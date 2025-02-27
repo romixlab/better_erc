@@ -36,7 +36,7 @@ pub struct Sheet {
     pub title_block: Vec<TitleBlockEntry>
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
 #[serde(rename_all = "kebab-case")]
 pub enum TitleBlockEntry {
     Title(Option<String>),
@@ -205,5 +205,24 @@ pub enum NetPieceKind {
         pin: Option<String>,
         pinfunction: Option<String>,
         pintype: Option<String>,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::fs::read_to_string;
+    use super::{DesignPiece, KicadFileKind};
+
+    #[test]
+    fn can_read_netlist_kicad() {
+        let contents = read_to_string("test_input/netlist_kicad.net").unwrap();
+        let netlist: KicadFileKind = serde_lexpr::from_str(&contents).unwrap();
+        let KicadFileKind::NetListExport(netlist) = netlist;
+        assert_eq!(netlist.design.len(), 5);
+        assert_eq!(netlist.components.len(), 3);
+        assert!(matches!(&netlist.design[2], DesignPiece::Tool(_)));
+        if let DesignPiece::Tool(tool) = &netlist.design[2] {
+            assert_eq!(tool, &Some("Eeschema 8.0.4".into()));
+        }
     }
 }
