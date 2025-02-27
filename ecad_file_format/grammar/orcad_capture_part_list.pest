@@ -1,0 +1,33 @@
+file                   =  {
+    SOI ~ "FILE_TYPE" ~ "=" ~ "EXPANDEDPARTLIST;" ~ exporter_comment ~
+    "DIRECTIVES" ~ directives ~ "END_DIRECTIVES;" ~
+    parts ~
+    "END." ~ EOI
+}
+exporter_comment       = ${ "{" ~ " "* ~ exporter_comment_inner ~ " "* ~ "}" }
+exporter_comment_inner = @{ (!("}" | (" "* ~ "}")) ~ ASCII)* }
+
+directives = { param* }
+parts      = { part* }
+
+part           =  { "PART_NAME" ~ designator ~ primitive_name ~ ":"? ~ ";" ~ sections }
+designator     = @{ ASCII_ALPHANUMERIC+ }
+sections       =  { section* }
+section        =  {
+    "SECTION_NUMBER" ~ section_number ~
+    instance_name ~ ":" ~ "C_PATH" ~ "=" ~ c_path ~ "," ~ "P_PATH" ~ "=" ~ p_path ~ "," ~
+    "PRIM_FILE" ~ "=" ~ param_value ~ "," ~ "SECTION" ~ "=" ~ param_value ~ ";"
+}
+section_number =  { ASCII_DIGIT+ }
+instance_name  = ${ "'" ~ quote_string_inner ~ "'" }
+c_path         = ${ "'" ~ quote_string_inner ~ "'" }
+p_path         = ${ "'" ~ quote_string_inner ~ "'" }
+
+primitive_name     = ${ "'" ~ quote_string_inner ~ "'" }
+quote_string_inner = @{ (!"'" ~ ASCII)* }
+
+param       =  { param_name ~ "=" ~ param_value ~ ";" }
+param_name  = @{ (ASCII_ALPHANUMERIC | "_")+ }
+param_value = ${ "'" ~ quote_string_inner ~ "'" }
+
+WHITESPACE = _{ " " | "\t" | "\n" | "\r" }

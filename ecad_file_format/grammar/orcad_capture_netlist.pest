@@ -1,0 +1,17 @@
+file                   =  { SOI ~ "FILE_TYPE" ~ "=" ~ "EXPANDEDNETLIST;" ~ exporter_comment ~ net* ~ "END." ~ EOI }
+exporter_comment       = ${ "{" ~ " "* ~ exporter_comment_inner ~ " "* ~ "}" }
+exporter_comment_inner = @{ (!("}" | (" "* ~ "}")) ~ ASCII)* }
+
+net                =  { "NET_NAME" ~ net_name ~ full_net_name ~ ":" ~ "C_SIGNAL" ~ "=" ~ c_signal ~ ";" ~ node* }
+net_name           = ${ "'" ~ quote_string_inner ~ "'" }
+full_net_name      = ${ "'" ~ quote_string_inner ~ "'" }
+c_signal           = ${ "'" ~ quote_string_inner ~ "'" }
+quote_string_inner = @{ (!"'" ~ ASCII)* }
+
+node          =  { "NODE_NAME" ~ designator ~ pin_id ~ instance_name ~ ":" ~ pin_name ~ ":"? ~ ";" }
+designator    = @{ ASCII_ALPHANUMERIC+ }
+pin_id        = @{ ASCII_ALPHANUMERIC+ }
+instance_name = ${ "'" ~ quote_string_inner ~ "'" }
+pin_name      = ${ "'" ~ quote_string_inner ~ "'" }
+
+WHITESPACE = _{ " " | "\t" | "\n" | "\r" }

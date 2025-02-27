@@ -1,0 +1,18 @@
+file                   =  { SOI ~ "FILE_TYPE" ~ "=" ~ "LIBRARY_PARTS;" ~ exporter_comment ~ primitive* ~ "END." ~ EOI }
+exporter_comment       = ${ "{" ~ " "* ~ exporter_comment_inner ~ " "* ~ "}" }
+exporter_comment_inner = @{ (!("}" | (" "* ~ "}")) ~ ASCII)* }
+
+primitive          =  { "primitive" ~ primitive_name ~ ";" ~ "pin" ~ pins ~ "end_pin;" ~ "body" ~ body ~ "end_body;" ~ "end_primitive;" }
+pins               =  { pin* }
+primitive_name     = ${ "'" ~ quote_string_inner ~ "'" }
+quote_string_inner = @{ (!"'" ~ ASCII)* }
+body               =  { param* }
+
+pin      =  { pin_name ~ ":" ~ param* }
+pin_name = ${ "'" ~ quote_string_inner ~ "'" }
+
+param       =  { param_name ~ "=" ~ param_value ~ ";" }
+param_name  = @{ (ASCII_ALPHANUMERIC | "_")+ }
+param_value = ${ "'" ~ quote_string_inner ~ "'" }
+
+WHITESPACE = _{ " " | "\t" | "\n" | "\r" }
