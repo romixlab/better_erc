@@ -4,3 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+lexpr = { path = "../../lexpr-rs/lexpr"}
+serde-lexpr = { path = "../../lexpr-rs/serde-lexpr"}
+serde = { version = "1.0", features = ["derive"] }
+serde_path_to_error = "0.1"
+csv = "1.3"

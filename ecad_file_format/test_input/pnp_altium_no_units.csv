@@ -1,0 +1,15 @@
+Altium Designer Pick and Place Locations
+C:\path\to\file.csv
+
+========================================================================================================================
+File Design Information:
+
+Date:       27/02/25
+Time:       14:55
+Revision:   2e69a887e70cef7590f571a9b8881b5496ecaf2b
+Variant:    No variations
+Units used: mm
+
+"Designator","Comment","Layer","Footprint","Center-X(mm)","Center-Y(mm)","Rotation","Description","Ref-X(mm)","Ref-Y(mm)","Pad-X(mm)","Pad-Y(mm)"
+"J1","HEADER-2.54-2x1","TopLayer","HEADER-2","1.3943","12.6700","270","","1.3943","13.9400","1.3943","13.9400"
+"R1","22K 1%","BottomLayer","RESC0402(1005)_N","20.2000","15.1000","0","22K 0.063W 1% 0402 (1005 Metric)  SMD","20.2000","15.1000","19.7000","15.1000"

@@ -1,0 +1,11 @@
+File name:  board_name
+Date:  2025-2-27 14:30:22
+Unites:  mm
+Board size(Ref):  93.3000 x 74.3500
+Board(0 0) 'Origin' xy: (0.0000 0.0000)
+
+
+,Center Location by Pins,,,,,Component Location,,Pin1 Location,,
+RefDes,Center-X,Center-Y,Rotation,Layer,Footprint,Org-X,Org-Y,Pin1-X,Pin1-Y,Rotation Edit
+C1,89.4000,-7.8000,0.000000,TOP,FID_C40M120,89.4000,-7.8000,89.4000,-7.8000,0,
+R1,30.0200,51.0600,270.000000,BOTTOM,RESC1005X40N,30.0200,51.0600,30.0200,50.5799,0,
