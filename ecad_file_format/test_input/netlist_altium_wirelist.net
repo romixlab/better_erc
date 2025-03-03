@@ -1,0 +1,33 @@
+Wire List
+
+<<< Component List >>>
+DX07P024AJ1R1500                J1             DX07P024AJ1R1500-Footprint-1
+95278-101A06LF                  J2             HEADER-2.54-2x3-VSMT
+219-2MST                        SW5            FP-219-2MST-MFG
+
+<<< Wire List >>>
+
+  NODE  REFERENCE  PIN #   PIN NAME       PIN TYPE    PART VALUE
+
+[00048] SBU2
+        J1         B8      SBU2           I/O         DX07P024AJ1R1500
+        J2         3       3              PASSIVE     95278-101A06LF
+        J4         5       5              PASSIVE     HEADER-6
+        SW4        1       A1             PASSIVE     219-2MST
+        SW5        1       A1             PASSIVE     219-2MST
+
+[00047] SBU1
+        J1         A8      SBU1           I/O         DX07P024AJ1R1500
+        J2         1       1              PASSIVE     95278-101A06LF
+        J4         4       4              PASSIVE     HEADER-6
+        SW4        3       A2             PASSIVE     219-2MST
+        SW5        3       A2             PASSIVE     219-2MST
+
+[00001] +5V0_DEV
+        J1         A4      VBUS           POWER       DX07P024AJ1R1500
+        J1         A9      VBUS           POWER       DX07P024AJ1R1500
+        J1         B4      VBUS           POWER       DX07P024AJ1R1500
+        J1         B9      VBUS           POWER       DX07P024AJ1R1500
+        J6         1       1              PASSIVE     HEADER-2.54-2x1
+        J7         1       1              PASSIVE     HEADER-2.54-2x1
+

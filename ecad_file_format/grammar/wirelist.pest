@@ -1,24 +1,25 @@
 file = { SOI ~ "Wire List" ~ component_list ~ wire_list ~ EOI }
 
-component_list = ${ "<<< Component List >>>" ~ "\n" ~ component* }
+component_list = ${ "<<< Component List >>>" ~ nl ~ component* }
 component      = ${
     #part_number = string_space5 ~ space ~ #designator = string_space5 ~ space ~
-    #footprint = string_space5 ~ ("\n" | "\r\n")
+    #footprint = string_space5 ~ nl
 }
-string_space5  = ${ (!(" "{5, } | "\n" | "\r\n") ~ ASCII)+ }
+string_space5  = ${ (!(" "{5, } | nl) ~ ASCII)+ }
 space          = _{ " "+ }
 
 wire_list   = ${ "<<< Wire List >>>" ~ (!"[" ~ ASCII)+ ~ net* }
-net         = ${ "[" ~ net_index ~ "]" ~ " " ~ net_name ~ "\n" ~ connection* ~ "\n" }
+net         = ${ "[" ~ net_index ~ "]" ~ " " ~ net_name ~ nl ~ connection* ~ nl }
 net_index   = ${ ASCII_DIGIT+ }
-net_name    = ${ (!"\n" ~ ASCII)+ }
+net_name    = ${ (!nl ~ ASCII)+ }
 connection  = ${
     (!ASCII_ALPHA_UPPER ~ " ")+ ~ #designator = string_space5 ~ space ~
     #pin_id = string_space5 ~ space ~ pin_name ~ maybe_space ~
-    io_type ~ maybe_space ~ #part_number = string_space5 ~ "\n"
+    io_type ~ maybe_space ~ #part_number = string_space5 ~ nl
 }
-pin_name    = ${ (!(" "{5, } | "\n" | "\r\n") ~ ASCII){1, 15} }
+pin_name    = ${ (!(" "{5, } | nl) ~ ASCII){1, 15} }
 maybe_space = _{ " "* }
 io_type     =  { "PASSIVE" | "OUTPUT" | "INPUT" | "I/O" | "OPEN COLLECTOR" | "OPEN EMITTER" | "POWER" }
 
+nl = _{ "\n" | "\r\n" }
 WHITESPACE = _{ " " | "\t" | "\n" | "\r" }
