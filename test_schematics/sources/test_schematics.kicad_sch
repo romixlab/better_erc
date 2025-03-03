@@ -1,0 +1,87 @@
+(kicad_sch
+	(version 20231120)
+	(generator "eeschema")
+	(generator_version "8.0")
+	(uuid "f327a4b6-22d9-4671-bd1f-2c46b703509e")
+	(paper "A3")
+	(lib_symbols)
+	(sheet
+		(at 13.97 24.13)
+		(size 49.53 3.81)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "1284c5bc-3fac-4644-8578-1906a627e12f")
+		(property "Sheetname" "C20: I2C non standard pull-ups"
+			(at 15.24 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "i2c_non_standard_pull_ups.kicad_sch"
+			(at 13.97 28.5246 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "test_schematics"
+				(path "/f327a4b6-22d9-4671-bd1f-2c46b703509e"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 13.97 16.51)
+		(size 49.53 3.81)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "29087d8a-217a-4d35-b399-b64f9dad2246")
+		(property "Sheetname" "C20: I2C no pull-ups"
+			(at 15.24 19.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "i2c_no_pull_ups.kicad_sch"
+			(at 13.97 20.9046 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "test_schematics"
+				(path "/f327a4b6-22d9-4671-bd1f-2c46b703509e"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+)
