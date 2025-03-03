@@ -1,0 +1,7 @@
+[package]
+name = "ecad_compare"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ecad_file_format = { path = "../ecad_file_format" }

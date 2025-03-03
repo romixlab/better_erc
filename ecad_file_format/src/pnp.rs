@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::path::Path;
 
 #[derive(Debug, Eq, PartialEq, Hash, Clone)]
-pub struct Designator(String);
+pub struct Designator(pub String);
 
 #[derive(Debug)]
 pub struct ComponentPosition {
