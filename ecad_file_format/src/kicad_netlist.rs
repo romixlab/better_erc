@@ -1,27 +1,75 @@
-use std::fmt;
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use serde::de::{SeqAccess};
+use crate::netlist::{Net, Netlist, Node};
+use anyhow::Result;
+use serde::de::SeqAccess;
 use serde::ser::SerializeSeq;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use std::collections::HashMap;
+use std::fmt;
+use std::fs::read_to_string;
+use std::path::PathBuf;
 
-#[derive(Debug, Serialize, Deserialize)]
-pub enum KicadFileKind {
-    #[serde(rename = "export")]
-    NetListExport(KicadNetListExport)
+pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
+    let contents = read_to_string(path)?;
+    let netlist: KicadFileKind = serde_lexpr::from_str(&contents)?;
+    let KicadFileKind::NetListExport(netlist) = netlist;
+
+    let mut parts = HashMap::new();
+    let mut nets = HashMap::new();
+    for net_kind in netlist.nets {
+        let NetKind::Net(net_pieces) = net_kind;
+        let mut net_name = String::new();
+        let mut net = Net { nodes: vec![] };
+        for net_piece in net_pieces {
+            match net_piece {
+                NetPieceKind::Code(_) => {}
+                NetPieceKind::Name(name) => {
+                    net_name = name.unwrap_or_default();
+                }
+                NetPieceKind::Node {
+                    r#ref,
+                    pin,
+                    pinfunction: _,
+                    pintype: _,
+                } => {
+                    // TODO: emit warning if empty ref or pin
+                    net.nodes.push(Node {
+                        part_ref: r#ref.unwrap_or_default(),
+                        part_pin: pin.unwrap_or_default(),
+                    });
+                }
+            }
+        }
+        // TODO: emit warnings
+        if net_name.is_empty() {
+            continue;
+        }
+        if nets.contains_key(&net_name) {
+            continue;
+        }
+        nets.insert(net_name, net);
+    }
+    Ok(Netlist { parts, nets })
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct KicadNetListExport {
-    pub version: Option<String>,
-    pub design: Vec<DesignPiece>,
-    pub components: Vec<ComponentKind>,
-    pub libparts: Vec<LibPartKind>,
-    pub libraries: Vec<LibraryKind>,
-    pub nets: Vec<NetKind>,
+enum KicadFileKind {
+    #[serde(rename = "export")]
+    NetListExport(KicadNetListExport),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct KicadNetListExport {
+    version: Option<String>,
+    design: Vec<DesignPiece>,
+    components: Vec<ComponentKind>,
+    libparts: Vec<LibPartKind>,
+    libraries: Vec<LibraryKind>,
+    nets: Vec<NetKind>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
-pub enum DesignPiece {
+enum DesignPiece {
     Source(Option<String>),
     Date(Option<String>),
     Tool(Option<String>),
@@ -29,16 +77,16 @@ pub enum DesignPiece {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Sheet {
-    pub number: Option<String>,
-    pub name: Option<String>,
-    pub tstamps: Vec<String>,
-    pub title_block: Vec<TitleBlockEntry>
+struct Sheet {
+    number: Option<String>,
+    name: Option<String>,
+    tstamps: Vec<String>,
+    title_block: Vec<TitleBlockEntry>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Eq, PartialEq)]
 #[serde(rename_all = "kebab-case")]
-pub enum TitleBlockEntry {
+enum TitleBlockEntry {
     Title(Option<String>),
     Company(Option<String>),
     Rev(Option<String>),
@@ -51,14 +99,14 @@ pub enum TitleBlockEntry {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub enum ComponentKind {
+enum ComponentKind {
     #[serde(rename = "comp")]
-    Component(Vec<ComponentEntry>)
+    Component(Vec<ComponentEntry>),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
-pub enum ComponentEntry {
+enum ComponentEntry {
     Ref(Option<String>),
     Value(Option<String>),
     Footprint(Option<String>),
@@ -84,7 +132,7 @@ pub enum ComponentEntry {
 }
 
 #[derive(Debug)]
-pub struct ComponentField(String, Option<String>);
+struct ComponentField(String, Option<String>);
 
 struct ComponentFieldKindVisitor;
 
@@ -92,7 +140,10 @@ impl<'de> serde::de::Visitor<'de> for ComponentFieldKindVisitor {
     type Value = ComponentField;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-        write!(formatter, "'field (name \"param name\") \"value\"' OR 'field (name \"param name\")'")
+        write!(
+            formatter,
+            "'field (name \"param name\") \"value\"' OR 'field (name \"param name\")'"
+        )
     }
 
     fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
@@ -107,11 +158,10 @@ impl<'de> serde::de::Visitor<'de> for ComponentFieldKindVisitor {
     }
 }
 
-
 impl<'de> Deserialize<'de> for ComponentField {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: Deserializer<'de>
+        D: Deserializer<'de>,
     {
         deserializer.deserialize_seq(ComponentFieldKindVisitor)
     }
@@ -120,7 +170,7 @@ impl<'de> Deserialize<'de> for ComponentField {
 impl Serialize for ComponentField {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: Serializer
+        S: Serializer,
     {
         let len = if self.1.is_some() { 3 } else { 2 };
         let mut seq = serializer.serialize_seq(Some(len))?;
@@ -135,25 +185,25 @@ impl Serialize for ComponentField {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
-pub enum ComponentFieldPlainSymbol {
+enum ComponentFieldPlainSymbol {
     Field,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
-pub enum ComponentFieldName {
+enum ComponentFieldName {
     Name(Option<String>),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub enum LibPartKind {
+enum LibPartKind {
     #[serde(rename = "libpart")]
-    LibPart(Vec<LibPartPiece>)
+    LibPart(Vec<LibPartPiece>),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
-pub enum LibPartPiece {
+enum LibPartPiece {
     Lib(Option<String>),
     Part(Option<String>),
     Description(Option<String>),
@@ -163,41 +213,40 @@ pub enum LibPartPiece {
     Pins(Vec<PinKind>),
 }
 
-
 #[derive(Debug, Serialize, Deserialize)]
-pub enum FootprintKind {
+enum FootprintKind {
     #[serde(rename = "fp")]
-    Footprint(Option<String>)
+    Footprint(Option<String>),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub enum PinKind {
+enum PinKind {
     #[serde(rename = "pin")]
     Pin {
         num: Option<String>,
         name: Option<String>,
         r#type: Option<String>,
-    }
+    },
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub enum LibraryKind {
+enum LibraryKind {
     #[serde(rename = "library")]
     Library {
         logical: Option<String>,
         uri: Option<String>,
-    }
+    },
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub enum NetKind {
+enum NetKind {
     #[serde(rename = "net")]
-    Net(Vec<NetPieceKind>)
+    Net(Vec<NetPieceKind>),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
-pub enum NetPieceKind {
+enum NetPieceKind {
     Code(Option<String>),
     Name(Option<String>),
     Node {
@@ -205,13 +254,13 @@ pub enum NetPieceKind {
         pin: Option<String>,
         pinfunction: Option<String>,
         pintype: Option<String>,
-    }
+    },
 }
 
 #[cfg(test)]
 mod tests {
-    use std::fs::read_to_string;
     use super::{DesignPiece, KicadFileKind};
+    use std::fs::read_to_string;
 
     #[test]
     fn can_read_netlist_kicad() {
