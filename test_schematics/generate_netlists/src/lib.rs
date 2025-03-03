@@ -3,9 +3,9 @@ use std::path::{Path, PathBuf};
 use std::{fs, io};
 use subprocess::Exec;
 
-fn main() {
+pub fn generate_netlists() {
     let generated_netlists_folder = get_parent_folder("generated_netlists").unwrap();
-    println!("Generated netlists folder: {:?}", generated_netlists_folder);
+    println!("generated netlists folder: {:?}", generated_netlists_folder);
     let kicad_cli_path = kicad_cli_path();
 
     let mut cache_hits = 0;
@@ -26,7 +26,10 @@ fn main() {
         let cached_path = generated_netlists_folder.join(format!("{file_name}_{sha256}.net"));
         // println!("cached path: {:?}", cached_path);
         let file_exists = fs::exists(&cached_path).unwrap();
-        if !file_exists {
+        if file_exists {
+            cache_hits += 1;
+        } else {
+            remove_outdated(file_name);
             let status = Exec::cmd(kicad_cli_path)
                 .args(&[
                     "sch",
@@ -38,12 +41,43 @@ fn main() {
                 ])
                 .join();
             println!("Generating netlist for: {file_name}: {status:?}");
-        } else {
-            cache_hits += 1;
         }
     }
 
     println!("Cache hits: {cache_hits}");
+}
+
+pub fn get_netlist_path(name: &str) -> PathBuf {
+    let generated_netlists_folder = get_parent_folder("generated_netlists").unwrap();
+    let mut paths = fs::read_dir(generated_netlists_folder)
+        .unwrap()
+        .filter_map(|e| {
+            let Ok(e) = e else { return None };
+            if e.file_name().to_str().unwrap().starts_with(name) {
+                Some(e.path())
+            } else {
+                None
+            }
+        })
+        .collect::<Vec<_>>();
+    if paths.len() == 0 {
+        panic!("{name} not found");
+    } else if paths.len() > 1 {
+        panic!("Internal error: more than one cached file for {name}");
+    } else {
+        paths.remove(0)
+    }
+}
+
+fn remove_outdated(file_name: &str) {
+    let generated_netlists_folder = get_parent_folder("generated_netlists").unwrap();
+    for entry in fs::read_dir(generated_netlists_folder).unwrap() {
+        let Ok(entry) = entry else { continue };
+        if entry.file_name().to_str().unwrap().starts_with(file_name) {
+            // println!("Removing outdated netlist for: {:?}", entry.path());
+            fs::remove_file(entry.path()).unwrap();
+        }
+    }
 }
 
 #[cfg(target_os = "macos")]
@@ -75,7 +109,7 @@ fn collect_schematics() -> Vec<PathBuf> {
         .collect()
 }
 
-fn get_parent_folder(folder_name: &str) -> std::io::Result<PathBuf> {
+fn get_parent_folder(folder_name: &str) -> io::Result<PathBuf> {
     // let mut path = std::env::current_dir()?;
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
     let mut path = manifest_dir

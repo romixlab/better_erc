@@ -1,0 +1,10 @@
+[package]
+name = "erc_core"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+generate_netlists = { path = "../test_schematics/generate_netlists" }
+
+[build-dependencies]
+generate_netlists = { path = "../test_schematics/generate_netlists" }

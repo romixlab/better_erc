@@ -2,6 +2,6 @@
 resolver = "3"
 
 members = ["ecad_compare",
-    "ecad_file_format",
+    "ecad_file_format", "erc_core",
     "test_schematics/generate_netlists",
 ]
