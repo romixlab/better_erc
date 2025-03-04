@@ -1,4 +1,6 @@
 use std::collections::HashMap;
+use std::fmt::{Display, Formatter};
+use std::ptr::write;
 
 #[derive(Debug)]
 pub struct Netlist {
@@ -91,4 +93,21 @@ pub struct Bank {
     pub total_source_current: f32,
     pub total_sink_current: f32,
     // min max voltage
+}
+
+impl Display for Netlist {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "{:?}", self.parts)?;
+        for (net_name, net) in self.nets.iter() {
+            write!(f, "Net: \"{net_name}\": ")?;
+            for (idx, node) in net.nodes.iter().enumerate() {
+                write!(f, "{}.{}", node.part_ref, node.part_pin)?;
+                if idx < net.nodes.len() - 1 {
+                    write!(f, " + ")?;
+                }
+            }
+            writeln!(f, "")?;
+        }
+        Ok(())
+    }
 }
