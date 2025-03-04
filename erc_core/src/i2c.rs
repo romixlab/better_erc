@@ -1,20 +1,37 @@
 use crate::util::collapse_underscores;
 use ecad_file_format::netlist::Netlist;
-use ecad_file_format::{Designator, NetName};
+use ecad_file_format::{Designator, DesignatorStartsWith, NetName};
 
 #[derive(Debug)]
-struct I2cBus {
-    derived_name: String,
-    scl_net: NetName,
-    scl_pull_up: Option<Designator>,
-    sda_net: NetName,
-    sda_pull_up: Option<Designator>,
-    nodes: Vec<Designator>,
+pub struct I2cBus {
+    pub derived_name: String,
+    pub scl_net: NetName,
+    pub sda_net: NetName,
+    pub pull_up: Option<I2cPullUp>,
+    pub nodes: Vec<Designator>,
 }
 
 #[derive(Debug)]
-struct I2cNode {
-    designator: Designator,
+pub struct I2cPullUp {
+    pub scl: Designator,
+    pub sda: Designator,
+    pub net: NetName,
+}
+
+#[derive(Debug)]
+pub enum I2cNode {
+    Device(Designator),
+    VoltageTranslator(Designator),
+    VoltageTranslatorDiscrete {
+        scl_fet: Designator,
+        sda_fet: Designator,
+    },
+    Connector(Designator),
+    /// 0R, net tie, solder tie
+    Tie {
+        scl_tie: Designator,
+        sda_tie: Designator,
+    },
 }
 
 fn find_i2c_buses(netlist: &Netlist) -> Vec<I2cBus> {
@@ -31,12 +48,25 @@ fn find_i2c_buses(netlist: &Netlist) -> Vec<I2cBus> {
             if netlist.nets.keys().any(|k| k == &sda_net) {
                 let derived_name =
                     collapse_underscores(format!("{}I2C{}", prefix, suffix).as_str());
+                let pull_up_chains = netlist.find_chains(
+                    potential_scl,
+                    &[DesignatorStartsWith("R"), DesignatorStartsWith("R")],
+                    &sda_net,
+                );
+                let pull_up = if let Some(chain) = pull_up_chains.first() {
+                    Some(I2cPullUp {
+                        scl: chain[0].1.clone(),
+                        sda: chain[1].1.clone(),
+                        net: netlist.connected_net(&chain[1].1, &chain[1].0).unwrap(),
+                    })
+                } else {
+                    None
+                };
                 buses.push(I2cBus {
                     derived_name,
                     scl_net: potential_scl.clone(),
-                    scl_pull_up: None,
                     sda_net,
-                    sda_pull_up: None,
+                    pull_up,
                     nodes: vec![],
                 });
             }
@@ -58,6 +88,18 @@ mod tests {
         // println!("{:#?}", netlist);
         let buses = find_i2c_buses(&netlist);
         println!("buses: {buses:#?}");
+        // let chains = netlist.find_chains(
+        //     &NetName("/SCL1_3V3".into()),
+        //     &[DesignatorStartsWith("R"), DesignatorStartsWith("R")],
+        //     &NetName("/SDA1_3V3".into()),
+        // );
+        // println!("{:?}", chains);
+        // let paths = netlist.find_connected_parts(
+        //     &Designator("Q1".into()),
+        //     &PinId("3".into()),
+        //     DesignatorStartsWith("R"),
+        // );
+        // println!("{:?}", paths);
     }
 
     #[test]

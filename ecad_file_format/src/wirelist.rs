@@ -3,6 +3,7 @@ use pest_derive::Parser;
 
 #[derive(Parser)]
 #[grammar = "grammar/wirelist.pest"]
+#[allow(dead_code)]
 struct WireListParser;
 
 #[cfg(test)]
