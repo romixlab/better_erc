@@ -13,6 +13,9 @@ use std::fmt::{Display, Formatter};
 #[derive(Debug, Eq, PartialEq, Hash, Clone)]
 pub struct Designator(pub String);
 
+#[derive(Copy, Clone)]
+pub struct DesignatorStartsWith<'a>(pub &'a str);
+
 #[derive(Debug, Eq, PartialEq, Hash, Clone)]
 pub struct NetName(pub String);
 
