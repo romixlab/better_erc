@@ -2,9 +2,13 @@ use crate::netlist::{Net, Netlist, Node};
 use anyhow::{Error, Result};
 use pest::Parser;
 use pest_derive::Parser;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fs::read_to_string;
 use std::path::PathBuf;
+
+#[derive(Parser)]
+#[grammar = "grammar/orcad_capture_netlist.pest"]
+struct NetListParser;
 
 pub fn load_orcad_netlist(path: &PathBuf) -> Result<Netlist> {
     let contents = read_to_string(path)?;
@@ -12,7 +16,7 @@ pub fn load_orcad_netlist(path: &PathBuf) -> Result<Netlist> {
         Ok(pairs) => pairs,
         Err(e) => return Err(Error::msg(format!("{e}"))),
     };
-    let mut parts = HashMap::new();
+    let parts = HashMap::new();
     let mut nets = HashMap::new();
     // println!("{pairs:#?}");
     let rule_file = pairs.into_iter().next().unwrap();
@@ -21,7 +25,7 @@ pub fn load_orcad_netlist(path: &PathBuf) -> Result<Netlist> {
             Rule::exporter_comment => {}
             Rule::net => {
                 let mut net_name = None;
-                let mut nodes = vec![];
+                let mut nodes = HashSet::new();
                 for pair in pair.into_inner().into_iter() {
                     match pair.as_rule() {
                         Rule::net_name => {
@@ -46,7 +50,7 @@ pub fn load_orcad_netlist(path: &PathBuf) -> Result<Netlist> {
                                 }
                             }
                             if let (Some(part_ref), Some(part_pin)) = (part_ref, part_pin) {
-                                nodes.push(Node { part_ref, part_pin });
+                                nodes.insert(Node { part_ref, part_pin });
                             }
                         }
                         _ => {}
@@ -64,10 +68,6 @@ pub fn load_orcad_netlist(path: &PathBuf) -> Result<Netlist> {
     Ok(Netlist { parts, nets })
 }
 
-#[derive(Parser)]
-#[grammar = "grammar/orcad_capture_netlist.pest"]
-pub struct NetListParser;
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -76,6 +76,26 @@ mod tests {
     fn can_load_orcad_netlist() {
         let netlist =
             load_orcad_netlist(&PathBuf::from("test_input/netlist_orcad_pstxnet.dat")).unwrap();
-        println!("{}", netlist);
+        assert_eq!(netlist.nets.len(), 3);
+        assert_eq!(
+            netlist.nets.get("TOUCH_INT_N"),
+            Some(&Net {
+                nodes: [
+                    Node {
+                        part_ref: "R610".to_string(),
+                        part_pin: "2".to_string()
+                    },
+                    Node {
+                        part_ref: "Q34".to_string(),
+                        part_pin: "3".to_string()
+                    },
+                    Node {
+                        part_ref: "R636".to_string(),
+                        part_pin: "1".to_string()
+                    }
+                ]
+                .into(),
+            })
+        )
     }
 }

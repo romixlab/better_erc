@@ -1,6 +1,5 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fmt::{Display, Formatter};
-use std::ptr::write;
 
 #[derive(Debug)]
 pub struct Netlist {
@@ -18,12 +17,12 @@ pub struct Part {
     pub banks: HashMap<String, Bank>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Net {
-    pub nodes: Vec<Node>,
+    pub nodes: HashSet<Node>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct Node {
     pub part_ref: String,
     pub part_pin: String,
@@ -97,7 +96,7 @@ pub struct Bank {
 
 impl Display for Netlist {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "{:?}", self.parts)?;
+        writeln!(f, "Parts: {:?}", self.parts)?;
         for (net_name, net) in self.nets.iter() {
             write!(f, "Net: \"{net_name}\": ")?;
             for (idx, node) in net.nodes.iter().enumerate() {

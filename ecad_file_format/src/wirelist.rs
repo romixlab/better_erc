@@ -1,9 +1,9 @@
-use pest::Parser;
+// use pest::Parser;
 use pest_derive::Parser;
 
 #[derive(Parser)]
 #[grammar = "grammar/wirelist.pest"]
-pub struct WireListParser;
+struct WireListParser;
 
 #[cfg(test)]
 mod tests {

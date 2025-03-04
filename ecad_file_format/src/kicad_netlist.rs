@@ -3,7 +3,7 @@ use anyhow::Result;
 use serde::de::SeqAccess;
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fmt;
 use std::fs::read_to_string;
 use std::path::PathBuf;
@@ -13,12 +13,14 @@ pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
     let netlist: KicadFileKind = serde_lexpr::from_str(&contents)?;
     let KicadFileKind::NetListExport(netlist) = netlist;
 
-    let mut parts = HashMap::new();
+    let parts = HashMap::new();
     let mut nets = HashMap::new();
     for net_kind in netlist.nets {
         let NetKind::Net(net_pieces) = net_kind;
         let mut net_name = String::new();
-        let mut net = Net { nodes: vec![] };
+        let mut net = Net {
+            nodes: HashSet::new(),
+        };
         for net_piece in net_pieces {
             match net_piece {
                 NetPieceKind::Code(_) => {}
@@ -32,7 +34,7 @@ pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
                     pintype: _,
                 } => {
                     // TODO: emit warning if empty ref or pin
-                    net.nodes.push(Node {
+                    net.nodes.insert(Node {
                         part_ref: r#ref.unwrap_or_default(),
                         part_pin: pin.unwrap_or_default(),
                     });
@@ -259,11 +261,13 @@ enum NetPieceKind {
 
 #[cfg(test)]
 mod tests {
-    use super::{DesignPiece, KicadFileKind};
+    use super::{DesignPiece, KicadFileKind, load_kicad_netlist};
+    use crate::netlist::{Net, Node};
     use std::fs::read_to_string;
+    use std::path::PathBuf;
 
     #[test]
-    fn can_read_netlist_kicad() {
+    fn can_read_netlist_kicad_sexpr() {
         let contents = read_to_string("test_input/netlist_kicad.net").unwrap();
         let netlist: KicadFileKind = serde_lexpr::from_str(&contents).unwrap();
         let KicadFileKind::NetListExport(netlist) = netlist;
@@ -273,5 +277,31 @@ mod tests {
         if let DesignPiece::Tool(tool) = &netlist.design[2] {
             assert_eq!(tool, &Some("Eeschema 8.0.4".into()));
         }
+    }
+
+    #[test]
+    fn can_read_netlist_kicad() {
+        let netlist = load_kicad_netlist(&PathBuf::from("test_input/netlist_kicad.net")).unwrap();
+        assert_eq!(netlist.nets.len(), 4);
+        assert_eq!(
+            netlist.nets.get("/Eth/RXD0"),
+            Some(&Net {
+                nodes: [
+                    Node {
+                        part_ref: "R21".to_string(),
+                        part_pin: "2".to_string()
+                    },
+                    Node {
+                        part_ref: "R29".to_string(),
+                        part_pin: "2".to_string()
+                    },
+                    Node {
+                        part_ref: "U2".to_string(),
+                        part_pin: "11".to_string()
+                    }
+                ]
+                .into(),
+            })
+        )
     }
 }
