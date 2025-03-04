@@ -1,6 +1,7 @@
 use crate::csv_util::{
     MINIMUM_PNP_COLUMNS_REQUIRED, POSSIBLE_PNP_COLUMN_NAMES, determine_separator, find_header_row,
 };
+use anyhow::{Error, Result};
 use std::collections::HashMap;
 use std::path::Path;
 
@@ -18,14 +19,6 @@ pub struct ComponentPosition {
     pub side: Side,
     pub value: Option<String>,
     pub package: Option<String>,
-}
-
-#[derive(Debug)]
-pub enum PnpError {
-    IOError(std::io::Error),
-    ColumnHeaderNotFound,
-    RequiredColumnNotFound(String),
-    UnknownSideName(String),
 }
 
 impl PartialEq for ComponentPosition {
@@ -47,9 +40,7 @@ pub enum Side {
     Bottom,
 }
 
-pub fn component_positions(
-    path: &Path,
-) -> Result<HashMap<Designator, ComponentPosition>, PnpError> {
+pub fn load_component_positions(path: &Path) -> Result<HashMap<Designator, ComponentPosition>> {
     let (header_idx, header) = find_header_row(
         MINIMUM_PNP_COLUMNS_REQUIRED,
         &POSSIBLE_PNP_COLUMN_NAMES,
@@ -63,19 +54,19 @@ pub fn component_positions(
         .flexible(true)
         .from_path(path)
     else {
-        return Err(PnpError::ColumnHeaderNotFound);
+        return Err(Error::msg("Column header not found"));
     };
 
     let designator_idx = find_column_idx(&header, &["Ref", "RefDes", "Designator"])
-        .ok_or(PnpError::RequiredColumnNotFound("Designator".into()))?;
+        .ok_or(Error::msg("Required column not found (designator)"))?;
     let x_idx = find_column_idx(&header, &["Center-X", "Center-X(mm)", "PosX"])
-        .ok_or(PnpError::RequiredColumnNotFound("X position".into()))?;
+        .ok_or(Error::msg("Required column not found (X position)"))?;
     let y_idx = find_column_idx(&header, &["Center-Y", "Center-Y(mm)", "PosY"])
-        .ok_or(PnpError::RequiredColumnNotFound("Y position".into()))?;
+        .ok_or(Error::msg("Required column not found (Y position)"))?;
     let a_idx = find_column_idx(&header, &["Rotation", "Rot"])
-        .ok_or(PnpError::RequiredColumnNotFound("Rotation".into()))?;
+        .ok_or(Error::msg("Required column not found (Rotation)"))?;
     let side_idx = find_column_idx(&header, &["Side", "Layer"])
-        .ok_or(PnpError::RequiredColumnNotFound("Side".into()))?;
+        .ok_or(Error::msg("Required column not found (Side)"))?;
     let value_idx = find_column_idx(&header, &["Value", "Val", "Comment"]);
     let package_idx = find_column_idx(&header, &["Package", "Footprint"]);
 
@@ -87,16 +78,21 @@ pub fn component_positions(
         let side = match values[side_idx] {
             "Top" | "TOP" | "top" | "TopLayer" => Side::Top,
             "Bottom" | "BOTTOM" | "bottom" | "BottomLayer" => Side::Bottom,
-            _ => return Err(PnpError::UnknownSideName(values[side_idx].to_string())),
+            _ => {
+                return Err(Error::msg(format!(
+                    "Unknown board side: {}",
+                    values[side_idx].to_string()
+                )));
+            }
         };
         let x_str = values[x_idx].strip_suffix("mm").unwrap_or(values[x_idx]);
         let y_str = values[y_idx].strip_suffix("mm").unwrap_or(values[y_idx]);
         let position = ComponentPosition {
-            x: x_str.parse::<f32>().unwrap(),
+            x: x_str.parse::<f32>()?,
             x_str: x_str.to_string(),
-            y: y_str.parse::<f32>().unwrap(),
+            y: y_str.parse::<f32>()?,
             y_str: y_str.to_string(),
-            rotation: values[a_idx].parse::<f32>().unwrap(),
+            rotation: values[a_idx].parse::<f32>()?,
             rotation_str: values[a_idx].to_string(),
             side,
             value: value_idx.map(|idx| values[idx].to_string()),
@@ -118,12 +114,12 @@ fn find_column_idx(columns: &[String], synonyms: &[&str]) -> Option<usize> {
 
 #[cfg(test)]
 mod tests {
-    use crate::pnp::{Designator, Side, component_positions};
+    use crate::pnp::{Designator, Side, load_component_positions};
     use std::path::Path;
 
     #[test]
     fn can_read_pnp_kicad() {
-        let positions = component_positions(Path::new("test_input/pnp_kicad.csv")).unwrap();
+        let positions = load_component_positions(Path::new("test_input/pnp_kicad.csv")).unwrap();
         let pos_r1 = positions.get(&Designator("R1".to_string())).unwrap();
         assert_eq!(pos_r1.x_str, "56.600000");
         assert_eq!(pos_r1.side, Side::Bottom);
@@ -135,7 +131,7 @@ mod tests {
     #[test]
     fn can_read_pnp_altium() {
         let positions =
-            component_positions(Path::new("test_input/pnp_altium_no_units.csv")).unwrap();
+            load_component_positions(Path::new("test_input/pnp_altium_no_units.csv")).unwrap();
         let pos_j1 = positions.get(&Designator("J1".to_string())).unwrap();
         assert_eq!(pos_j1.x_str, "1.3943");
         assert_eq!(pos_j1.side, Side::Top);
@@ -147,7 +143,7 @@ mod tests {
     #[test]
     fn can_read_pnp_altium_with_units() {
         let positions =
-            component_positions(Path::new("test_input/pnp_altium_with_units.csv")).unwrap();
+            load_component_positions(Path::new("test_input/pnp_altium_with_units.csv")).unwrap();
         let pos_r1 = positions.get(&Designator("J1".to_string())).unwrap();
         assert_eq!(pos_r1.x_str, "1.3943");
         assert_eq!(pos_r1.side, Side::Top);
@@ -158,7 +154,7 @@ mod tests {
 
     #[test]
     fn can_read_pnp_allegro() {
-        let positions = component_positions(Path::new("test_input/pnp_allegro.csv")).unwrap();
+        let positions = load_component_positions(Path::new("test_input/pnp_allegro.csv")).unwrap();
         let pos_r1 = positions.get(&Designator("R1".to_string())).unwrap();
         assert_eq!(pos_r1.x_str, "30.0200");
         assert_eq!(pos_r1.side, Side::Bottom);

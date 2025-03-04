@@ -33,15 +33,15 @@ pub fn compare_positions(
 #[cfg(test)]
 mod tests {
     use crate::pnp::compare_positions;
-    use ecad_file_format::pnp::{Designator, component_positions};
+    use ecad_file_format::pnp::{Designator, load_component_positions};
     use std::path::Path;
 
     #[test]
     fn compare_positions_works() {
         let positions_a =
-            component_positions(&Path::new("../ecad_file_format/test_input/pnp_allegro.csv"))
+            load_component_positions(&Path::new("../ecad_file_format/test_input/pnp_allegro.csv"))
                 .unwrap();
-        let positions_b = component_positions(&Path::new(
+        let positions_b = load_component_positions(&Path::new(
             "../ecad_file_format/test_input/pnp_altium_no_units.csv",
         ))
         .unwrap();
