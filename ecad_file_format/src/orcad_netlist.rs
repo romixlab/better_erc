@@ -1,4 +1,5 @@
 use crate::netlist::{Net, Netlist, Node};
+use crate::{Designator, NetName, PinId};
 use anyhow::{Error, Result};
 use pest::Parser;
 use pest_derive::Parser;
@@ -50,7 +51,10 @@ pub fn load_orcad_netlist(path: &PathBuf) -> Result<Netlist> {
                                 }
                             }
                             if let (Some(part_ref), Some(part_pin)) = (part_ref, part_pin) {
-                                nodes.insert(Node { part_ref, part_pin });
+                                nodes.insert(Node {
+                                    designator: Designator(part_ref),
+                                    pin_id: PinId(part_pin),
+                                });
                             }
                         }
                         _ => {}
@@ -58,7 +62,7 @@ pub fn load_orcad_netlist(path: &PathBuf) -> Result<Netlist> {
                 }
                 if let Some(net_name) = net_name {
                     // TODO: Emit warning if replaces existing net?
-                    nets.insert(net_name, Net { nodes });
+                    nets.insert(NetName(net_name), Net { nodes });
                 }
             }
             Rule::EOI => {}
@@ -78,20 +82,20 @@ mod tests {
             load_orcad_netlist(&PathBuf::from("test_input/netlist_orcad_pstxnet.dat")).unwrap();
         assert_eq!(netlist.nets.len(), 3);
         assert_eq!(
-            netlist.nets.get("TOUCH_INT_N"),
+            netlist.nets.get(&NetName("TOUCH_INT_N".into())),
             Some(&Net {
                 nodes: [
                     Node {
-                        part_ref: "R610".to_string(),
-                        part_pin: "2".to_string()
+                        designator: Designator("R610".to_string()),
+                        pin_id: PinId("2".to_string())
                     },
                     Node {
-                        part_ref: "Q34".to_string(),
-                        part_pin: "3".to_string()
+                        designator: Designator("Q34".to_string()),
+                        pin_id: PinId("3".to_string())
                     },
                     Node {
-                        part_ref: "R636".to_string(),
-                        part_pin: "1".to_string()
+                        designator: Designator("R636".to_string()),
+                        pin_id: PinId("1".to_string())
                     }
                 ]
                 .into(),

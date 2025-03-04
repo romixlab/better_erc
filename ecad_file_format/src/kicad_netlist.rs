@@ -1,4 +1,5 @@
 use crate::netlist::{Net, Netlist, Node};
+use crate::{Designator, NetName, PinId};
 use anyhow::Result;
 use serde::de::SeqAccess;
 use serde::ser::SerializeSeq;
@@ -35,8 +36,8 @@ pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
                 } => {
                     // TODO: emit warning if empty ref or pin
                     net.nodes.insert(Node {
-                        part_ref: r#ref.unwrap_or_default(),
-                        part_pin: pin.unwrap_or_default(),
+                        designator: Designator(r#ref.unwrap_or_default()),
+                        pin_id: PinId(pin.unwrap_or_default()),
                     });
                 }
             }
@@ -45,6 +46,7 @@ pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
         if net_name.is_empty() {
             continue;
         }
+        let net_name = NetName(net_name);
         if nets.contains_key(&net_name) {
             continue;
         }
@@ -288,16 +290,16 @@ mod tests {
             Some(&Net {
                 nodes: [
                     Node {
-                        part_ref: "R21".to_string(),
-                        part_pin: "2".to_string()
+                        designator: "R21".to_string(),
+                        pin_id: "2".to_string()
                     },
                     Node {
-                        part_ref: "R29".to_string(),
-                        part_pin: "2".to_string()
+                        designator: "R29".to_string(),
+                        pin_id: "2".to_string()
                     },
                     Node {
-                        part_ref: "U2".to_string(),
-                        part_pin: "11".to_string()
+                        designator: "U2".to_string(),
+                        pin_id: "11".to_string()
                     }
                 ]
                 .into(),

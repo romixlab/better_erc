@@ -1,10 +1,11 @@
+use crate::{Designator, NetName, PinId, PinName};
 use std::collections::{HashMap, HashSet};
 use std::fmt::{Display, Formatter};
 
 #[derive(Debug)]
 pub struct Netlist {
-    pub parts: HashMap<String, Part>,
-    pub nets: HashMap<String, Net>,
+    pub parts: HashMap<Designator, Part>,
+    pub nets: HashMap<NetName, Net>,
 }
 
 #[derive(Debug)]
@@ -13,7 +14,7 @@ pub struct Part {
     pub description: String,
     pub footprints: Vec<String>,
     pub fields: HashMap<String, String>,
-    pub pins: HashMap<String, Pin>,
+    pub pins: HashMap<PinName, Pin>,
     pub banks: HashMap<String, Bank>,
 }
 
@@ -24,9 +25,8 @@ pub struct Net {
 
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub struct Node {
-    pub part_ref: String,
-    pub part_pin: String,
-    // pub pin_type: PinType,
+    pub designator: Designator,
+    pub pin_id: PinId,
 }
 
 #[derive(Debug)]
@@ -100,7 +100,7 @@ impl Display for Netlist {
         for (net_name, net) in self.nets.iter() {
             write!(f, "Net: \"{net_name}\": ")?;
             for (idx, node) in net.nodes.iter().enumerate() {
-                write!(f, "{}.{}", node.part_ref, node.part_pin)?;
+                write!(f, "{}.{}", node.designator, node.pin_id)?;
                 if idx < net.nodes.len() - 1 {
                     write!(f, " + ")?;
                 }

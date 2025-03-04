@@ -1,12 +1,10 @@
+use crate::Designator;
 use crate::csv_util::{
     MINIMUM_PNP_COLUMNS_REQUIRED, POSSIBLE_PNP_COLUMN_NAMES, determine_separator, find_header_row,
 };
 use anyhow::{Error, Result};
 use std::collections::HashMap;
 use std::path::Path;
-
-#[derive(Debug, Eq, PartialEq, Hash, Clone)]
-pub struct Designator(pub String);
 
 #[derive(Debug)]
 pub struct ComponentPosition {
