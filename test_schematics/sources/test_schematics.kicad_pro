@@ -394,6 +394,10 @@
     [
       "1284c5bc-3fac-4644-8578-1906a627e12f",
       "C20: I2C non standard pull-ups"
+    ],
+    [
+      "e8f54ccd-b547-40b2-8596-7ab8e82f53b9",
+      "C22: I2C Segments"
     ]
   ],
   "text_variables": {}
