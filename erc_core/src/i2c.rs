@@ -1,6 +1,7 @@
 use crate::util::collapse_underscores;
 use ecad_file_format::netlist::Netlist;
 use ecad_file_format::{Designator, DesignatorStartsWith, NetName};
+use std::collections::HashSet;
 
 #[derive(Debug)]
 pub struct I2cBus {
@@ -8,7 +9,7 @@ pub struct I2cBus {
     pub scl_net: NetName,
     pub sda_net: NetName,
     pub pull_up: Option<I2cPullUp>,
-    pub nodes: Vec<Designator>,
+    pub nodes: Vec<I2cNode>,
 }
 
 #[derive(Debug)]
@@ -53,11 +54,18 @@ fn find_i2c_buses(netlist: &Netlist) -> Vec<I2cBus> {
                     &[DesignatorStartsWith("R"), DesignatorStartsWith("R")],
                     &sda_net,
                 );
+                let mut connected_parts = netlist.any_net_parts(&[potential_scl, &sda_net]);
+                // TODO: Emit warning if more than one resistor chain found between I2C lines
                 let pull_up = if let Some(chain) = pull_up_chains.first() {
+                    let scl = chain[0].1.clone();
+                    let sda = chain[1].1.clone();
+                    // remove pull-ups from parts on I2C lines
+                    connected_parts.remove(&scl);
+                    connected_parts.remove(&sda);
                     Some(I2cPullUp {
-                        scl: chain[0].1.clone(),
-                        sda: chain[1].1.clone(),
-                        net: netlist.connected_net(&chain[1].1, &chain[1].0).unwrap(),
+                        scl,
+                        sda,
+                        net: netlist.pin_net(&chain[1].1, &chain[1].0).unwrap(),
                     })
                 } else {
                     None
@@ -67,12 +75,21 @@ fn find_i2c_buses(netlist: &Netlist) -> Vec<I2cBus> {
                     scl_net: potential_scl.clone(),
                     sda_net,
                     pull_up,
-                    nodes: vec![],
+                    nodes: parts_to_nodes(netlist, connected_parts),
                 });
             }
         }
     }
     buses
+}
+
+fn parts_to_nodes(_netlist: &Netlist, parts: HashSet<Designator>) -> Vec<I2cNode> {
+    // TODO: implement I2C parts to nodes
+    let mut nodes = vec![];
+    for part in parts {
+        nodes.push(I2cNode::Device(part));
+    }
+    nodes
 }
 
 #[cfg(test)]

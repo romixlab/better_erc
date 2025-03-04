@@ -218,7 +218,7 @@ impl Netlist {
     }
 
     /// Returns net name for the part's pin
-    pub fn connected_net(&self, part: &Designator, pin: &PinId) -> Option<NetName> {
+    pub fn pin_net(&self, part: &Designator, pin: &PinId) -> Option<NetName> {
         for (net_name, net) in &self.nets {
             for node in &net.nodes {
                 if node.designator == *part && node.pin_id == *pin {
@@ -227,6 +227,21 @@ impl Netlist {
             }
         }
         None
+    }
+
+    /// Returns list of parts that have connection to any of the specified nets
+    pub fn any_net_parts(&self, nets: &[&NetName]) -> HashSet<Designator> {
+        let mut parts = HashSet::new();
+        for net_name in nets {
+            if let Some(net) = self.nets.get(net_name) {
+                for node in &net.nodes {
+                    if !parts.contains(&node.designator) {
+                        parts.insert(node.designator.clone());
+                    }
+                }
+            }
+        }
+        parts
     }
 }
 
