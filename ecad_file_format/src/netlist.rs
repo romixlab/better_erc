@@ -3,7 +3,7 @@ use itertools::Itertools;
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt::{Display, Formatter};
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Netlist {
     pub parts: HashMap<Designator, Part>,
     pub nets: HashMap<NetName, Net>,
@@ -96,6 +96,15 @@ pub struct Bank {
 }
 
 impl Netlist {
+    /// Finds all the chains of parts connected in between two nets, each going through particular designators
+    ///
+    /// Example finding I2C pull up resistors:
+    /// ```
+    /// # use ecad_file_format::netlist::Netlist;
+    /// # use ecad_file_format::{DesignatorStartsWith, NetName};
+    /// let netlist = Netlist::default();
+    /// netlist.find_chains(&NetName("SCL".into()), &[DesignatorStartsWith("R"), DesignatorStartsWith("R")], &NetName("SDA".into()))
+    /// ```
     pub fn find_chains(
         &self,
         start: &NetName,
@@ -152,6 +161,7 @@ impl Netlist {
             .collect()
     }
 
+    /// Returns a set of pins that are reachable from any pins of 'start' part, except via its 'except_pin'
     pub fn find_connected_parts(
         &self,
         start: &Designator,
@@ -195,6 +205,7 @@ impl Netlist {
         false
     }
 
+    /// Returns true if two parts are connected via any of their pins
     pub fn are_parts_connected(&self, part_a: &Designator, part_b: &Designator) -> bool {
         for (_, net) in &self.nets {
             let contains_a = net.nodes.iter().any(|n| &n.designator == part_a);
@@ -206,6 +217,7 @@ impl Netlist {
         false
     }
 
+    /// Returns net name for the part's pin
     pub fn connected_net(&self, part: &Designator, pin: &PinId) -> Option<NetName> {
         for (net_name, net) in &self.nets {
             for node in &net.nodes {
