@@ -276,8 +276,26 @@ mod tests {
             I2cDiagnostic {
                 derived_name: "/I2C".to_string(),
                 kind: I2cDiagnosticKind::NonStandardPullUps {
-                    resistance: Ohm(1000.0, "1000Ω".into())
+                    resistance: Ohm(1000.0, "1000 Ω".into())
                 },
+            }
+        );
+    }
+
+    #[test]
+    fn able_to_find_non_equal_pull_ups() {
+        let path = get_netlist_path("i2c_non_equal_pull_ups");
+        let netlist = load_kicad_netlist(&path).unwrap();
+        let mut diagnostics = Vec::new();
+        let _buses = find_i2c_buses(&netlist, &mut diagnostics);
+        assert_eq!(
+            diagnostics[0],
+            I2cDiagnostic {
+                derived_name: "/I2C".to_string(),
+                kind: I2cDiagnosticKind::NonEqualPullUps {
+                    scl_resistance: Ohm(3000.0, "3000 Ω".into()),
+                    sda_resistance: Ohm(3300.0, "3300 Ω".into()),
+                }
             }
         );
     }

@@ -402,6 +402,10 @@
     [
       "f839a5f6-8daf-4ea7-83ef-589c1acb7b49",
       "C107: I2C multiple pull-ups"
+    ],
+    [
+      "4cfb0621-a35b-481b-a0c0-c81dca4e1433",
+      "C20: I2C non equal pull-ups"
     ]
   ],
   "text_variables": {}
