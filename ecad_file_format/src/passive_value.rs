@@ -1,15 +1,16 @@
 use anyhow::{Error, Result};
+use human_repr::HumanCount;
 use pest::Parser;
 use pest::iterators::Pair;
 use pest_derive::Parser;
+use std::fmt::{Debug, Formatter};
 
-#[derive(Debug, Clone)]
-pub struct Ohm(pub f32, pub String);
+#[derive(Clone, PartialEq)]
+pub struct Ohm(pub f32);
 
-// TODO: compare string representation instead
-impl PartialEq for Ohm {
-    fn eq(&self, other: &Self) -> bool {
-        self.0 == other.0
+impl Debug for Ohm {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0.human_count("Ω"))
     }
 }
 
@@ -37,7 +38,7 @@ pub fn parse_resistance_value(value: &str) -> Result<(Ohm, Option<PassiveValuePa
             let integer = pairs.next().unwrap().as_str();
             let (mul, warning) = parse_prefix_ohm(pairs.next())?;
             let val: f32 = integer.parse()?;
-            Ok((Ohm(val * mul, "".into()), warning))
+            Ok((Ohm(val * mul), warning))
         }
         Rule::r_letter_delimited => {
             let integer = pairs.next().unwrap().as_str();
@@ -46,7 +47,7 @@ pub fn parse_resistance_value(value: &str) -> Result<(Ohm, Option<PassiveValuePa
             let fractional = pairs.next().unwrap().as_str();
             let val = format!("{}.{}", integer, fractional);
             let val: f32 = val.parse()?;
-            Ok((Ohm(val * mul, "".into()), warning))
+            Ok((Ohm(val * mul), warning))
         }
         Rule::r_dot_delimited => {
             let integer = pairs.next().unwrap().as_str();
@@ -54,7 +55,7 @@ pub fn parse_resistance_value(value: &str) -> Result<(Ohm, Option<PassiveValuePa
             let (mul, warning) = parse_prefix_ohm(pairs.next())?;
             let val = format!("{}.{}", integer, fractional);
             let val: f32 = val.parse()?;
-            Ok((Ohm(val * mul, "".into()), warning))
+            Ok((Ohm(val * mul), warning))
         }
         _ => Err(Error::msg("Invalid rule")),
     }
@@ -98,6 +99,8 @@ fn parse_prefix_ohm(
 
 fn parse_r_prefix(pair: Pair<Rule>) -> Result<(f32, Option<PassiveValueParseWarning>)> {
     match pair.as_rule() {
+        Rule::micro => Ok((0.000001, None)),
+        Rule::milli => Ok((0.001, None)),
         Rule::r => {
             if pair.as_str() == "r" {
                 Ok((1.0, Some(PassiveValueParseWarning::SmallR)))
@@ -161,6 +164,14 @@ mod tests {
 
         let (v, w) = parse_resistance_value("5Ω").unwrap();
         assert_eq!(v.0, 5.0);
+        assert!(w.is_none());
+
+        let (v, w) = parse_resistance_value("1mΩ").unwrap();
+        assert_eq!(v.0, 0.001);
+        assert!(w.is_none());
+
+        let (v, w) = parse_resistance_value("1μΩ").unwrap();
+        assert_eq!(v.0, 0.000001);
         assert!(w.is_none());
 
         let (v, w) = parse_resistance_value(" 0 ").unwrap();

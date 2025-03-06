@@ -4,7 +4,9 @@ r_letter_delimited = { number ~ r_prefix ~ number }
 r_not_delimited = { number ~ prefix_ohm? }
 
 prefix_ohm = { space? ~ ((r_prefix ~ ohm) | r_prefix | ohm) }
-r_prefix = { r | kilo | mega | giga }
+r_prefix = { r | kilo | milli | mega | micro | giga }
+micro = { "u" | "μ" }
+milli = { "m" }
 r = { "r" | "R" } // warning if r is used
 kilo = { "k" | "K" }
 mega = { "M" }
