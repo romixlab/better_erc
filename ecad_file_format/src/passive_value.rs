@@ -3,7 +3,15 @@ use pest::Parser;
 use pest::iterators::Pair;
 use pest_derive::Parser;
 
+#[derive(Debug, Clone)]
 pub struct Ohm(pub f32, pub String);
+
+// TODO: compare string representation instead
+impl PartialEq for Ohm {
+    fn eq(&self, other: &Self) -> bool {
+        self.0 == other.0
+    }
+}
 
 #[derive(Debug)]
 pub enum PassiveValueParseWarning {

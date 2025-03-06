@@ -18,6 +18,7 @@ pub fn load_orcad_netlist(path: &PathBuf) -> Result<Netlist> {
         Err(e) => return Err(Error::msg(format!("{e}"))),
     };
     let parts = HashMap::new();
+    let components = HashMap::new();
     let mut nets = HashMap::new();
     // println!("{pairs:#?}");
     let rule_file = pairs.into_iter().next().unwrap();
@@ -69,7 +70,11 @@ pub fn load_orcad_netlist(path: &PathBuf) -> Result<Netlist> {
             _ => {}
         }
     }
-    Ok(Netlist { parts, nets })
+    Ok(Netlist {
+        parts,
+        nets,
+        components,
+    })
 }
 
 #[cfg(test)]

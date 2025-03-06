@@ -1,4 +1,4 @@
-use crate::netlist::{Net, Netlist, Node};
+use crate::netlist::{Component, Net, Netlist, Node};
 use crate::{Designator, NetName, PinId};
 use anyhow::Result;
 use serde::de::SeqAccess;
@@ -14,7 +14,82 @@ pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
     let netlist: KicadFileKind = serde_lexpr::from_str(&contents)?;
     let KicadFileKind::NetListExport(netlist) = netlist;
 
+    let mut components = HashMap::new();
+    for component in netlist.components {
+        let ComponentKind::Component(component_entry) = component;
+        let mut designator = String::new();
+        let mut value = String::new();
+        let mut description = String::new();
+        let mut fields = HashMap::new();
+        for entry in component_entry {
+            match entry {
+                ComponentEntry::Ref(d) => designator = d.unwrap_or_default(),
+                ComponentEntry::Value(v) => value = v.unwrap_or_default(),
+                ComponentEntry::Footprint(f) => {
+                    let f = f.unwrap_or_default();
+                    if !f.is_empty() {
+                        fields.insert("Footprint".into(), f);
+                    }
+                }
+                ComponentEntry::Fields(f) => {
+                    for field in f {
+                        let value = field.1.unwrap_or_default();
+                        if !value.is_empty() {
+                            fields.insert(field.0, value);
+                        }
+                    }
+                }
+                ComponentEntry::LibSource { .. } => {}
+                ComponentEntry::Property { name, value } => {
+                    let name = name.unwrap_or_default();
+                    let value = value.unwrap_or_default();
+                    if !name.is_empty() && !value.is_empty() {
+                        if name != "Sheetname" && name != "Sheetfile" {
+                            fields.insert(name, value);
+                        }
+                    }
+                }
+                ComponentEntry::SheetPath { .. } => {}
+                ComponentEntry::Tstamps(_) => {}
+                ComponentEntry::Datasheet(d) => {
+                    let d = d.unwrap_or_default();
+                    if !d.is_empty() {
+                        fields.insert("Datasheet".into(), d);
+                    }
+                }
+                ComponentEntry::Description(d) => description = d.unwrap_or_default(),
+            }
+        }
+        if designator.is_empty() {
+            // TODO: kicad: emit warning on empty designator?
+            continue;
+        }
+        components.insert(
+            Designator(designator),
+            Component {
+                value,
+                description,
+                fields,
+            },
+        );
+    }
+
     let parts = HashMap::new();
+    // for part in netlist.libparts {
+    //     let LibPartKind::LibPart(lib_part_pieces) = part;
+    //     for piece in lib_part_pieces {
+    //         match piece {
+    //             LibPartPiece::Lib(_) => {}
+    //             LibPartPiece::Part(_) => {}
+    //             LibPartPiece::Description(_) => {}
+    //             LibPartPiece::Docs(_) => {}
+    //             LibPartPiece::Footprints(_) => {}
+    //             LibPartPiece::Fields(_) => {}
+    //             LibPartPiece::Pins(_) => {}
+    //         }
+    //     }
+    // }
+
     let mut nets = HashMap::new();
     for net_kind in netlist.nets {
         let NetKind::Net(net_pieces) = net_kind;
@@ -52,7 +127,11 @@ pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
         }
         nets.insert(net_name, net);
     }
-    Ok(Netlist { parts, nets })
+    Ok(Netlist {
+        parts,
+        nets,
+        components,
+    })
 }
 
 #[derive(Debug, Serialize, Deserialize)]

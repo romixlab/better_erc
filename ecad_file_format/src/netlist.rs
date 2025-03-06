@@ -1,4 +1,6 @@
+use crate::passive_value::{Ohm, parse_resistance_value};
 use crate::{Designator, DesignatorStartsWith, NetName, PinId, PinName};
+use anyhow::{Error, Result};
 use itertools::Itertools;
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt::{Display, Formatter};
@@ -7,6 +9,7 @@ use std::fmt::{Display, Formatter};
 pub struct Netlist {
     pub parts: HashMap<Designator, Part>,
     pub nets: HashMap<NetName, Net>,
+    pub components: HashMap<Designator, Component>,
 }
 
 #[derive(Debug)]
@@ -17,6 +20,13 @@ pub struct Part {
     pub fields: HashMap<String, String>,
     pub pins: HashMap<PinName, Pin>,
     pub banks: HashMap<String, Bank>,
+}
+
+#[derive(Debug)]
+pub struct Component {
+    pub value: String,
+    pub description: String,
+    pub fields: HashMap<String, String>,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone)]
@@ -242,6 +252,22 @@ impl Netlist {
             }
         }
         parts
+    }
+
+    pub fn resistance(&self, designator: &Designator) -> Result<Ohm> {
+        if !designator.0.starts_with('R') {
+            return Err(Error::msg("{designator} is not a resistor"));
+        }
+        if let Some(component) = &self.components.get(designator) {
+            if component.value.is_empty() {
+                Err(Error::msg("{designator} has no value"))
+            } else {
+                let val = parse_resistance_value(component.value.as_str())?;
+                Ok(val.0)
+            }
+        } else {
+            Err(Error::msg("{designator} not found"))
+        }
     }
 }
 
