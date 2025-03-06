@@ -398,6 +398,10 @@
     [
       "e8f54ccd-b547-40b2-8596-7ab8e82f53b9",
       "C22: I2C Segments"
+    ],
+    [
+      "f839a5f6-8daf-4ea7-83ef-589c1acb7b49",
+      "C107: I2C multiple pull-ups"
     ]
   ],
   "text_variables": {}

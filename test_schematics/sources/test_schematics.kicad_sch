@@ -116,6 +116,43 @@
 			)
 		)
 	)
+	(sheet
+		(at 13.97 39.37)
+		(size 49.53 3.81)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "f839a5f6-8daf-4ea7-83ef-589c1acb7b49")
+		(property "Sheetname" "C107: I2C multiple pull-ups"
+			(at 15.24 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "i2c_multiple_pull_ups.kicad_sch"
+			(at 13.97 43.7646 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "test_schematics"
+				(path "/f327a4b6-22d9-4671-bd1f-2c46b703509e"
+					(page "5")
+				)
+			)
+		)
+	)
 	(sheet_instances
 		(path "/"
 			(page "1")

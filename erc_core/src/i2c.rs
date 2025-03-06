@@ -16,7 +16,7 @@ pub struct I2cBus {
 pub struct I2cPullUp {
     pub scl: Designator,
     pub sda: Designator,
-    pub net: NetName,
+    pub v_net: NetName,
 }
 
 #[derive(Debug)]
@@ -35,52 +35,116 @@ pub enum I2cNode {
     },
 }
 
-fn find_i2c_buses(netlist: &Netlist) -> Vec<I2cBus> {
+#[derive(Debug)]
+pub enum I2cDiagnosticKind {
+    RedundantPullUps {
+        redundant_pull_ups: HashSet<Designator>,
+    },
+    NonStandardPullUps {
+        resistance: f32,
+    },
+}
+
+#[derive(Debug)]
+pub struct I2cDiagnostic {
+    pub derived_name: String,
+    pub kind: I2cDiagnosticKind,
+}
+
+fn find_i2c_buses(netlist: &Netlist, diagnostics: &mut Vec<I2cDiagnostic>) -> Vec<I2cBus> {
     let mut buses = vec![];
-    for potential_scl in netlist.nets.keys() {
-        if let Some(scl_start) = potential_scl.0.find("SCL") {
-            let prefix = &potential_scl.0[..scl_start];
-            let suffix = if scl_start + 3 < potential_scl.len() {
-                &potential_scl.0[(scl_start + 3)..]
+    for scl_net in netlist.nets.keys() {
+        if let Some(scl_start) = scl_net.0.find("SCL") {
+            let prefix = &scl_net.0[..scl_start];
+            let suffix = if scl_start + 3 < scl_net.len() {
+                &scl_net.0[(scl_start + 3)..]
             } else {
                 ""
             };
             let sda_net = NetName(format!("{}SDA{}", prefix, suffix));
-            if netlist.nets.keys().any(|k| k == &sda_net) {
-                let derived_name =
-                    collapse_underscores(format!("{}I2C{}", prefix, suffix).as_str());
-                let pull_up_chains = netlist.find_chains(
-                    potential_scl,
-                    &[DesignatorStartsWith("R"), DesignatorStartsWith("R")],
-                    &sda_net,
-                );
-                let mut connected_parts = netlist.any_net_parts(&[potential_scl, &sda_net]);
-                // TODO: Emit warning if more than one resistor chain found between I2C lines
-                let pull_up = if let Some(chain) = pull_up_chains.first() {
-                    let scl = chain[0].1.clone();
-                    let sda = chain[1].1.clone();
-                    // remove pull-ups from parts on I2C lines
-                    connected_parts.remove(&scl);
-                    connected_parts.remove(&sda);
-                    Some(I2cPullUp {
-                        scl,
-                        sda,
-                        net: netlist.pin_net(&chain[1].1, &chain[1].0).unwrap(),
-                    })
-                } else {
-                    None
-                };
-                buses.push(I2cBus {
-                    derived_name,
-                    scl_net: potential_scl.clone(),
-                    sda_net,
-                    pull_up,
-                    nodes: parts_to_nodes(netlist, connected_parts),
-                });
+            if !netlist.nets.keys().any(|k| k == &sda_net) {
+                continue;
             }
+            let derived_name = collapse_underscores(format!("{}I2C{}", prefix, suffix).as_str());
+            let mut pull_up_chains = netlist.find_chains(
+                scl_net,
+                &[DesignatorStartsWith("R"), DesignatorStartsWith("R")],
+                &sda_net,
+            );
+            let mut connected_parts = netlist.any_net_parts(&[scl_net, &sda_net]);
+            let pull_up = if let Some(chain) = pull_up_chains.pop() {
+                let scl_pull_up = chain[0].1.clone();
+                let sda_pull_up = chain[1].1.clone();
+                let v_net = netlist.pin_net(&chain[1].1, &chain[1].0).unwrap();
+                let pull_up = I2cPullUp {
+                    scl: scl_pull_up,
+                    sda: sda_pull_up,
+                    v_net,
+                };
+                // remove pull-ups from parts on I2C lines
+                connected_parts.remove(&pull_up.scl);
+                connected_parts.remove(&pull_up.sda);
+                // TODO: look in respect to any power net instead
+                look_for_redundant_pull_ups(
+                    netlist,
+                    diagnostics,
+                    scl_net,
+                    &sda_net,
+                    &derived_name,
+                    &mut connected_parts,
+                    &pull_up,
+                );
+                Some(pull_up)
+            } else {
+                None
+            };
+            buses.push(I2cBus {
+                derived_name,
+                scl_net: scl_net.clone(),
+                sda_net,
+                pull_up,
+                nodes: parts_to_nodes(netlist, connected_parts),
+            });
         }
     }
     buses
+}
+
+fn look_for_redundant_pull_ups(
+    netlist: &Netlist,
+    diagnostics: &mut Vec<I2cDiagnostic>,
+    scl_net: &NetName,
+    sda_net: &NetName,
+    derived_name: &String,
+    connected_parts: &mut HashSet<Designator>,
+    pull_up: &I2cPullUp,
+) {
+    // find redundant pull-ups
+    let mut redundant_chains =
+        netlist.find_chains(scl_net, &[DesignatorStartsWith("R")], &pull_up.v_net);
+    redundant_chains.extend(netlist.find_chains(
+        &sda_net,
+        &[DesignatorStartsWith("R")],
+        &pull_up.v_net,
+    ));
+    redundant_chains.retain(|c| {
+        !c.iter()
+            .any(|(_, d)| d == &pull_up.scl || d == &pull_up.sda)
+    });
+    // remove redundant pull-ups from connected parts as well as they are already accounted for
+    let mut redundant_pull_ups = HashSet::new();
+    for c in redundant_chains {
+        for (_, d) in c {
+            connected_parts.remove(&d);
+            redundant_pull_ups.insert(d);
+        }
+    }
+    if !redundant_pull_ups.is_empty() {
+        diagnostics.push(I2cDiagnostic {
+            derived_name: derived_name.clone(),
+            kind: I2cDiagnosticKind::RedundantPullUps { redundant_pull_ups },
+        })
+    }
 }
 
 fn parts_to_nodes(_netlist: &Netlist, parts: HashSet<Designator>) -> Vec<I2cNode> {
@@ -94,7 +158,7 @@ fn parts_to_nodes(_netlist: &Netlist, parts: HashSet<Designator>) -> Vec<I2cNode
 
 #[cfg(test)]
 mod tests {
-    use crate::i2c::find_i2c_buses;
+    use super::*;
     use ecad_file_format::kicad_netlist::load_kicad_netlist;
     use generate_netlists::get_netlist_path;
 
@@ -103,7 +167,8 @@ mod tests {
         let path = get_netlist_path("i2c_segments");
         let netlist = load_kicad_netlist(&path).unwrap();
         // println!("{:#?}", netlist);
-        let buses = find_i2c_buses(&netlist);
+        let mut diagnostics = Vec::new();
+        let buses = find_i2c_buses(&netlist, &mut diagnostics);
         println!("buses: {buses:#?}");
         // let chains = netlist.find_chains(
         //     &NetName("/SCL1_3V3".into()),
@@ -124,5 +189,36 @@ mod tests {
         let path = get_netlist_path("i2c_no_pull_ups");
         let netlist = load_kicad_netlist(&path).unwrap();
         println!("{:#?}", netlist);
+    }
+
+    #[test]
+    fn able_to_find_multiple_i2c_pull_ups() {
+        let path = get_netlist_path("i2c_multiple_pull_ups");
+        let netlist = load_kicad_netlist(&path).unwrap();
+        let mut diagnostics = Vec::new();
+        let buses = find_i2c_buses(&netlist, &mut diagnostics);
+
+        let i2c1_1v8_bus = buses
+            .iter()
+            .find(|b| b.derived_name == "/I2C1_1V8")
+            .unwrap();
+        let pull_up = i2c1_1v8_bus.pull_up.as_ref().unwrap();
+        let diagnostic = diagnostics
+            .iter()
+            .find(|d| d.derived_name == "/I2C1_1V8")
+            .unwrap();
+        let I2cDiagnosticKind::RedundantPullUps { redundant_pull_ups } = &diagnostic.kind else {
+            panic!("Wrong diagnostic kind");
+        };
+        // Since there are multiple combinations and HashSet, it is non-deterministic which ones will be picked
+        let mut expected_redundant_pull_ups = ["R507", "R508", "R509", "R510", "R511"]
+            .map(|d| Designator(d.into()))
+            .into_iter()
+            .collect::<HashSet<_>>();
+        expected_redundant_pull_ups.remove(&pull_up.scl);
+        expected_redundant_pull_ups.remove(&pull_up.sda);
+        assert_eq!(&expected_redundant_pull_ups, redundant_pull_ups);
+
+        // println!("diagnostics: {:?}", diagnostics);
     }
 }
