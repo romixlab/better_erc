@@ -73,3 +73,17 @@ impl PinId {
         self.0.len()
     }
 }
+
+impl Designator {
+    pub fn is_resistor(&self) -> bool {
+        self.0.starts_with('R')
+    }
+
+    pub fn is_capacitor(&self) -> bool {
+        self.0.starts_with('C')
+    }
+
+    pub fn is_inductor(&self) -> bool {
+        self.0.starts_with('L')
+    }
+}
