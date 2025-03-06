@@ -265,6 +265,7 @@ enum NetPieceKind {
 mod tests {
     use super::{DesignPiece, KicadFileKind, load_kicad_netlist};
     use crate::netlist::{Net, Node};
+    use crate::{Designator, NetName, PinId};
     use std::fs::read_to_string;
     use std::path::PathBuf;
 
@@ -286,20 +287,20 @@ mod tests {
         let netlist = load_kicad_netlist(&PathBuf::from("test_input/netlist_kicad.net")).unwrap();
         assert_eq!(netlist.nets.len(), 4);
         assert_eq!(
-            netlist.nets.get("/Eth/RXD0"),
+            netlist.nets.get(&NetName("/Eth/RXD0".into())),
             Some(&Net {
                 nodes: [
                     Node {
-                        designator: "R21".to_string(),
-                        pin_id: "2".to_string()
+                        designator: Designator("R21".to_string()),
+                        pin_id: PinId("2".to_string())
                     },
                     Node {
-                        designator: "R29".to_string(),
-                        pin_id: "2".to_string()
+                        designator: Designator("R29".to_string()),
+                        pin_id: PinId("2".to_string())
                     },
                     Node {
-                        designator: "U2".to_string(),
-                        pin_id: "11".to_string()
+                        designator: Designator("U2".to_string()),
+                        pin_id: PinId("11".to_string())
                     }
                 ]
                 .into(),

@@ -2,6 +2,7 @@ mod csv_util;
 pub mod kicad_netlist;
 pub mod netlist;
 pub mod orcad_netlist;
+pub mod passive_value;
 pub mod pnp;
 mod wirelist;
 

@@ -1,0 +1,18 @@
+resistance = _{ silent_space? ~ (r_dot_delimited | r_letter_delimited | r_not_delimited) ~ silent_space? ~ EOI }
+r_dot_delimited = { number ~ dot ~ number ~ prefix_ohm? }
+r_letter_delimited = { number ~ r_prefix ~ number }
+r_not_delimited = { number ~ prefix_ohm? }
+
+prefix_ohm = { space? ~ ((r_prefix ~ ohm) | r_prefix | ohm) }
+r_prefix = { r | kilo | mega | giga }
+r = { "r" | "R" } // warning if r is used
+kilo = { "k" | "K" }
+mega = { "M" }
+giga = { "G" }
+ohm = { "Ω" | "R" } // warning if Ω used as R as in (5KR or 5MR)
+dot = _{ "." }
+
+space = { " "+ } // warning if more than one space is used
+silent_space = _{ " "* }
+
+number = { ASCII_DIGIT+ }
