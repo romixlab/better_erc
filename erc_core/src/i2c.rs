@@ -2,7 +2,7 @@ use crate::util::collapse_underscores;
 use ecad_file_format::netlist::Netlist;
 use ecad_file_format::passive_value::Ohm;
 use ecad_file_format::{Designator, DesignatorStartsWith, NetName};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug)]
 pub struct I2cBus {
@@ -23,17 +23,24 @@ pub struct I2cPullUp {
 #[derive(Debug)]
 pub enum I2cNode {
     Device(Designator),
-    VoltageTranslator(Designator),
+    VoltageTranslator {
+        part: Designator,
+        other_side: String,
+    },
     VoltageTranslatorDiscrete {
         scl_fet: Designator,
         sda_fet: Designator,
+        other_side: String,
     },
     Connector(Designator),
     /// 0R, net tie, solder tie
     Tie {
         scl_tie: Designator,
         sda_tie: Designator,
+        other_side: String,
     },
+    TestPoint(Designator),
+    Unknown(Designator),
 }
 
 #[derive(Debug, PartialEq)]
@@ -50,6 +57,13 @@ pub enum I2cDiagnosticKind {
     NonEqualPullUps {
         scl_resistance: Ohm,
         sda_resistance: Ohm,
+    },
+    TieTooHighValue {
+        resistance: Ohm,
+        other_side: String,
+    },
+    UnknownNode {
+        designator: Designator,
     },
 }
 
@@ -76,38 +90,15 @@ fn find_i2c_buses(netlist: &Netlist, diagnostics: &mut Vec<I2cDiagnostic>) -> Ve
             continue;
         }
         let derived_name = collapse_underscores(format!("{}I2C{}", prefix, suffix).as_str());
-        let mut pull_up_chains = netlist.find_chains(
-            scl_net,
-            &[DesignatorStartsWith("R"), DesignatorStartsWith("R")],
-            &sda_net,
-        );
         let mut connected_parts = netlist.any_net_parts(&[scl_net, &sda_net]);
-        let pull_up = if let Some(chain) = pull_up_chains.pop() {
-            let scl_pull_up = chain[0].1.clone();
-            let sda_pull_up = chain[1].1.clone();
-            let v_net = netlist.pin_net(&chain[1].1, &chain[1].0).unwrap();
-            let pull_up = I2cPullUp {
-                scl: scl_pull_up,
-                sda: sda_pull_up,
-                v_net,
-            };
-            // remove pull-ups from parts on I2C lines
-            connected_parts.remove(&pull_up.scl);
-            connected_parts.remove(&pull_up.sda);
-            // TODO: look in respect to any power net instead
-            look_for_redundant_pull_ups(
-                netlist,
-                diagnostics,
-                scl_net,
-                &sda_net,
-                &derived_name,
-                &mut connected_parts,
-                &pull_up,
-            );
-            Some(pull_up)
-        } else {
-            None
-        };
+        let pull_up = find_pull_ups(
+            netlist,
+            diagnostics,
+            scl_net,
+            &sda_net,
+            &derived_name,
+            &mut connected_parts,
+        );
         buses.push(I2cBus {
             derived_name,
             scl_net: scl_net.clone(),
@@ -117,7 +108,50 @@ fn find_i2c_buses(netlist: &Netlist, diagnostics: &mut Vec<I2cDiagnostic>) -> Ve
         });
     }
     look_for_non_standard_pull_ups(netlist, &buses, diagnostics);
+    look_for_bus_interconnects(netlist, &mut buses, diagnostics);
     buses
+}
+
+fn find_pull_ups(
+    netlist: &Netlist,
+    diagnostics: &mut Vec<I2cDiagnostic>,
+    scl_net: &NetName,
+    sda_net: &NetName,
+    derived_name: &String,
+    mut connected_parts: &mut HashSet<Designator>,
+) -> Option<I2cPullUp> {
+    let mut pull_up_chains = netlist.find_chains(
+        scl_net,
+        &[DesignatorStartsWith("R"), DesignatorStartsWith("R")],
+        &sda_net,
+    );
+    let pull_up = if let Some(chain) = pull_up_chains.pop() {
+        let scl_pull_up = chain[0].1.clone();
+        let sda_pull_up = chain[1].1.clone();
+        let v_net = netlist.pin_net(&chain[1].1, &chain[1].0).unwrap();
+        let pull_up = I2cPullUp {
+            scl: scl_pull_up,
+            sda: sda_pull_up,
+            v_net,
+        };
+        // remove pull-ups from parts on I2C lines
+        connected_parts.remove(&pull_up.scl);
+        connected_parts.remove(&pull_up.sda);
+        // TODO: look in respect to any power net instead
+        look_for_redundant_pull_ups(
+            netlist,
+            diagnostics,
+            scl_net,
+            &sda_net,
+            &derived_name,
+            &mut connected_parts,
+            &pull_up,
+        );
+        Some(pull_up)
+    } else {
+        None
+    };
+    pull_up
 }
 
 fn look_for_redundant_pull_ups(
@@ -224,9 +258,257 @@ fn parts_to_nodes(_netlist: &Netlist, parts: HashSet<Designator>) -> Vec<I2cNode
     // TODO: implement I2C parts to nodes
     let mut nodes = vec![];
     for part in parts {
-        nodes.push(I2cNode::Device(part));
+        if part.0.starts_with('J') {
+            nodes.push(I2cNode::Connector(part));
+        } else if part.0.starts_with("TP") {
+            nodes.push(I2cNode::TestPoint(part));
+        } else {
+            nodes.push(I2cNode::Unknown(part));
+        }
     }
     nodes
+}
+
+impl I2cNode {
+    fn mentions_part(&self, designator: &Designator) -> bool {
+        match self {
+            I2cNode::VoltageTranslatorDiscrete {
+                scl_fet, sda_fet, ..
+            } => scl_fet == designator || sda_fet == designator,
+            I2cNode::Tie {
+                scl_tie, sda_tie, ..
+            } => scl_tie == designator || sda_tie == designator,
+            _ => false,
+        }
+    }
+}
+
+fn look_for_bus_interconnects(
+    netlist: &Netlist,
+    buses: &mut Vec<I2cBus>,
+    diagnostics: &mut Vec<I2cDiagnostic>,
+) {
+    let mut modifications: HashMap<String, Vec<I2cNode>> = HashMap::new();
+    let mut create_buses: Vec<I2cBus> = vec![];
+    for bus in buses.iter() {
+        for node in &bus.nodes {
+            let I2cNode::Unknown(designator) = &node else {
+                continue;
+            };
+            if modifications
+                .values()
+                .any(|m| m.iter().any(|n| n.mentions_part(designator)))
+            {
+                continue;
+            }
+            if designator.is_resistor() || designator.is_transistor() {
+                let nets = netlist.part_nets(designator);
+                let is_scl = nets.iter().any(|n| n == &bus.scl_net);
+                let other_side = if is_scl {
+                    nets.iter().find(|n| *n != &bus.scl_net)
+                } else {
+                    nets.iter().find(|n| *n != &bus.sda_net)
+                };
+                let Some(other_side) = other_side else {
+                    // shouldn't happen
+                    continue;
+                };
+                let complementary_net = if is_scl { &bus.sda_net } else { &bus.scl_net };
+                let other_bus = buses
+                    .iter()
+                    .find(|b| b.scl_net == *other_side || b.sda_net == *other_side);
+                if let Some(other_bus) = other_bus {
+                    let other_complementary_net = if is_scl {
+                        &other_bus.sda_net
+                    } else {
+                        &other_bus.scl_net
+                    };
+                    let goes_through = if designator.is_resistor() { "R" } else { "Q" };
+                    let complementary_part = netlist.find_chains(
+                        other_complementary_net,
+                        &[DesignatorStartsWith(goes_through)],
+                        complementary_net,
+                    );
+                    if let Some(complementary_part) = complementary_part.first() {
+                        if let Some(p) = complementary_part.first() {
+                            let complementary_part = &p.1;
+                            if designator.is_resistor() {
+                                modifications
+                                    .entry(bus.derived_name.clone())
+                                    .or_default()
+                                    .push(I2cNode::Tie {
+                                        scl_tie: designator.clone(),
+                                        sda_tie: complementary_part.clone(),
+                                        other_side: other_bus.derived_name.clone(),
+                                    });
+                                modifications
+                                    .entry(other_bus.derived_name.clone())
+                                    .or_default()
+                                    .push(I2cNode::Tie {
+                                        scl_tie: designator.clone(),
+                                        sda_tie: complementary_part.clone(),
+                                        other_side: bus.derived_name.clone(),
+                                    });
+                                check_tie_resistance(
+                                    netlist,
+                                    diagnostics,
+                                    bus.derived_name.as_str(),
+                                    designator,
+                                    other_bus.derived_name.as_str(),
+                                    complementary_part,
+                                );
+                            } else {
+                                modifications
+                                    .entry(bus.derived_name.clone())
+                                    .or_default()
+                                    .push(I2cNode::VoltageTranslatorDiscrete {
+                                        scl_fet: designator.clone(),
+                                        sda_fet: complementary_part.clone(),
+                                        other_side: other_bus.derived_name.clone(),
+                                    });
+                                modifications
+                                    .entry(other_bus.derived_name.clone())
+                                    .or_default()
+                                    .push(I2cNode::VoltageTranslatorDiscrete {
+                                        scl_fet: designator.clone(),
+                                        sda_fet: complementary_part.clone(),
+                                        other_side: bus.derived_name.clone(),
+                                    });
+                            }
+                        }
+                    }
+                } else {
+                    // other side might be an IC or connector connected through 0R with unnamed nets
+                    // find parts on the other side
+                    let mut other_side_parts = netlist.any_net_parts(&[other_side]);
+                    other_side_parts.remove(designator);
+                    // println!("other_side: {other_side:?}, parts: {other_side_parts:?}");
+                    let mut potential_targets = vec![];
+                    // find other resistors or transistors in this bus connected to one of found parts
+                    for node in &bus.nodes {
+                        let I2cNode::Unknown(complementary_part) = &node else {
+                            continue;
+                        };
+                        if complementary_part == designator {
+                            continue;
+                        }
+                        if !complementary_part.is_resistor() && !complementary_part.is_transistor()
+                        {
+                            continue;
+                        }
+                        for other_part in &other_side_parts {
+                            if netlist.are_parts_connected(complementary_part, other_part) {
+                                potential_targets
+                                    .push((other_part.clone(), complementary_part.clone()));
+                            }
+                        }
+                    }
+                    // println!(
+                    //     "other_side: {other_side:?} potential_targets: {:?}",
+                    //     potential_targets
+                    // );
+                    if potential_targets.len() == 1 {
+                        let (target, complementary_part) = potential_targets.pop().unwrap();
+                        let adhoc_name = format!("{}_to_{}", bus.derived_name, target.0);
+                        let other_part_nets = netlist.part_nets(&complementary_part);
+                        let other_side_complementary_net = other_part_nets
+                            .iter()
+                            .find(|n| *n != complementary_net)
+                            .unwrap()
+                            .clone();
+                        let (scl_net, sda_net) = if is_scl {
+                            (other_side.clone(), other_side_complementary_net)
+                        } else {
+                            (other_side_complementary_net, other_side.clone())
+                        };
+                        let mut connected_parts = netlist.any_net_parts(&[&scl_net, &sda_net]);
+                        let pull_up = find_pull_ups(
+                            netlist,
+                            diagnostics,
+                            &scl_net,
+                            &sda_net,
+                            &adhoc_name,
+                            &mut connected_parts,
+                        );
+                        create_buses.push(I2cBus {
+                            derived_name: adhoc_name.clone(),
+                            scl_net,
+                            sda_net,
+                            pull_up,
+                            nodes: parts_to_nodes(netlist, connected_parts),
+                        });
+                        if designator.is_resistor() {
+                            check_tie_resistance(
+                                netlist,
+                                diagnostics,
+                                bus.derived_name.as_str(),
+                                designator,
+                                adhoc_name.as_str(),
+                                &complementary_part,
+                            );
+                        }
+                        modifications
+                            .entry(bus.derived_name.clone())
+                            .or_default()
+                            .push(I2cNode::Tie {
+                                scl_tie: designator.clone(),
+                                sda_tie: complementary_part.clone(),
+                                other_side: adhoc_name.clone(),
+                            });
+                        modifications
+                            .entry(adhoc_name)
+                            .or_default()
+                            .push(I2cNode::Tie {
+                                scl_tie: designator.clone(),
+                                sda_tie: complementary_part.clone(),
+                                other_side: bus.derived_name.clone(),
+                            });
+                    }
+                }
+            }
+        }
+    }
+    // println!("create buses: {create_buses:?}");
+    for create_bus in create_buses {
+        buses.push(create_bus);
+    }
+    // println!("modifications: {modifications:?}");
+    for (to_bus, add_node) in modifications {
+        let Some(bus) = buses.iter_mut().find(|bus| bus.derived_name == to_bus) else {
+            continue;
+        };
+        for node in add_node {
+            bus.nodes.retain(|n| {
+                if let I2cNode::Unknown(d) = n {
+                    !node.mentions_part(d)
+                } else {
+                    true
+                }
+            });
+            bus.nodes.push(node);
+        }
+    }
+}
+
+fn check_tie_resistance(
+    netlist: &Netlist,
+    diagnostics: &mut Vec<I2cDiagnostic>,
+    bus_name: &str,
+    scl_tie: &Designator,
+    other_side: &str,
+    sda_tie: &Designator,
+) {
+    let scl_tie_resistance = netlist.resistance(scl_tie).unwrap_or(Ohm(0.0));
+    let sda_tie_resistance = netlist.resistance(sda_tie).unwrap_or(Ohm(0.0));
+    if scl_tie_resistance.0 > 100.0 || sda_tie_resistance.0 > 100.0 {
+        diagnostics.push(I2cDiagnostic {
+            derived_name: bus_name.to_string(),
+            kind: I2cDiagnosticKind::TieTooHighValue {
+                resistance: Ohm(scl_tie_resistance.0.max(sda_tie_resistance.0)),
+                other_side: other_side.to_string(),
+            },
+        });
+    }
 }
 
 #[cfg(test)]
@@ -239,22 +521,11 @@ mod tests {
     fn able_to_recognize_i2c_bus_segments() {
         let path = get_netlist_path("i2c_segments");
         let netlist = load_kicad_netlist(&path).unwrap();
-        println!("{:#?}", netlist);
-        // let mut diagnostics = Vec::new();
-        // let buses = find_i2c_buses(&netlist, &mut diagnostics);
-        // println!("buses: {buses:#?}");
-        // let chains = netlist.find_chains(
-        //     &NetName("/SCL1_3V3".into()),
-        //     &[DesignatorStartsWith("R"), DesignatorStartsWith("R")],
-        //     &NetName("/SDA1_3V3".into()),
-        // );
-        // println!("{:?}", chains);
-        // let paths = netlist.find_connected_parts(
-        //     &Designator("Q1".into()),
-        //     &PinId("3".into()),
-        //     DesignatorStartsWith("R"),
-        // );
-        // println!("{:?}", paths);
+        // println!("{:#?}", netlist);
+        let mut diagnostics = Vec::new();
+        let buses = find_i2c_buses(&netlist, &mut diagnostics);
+        println!("buses: {buses:#?}");
+        println!("diagnostics: {diagnostics:#?}");
     }
 
     #[test]
@@ -271,7 +542,6 @@ mod tests {
         let netlist = load_kicad_netlist(&path).unwrap();
         let mut diagnostics = Vec::new();
         let _buses = find_i2c_buses(&netlist, &mut diagnostics);
-        println!("{:#?}", diagnostics);
         assert_eq!(
             diagnostics[0],
             I2cDiagnostic {
@@ -328,7 +598,5 @@ mod tests {
         expected_redundant_pull_ups.remove(&pull_up.scl);
         expected_redundant_pull_ups.remove(&pull_up.sda);
         assert_eq!(&expected_redundant_pull_ups, redundant_pull_ups);
-
-        // println!("diagnostics: {:?}", diagnostics);
     }
 }

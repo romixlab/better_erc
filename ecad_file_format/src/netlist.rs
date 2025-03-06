@@ -254,6 +254,19 @@ impl Netlist {
         parts
     }
 
+    /// Returns list of nets part is connected to
+    pub fn part_nets(&self, part: &Designator) -> Vec<NetName> {
+        let mut nets = vec![];
+        for (net_name, net) in &self.nets {
+            for node in &net.nodes {
+                if node.designator == *part {
+                    nets.push(net_name.clone());
+                }
+            }
+        }
+        nets
+    }
+
     pub fn resistance(&self, designator: &Designator) -> Result<Ohm> {
         if !designator.0.starts_with('R') {
             return Err(Error::msg("{designator} is not a resistor"));

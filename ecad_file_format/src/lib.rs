@@ -86,4 +86,8 @@ impl Designator {
     pub fn is_inductor(&self) -> bool {
         self.0.starts_with('L')
     }
+
+    pub fn is_transistor(&self) -> bool {
+        self.0.starts_with('Q')
+    }
 }

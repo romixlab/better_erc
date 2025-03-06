@@ -1923,6 +1923,18 @@
 		(color 0 0 0 0)
 		(uuid "dbaf7a1b-6023-453c-af46-7db8fce0ecea")
 	)
+	(junction
+		(at 181.61 266.7)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e3d3aac1-88b0-4079-923f-3f3f5b88b28f")
+	)
+	(junction
+		(at 171.45 264.16)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "efdffbac-8a2a-4ab4-a683-2fc3cb2f6705")
+	)
 	(wire
 		(pts
 			(xy 177.8 201.93) (xy 175.26 201.93)
@@ -1945,7 +1957,7 @@
 	)
 	(wire
 		(pts
-			(xy 180.34 271.78) (xy 180.34 275.59)
+			(xy 203.2 271.78) (xy 203.2 275.59)
 		)
 		(stroke
 			(width 0)
@@ -2082,6 +2094,16 @@
 			(type default)
 		)
 		(uuid "1754bdaf-e950-45bd-8f84-3fd232782ece")
+	)
+	(wire
+		(pts
+			(xy 171.45 250.19) (xy 171.45 252.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "18e2a51f-4b38-4736-a30c-5bd3187f367c")
 	)
 	(wire
 		(pts
@@ -2485,6 +2507,16 @@
 	)
 	(wire
 		(pts
+			(xy 181.61 260.35) (xy 181.61 266.7)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7475af8c-5dd8-4b9e-aa68-a3488415d146")
+	)
+	(wire
+		(pts
 			(xy 198.12 217.17) (xy 213.36 217.17)
 		)
 		(stroke
@@ -2585,13 +2617,23 @@
 	)
 	(wire
 		(pts
-			(xy 156.21 266.7) (xy 167.64 266.7)
+			(xy 156.21 266.7) (xy 181.61 266.7)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "838759d2-2941-4dec-9d71-3b3b38468d0b")
+	)
+	(wire
+		(pts
+			(xy 181.61 250.19) (xy 181.61 252.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "83bdd37f-7808-4851-8b02-d9a0c7d0fa2d")
 	)
 	(wire
 		(pts
@@ -2745,6 +2787,16 @@
 	)
 	(wire
 		(pts
+			(xy 171.45 264.16) (xy 156.21 264.16)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a9cf6a26-763c-446b-822f-c12cf5b73a4d")
+	)
+	(wire
+		(pts
 			(xy 69.85 93.98) (xy 127 93.98)
 		)
 		(stroke
@@ -2785,7 +2837,7 @@
 	)
 	(wire
 		(pts
-			(xy 167.64 264.16) (xy 156.21 264.16)
+			(xy 190.5 264.16) (xy 171.45 264.16)
 		)
 		(stroke
 			(width 0)
@@ -2835,7 +2887,17 @@
 	)
 	(wire
 		(pts
-			(xy 180.34 250.19) (xy 180.34 254)
+			(xy 171.45 260.35) (xy 171.45 264.16)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b63c3c0b-9ddc-4f26-b6cb-f2c22a8c89b3")
+	)
+	(wire
+		(pts
+			(xy 203.2 250.19) (xy 203.2 254)
 		)
 		(stroke
 			(width 0)
@@ -3142,6 +3204,16 @@
 			(type default)
 		)
 		(uuid "faede1bf-1c99-4e60-935a-2a3fd5843dd3")
+	)
+	(wire
+		(pts
+			(xy 181.61 266.7) (xy 190.5 266.7)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fb75f210-742a-4497-a13e-5a8dcee94d08")
 	)
 	(wire
 		(pts
@@ -3474,7 +3546,7 @@
 	)
 	(symbol
 		(lib_id "Interface_Expansion:PCA9536DP")
-		(at 180.34 261.62 0)
+		(at 203.2 261.62 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3483,7 +3555,7 @@
 		(fields_autoplaced yes)
 		(uuid "0aa8cbb2-6a1e-4cfa-bdd3-9568fbf29177")
 		(property "Reference" "U408"
-			(at 182.5341 251.46 0)
+			(at 205.3941 251.46 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3492,7 +3564,7 @@
 			)
 		)
 		(property "Value" "PCA9536DP"
-			(at 182.5341 254 0)
+			(at 205.3941 254 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3501,7 +3573,7 @@
 			)
 		)
 		(property "Footprint" "Package_SO:TSSOP-8_3x3mm_P0.65mm"
-			(at 205.74 270.51 0)
+			(at 228.6 270.51 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3510,7 +3582,7 @@
 			)
 		)
 		(property "Datasheet" "http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf"
-			(at 175.26 304.8 0)
+			(at 198.12 304.8 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3519,7 +3591,7 @@
 			)
 		)
 		(property "Description" "4-bit I2C-bus and SMBus IO port, TSSOP-8"
-			(at 180.34 261.62 0)
+			(at 203.2 261.62 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3918,7 +3990,7 @@
 	)
 	(symbol
 		(lib_id "power:VCC")
-		(at 180.34 250.19 0)
+		(at 203.2 250.19 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3927,7 +3999,7 @@
 		(fields_autoplaced yes)
 		(uuid "25eea94f-82c4-419f-8ce4-ead72043b869")
 		(property "Reference" "#PWR0429"
-			(at 180.34 254 0)
+			(at 203.2 254 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3936,7 +4008,7 @@
 			)
 		)
 		(property "Value" "VCC_3V3"
-			(at 180.34 245.11 0)
+			(at 203.2 245.11 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3944,7 +4016,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 180.34 250.19 0)
+			(at 203.2 250.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3953,7 +4025,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 180.34 250.19 0)
+			(at 203.2 250.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3962,7 +4034,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"VCC\""
-			(at 180.34 250.19 0)
+			(at 203.2 250.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3977,6 +4049,72 @@
 			(project "test_schematics"
 				(path "/f327a4b6-22d9-4671-bd1f-2c46b703509e/e8f54ccd-b547-40b2-8596-7ab8e82f53b9"
 					(reference "#PWR0429")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:VCC")
+		(at 181.61 250.19 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "26018b88-eedf-489a-82ad-82eee8e00e7d")
+		(property "Reference" "#PWR0432"
+			(at 181.61 254 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "VCC_3V3"
+			(at 181.61 245.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 181.61 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 181.61 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"VCC\""
+			(at 181.61 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "13102d0e-3b6c-497c-9809-dc89676b6551")
+		)
+		(instances
+			(project "test_schematics"
+				(path "/f327a4b6-22d9-4671-bd1f-2c46b703509e/e8f54ccd-b547-40b2-8596-7ab8e82f53b9"
+					(reference "#PWR0432")
 					(unit 1)
 				)
 			)
@@ -5472,6 +5610,76 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 181.61 256.54 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "7ffb8bfd-c0da-4a18-83b8-32fa93e4f8ff")
+		(property "Reference" "R416"
+			(at 184.15 255.2699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "4K7"
+			(at 184.15 257.8099 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 179.832 256.54 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 181.61 256.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 181.61 256.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "0d522f38-b3aa-454a-a7cb-15a58d66bce4")
+		)
+		(pin "1"
+			(uuid "980171df-cdaa-4bb3-8fa7-832771ec50bd")
+		)
+		(instances
+			(project "test_schematics"
+				(path "/f327a4b6-22d9-4671-bd1f-2c46b703509e/e8f54ccd-b547-40b2-8596-7ab8e82f53b9"
+					(reference "R416")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:VCC")
 		(at 259.08 203.2 0)
 		(unit 1)
@@ -6011,6 +6219,76 @@
 	)
 	(symbol
 		(lib_id "Device:R")
+		(at 171.45 256.54 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "a4776743-b5c4-45f6-bcc1-a45c93867582")
+		(property "Reference" "R415"
+			(at 173.99 255.2699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "4K7"
+			(at 173.99 257.8099 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 169.672 256.54 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 171.45 256.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 171.45 256.54 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "3b5a0441-078f-490a-af3a-a6a5ede128dd")
+		)
+		(pin "1"
+			(uuid "c65ef73d-b475-4d57-88e0-9596097efe09")
+		)
+		(instances
+			(project "test_schematics"
+				(path "/f327a4b6-22d9-4671-bd1f-2c46b703509e/e8f54ccd-b547-40b2-8596-7ab8e82f53b9"
+					(reference "R415")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
 		(at 152.4 266.7 90)
 		(unit 1)
 		(exclude_from_sim no)
@@ -6026,7 +6304,7 @@
 				)
 			)
 		)
-		(property "Value" "10R"
+		(property "Value" "1K"
 			(at 152.4 266.7 90)
 			(effects
 				(font
@@ -6700,7 +6978,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 180.34 275.59 0)
+		(at 203.2 275.59 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -6709,7 +6987,7 @@
 		(fields_autoplaced yes)
 		(uuid "d6b38719-6eac-4f8d-a5b6-1751675d549c")
 		(property "Reference" "#PWR0430"
-			(at 180.34 281.94 0)
+			(at 203.2 281.94 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6718,7 +6996,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 180.34 280.67 0)
+			(at 203.2 280.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6726,7 +7004,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 180.34 275.59 0)
+			(at 203.2 275.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6735,7 +7013,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 180.34 275.59 0)
+			(at 203.2 275.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6744,7 +7022,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 180.34 275.59 0)
+			(at 203.2 275.59 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6759,6 +7037,72 @@
 			(project "test_schematics"
 				(path "/f327a4b6-22d9-4671-bd1f-2c46b703509e/e8f54ccd-b547-40b2-8596-7ab8e82f53b9"
 					(reference "#PWR0430")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:VCC")
+		(at 171.45 250.19 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d98e5168-33b5-455d-844d-5863e9bc7880")
+		(property "Reference" "#PWR0431"
+			(at 171.45 254 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "VCC_3V3"
+			(at 171.45 245.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 171.45 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 171.45 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"VCC\""
+			(at 171.45 250.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ed27901d-2b6f-4c87-97ae-bc17787d1cf2")
+		)
+		(instances
+			(project "test_schematics"
+				(path "/f327a4b6-22d9-4671-bd1f-2c46b703509e/e8f54ccd-b547-40b2-8596-7ab8e82f53b9"
+					(reference "#PWR0431")
 					(unit 1)
 				)
 			)
