@@ -5,6 +5,7 @@ use subprocess::Exec;
 
 pub fn generate_netlists() {
     let generated_netlists_folder = get_parent_folder("generated_netlists").unwrap();
+    let generated_pictures_folder = get_parent_folder("generated_pictures").unwrap();
     println!("generated netlists folder: {:?}", generated_netlists_folder);
     let kicad_cli_path = kicad_cli_path();
 
@@ -24,6 +25,7 @@ pub fn generate_netlists() {
         let sha256 = hex::encode(&hasher.finalize());
 
         let cached_path = generated_netlists_folder.join(format!("{file_name}_{sha256}.net"));
+        // let image_path = generated_pictures_folder.join(format!("{file_name}.svg"));
         // println!("cached path: {:?}", cached_path);
         let file_exists = fs::exists(&cached_path).unwrap();
         if file_exists {
@@ -40,7 +42,19 @@ pub fn generate_netlists() {
                     sch_path.to_str().unwrap(),
                 ])
                 .join();
-            println!("Generating netlist for: {file_name}: {status:?}");
+            let im_status = Exec::cmd(kicad_cli_path)
+                .args(&[
+                    "sch",
+                    "export",
+                    "svg",
+                    "--exclude-drawing-sheet",
+                    "--no-background-color",
+                    "-o",
+                    generated_pictures_folder.to_str().unwrap(),
+                    sch_path.to_str().unwrap(),
+                ])
+                .join();
+            println!("Generated netlist and picture for: {file_name}: {status:?} {im_status:?}");
         }
     }
 
