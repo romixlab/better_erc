@@ -16,6 +16,7 @@ pub enum StyleDiagnosticKind {
     NonStandardValue(PassiveValueParseWarning),
     NoValue,
     CalculateLaterValue,
+    MosfetPinsNotNamed,
 }
 
 pub fn check_style(netlist: &Netlist, diagnostics: &mut Vec<StyleDiagnostic>) {
@@ -57,6 +58,50 @@ pub fn check_style(netlist: &Netlist, diagnostics: &mut Vec<StyleDiagnostic>) {
                         kind: StyleDiagnosticKind::WrongValue(format!("{}", e)),
                     });
                 }
+            }
+        }
+    }
+    check_for_transistors_to_have_pin_names(netlist, diagnostics);
+}
+
+fn check_for_transistors_to_have_pin_names(
+    netlist: &Netlist,
+    diagnostics: &mut Vec<StyleDiagnostic>,
+) {
+    for (designator, component) in &netlist.components {
+        if !designator.is_transistor() {
+            continue;
+        }
+        let Some(lib_part) = netlist.lib_parts.get(&component.lib_source) else {
+            continue;
+        };
+        let d = lib_part.description.to_lowercase();
+        if d.contains("mosfet")
+            || d.contains("p-channel")
+            || d.contains("n-channel")
+            || d.contains("n channel")
+            || d.contains("p channel")
+        {
+            let mut gate_found = false;
+            let mut source_found = false;
+            let mut drain_found = false;
+            for pin in lib_part.pins.values() {
+                if pin.name.0 == "G" || pin.name.0 == "GATE" {
+                    gate_found = true;
+                }
+                if pin.name.0 == "S" || pin.name.0 == "SOURCE" {
+                    source_found = true;
+                }
+                if pin.name.0 == "D" || pin.name.0 == "DRAIN" {
+                    drain_found = true;
+                }
+            }
+            if !(gate_found && source_found && drain_found) {
+                diagnostics.push(StyleDiagnostic {
+                    severity: Severity::Warning,
+                    designator: designator.clone(),
+                    kind: StyleDiagnosticKind::MosfetPinsNotNamed,
+                });
             }
         }
     }
