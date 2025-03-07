@@ -1,5 +1,7 @@
-use crate::netlist::{Component, Net, Netlist, Node};
-use crate::{Designator, NetName, PinId};
+use crate::netlist::{
+    Component, LibName, LibPart, LibPartName, Net, Netlist, Node, Pin, PinMode, PinType,
+};
+use crate::{Designator, NetName, PinId, PinName};
 use anyhow::Result;
 use serde::de::SeqAccess;
 use serde::ser::SerializeSeq;
@@ -21,6 +23,7 @@ pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
         let mut value = String::new();
         let mut description = String::new();
         let mut fields = HashMap::new();
+        let mut lib_source = (LibName(String::new()), LibPartName(String::new()));
         for entry in component_entry {
             match entry {
                 ComponentEntry::Ref(d) => designator = d.unwrap_or_default(),
@@ -39,7 +42,16 @@ pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
                         }
                     }
                 }
-                ComponentEntry::LibSource { .. } => {}
+                ComponentEntry::LibSource {
+                    lib,
+                    part,
+                    description: _,
+                } => {
+                    lib_source = (
+                        LibName(lib.unwrap_or_default()),
+                        LibPartName(part.unwrap_or_default()),
+                    );
+                }
                 ComponentEntry::Property { name, value } => {
                     let name = name.unwrap_or_default();
                     let value = value.unwrap_or_default();
@@ -69,26 +81,75 @@ pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
             Component {
                 value,
                 description,
+                lib_source,
                 fields,
             },
         );
     }
 
-    let parts = HashMap::new();
-    // for part in netlist.libparts {
-    //     let LibPartKind::LibPart(lib_part_pieces) = part;
-    //     for piece in lib_part_pieces {
-    //         match piece {
-    //             LibPartPiece::Lib(_) => {}
-    //             LibPartPiece::Part(_) => {}
-    //             LibPartPiece::Description(_) => {}
-    //             LibPartPiece::Docs(_) => {}
-    //             LibPartPiece::Footprints(_) => {}
-    //             LibPartPiece::Fields(_) => {}
-    //             LibPartPiece::Pins(_) => {}
-    //         }
-    //     }
-    // }
+    let mut lib_parts = HashMap::new();
+    for part in netlist.libparts {
+        let mut lib_source = (LibName(String::new()), LibPartName(String::new()));
+        let mut description = String::new();
+        let mut pins = HashMap::new();
+        let mut fields = HashMap::new();
+        let mut footprints = vec![];
+        let LibPartKind::LibPart(lib_part_pieces) = part;
+        for piece in lib_part_pieces {
+            match piece {
+                LibPartPiece::Lib(lib) => lib_source.0 = LibName(lib.unwrap_or_default()),
+                LibPartPiece::Part(part) => lib_source.1 = LibPartName(part.unwrap_or_default()),
+                LibPartPiece::Description(d) => description = d.unwrap_or_default(),
+                LibPartPiece::Docs(_) => {}
+                LibPartPiece::Footprints(f) => {
+                    for footprint_kind in f {
+                        let FootprintKind::Footprint(footprint_name) = footprint_kind;
+                        let footprint_name = footprint_name.unwrap_or_default();
+                        if !footprint_name.is_empty() {
+                            footprints.push(footprint_name);
+                        }
+                    }
+                }
+                LibPartPiece::Fields(f) => {
+                    for field in f {
+                        let value = field.1.unwrap_or_default();
+                        if !value.is_empty() {
+                            fields.insert(field.0, value);
+                        }
+                    }
+                }
+                LibPartPiece::Pins(pin_kinds) => {
+                    for p in pin_kinds {
+                        let PinKind::Pin { num, name, r#type } = p;
+                        pins.insert(
+                            PinId(num.unwrap_or_default()),
+                            Pin {
+                                name: PinName(name.unwrap_or_default().to_uppercase()),
+                                default_mode: PinMode {
+                                    ty: PinType::DigitalInput, // TODO: Parse pin type
+                                    pull_up: None,
+                                    pull_down: None,
+                                    io_standard: None,
+                                },
+                                alternate_modes: Default::default(),
+                                bank_name: None,
+                            },
+                        );
+                    }
+                }
+            }
+        }
+        lib_parts.insert(
+            lib_source,
+            LibPart {
+                description,
+                footprints,
+                fields,
+                pins,
+                banks: HashMap::new(),
+            },
+        );
+    }
 
     let mut nets = HashMap::new();
     for net_kind in netlist.nets {
@@ -128,7 +189,7 @@ pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
         nets.insert(net_name, net);
     }
     Ok(Netlist {
-        parts,
+        lib_parts,
         nets,
         components,
     })

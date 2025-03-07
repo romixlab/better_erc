@@ -90,4 +90,8 @@ impl Designator {
     pub fn is_transistor(&self) -> bool {
         self.0.starts_with('Q')
     }
+
+    pub fn is_ic(&self) -> bool {
+        self.0.starts_with('U')
+    }
 }

@@ -7,18 +7,23 @@ use std::fmt::{Display, Formatter};
 
 #[derive(Debug, Default)]
 pub struct Netlist {
-    pub parts: HashMap<Designator, Part>,
+    pub lib_parts: HashMap<(LibName, LibPartName), LibPart>,
     pub nets: HashMap<NetName, Net>,
     pub components: HashMap<Designator, Component>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct LibName(pub String);
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct LibPartName(pub String);
+
 #[derive(Debug)]
-pub struct Part {
-    pub name: String,
+pub struct LibPart {
     pub description: String,
     pub footprints: Vec<String>,
     pub fields: HashMap<String, String>,
-    pub pins: HashMap<PinName, Pin>,
+    pub pins: HashMap<PinId, Pin>,
     pub banks: HashMap<String, Bank>,
 }
 
@@ -26,6 +31,7 @@ pub struct Part {
 pub struct Component {
     pub value: String,
     pub description: String,
+    pub lib_source: (LibName, LibPartName),
     pub fields: HashMap<String, String>,
 }
 
@@ -42,6 +48,7 @@ pub struct Node {
 
 #[derive(Debug)]
 pub struct Pin {
+    pub name: PinName,
     pub default_mode: PinMode,
     pub alternate_modes: HashMap<String, PinMode>,
     pub bank_name: Option<String>,
@@ -255,11 +262,42 @@ impl Netlist {
     }
 
     /// Returns list of nets part is connected to
-    pub fn part_nets(&self, part: &Designator) -> Vec<NetName> {
-        let mut nets = vec![];
+    pub fn part_nets(&self, part: &Designator) -> HashSet<NetName> {
+        let mut nets = HashSet::new();
         for (net_name, net) in &self.nets {
             for node in &net.nodes {
                 if node.designator == *part {
+                    nets.insert(net_name.clone());
+                }
+            }
+        }
+        nets
+    }
+
+    /// Returns list of nets part is connected to, excluding part pin with provided names
+    pub fn part_nets_exclude_pin_names(
+        &self,
+        part: &Designator,
+        exclude: &[&PinName],
+    ) -> Vec<NetName> {
+        let mut nets = vec![];
+        for (net_name, net) in &self.nets {
+            for node in &net.nodes {
+                if node.designator != *part {
+                    continue;
+                }
+
+                let Some(component) = self.components.get(&node.designator) else {
+                    continue;
+                };
+                let Some(lib_part) = self.lib_parts.get(&component.lib_source) else {
+                    continue;
+                };
+                let Some(pin) = lib_part.pins.get(&node.pin_id) else {
+                    continue;
+                };
+
+                if !exclude.contains(&&pin.name) {
                     nets.push(net_name.clone());
                 }
             }
@@ -286,7 +324,7 @@ impl Netlist {
 
 impl Display for Netlist {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "Parts: {:?}", self.parts)?;
+        writeln!(f, "Parts: {:?}", self.lib_parts)?;
         for (net_name, net) in self.nets.iter() {
             write!(f, "Net: \"{net_name}\": ")?;
             for (idx, node) in net.nodes.iter().enumerate() {

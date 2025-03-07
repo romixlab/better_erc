@@ -71,7 +71,7 @@ pub fn load_orcad_netlist(path: &PathBuf) -> Result<Netlist> {
         }
     }
     Ok(Netlist {
-        parts,
+        lib_parts: parts,
         nets,
         components,
     })
