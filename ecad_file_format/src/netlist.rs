@@ -33,6 +33,12 @@ pub struct Component {
     pub description: String,
     pub lib_source: (LibName, LibPartName),
     pub fields: HashMap<String, String>,
+    pub sections: Vec<ComponentSection>,
+}
+
+pub struct ComponentSection {
+    pub name: String,
+    pub page_number: Option<u32>,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone)]
@@ -52,13 +58,13 @@ pub struct Pin {
     pub default_mode: PinMode,
     pub alternate_modes: HashMap<String, PinMode>,
     pub bank_name: Option<String>,
+    pub section_name: Option<String>,
     // voltage thresholds vs bank voltage table
     // max sink/source current
     // max frequency
     // min/max voltage or from bank?
 }
 
-#[derive(Debug)]
 pub struct PinMode {
     pub ty: PinType,
     pub pull_up: Option<Pull>,
@@ -66,7 +72,7 @@ pub struct PinMode {
     pub io_standard: Option<IOStandard>, // pub quiescent current vs bank voltage table
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone)]
 pub enum PinType {
     DigitalInput,
     DigitalOutput,
@@ -77,6 +83,7 @@ pub enum PinType {
     PowerIn,
     PowerOut,
     PowerIO,
+    PowerUnspecified,
     OpenCollector,
     OpenEmitter,
     /// High, Low or High-Z
@@ -369,5 +376,30 @@ impl Display for Node {
 impl Debug for Node {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{self}")
+    }
+}
+
+impl Display for PinMode {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "PinMode(ty: {:?}, pull_up: {:?}, pull_down: {:?}, io_standard: {:?})",
+            self.ty, self.pull_up, self.pull_down, self.io_standard
+        )
+    }
+}
+impl Debug for PinMode {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{self}")
+    }
+}
+
+impl Debug for ComponentSection {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "ComponentSection('{}', page: {:?})",
+            self.name, self.page_number
+        )
     }
 }

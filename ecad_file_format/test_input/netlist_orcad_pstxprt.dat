@@ -1,0 +1,67 @@
+FILE_TYPE = EXPANDEDPARTLIST;
+{ Using PSTWRITER 17.4.0 d001Feb-26-2025 at 16:06:09 }
+DIRECTIVES
+ PST_VERSION='PST_HDL_CENTRIC_VERSION_0';
+ ROOT_DRAWING='PCBA_XX';
+ POST_TIME='Jan 17 2022 03:21:33';
+ SOURCE_TOOL='CAPTURE_WRITER';
+END_DIRECTIVES;
+
+PART_NAME
+ C1 'CAP_DETAILED_CAPC0603X33N_DISCRETE_10PF_CAP-00000266':;
+
+SECTION_NUMBER 1
+ '@PCBA_XX.SCHEMATIC1(SCH_1):INS11643525@CAPACITORS.CAP_DETAILED.NORMAL(CHIPS)':
+ C_PATH='@pcba_xx.schematic1(sch_1):ins11643525@capacitors.\cap_detailed.normal\(chips)',
+ P_PATH='@pcba_xx.schematic1(sch_1):page3_ins11643525@capacitors.\cap_detailed.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ U41 '74XX2G14_NEXPERIA_SOT886_IC_74LVC2G14_IC-00000054':;
+
+SECTION_NUMBER 1
+ '@PCBA_XX.SCHEMATIC1(SCH_1):INS16776559@INTEGRATED_CIRCUITS.74XX2G14A.NORMAL(CHIPS)':
+ C_PATH='@pcba_xx.schematic1(sch_1):ins16776559@integrated_circuits.\74xx2g14a.normal\(chips)',
+ P_PATH='@pcba_xx.schematic1(sch_1):page11_ins16776559@integrated_circuits.\74xx2g14a.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='A';
+
+SECTION_NUMBER 2
+ '@PCBA_XX.SCHEMATIC1(SCH_1):INS16776647@INTEGRATED_CIRCUITS.74XX2G14B.NORMAL(CHIPS)':
+ C_PATH='@pcba_xx.schematic1(sch_1):ins16776647@integrated_circuits.\74xx2g14b.normal\(chips)',
+ P_PATH='@pcba_xx.schematic1(sch_1):page11_ins16776647@integrated_circuits.\74xx2g14b.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='B';
+
+SECTION_NUMBER 3
+ '@PCBA_XX.SCHEMATIC1(SCH_1):INS16776709@INTEGRATED_CIRCUITS.74XX2G14C.NORMAL(CHIPS)':
+ C_PATH='@pcba_xx.schematic1(sch_1):ins16776709@integrated_circuits.\74xx2g14c.normal\(chips)',
+ P_PATH='@pcba_xx.schematic1(sch_1):page11_ins16776709@integrated_circuits.\74xx2g14c.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='C';
+
+PART_NAME
+ U8 'EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571':;
+
+SECTION_NUMBER 1
+ '@PCBA.SCHEMATIC1(SCH_1):INS14495905@INTEGRATED_CIRCUITS.EMMC_4_51_BGA153A.NORMAL(CHIPS)':
+ C_PATH='@pcba.schematic1(sch_1):ins14495905@integrated_circuits.\emmc_4_51_bga153a.normal\(chips)',
+ P_PATH='@pcba.schematic1(sch_1):page9_ins14495905@integrated_circuits.\emmc_4_51_bga153a.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='A';
+
+SECTION_NUMBER 2
+ '@PCBA.SCHEMATIC1(SCH_1):INS14495851@INTEGRATED_CIRCUITS.EMMC_4_51_BGA153B.NORMAL(CHIPS)':
+ C_PATH='@pcba.schematic1(sch_1):ins14495851@integrated_circuits.\emmc_4_51_bga153b.normal\(chips)',
+ P_PATH='@pcba.schematic1(sch_1):page9_ins14495851@integrated_circuits.\emmc_4_51_bga153b.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='B';
+
+SECTION_NUMBER 3
+ '@PCBA.SCHEMATIC1(SCH_1):INS14495969@INTEGRATED_CIRCUITS.EMMC_4_51_BGA153C.NORMAL(CHIPS)':
+ C_PATH='@pcba.schematic1(sch_1):ins14495969@integrated_circuits.\emmc_4_51_bga153c.normal\(chips)',
+ P_PATH='@pcba.schematic1(sch_1):page9_ins14495969@integrated_circuits.\emmc_4_51_bga153c.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='C';
+END.

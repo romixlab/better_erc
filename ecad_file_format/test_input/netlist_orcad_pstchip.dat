@@ -1,0 +1,63 @@
+FILE_TYPE=LIBRARY_PARTS;
+{ Using PSTWRITER 17.4.0 d001Feb-26-2025 at 16:06:09}
+primitive 'CAP_DETAILED_CAPC0603X33N_DISCRETE_10PF_CAP-00000266';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP_detailed';
+    JEDEC_TYPE='CAPC0603X33N';
+    CLASS='DISCRETE';
+    VALUE='10pF';
+    PART_NUMBER='CAP-00000266';
+  end_body;
+end_primitive;
+primitive 'CAP_DETAILED_CAPC0603X35N_DISCRETE_220NF_CAP-00000025';
+  pin
+    '1':
+      PIN_NUMBER='(1)';
+      PINUSE='UNSPEC';
+    '2':
+      PIN_NUMBER='(2)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='CAP_detailed';
+    JEDEC_TYPE='CAPC0603X35N';
+    CLASS='DISCRETE';
+    VALUE='220nF';
+    PART_NUMBER='CAP-00000025';
+  end_body;
+end_primitive;
+primitive 'EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571';
+  pin
+    'DAT0':
+      PIN_NUMBER='(A3,0,0)';
+      INPUT_LOAD='(*)';
+      OUTPUT_LOAD='(*)';
+      BIDIRECTIONAL='TRUE';
+    'RST_N':
+      PIN_NUMBER='(K5,0,0)';
+      INPUT_LOAD='(*)';
+    'VCCQ#C6':
+      PIN_NUMBER='(0,C6,0)';
+      PINUSE='POWER';
+    'NC_P14':
+      PIN_NUMBER='(0,0,P14)';
+      PINUSE='UNSPEC';
+  end_pin;
+  body
+    PART_NAME='eMMC_4_51_BGA153';
+    JEDEC_TYPE='BGA153N50P14X14_1150X1300X80';
+    CLASS='IC';
+    SWAP_INFO='(S1+S2+S3)';
+    VALUE='EMMC64G-TY29-GA5B-R';
+    PART_NUMBER='TMP-571';
+  end_body;
+end_primitive;
+END.

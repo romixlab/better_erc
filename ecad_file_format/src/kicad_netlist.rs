@@ -83,6 +83,7 @@ pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
                 description,
                 lib_source,
                 fields,
+                sections: vec![],
             },
         );
     }
@@ -133,6 +134,7 @@ pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
                                 },
                                 alternate_modes: Default::default(),
                                 bank_name: None,
+                                section_name: None,
                             },
                         );
                     }
