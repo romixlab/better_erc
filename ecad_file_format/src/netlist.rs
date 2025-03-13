@@ -3,7 +3,7 @@ use crate::{Designator, DesignatorStartsWith, NetName, PinId, PinName};
 use anyhow::{Error, Result};
 use itertools::Itertools;
 use std::collections::{HashMap, HashSet, VecDeque};
-use std::fmt::{Display, Formatter};
+use std::fmt::{Debug, Display, Formatter};
 
 #[derive(Debug, Default)]
 pub struct Netlist {
@@ -12,10 +12,10 @@ pub struct Netlist {
     pub components: HashMap<Designator, Component>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash)]
 pub struct LibName(pub String);
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash)]
 pub struct LibPartName(pub String);
 
 #[derive(Debug)]
@@ -40,7 +40,7 @@ pub struct Net {
     pub nodes: HashSet<Node>,
 }
 
-#[derive(Debug, PartialEq, Eq, Clone, Hash)]
+#[derive(PartialEq, Eq, Clone, Hash)]
 pub struct Node {
     pub designator: Designator,
     pub pin_id: PinId,
@@ -336,5 +336,38 @@ impl Display for Netlist {
             writeln!(f, "")?;
         }
         Ok(())
+    }
+}
+
+impl Display for LibName {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "LibName({})", self.0)
+    }
+}
+impl Debug for LibName {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{self}")
+    }
+}
+
+impl Display for LibPartName {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "LibPartName({})", self.0)
+    }
+}
+impl Debug for LibPartName {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{self}")
+    }
+}
+
+impl Display for Node {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Node({}.{})", self.designator, self.pin_id)
+    }
+}
+impl Debug for Node {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{self}")
     }
 }
