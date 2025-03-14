@@ -1,17 +1,17 @@
-use crate::netlist::{LibName, LibPart, LibPartName, Net, Netlist, Node};
+use crate::netlist::{Net, Netlist, Node};
 use crate::{Designator, NetName, PinId};
 use anyhow::{Error, Result};
 use pest::Parser;
 use pest_derive::Parser;
 use std::collections::{HashMap, HashSet};
 use std::fs::read_to_string;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 #[derive(Parser)]
 #[grammar = "grammar/orcad_capture_netlist.pest"]
 struct NetListParser;
 
-pub fn load_orcad_netlist(pstxnet_path: &PathBuf) -> Result<Netlist> {
+pub fn load_orcad_netlist(pstxnet_path: &Path) -> Result<Netlist> {
     let contents = read_to_string(pstxnet_path)?;
     let pstxprt_path = PathBuf::from(
         pstxnet_path

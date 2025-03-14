@@ -1,3 +1,4 @@
+use crate::netlist::PinType::Passive;
 use crate::netlist::{
     Component, LibName, LibPart, LibPartName, Net, Netlist, Node, Pin, PinMode, PinType,
 };
@@ -129,6 +130,17 @@ pub fn load_edif_netlist(path: &Path) -> Result<Netlist> {
                                         } else {
                                             fields.get("Comment").cloned().unwrap_or_default()
                                         };
+                                        let k = (
+                                            LibName("COMPONENT_LIB".into()),
+                                            LibPartName(lib_part_name.into()),
+                                        );
+                                        if let Some(footprint) = fields.get("Footprint") {
+                                            if !footprint.is_empty() {
+                                                if let Some(lib_part) = lib_parts.get_mut(&k) {
+                                                    lib_part.footprints.push(footprint.clone());
+                                                }
+                                            }
+                                        }
                                         components.insert(
                                             Designator(designator.into()),
                                             Component {
@@ -137,10 +149,7 @@ pub fn load_edif_netlist(path: &Path) -> Result<Netlist> {
                                                     .get("Description")
                                                     .cloned()
                                                     .unwrap_or_default(),
-                                                lib_source: (
-                                                    LibName("COMPONENT_LIB".into()),
-                                                    LibPartName(lib_part_name.into()),
-                                                ),
+                                                lib_source: k,
                                                 fields,
                                                 sections: vec![],
                                             },
@@ -226,12 +235,9 @@ mod tests {
 
     #[test]
     fn can_read_edif_netlist() {
-        // let path = PathBuf::from(
-        //     "/Users/roman/Downloads/test_projects/typec_sbu_serial_revb/typec_sbu_serial.NET.EDF",
-        // );
         let path = Path::new("test_input/netlist_altium_edif.edf");
         let netlist = load_edif_netlist(&path).unwrap();
-        // println!("{:#?}", netlist);
+        println!("{:#?}", netlist);
         let part = netlist
             .lib_parts
             .get(&(

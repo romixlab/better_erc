@@ -1,3 +1,4 @@
+mod altium_netlist;
 mod csv_util;
 mod edif_netlist;
 pub mod kicad_netlist;
@@ -8,6 +9,7 @@ pub mod pnp;
 mod text_util;
 mod wirelist;
 
+pub use altium_netlist::load_altium_netlist;
 pub use kicad_netlist::load_kicad_netlist;
 pub use orcad_netlist::load_orcad_netlist;
 pub use pnp::load_component_positions;

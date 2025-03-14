@@ -18,7 +18,7 @@ pub struct LibName(pub String);
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct LibPartName(pub String);
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct LibPart {
     pub description: String,
     pub footprints: Vec<String>,

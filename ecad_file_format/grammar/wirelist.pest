@@ -2,10 +2,11 @@ file = { SOI ~ "Wire List" ~ component_list ~ wire_list ~ EOI }
 
 component_list = ${ "<<< Component List >>>" ~ nl ~ component* }
 component      = ${
-    #part_number = string_space5 ~ space ~ #designator = string_space5 ~ space ~
+    component_name ~ maybe_space ~ #designator = string_space5 ~ space ~
     #footprint = string_space5 ~ nl
 }
-string_space5  = ${ (!(" "{5, } | nl) ~ ASCII)+ }
+component_name    = ${ (!(" "{5, } | nl) ~ ANY){1, 40} }
+string_space5  = ${ (!(" "{5, } | nl) ~ ANY)+ }
 space          = _{ " "+ }
 
 wire_list   = ${ "<<< Wire List >>>" ~ (!"[" ~ ASCII)+ ~ net* }

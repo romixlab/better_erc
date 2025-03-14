@@ -9,9 +9,9 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::collections::{HashMap, HashSet};
 use std::fmt;
 use std::fs::read_to_string;
-use std::path::PathBuf;
+use std::path::Path;
 
-pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
+pub fn load_kicad_netlist(path: &Path) -> Result<Netlist> {
     let contents = read_to_string(path)?;
     let netlist: KicadFileKind = serde_lexpr::from_str(&contents)?;
     let KicadFileKind::NetListExport(netlist) = netlist;
