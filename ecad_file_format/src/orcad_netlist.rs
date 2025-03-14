@@ -76,7 +76,13 @@ pub fn load_orcad_netlist(pstxnet_path: &PathBuf) -> Result<Netlist> {
                 }
                 if let Some(net_name) = net_name {
                     // TODO: Emit warning if replaces existing net?
-                    nets.insert(NetName(net_name), Net { nodes });
+                    nets.insert(
+                        NetName(net_name),
+                        Net {
+                            nodes,
+                            properties: HashMap::new(),
+                        },
+                    );
                 }
             }
             Rule::EOI => {}
@@ -366,6 +372,7 @@ mod tests {
                     }
                 ]
                 .into(),
+                properties: Default::default(),
             })
         );
         let mut found = false;

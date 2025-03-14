@@ -1,0 +1,119 @@
+(edif BoardName_PrjPcb
+  (edifVersion 2 0 0)
+  (edifLevel 0)
+  (keywordMap
+     (keywordLevel 0)
+  )
+  (status
+    (written
+      (timeStamp 2025 2 27 15 30 0)
+      (program "Altium Designer - EDIF For PCB"
+        (version "1.0.0")
+      )
+      (author "EDIF For PCB")
+    )
+  )
+
+  (library COMPONENT_LIB
+    (edifLevel 0)
+    (technology
+      (numberDefinition
+        (scale  1  1  (unit  distance))
+      )
+    )
+    (cell (rename DX07P024AJ1R1500_Symbol_1 "DX07P024AJ1R1500-Symbol-1")
+      (cellType GENERIC)
+      (view netListView
+        (viewType NETLIST)
+        (interface
+          (port A1  (direction INOUT))
+          (port A2  (direction INOUT))
+          (port S4  (direction INOUT))
+          (port S5  (direction INOUT))
+          (port S6  (direction INOUT))
+        )
+      )
+    )
+    (cell (rename CONN_2_3__6_ "CONN-2-3 (6)")
+      (cellType GENERIC)
+      (view netListView
+        (viewType NETLIST)
+        (interface
+          (port (rename &1 "1") (direction INOUT))
+          (port (rename &2 "2") (direction INOUT))
+          (port (rename &3 "3") (direction INOUT))
+          (port (rename &4 "4") (direction INOUT))
+          (port (rename &5 "5") (direction INOUT))
+          (port (rename &6 "6") (direction INOUT))
+        )
+      )
+    )
+  )
+  (library SHEET_LIB
+    (edifLevel 0)
+    (technology
+      (numberDefinition
+        (scale  1  1  (unit  distance))
+      )
+    )
+    (cell _02____Dumb_Breakout_SchDoc
+      (cellType generic)
+      (view netListView
+        (viewType netlist)
+        (interface
+        )
+        (contents
+          (Instance J1
+            (viewRef NetlistView
+              (cellRef DX07P024AJ1R1500_Symbol_1
+                (LibraryRef COMPONENT_LIB)
+              )
+            )
+            (Property Comment (String "DX07P024AJ1R1500" ))
+            (Property (rename Component_Kind "Component Kind") (String "Standard" ))
+            (Property PCB3D (String "" ))
+            (Property (rename Pin_Info "Pin Info") (String "" ))
+          )
+          (Instance J2
+            (viewRef NetlistView
+              (cellRef CONN_2_3__6_
+                (LibraryRef COMPONENT_LIB)
+              )
+            )
+            (Property Comment (String "95278-101A06LF" ))
+            (Property ChannelOffset (String "1" ))
+          )
+          (Net SBU2
+            (Joined 
+                (PortRef B8 (InstanceRef J1))
+                (PortRef &3 (InstanceRef J2))
+                (PortRef &5 (InstanceRef J4))
+                (PortRef &1 (InstanceRef SW4))
+                (PortRef &1 (InstanceRef SW5))
+            )
+          )
+          (Net SBU1
+            (Joined 
+                (PortRef A8 (InstanceRef J1))
+                (PortRef &1 (InstanceRef J2))
+                (PortRef &4 (InstanceRef J4))
+                (PortRef &3 (InstanceRef SW4))
+                (PortRef &3 (InstanceRef SW5))
+            )
+          )
+          (Net NetR13_1
+            (Joined 
+                (PortRef &1 (InstanceRef R13))
+                (PortRef &4 (InstanceRef SW4))
+            )
+          )
+       )
+     )
+   )
+  )
+  (design BoardName_PrjPcb
+    (cellRef _02_____SchDoc
+      (libraryRef SHEET_LIB)
+    )
+  )
+)

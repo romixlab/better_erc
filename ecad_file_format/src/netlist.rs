@@ -44,6 +44,7 @@ pub struct ComponentSection {
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub struct Net {
     pub nodes: HashSet<Node>,
+    pub properties: HashMap<String, String>,
 }
 
 #[derive(PartialEq, Eq, Clone, Hash)]

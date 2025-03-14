@@ -159,6 +159,7 @@ pub fn load_kicad_netlist(path: &PathBuf) -> Result<Netlist> {
         let mut net_name = String::new();
         let mut net = Net {
             nodes: HashSet::new(),
+            properties: HashMap::new(),
         };
         for net_piece in net_pieces {
             match net_piece {
@@ -446,6 +447,7 @@ mod tests {
                     }
                 ]
                 .into(),
+                properties: Default::default(),
             })
         )
     }

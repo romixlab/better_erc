@@ -1,9 +1,11 @@
 mod csv_util;
+mod edif_netlist;
 pub mod kicad_netlist;
 pub mod netlist;
 pub mod orcad_netlist;
 pub mod passive_value;
 pub mod pnp;
+mod text_util;
 mod wirelist;
 
 pub use kicad_netlist::load_kicad_netlist;
