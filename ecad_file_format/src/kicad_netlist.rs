@@ -121,17 +121,32 @@ pub fn load_kicad_netlist(path: &Path) -> Result<Netlist> {
                 }
                 LibPartPiece::Pins(pin_kinds) => {
                     for p in pin_kinds {
-                        let PinKind::Pin {
-                            num,
-                            name,
-                            r#type: _,
-                        } = p;
+                        let PinKind::Pin { num, name, r#type } = p;
+                        let ty = if let Some(ty) = r#type {
+                            match ty.as_str() {
+                                "input" => PinType::DigitalInput,
+                                "output" => PinType::DigitalOutput,
+                                "bidirectional" => PinType::DigitalIO,
+                                "tri_state" => PinType::TriState,
+                                "passive" => PinType::Passive,
+                                "free" => PinType::Unconnected,
+                                "unspecified" => PinType::Unspecified,
+                                "power_in" => PinType::PowerIn,
+                                "power_out" => PinType::PowerOut,
+                                "open_collector" => PinType::OpenCollector,
+                                "open_emitter" => PinType::OpenEmitter,
+                                "no_connect" => PinType::Unconnected,
+                                _ => PinType::Unspecified,
+                            }
+                        } else {
+                            PinType::Unspecified
+                        };
                         pins.insert(
                             PinId(num.unwrap_or_default()),
                             Pin {
                                 name: PinName(name.unwrap_or_default().to_uppercase()),
                                 default_mode: PinMode {
-                                    ty: PinType::DigitalInput, // TODO: Parse KiCad pin type
+                                    ty,
                                     pull_up: None,
                                     pull_down: None,
                                     io_standard: None,
