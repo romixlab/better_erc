@@ -5,7 +5,7 @@ use pest::iterators::Pair;
 use pest_derive::Parser;
 use std::fmt::{Debug, Formatter};
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, PartialOrd)]
 pub struct Ohm(pub f32);
 
 impl Debug for Ohm {

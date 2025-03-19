@@ -282,6 +282,13 @@ impl Netlist {
         nets
     }
 
+    /// Returns list of nets between two parts
+    pub fn parts_common_nets(&self, part_a: &Designator, part_b: &Designator) -> HashSet<NetName> {
+        let part_a_nets = self.part_nets(part_a);
+        let part_b_nets = self.part_nets(part_b);
+        part_a_nets.intersection(&part_b_nets).cloned().collect()
+    }
+
     /// Returns list of nets part is connected to, excluding part pin with provided names
     pub fn part_nets_exclude_pin_names(
         &self,
