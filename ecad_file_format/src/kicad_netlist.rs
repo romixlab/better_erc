@@ -121,13 +121,17 @@ pub fn load_kicad_netlist(path: &Path) -> Result<Netlist> {
                 }
                 LibPartPiece::Pins(pin_kinds) => {
                     for p in pin_kinds {
-                        let PinKind::Pin { num, name, r#type } = p;
+                        let PinKind::Pin {
+                            num,
+                            name,
+                            r#type: _,
+                        } = p;
                         pins.insert(
                             PinId(num.unwrap_or_default()),
                             Pin {
                                 name: PinName(name.unwrap_or_default().to_uppercase()),
                                 default_mode: PinMode {
-                                    ty: PinType::DigitalInput, // TODO: Parse pin type
+                                    ty: PinType::DigitalInput, // TODO: Parse KiCad pin type
                                     pull_up: None,
                                     pull_down: None,
                                     io_standard: None,

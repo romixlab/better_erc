@@ -112,10 +112,6 @@ mod tests {
     fn can_read_altium_wirelist_netlist() {
         let netlist =
             load_wirelist_netlist(Path::new("test_input/netlist_altium_wirelist.net")).unwrap();
-        // let netlist = load_wirelist_netlist(Path::new(
-        //     ,
-        // ))
-        // .unwrap();
         println!("{:#?}", netlist);
     }
 }

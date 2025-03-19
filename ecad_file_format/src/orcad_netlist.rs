@@ -255,7 +255,7 @@ mod lib_parts_parser {
 
 mod part_list_parser {
     use crate::Designator;
-    use crate::netlist::{Component, ComponentSection, LibName, LibPart, LibPartName};
+    use crate::netlist::{Component, ComponentSection, LibName, LibPartName};
     use anyhow::Error;
     use pest::Parser;
     use pest_derive::Parser;

@@ -1,4 +1,3 @@
-use crate::netlist::PinType::Passive;
 use crate::netlist::{
     Component, LibName, LibPart, LibPartName, Net, Netlist, Node, Pin, PinMode, PinType,
 };
@@ -8,7 +7,6 @@ use anyhow::{Error, Result};
 use pest::Parser;
 use pest::iterators::Pair;
 use pest_derive::Parser;
-use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use std::path::Path;
 
@@ -32,7 +30,7 @@ pub fn load_edif_netlist(path: &Path) -> Result<Netlist> {
         match p.as_rule() {
             Rule::board_name => {}
             Rule::item => {
-                let mut item = p.into_inner().next().unwrap();
+                let item = p.into_inner().next().unwrap();
                 match item.as_rule() {
                     Rule::library => {
                         let mut library = item.into_inner();

@@ -110,8 +110,7 @@ fn check_for_transistors_to_have_pin_names(
 #[cfg(test)]
 mod tests {
     use crate::style::check_style;
-    use ecad_file_format::load_kicad_netlist;
-    use std::path::PathBuf;
+    use std::path::Path;
 
     #[test]
     fn able_to_find_style_diagnostics() {
@@ -120,10 +119,21 @@ mod tests {
         // let path = PathBuf::from("/Users/roman/Downloads/test_projects/vb125_eth_fdcan_pro.net");
         // let path =
         //     PathBuf::from("/Users/roman/Downloads/test_projects/vb133_d600plus_control_board.net");
-        let path = PathBuf::from("/Users/roman/Downloads/test_projects/cannify_micro.net");
-        let netlist = load_kicad_netlist(&path).unwrap();
+        // let path = PathBuf::from("/Users/roman/Downloads/test_projects/cannify_micro.net");
+        // let netlist = ecad_file_format::load_kicad_netlist(&path).unwrap();
+        // let path = PathBuf::from("/Users/roman/Downloads/test_projects/c_a6/pstxnet.dat");
+        // let netlist = ecad_file_format::load_orcad_netlist(&path).unwrap();
+
+        let netlist = ecad_file_format::load_altium_netlist(Path::new("/Users/roman/Downloads/test_projects/typec_sbu_serial_revb/typec_sbu_serial.NET.EDF"), Path::new("/Users/roman/Downloads/test_projects/typec_sbu_serial_revb/typec_sbu_serial.NET")).unwrap();
+        println!("{:#?}", netlist);
+
         let mut diagnostics = Vec::new();
         check_style(&netlist, &mut diagnostics);
         println!("{diagnostics:#?}");
+
+        let mut diagnostics = Vec::new();
+        let buses = crate::i2c::find_i2c_buses(&netlist, &mut diagnostics);
+        println!("buses: {buses:#?}");
+        println!("diagnostics: {diagnostics:#?}");
     }
 }
