@@ -18,9 +18,6 @@ use std::fmt::{Debug, Display, Formatter};
 #[derive(Eq, PartialEq, Hash, Clone)]
 pub struct Designator(pub String);
 
-#[derive(Copy, Clone)]
-pub struct DesignatorStartsWith<'a>(pub &'a str);
-
 #[derive(Eq, PartialEq, Hash, Clone)]
 pub struct NetName(pub String);
 
@@ -108,7 +105,15 @@ impl Designator {
     }
 
     pub fn is_inductor(&self) -> bool {
-        self.0.starts_with('L')
+        if !self.0.starts_with('L') {
+            return false;
+        }
+        if let Some(c) = self.0.chars().skip(1).next() {
+            // ignore LEDx, LDx, etc
+            c.is_numeric()
+        } else {
+            true
+        }
     }
 
     pub fn is_transistor(&self) -> bool {

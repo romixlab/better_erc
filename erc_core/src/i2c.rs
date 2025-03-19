@@ -1,7 +1,7 @@
 use crate::util::collapse_underscores;
 use ecad_file_format::netlist::Netlist;
 use ecad_file_format::passive_value::Ohm;
-use ecad_file_format::{Designator, DesignatorStartsWith, NetName, PinName};
+use ecad_file_format::{Designator, NetName, PinName};
 use std::collections::{HashMap, HashSet};
 
 #[derive(Debug)]
@@ -82,7 +82,7 @@ pub struct I2cBuses {
     pub same_bus_segments: Vec<HashSet<String>>,
 }
 
-fn find_i2c_buses(netlist: &Netlist, diagnostics: &mut Vec<I2cDiagnostic>) -> I2cBuses {
+pub fn find_i2c_buses(netlist: &Netlist, diagnostics: &mut Vec<I2cDiagnostic>) -> I2cBuses {
     let mut buses = vec![];
     for scl_net in netlist.nets.keys() {
         let Some(scl_start) = scl_net.0.find("SCL") else {
@@ -141,9 +141,9 @@ fn find_pull_ups(
     derived_name: &String,
     mut connected_parts: &mut HashSet<Designator>,
 ) -> Option<I2cPullUp> {
-    let mut pull_up_chains = netlist.find_chains(
+    let mut pull_up_chains = netlist.find_net_chains(
         scl_net,
-        &[DesignatorStartsWith("R"), DesignatorStartsWith("R")],
+        &[Designator::is_resistor, Designator::is_resistor],
         &sda_net,
     );
     let pull_up = if let Some(chain) = pull_up_chains.pop() {
@@ -186,10 +186,10 @@ fn look_for_redundant_pull_ups(
 ) {
     // find redundant pull-ups
     let mut redundant_chains =
-        netlist.find_chains(scl_net, &[DesignatorStartsWith("R")], &pull_up.v_net);
-    redundant_chains.extend(netlist.find_chains(
+        netlist.find_net_chains(scl_net, &[Designator::is_resistor], &pull_up.v_net);
+    redundant_chains.extend(netlist.find_net_chains(
         &sda_net,
-        &[DesignatorStartsWith("R")],
+        &[Designator::is_resistor],
         &pull_up.v_net,
     ));
     redundant_chains.retain(|c| {
@@ -363,10 +363,14 @@ fn look_for_bus_interconnects(
                     } else {
                         &other_bus.scl_net
                     };
-                    let goes_through = if designator.is_resistor() { "R" } else { "Q" };
-                    let complementary_part = netlist.find_chains(
+                    let goes_through = if designator.is_resistor() {
+                        Designator::is_resistor
+                    } else {
+                        Designator::is_transistor
+                    };
+                    let complementary_part = netlist.find_net_chains(
                         other_complementary_net,
-                        &[DesignatorStartsWith(goes_through)],
+                        &[goes_through],
                         complementary_net,
                     );
                     if let Some(complementary_part) = complementary_part.first() {

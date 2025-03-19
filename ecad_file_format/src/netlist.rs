@@ -1,5 +1,5 @@
 use crate::passive_value::{Ohm, parse_resistance_value};
-use crate::{Designator, DesignatorStartsWith, NetName, PinId, PinName};
+use crate::{Designator, NetName, PinId, PinName};
 use anyhow::{Error, Result};
 use itertools::Itertools;
 use std::collections::{HashMap, HashSet, VecDeque};
@@ -126,14 +126,14 @@ impl Netlist {
     /// Example finding I2C pull up resistors:
     /// ```
     /// # use ecad_file_format::netlist::Netlist;
-    /// # use ecad_file_format::{DesignatorStartsWith, NetName};
-    /// let netlist = Netlist::default();
-    /// netlist.find_chains(&NetName("SCL".into()), &[DesignatorStartsWith("R"), DesignatorStartsWith("R")], &NetName("SDA".into()))
+    /// # use ecad_file_format::{Designator, NetName};
+    /// # let netlist = Netlist::default();
+    /// netlist.find_net_chains(&NetName("SCL".into()), &[Designator::is_resistor, Designator::is_resistor], &NetName("SDA".into()))
     /// ```
-    pub fn find_chains(
+    pub fn find_net_chains<F: Fn(&Designator) -> bool>(
         &self,
         start: &NetName,
-        goes_through: &[DesignatorStartsWith],
+        goes_through: &[F],
         end: &NetName,
     ) -> Vec<Vec<(PinId, Designator)>> {
         let mut goes_through = goes_through.iter().collect::<VecDeque<_>>();
@@ -146,7 +146,7 @@ impl Netlist {
         // find to which part.pin_id's 'start' net is connected
         let mut first_layer = HashSet::new();
         for node in &net.nodes {
-            if node.designator.0.starts_with(goes_through_first.0) {
+            if goes_through_first(&node.designator) {
                 first_layer.insert((node.pin_id.clone(), node.designator.clone()));
             }
         }
@@ -157,10 +157,10 @@ impl Netlist {
             let last_starts = links.last().unwrap();
             let mut next_layer = HashSet::new();
             for (except_pin, last_start) in last_starts {
-                next_layer.extend(self.find_connected_parts(
+                next_layer.extend(self.find_reachable_pins(
                     last_start,
                     except_pin,
-                    *goes_through_next,
+                    goes_through_next,
                 ));
             }
             // println!("next_layer {:?}", next_layer);
@@ -187,11 +187,11 @@ impl Netlist {
     }
 
     /// Returns a set of pins that are reachable from any pins of 'start' part, except via its 'except_pin'
-    pub fn find_connected_parts(
+    pub fn find_reachable_pins<F: Fn(&Designator) -> bool>(
         &self,
         start: &Designator,
         except_pin: &PinId,
-        end: DesignatorStartsWith,
+        end_filter: F,
     ) -> HashSet<(PinId, Designator)> {
         let mut found = HashSet::new();
         'outer: for (_net_name, net) in &self.nets {
@@ -204,7 +204,7 @@ impl Netlist {
                 if &node.designator == start {
                     start_found = true;
                 }
-                if start != &node.designator && node.designator.0.starts_with(end.0) {
+                if start != &node.designator && end_filter(&node.designator) {
                     potential.push((node.pin_id.clone(), node.designator.clone()));
                 }
             }
@@ -327,6 +327,29 @@ impl Netlist {
         } else {
             Err(Error::msg("{designator} not found"))
         }
+    }
+
+    /// Returns all the nets that have specified pin types in them.
+    pub fn find_nets_with_pin_types(&self, pin_types: &[PinType]) -> HashSet<NetName> {
+        let mut nets = HashSet::new();
+        for (k, lib_part) in &self.lib_parts {
+            let components = self
+                .components
+                .iter()
+                .filter(|(_d, c)| &c.lib_source == k)
+                .collect::<Vec<_>>();
+            for (pin_id, pin) in &lib_part.pins {
+                if !pin_types.contains(&pin.default_mode.ty) {
+                    continue;
+                }
+                for (designator, _c) in &components {
+                    if let Some(net) = self.pin_net(designator, pin_id) {
+                        nets.insert(net);
+                    }
+                }
+            }
+        }
+        nets
     }
 }
 
