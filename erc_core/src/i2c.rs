@@ -1,3 +1,4 @@
+use crate::config::{I2C_ACCEPTABLE_PULL_UP_RANGE, MAX_TIE_RESISTANCE};
 use crate::util::collapse_underscores;
 use ecad_file_format::netlist::Netlist;
 use ecad_file_format::passive_value::Ohm;
@@ -265,7 +266,8 @@ fn look_for_non_standard_pull_ups(
 }
 
 fn check_pull_up_range(value: &Ohm, bus_name: &str, diagnostics: &mut Vec<I2cDiagnostic>) {
-    if value.0 <= 2200.0 || value.0 >= 10_000.0 {
+    if value <= I2C_ACCEPTABLE_PULL_UP_RANGE.start() || value >= I2C_ACCEPTABLE_PULL_UP_RANGE.end()
+    {
         diagnostics.push(I2cDiagnostic {
             derived_name: bus_name.to_string(),
             kind: I2cDiagnosticKind::NonStandardPullUps {
@@ -544,7 +546,7 @@ fn check_tie_resistance(
 ) {
     let scl_tie_resistance = netlist.resistance(scl_tie).unwrap_or(Ohm(0.0));
     let sda_tie_resistance = netlist.resistance(sda_tie).unwrap_or(Ohm(0.0));
-    if scl_tie_resistance.0 > 100.0 || sda_tie_resistance.0 > 100.0 {
+    if scl_tie_resistance > MAX_TIE_RESISTANCE || sda_tie_resistance > MAX_TIE_RESISTANCE {
         diagnostics.push(I2cDiagnostic {
             derived_name: bus_name.to_string(),
             kind: I2cDiagnosticKind::TieTooHighValue {
