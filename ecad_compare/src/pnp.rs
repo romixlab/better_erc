@@ -1,11 +1,12 @@
-use ecad_file_format::pnp::{ComponentPosition, Designator};
+use ecad_file_format::Designator;
+use ecad_file_format::pnp::ComponentPosition;
 use std::collections::HashMap;
 
 #[derive(Debug, Default)]
 pub struct PositionChangeList {
-    changed: Vec<Designator>,
-    removed: Vec<Designator>,
-    added: Vec<Designator>,
+    pub changed: Vec<Designator>,
+    pub removed: Vec<Designator>,
+    pub added: Vec<Designator>,
 }
 
 pub fn compare_positions(
@@ -33,7 +34,8 @@ pub fn compare_positions(
 #[cfg(test)]
 mod tests {
     use crate::pnp::compare_positions;
-    use ecad_file_format::pnp::{Designator, load_component_positions};
+    use ecad_file_format::Designator;
+    use ecad_file_format::pnp::load_component_positions;
     use std::path::Path;
 
     #[test]

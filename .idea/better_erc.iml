@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/ecad_file_format/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/erc_core/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test_schematics/generate_netlists/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ecad_compare/examples" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
