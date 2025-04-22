@@ -14,11 +14,11 @@ impl DebugWindow {
     ) {
         tabs_behavior.ui(ui);
 
-        ui.collapsing("Tree", |ui| {
-            ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
-            let tree_debug = format!("{:#?}", tabs);
-            ui.monospace(&tree_debug);
-        });
+        // ui.collapsing("Tree", |ui| {
+        //     ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
+        //     let tree_debug = format!("{:#?}", tabs);
+        //     ui.monospace(&tree_debug);
+        // });
 
         ui.separator();
 
@@ -63,33 +63,33 @@ pub(crate) fn tree_ui(
         ui.id().with((tile_id, "tree")),
         default_open,
     )
-        .show_header(ui, |ui| {
-            ui.label(text);
-            let mut visible = tiles.is_visible(tile_id);
-            ui.checkbox(&mut visible, "Visible");
-            tiles.set_visible(tile_id, visible);
-        })
-        .body(|ui| match &mut tile {
-            egui_tiles::Tile::Pane(_) => {}
-            egui_tiles::Tile::Container(container) => {
-                let mut kind = container.kind();
-                egui::ComboBox::from_label("Kind")
-                    .selected_text(format!("{kind:?}"))
-                    .show_ui(ui, |ui| {
-                        for typ in egui_tiles::ContainerKind::ALL {
-                            ui.selectable_value(&mut kind, typ, format!("{typ:?}"))
-                                .clicked();
-                        }
-                    });
-                if kind != container.kind() {
-                    container.set_kind(kind);
-                }
-
-                for &child in container.children() {
-                    tree_ui(ui, behavior, tiles, child);
-                }
+    .show_header(ui, |ui| {
+        ui.label(text);
+        let mut visible = tiles.is_visible(tile_id);
+        ui.checkbox(&mut visible, "Visible");
+        tiles.set_visible(tile_id, visible);
+    })
+    .body(|ui| match &mut tile {
+        egui_tiles::Tile::Pane(_) => {}
+        egui_tiles::Tile::Container(container) => {
+            let mut kind = container.kind();
+            egui::ComboBox::from_label("Kind")
+                .selected_text(format!("{kind:?}"))
+                .show_ui(ui, |ui| {
+                    for typ in egui_tiles::ContainerKind::ALL {
+                        ui.selectable_value(&mut kind, typ, format!("{typ:?}"))
+                            .clicked();
+                    }
+                });
+            if kind != container.kind() {
+                container.set_kind(kind);
             }
-        });
+
+            for &child in container.children() {
+                tree_ui(ui, behavior, tiles, child);
+            }
+        }
+    });
 
     // Put the tile back
     tiles.insert(tile_id, tile);

@@ -1,12 +1,12 @@
 use crate::BetterErcApp;
 use crate::prelude::*;
-use crate::tabs::{Tab, TabKind, TabKindDiscriminants};
+use crate::tabs::{Tab, TabKind};
 use egui_tiles::{Container, Tile};
 
 impl BetterErcApp {
     pub(super) fn side_panel(&mut self, ui: &mut Ui) {
         ui.add_space(8.0);
-        for tab_kind in TabKindDiscriminants::iter() {
+        for tab_kind in TabKind::iter() {
             let id = self
                 .state
                 .tabs
@@ -14,7 +14,7 @@ impl BetterErcApp {
                 .iter()
                 .find_map(|(id, tile)| match tile {
                     Tile::Pane(tab) => {
-                        if TabKindDiscriminants::from(&tab.kind) == tab_kind {
+                        if TabKind::from(tab) == tab_kind {
                             Some(id.clone())
                         } else {
                             None
@@ -23,8 +23,8 @@ impl BetterErcApp {
                     Tile::Container(_) => None,
                 });
             let text = match tab_kind {
-                TabKindDiscriminants::PcbDataImport => "PCB Data Import",
-                TabKindDiscriminants::Nets => "Nets",
+                TabKind::PcbDataImport => "PCB Data Import",
+                TabKind::Nets => "Nets",
             };
             let mut is_open = id
                 .map(|id| self.state.tabs.tiles.is_visible(id))
@@ -42,30 +42,13 @@ impl BetterErcApp {
                     }
                     debug!("Changed visible");
                 } else {
-                    let kind = match tab_kind {
-                        TabKindDiscriminants::PcbDataImport => {
-                            TabKind::PcbDataImport(Default::default())
-                        }
-                        TabKindDiscriminants::Nets => TabKind::Nets(Default::default()),
+                    let tab = match tab_kind {
+                        TabKind::PcbDataImport => Tab::PcbDataImport(Default::default()),
+                        TabKind::Nets => Tab::Nets(Default::default()),
                     };
-                    let nr = self
-                        .state
-                        .tabs
-                        .tiles
-                        .iter()
-                        .filter_map(|(_, t)| match t {
-                            Tile::Pane(tab) => Some(tab.nr),
-                            Tile::Container(_) => None,
-                        })
-                        .max()
-                        .unwrap_or(0)
-                        + 1;
-                    let tab = Tab { kind, nr };
+
                     if let Some(r) = self.state.tabs.root {
                         let new_child = self.state.tabs.tiles.insert_pane(tab);
-                        // self.state
-                        //     .tabs
-                        //     .move_tile_to_container(id, r, usize::MAX, true);
                         if let Some(Tile::Container(Container::Tabs(tabs))) =
                             self.state.tabs.tiles.get_mut(r)
                         {

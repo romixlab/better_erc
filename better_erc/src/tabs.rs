@@ -1,13 +1,14 @@
 use crate::prelude::*;
 use egui_tiles::{SimplificationOptions, Tile, TileId, Tiles, UiResponse};
-use std::fmt::{Debug, Formatter};
+use std::fmt::Debug;
 
 pub mod nets;
 pub mod pcb_data_import;
 
 #[derive(Serialize, Deserialize, EnumDiscriminants)]
 #[strum_discriminants(derive(EnumIter, AsRefStr))]
-pub enum TabKind {
+#[strum_discriminants(name(TabKind))]
+pub enum Tab {
     PcbDataImport(pcb_data_import::PcbDataImport),
     Nets(nets::Nets),
 }
@@ -17,26 +18,14 @@ pub trait TabUi {
     fn ui(&mut self, ui: &mut Ui, cx: &mut Context, id: Id);
 }
 
-impl Debug for TabKind {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "TabKind({})", TabKindDiscriminants::from(self).as_ref())
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Tab {
-    pub kind: TabKind,
-    pub nr: usize,
-}
-
 impl Tab {
-    pub fn ui(&mut self, ui: &mut Ui, cx: &mut Context, _title: &str) -> UiResponse {
-        let id = Id::new("Tab").with(self.nr);
+    pub fn ui(&mut self, cx: &mut Context, ui: &mut Ui, tile_id: TileId) -> UiResponse {
+        let id = Id::new("Tab").with(tile_id);
         egui::Frame::NONE
             .inner_margin(4.0)
-            .show(ui, |ui| match &mut self.kind {
-                TabKind::PcbDataImport(t) => t.ui(ui, cx, id),
-                TabKind::Nets(t) => t.ui(ui, cx, id),
+            .show(ui, |ui| match self {
+                Tab::PcbDataImport(t) => t.ui(ui, cx, id),
+                Tab::Nets(t) => t.ui(ui, cx, id),
             });
         // if dragged {
         //     UiResponse::DragStarted
@@ -47,18 +36,18 @@ impl Tab {
     }
 
     pub fn init(&mut self, cx: &Context) {
-        match &mut self.kind {
-            TabKind::PcbDataImport(t) => t.init(cx),
-            TabKind::Nets(t) => t.init(cx),
+        match self {
+            Tab::PcbDataImport(t) => t.init(cx),
+            Tab::Nets(t) => t.init(cx),
         }
     }
 
     pub fn title(&self) -> WidgetText {
-        match &self.kind {
-            TabKind::PcbDataImport(_t) => "PCB Data Import",
-            TabKind::Nets(_t) => "Nets",
+        match self {
+            Tab::PcbDataImport(_t) => "PCB Data Import",
+            Tab::Nets(_t) => "Nets",
         }
-            .into()
+        .into()
     }
 
     fn is_closeable(&self) -> bool {
@@ -72,7 +61,6 @@ pub struct TreeBehavior {
     gap_width: f32,
     // pub(crate) add_child_to: Option<TileId>,
     cx: Option<Context>,
-    show_view_numbers: bool,
 }
 
 impl Default for TreeBehavior {
@@ -90,7 +78,6 @@ impl Default for TreeBehavior {
             gap_width: 2.0,
             // add_child_to: None,
             cx: None,
-            show_view_numbers: false,
         }
     }
 }
@@ -103,7 +90,6 @@ impl TreeBehavior {
             gap_width,
             // add_child_to: _,
             cx: _,
-            show_view_numbers: _,
         } = self;
 
         Grid::new("behavior_ui").num_columns(2).show(ui, |ui| {
@@ -125,10 +111,6 @@ impl TreeBehavior {
             ui.label("Gap width:");
             ui.add(DragValue::new(gap_width).range(0.0..=20.0).speed(1.0));
             ui.end_row();
-
-            ui.label("Show view numbers:");
-            ui.checkbox(&mut self.show_view_numbers, "");
-            ui.end_row();
         });
     }
 
@@ -138,20 +120,16 @@ impl TreeBehavior {
 }
 
 impl egui_tiles::Behavior<Tab> for TreeBehavior {
-    fn pane_ui(&mut self, ui: &mut Ui, _tile_id: TileId, view: &mut Tab) -> UiResponse {
+    fn pane_ui(&mut self, ui: &mut Ui, tile_id: TileId, view: &mut Tab) -> UiResponse {
         if let Some(cx) = &mut self.cx {
-            view.ui(ui, cx, view.title().text())
+            view.ui(cx, ui, tile_id)
         } else {
             UiResponse::None
         }
     }
 
     fn tab_title_for_pane(&mut self, view: &Tab) -> WidgetText {
-        if self.show_view_numbers {
-            format!("{}: {}", view.nr, view.title().text()).into()
-        } else {
-            view.title()
-        }
+        view.title()
     }
 
     fn is_tab_closable(&self, tiles: &Tiles<Tab>, tile_id: TileId) -> bool {
