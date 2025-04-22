@@ -1,4 +1,8 @@
 #![warn(clippy::all, rust_2018_idioms)]
 
-mod app;
-pub use app::BetterErcApp;
+mod context;
+mod main_window;
+pub mod prelude;
+mod tabs;
+
+pub use main_window::BetterErcApp;

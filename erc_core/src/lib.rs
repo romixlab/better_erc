@@ -1,6 +1,6 @@
 mod config;
 mod diagnostics;
-mod general;
+pub mod general;
 pub mod i2c;
 pub mod pcba;
 pub mod power;
