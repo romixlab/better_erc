@@ -4,5 +4,6 @@ mod context;
 mod main_window;
 pub mod prelude;
 mod tabs;
+mod windows;
 
 pub use main_window::BetterErcApp;

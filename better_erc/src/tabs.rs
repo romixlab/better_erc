@@ -1,10 +1,12 @@
 use crate::prelude::*;
 use egui_tiles::{SimplificationOptions, Tile, TileId, Tiles, UiResponse};
+use std::fmt::{Debug, Formatter};
 
 pub mod nets;
 pub mod pcb_data_import;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, EnumDiscriminants)]
+#[strum_discriminants(derive(EnumIter, AsRefStr))]
 pub enum TabKind {
     PcbDataImport(pcb_data_import::PcbDataImport),
     Nets(nets::Nets),
@@ -16,13 +18,13 @@ pub trait TabUi {
     fn ui(&mut self, ui: &mut Ui, cx: &mut Context, id: Id);
 }
 
-// impl debug for tabkind {
-//     fn fmt(&self, f: &mut formatter<'_>) -> std::fmt::result {
-//         write!(f, "tabkind({})", tabkinddiscriminants::from(self).as_ref())
-//     }
-// }
+impl Debug for TabKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "TabKind({})", TabKindDiscriminants::from(self).as_ref())
+    }
+}
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Tab {
     pub kind: TabKind,
     pub nr: usize,
@@ -95,41 +97,41 @@ impl Default for TreeBehavior {
 }
 
 impl TreeBehavior {
-    // pub(crate) fn ui(&mut self, ui: &mut Ui) {
-    //     let Self {
-    //         simplification_options,
-    //         tab_bar_height,
-    //         gap_width,
-    //         // add_child_to: _,
-    //         cx: _,
-    //         show_view_numbers: _,
-    //     } = self;
-    //
-    //     Grid::new("behavior_ui").num_columns(2).show(ui, |ui| {
-    //         ui.label("All panes must have tabs:");
-    //         ui.checkbox(&mut simplification_options.all_panes_must_have_tabs, "");
-    //         ui.end_row();
-    //
-    //         ui.label("Join nested containers:");
-    //         ui.checkbox(
-    //             &mut simplification_options.join_nested_linear_containers,
-    //             "",
-    //         );
-    //         ui.end_row();
-    //
-    //         ui.label("Tab bar height:");
-    //         ui.add(DragValue::new(tab_bar_height).range(0.0..=100.0).speed(1.0));
-    //         ui.end_row();
-    //
-    //         ui.label("Gap width:");
-    //         ui.add(DragValue::new(gap_width).range(0.0..=20.0).speed(1.0));
-    //         ui.end_row();
-    //
-    //         ui.label("Show view numbers:");
-    //         ui.checkbox(&mut self.show_view_numbers, "");
-    //         ui.end_row();
-    //     });
-    // }
+    pub(crate) fn ui(&mut self, ui: &mut Ui) {
+        let Self {
+            simplification_options,
+            tab_bar_height,
+            gap_width,
+            // add_child_to: _,
+            cx: _,
+            show_view_numbers: _,
+        } = self;
+
+        Grid::new("behavior_ui").num_columns(2).show(ui, |ui| {
+            ui.label("All panes must have tabs:");
+            ui.checkbox(&mut simplification_options.all_panes_must_have_tabs, "");
+            ui.end_row();
+
+            ui.label("Join nested containers:");
+            ui.checkbox(
+                &mut simplification_options.join_nested_linear_containers,
+                "",
+            );
+            ui.end_row();
+
+            ui.label("Tab bar height:");
+            ui.add(DragValue::new(tab_bar_height).range(0.0..=100.0).speed(1.0));
+            ui.end_row();
+
+            ui.label("Gap width:");
+            ui.add(DragValue::new(gap_width).range(0.0..=20.0).speed(1.0));
+            ui.end_row();
+
+            ui.label("Show view numbers:");
+            ui.checkbox(&mut self.show_view_numbers, "");
+            ui.end_row();
+        });
+    }
 
     pub fn feed_cx(&mut self, cx: Context) {
         self.cx = Some(cx);

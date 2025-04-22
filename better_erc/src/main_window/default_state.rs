@@ -23,8 +23,9 @@ impl BetterErcApp {
         let open_tabs = egui_tiles::Tree::new("main_window_tile_tree", root, tiles);
 
         State {
-            open_tabs,
+            tabs: open_tabs,
             tabs_behavior: Default::default(),
+            debug_window_shown: false,
         }
     }
 }

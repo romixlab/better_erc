@@ -1,7 +1,7 @@
 pub use crate::context::Context;
 pub use egui::{
-    Button, Color32, ComboBox, DragValue, Grid, Id, Label, Pos2, RichText, Sense, TextEdit, Ui,
-    WidgetText,
+    Button, Color32, ComboBox, DragValue, Grid, Id, Label, Pos2, RichText, ScrollArea, Sense,
+    TextEdit, Ui, WidgetText,
 };
 pub use egui_phosphor;
 pub use log::{debug, info, trace, warn};
