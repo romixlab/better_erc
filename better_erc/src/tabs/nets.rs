@@ -1,7 +1,7 @@
 use crate::prelude::*;
 use crate::tabs::TabUi;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Default, Serialize, Deserialize)]
 pub struct Nets {
     #[serde(skip)]
     transient: Option<Transient>,
@@ -10,10 +10,6 @@ pub struct Nets {
 struct Transient {}
 
 impl TabUi for Nets {
-    fn new(cx: &Context) -> Self {
-        Self { transient: None }.tap_mut(|s| s.init(cx))
-    }
-
     fn init(&mut self, _cx: &Context) {
         self.transient = Some(Transient {});
     }

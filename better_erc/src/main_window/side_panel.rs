@@ -1,8 +1,6 @@
 use crate::BetterErcApp;
 use crate::prelude::*;
-use crate::tabs::nets::Nets;
-use crate::tabs::pcb_data_import::PcbDataImport;
-use crate::tabs::{Tab, TabKind, TabKindDiscriminants, TabUi};
+use crate::tabs::{Tab, TabKind, TabKindDiscriminants};
 use egui_tiles::{Container, Tile};
 
 impl BetterErcApp {
@@ -46,9 +44,9 @@ impl BetterErcApp {
                 } else {
                     let kind = match tab_kind {
                         TabKindDiscriminants::PcbDataImport => {
-                            TabKind::PcbDataImport(PcbDataImport::new(&self.cx))
+                            TabKind::PcbDataImport(Default::default())
                         }
-                        TabKindDiscriminants::Nets => TabKind::Nets(Nets::new(&self.cx)),
+                        TabKindDiscriminants::Nets => TabKind::Nets(Default::default()),
                     };
                     let nr = self
                         .state

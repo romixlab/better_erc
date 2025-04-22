@@ -13,7 +13,6 @@ pub enum TabKind {
 }
 
 pub trait TabUi {
-    fn new(cx: &Context) -> Self;
     fn init(&mut self, cx: &Context);
     fn ui(&mut self, ui: &mut Ui, cx: &mut Context, id: Id);
 }

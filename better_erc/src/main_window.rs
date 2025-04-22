@@ -13,7 +13,7 @@ pub struct BetterErcApp {
 }
 
 #[derive(Serialize, Deserialize)]
-// #[serde(default)] // if we add new fields, give them default values when deserializing old state
+#[serde(default)] // if we add new fields, give them default values when deserializing old state
 struct State {
     tabs: egui_tiles::Tree<Tab>,
     #[serde(skip)]
@@ -32,14 +32,14 @@ impl BetterErcApp {
         // });
 
         // Load previous app state (if any).
-        let mut state = if let Some(storage) = cc.storage {
+        let mut state: State = if let Some(storage) = cc.storage {
             eframe::get_value(storage, eframe::APP_KEY).unwrap_or_else(|| {
                 info!("Default state created, because deserializing failed");
-                Self::default_state(&cx)
+                Default::default()
             })
         } else {
             info!("Default state created, because persistence is disabled");
-            Self::default_state(&cx)
+            Default::default()
         };
 
         // Restore context for tabs
