@@ -20,4 +20,7 @@ Cargo.lock
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# Mac stuff:
+.DS_Store
+
 test_schematics/generated_netlists

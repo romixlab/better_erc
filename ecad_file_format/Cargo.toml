@@ -1,7 +1,10 @@
 [package]
 name = "ecad_file_format"
-version = "0.1.0"
-edition = "2024"
+authors.workspace = true
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+include.workspace = true
 
 [dependencies]
 pest = "2.7"
