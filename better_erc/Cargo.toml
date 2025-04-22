@@ -21,11 +21,13 @@ eframe = { version = "0.31", default-features = false, features = [
 ] }
 egui-phosphor = { version = "0.9", features = ["fill"] }
 egui_tiles = "0.12"
+rfd = "0.15"
 
 strum = { version = "0.27", features = ["derive"] }
 log = "0.4.27"
 serde = { version = "1.0.219", features = ["derive"] }
 tap = "1.0"
+tokio = { version = "1.44", features = ["full", "sync"] }
 
 erc_core = { path = "../erc_core" }
 ecad_file_format = { path = "../ecad_file_format" }

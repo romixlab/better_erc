@@ -5,6 +5,7 @@ pub mod kicad_netlist;
 pub mod netlist;
 pub mod orcad_netlist;
 pub mod passive_value;
+pub mod pcb_assembly;
 pub mod pnp;
 mod text_util;
 mod wirelist;

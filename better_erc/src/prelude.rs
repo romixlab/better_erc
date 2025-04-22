@@ -4,7 +4,7 @@ pub use egui::{
     TextEdit, Ui, WidgetText,
 };
 pub use egui_phosphor;
-pub use log::{debug, info, trace, warn};
+pub use log::{debug, error, info, trace, warn};
 pub use serde::{Deserialize, Serialize};
 pub use std::collections::HashMap;
 pub use strum::{AsRefStr, EnumDiscriminants, EnumIter, IntoDiscriminant, IntoEnumIterator};
