@@ -22,10 +22,12 @@ impl BetterErcApp {
                     }
                     Tile::Container(_) => None,
                 });
-            let text = match tab_kind {
-                TabKind::PcbDataImport => "PCB Data Import",
-                TabKind::Nets => "Nets",
-            };
+            // let text = match tab_kind {
+            //     TabKind::PcbDataImport => "PCB Data Import",
+            //     TabKind::Nets => "Nets",
+            //     TabKind::I2C => "I2C",
+            // };
+            let text = tab_kind.as_ref();
             let mut is_open = id
                 .map(|id| self.state.tabs.tiles.is_visible(id))
                 .unwrap_or(false);
@@ -45,7 +47,11 @@ impl BetterErcApp {
                     let tab = match tab_kind {
                         TabKind::PcbDataImport => Tab::PcbDataImport(Default::default()),
                         TabKind::Nets => Tab::Nets(Default::default()),
-                    };
+                        TabKind::I2C => Tab::I2C(Default::default()),
+                        TabKind::Style => Tab::Style(Default::default()),
+                        TabKind::Inputs => Tab::Inputs(Default::default()),
+                    }
+                    .tap_mut(|t| t.init(&self.cx));
 
                     if let Some(r) = self.state.tabs.root {
                         let new_child = self.state.tabs.tiles.insert_pane(tab);

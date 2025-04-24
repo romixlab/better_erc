@@ -7,7 +7,7 @@ pub mod power;
 pub mod style;
 pub(crate) mod util;
 
-pub use pcba::Pcba;
+pub use pcba::PcbAssembly;
 
 #[cfg(test)]
 mod tests {}

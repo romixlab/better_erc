@@ -19,8 +19,22 @@ impl TabUi for Nets {
             return;
         };
         let s = cx.blocking_read();
-        for board in &s.boards {
-            ScrollArea::vertical().show(ui, |ui| {
+        // TODO: switch to TableView for nets
+        ScrollArea::vertical().show(ui, |ui| {
+            for board in &s.boards {
+                ui.heading("Power rails:");
+                for net_name in board.power.power_rails.keys() {
+                    ui.label(net_name.0.as_str());
+                }
+                ui.heading("Ground nets:");
+                for net_name in &board.power.ground_nets {
+                    ui.label(net_name.0.as_str());
+                }
+                ui.heading("Switching nodes");
+                for net_name in &board.switching_nodes {
+                    ui.label(net_name.0.as_str());
+                }
+                ui.heading("All nets");
                 for (net_name, net) in &board.netlist.nets {
                     ui.horizontal(|ui| {
                         ui.label(
@@ -32,7 +46,7 @@ impl TabUi for Nets {
                         ui.label(format!("{}", net.nodes.len()));
                     });
                 }
-            });
-        }
+            }
+        });
     }
 }

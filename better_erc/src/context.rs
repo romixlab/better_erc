@@ -1,4 +1,4 @@
-use ecad_file_format::pcb_assembly::PcbAssembly;
+use erc_core::PcbAssembly;
 use std::sync::Arc;
 use tokio::sync::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 
@@ -14,11 +14,11 @@ impl Context {
         }
     }
 
-    pub fn blocking_read(&self) -> RwLockReadGuard<ContextShared> {
+    pub fn blocking_read(&self) -> RwLockReadGuard<'_, ContextShared> {
         self.shared.blocking_read()
     }
 
-    pub fn blocking_write(&mut self) -> RwLockWriteGuard<ContextShared> {
+    pub fn blocking_write(&mut self) -> RwLockWriteGuard<'_, ContextShared> {
         self.shared.blocking_write()
     }
 }

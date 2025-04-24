@@ -97,6 +97,15 @@ pub enum PinType {
     Passive,
 }
 
+impl PinType {
+    pub fn is_input(&self) -> bool {
+        matches!(
+            self,
+            PinType::DigitalInput | PinType::AnalogInput | PinType::PowerIn
+        )
+    }
+}
+
 #[derive(Debug)]
 pub enum IOStandard {
     LVTTL,

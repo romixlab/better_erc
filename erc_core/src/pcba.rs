@@ -3,18 +3,23 @@ use crate::i2c::{I2cBuses, find_i2c_buses};
 use crate::power::{Power, derive_power_structure};
 use crate::style::check_style;
 use ecad_file_format::netlist::Netlist;
+use ecad_file_format::pnp::ComponentPosition;
 use ecad_file_format::{Designator, NetName};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
+use std::sync::Arc;
 
-pub struct Pcba {
+pub struct PcbAssembly {
     pub netlist: Netlist,
     pub power: Power,
     pub switching_nodes: HashSet<NetName>,
     pub i2c_buses: I2cBuses,
     pub diagnostics: Diagnostics,
+    pub name: Arc<String>,
+    pub pnp: HashMap<Designator, ComponentPosition>,
+    pub bom: (),
 }
 
-impl Pcba {
+impl PcbAssembly {
     pub fn new(netlist: Netlist) -> Self {
         let mut diagnostics = Diagnostics::default();
         let power = derive_power_structure(&netlist, true); // TODO: move strict to config
@@ -27,6 +32,9 @@ impl Pcba {
             switching_nodes: HashSet::new(),
             i2c_buses,
             diagnostics,
+            name: Arc::new("".to_string()),
+            pnp: Default::default(),
+            bom: (),
         };
 
         let switching_nodes = crate::power::find_switching_nodes(&pcba);
@@ -81,9 +89,9 @@ impl Pcba {
     /// ```
     /// # use ecad_file_format::netlist::Netlist;
     /// # use ecad_file_format::{Designator};
-    /// # use erc_core::Pcba;
+    /// # use erc_core::PcbAssembly;
     /// # let netlist = Netlist::default();
-    /// # let pcba = Pcba::new(netlist);
+    /// # let pcba = PcbAssembly::new(netlist);
     /// pcba.find_part_chains(&[Designator::is_ic, Designator::is_inductor][..], true);
     /// // if there is a sense resistor before inductor
     /// pcba.find_part_chains(&[Designator::is_ic, Designator::is_resistor, Designator::is_inductor][..], true);

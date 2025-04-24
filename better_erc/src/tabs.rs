@@ -2,15 +2,21 @@ use crate::prelude::*;
 use egui_tiles::{SimplificationOptions, Tile, TileId, Tiles, UiResponse};
 use std::fmt::Debug;
 
+mod i2c;
+mod inputs;
 pub mod nets;
 pub mod pcb_data_import;
+mod style;
 
-#[derive(Serialize, Deserialize, EnumDiscriminants)]
+#[derive(Serialize, Deserialize, EnumDiscriminants, AsRefStr)]
 #[strum_discriminants(derive(EnumIter, AsRefStr))]
 #[strum_discriminants(name(TabKind))]
 pub enum Tab {
     PcbDataImport(pcb_data_import::PcbDataImport),
     Nets(nets::Nets),
+    I2C(i2c::I2C),
+    Style(style::Style),
+    Inputs(inputs::Inputs),
 }
 
 pub trait TabUi {
@@ -26,6 +32,9 @@ impl Tab {
             .show(ui, |ui| match self {
                 Tab::PcbDataImport(t) => t.ui(ui, cx, id),
                 Tab::Nets(t) => t.ui(ui, cx, id),
+                Tab::I2C(t) => t.ui(ui, cx, id),
+                Tab::Style(t) => t.ui(ui, cx, id),
+                Tab::Inputs(t) => t.ui(ui, cx, id),
             });
         // if dragged {
         //     UiResponse::DragStarted
@@ -39,15 +48,14 @@ impl Tab {
         match self {
             Tab::PcbDataImport(t) => t.init(cx),
             Tab::Nets(t) => t.init(cx),
+            Tab::I2C(t) => t.init(cx),
+            Tab::Style(t) => t.init(cx),
+            Tab::Inputs(t) => t.init(cx),
         }
     }
 
     pub fn title(&self) -> WidgetText {
-        match self {
-            Tab::PcbDataImport(_t) => "PCB Data Import",
-            Tab::Nets(_t) => "Nets",
-        }
-        .into()
+        self.as_ref().into()
     }
 
     fn is_closeable(&self) -> bool {

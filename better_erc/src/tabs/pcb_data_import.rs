@@ -1,11 +1,9 @@
 use crate::prelude::*;
 use crate::tabs::TabUi;
 use ecad_file_format::load_altium_netlist;
-use ecad_file_format::orcad_netlist::Rule::net;
-use ecad_file_format::pcb_assembly::PcbAssembly;
+use erc_core::PcbAssembly;
 use rfd::FileDialog;
 use std::path::PathBuf;
-use std::sync::Arc;
 
 #[derive(Default, Serialize, Deserialize)]
 pub struct PcbDataImport {
@@ -113,12 +111,7 @@ impl TabUi for PcbDataImport {
                         let netlist = load_altium_netlist(edif_path, wirelist_path);
                         match netlist {
                             Ok(netlist) => {
-                                cx.blocking_write().boards.push(PcbAssembly {
-                                    name: Arc::new("".to_string()),
-                                    netlist,
-                                    pnp: Default::default(),
-                                    bom: (),
-                                });
+                                cx.blocking_write().boards.push(PcbAssembly::new(netlist));
                             }
                             Err(e) => {
                                 error!("{e:?}");

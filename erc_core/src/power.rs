@@ -1,4 +1,4 @@
-use crate::Pcba;
+use crate::PcbAssembly;
 use ecad_file_format::netlist::{Netlist, PinType};
 use ecad_file_format::{Designator, NetName};
 use regex::Regex;
@@ -88,7 +88,7 @@ pub fn derive_power_structure(netlist: &Netlist, strict: bool) -> Power {
     }
 }
 
-pub fn find_switching_nodes(pcba: &Pcba) -> HashSet<NetName> {
+pub fn find_switching_nodes(pcba: &PcbAssembly) -> HashSet<NetName> {
     let mut switching_nodes = HashSet::new();
     let chains = pcba.find_part_chains(&[Designator::is_ic, Designator::is_inductor][..], false);
     for chain in &chains {
