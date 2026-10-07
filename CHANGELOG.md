@@ -11,6 +11,18 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-10-07
+
+### Changed
+
+- `lexpr` and `serde-lexpr` come from upstream git, pinned to `09a61d3`, instead of a `../../lexpr-rs` checkout,
+  so the workspace builds on any PC. Dropping them completely is planned (NET-16).
+
+### Fixed
+
+- The workspace builds on Linux: `generate_netlists` uses `kicad-cli` from PATH outside macOS, and creates the
+  gitignored `generated_netlists` folder on a fresh clone. Seven `erc_core` tests still fail there (IMP-12).
+
 ## [0.2.0] - 2026-10-07
 
 ### Added

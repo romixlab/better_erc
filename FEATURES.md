@@ -40,6 +40,7 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - 📋 `IMP-9` Pinmux import from Excel
 - 📋 `IMP-10` Xilinx bank info from pin names or Xilinx ASCII pin files
 - 💡 `IMP-11` Watch the netlist file and reload on change
+- 🐛 `IMP-12` KiCad 10 netlists don't load: `units` element unknown to the KiCad netlist parser (5 i2c tests fail since the test netlists are regenerated with kicad-cli 10). Also `general` and `style` tests read OrCAD files from `~/Downloads/test_projects/` that only existed on the old Mac: move them into `test_schematics` or mark `#[ignore]`
 
 ## Netlist model and analysis (`NET`)
 
@@ -60,6 +61,7 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - 📋 `NET-13` Multi-board: several netlists joined through connectors
 - 📋 `NET-14` Standard plug-in cards for multi-board (M.2 device, DP cable...)
 - 💡 `NET-15` Select a piece of schematic and simulate it
+- 📋 `NET-16` Drop lexpr / serde-lexpr: `ecad_file_format` parses KiCad through them, pinned to upstream master `09a61d3` (Aug 2024) because crates.io 0.2.7 (Mar 2023) lacks numeric-looking symbols. Move it onto `berc`'s own s-expr reader (`berc/src/sexpr.rs`, lift into a shared module) and remove the dependency
 
 ## Checks and diagnostics (`DIAG`)
 

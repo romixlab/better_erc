@@ -99,6 +99,11 @@ fn kicad_cli_path() -> &'static Path {
     Path::new("/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli")
 }
 
+#[cfg(not(target_os = "macos"))]
+fn kicad_cli_path() -> &'static Path {
+    Path::new("kicad-cli")
+}
+
 fn collect_schematics() -> Vec<PathBuf> {
     let path = get_parent_folder("sources").unwrap();
     fs::read_dir(path)
@@ -134,5 +139,6 @@ fn get_parent_folder(folder_name: &str) -> io::Result<PathBuf> {
         ))?
         .to_path_buf();
     path.push(folder_name);
+    fs::create_dir_all(&path)?; // generated_netlists is gitignored, missing on a fresh clone
     Ok(fs::canonicalize(path)?)
 }

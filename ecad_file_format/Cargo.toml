@@ -9,8 +9,8 @@ include.workspace = true
 [dependencies]
 pest = "2.7"
 pest_derive = { version = "2.7", features = ["grammar-extras"] }
-lexpr = { path = "../../lexpr-rs/lexpr" }
-serde-lexpr = { path = "../../lexpr-rs/serde-lexpr" }
+lexpr = { git = "https://github.com/rotty/lexpr-rs", rev = "09a61d3d132c37bf29d175b86d1b532dd41ca8bd" }  # pinned, see NET-16
+serde-lexpr = { git = "https://github.com/rotty/lexpr-rs", rev = "09a61d3d132c37bf29d175b86d1b532dd41ca8bd" }
 serde = { version = "1.0", features = ["derive"] }
 serde_path_to_error = "0.1"
 csv = "1.3"
