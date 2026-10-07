@@ -11,8 +11,14 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-07
+
 ### Added
 
+- `berc` crate with `berc textconv FILE`: a `.kicad_sch` or `.kicad_pcb` as sorted, line-oriented text for git's
+  textconv, so `git diff` and `git log -p` show what a person changed (symbols, fields, variant overrides, text,
+  labels, footprints and their pad nets, design rules), not UUIDs, coordinates and reordering; `--with-geometry`
+  adds positions; `berc --version` shows the git SHA and build time. Setup in README "Readable git diffs" (TOOL-3)
 - `FEATURES.md` tracker with stable area IDs (IMP, NET, DIAG, CFG, RPT, VIEW, APP, TOOL, GEN, BIZ); `CLAUDE.md`
   points at it and at the check catalogue in tpm (`ideas/P2503-better-erc/rules.md`)
 - This changelog

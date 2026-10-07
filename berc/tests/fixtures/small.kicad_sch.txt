@@ -1,0 +1,52 @@
+kicad_sch version 20260306, eeschema 10.0
+paper A4
+title "Golden test"
+rev A
+comment 1 berc
+
+# sheets (1)
+sheet "Power In"  file=power.kicad_sch  page=2
+  pin EN input
+  pin VIN input
+
+# symbols (4)
+R2 0R  lib=Device:R  dnp  no_bom
+R10 10k  lib=Device:R  fp=Resistor_SMD:R_0402_1005Metric
+  Mpn1=RC0402FR-0710KL
+  variant Lite dnp=yes
+  variant Plus Value=4k7
+U1 LM358  lib=Amp:Dual  fp=Package_SO:SOIC-8  units=1,2
+  [unit 2] pin 5 alt=IN_ALT
+
+# power symbols (2)
+power GND x2
+
+# no_connect (2)
+nc R10.1
+nc U1.5 IN
+
+# labels (4)
+global_label VBUS input
+hier_label ~{RESET} output
+label SDA x2
+
+# text (1)
+text "Note:\nchecked \"twice\""
+
+# tables (1)
+table 2 cols
+  | "Mode" | "Pin" |
+  | "Boot" | "PA14" |
+
+# drawing (3)
+junction
+wire x2
+
+# library symbols (3)
+lib Amp:Dual  d8429137
+lib Device:R  79d70b7a
+lib power:GND  a2c37d0e
+
+# other (2)
+(embedded_fonts no)
+(rule_area (polyline))

@@ -24,6 +24,7 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - `erc_core`: analysis (`PcbAssembly`, power structure, I2C buses) and the checks, `config.rs` for thresholds
 - `ecad_compare`: board file comparisons (PnP so far)
 - `better_erc`: egui/eframe desktop app (`egui_tiles` tabs)
+- `berc`: command line tools (`berc textconv` so far)
 - `test_schematics`: KiCad test schematics, one per check, with a netlist generator (`generate_netlists`)
 
 ## Import (`IMP`)
@@ -147,6 +148,9 @@ planned.
 
 - ✅ `TOOL-1` PnP compare between two files · `ecad_compare/examples/pnp_compare.rs`
 - 📋 `TOOL-2` Schematic vs layout match (catalogue `LAY-1`)
+- ✅ `TOOL-3` Readable git diffs: `berc textconv` prints a `.kicad_sch` / `.kicad_pcb` as sorted text without UUIDs
+  or coordinates (`--with-geometry` adds them), for git's `diff.kicad.textconv` · `berc/src/sch.rs`, `pcb.rs`,
+  README "Readable git diffs"
 
 ## Code generation (`GEN`)
 

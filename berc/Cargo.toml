@@ -1,0 +1,12 @@
+[package]
+name = "berc"
+description = "better_erc command line: readable git diffs of KiCad files (textconv)"
+authors.workspace = true
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+include.workspace = true
+
+[dependencies]
+clap = { version = "4.5", features = ["derive"] }
+clap_complete = { version = "4.5", features = ["unstable-dynamic"] }

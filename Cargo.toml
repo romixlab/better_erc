@@ -1,7 +1,7 @@
 [workspace.package]
 authors = ["Roman Isaikin <romix.lab@gmail.com>"]
 edition = "2024"
-version = "0.1.0"
+version = "0.2.0"
 rust-version = "1.86"
 include = [
     # "../../Cargo.lock", # So that users can pass `--locked` to `cargo install x`
@@ -13,6 +13,7 @@ include = [
 resolver = "3"
 
 members = [
+    "berc",
     "better_erc",
     "ecad_compare",
     "ecad_file_format",

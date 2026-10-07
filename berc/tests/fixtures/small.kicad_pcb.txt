@@ -1,0 +1,52 @@
+kicad_pcb version 20260206, pcbnew 10.0
+
+# board (14)
+general (thickness 1.6) (legacy_teardrops no)
+paper A4
+layer F.Cu signal
+layer B.Cu signal
+layer Edge.Cuts user
+stackup "F.Cu" (type "copper") (thickness 0.035)
+stackup "dielectric 1" (type "core") (thickness 1.51) (material "FR4") (epsilon_r 4.5)
+stackup "B.Cu" (type "copper") (thickness 0.035)
+stackup (copper_finish "ENIG")
+setup pad_to_mask_clearance 0.05
+plot outputdirectory "gerbers/"
+plot mirror no
+property BOARD_NUMBER=B999A
+outline 30 x 20 mm
+
+# footprints (2)
+R10 10k  fp=Resistor_SMD:R_0402_1005Metric  side=top  rot=270  smd
+  Mpn1=RC0402FR-0710KL
+  model ${KICAD10_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0402_1005Metric.step
+  pad 1 /SDA
+  pad 2 +3V3
+U1 LM358  fp=Package_SO:SOIC-8  side=bottom  rot=180  smd  dnp
+  variant Plus dnp=no
+  pad 3 /SDA (IN)
+  pad 4 GND (V-)
+  pad 5 -
+
+# nets (3)
+net +3V3  pads=1 tracks=0 vias=0
+net /SDA  pads=2 tracks=2 vias=1
+net GND  pads=1 tracks=0 vias=0
+
+# copper (3)
+F.Cu  tracks=1 arcs=0 zones=1
+B.Cu  tracks=1 arcs=0 zones=1
+via 0.6/0.3 F.Cu-B.Cu
+
+# zones (1)
+zone GND F.Cu,B.Cu ground  (connect_pads (clearance 0.2)) (min_thickness 0.2) (fill yes (thermal_gap 0.3) (thermal_bridge_width 0.3))
+
+# graphics (1)
+gr_rect Edge.Cuts
+
+# text (1)
+gr_text F.SilkS "B999A rev A"
+
+# other (2)
+(embedded_fonts no)
+(future_item "kept" (value 42))
