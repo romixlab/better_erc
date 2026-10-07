@@ -22,6 +22,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 - `FEATURES.md` tracker with stable area IDs (IMP, NET, DIAG, CFG, RPT, VIEW, APP, TOOL, GEN, BIZ); `CLAUDE.md`
   points at it and at the check catalogue in tpm (`ideas/P2503-better-erc/rules.md`)
 - This changelog
+- `justfile` with the standard recipes `test`, `lint`, `install` and `deploy` (pull --ff-only, refuses on local
+  changes, install); documented in CLAUDE.md
 
 ## [0.1.0] - 2025-04-24
 
