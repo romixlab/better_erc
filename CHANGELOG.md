@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-09
+
 ### Changed
 
 - `justfile` gets a `default` recipe (`@just --list`), so a bare `just` only lists the recipes instead of
