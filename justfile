@@ -1,3 +1,7 @@
+# Bare `just` only lists the recipes
+default:
+    @just --list
+
 test:
     cargo test --workspace
 

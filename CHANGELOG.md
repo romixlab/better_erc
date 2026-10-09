@@ -11,6 +11,11 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Changed
+
+- `justfile` gets a `default` recipe (`@just --list`), so a bare `just` only lists the recipes instead of
+  running tests, builds or deploying.
+
 ## [0.2.1] - 2026-10-07
 
 ### Changed
