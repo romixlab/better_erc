@@ -4,6 +4,7 @@
 pub mod common;
 pub mod pcb;
 pub mod pro;
+pub mod pro_defaults;
 pub mod sch;
 pub mod sexpr;
 

@@ -59,11 +59,13 @@ What the text shows:
   size; zones with their settings; the board outline size; text and dimensions.
 - Project file: every setting as a dotted path (`board.design_settings.defaults.zones.min_clearance = 0.3`); net
   classes, the sheet list and other named lists keyed by name instead of position, so adding or removing one
-  shows as one line; a setting that looks like KiCad's own "nothing here" value (`false`, `0`, `""`, `[]`, `{}`)
-  is folded into one summary line per top-level section instead of printed - this is a cheap stand-in for a real
-  "is this KiCad's default" table (none exists: that needs a project file from a full KiCad GUI round-trip, not
-  available to a headless build), so it can hide a setting that is genuinely and meaningfully zero; `--all`
-  always shows every line.
+  shows as one line; a setting that matches KiCad 10.0.6's own default (`pro_defaults`, transcribed from the
+  KiCad source - no headless KiCad here to generate a fresh project file instead) or JSON's own "nothing here"
+  value (`false`, `0`, `""`, `[]`, `{}`) is folded into one summary line per top-level section instead of
+  printed, so opening a project in a newer KiCad and saving it - which can add dozens of such settings - shows
+  as a small diff. The table covers the zone and DRC/ERC rule-severity defaults, the ERC pin conflict matrix and
+  `reuse_designators`; anything else only gets the JSON-emptiness check, which can hide a setting that is
+  genuinely and meaningfully zero. `--all` always shows every line.
 - Anything berc doesn't know is printed as a one-line s-expression in `# other`, so nothing is silently dropped.
   A file that isn't a KiCad s-expression comes out as it is.
 

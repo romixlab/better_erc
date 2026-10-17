@@ -86,8 +86,10 @@ fn project() {
     );
 }
 
-/// Real fixture (hw/b129_cannify_micro): opening the project in a newer KiCad added ~70 lines of new-but-default
-/// JSON. textconv on the two sides should still differ by only a few dozen lines, not the whole file.
+/// Real fixture (hw/b129_cannify_micro): opening the project in a newer KiCad added ~70 lines of new JSON, all
+/// but a handful of it KiCad 10.0.6's own defaults (`pro_defaults`). textconv on the two sides should differ by
+/// only a few lines: the net classes schema version bump, the new sheet's filename, and the folded-count
+/// summary lines moving - not a line per new-but-default setting.
 #[test]
 fn project_upgrade_is_a_small_diff() {
     let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures");
@@ -101,8 +103,8 @@ fn project_upgrade_is_a_small_diff() {
     );
     let changed = symmetric_line_diff(&old, &new);
     assert!(
-        changed <= 40,
-        "{changed} lines differ between old and new textconv output, expected a few dozen at most"
+        changed <= 15,
+        "{changed} lines differ between old and new textconv output, expected a handful at most"
     );
 }
 

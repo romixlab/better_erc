@@ -15,9 +15,12 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 - `berc textconv` reads `.kicad_pro` too: every project setting as a dotted path
   (`board.design_settings.defaults.zones.min_clearance = 0.3`), net classes and other named lists keyed by name,
-  and settings that look like KiCad's "nothing here" value (`false`/`0`/`""`/`[]`/`{}`) folded into one summary
-  line per section, so opening a project in a newer KiCad - which can add dozens of new-but-default settings on
-  first save - shows as a small diff instead of a wall of JSON. `--all` shows the folded settings too (TOOL-3).
+  and settings that match KiCad 10.0.6's own default (`pro_defaults`, a table transcribed from the KiCad
+  source - zones, the DRC/ERC rule severities, the ERC pin conflict matrix, `reuse_designators`) or JSON's
+  "nothing here" value (`false`/`0`/`""`/`[]`/`{}`) folded into one summary line per section, so opening a
+  project in a newer KiCad and saving it - which can add dozens of such settings - shows as a small diff instead
+  of a wall of JSON (cannify_micro.kicad_pro, real fixture: 72 raw diff lines to 13). `--all` shows the folded
+  settings too (TOOL-3).
 
 ### Changed
 

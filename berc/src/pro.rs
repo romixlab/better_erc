@@ -4,15 +4,17 @@
 //! instead of a wall of JSON noise. `uuid` fields are identity, not content, and dropped like everywhere else
 //! in berc; the project's own `meta.filename` is the file's own name, not content, and dropped too.
 //!
-//! There is no literal "is this KiCad's default" table here: building one means a fresh project file from a
-//! full KiCad GUI round-trip (File > New Project, save, quit), which this build has no headless KiCad to
-//! produce. Instead a leaf folds into a per-section summary line when its value is JSON's own "nothing here"
-//! (`false`, `0`, `0.0`, `""`, `[]`, `{}`, `null`). That is a cheap approximation, not a real default check: a
-//! setting that is genuinely and meaningfully `0` (a net class `priority`, say) folds too. `--all` always shows
-//! every line, folded or not.
+//! A leaf folds into a per-section summary line when it matches `pro_defaults`'s table of KiCad 10.0.6's own
+//! defaults (transcribed from source - see that module for why not a generated fresh project), or, for
+//! anything not in that table, when its value is JSON's own "nothing here" (`false`, `0`, `0.0`, `""`, `[]`,
+//! `{}`, `null`) - a cheap approximation for the rest of the schema, not a real default check: an untabled
+//! setting that is genuinely and meaningfully `0` (a net class `priority`, say) folds too. `--all` always
+//! shows every line, folded or not.
 
 use crate::common::{Options, q, sort_natural};
+use crate::pro_defaults;
 use serde_json::Value;
+use std::collections::HashMap;
 use std::fmt::Write;
 
 /// `Some(json)` when `text` looks like a `.kicad_pro`: a JSON object with a `meta.filename`. Checked by content,
@@ -34,6 +36,7 @@ pub fn render(root: &Value, opts: Options) -> String {
     let mut keys: Vec<&String> = map.keys().collect();
     keys.sort();
 
+    let defaults = pro_defaults::table();
     let mut out = String::new();
     for k in keys {
         let v = &map[k];
@@ -46,7 +49,7 @@ pub fn render(root: &Value, opts: Options) -> String {
         }
         let mut lines = Vec::new();
         let mut folded = 0usize;
-        walk(k, v, opts, &mut lines, &mut folded);
+        walk(k, v, opts, &defaults, &mut lines, &mut folded);
         sort_natural(&mut lines);
         for l in &lines {
             out.push_str(l);
@@ -56,14 +59,33 @@ pub fn render(root: &Value, opts: Options) -> String {
             let s = if folded == 1 { "" } else { "s" };
             let _ = writeln!(
                 out,
-                "# {folded} setting{s} at zero/empty, folded: {k}.* (--all shows them)"
+                "# {folded} setting{s} at KiCad's default or empty, folded: {k}.* (--all shows them)"
             );
         }
     }
     out
 }
 
-fn walk(path: &str, v: &Value, opts: Options, lines: &mut Vec<String>, folded: &mut usize) {
+fn walk(
+    path: &str,
+    v: &Value,
+    opts: Options,
+    defaults: &HashMap<String, Value>,
+    lines: &mut Vec<String>,
+    folded: &mut usize,
+) {
+    // A path with a known KiCad default is judged only against that default, even when the actual value also
+    // happens to look like JSON's own "nothing here" (reuse_designators: false is real content, not noise,
+    // even though its default is true, not false)
+    if !opts.show_defaults {
+        if let Some(default) = defaults.get(path) {
+            if pro_defaults::value_eq(v, default) {
+                *folded += 1;
+                return;
+            }
+        }
+    }
+    let known_not_default = !opts.show_defaults && defaults.contains_key(path);
     match v {
         Value::Object(map) if map.is_empty() => push_leaf(path, "{}", true, opts, lines, folded),
         Value::Object(map) => {
@@ -71,15 +93,15 @@ fn walk(path: &str, v: &Value, opts: Options, lines: &mut Vec<String>, folded: &
                 if k == "uuid" {
                     continue;
                 }
-                walk(&format!("{path}.{k}"), v, opts, lines, folded);
+                walk(&format!("{path}.{k}"), v, opts, defaults, lines, folded);
             }
         }
         Value::Array(items) if items.is_empty() => push_leaf(path, "[]", true, opts, lines, folded),
-        Value::Array(items) => walk_array(path, items, opts, lines, folded),
+        Value::Array(items) => walk_array(path, items, opts, defaults, lines, folded),
         _ => push_leaf(
             path,
             &compact_scalar(v),
-            is_zero_scalar(v),
+            !known_not_default && is_zero_scalar(v),
             opts,
             lines,
             folded,
@@ -91,6 +113,7 @@ fn walk_array(
     path: &str,
     items: &[Value],
     opts: Options,
+    defaults: &HashMap<String, Value>,
     lines: &mut Vec<String>,
     folded: &mut usize,
 ) {
@@ -111,7 +134,7 @@ fn walk_array(
                 if k == "name" || k == "uuid" {
                     continue;
                 }
-                walk(&format!("{child}.{k}"), v, opts, lines, folded);
+                walk(&format!("{child}.{k}"), v, opts, defaults, lines, folded);
             }
         }
         return;
@@ -154,7 +177,7 @@ fn walk_array(
 
     // Nothing to key by: index it, same as everything else that has no name
     for (i, item) in items.iter().enumerate() {
-        walk(&format!("{path}.{i}"), item, opts, lines, folded);
+        walk(&format!("{path}.{i}"), item, opts, defaults, lines, folded);
     }
 }
 
@@ -228,7 +251,7 @@ mod tests {
         let out = render(&v, Options::default());
         assert_eq!(
             out,
-            "board.b = 1\n# 1 setting at zero/empty, folded: board.* (--all shows them)\nmeta.version = 1\n"
+            "board.b = 1\n# 1 setting at KiCad's default or empty, folded: board.* (--all shows them)\nmeta.version = 1\n"
         );
         let all = render(
             &v,
@@ -273,5 +296,43 @@ mod tests {
             },
         );
         assert_eq!(out, "meta.version = 1\nsheets = [Root]\n");
+    }
+
+    #[test]
+    fn folds_kicad_defaults_not_just_zero() {
+        let v: Value = serde_json::from_str(
+            r#"{"meta": {"filename": "x", "version": 1}, "schematic": {"reuse_designators": true}}"#,
+        )
+        .unwrap();
+        let out = render(&v, Options::default());
+        assert_eq!(
+            out,
+            "meta.version = 1\n# 1 setting at KiCad's default or empty, folded: schematic.* (--all shows them)\n"
+        );
+
+        // A project that disabled it is real content, not folded
+        let v: Value = serde_json::from_str(
+            r#"{"meta": {"filename": "x", "version": 1}, "schematic": {"reuse_designators": false}}"#,
+        )
+        .unwrap();
+        let out = render(&v, Options::default());
+        assert_eq!(
+            out,
+            "meta.version = 1\nschematic.reuse_designators = false\n"
+        );
+    }
+
+    #[test]
+    fn folds_the_whole_default_pin_map_as_one_setting() {
+        let default_pin_map = pro_defaults::table()["erc.pin_map"].clone();
+        let v: Value = serde_json::json!({
+            "meta": {"filename": "x", "version": 1},
+            "erc": {"pin_map": default_pin_map},
+        });
+        let out = render(&v, Options::default());
+        assert_eq!(
+            out,
+            "# 1 setting at KiCad's default or empty, folded: erc.* (--all shows them)\nmeta.version = 1\n"
+        );
     }
 }

@@ -25,67 +25,13 @@ board.design_settings.defaults.silk_line_width = 0.15
 board.design_settings.defaults.silk_text_size_h = 1.0
 board.design_settings.defaults.silk_text_size_v = 1.0
 board.design_settings.defaults.silk_text_thickness = 0.15
-board.design_settings.defaults.zones.min_clearance = 0.3
 board.design_settings.drc_exclusions = [hole_clearance|144400000|90230000|7dcfa546-45b5-414f-9df5-72b029b49d39|5e46129c-6cac-4ca4-8099-472088bf246c, hole_clearance|144400000|90230000|7dcfa546-45b5-414f-9df5-72b029b49d39|a638c8d6-873c-448a-9f5b-386d23e8cba5, hole_clearance|144600000|90230000|7dcfa546-45b5-414f-9df5-72b029b49d39|2e583cea-2cbe-4381-970c-1c9e89e5ef10, hole_clearance|144600000|90230000|7dcfa546-45b5-414f-9df5-72b029b49d39|6df6853b-0cfd-454f-9b79-ad278465f4c4, hole_clearance|150000000|90230000|050ae785-becd-439e-aa1c-95c43d7b1f3b|5c1f9ebe-fb56-4afd-9eaa-7d46b8052048, hole_clearance|150000000|90230000|050ae785-becd-439e-aa1c-95c43d7b1f3b|cc135ebd-3222-4adb-899b-e97a2916501e, hole_clearance|150200000|90230000|050ae785-becd-439e-aa1c-95c43d7b1f3b|6c16ca0a-735c-4840-ac2e-1c9284b3312f, hole_clearance|150200000|90230000|050ae785-becd-439e-aa1c-95c43d7b1f3b|8f62b3b5-5166-4540-bc84-ac311e496113]
 board.design_settings.meta.version = 2
-board.design_settings.rule_severities.annular_width = error
-board.design_settings.rule_severities.clearance = error
-board.design_settings.rule_severities.connection_width = warning
-board.design_settings.rule_severities.copper_edge_clearance = error
-board.design_settings.rule_severities.copper_sliver = warning
 board.design_settings.rule_severities.courtyards_overlap = ignore
-board.design_settings.rule_severities.creepage = error
-board.design_settings.rule_severities.diff_pair_gap_out_of_range = error
-board.design_settings.rule_severities.diff_pair_uncoupled_length_too_long = error
-board.design_settings.rule_severities.drill_out_of_range = error
-board.design_settings.rule_severities.duplicate_footprints = warning
-board.design_settings.rule_severities.extra_footprint = warning
-board.design_settings.rule_severities.footprint = error
-board.design_settings.rule_severities.footprint_filters_mismatch = ignore
-board.design_settings.rule_severities.footprint_symbol_mismatch = warning
-board.design_settings.rule_severities.footprint_type_mismatch = ignore
-board.design_settings.rule_severities.hole_clearance = error
 board.design_settings.rule_severities.hole_near_hole = error
 board.design_settings.rule_severities.hole_to_hole = error
-board.design_settings.rule_severities.holes_co_located = warning
-board.design_settings.rule_severities.invalid_outline = error
-board.design_settings.rule_severities.isolated_copper = warning
-board.design_settings.rule_severities.item_on_disabled_layer = error
-board.design_settings.rule_severities.items_not_allowed = error
-board.design_settings.rule_severities.length_out_of_range = error
-board.design_settings.rule_severities.lib_footprint_issues = warning
-board.design_settings.rule_severities.lib_footprint_mismatch = warning
-board.design_settings.rule_severities.malformed_courtyard = error
-board.design_settings.rule_severities.microvia_drill_out_of_range = error
-board.design_settings.rule_severities.mirrored_text_on_front_layer = warning
-board.design_settings.rule_severities.missing_courtyard = ignore
-board.design_settings.rule_severities.missing_footprint = warning
-board.design_settings.rule_severities.net_conflict = warning
-board.design_settings.rule_severities.nonmirrored_text_on_back_layer = warning
 board.design_settings.rule_severities.npth_inside_courtyard = ignore
-board.design_settings.rule_severities.padstack = warning
 board.design_settings.rule_severities.pth_inside_courtyard = ignore
-board.design_settings.rule_severities.shorting_items = error
-board.design_settings.rule_severities.silk_edge_clearance = warning
-board.design_settings.rule_severities.silk_over_copper = warning
-board.design_settings.rule_severities.silk_overlap = warning
-board.design_settings.rule_severities.skew_out_of_range = error
-board.design_settings.rule_severities.solder_mask_bridge = error
-board.design_settings.rule_severities.starved_thermal = error
-board.design_settings.rule_severities.text_height = warning
-board.design_settings.rule_severities.text_on_edge_cuts = error
-board.design_settings.rule_severities.text_thickness = warning
-board.design_settings.rule_severities.through_hole_pad_without_hole = error
-board.design_settings.rule_severities.too_many_vias = error
-board.design_settings.rule_severities.track_angle = error
-board.design_settings.rule_severities.track_dangling = warning
-board.design_settings.rule_severities.track_segment_length = error
-board.design_settings.rule_severities.track_width = error
-board.design_settings.rule_severities.tracks_crossing = error
-board.design_settings.rule_severities.unconnected_items = error
-board.design_settings.rule_severities.unresolved_variable = error
-board.design_settings.rule_severities.via_dangling = warning
-board.design_settings.rule_severities.zones_intersect = error
 board.design_settings.rules.max_error = 0.005
 board.design_settings.rules.min_clearance = 0.1
 board.design_settings.rules.min_copper_edge_clearance = 0.25
@@ -145,67 +91,14 @@ board.design_settings.via_dimensions.1.diameter = 0.5
 board.design_settings.via_dimensions.1.drill = 0.25
 board.design_settings.via_dimensions.2.diameter = 0.6
 board.design_settings.via_dimensions.2.drill = 0.3
-# 45 settings at zero/empty, folded: board.* (--all shows them)
-# 1 setting at zero/empty, folded: boards.* (--all shows them)
-# 1 setting at zero/empty, folded: cvpcb.* (--all shows them)
-erc.pin_map.0 = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2]
-erc.pin_map.1 = [0, 2, 0, 1, 0, 0, 1, 0, 2, 2, 2, 2]
-erc.pin_map.2 = [0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 2]
-erc.pin_map.3 = [0, 1, 0, 0, 0, 0, 1, 1, 2, 1, 1, 2]
-erc.pin_map.4 = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2]
-erc.pin_map.5 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]
-erc.pin_map.6 = [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 2]
-erc.pin_map.7 = [0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 2]
-erc.pin_map.8 = [0, 2, 1, 2, 0, 0, 1, 0, 2, 2, 2, 2]
-erc.pin_map.9 = [0, 2, 0, 1, 0, 0, 1, 0, 2, 0, 0, 2]
-erc.pin_map.10 = [0, 2, 1, 1, 0, 0, 1, 0, 2, 0, 0, 2]
-erc.pin_map.11 = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
-erc.rule_severities.bus_definition_conflict = error
-erc.rule_severities.bus_entry_needed = error
-erc.rule_severities.bus_to_bus_conflict = error
-erc.rule_severities.bus_to_net_conflict = error
+# 99 settings at KiCad's default or empty, folded: board.* (--all shows them)
+# 1 setting at KiCad's default or empty, folded: boards.* (--all shows them)
+# 1 setting at KiCad's default or empty, folded: cvpcb.* (--all shows them)
 erc.rule_severities.conflicting_netclasses = error
-erc.rule_severities.different_unit_footprint = error
-erc.rule_severities.different_unit_net = error
-erc.rule_severities.duplicate_reference = error
-erc.rule_severities.duplicate_sheet_names = error
-erc.rule_severities.endpoint_off_grid = warning
-erc.rule_severities.extra_units = error
-erc.rule_severities.footprint_filter = ignore
-erc.rule_severities.footprint_link_issues = warning
-erc.rule_severities.four_way_junction = ignore
 erc.rule_severities.global_label_dangling = warning
-erc.rule_severities.hier_label_mismatch = error
-erc.rule_severities.label_dangling = error
-erc.rule_severities.label_multiple_wires = warning
-erc.rule_severities.lib_symbol_issues = warning
-erc.rule_severities.lib_symbol_mismatch = warning
-erc.rule_severities.missing_bidi_pin = warning
-erc.rule_severities.missing_input_pin = warning
-erc.rule_severities.missing_power_pin = error
-erc.rule_severities.missing_unit = warning
-erc.rule_severities.multiple_net_names = warning
-erc.rule_severities.net_not_bus_member = warning
-erc.rule_severities.no_connect_connected = warning
-erc.rule_severities.no_connect_dangling = warning
-erc.rule_severities.pin_not_connected = error
-erc.rule_severities.pin_not_driven = error
-erc.rule_severities.pin_to_pin = warning
-erc.rule_severities.power_pin_not_driven = error
-erc.rule_severities.same_local_global_label = warning
-erc.rule_severities.similar_label_and_power = warning
-erc.rule_severities.similar_labels = warning
-erc.rule_severities.similar_power = warning
 erc.rule_severities.simulation_model_issue = error
-erc.rule_severities.single_global_label = ignore
-erc.rule_severities.unannotated = error
-erc.rule_severities.unconnected_wire_endpoint = warning
-erc.rule_severities.undefined_netclass = error
-erc.rule_severities.unit_value_mismatch = error
-erc.rule_severities.unresolved_variable = error
-erc.rule_severities.wire_dangling = error
-# 2 settings at zero/empty, folded: erc.* (--all shows them)
-# 2 settings at zero/empty, folded: libraries.* (--all shows them)
+# 44 settings at KiCad's default or empty, folded: erc.* (--all shows them)
+# 2 settings at KiCad's default or empty, folded: libraries.* (--all shows them)
 meta.version = 3
 net_settings.classes.D90.bus_width = 12
 net_settings.classes.D90.clearance = 0.15
@@ -239,9 +132,9 @@ net_settings.netclass_assignments./USB_N = [D90]
 net_settings.netclass_assignments./USB_P = [D90]
 net_settings.netclass_patterns.0.netclass = D90
 net_settings.netclass_patterns.0.pattern = USB_*
-# 4 settings at zero/empty, folded: net_settings.* (--all shows them)
+# 4 settings at KiCad's default or empty, folded: net_settings.* (--all shows them)
 pcbnew.last_paths.step = ../../../kicad-library/3dmodels/modules/cannify_micro.step
-# 9 settings at zero/empty, folded: pcbnew.* (--all shows them)
+# 9 settings at KiCad's default or empty, folded: pcbnew.* (--all shows them)
 schematic.bom_fmt_settings.field_delimiter = ,
 schematic.bom_fmt_settings.name = CSV
 schematic.bom_fmt_settings.ref_delimiter = ,
@@ -309,6 +202,6 @@ schematic.space_save_all_events = true
 schematic.spice_external_command = "spice \"%I\""
 schematic.spice_model_current_sheet_as_root = true
 schematic.subpart_first_id = 65
-# 52 settings at zero/empty, folded: schematic.* (--all shows them)
+# 52 settings at KiCad's default or empty, folded: schematic.* (--all shows them)
 sheets = [Root]
-# 1 setting at zero/empty, folded: text_variables.* (--all shows them)
+# 1 setting at KiCad's default or empty, folded: text_variables.* (--all shows them)
