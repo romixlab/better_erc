@@ -151,8 +151,9 @@ planned.
 - ✅ `TOOL-1` PnP compare between two files · `ecad_compare/examples/pnp_compare.rs`
 - 📋 `TOOL-2` Schematic vs layout match (catalogue `LAY-1`)
 - ✅ `TOOL-3` Readable git diffs: `berc textconv` prints a `.kicad_sch` / `.kicad_pcb` as sorted text without UUIDs
-  or coordinates (`--with-geometry` adds them), for git's `diff.kicad.textconv` · `berc/src/sch.rs`, `pcb.rs`,
-  README "Readable git diffs"
+  or coordinates (`--with-geometry` adds them), and a `.kicad_pro` as dotted-path settings with named lists and
+  KiCad-default-looking settings folded per section (`--all` shows them), for git's `diff.kicad.textconv` ·
+  `berc/src/sch.rs`, `pcb.rs`, `pro.rs`, README "Readable git diffs"
 
 ## Code generation (`GEN`)
 

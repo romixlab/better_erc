@@ -10,6 +10,9 @@ use std::fmt::Write;
 pub struct Options {
     /// Add positions, rotations and per-item geometry (wires, tracks)
     pub with_geometry: bool,
+    /// `.kicad_pro` only: show settings folded into a per-section summary line because they look like KiCad's
+    /// default (see `pro.rs`)
+    pub show_defaults: bool,
 }
 
 /// Children never printed by the generic printer: identity and styling, not content
@@ -271,6 +274,7 @@ mod tests {
             &v[0],
             Options {
                 with_geometry: true,
+                ..Options::default()
             },
         );
         assert!(geo.contains("(at 1 2)"));

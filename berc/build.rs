@@ -1,17 +1,39 @@
-//! Sets `GIT_SHA` (short, `-dirty` with local changes) and `BUILD_TIME` (UTC) for `berc --version`, so any
-//! installed build can be traced back to its commit. Both fall back to `unknown` without git.
+//! Sets `GIT_SHA` (short, `-dirty` from the index) and `BUILD_TIME` (the commit's own time, not the clock) for
+//! `berc --version`, so any installed build can be traced back to its commit. Both fall back to `unknown`
+//! without git. Model: `tpm_cli/build.rs`.
+//!
+//! Worktree-safe: in a worktree `.git` is a file, not a dir, so watching the fixed `.git/HEAD` and `.git/index`
+//! paths never finds them, and cargo treats build.rs as always-stale. Resolved instead with `git rev-parse`
+//! (`--git-dir` for this worktree's own `HEAD` and index, `--git-common-dir` for the branch ref and
+//! `packed-refs`, shared by every worktree). Paths that don't exist (`packed-refs` before the first pack, a
+//! packed branch's ref file) are not watched: cargo would call build.rs stale on every build for a missing file.
 
 use std::process::Command;
-use std::time::{SystemTime, UNIX_EPOCH};
 
 fn main() {
-    // In a worktree .git is a file; ask git where HEAD and the index really are
-    if let Some(dir) = git(&["rev-parse", "--absolute-git-dir"]) {
-        println!("cargo:rerun-if-changed={dir}/HEAD");
-        println!("cargo:rerun-if-changed={dir}/index");
+    let git_dir = git(&["rev-parse", "--git-dir"]).unwrap_or_else(|| ".git".into());
+    let common_dir = git(&["rev-parse", "--git-common-dir"]).unwrap_or_else(|| git_dir.clone());
+    println!("cargo:rerun-if-changed={git_dir}/HEAD");
+    println!("cargo:rerun-if-changed={git_dir}/index");
+    // HEAD here is this worktree's own, but "ref: refs/heads/X" only changes on a checkout; a commit on X
+    // updates the ref file itself, shared in the common dir (or, once git packs it, packed-refs there).
+    if let Ok(head) = std::fs::read_to_string(format!("{git_dir}/HEAD")) {
+        if let Some(r) = head.trim().strip_prefix("ref: ") {
+            watch_if_there(&format!("{common_dir}/{r}"));
+        }
     }
+    watch_if_there(&format!("{common_dir}/packed-refs"));
     println!("cargo:rustc-env=GIT_SHA={}", git_sha());
     println!("cargo:rustc-env=BUILD_TIME={}", build_time());
+}
+
+/// `rerun-if-changed` on a path that does not exist makes cargo treat build.rs as stale on every build: a repo
+/// that never ran `git pack-refs` has no `packed-refs`, a packed branch no ref file. When git creates or packs
+/// one, the other one disappears or changes, and that reruns build.rs.
+fn watch_if_there(path: &str) {
+    if std::path::Path::new(path).exists() {
+        println!("cargo:rerun-if-changed={path}");
+    }
 }
 
 fn git(args: &[&str]) -> Option<String> {
@@ -25,18 +47,20 @@ fn git_sha() -> String {
     let Some(sha) = git(&["rev-parse", "--short", "HEAD"]) else {
         return "unknown".into();
     };
-    match git(&["status", "--porcelain"]) {
-        Some(s) if !s.is_empty() => format!("{sha}-dirty"),
-        _ => sha,
+    // --quiet exits non-zero when the index differs from HEAD or the worktree from the index: dirty without a
+    // full working-tree scan for untracked files (git() turns that non-zero exit into None).
+    match git(&["diff-index", "--quiet", "HEAD", "--"]) {
+        None => format!("{sha}-dirty"),
+        Some(_) => sha,
     }
 }
 
-/// "3 Oct 2026 18:20 UTC", without a date crate
+/// "3 Oct 2026 18:20 UTC", without a date crate; the commit's own time (`git log -1 --format=%ct`), not the
+/// clock, so this output doesn't change between builds of the same commit.
 fn build_time() -> String {
-    let Ok(now) = SystemTime::now().duration_since(UNIX_EPOCH) else {
+    let Some(secs) = git(&["log", "-1", "--format=%ct"]).and_then(|s| s.parse::<i64>().ok()) else {
         return "unknown".into();
     };
-    let secs = now.as_secs() as i64;
     let (days, rest) = (secs.div_euclid(86400), secs.rem_euclid(86400));
     // Civil date from days since 1970-01-01 (Howard Hinnant's algorithm)
     let z = days + 719468;

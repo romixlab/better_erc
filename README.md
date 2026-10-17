@@ -3,10 +3,11 @@
 
 ## Readable git diffs
 
-`git diff` of a `.kicad_sch` or `.kicad_pcb` is mostly noise: UUIDs, instance paths, coordinates, items written in
-a new order on every save. `berc textconv` turns one KiCad file into sorted, line-oriented text (one fact per line,
-no UUIDs, no coordinates), and git can diff that instead. The stored files don't change; `git diff`, `git log -p`,
-`git show` and lazygit all show the readable form.
+`git diff` of a `.kicad_sch`, `.kicad_pcb` or `.kicad_pro` is mostly noise: UUIDs, instance paths, coordinates,
+items written in a new order on every save, and - for the project file - dozens of new-but-default settings
+added the moment a newer KiCad opens and saves an older project. `berc textconv` turns one KiCad file into sorted,
+line-oriented text (one fact per line, no UUIDs, no coordinates), and git can diff that instead. The stored files
+don't change; `git diff`, `git log -p`, `git show` and lazygit all show the readable form.
 
 Install the binary (from this repo):
 
@@ -20,6 +21,7 @@ Tell git which files to convert, in the repo with the KiCad files (`.gitattribut
 ```gitattributes
 *.kicad_sch diff=kicad
 *.kicad_pcb diff=kicad
+*.kicad_pro diff=kicad
 ```
 
 And how to convert them, once per machine:
@@ -33,6 +35,16 @@ git config --global diff.kicad.cachetextconv true
 history converts each file version only once. `git diff --stat` and `--numstat` still count raw lines; that is
 git, not berc. To see the raw diff once, pass `--no-textconv`.
 
+The cache is keyed only by the blob's hash, not by which berc version produced the note: after a `berc` upgrade
+that changes the output format, old blobs keep showing their old (but still cached) textconv text until the note
+is dropped. There's no fix for this inside berc - git never calls textconv again for a blob it already has a
+note for, no matter what the command would print now - so after an upgrade that changes output, clear it once
+per clone:
+
+```sh
+git update-ref -d refs/notes/textconv/kicad
+```
+
 What the text shows:
 
 - Schematic: title block; sub-sheets with file, page and pins; every symbol as
@@ -45,8 +57,16 @@ What the text shows:
   `C206 100nF  fp=Capacitor_SMD:C_0402_1005Metric  side=top  rot=90  smd` with its fields, 3D model, variant
   overrides and the net of each pad; nets with pad, track and via counts; per-layer track and zone counts; vias by
   size; zones with their settings; the board outline size; text and dimensions.
+- Project file: every setting as a dotted path (`board.design_settings.defaults.zones.min_clearance = 0.3`); net
+  classes, the sheet list and other named lists keyed by name instead of position, so adding or removing one
+  shows as one line; a setting that looks like KiCad's own "nothing here" value (`false`, `0`, `""`, `[]`, `{}`)
+  is folded into one summary line per top-level section instead of printed - this is a cheap stand-in for a real
+  "is this KiCad's default" table (none exists: that needs a project file from a full KiCad GUI round-trip, not
+  available to a headless build), so it can hide a setting that is genuinely and meaningfully zero; `--all`
+  always shows every line.
 - Anything berc doesn't know is printed as a one-line s-expression in `# other`, so nothing is silently dropped.
   A file that isn't a KiCad s-expression comes out as it is.
 
 `berc textconv --with-geometry FILE` adds positions (footprints rounded to 0.1 mm), wires and tracks, for when
-placement is what you are reviewing. Shell completion: `source <(COMPLETE=bash berc)` (or `zsh`, `fish`).
+placement is what you are reviewing. `--all` (`.kicad_pro` only) shows settings otherwise folded as looking like
+KiCad's default. Shell completion: `source <(COMPLETE=bash berc)` (or `zsh`, `fish`).

@@ -64,6 +64,7 @@ pub fn render(root: &Sexp, opts: Options) -> String {
                         s,
                         Options {
                             with_geometry: true,
+                            ..opts
                         },
                     ));
                     library.push(format!("lib {}  {hash}", q(name)));

@@ -6,7 +6,7 @@ const VERSION: &str = concat!(
     env!("CARGO_PKG_VERSION"),
     " (",
     env!("GIT_SHA"),
-    ", built ",
+    ", commit ",
     env!("BUILD_TIME"),
     ")"
 );
@@ -21,12 +21,13 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
-    /// Print a .kicad_sch or .kicad_pcb as sorted, line-oriented text for git diff
+    /// Print a .kicad_sch, .kicad_pcb or .kicad_pro as sorted, line-oriented text for git diff
     ///
     /// One fact per line, no UUIDs, no coordinates, so re-saving or reordering never shows as a change.
     /// Set up once (see README "Readable git diffs"):
     ///   .gitattributes:  *.kicad_sch diff=kicad
     ///                    *.kicad_pcb diff=kicad
+    ///                    *.kicad_pro diff=kicad
     ///   git config --global diff.kicad.textconv "berc textconv"
     ///   git config --global diff.kicad.cachetextconv true
     #[command(verbatim_doc_comment)]
@@ -37,6 +38,9 @@ enum Command {
         /// Add positions, rotations, wires and tracks
         #[arg(long)]
         with_geometry: bool,
+        /// .kicad_pro only: also show settings that look like KiCad's default, folded out by default
+        #[arg(long)]
+        all: bool,
     },
 }
 
@@ -47,6 +51,7 @@ fn main() -> ExitCode {
         Command::Textconv {
             file,
             with_geometry,
+            all,
         } => {
             let bytes = match std::fs::read(&file) {
                 Ok(b) => b,
@@ -56,7 +61,13 @@ fn main() -> ExitCode {
                 }
             };
             let text = String::from_utf8_lossy(&bytes);
-            let out = berc::textconv(&text, berc::Options { with_geometry });
+            let out = berc::textconv(
+                &text,
+                berc::Options {
+                    with_geometry,
+                    show_defaults: all,
+                },
+            );
             use std::io::Write;
             // A closed pipe (git diff into a pager that quit) is not an error worth a message
             let _ = std::io::stdout().lock().write_all(out.as_bytes());

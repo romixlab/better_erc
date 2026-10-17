@@ -11,6 +11,22 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- `berc textconv` reads `.kicad_pro` too: every project setting as a dotted path
+  (`board.design_settings.defaults.zones.min_clearance = 0.3`), net classes and other named lists keyed by name,
+  and settings that look like KiCad's "nothing here" value (`false`/`0`/`""`/`[]`/`{}`) folded into one summary
+  line per section, so opening a project in a newer KiCad - which can add dozens of new-but-default settings on
+  first save - shows as a small diff instead of a wall of JSON. `--all` shows the folded settings too (TOOL-3).
+
+### Changed
+
+- `justfile install` also installs `berc` (`cargo install --locked --path berc`), and `deploy` checks
+  `berc --version` instead of only `better_erc` being on PATH.
+- `berc --version` labels its timestamp `commit` instead of `built`, and that timestamp is now the commit's own
+  time instead of the build clock's, like `tpm_cli`'s `build.rs` - so it doesn't change between rebuilds of the
+  same commit, and a worktree build no longer looks stale to cargo.
+
 ## [0.3.0] - 2026-10-09
 
 ### Changed

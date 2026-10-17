@@ -32,6 +32,7 @@ fn schematic_with_geometry() {
         "small.kicad_sch.geometry.txt",
         Options {
             with_geometry: true,
+            ..Options::default()
         },
     );
 }
@@ -57,6 +58,7 @@ fn stable_under_reordering() {
                 i,
                 Options {
                     with_geometry: true,
+                    ..Options::default()
                 },
             )
         })
@@ -68,6 +70,52 @@ fn stable_under_reordering() {
         textconv(&shuffled, Options::default()),
         textconv(&input, Options::default())
     );
+}
+
+#[test]
+fn project() {
+    check(
+        "cannify_micro.old.kicad_pro",
+        "cannify_micro.old.kicad_pro.txt",
+        Options::default(),
+    );
+    check(
+        "cannify_micro.new.kicad_pro",
+        "cannify_micro.new.kicad_pro.txt",
+        Options::default(),
+    );
+}
+
+/// Real fixture (hw/b129_cannify_micro): opening the project in a newer KiCad added ~70 lines of new-but-default
+/// JSON. textconv on the two sides should still differ by only a few dozen lines, not the whole file.
+#[test]
+fn project_upgrade_is_a_small_diff() {
+    let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures");
+    let old = textconv(
+        &std::fs::read_to_string(dir.join("cannify_micro.old.kicad_pro")).unwrap(),
+        Options::default(),
+    );
+    let new = textconv(
+        &std::fs::read_to_string(dir.join("cannify_micro.new.kicad_pro")).unwrap(),
+        Options::default(),
+    );
+    let changed = symmetric_line_diff(&old, &new);
+    assert!(
+        changed <= 40,
+        "{changed} lines differ between old and new textconv output, expected a few dozen at most"
+    );
+}
+
+/// Lines present on only one side, counted with repeats (a cheap stand-in for a real diff's changed-line count)
+fn symmetric_line_diff(a: &str, b: &str) -> usize {
+    let mut counts: std::collections::HashMap<&str, i32> = std::collections::HashMap::new();
+    for l in a.lines() {
+        *counts.entry(l).or_default() += 1;
+    }
+    for l in b.lines() {
+        *counts.entry(l).or_default() -= 1;
+    }
+    counts.values().map(|n| n.unsigned_abs() as usize).sum()
 }
 
 #[test]

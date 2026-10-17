@@ -664,7 +664,13 @@ mod tests {
 
     fn render_str(text: &str, with_geometry: bool) -> String {
         let v = parse(text).unwrap();
-        render(&v[0], Options { with_geometry })
+        render(
+            &v[0],
+            Options {
+                with_geometry,
+                ..Options::default()
+            },
+        )
     }
 
     const BOARD: &str = r#"(kicad_pcb (version 20260206) (generator "pcbnew") (generator_version "10.0")

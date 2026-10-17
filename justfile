@@ -9,12 +9,14 @@ lint:
     cargo clippy --workspace --all-targets -- -D warnings
     cargo fmt --all --check
 
-# Installs the `better_erc` GUI binary to ~/.cargo/bin (there is no separate CLI yet)
+# Installs the `better_erc` GUI binary and the `berc` command line tool to ~/.cargo/bin
 install:
     cargo install --locked --path better_erc
+    cargo install --locked --path berc
 
-# Bring this PC up to main: pull, install, check the binary is on PATH. Refuses on local changes (names them,
-# never discards them). No systemd units. The app has no --version, so the check compares crate versions.
+# Bring this PC up to main: pull, install, check both binaries are on PATH. Refuses on local changes (names
+# them, never discards them). No systemd units. better_erc has no --version, so that check compares crate
+# versions; berc does, and is checked against it directly.
 deploy:
     #!/usr/bin/env bash
     set -eu
@@ -23,4 +25,6 @@ deploy:
     git pull --ff-only
     just install
     command -v better_erc
-    echo "ok: better_erc installed from $(git rev-parse --short HEAD)"
+    command -v berc
+    berc --version
+    echo "ok: better_erc and berc installed from $(git rev-parse --short HEAD)"

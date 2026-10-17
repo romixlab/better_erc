@@ -3,6 +3,7 @@
 
 pub mod common;
 pub mod pcb;
+pub mod pro;
 pub mod sch;
 pub mod sexpr;
 
@@ -11,6 +12,11 @@ pub use common::Options;
 /// Text form of a KiCad file. Never fails: input that isn't a KiCad s-expression comes back as it is, with a note
 /// on the first line, so `git diff` still shows something.
 pub fn textconv(text: &str, opts: Options) -> String {
+    // .kicad_pro is JSON, not an s-expression; detected by content so a git temp path without the extension
+    // still works
+    if let Some(json) = pro::detect(text) {
+        return pro::render(&json, opts);
+    }
     let parsed = match sexpr::parse(text) {
         Ok(p) => p,
         Err(e) => {
