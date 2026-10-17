@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-10-17
+
 ### Added
 
 - `berc textconv` reads `.kicad_pro` too: every project setting as a dotted path
