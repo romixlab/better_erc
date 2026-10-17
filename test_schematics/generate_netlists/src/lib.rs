@@ -13,8 +13,7 @@ pub fn generate_netlists() {
     for sch_path in collect_schematics() {
         let file_name = sch_path
             .file_name()
-            .map(|s| s.to_str())
-            .flatten()
+            .and_then(|s| s.to_str())
             .unwrap()
             .strip_suffix(".kicad_sch")
             .unwrap();
@@ -22,7 +21,7 @@ pub fn generate_netlists() {
         let contents = fs::read(&sch_path).unwrap();
         let mut hasher = Sha256::new();
         hasher.update(&contents);
-        let sha256 = hex::encode(&hasher.finalize());
+        let sha256 = hex::encode(hasher.finalize());
 
         let cached_path = generated_netlists_folder.join(format!("{file_name}_{sha256}.net"));
         // let image_path = generated_pictures_folder.join(format!("{file_name}.svg"));
@@ -74,7 +73,7 @@ pub fn get_netlist_path(name: &str) -> PathBuf {
             }
         })
         .collect::<Vec<_>>();
-    if paths.len() == 0 {
+    if paths.is_empty() {
         panic!("{name} not found");
     } else if paths.len() > 1 {
         panic!("Internal error: more than one cached file for {name}");
@@ -116,9 +115,8 @@ fn collect_schematics() -> Vec<PathBuf> {
             }
             if Path::new(&e.file_name())
                 .extension()
-                .map(|s| s.to_str())
-                .flatten()
-                == Some("kicad_sch".into())
+                .and_then(|s| s.to_str())
+                == Some("kicad_sch")
             {
                 Some(e.path())
             } else {
@@ -140,5 +138,5 @@ fn get_parent_folder(folder_name: &str) -> io::Result<PathBuf> {
         .to_path_buf();
     path.push(folder_name);
     fs::create_dir_all(&path)?; // generated_netlists is gitignored, missing on a fresh clone
-    Ok(fs::canonicalize(path)?)
+    fs::canonicalize(path)
 }

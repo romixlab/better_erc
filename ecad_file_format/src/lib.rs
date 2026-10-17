@@ -75,11 +75,19 @@ impl Designator {
     pub fn len(&self) -> usize {
         self.0.len()
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
 }
 
 impl NetName {
     pub fn len(&self) -> usize {
         self.0.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
     }
 }
 
@@ -87,11 +95,19 @@ impl PinName {
     pub fn len(&self) -> usize {
         self.0.len()
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
 }
 
 impl PinId {
     pub fn len(&self) -> usize {
         self.0.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
     }
 }
 
@@ -108,7 +124,7 @@ impl Designator {
         if !self.0.starts_with('L') {
             return false;
         }
-        if let Some(c) = self.0.chars().skip(1).next() {
+        if let Some(c) = self.0.chars().nth(1) {
             // ignore LEDx, LDx, etc
             c.is_numeric()
         } else {

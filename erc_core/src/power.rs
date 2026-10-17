@@ -54,10 +54,8 @@ pub fn derive_power_structure(netlist: &Netlist, strict: bool) -> Power {
             continue;
         }
 
-        if name.0.contains("VDD") || name.0.contains("VCC") {
-            if !power_rails.contains_key(name) {
-                power_rails.insert(name.clone(), PowerRail { voltage: None });
-            }
+        if (name.0.contains("VDD") || name.0.contains("VCC")) && !power_rails.contains_key(name) {
+            power_rails.insert(name.clone(), PowerRail { voltage: None });
         }
     }
 

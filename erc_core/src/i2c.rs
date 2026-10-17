@@ -139,15 +139,15 @@ fn find_pull_ups(
     diagnostics: &mut Vec<I2cDiagnostic>,
     scl_net: &NetName,
     sda_net: &NetName,
-    derived_name: &String,
-    mut connected_parts: &mut HashSet<Designator>,
+    derived_name: &str,
+    connected_parts: &mut HashSet<Designator>,
 ) -> Option<I2cPullUp> {
     let mut pull_up_chains = netlist.find_net_chains(
         scl_net,
         &[Designator::is_resistor, Designator::is_resistor],
-        &sda_net,
+        sda_net,
     );
-    let pull_up = if let Some(chain) = pull_up_chains.pop() {
+    if let Some(chain) = pull_up_chains.pop() {
         let scl_pull_up = chain[0].1.clone();
         let sda_pull_up = chain[1].1.clone();
         let v_net = netlist.pin_net(&chain[1].1, &chain[1].0).unwrap();
@@ -164,16 +164,15 @@ fn find_pull_ups(
             netlist,
             diagnostics,
             scl_net,
-            &sda_net,
-            &derived_name,
-            &mut connected_parts,
+            sda_net,
+            derived_name,
+            connected_parts,
             &pull_up,
         );
         Some(pull_up)
     } else {
         None
-    };
-    pull_up
+    }
 }
 
 fn look_for_redundant_pull_ups(
@@ -181,7 +180,7 @@ fn look_for_redundant_pull_ups(
     diagnostics: &mut Vec<I2cDiagnostic>,
     scl_net: &NetName,
     sda_net: &NetName,
-    derived_name: &String,
+    derived_name: &str,
     connected_parts: &mut HashSet<Designator>,
     pull_up: &I2cPullUp,
 ) {
@@ -189,7 +188,7 @@ fn look_for_redundant_pull_ups(
     let mut redundant_chains =
         netlist.find_net_chains(scl_net, &[Designator::is_resistor], &pull_up.v_net);
     redundant_chains.extend(netlist.find_net_chains(
-        &sda_net,
+        sda_net,
         &[Designator::is_resistor],
         &pull_up.v_net,
     ));
@@ -207,7 +206,7 @@ fn look_for_redundant_pull_ups(
     }
     if !redundant_pull_ups.is_empty() {
         diagnostics.push(I2cDiagnostic {
-            derived_name: derived_name.clone(),
+            derived_name: derived_name.to_owned(),
             kind: I2cDiagnosticKind::RedundantPullUps { redundant_pull_ups },
         })
     }
@@ -667,7 +666,7 @@ impl I2cBuses {
                     pull_ups.insert(pull_up.scl.clone());
                     pull_ups.insert(pull_up.sda.clone());
                     if let Some(pull_up_net) = netlist.nets.get(&pull_up.v_net) {
-                        let node_count = pull_up_net.nodes.iter().count();
+                        let node_count = pull_up_net.nodes.len();
                         if node_count == 2 {
                             diagnostics.push(I2cDiagnostic {
                                 derived_name: direct_segment
@@ -686,7 +685,7 @@ impl I2cBuses {
                                 nets.remove(&pull_up.v_net);
                                 if let Some(should_be_power_net) = nets.iter().next() {
                                     if let Some(net) = netlist.nets.get(should_be_power_net) {
-                                        if net.nodes.iter().count() == 1 {
+                                        if net.nodes.len() == 1 {
                                             diagnostics.push(I2cDiagnostic {
                                                 derived_name: direct_segment
                                                     .iter()

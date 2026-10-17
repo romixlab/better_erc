@@ -30,8 +30,6 @@ pub fn input_without_driving_source(netlist: &Netlist) {
 #[cfg(test)]
 mod tests {
     use crate::PcbAssembly;
-    use crate::general::input_without_driving_source;
-    use crate::power::derive_power_structure;
     use ecad_file_format::Designator;
     use std::path::Path;
 
@@ -41,7 +39,7 @@ mod tests {
         // let netlist = ecad_file_format::load_kicad_netlist(&path).unwrap();
         // let netlist = ecad_file_format::load_altium_netlist(Path::new("/Users/roman/Downloads/test_projects/typec_sbu_serial_revb/typec_sbu_serial.NET.EDF"), Path::new("/Users/roman/Downloads/test_projects/typec_sbu_serial_revb/typec_sbu_serial.NET")).unwrap();
         let path = Path::new("/Users/roman/Downloads/test_projects/c_a6/pstxnet.dat");
-        let netlist = ecad_file_format::load_orcad_netlist(&path).unwrap();
+        let netlist = ecad_file_format::load_orcad_netlist(path).unwrap();
         let pcba = PcbAssembly::new(netlist);
         let k = &pcba
             .netlist

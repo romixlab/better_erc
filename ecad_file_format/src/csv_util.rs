@@ -42,7 +42,7 @@ pub fn determine_separator(path: &Path) -> Option<u8> {
             _ => {}
         }
     }
-    counts.sort_by(|a, b| a.0.cmp(&b.0));
+    counts.sort_by_key(|a| a.0);
     // debug!("{counts:?}");
     Some(counts[2].1)
 }
@@ -72,7 +72,7 @@ pub fn find_header_row(
         let column_names = record.iter().collect::<Vec<&str>>();
         let mut count = 0;
         for column_name in &column_names {
-            if possible_columns.contains(&column_name) {
+            if possible_columns.contains(column_name) {
                 count += 1;
             }
         }
@@ -119,7 +119,7 @@ mod tests {
         let header_row = find_header_row(
             MINIMUM_PNP_COLUMNS_REQUIRED,
             &POSSIBLE_PNP_COLUMN_NAMES,
-            &Path::new("test_input/pnp_allegro.csv"),
+            Path::new("test_input/pnp_allegro.csv"),
         )
         .unwrap();
         assert_eq!(header_row.0, 6);

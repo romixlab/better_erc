@@ -23,6 +23,12 @@ impl Context {
     }
 }
 
+impl Default for Context {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[derive(Default)]
 pub struct ContextShared {
     pub boards: Vec<PcbAssembly>,

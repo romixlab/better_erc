@@ -55,10 +55,12 @@ pub fn load_kicad_netlist(path: &Path) -> Result<Netlist> {
                 ComponentEntry::Property { name, value } => {
                     let name = name.unwrap_or_default();
                     let value = value.unwrap_or_default();
-                    if !name.is_empty() && !value.is_empty() {
-                        if name != "Sheetname" && name != "Sheetfile" {
-                            fields.insert(name, value);
-                        }
+                    if !name.is_empty()
+                        && !value.is_empty()
+                        && name != "Sheetname"
+                        && name != "Sheetfile"
+                    {
+                        fields.insert(name, value);
                     }
                 }
                 ComponentEntry::SheetPath { .. } => {}

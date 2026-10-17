@@ -203,7 +203,7 @@ impl Netlist {
         end_filter: F,
     ) -> HashSet<(PinId, Designator)> {
         let mut found = HashSet::new();
-        'outer: for (_net_name, net) in &self.nets {
+        'outer: for net in self.nets.values() {
             let mut potential = vec![];
             let mut start_found = false;
             for node in &net.nodes {
@@ -241,7 +241,7 @@ impl Netlist {
 
     /// Returns true if two parts are connected via any of their pins
     pub fn are_parts_connected(&self, part_a: &Designator, part_b: &Designator) -> bool {
-        for (_, net) in &self.nets {
+        for net in self.nets.values() {
             let contains_a = net.nodes.iter().any(|n| &n.designator == part_a);
             let contains_b = net.nodes.iter().any(|n| &n.designator == part_b);
             if contains_a && contains_b {
@@ -380,7 +380,7 @@ impl Display for Netlist {
                     write!(f, " + ")?;
                 }
             }
-            writeln!(f, "")?;
+            writeln!(f)?;
         }
         Ok(())
     }

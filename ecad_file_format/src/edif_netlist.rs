@@ -101,7 +101,7 @@ pub fn load_edif_netlist(path: &Path) -> Result<Netlist> {
                                         let designator = instance.next().unwrap().as_str();
                                         let view_ref = instance.next().unwrap();
                                         let lib_part_name =
-                                            view_ref.into_inner().skip(1).next().unwrap().as_str();
+                                            view_ref.into_inner().nth(1).unwrap().as_str();
                                         let mut fields = HashMap::new();
                                         for property in instance {
                                             let mut property = property.into_inner();
@@ -213,7 +213,7 @@ pub fn load_edif_netlist(path: &Path) -> Result<Netlist> {
     })
 }
 
-fn symbol_or_rename_get(symbol_or_rename: Pair<Rule>) -> (&str, &str) {
+fn symbol_or_rename_get(symbol_or_rename: Pair<'_, Rule>) -> (&str, &str) {
     match symbol_or_rename.as_rule() {
         Rule::symbol => (symbol_or_rename.as_str(), symbol_or_rename.as_str()),
         Rule::rename => {
@@ -234,7 +234,7 @@ mod tests {
     #[test]
     fn can_read_edif_netlist() {
         let path = Path::new("test_input/netlist_altium_edif.edf");
-        let netlist = load_edif_netlist(&path).unwrap();
+        let netlist = load_edif_netlist(path).unwrap();
         println!("{:#?}", netlist);
         let part = netlist
             .lib_parts
@@ -243,11 +243,11 @@ mod tests {
                 LibPartName("CONN_2_3__6_".into()),
             ))
             .unwrap();
-        assert_eq!(part.pins.iter().count(), 6);
+        assert_eq!(part.pins.len(), 6);
         let pin = part.pins.get(&PinId("1".into())).unwrap();
         assert_eq!(pin.default_mode.ty, PinType::DigitalIO);
 
-        assert_eq!(netlist.nets.iter().count(), 3);
+        assert_eq!(netlist.nets.len(), 3);
         let net = netlist.nets.get(&NetName("NetR13_1".into())).unwrap();
         assert_eq!(
             net.nodes,
@@ -264,7 +264,7 @@ mod tests {
             .into()
         );
 
-        assert_eq!(netlist.components.iter().count(), 2);
+        assert_eq!(netlist.components.len(), 2);
         let component = netlist.components.get(&Designator("J2".into())).unwrap();
         assert_eq!(component.value, "95278-101A06LF");
         assert_eq!(component.fields.get("ChannelOffset").unwrap(), "1");

@@ -15,7 +15,7 @@ impl BetterErcApp {
                 .find_map(|(id, tile)| match tile {
                     Tile::Pane(tab) => {
                         if TabKind::from(tab) == tab_kind {
-                            Some(id.clone())
+                            Some(*id)
                         } else {
                             None
                         }

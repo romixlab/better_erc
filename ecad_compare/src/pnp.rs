@@ -23,7 +23,7 @@ pub fn compare_positions(
             change_list.removed.push(designator_a.clone());
         }
     }
-    for (designator_b, _pos_b) in positions_b.iter() {
+    for designator_b in positions_b.keys() {
         if !positions_a.contains_key(designator_b) {
             change_list.added.push(designator_b.clone());
         }
@@ -41,9 +41,9 @@ mod tests {
     #[test]
     fn compare_positions_works() {
         let positions_a =
-            load_component_positions(&Path::new("../ecad_file_format/test_input/pnp_allegro.csv"))
+            load_component_positions(Path::new("../ecad_file_format/test_input/pnp_allegro.csv"))
                 .unwrap();
-        let positions_b = load_component_positions(&Path::new(
+        let positions_b = load_component_positions(Path::new(
             "../ecad_file_format/test_input/pnp_altium_no_units.csv",
         ))
         .unwrap();

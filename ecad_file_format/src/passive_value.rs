@@ -83,10 +83,8 @@ fn parse_prefix_ohm(
                         }
                         mul = m;
                     }
-                    Rule::ohm => {
-                        if p.as_str() == "R" {
-                            warning = Some(PassiveValueParseWarning::BigRInsteadOfOhmSymbol);
-                        }
+                    Rule::ohm if p.as_str() == "R" => {
+                        warning = Some(PassiveValueParseWarning::BigRInsteadOfOhmSymbol);
                     }
                     _ => {}
                 }

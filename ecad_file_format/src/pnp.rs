@@ -79,7 +79,7 @@ pub fn load_component_positions(path: &Path) -> Result<HashMap<Designator, Compo
             _ => {
                 return Err(Error::msg(format!(
                     "Unknown board side: {}",
-                    values[side_idx].to_string()
+                    values[side_idx]
                 )));
             }
         };

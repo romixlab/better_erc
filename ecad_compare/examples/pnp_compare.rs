@@ -10,11 +10,11 @@ fn main() -> Result<()> {
     let path_a = args.get(1).expect("Path A");
     let path_b = args.get(2).expect("Path B");
 
-    let positions_a = load_component_positions(&Path::new(path_a))?;
+    let positions_a = load_component_positions(Path::new(path_a))?;
     println!("A file info:");
     print_info(&positions_a);
 
-    let positions_b = load_component_positions(&Path::new(path_b))?;
+    let positions_b = load_component_positions(Path::new(path_b))?;
     println!("B file info:");
     print_info(&positions_b);
 

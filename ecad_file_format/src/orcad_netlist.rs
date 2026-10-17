@@ -35,13 +35,13 @@ pub fn load_orcad_netlist(pstxnet_path: &Path) -> Result<Netlist> {
     let mut nets = HashMap::new();
     // println!("{pairs:#?}");
     let rule_file = pairs.into_iter().next().unwrap();
-    for pair in rule_file.into_inner().into_iter() {
+    for pair in rule_file.into_inner() {
         match pair.as_rule() {
             Rule::exporter_comment => {}
             Rule::net => {
                 let mut net_name = None;
                 let mut nodes = HashSet::new();
-                for pair in pair.into_inner().into_iter() {
+                for pair in pair.into_inner() {
                     match pair.as_rule() {
                         Rule::net_name => {
                             net_name = Some(pair.into_inner().next().unwrap().as_str().to_string());
@@ -51,7 +51,7 @@ pub fn load_orcad_netlist(pstxnet_path: &Path) -> Result<Netlist> {
                         Rule::node => {
                             let mut part_ref = None;
                             let mut part_pin = None;
-                            for pair in pair.into_inner().into_iter() {
+                            for pair in pair.into_inner() {
                                 match pair.as_rule() {
                                     Rule::designator => {
                                         part_ref = Some(pair.as_str().to_string());
@@ -122,7 +122,7 @@ mod lib_parts_parser {
         };
         let mut lib_parts = HashMap::new();
         let rule_file = pairs.into_iter().next().unwrap();
-        for pair in rule_file.into_inner().into_iter() {
+        for pair in rule_file.into_inner() {
             match pair.as_rule() {
                 Rule::exporter_comment => {}
                 Rule::primitive => {
@@ -162,7 +162,7 @@ mod lib_parts_parser {
                         let mut section_name = None;
                         let pin_id = if let Some(sections) = component_sections {
                             if sections.len() > 1 {
-                                let nulls_and_name = pin_id.split(',').into_iter();
+                                let nulls_and_name = pin_id.split(',');
                                 let idx_pin_id =
                                     nulls_and_name.enumerate().find(|(_, n)| n != &"0");
                                 if let Some((idx, pin_id)) = idx_pin_id {
@@ -280,7 +280,7 @@ mod part_list_parser {
         let mut components = HashMap::new();
         let rule_file = pairs.into_iter().next().unwrap();
         let page_re = Regex::new("@[\\w.()]+:page(\\d+).*")?;
-        for pair in rule_file.into_inner().into_iter() {
+        for pair in rule_file.into_inner() {
             match pair.as_rule() {
                 Rule::exporter_comment => {}
                 Rule::directives => {}

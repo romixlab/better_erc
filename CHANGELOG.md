@@ -30,6 +30,13 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
   time instead of the build clock's, like `tpm_cli`'s `build.rs` - so it doesn't change between rebuilds of the
   same commit, and a worktree build no longer looks stale to cargo.
 
+### Fixed
+
+- `just lint` is green again: mechanical clippy fixes across `ecad_file_format`, `erc_core`, `ecad_compare`,
+  `better_erc` and `generate_netlists` (needless borrows, `.iter().count()` to `.len()`, `for_kv_map`,
+  collapsible ifs, an unnecessary `let` binding, `len_without_is_empty`, a missing `Default` impl, a couple of
+  unused imports), no behaviour change. Pre-existing drift, unrelated to the `.kicad_pro` work above.
+
 ## [0.3.0] - 2026-10-09
 
 ### Changed
