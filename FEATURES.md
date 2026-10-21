@@ -71,8 +71,10 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 Checks are named by their catalogue ID. Only the ones with code are listed; everything else in the catalogue is
 planned.
 
-- ✅ `I2C-1` No pull-ups, non-standard value (outside 2.2k-10k), SCL/SDA not equal, value that doesn't parse ·
-  `i2c.rs` `check_pull_ups`, test schematics `i2c_*_pull_ups`
+- ✅ `I2C-1` No pull-ups · `i2c.rs` `check_pull_ups`, test schematics `i2c_*_pull_ups`. The same function also
+  finds `I2C-9` (value outside 2.2k-10k, or one that doesn't parse) and `I2C-10` (SCL and SDA pull-ups differ);
+  the catalogue split them out of I2C-1 on 21 Oct 2026, the code still reports all three as one kind of finding
+  (give each its own variant with `DIAG-3`)
 - ✅ `I2C-2` Redundant pull-ups · `i2c.rs`
 - ✅ `I2C-3` Pull-up through series resistors to nowhere · `i2c.rs`
 - ✅ `I2C-7` Series tie resistor too high (`MAX_TIE_RESISTANCE` = 100 Ω) · `check_tie_resistance`

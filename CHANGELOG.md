@@ -11,6 +11,21 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Changed
+
+- Check catalogue (`docs/checks.md`) grown from 166 to 513 checks. New categories: `BAT` (batteries and chargers),
+  `WIRE` (connectivity hygiene: one-pin nets, near-duplicate net names, no-connect misuse), `BOOT` (boot modes and
+  strapping pins), `ETH` (Ethernet PHY, magnetics, RGMII/RMII), `ERR` (known errata by MPN). Every category got
+  new entries; the real misses of the B125, B135, B153, B156 and B200 assemblies and bring-ups became checks
+  (`RAIL-4` fixed regulator voltage vs net, `RAIL-5` rail without a source, `MUX-4` GPIO on an NRST pin, `IO-12`
+  output enables without a pull, `IO-13` peripheral reset held by a resetting controller, `BOM-12` value vs MPN,
+  `LIB-6` footprint vs MPN package, `LVL-11` TXS-class shifters on push-pull lines, `SEQ-6` hard turn-on into a
+  capacitive load, `USB-7`/`USB-8` CC resistor sources and roles, among others), and the P2623 I2C-in-the-wild
+  notes became `I2C-11`..`I2C-22`. New rule "one check, one concern": 22 lumped entries were split, the old ID
+  keeping its first concern and the rest taking new numbers (`PIN-1` → `PIN-4`..`PIN-6`, `I2C-1` → `I2C-9`,
+  `I2C-10`, `SER-1` → `SER-7`, `SER-8`, ...), each marked with a `split` comment. The review checklist follows
+  the catalogue. FEATURES.md: `I2C-1`'s code also covers `I2C-9` and `I2C-10` as one finding for now.
+
 ## [0.3.3] - 2026-10-21
 
 ### Changed
