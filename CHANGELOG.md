@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.3.4] - 2026-10-21
+
 ### Changed
 
 - Check catalogue (`docs/checks.md`) grown from 166 to 513 checks. New categories: `BAT` (batteries and chargers),
