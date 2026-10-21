@@ -109,31 +109,39 @@ fn check_for_transistors_to_have_pin_names(
 
 #[cfg(test)]
 mod tests {
-    use crate::style::check_style;
-    use std::path::Path;
+    use super::*;
+    use ecad_file_format::kicad_netlist::load_kicad_netlist;
+    use generate_netlists::get_netlist_path;
 
+    /// `test_schematics/sources/style_values.kicad_sch`: one resistor per value finding, R1 fine and R8 DNP,
+    /// Q1 a MOSFET with unnamed pins, Q2 one with G, S and D
     #[test]
     fn able_to_find_style_diagnostics() {
-        // let path =
-        //     PathBuf::from("/Users/roman/Downloads/test_projects/vb135a_fdcan_iso_usb_hw.net");
-        // let path = PathBuf::from("/Users/roman/Downloads/test_projects/vb125_eth_fdcan_pro.net");
-        // let path =
-        //     PathBuf::from("/Users/roman/Downloads/test_projects/vb133_d600plus_control_board.net");
-        // let path = PathBuf::from("/Users/roman/Downloads/test_projects/cannify_micro.net");
-        // let netlist = ecad_file_format::load_kicad_netlist(&path).unwrap();
-        // let path = PathBuf::from("/Users/roman/Downloads/test_projects/c_a6/pstxnet.dat");
-        // let netlist = ecad_file_format::load_orcad_netlist(&path).unwrap();
-
-        let netlist = ecad_file_format::load_altium_netlist(Path::new("/Users/roman/Downloads/test_projects/typec_sbu_serial_revb/typec_sbu_serial.NET.EDF"), Path::new("/Users/roman/Downloads/test_projects/typec_sbu_serial_revb/typec_sbu_serial.NET")).unwrap();
-        println!("{:#?}", netlist);
-
+        let netlist = load_kicad_netlist(&get_netlist_path("style_values")).unwrap();
         let mut diagnostics = Vec::new();
         check_style(&netlist, &mut diagnostics);
-        println!("{diagnostics:#?}");
-
-        let mut diagnostics = Vec::new();
-        let buses = crate::i2c::find_i2c_buses(&netlist, &mut diagnostics);
-        println!("buses: {buses:#?}");
-        println!("diagnostics: {diagnostics:#?}");
+        let mut found: Vec<_> = diagnostics
+            .iter()
+            .map(|d| {
+                let kind = match &d.kind {
+                    // The parser's own message, not worth pinning here
+                    StyleDiagnosticKind::WrongValue(_) => "WrongValue".to_string(),
+                    kind => format!("{kind:?}"),
+                };
+                (d.designator.0.clone(), format!("{:?} {kind}", d.severity))
+            })
+            .collect();
+        found.sort();
+        let expected = [
+            ("Q1", "Warning MosfetPinsNotNamed"),
+            ("R2", "Error NoValue"),
+            ("R3", "Warning CalculateLaterValue"),
+            ("R4", "Error WrongValue"),
+            ("R5", "Warning NonStandardValue(RedundantSpace)"),
+            ("R6", "Warning NonStandardValue(SmallR)"),
+            ("R7", "Warning NonStandardValue(BigRInsteadOfOhmSymbol)"),
+        ]
+        .map(|(d, f)| (d.to_string(), f.to_string()));
+        assert_eq!(found, expected);
     }
 }

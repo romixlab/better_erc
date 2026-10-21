@@ -41,7 +41,8 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - 📋 `IMP-9` Pinmux import from Excel
 - 📋 `IMP-10` Xilinx bank info from pin names or Xilinx ASCII pin files
 - 💡 `IMP-11` Watch the netlist file and reload on change
-- 🐛 `IMP-12` ~~KiCad 10 netlists don't load~~ (fixed: KiCad 8, 9 and 10 each tested). Left: the `general` and `style` tests read OrCAD and Altium files from `~/Downloads/test_projects/` that only existed on an old Mac
+- ✅ `IMP-12` KiCad 9 and 10 netlists load (a fixture per KiCad version, `test_input/kicad_versions`); the `general` and
+  `style` tests run on test schematics in `test_schematics` instead of project files that only existed on one PC
 
 ## Netlist model and analysis (`NET`)
 
@@ -74,11 +75,12 @@ planned.
 - ✅ `I2C-2` Redundant pull-ups · `i2c.rs`
 - ✅ `I2C-3` Pull-up through series resistors to nowhere · `i2c.rs`
 - ✅ `I2C-7` Series tie resistor too high (`MAX_TIE_RESISTANCE` = 100 Ω) · `check_tie_resistance`
-- ✅ `BOM-5`, `BOM-6` "Calculate later" values · `style.rs`
+- ✅ `BOM-5`, `BOM-6` "Calculate later" values · `style.rs`, test schematic `style_values` (as BOM-9, BOM-10, LIB-3)
 - ✅ `BOM-9` Part without a value · `style.rs`
 - ✅ `BOM-10` Value doesn't parse or isn't standard · `style.rs`
 - ✅ `LIB-3` MOSFET pins not named · `style.rs`
-- ⬜ `IO-1` Inputs without a drive source: collects input pins and prints them, no diagnostic yet · `general.rs`
+- ⬜ `IO-1` Inputs without a drive source: collects input pins and prints them, no diagnostic yet · `general.rs`,
+  test schematic `io_inputs`
 - 📋 `DIAG-1` Unknown I2C node warning exists (`UnknownNode`) but should feed `DIAG-2` instead of being a check
 - 📋 `DIAG-2` Say which checks ran, and which didn't for lack of data (and what data would enable them)
 - 📋 `DIAG-3` One diagnostic type across checks (today `I2cDiagnostic` and `StyleDiagnostic`), with catalogue ID

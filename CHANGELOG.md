@@ -11,6 +11,15 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Changed
+
+- The `general` and `style` tests (IMP-12) read new test schematics instead of OrCAD and Altium project files
+  that only existed on one PC, and now assert what they find instead of printing it: `style_values` has one
+  part per style finding (BOM-5/6, BOM-9, BOM-10 with each value warning, LIB-3, a fine value and a DNP), and
+  `io_inputs` an input driven and one floating for the IO-1 stub. A second test takes the in-repo OrCAD fixture
+  through `PcbAssembly`, the path the old `general` test covered. `input_without_driving_source` gets its
+  input list from a new `inputs()`, which the test reads; it still prints the same list.
+
 ### Fixed
 
 - KiCad 9 and 10 netlists load again (IMP-12): the KiCad netlist reader knows the elements those versions add,
