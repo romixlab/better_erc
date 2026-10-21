@@ -71,6 +71,50 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 Checks are named by their catalogue ID. Only the ones with code are listed; everything else in the catalogue is
 planned.
 
+Every catalogue check carries an implementation tier (`impl:` in [docs/checks.md](docs/checks.md), explained in each
+detail page): `easy` runs on the netlist alone, `mid` needs part data or a project setting first, `hard` needs analysis
+the code lacks, `judgement` is not a rule. Counts on 22 Oct 2026:
+
+| category | easy | mid | hard | judgement | total |
+|---|---|---|---|---|---|
+| `PIN` | 3 | 13 | 1 | · | 17 |
+| `RAIL` | 4 | 20 | 2 | · | 26 |
+| `DEC` | 7 | 6 | · | · | 13 |
+| `SEQ` | 1 | 3 | 3 | 2 | 9 |
+| `GND` | 2 | 5 | · | · | 7 |
+| `DRV` | 7 | 12 | 1 | · | 20 |
+| `BAT` | · | 6 | · | 1 | 7 |
+| `SHORT` | 9 | 3 | · | · | 12 |
+| `WIRE` | 5 | 12 | · | · | 17 |
+| `BKF` | · | 2 | 9 | 1 | 12 |
+| `LEAK` | 1 | 4 | 2 | · | 7 |
+| `LVL` | 3 | 11 | 1 | · | 15 |
+| `IO` | 8 | 7 | 3 | · | 18 |
+| `LOGIC` | 3 | 2 | 1 | 2 | 8 |
+| `MUX` | 1 | 6 | · | 1 | 8 |
+| `BOOT` | · | 8 | 2 | · | 10 |
+| `CLK` | 7 | 12 | · | · | 19 |
+| `I2C` | 8 | 11 | 2 | 1 | 22 |
+| `SER` | 1 | 21 | 1 | 1 | 24 |
+| `ETH` | 1 | 9 | 4 | · | 14 |
+| `MEM` | 4 | 6 | 2 | · | 12 |
+| `HS` | 4 | 10 | 2 | · | 16 |
+| `RF` | · | 8 | 1 | · | 9 |
+| `USB` | 6 | 11 | 2 | · | 19 |
+| `CONN` | 6 | 11 | 2 | 1 | 20 |
+| `ANA` | 8 | 11 | 3 | 1 | 23 |
+| `RATE` | · | 23 | 1 | · | 24 |
+| `ERR` | · | 1 | · | · | 1 |
+| `DBG` | 12 | 8 | 1 | 3 | 24 |
+| `TEST` | 4 | 1 | 2 | · | 7 |
+| `BOM` | 11 | 5 | · | 2 | 18 |
+| `NAME` | 10 | 2 | · | · | 12 |
+| `LIB` | 3 | 12 | 2 | 1 | 18 |
+| `LAY` | · | 9 | 14 | 2 | 25 |
+| **all** | **139** | **291** | **64** | **19** | **513** |
+
+`BOM-5` is listed as an error in the catalogue while `style.rs` reports it as a warning: align when `DIAG-3` lands.
+
 - ✅ `I2C-1` No pull-ups · `i2c.rs` `check_pull_ups`, test schematics `i2c_*_pull_ups`. The same function also
   finds `I2C-9` (value outside 2.2k-10k, or one that doesn't parse) and `I2C-10` (SCL and SDA pull-ups differ);
   the catalogue split them out of I2C-1 on 21 Oct 2026, the code still reports all three as one kind of finding

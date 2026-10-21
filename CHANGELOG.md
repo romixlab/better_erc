@@ -11,6 +11,23 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- Detail pages for every check, one file per category under `docs/checks/` (34 pages, 513 sections): what the check
+  catches, why the board fails without it, a concrete example (our own boards' misses where there is one), how
+  better_erc can detect it and what data that needs, the fix, and references that were fetched and checked before
+  being cited (vendor app notes and datasheets, specs, Wikipedia, books by edition and chapter). Each section has an
+  `Impl.` line: how hard the check is to implement in pure Rust with no LLM (`easy` 139 · `mid` 291 · `hard` 64 ·
+  `judgement` 19) and the FEATURES.md ids it depends on. The index `docs/checks.md` carries the tier and a 📖 link on
+  every line, and explains the tiers in its header; FEATURES.md has the per-category tier table.
+
+### Changed
+
+- Catalogue fixes found while writing the pages: `ETH-1` had current- and voltage-mode PHY centre-tap termination the
+  wrong way round; `BOM-12`'s example attributed B200A's 13k3-for-13k7 to B153A (whose R219/R222 were 13k3 for 3k3);
+  `NAME-9`'s example pins (IO4 = GPIO17, IO5 = GPIO16); `I2C-12` SMBus 3.0 thresholds are 0.8 / 1.35 V; `I2C-14`
+  names the push-pull TXB class as the problem on I2C, not the open-drain TXS class.
+
 ## [0.3.4] - 2026-10-21
 
 ### Changed

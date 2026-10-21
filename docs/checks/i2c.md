@@ -2,7 +2,9 @@
 
 Detail page for the `I2C` category of the [check catalogue](../checks.md#-i2c---i2c). Each section explains one
 check: what it catches, why the board fails without it, a concrete example, what better_erc needs to find it, the
-usual fix, and where to read more. The one-line entries in the catalogue stay the source of truth for ID,
+usual fix, where to read more, and an **Impl.** line: how hard the check is to implement in pure Rust
+(`easy` netlist only · `mid` needs part data or a project setting · `hard` needs analysis the code lacks ·
+`judgement` not a rule, a human or an LLM) and the FEATURES.md ids it depends on. The one-line entries in the catalogue stay the source of truth for ID,
 severity and wording; this page is the commentary.
 
 References used throughout:
@@ -20,6 +22,8 @@ References used throughout:
 ## `I2C-1` No pull-ups on an I2C bus <a id="i2c-1"></a>
 
 🛑 error · needs: the bus (SCL/SDA nets), resistors to a rail · [catalogue entry](../checks.md#i2c-1)
+
+**Impl.** easy · depends on NET-4, NET-5
 
 **What it catches.** An SCL or SDA net with no resistor to a power rail anywhere on the bus.
 
@@ -44,6 +48,8 @@ so (they are typically 30-50 kΩ and too weak, see `I2C-8`).
 
 ⚠️ warning · needs: the bus, resistors to rails · [catalogue entry](../checks.md#i2c-2)
 
+**Impl.** easy · depends on NET-4
+
 **What it catches.** More than one pull-up on the same line of one bus segment.
 
 **Why it matters.** Pull-ups in parallel add up: two 4.7 kΩ make 2.35 kΩ, and three breakout boards with
@@ -65,6 +71,8 @@ stays inside the window of `I2C-9`.
 
 🛑 error · needs: the bus, resistor chains · [catalogue entry](../checks.md#i2c-3)
 
+**Impl.** easy · depends on NET-4, NET-10
+
 **What it catches.** A pull-up resistor whose far end goes through another resistor (or a chain) that ends on an
 unconnected pin, a DNP part or a net with nothing else on it, so no current path to a rail exists.
 
@@ -85,6 +93,8 @@ in the current variant.
 ## `I2C-4` Pull-up to a non-rail net <a id="i2c-4"></a>
 
 🛑 error · needs: the bus, power structure · [catalogue entry](../checks.md#i2c-4)
+
+**Impl.** easy · depends on NET-4, NET-5
 
 **What it catches.** A pull-up whose far end is a net that is not a power rail (a signal, an enable, a net with
 only this resistor on it).
@@ -109,6 +119,8 @@ documented default (`IO-3`).
 
 🛑 error · needs: device addresses (library data, straps `NET-11`) · [catalogue entry](../checks.md#i2c-5)
 
+**Impl.** mid · depends on NET-11
+
 **What it catches.** Two devices on one bus segment that answer to the same 7-bit (or 10-bit) address.
 
 **Why it matters.** Both acknowledge and both drive SDA during reads: the master sees the wired-AND of two
@@ -131,6 +143,8 @@ one device to another bus.
 
 💡 suggestion · needs: connector type · [catalogue entry](../checks.md#i2c-6)
 
+**Impl.** mid · depends on NET-4, LIB-2
+
 **What it catches.** An I2C bus leaving the board through a connector that is not a short fine-pitch FPC or
 board-to-board link: a pin header, a cable, a terminal block.
 
@@ -152,6 +166,8 @@ P82B96 class), a differential bus (CAN, RS-485), or 1-Wire/UART for simple senso
 
 ⚠️ warning · needs: the bus, series resistors · [catalogue entry](../checks.md#i2c-7)
 
+**Impl.** easy · depends on NET-4, NET-10
+
 **What it catches.** A series resistor in an SCL or SDA line (a net tie, a 0 Ω selector, an ESD resistor) above
 about 100 Ω.
 
@@ -172,6 +188,8 @@ recompute VOL.
 ## `I2C-8` Pull-up too weak for the bus speed <a id="i2c-8"></a>
 
 ⚠️ warning · needs: the bus, pull-up value, estimated capacitance, bus speed · [catalogue entry](../checks.md#i2c-8)
+
+**Impl.** mid · depends on NET-4, CFG-2
 
 **What it catches.** Rp above Rp(max) = tr(max) / (0.8473 · Cb), where tr(max) is the rise time the mode allows
 (1000 ns standard, 300 ns fast, 120 ns Fm+) and Cb the line capacitance.
@@ -196,6 +214,8 @@ I²C "Physical layer".
 
 ⚠️ warning · needs: pull-up value · [catalogue entry](../checks.md#i2c-9)
 
+**Impl.** easy · depends on NET-4, IMP-6
+
 **What it catches.** A pull-up below Rp(min) ≈ (VDD − 0.4 V) / 3 mA (≈ 1 kΩ at 3.3 V, 470 Ω at 1.8 V) or above
 the usual 10 kΩ, or a value that does not parse.
 
@@ -216,6 +236,8 @@ sensor's 3 mA sink, VOL rises above 0.3·VDD = 0.54 V.
 
 ⚠️ warning · needs: pull-up values · [catalogue entry](../checks.md#i2c-10)
 
+**Impl.** easy · depends on NET-4
+
 **What it catches.** Different pull-up values on SCL and SDA of one segment.
 
 **Why it matters.** Rarely fatal, nearly always a mistake: a BOM swap, a value changed on one line only, or a
@@ -233,6 +255,8 @@ assumes, and the weaker line reaches the limit of `I2C-8` first.
 ## `I2C-11` Back-powered I2C device <a id="i2c-11"></a>
 
 🛑 error · needs: power states (`NET-8`), device supply rail, fail-safe data of the part · [catalogue entry](../checks.md#i2c-11)
+
+**Impl.** hard · depends on NET-7, NET-8
 
 **What it catches.** A device on the bus whose supply can be off in some power state while the bus stays
 powered, and whose SCL/SDA pins are not fail-safe (Ioff-rated) inputs.
@@ -259,6 +283,8 @@ catalogue `BKF-2` for the general backfeed case; P2623 "I2C in the wild" §1.
 
 ⚠️ warning · needs: part class (I2C vs SMBus) from the library, bus speed · [catalogue entry](../checks.md#i2c-12)
 
+**Impl.** mid · depends on CFG-5, CFG-2
+
 **What it catches.** A device specified for SMBus (power monitors, chargers, fan controllers, many PMICs)
 on a bus run as plain I2C.
 
@@ -282,6 +308,8 @@ System Management Bus; UM10204 §6 (I2C thresholds).
 ## `I2C-13` Static-offset buffers in series or facing a low-VIL device <a id="i2c-13"></a>
 
 🛑 error · needs: buffer part type (library) · [catalogue entry](../checks.md#i2c-13)
+
+**Impl.** mid · depends on CFG-5
 
 **What it catches.** Two static-offset bus buffers (P82B96, PCA9515, TCA9517 B-side and friends) connected
 back-to-back on one segment, or one of them facing a device whose VIL is below the buffer's output low.
@@ -307,6 +335,8 @@ cannot be used in series with devices that use static voltage offset"); P2623 "I
 
 ⚠️ warning · needs: shifter part type (library) · [catalogue entry](../checks.md#i2c-14)
 
+**Impl.** mid · depends on CFG-5
+
 **What it catches.** A TXB010x-class (push-pull, auto-direction) translator in SCL/SDA, or an edge-accelerated
 open-drain class (TXS01xx) where a plain open-drain shifter was wanted.
 
@@ -331,6 +361,8 @@ acceleration, 10 kΩ pull-ups); TI PCA9306 datasheet (pass-FET translator withou
 
 ⚠️ warning · needs: mux type, device addresses · [catalogue entry](../checks.md#i2c-15)
 
+**Impl.** mid · depends on NET-11, CFG-5
+
 **What it catches.** An I2C switch (TCA9548A class, where several channels can be on at once) with devices of
 the same address, or a total capacitance over the limit, on channels the firmware may enable together.
 
@@ -351,6 +383,8 @@ channels and sums over 400 pF.
 ## `I2C-16` Device at a reserved address <a id="i2c-16"></a>
 
 ⚠️ warning · needs: device addresses · [catalogue entry](../checks.md#i2c-16)
+
+**Impl.** mid · depends on NET-11
 
 **What it catches.** A device whose 7-bit address falls in 0x00-0x07 or 0x78-0x7F.
 
@@ -373,6 +407,8 @@ address space"; SMBus 3.1 Appendix C (SMBus reserved addresses).
 
 🛑 error · needs: strap pins (library) · [catalogue entry](../checks.md#i2c-17)
 
+**Impl.** mid · depends on NET-7
+
 **What it catches.** Address-select pins (A0-A2, ADDR, SA0, SDO) with no pull, tie or driver.
 
 **Why it matters.** Most such pins have no internal pull: a floating one reads a random level, so the address
@@ -393,6 +429,8 @@ address in the schematic.
 ## `I2C-18` Bus segment without its own pull-ups <a id="i2c-18"></a>
 
 🛑 error · needs: the bus split into segments by translators, buffers, muxes · [catalogue entry](../checks.md#i2c-18)
+
+**Impl.** easy · depends on NET-4
 
 **What it catches.** A segment separated from the rest of the bus by a translator, buffer, isolator or mux
 whose SCL/SDA have no pull-ups of their own.
@@ -417,6 +455,8 @@ for translators) and run `I2C-1` per segment.
 
 ⚠️ warning · needs: power states (`NET-8`) · [catalogue entry](../checks.md#i2c-19)
 
+**Impl.** hard · depends on NET-4, NET-8
+
 **What it catches.** Pull-ups of a segment to a rail that is off in a power state where the rest of the bus is
 on and that segment is still connected (no switch opens it).
 
@@ -439,6 +479,8 @@ and switch only the devices.
 ## `I2C-20` Clock-stretching device on a master that cannot stretch <a id="i2c-20"></a>
 
 💡 suggestion · needs: device and master data (library) · [catalogue entry](../checks.md#i2c-20)
+
+**Impl.** judgement · depends on CFG-5
 
 **What it catches.** A slave known to stretch SCL (sensors that hold the clock during conversion, some MCUs as
 slaves) on a master known to mishandle stretching.
@@ -463,6 +505,8 @@ an interrupt line instead).
 
 ⚠️ warning · needs: estimated capacitance per segment · [catalogue entry](../checks.md#i2c-21)
 
+**Impl.** mid · depends on NET-4, CFG-2
+
 **What it catches.** A segment whose estimated line capacitance exceeds 400 pF (550 pF in Fm+).
 
 **Why it matters.** The rise-time budget of `I2C-8` assumes Cb ≤ 400 pF; above it no legal pull-up can meet
@@ -484,6 +528,8 @@ Wikipedia, I²C "Physical layer".
 ## `I2C-22` Several masters on one bus <a id="i2c-22"></a>
 
 💡 suggestion · needs: device roles (library) · [catalogue entry](../checks.md#i2c-22)
+
+**Impl.** mid · depends on NET-7, CFG-5
 
 **What it catches.** Two or more devices that can act as master (MCUs, SoCs, PMICs with host mode, bus
 analysers) on one bus.
