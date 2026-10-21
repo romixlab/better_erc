@@ -1,5 +1,10 @@
 # better_erc
 
+## Check catalogue
+
+What better_erc should catch on a schematic or netlist, by ID and severity: [docs/checks.md](docs/checks.md).
+A condensed [schematic review checklist](docs/review-checklist.md) groups those IDs for a review pass. What the
+code actually runs today: [FEATURES.md](FEATURES.md).
 
 ## Readable git diffs
 

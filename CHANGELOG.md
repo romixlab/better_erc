@@ -11,6 +11,14 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- `docs/checks.md`: the check catalogue (IDs like `PIN-1`, `I2C-3`, severity, overlaps), moved here from the tpm
+  repo so it ships with the public code. `docs/review-checklist.md`: the condensed schematic review checklist,
+  each ID linking back to its catalogue entry. README, FEATURES.md and CLAUDE.md now point here instead of tpm;
+  wording scrubbed of internal project names, board names and tools (the IO-9 and LOGIC-5 examples, an I2C-8
+  bench note, and two other asides) for a public repo.
+
 ## [0.3.1] - 2026-10-17
 
 ### Added

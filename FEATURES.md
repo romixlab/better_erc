@@ -1,9 +1,9 @@
 # better_erc features and roadmap
 
 The single source of truth for what the better_erc code does and what is planned. The checks themselves (what to
-catch, with severity) are specified in the check catalogue, kept in the tpm repo
-(`ideas/P2503-better-erc/rules.md`) with IDs like `I2C-3` or `PIN-1`; this file tracks which of them run and
-everything around them: importers, the netlist model, analysis, reports, views and the app.
+catch, with severity) are specified in the check catalogue, [docs/checks.md](docs/checks.md), with IDs like
+`I2C-3` or `PIN-1`; this file tracks which of them run and everything around them: importers, the netlist model,
+analysis, reports, views and the app.
 
 Last full review: 5 Oct 2026 (commit `9952563`, last code change 24 Apr 2025). Statuses come from reading the code,
 not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
