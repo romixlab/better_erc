@@ -2,21 +2,40 @@
 default:
     @just --list
 
+# erc_core's build first exports the test schematics with kicad-cli, so KiCad must be installed.
+
+# Run every test in the workspace
 test:
     cargo test --workspace
 
+# Clippy with warnings as errors, and the format check
 lint:
     cargo clippy --workspace --all-targets -- -D warnings
     cargo fmt --all --check
 
-# Installs the `better_erc` GUI binary and the `berc` command line tool to ~/.cargo/bin
+# Format all code
+fmt:
+    cargo fmt --all
+
+# Start the better_erc app from this checkout
+run:
+    cargo run --release -p better_erc
+
+# Only the changed schematics are exported again; the netlists are cached by content hash.
+
+# Export the test schematics to netlists and SVG pictures with kicad-cli
+netlists:
+    cargo run -p generate_netlists
+
+# Install the better_erc app and the berc command line tool to ~/.cargo/bin
 install:
     cargo install --locked --path better_erc
     cargo install --locked --path berc
 
-# Bring this PC up to main: pull, install, check both binaries are on PATH. Refuses on local changes (names
-# them, never discards them). No systemd units. better_erc has no --version, so that check compares crate
-# versions; berc does, and is checked against it directly.
+# Refuses on local changes (names them, never discards them). No systemd units. better_erc has no --version,
+# so only berc's version is printed.
+
+# Bring this PC up to main: pull, install, check both binaries are on PATH
 deploy:
     #!/usr/bin/env bash
     set -eu
@@ -29,10 +48,14 @@ deploy:
     berc --version
     echo "ok: better_erc and berc installed from $(git rev-parse --short HEAD)"
 
-# Re-export the KiCad netlist fixtures (ecad_file_format/test_input/kicad_versions) with kicad-cli 8, 9 and 10
-# from KiCad's own container images, so each version's netlist format stays covered by a test
+kicad := "podman run --rm --userns=keep-id -v $PWD:/w:Z -w /w docker.io/kicad/kicad"
+
+# So each KiCad version's netlist format stays covered by a test (ecad_file_format/test_input/kicad_versions).
+
+# Export the netlist fixtures again with kicad-cli 8, 9 and 10 from KiCad's container images (podman)
+[working-directory: 'ecad_file_format/test_input/kicad_versions']
 netlist-fixtures:
-    cd ecad_file_format/test_input/kicad_versions && podman run --rm --userns=keep-id -v "$PWD":/w:Z -w /w docker.io/kicad/kicad:8.0 kicad-cli sch export netlist -o fixture.kicad8.net fixture.kicad_sch
-    cd ecad_file_format/test_input/kicad_versions && podman run --rm --userns=keep-id -v "$PWD":/w:Z -w /w docker.io/kicad/kicad:9.0 kicad-cli sch export netlist -o fixture.kicad9.net fixture.kicad_sch
-    cd ecad_file_format/test_input/kicad_versions && podman run --rm --userns=keep-id -v "$PWD":/w:Z -w /w docker.io/kicad/kicad:10.0 kicad-cli sch export netlist -o fixture.kicad10.net fixture.kicad_sch
-    cd ecad_file_format/test_input/kicad_versions && podman run --rm --userns=keep-id -v "$PWD":/w:Z -w /w docker.io/kicad/kicad:10.0 kicad-cli sch export netlist -o fixture_kicad10.kicad10.net fixture_kicad10.kicad_sch
+    {{ kicad }}:8.0 kicad-cli sch export netlist -o fixture.kicad8.net fixture.kicad_sch
+    {{ kicad }}:9.0 kicad-cli sch export netlist -o fixture.kicad9.net fixture.kicad_sch
+    {{ kicad }}:10.0 kicad-cli sch export netlist -o fixture.kicad10.net fixture.kicad_sch
+    {{ kicad }}:10.0 kicad-cli sch export netlist -o fixture_kicad10.kicad10.net fixture_kicad10.kicad_sch
