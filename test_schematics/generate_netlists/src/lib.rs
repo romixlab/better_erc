@@ -1,5 +1,11 @@
+//! Exports the test schematics in `test_schematics/sources` to netlists (cached by content hash in
+//! `test_schematics/generated_netlists`, gitignored) and SVG pictures (`generated_pictures`, committed) with
+//! kicad-cli. Tests call [`get_netlist_path`], which exports first, once per test process; `just netlists` runs
+//! the export on its own.
+
 use sha2::{Digest, Sha256};
 use std::path::{Path, PathBuf};
+use std::sync::Once;
 use std::{fs, io};
 use subprocess::Exec;
 
@@ -61,7 +67,11 @@ pub fn generate_netlists() {
     println!("Cache hits: {cache_hits}");
 }
 
+/// The netlist exported from `sources/{name}.kicad_sch`, exporting what changed first (once per process, so
+/// tests running in parallel don't export at the same time)
 pub fn get_netlist_path(name: &str) -> PathBuf {
+    static GENERATED: Once = Once::new();
+    GENERATED.call_once(generate_netlists);
     let generated_netlists_folder = get_parent_folder("generated_netlists").unwrap();
     let mut paths = fs::read_dir(generated_netlists_folder)
         .unwrap()
@@ -75,7 +85,9 @@ pub fn get_netlist_path(name: &str) -> PathBuf {
         })
         .collect::<Vec<_>>();
     if paths.is_empty() {
-        panic!("{name} not found");
+        panic!(
+            "no netlist for {name}: is there a sources/{name}.kicad_sch, and is kicad-cli installed?"
+        );
     } else if paths.len() > 1 {
         panic!("Internal error: more than one cached file for {name}");
     } else {

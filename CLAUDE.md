@@ -8,7 +8,7 @@ alongside it. New checks go there first, then into FEATURES.md when code exists.
 ## Commands
 
 ```sh
-just test              # cargo test --workspace (erc_core's build runs kicad-cli on the test schematics first)
+just test              # cargo test --workspace (erc_core's tests export the test schematics with kicad-cli first)
 just lint              # clippy -D warnings + fmt --check
 just fmt               # cargo fmt --all
 just run               # start the better_erc app

@@ -2,7 +2,7 @@
 default:
     @just --list
 
-# erc_core's build first exports the test schematics with kicad-cli, so KiCad must be installed.
+# erc_core's tests first export the test schematics with kicad-cli, so KiCad must be installed.
 
 # Run every test in the workspace
 test:

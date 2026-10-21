@@ -13,6 +13,10 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ### Changed
 
+- Building erc_core no longer runs kicad-cli: its build script exported the test schematics on every build, also
+  when building or installing the app, and wrote into the source tree. The tests now export them on their first
+  `get_netlist_path` (once per test process), `generate_netlists` is a dev-dependency only, and `just netlists`
+  exports on its own. A missing netlist names the likely cause (no schematic, no kicad-cli).
 - README: what better_erc is and who it is for, what works today (berc textconv, the importers, the checks that
   run, the app and how far its import goes), install, a quick start for diffs and for running the checks from
   Rust, development recipes, and links to the check catalogue, the review checklist and FEATURES.md. The Rust
