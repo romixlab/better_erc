@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.3.3] - 2026-10-21
+
 ### Changed
 
 - Crate docs for `ecad_file_format`, `erc_core` and `ecad_compare`; an empty test module in erc_core removed.
