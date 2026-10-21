@@ -15,6 +15,8 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - `≈` marks overlaps: merge when implementing.
 - A miss found at assembly or bring-up becomes a new check here, so the list grows from real failures. Entries
   born that way carry the board in a comment (`<!-- B153A -->`); the full story is in that board's change list.
+- Detail pages under [docs/checks/](checks/) explain each check (what, why, example, how to detect, fix,
+  references); a 📖 on an index line links to its section. Written so far: [I2C](checks/i2c.md).
 - A check that needs data the netlist does not carry (part parameters, pin functions, power states) still belongs
   here: the code reports it as not run for lack of data (`DIAG-2`), and the review checklist covers it by hand.
 
@@ -297,28 +299,28 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 ## Interfaces
 
 ### 🚌 I2C - I2C
-- <a id="i2c-1"></a>🛑 `I2C-1` No pull-ups on an I2C bus <!-- CHK-20; split 21 Oct 2026: I2C-9, I2C-10 -->
-- <a id="i2c-2"></a>⚠️ `I2C-2` I2C multiple pull-ups <!-- CHK-107 -->
-- <a id="i2c-3"></a>🛑 `I2C-3` Pull-up from two series resistors to nowhere (part of I2C-1) <!-- CHK-162 -->
-- <a id="i2c-4"></a>🛑 `I2C-4` Pull-up to a non-rail net (resistor with only two pins connected)? <!-- CHK-163 -->
-- <a id="i2c-5"></a>🛑 `I2C-5` I2C address collision (needs addresses in the library, maybe AI can pull them out) <!-- CHK-15 -->
-- <a id="i2c-6"></a>💡 `I2C-6` I2C going to a connector that isn't FPC or fine pitch B2B: suggest another interface, keep I2C on board? <!-- CHK-99 -->
-- <a id="i2c-7"></a>⚠️ `I2C-7` Series tie resistor on an I2C line too high (over 100 Ω) <!-- new 5 Oct 2026, found in code -->
-- <a id="i2c-8"></a>⚠️ `I2C-8` Pull-up too weak for the bus speed: Rp > tr_max / (0.847 · Cb), tr (30-70 %) max 1000 ns at 100k, 300 ns at 400k, 120 ns at 1M; Cb estimated from the pins on the net (or a project setting). Measured on a bench: ~135 pF per line, 10k gives 1170 ns (fails 100k), 2.2k 277 ns (meets 400k), 1M needs ≤ 1.05k <!-- new 10 Oct 2026 -->
-- <a id="i2c-9"></a>⚠️ `I2C-9` Pull-up value outside the recommended range (2.2k-10k): too strong for the sink current (3 mA, 20 mA in Fm+), too weak for the edges ≈ I2C-8 <!-- from I2C-1 -->
-- <a id="i2c-10"></a>⚠️ `I2C-10` SCL and SDA pull-ups of different value <!-- from I2C-1 -->
-- <a id="i2c-11"></a>🛑 `I2C-11` I2C device whose supply can be off while the bus is on, without fail-safe (Ioff) inputs: it feeds itself through its ESD diodes and clamps both lines to ~0.6 V, the whole bus is dead ≈ BKF-8 <!-- 21 Oct 2026; P2623 I2C in the wild -->
-- <a id="i2c-12"></a>⚠️ `I2C-12` SMBus device on an I2C bus: it times out when the clock drops under 10 kHz or a transfer stalls over 25-35 ms, and its fixed 0.8 / 2.1 V thresholds do not match I2C's 0.3 / 0.7 VDD on 5 V and 1.8 V buses <!-- 21 Oct 2026; P2623 -->
-- <a id="i2c-13"></a>🛑 `I2C-13` Static-offset bus buffers (P82B96, PCA9600, PCA9515 class) in series, or one facing a device with a low VIL: the buffer's ~0.5 V low is never seen as low, the bus locks <!-- 21 Oct 2026; P2623 -->
-- <a id="i2c-14"></a>⚠️ `I2C-14` Push-pull auto-direction shifter (TXB010x class) on I2C: its direction sensing fails on open-drain lines and with pull-ups under ~50k. Edge-accelerated open-drain parts (TXS01xx) work but their one-shots can glitch slow edges; a plain open-drain shifter (PCA9306, BSS138 pair) is the safe choice ≈ LVL-11 <!-- 21 Oct 2026; P2623 -->
-- <a id="i2c-15"></a>⚠️ `I2C-15` I2C mux or switch whose channels, joined by firmware, carry devices with the same address, or whose summed capacitance exceeds the limit <!-- 21 Oct 2026; P2623 -->
-- <a id="i2c-16"></a>⚠️ `I2C-16` Device at a reserved address: 0x00-0x07 (general call, CBUS, Hs master codes) or 0x78-0x7F (10-bit prefix, device ID) <!-- 21 Oct 2026 -->
-- <a id="i2c-17"></a>🛑 `I2C-17` Address straps (A0-A2, ADDR, SA0) floating: the address is undefined, or read at power-up only <!-- 21 Oct 2026 -->
-- <a id="i2c-18"></a>🛑 `I2C-18` Bus segment behind a translator, isolator, buffer or mux with no pull-ups of its own <!-- 21 Oct 2026 -->
-- <a id="i2c-19"></a>⚠️ `I2C-19` Pull-ups of a segment to a rail that can be off while the rest of the bus is on ≈ BKF-12 <!-- 21 Oct 2026 -->
-- <a id="i2c-20"></a>💡 `I2C-20` Device that stretches the clock for its conversions on a master known not to support stretching (BCM2835 and its errata) <!-- 21 Oct 2026; P2623 -->
-- <a id="i2c-21"></a>⚠️ `I2C-21` Estimated bus capacitance over 400 pF (long cable, many devices): needs a buffer or a slower mode ≈ I2C-8 <!-- 21 Oct 2026 -->
-- <a id="i2c-22"></a>💡 `I2C-22` Several masters on one bus: all controllers must support multi-master arbitration, and the firmware must handle bus-busy <!-- 21 Oct 2026 -->
+- <a id="i2c-1"></a>🛑 `I2C-1` No pull-ups on an I2C bus [📖](checks/i2c.md#i2c-1) <!-- CHK-20; split 21 Oct 2026: I2C-9, I2C-10 -->
+- <a id="i2c-2"></a>⚠️ `I2C-2` I2C multiple pull-ups [📖](checks/i2c.md#i2c-2) <!-- CHK-107 -->
+- <a id="i2c-3"></a>🛑 `I2C-3` Pull-up from two series resistors to nowhere (part of I2C-1) [📖](checks/i2c.md#i2c-3) <!-- CHK-162 -->
+- <a id="i2c-4"></a>🛑 `I2C-4` Pull-up to a non-rail net (resistor with only two pins connected)? [📖](checks/i2c.md#i2c-4) <!-- CHK-163 -->
+- <a id="i2c-5"></a>🛑 `I2C-5` I2C address collision (needs addresses in the library, maybe AI can pull them out) [📖](checks/i2c.md#i2c-5) <!-- CHK-15 -->
+- <a id="i2c-6"></a>💡 `I2C-6` I2C going to a connector that isn't FPC or fine pitch B2B: suggest another interface, keep I2C on board? [📖](checks/i2c.md#i2c-6) <!-- CHK-99 -->
+- <a id="i2c-7"></a>⚠️ `I2C-7` Series tie resistor on an I2C line too high (over 100 Ω) [📖](checks/i2c.md#i2c-7) <!-- new 5 Oct 2026, found in code -->
+- <a id="i2c-8"></a>⚠️ `I2C-8` Pull-up too weak for the bus speed: Rp > tr_max / (0.847 · Cb), tr (30-70 %) max 1000 ns at 100k, 300 ns at 400k, 120 ns at 1M; Cb estimated from the pins on the net (or a project setting). Measured on a bench: ~135 pF per line, 10k gives 1170 ns (fails 100k), 2.2k 277 ns (meets 400k), 1M needs ≤ 1.05k [📖](checks/i2c.md#i2c-8) <!-- new 10 Oct 2026 -->
+- <a id="i2c-9"></a>⚠️ `I2C-9` Pull-up value outside the recommended range (2.2k-10k): too strong for the sink current (3 mA, 20 mA in Fm+), too weak for the edges ≈ I2C-8 [📖](checks/i2c.md#i2c-9) <!-- from I2C-1 -->
+- <a id="i2c-10"></a>⚠️ `I2C-10` SCL and SDA pull-ups of different value [📖](checks/i2c.md#i2c-10) <!-- from I2C-1 -->
+- <a id="i2c-11"></a>🛑 `I2C-11` I2C device whose supply can be off while the bus is on, without fail-safe (Ioff) inputs: it feeds itself through its ESD diodes and clamps both lines to ~0.6 V, the whole bus is dead ≈ BKF-8 [📖](checks/i2c.md#i2c-11) <!-- 21 Oct 2026; P2623 I2C in the wild -->
+- <a id="i2c-12"></a>⚠️ `I2C-12` SMBus device on an I2C bus: it times out when the clock drops under 10 kHz or a transfer stalls over 25-35 ms, and its fixed thresholds (0.8 / 2.1 V in SMBus 2.0, 0.8 / 1.35 V in 3.0) do not match I2C's 0.3 / 0.7 VDD on 5 V and 1.8 V buses [📖](checks/i2c.md#i2c-12) <!-- 21 Oct 2026; P2623 -->
+- <a id="i2c-13"></a>🛑 `I2C-13` Static-offset bus buffers (P82B96, PCA9600, PCA9515 class) in series, or one facing a device with a low VIL: the buffer's ~0.5 V low is never seen as low, the bus locks [📖](checks/i2c.md#i2c-13) <!-- 21 Oct 2026; P2623 -->
+- <a id="i2c-14"></a>⚠️ `I2C-14` Push-pull auto-direction shifter (TXB010x class) on I2C: its direction sensing fails on open-drain lines and with pull-ups under ~50k. Edge-accelerated open-drain parts (TXS01xx) work but their one-shots can glitch slow edges; a plain open-drain shifter (PCA9306, BSS138 pair) is the safe choice ≈ LVL-11 [📖](checks/i2c.md#i2c-14) <!-- 21 Oct 2026; P2623 -->
+- <a id="i2c-15"></a>⚠️ `I2C-15` I2C mux or switch whose channels, joined by firmware, carry devices with the same address, or whose summed capacitance exceeds the limit [📖](checks/i2c.md#i2c-15) <!-- 21 Oct 2026; P2623 -->
+- <a id="i2c-16"></a>⚠️ `I2C-16` Device at a reserved address: 0x00-0x07 (general call, CBUS, Hs master codes) or 0x78-0x7F (10-bit prefix, device ID) [📖](checks/i2c.md#i2c-16) <!-- 21 Oct 2026 -->
+- <a id="i2c-17"></a>🛑 `I2C-17` Address straps (A0-A2, ADDR, SA0) floating: the address is undefined, or read at power-up only [📖](checks/i2c.md#i2c-17) <!-- 21 Oct 2026 -->
+- <a id="i2c-18"></a>🛑 `I2C-18` Bus segment behind a translator, isolator, buffer or mux with no pull-ups of its own [📖](checks/i2c.md#i2c-18) <!-- 21 Oct 2026 -->
+- <a id="i2c-19"></a>⚠️ `I2C-19` Pull-ups of a segment to a rail that can be off while the rest of the bus is on ≈ BKF-12 [📖](checks/i2c.md#i2c-19) <!-- 21 Oct 2026 -->
+- <a id="i2c-20"></a>💡 `I2C-20` Device that stretches the clock for its conversions on a master known not to support stretching (BCM2835 and its errata) [📖](checks/i2c.md#i2c-20) <!-- 21 Oct 2026; P2623 -->
+- <a id="i2c-21"></a>⚠️ `I2C-21` Estimated bus capacitance over 400 pF (long cable, many devices): needs a buffer or a slower mode ≈ I2C-8 [📖](checks/i2c.md#i2c-21) <!-- 21 Oct 2026 -->
+- <a id="i2c-22"></a>💡 `I2C-22` Several masters on one bus: all controllers must support multi-master arbitration, and the firmware must handle bus-busy [📖](checks/i2c.md#i2c-22) <!-- 21 Oct 2026 -->
 
 ### 🔁 SER - UART, SPI, CAN, RS-485, LVDS and whole-bus checks
 - <a id="ser-1"></a>🛑 `SER-1` USART TX connected to TX (not crossed) <!-- CHK-115; split 21 Oct 2026: SER-7, SER-8 -->
