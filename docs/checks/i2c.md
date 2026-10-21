@@ -7,8 +7,8 @@ severity and wording; this page is the commentary.
 
 References used throughout:
 
-- **UM10204** · NXP, *I²C-bus specification and user manual*, Rev. 7 (2021). The bus standard; section numbers
-  below refer to it. [nxp.com/docs/en/user-guide/UM10204.pdf](https://www.nxp.com/docs/en/user-guide/UM10204.pdf)
+- **UM10204** · NXP, *I²C-bus specification and user manual*, Rev. 7.0 (October 2021). The bus standard; section and table numbers
+  below refer to it (fetched 21 Oct 2026 through `tpm fetch`, nxp.com refuses plain HTTP clients). [nxp.com/docs/en/user-guide/UM10204.pdf](https://www.nxp.com/docs/en/user-guide/UM10204.pdf)
 - **SLVA689** · TI, *I2C Bus Pullup Resistor Calculation* (2015). [ti.com/lit/an/slva689](https://www.ti.com/lit/an/slva689/slva689.pdf)
 - **SLVA704** · TI, *Understanding the I2C Bus* (2015). [ti.com/lit/an/slva704](https://www.ti.com/lit/an/slva704/slva704.pdf)
 - **SCPA054** · TI, *Why, When, and How to use I2C Buffers* (2018). [ti.com/lit/an/scpa054](https://www.ti.com/lit/an/scpa054/scpa054.pdf)
@@ -146,7 +146,7 @@ until power cycle.
 **Fix.** Keep I2C on the board; across a cable use a buffer with hot-swap and capacitance isolation (PCA9511,
 P82B96 class), a differential bus (CAN, RS-485), or 1-Wire/UART for simple sensors.
 
-**References.** SCPA054 (buffers for long buses, capacitance isolation); UM10204 Table 10 (Cb 400 pF).
+**References.** SCPA054 (buffers for long buses, capacitance isolation); UM10204 Table 11 (Cb 400 pF).
 
 ## `I2C-7` Series tie resistor too high <a id="i2c-7"></a>
 
@@ -167,7 +167,7 @@ with a 2.2 kΩ pull-up on 3.3 V, above the 0.3·VDD = 0.99 V threshold; the sens
 **Fix.** 0 Ω ties, or protection with a TVS instead of a resistor; if a resistor is needed keep it ≤ 100 Ω and
 recompute VOL.
 
-**References.** UM10204 §7.2 (series resistors), Table 10 (VOL, IOL); SLVA704 §4.
+**References.** UM10204 §7.3 (series protection resistors), Table 10 (VOL, IOL); SLVA704 §4.
 
 ## `I2C-8` Pull-up too weak for the bus speed <a id="i2c-8"></a>
 
@@ -189,7 +189,7 @@ setting), take the bus speed from the project, compute Rp(max), compare.
 **Fix.** Lower Rp (down to Rp(min), see `I2C-9`), shorten the bus, lower the speed, or add a buffer that splits
 the capacitance (SCPA054).
 
-**References.** SLVA689 §2.1 (tr = 0.8473 · Rp · Cb, Rp(max)); UM10204 Table 10 (tr per mode), §7.1; Wikipedia,
+**References.** SLVA689 §2.1 (tr = 0.8473 · Rp · Cb, Rp(max)); UM10204 Table 11 (tr per mode), §7.1; Wikipedia,
 I²C "Physical layer".
 
 ## `I2C-9` Pull-up value outside the recommended range <a id="i2c-9"></a>
@@ -325,7 +325,7 @@ bus, lost once a second sensor adds capacitance.
 **Fix.** PCA9306 or a BSS138 pair for I2C; keep TXS for 1-Wire and slow mixed buses; TXB for push-pull only.
 
 **References.** SCEA043 §1 (TXB: not for open-drain, use TXS for I2C); SCEA044 §2 (TXS one-shot edge
-acceleration, 10 kΩ pull-ups); TI PCA9306 datasheet; UM10204 §7.3 (level shifting with a pass transistor).
+acceleration, 10 kΩ pull-ups); TI PCA9306 datasheet (pass-FET translator without acceleration).
 
 ## `I2C-15` Mux channels that can join colliding devices <a id="i2c-15"></a>
 
@@ -366,7 +366,7 @@ address, the driver never binds.
 
 **Fix.** Another strap value.
 
-**References.** UM10204 §3.1.12, Table 3 (reserved addresses); Wikipedia, I²C "Reserved addresses in 7-bit
+**References.** UM10204 §3.1.12, Table 4 (reserved addresses); Wikipedia, I²C "Reserved addresses in 7-bit
 address space"; SMBus 3.1 Appendix C (SMBus reserved addresses).
 
 ## `I2C-17` Address straps floating <a id="i2c-17"></a>
@@ -410,8 +410,8 @@ for translators) and run `I2C-1` per segment.
 
 **Fix.** A pull-up pair per segment, to that segment's rail.
 
-**References.** UM10204 §7.3 (level shifting), SCPA054 §2 (buffers: each side needs pull-ups); TI PCA9306
-datasheet §9.2 (pull-ups on both sides).
+**References.** SCPA054 §2 (buffers: each side needs pull-ups); TI PCA9306 datasheet, application section
+(pull-ups on both sides); UM10204 Table 11 (Cb per side).
 
 ## `I2C-19` Segment pull-ups to a rail that can be off <a id="i2c-19"></a>
 
@@ -478,7 +478,7 @@ available, and connector/cable estimates from the project.
 **Fix.** A buffer that splits the bus into two capacitive halves (SCPA054), fewer devices per segment, a
 shorter route, or a lower mode with its longer tr allowance.
 
-**References.** UM10204 Table 10 (Cb 400 pF, 550 pF Fm+); SLVA689 §2.1; SCPA054 §3 (capacitance buffering);
+**References.** UM10204 Table 11 (Cb 400 pF, 550 pF Fm+); SLVA689 §2.1; SCPA054 §3 (capacitance buffering);
 Wikipedia, I²C "Physical layer".
 
 ## `I2C-22` Several masters on one bus <a id="i2c-22"></a>
