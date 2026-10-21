@@ -13,6 +13,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ### Changed
 
+- `Cargo.lock` is committed (it was gitignored), so `cargo install --locked` and `just install` build every
+  clone with the same dependency versions.
 - Building erc_core no longer runs kicad-cli: its build script exported the test schematics on every build, also
   when building or installing the app, and wrote into the source tree. The tests now export them on their first
   `get_netlist_path` (once per test process), `generate_netlists` is a dev-dependency only, and `just netlists`
