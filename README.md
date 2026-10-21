@@ -1,10 +1,101 @@
 # better_erc
 
-## Check catalogue
+Electrical rule checks for schematics that go further than the ERC built into an EDA tool: checks that know
+what an I2C bus, a pull-up, a MOSFET or a power rail is, read from the netlist your EDA tool exports. Plus
+`berc textconv`, which makes `git diff` of KiCad files readable.
 
-What better_erc should catch on a schematic or netlist, by ID and severity: [docs/checks.md](docs/checks.md).
-A condensed [schematic review checklist](docs/review-checklist.md) groups those IDs for a review pass. What the
-code actually runs today: [FEATURES.md](FEATURES.md).
+For hardware engineers who review schematics (their own or someone else's) and want the repetitive part of a
+review done by a tool, and for teams that keep KiCad projects in git.
+
+The project is early. The KiCad diff tool is ready for daily use; the checks run as a Rust library and in tests,
+and the desktop app is a first prototype.
+
+## What works today
+
+- **`berc textconv`**: `.kicad_sch`, `.kicad_pcb` and `.kicad_pro` files as sorted, line-oriented text for
+  `git diff`, `git log -p` and anything else that uses git's textconv. See
+  [Readable git diffs](#readable-git-diffs).
+- **Netlist import** (`ecad_file_format`): KiCad 8, 9 and 10 netlists, OrCAD Capture netlists (pstxnet, pstxprt,
+  pstchip), Altium EDIF plus WireList, and pick-and-place CSV files from KiCad, Altium and Allegro, all into one
+  netlist model.
+- **Checks** (`erc_core`), run on any imported netlist:
+  - I2C buses found from net names, including segments behind voltage translators; missing, redundant,
+    unequal or non-standard pull-ups, pull-ups through series resistors to nowhere, series resistors that are
+    too large (`I2C-1`, `I2C-2`, `I2C-3`, `I2C-7`)
+  - parts without a value, "calculate later" values like `?`, resistor values that don't parse or are written
+    in a non-standard way (`BOM-5`, `BOM-6`, `BOM-9`, `BOM-10`)
+  - MOSFET symbols whose pins aren't named G, S and D (`LIB-3`)
+  - power rails and grounds derived from net names
+- **The app** (`better_erc`, egui): tabs for nets, power rails, I2C buses, style findings and inputs. Its import
+  tab loads Altium netlists so far; KiCad and OrCAD import in the app are still to come.
+- **Tools**: a pick-and-place file comparison (`ecad_compare`).
+
+There is no command to run the checks from the shell yet; that is planned (`RPT-20` in FEATURES.md).
+
+## Documentation
+
+- [docs/checks.md](docs/checks.md): the check catalogue, everything better_erc should catch on a schematic or
+  netlist, by ID (`PIN-1`, `I2C-3`) and severity.
+- [docs/review-checklist.md](docs/review-checklist.md): a condensed schematic review checklist that groups those
+  IDs for a review pass.
+- [FEATURES.md](FEATURES.md): what the code does today and what is planned, item by item.
+- [CHANGELOG.md](CHANGELOG.md): what changed in each version.
+
+## Install
+
+You need a Rust toolchain (1.86 or newer, from [rustup](https://rustup.rs)). From a clone of this repository:
+
+```sh
+cargo install --locked --path berc         # the berc command line tool
+cargo install --locked --path better_erc   # the desktop app
+```
+
+or both at once with [just](https://github.com/casey/just): `just install`. `berc --version` shows the version,
+the git commit it was built from and that commit's time.
+
+## Quick start
+
+Readable diffs of a KiCad project in git, once per machine and once per repository:
+
+```sh
+git config --global diff.kicad.textconv "berc textconv"
+git config --global diff.kicad.cachetextconv true
+printf '*.kicad_sch diff=kicad\n*.kicad_pcb diff=kicad\n*.kicad_pro diff=kicad\n' >> .gitattributes
+git diff   # changed parts, values, nets and settings instead of raw s-expressions
+```
+
+Run the checks on a KiCad design from Rust: export the netlist with
+`kicad-cli sch export netlist -o board.net board.kicad_sch`, then
+
+```rust
+use ecad_file_format::load_kicad_netlist;
+use erc_core::PcbAssembly;
+
+let netlist = load_kicad_netlist(std::path::Path::new("board.net"))?;
+let pcba = PcbAssembly::new(netlist);
+println!("{:#?}", pcba.diagnostics); // I2C and style findings
+```
+
+Start the app with `just run` (or `better_erc` once installed).
+
+Shell completion for `berc`: add `source <(COMPLETE=bash berc)` to `~/.bashrc`, `source <(COMPLETE=zsh berc)`
+to `~/.zshrc`, or `COMPLETE=fish berc | source` to `~/.config/fish/config.fish`.
+
+## Development
+
+The workspace has five crates: `ecad_file_format` (importers and the netlist model), `erc_core` (analysis and
+checks), `ecad_compare` (board file comparisons), `better_erc` (the app) and `berc` (the command line tool).
+`test_schematics` holds a small KiCad schematic per check; the tests export them with `kicad-cli`, so KiCad must
+be installed to run them.
+
+```sh
+just test       # all tests
+just lint       # clippy with warnings as errors, and the format check
+just fmt        # format the code
+just run        # start the app
+just netlists   # export the test schematics to netlists and pictures
+just            # list every recipe
+```
 
 ## Readable git diffs
 
@@ -14,14 +105,8 @@ added the moment a newer KiCad opens and saves an older project. `berc textconv`
 line-oriented text (one fact per line, no UUIDs, no coordinates), and git can diff that instead. The stored files
 don't change; `git diff`, `git log -p`, `git show` and lazygit all show the readable form.
 
-Install the binary (from this repo):
-
-```sh
-cargo install --path berc
-```
-
-Tell git which files to convert, in the repo with the KiCad files (`.gitattributes`, committed, or
-`.git/info/attributes` for yourself only):
+With `berc` installed (see [Install](#install)), tell git which files to convert, in the repo with the KiCad
+files (`.gitattributes`, committed, or `.git/info/attributes` for yourself only):
 
 ```gitattributes
 *.kicad_sch diff=kicad
@@ -76,4 +161,4 @@ What the text shows:
 
 `berc textconv --with-geometry FILE` adds positions (footprints rounded to 0.1 mm), wires and tracks, for when
 placement is what you are reviewing. `--all` (`.kicad_pro` only) shows settings otherwise folded as looking like
-KiCad's default. Shell completion: `source <(COMPLETE=bash berc)` (or `zsh`, `fish`).
+KiCad's default.

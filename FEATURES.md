@@ -36,7 +36,8 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - ✅ `IMP-4` Altium: EDIF netlist + WireList (for pin types) combined · `edif_netlist.rs`, `wirelist.rs`, `altium_netlist.rs`
 - ✅ `IMP-5` PnP CSV from KiCad, Altium and Allegro · `pnp.rs`
 - ✅ `IMP-6` Passive values (Ω with milli/micro, k, M) · `passive_value.rs`
-- 🚧 `IMP-7` Import tab in the app: KiCad schematic, Altium and OrCAD netlist sources · `tabs/pcb_data_import.rs`
+- 🚧 `IMP-7` Import tab in the app: KiCad schematic, Altium and OrCAD netlist sources. Only Altium loads; the KiCad and
+  OrCAD sources pick their files but load nothing yet · `tabs/pcb_data_import.rs`
 - 📋 `IMP-8` OrCAD: one BOM per variant
 - 📋 `IMP-9` Pinmux import from Excel
 - 📋 `IMP-10` Xilinx bank info from pin names or Xilinx ASCII pin files

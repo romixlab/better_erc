@@ -8,6 +8,20 @@ use ecad_file_format::{Designator, NetName};
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
+/// One board: its netlist and everything derived from it (power structure, I2C buses, findings of the checks).
+/// `new` runs the analysis and the checks.
+///
+/// ```no_run
+/// use ecad_file_format::load_kicad_netlist;
+/// use erc_core::PcbAssembly;
+///
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// let netlist = load_kicad_netlist(std::path::Path::new("board.net"))?;
+/// let pcba = PcbAssembly::new(netlist);
+/// println!("{:#?}", pcba.diagnostics); // I2C and style findings
+/// # Ok(())
+/// # }
+/// ```
 pub struct PcbAssembly {
     pub netlist: Netlist,
     pub power: Power,

@@ -13,6 +13,11 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ### Changed
 
+- README: what better_erc is and who it is for, what works today (berc textconv, the importers, the checks that
+  run, the app and how far its import goes), install, a quick start for diffs and for running the checks from
+  Rust, development recipes, and links to the check catalogue, the review checklist and FEATURES.md. The Rust
+  example is also a doc test on `PcbAssembly`, so it keeps compiling. FEATURES.md `IMP-7` now says only Altium
+  loads in the app's import tab.
 - `berc` (TOOL-4): help is coloured and `berc: error: ...` has a red `error:`, both only on a terminal and never
   with `NO_COLOR` (`textconv` output stays plain); `--help` says how to turn on shell completion. Tests for the
   binary itself: the `--version` line, a plain error on a pipe, completion scripts for bash, zsh and fish.
