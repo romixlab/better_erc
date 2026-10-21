@@ -148,6 +148,8 @@ planned.
 
 - ✅ `APP-1` egui app with tiles, tabs shown and hidden from the side panel, menu bar, debug window · `better_erc/src`
 - 📋 `APP-2` Sidebar with view switching; netlist load and watch status in a status bar
+- 📋 `APP-3` `better_erc --version` with version, git SHA and commit time like `berc` (the app has no command line
+  options at all yet), so `just deploy` can check the installed app and not only that it is on PATH
 
 ## Tools (`TOOL`)
 
@@ -157,6 +159,10 @@ planned.
   or coordinates (`--with-geometry` adds them), and a `.kicad_pro` as dotted-path settings with named lists and
   KiCad-default-looking settings folded per section (`--all` shows them), for git's `diff.kicad.textconv` ·
   `berc/src/sch.rs`, `pcb.rs`, `pro.rs`, README "Readable git diffs"
+- ✅ `TOOL-4` `berc` CLI basics: `--version` with version, git SHA (`-dirty`) and commit time (`berc/build.rs`); shell
+  completion for bash, zsh and fish (`COMPLETE=bash berc`, file paths completed), told in `--help`; colour in help
+  and errors only on a terminal and never with `NO_COLOR`; `textconv` output always plain (git colours the diff).
+  No progress bar: `textconv` converts one file in milliseconds · `berc/src/main.rs`, `berc/tests/cli.rs`
 
 ## Code generation (`GEN`)
 

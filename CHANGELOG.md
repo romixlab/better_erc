@@ -13,6 +13,9 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ### Changed
 
+- `berc` (TOOL-4): help is coloured and `berc: error: ...` has a red `error:`, both only on a terminal and never
+  with `NO_COLOR` (`textconv` output stays plain); `--help` says how to turn on shell completion. Tests for the
+  binary itself: the `--version` line, a plain error on a pipe, completion scripts for bash, zsh and fish.
 - `justfile`: new `fmt`, `run` (the app), `netlists` (export the test schematics with kicad-cli, through a new
   `generate_netlists` binary; before, only erc_core's build script could) and `netlist-fixtures`; each recipe has
   a one-line description for `just --list`.

@@ -1,3 +1,4 @@
+use clap::builder::styling::Styles;
 use clap::{CommandFactory, Parser, Subcommand, ValueHint};
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -11,9 +12,16 @@ const VERSION: &str = concat!(
     ")"
 );
 
+/// Shown under --help. Completion is dynamic (clap_complete's `CompleteEnv`): the shell asks berc itself.
+const AFTER_HELP: &str = "Shell completion: add `source <(COMPLETE=bash berc)` to ~/.bashrc, \
+`source <(COMPLETE=zsh berc)` to ~/.zshrc, or `COMPLETE=fish berc | source` to ~/.config/fish/config.fish.";
+
 /// better_erc command line tools
+///
+/// Colour in help and errors only on a terminal, and never with NO_COLOR set; `textconv` output is always plain
+/// text, git colours the diff itself.
 #[derive(Parser)]
-#[command(name = "berc", version = VERSION)]
+#[command(name = "berc", version = VERSION, after_help = AFTER_HELP, styles = Styles::styled())]
 struct Cli {
     #[command(subcommand)]
     command: Command,
@@ -56,7 +64,7 @@ fn main() -> ExitCode {
             let bytes = match std::fs::read(&file) {
                 Ok(b) => b,
                 Err(e) => {
-                    eprintln!("berc: can't read {}: {e}", file.display());
+                    error(&format!("can't read {}: {e}", file.display()));
                     return ExitCode::FAILURE;
                 }
             };
@@ -74,4 +82,11 @@ fn main() -> ExitCode {
             ExitCode::SUCCESS
         }
     }
+}
+
+/// `berc: error: ...` on stderr, the `error:` in red on a terminal (anstream drops the colour when stderr isn't
+/// one, or NO_COLOR is set)
+fn error(msg: &str) {
+    let red = anstyle::AnsiColor::Red.on_default().bold();
+    anstream::eprintln!("berc: {red}error:{red:#} {msg}");
 }
