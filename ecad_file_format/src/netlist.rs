@@ -137,7 +137,7 @@ impl Netlist {
     /// # use ecad_file_format::netlist::Netlist;
     /// # use ecad_file_format::{Designator, NetName};
     /// # let netlist = Netlist::default();
-    /// netlist.find_net_chains(&NetName("SCL".into()), &[Designator::is_resistor, Designator::is_resistor], &NetName("SDA".into()))
+    /// netlist.find_net_chains(&NetName("SCL".into()), &[Designator::is_resistor, Designator::is_resistor], &NetName("SDA".into()));
     /// ```
     pub fn find_net_chains<F: Fn(&Designator) -> bool>(
         &self,

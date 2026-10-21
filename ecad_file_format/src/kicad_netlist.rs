@@ -1,8 +1,9 @@
 use crate::netlist::{
-    Component, LibName, LibPart, LibPartName, Net, Netlist, Node, Pin, PinMode, PinType,
+    Component, ComponentSection, LibName, LibPart, LibPartName, Net, Netlist, Node, Pin, PinMode,
+    PinType,
 };
 use crate::{Designator, NetName, PinId, PinName};
-use anyhow::Result;
+use anyhow::{Context, Result};
 use serde::de::SeqAccess;
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
@@ -11,9 +12,14 @@ use std::fmt;
 use std::fs::read_to_string;
 use std::path::Path;
 
+/// Reads a KiCad netlist (`kicad-cli sch export netlist`, the "KiCad" s-expression format) as written by KiCad 8,
+/// 9 and 10. Elements newer KiCad versions add that no check uses yet (variants, component classes, jumper pins,
+/// groups) are read and dropped; KiCad 10's unit list becomes the component's `sections`.
 pub fn load_kicad_netlist(path: &Path) -> Result<Netlist> {
-    let contents = read_to_string(path)?;
-    let netlist: KicadFileKind = serde_lexpr::from_str(&contents)?;
+    let contents =
+        read_to_string(path).with_context(|| format!("can't read {}", path.display()))?;
+    let netlist: KicadFileKind = serde_lexpr::from_str(&contents)
+        .with_context(|| format!("{}: not a KiCad netlist this reader knows", path.display()))?;
     let KicadFileKind::NetListExport(netlist) = netlist;
 
     let mut components = HashMap::new();
@@ -24,6 +30,7 @@ pub fn load_kicad_netlist(path: &Path) -> Result<Netlist> {
         let mut description = String::new();
         let mut fields = HashMap::new();
         let mut lib_source = (LibName(String::new()), LibPartName(String::new()));
+        let mut sections = vec![];
         for entry in component_entry {
             match entry {
                 ComponentEntry::Ref(d) => designator = d.unwrap_or_default(),
@@ -72,6 +79,20 @@ pub fn load_kicad_netlist(path: &Path) -> Result<Netlist> {
                     }
                 }
                 ComponentEntry::Description(d) => description = d.unwrap_or_default(),
+                ComponentEntry::Units(units) => {
+                    for UnitKind::Unit { name, pins: _ } in units {
+                        sections.push(ComponentSection {
+                            name: name.unwrap_or_default(),
+                            page_number: None,
+                        });
+                    }
+                }
+                // Not used by any check yet: variant overrides, component classes and jumper pins (pins
+                // connected inside the part)
+                ComponentEntry::Variants(_)
+                | ComponentEntry::ComponentClasses(_)
+                | ComponentEntry::DuplicatePinNumbersAreJumpers(_)
+                | ComponentEntry::JumperPinGroups(_) => {}
             }
         }
         if designator.is_empty() {
@@ -85,7 +106,7 @@ pub fn load_kicad_netlist(path: &Path) -> Result<Netlist> {
                 description,
                 lib_source,
                 fields,
-                sections: vec![],
+                sections,
             },
         );
     }
@@ -187,6 +208,11 @@ pub fn load_kicad_netlist(path: &Path) -> Result<Netlist> {
                 NetPieceKind::Code(_) => {}
                 NetPieceKind::Name(name) => {
                     net_name = name.unwrap_or_default();
+                }
+                NetPieceKind::Class(class) => {
+                    if let Some(class) = class.filter(|c| !c.is_empty()) {
+                        net.properties.insert("class".into(), class);
+                    }
                 }
                 NetPieceKind::Node {
                     r#ref,
@@ -297,6 +323,69 @@ enum ComponentEntry {
     Tstamps(Vec<String>),
     Datasheet(Option<String>),
     Description(Option<String>),
+    /// KiCad 9 and later
+    #[serde(rename = "component_classes")]
+    ComponentClasses(Vec<ComponentClassKind>),
+    /// KiCad 10 and later: every unit of the library symbol with its pins, placed or not
+    Units(Vec<UnitKind>),
+    /// KiCad 10 and later: per-variant overrides (DNP, BOM and position file exclusion, fields)
+    Variants(Vec<VariantKind>),
+    /// KiCad 10 and later, `"1"` when pins with the same number are connected inside the part
+    #[serde(rename = "duplicate_pin_numbers_are_jumpers")]
+    DuplicatePinNumbersAreJumpers(Option<String>),
+    /// KiCad 10 and later: groups of pins connected inside the part
+    #[serde(rename = "jumper_pin_groups")]
+    JumperPinGroups(Vec<JumperPinGroupKind>),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum ComponentClassKind {
+    #[serde(rename = "class")]
+    Class(Option<String>),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum UnitKind {
+    #[serde(rename = "unit")]
+    Unit {
+        name: Option<String>,
+        pins: Vec<UnitPinKind>,
+    },
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum UnitPinKind {
+    #[serde(rename = "pin")]
+    Pin { num: Option<String> },
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum VariantKind {
+    #[serde(rename = "variant")]
+    Variant(Vec<VariantPiece>),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+enum VariantPiece {
+    Name(Option<String>),
+    Property {
+        name: Option<String>,
+        value: Option<String>,
+    },
+    Fields(Vec<ComponentField>),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum JumperPinGroupKind {
+    #[serde(rename = "group")]
+    Group(Vec<JumperPinKind>),
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+enum JumperPinKind {
+    #[serde(rename = "pin")]
+    Pin(Option<String>),
 }
 
 #[derive(Debug)]
@@ -417,6 +506,8 @@ enum NetKind {
 enum NetPieceKind {
     Code(Option<String>),
     Name(Option<String>),
+    /// Net class, KiCad 9 and later
+    Class(Option<String>),
     Node {
         r#ref: Option<String>,
         pin: Option<String>,
@@ -428,10 +519,132 @@ enum NetPieceKind {
 #[cfg(test)]
 mod tests {
     use super::{DesignPiece, KicadFileKind, load_kicad_netlist};
-    use crate::netlist::{Net, Node};
+    use crate::netlist::{Net, Netlist, Node, PinType};
     use crate::{Designator, NetName, PinId};
+    use std::collections::BTreeSet;
     use std::fs::read_to_string;
-    use std::path::PathBuf;
+    use std::path::{Path, PathBuf};
+
+    /// `test_input/kicad_versions/fixture.kicad_sch` (KiCad 8 format) exported by kicad-cli 8, 9 and 10, and
+    /// `fixture_kicad10.kicad_sch` (the same with KiCad 10 jumper pins, a variant and a group) exported by
+    /// kicad-cli 10. Regenerate with `just netlist-fixtures`.
+    fn load_fixture(name: &str) -> Netlist {
+        let path = Path::new("test_input/kicad_versions").join(name);
+        load_kicad_netlist(&path).unwrap_or_else(|e| panic!("{}: {e:#}", path.display()))
+    }
+
+    type Summary = (
+        BTreeSet<(String, String, String)>,
+        BTreeSet<(String, BTreeSet<(String, String)>)>,
+        BTreeSet<(String, String, String, String)>,
+    );
+
+    /// Everything the checks read, in a form that compares across versions: components with value and
+    /// library part, nets with their nodes, library part pins with name and type
+    fn summary(netlist: &Netlist) -> Summary {
+        let components = netlist
+            .components
+            .iter()
+            .map(|(d, c)| (d.0.clone(), c.value.clone(), c.lib_source.1.0.clone()))
+            .collect();
+        let nets = netlist
+            .nets
+            .iter()
+            .map(|(name, net)| {
+                let nodes = net
+                    .nodes
+                    .iter()
+                    .map(|n| (n.designator.0.clone(), n.pin_id.0.clone()))
+                    .collect();
+                (name.0.clone(), nodes)
+            })
+            .collect();
+        let pins = netlist
+            .lib_parts
+            .iter()
+            .flat_map(|((_, part), lib_part)| {
+                lib_part.pins.iter().map(move |(id, pin)| {
+                    (
+                        part.0.clone(),
+                        id.0.clone(),
+                        pin.name.0.clone(),
+                        format!("{:?}", pin.default_mode.ty),
+                    )
+                })
+            })
+            .collect();
+        (components, nets, pins)
+    }
+
+    #[test]
+    fn kicad_8_9_and_10_netlists_read_the_same() {
+        let kicad8 = load_fixture("fixture.kicad8.net");
+        let kicad9 = load_fixture("fixture.kicad9.net");
+        let kicad10 = load_fixture("fixture.kicad10.net");
+        let expected = summary(&kicad8);
+        assert_eq!(summary(&kicad9), expected);
+        assert_eq!(summary(&kicad10), expected);
+
+        let (components, nets, _) = &expected;
+        assert_eq!(components.len(), 3);
+        let mid = nets.iter().find(|(name, _)| name == "/MID").unwrap();
+        let jp1_2 = ("JP1".to_string(), "2".to_string());
+        let r1_2 = ("R1".to_string(), "2".to_string());
+        assert_eq!(mid.1, BTreeSet::from([jp1_2, r1_2]));
+        let u1 = kicad8
+            .lib_parts
+            .values()
+            .find(|p| p.pins.len() == 6)
+            .unwrap();
+        assert_eq!(
+            u1.pins[&PinId("7".into())].default_mode.ty,
+            PinType::DigitalOutput
+        );
+    }
+
+    #[test]
+    fn kicad_9_and_10_netlists_keep_net_classes() {
+        for name in ["fixture.kicad9.net", "fixture.kicad10.net"] {
+            let netlist = load_fixture(name);
+            let net = &netlist.nets[&NetName("/OUTA".into())];
+            assert_eq!(
+                net.properties.get("class").map(String::as_str),
+                Some("Default"),
+                "{name}"
+            );
+        }
+        let kicad8 = load_fixture("fixture.kicad8.net");
+        assert!(kicad8.nets[&NetName("/OUTA".into())].properties.is_empty());
+    }
+
+    #[test]
+    fn kicad_10_units_become_component_sections() {
+        let kicad10 = load_fixture("fixture.kicad10.net");
+        let sections: Vec<_> = kicad10.components[&Designator("U1".into())]
+            .sections
+            .iter()
+            .map(|s| s.name.as_str())
+            .collect();
+        assert_eq!(sections, ["A", "B"]);
+        // Before KiCad 10 the netlist has no unit list
+        let kicad9 = load_fixture("fixture.kicad9.net");
+        assert!(
+            kicad9.components[&Designator("U1".into())]
+                .sections
+                .is_empty()
+        );
+    }
+
+    #[test]
+    fn kicad_10_netlist_with_variants_jumpers_and_groups_loads() {
+        let netlist = load_fixture("fixture_kicad10.kicad10.net");
+        assert_eq!(
+            summary(&netlist),
+            summary(&load_fixture("fixture.kicad10.net"))
+        );
+        // The base value, not the "Lite" variant's override
+        assert_eq!(netlist.components[&Designator("R1".into())].value, "10k");
+    }
 
     #[test]
     fn can_read_netlist_kicad_sexpr() {

@@ -11,6 +11,17 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Fixed
+
+- KiCad 9 and 10 netlists load again (IMP-12): the KiCad netlist reader knows the elements those versions add,
+  per KiCad's own netlist exporter source: net classes (kept as the net's `class` property), component classes,
+  and in KiCad 10 the unit list (now the component's `sections`), per-component variants, jumper pins and
+  groups. Fixtures exported by kicad-cli 8.0.9, 9.0.9 and 10.0.7 from one small schematic
+  (`ecad_file_format/test_input/kicad_versions`, `just netlist-fixtures` regenerates them from KiCad's container
+  images) must read to the same netlist; a load error now names the file. The five I2C tests are green again.
+- The `find_net_chains` doc example compiles (a missing `;`); it was never run while the erc_core tests failed
+  first.
+
 ## [0.3.2] - 2026-10-21
 
 ### Added

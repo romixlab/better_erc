@@ -29,7 +29,8 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 
 ## Import (`IMP`)
 
-- ✅ `IMP-1` KiCad netlist (pest grammar), incl. pin types · `ecad_file_format/src/kicad_netlist.rs`
+- ✅ `IMP-1` KiCad netlist from KiCad 8, 9 and 10 (serde-lexpr), incl. pin types, net classes and units; a test per
+  version · `ecad_file_format/src/kicad_netlist.rs`, `test_input/kicad_versions`
 - ✅ `IMP-2` KiCad schematic → netlist through kicad-cli, cached per file · `test_schematics/generate_netlists`
 - ✅ `IMP-3` OrCAD netlist: nets, components, library parts · `orcad_netlist.rs`
 - ✅ `IMP-4` Altium: EDIF netlist + WireList (for pin types) combined · `edif_netlist.rs`, `wirelist.rs`, `altium_netlist.rs`
@@ -40,7 +41,7 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - 📋 `IMP-9` Pinmux import from Excel
 - 📋 `IMP-10` Xilinx bank info from pin names or Xilinx ASCII pin files
 - 💡 `IMP-11` Watch the netlist file and reload on change
-- 🐛 `IMP-12` KiCad 10 netlists don't load: `units` element unknown to the KiCad netlist parser (5 i2c tests fail since the test netlists are regenerated with kicad-cli 10). Also `general` and `style` tests read OrCAD files from `~/Downloads/test_projects/` that only existed on the old Mac: move them into `test_schematics` or mark `#[ignore]`
+- 🐛 `IMP-12` ~~KiCad 10 netlists don't load~~ (fixed: KiCad 8, 9 and 10 each tested). Left: the `general` and `style` tests read OrCAD and Altium files from `~/Downloads/test_projects/` that only existed on an old Mac
 
 ## Netlist model and analysis (`NET`)
 
