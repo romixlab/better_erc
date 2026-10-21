@@ -296,7 +296,7 @@ off-rail, unless its driver is a push-pull output that is valid in every state (
 
 **References.** AoE3 chapter 3 (FET switches) and chapter 12; Wikipedia, Pull-up resistor.
 
-## `IO-12` Output enable of a shift register, driver, mux or buffer without a pull to its disabled state <a id="io-12"></a>
+## `IO-12` Output enable of a shift register, driver or buffer without a pull to its disabled state <a id="io-12"></a>
 
 🛑 error · needs: OE pin role and polarity, GPIO default · [catalogue entry](../checks.md#io-12)
 
