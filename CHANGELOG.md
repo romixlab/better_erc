@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-10-21
+
 ### Added
 
 - `docs/checks.md`: the check catalogue (IDs like `PIN-1`, `I2C-3`, severity, overlaps), moved here from the tpm
