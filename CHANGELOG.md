@@ -13,6 +13,7 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ### Changed
 
+- Crate docs for `ecad_file_format`, `erc_core` and `ecad_compare`; an empty test module in erc_core removed.
 - `Cargo.lock` is committed (it was gitignored), so `cargo install --locked` and `just install` build every
   clone with the same dependency versions.
 - Building erc_core no longer runs kicad-cli: its build script exported the test schematics on every build, also

@@ -1,3 +1,7 @@
+//! Reading EDA output into one netlist model ([`netlist::Netlist`]): KiCad netlists (KiCad 8, 9 and 10), OrCAD
+//! Capture netlists (pstxnet, pstxprt, pstchip), Altium EDIF plus WireList, pick-and-place CSV files from KiCad,
+//! Altium and Allegro, and passive values like `4k7` ([`passive_value`]).
+
 mod altium_netlist;
 mod csv_util;
 mod edif_netlist;
