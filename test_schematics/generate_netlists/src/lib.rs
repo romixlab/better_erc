@@ -53,6 +53,7 @@ pub fn generate_netlists() {
                     sch_path.to_str().unwrap(),
                 ])
                 .join();
+            drop_svg_date(&generated_pictures_folder.join(format!("{file_name}.svg")));
             println!("Generated netlist and picture for: {file_name}: {status:?} {im_status:?}");
         }
     }
@@ -80,6 +81,24 @@ pub fn get_netlist_path(name: &str) -> PathBuf {
     } else {
         paths.remove(0)
     }
+}
+
+/// KiCad writes the export time into the SVG's `<title>`; the pictures are committed, so without this every
+/// regeneration (a fresh clone, a newer KiCad) would show all of them as changed
+fn drop_svg_date(svg_path: &Path) {
+    let Ok(svg) = fs::read_to_string(svg_path) else {
+        return;
+    };
+    let without_date = svg
+        .lines()
+        .map(|line| match (line.find("<title>"), line.find(" date ")) {
+            (Some(_), Some(date)) => format!("{}</title>", &line[..date]),
+            _ => line.to_string(),
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
+        + "\n";
+    fs::write(svg_path, without_date).unwrap();
 }
 
 fn remove_outdated(file_name: &str) {

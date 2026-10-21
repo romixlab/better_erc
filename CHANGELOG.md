@@ -21,6 +21,9 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
   images) must read to the same netlist; a load error now names the file. The five I2C tests are green again.
 - The `find_net_chains` doc example compiles (a missing `;`); it was never run while the erc_core tests failed
   first.
+- Regenerating the test schematic pictures (`test_schematics/generated_pictures`, on every fresh clone or
+  schematic change) no longer shows all of them as changed: `generate_netlists` drops the export time KiCad
+  writes into each SVG's `<title>`.
 
 ## [0.3.2] - 2026-10-21
 
