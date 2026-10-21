@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.3.5] - 2026-10-22
+
 ### Added
 
 - Detail pages for every check, one file per category under `docs/checks/` (34 pages, 513 sections): what the check
