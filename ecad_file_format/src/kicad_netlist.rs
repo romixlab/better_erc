@@ -34,7 +34,8 @@ pub fn load_kicad_netlist(path: &Path) -> Result<Netlist> {
         for entry in component_entry {
             match entry {
                 ComponentEntry::Ref(d) => designator = d.unwrap_or_default(),
-                ComponentEntry::Value(v) => value = v.unwrap_or_default(),
+                // KiCad writes an empty value as "~" (netlist_exporter_xml.cpp, 8.0 to 10.0)
+                ComponentEntry::Value(v) => value = v.filter(|v| v != "~").unwrap_or_default(),
                 ComponentEntry::Footprint(f) => {
                     let f = f.unwrap_or_default();
                     if !f.is_empty() {

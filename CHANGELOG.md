@@ -19,6 +19,9 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
   groups. Fixtures exported by kicad-cli 8.0.9, 9.0.9 and 10.0.7 from one small schematic
   (`ecad_file_format/test_input/kicad_versions`, `just netlist-fixtures` regenerates them from KiCad's container
   images) must read to the same netlist; a load error now names the file. The five I2C tests are green again.
+- `BOM-9` (part without a value) fires on KiCad designs: KiCad writes an empty value as `~` in the netlist, which
+  the reader took for a value, so the check never saw an empty one; `~` now reads as empty. Found by the new
+  `style_values` test schematic.
 - The `find_net_chains` doc example compiles (a missing `;`); it was never run while the erc_core tests failed
   first.
 - Regenerating the test schematic pictures (`test_schematics/generated_pictures`, on every fresh clone or
