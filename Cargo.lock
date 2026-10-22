@@ -371,7 +371,7 @@ checksum = "9d297deb1925b89f2ccc13d7635fa0714f12c87adce1c75356b39ca9b7178567"
 
 [[package]]
 name = "berc"
-version = "0.4.7"
+version = "0.4.8"
 dependencies = [
  "anstream",
  "anstyle",
@@ -384,7 +384,7 @@ dependencies = [
 
 [[package]]
 name = "better_erc"
-version = "0.4.7"
+version = "0.4.8"
 dependencies = [
  "anstyle",
  "erc_analysis",
@@ -398,7 +398,7 @@ dependencies = [
 
 [[package]]
 name = "better_erc_app"
-version = "0.4.7"
+version = "0.4.8"
 dependencies = [
  "better_erc",
  "eframe",
@@ -1231,7 +1231,7 @@ checksum = "00d174d5400e5e8fd687ad1049e2f578285fa914201b1af7e8b112a4546bd826"
 
 [[package]]
 name = "erc_analysis"
-version = "0.4.7"
+version = "0.4.8"
 dependencies = [
  "erc_kicad",
  "erc_model",
@@ -1241,7 +1241,7 @@ dependencies = [
 
 [[package]]
 name = "erc_checks"
-version = "0.4.7"
+version = "0.4.8"
 dependencies = [
  "anstyle",
  "erc_analysis",
@@ -1257,7 +1257,7 @@ dependencies = [
 
 [[package]]
 name = "erc_import"
-version = "0.4.7"
+version = "0.4.8"
 dependencies = [
  "chardetng",
  "csv",
@@ -1272,7 +1272,7 @@ dependencies = [
 
 [[package]]
 name = "erc_kicad"
-version = "0.4.7"
+version = "0.4.8"
 dependencies = [
  "erc_model",
  "generate_netlists",
@@ -1282,7 +1282,7 @@ dependencies = [
 
 [[package]]
 name = "erc_model"
-version = "0.4.7"
+version = "0.4.8"
 dependencies = [
  "serde",
 ]
@@ -1471,7 +1471,7 @@ dependencies = [
 
 [[package]]
 name = "generate_netlists"
-version = "0.4.7"
+version = "0.4.8"
 dependencies = [
  "hex",
  "sha2",
