@@ -197,3 +197,75 @@ pub fn part_chains(
     }
     chains
 }
+
+/// A path of two-terminal parts in series from a net: the parts in order and the net it ends on
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SeriesPath {
+    pub parts: Vec<PartId>,
+    pub end: NetId,
+}
+
+/// The paths from `start` through parts with exactly two nets that pass `through`, at most `max_len` parts long;
+/// a path goes on from a net only when `pass` lets it (a node of the chain: no rail, no ground), and never through
+/// a net twice. Every prefix is a path of its own, so a caller picks the ends it wants (a ground, `start` again).
+pub fn series_paths(
+    board: &Board,
+    start: NetId,
+    through: &dyn Fn(PartId) -> bool,
+    pass: &dyn Fn(NetId) -> bool,
+    max_len: usize,
+) -> Vec<SeriesPath> {
+    struct Walk<'a> {
+        board: &'a Board,
+        through: &'a dyn Fn(PartId) -> bool,
+        pass: &'a dyn Fn(NetId) -> bool,
+        max_len: usize,
+        parts: Vec<PartId>,
+        nets: Vec<NetId>,
+        out: Vec<SeriesPath>,
+    }
+    impl Walk<'_> {
+        fn from(&mut self, at: NetId) {
+            if self.parts.len() >= self.max_len {
+                return;
+            }
+            let here: BTreeSet<PartId> = net_pins(self.board, at)
+                .map(|p| self.board.pin(p).part)
+                .collect();
+            for p in here {
+                if self.parts.contains(&p) || !(self.through)(p) {
+                    continue;
+                }
+                let pn = part_nets(self.board, p);
+                if pn.len() != 2 {
+                    continue;
+                }
+                let Some(next) = pn.into_iter().find(|n| *n != at) else {
+                    continue;
+                };
+                self.parts.push(p);
+                self.out.push(SeriesPath {
+                    parts: self.parts.clone(),
+                    end: next,
+                });
+                if !self.nets.contains(&next) && (self.pass)(next) {
+                    self.nets.push(next);
+                    self.from(next);
+                    self.nets.pop();
+                }
+                self.parts.pop();
+            }
+        }
+    }
+    let mut w = Walk {
+        board,
+        through,
+        pass,
+        max_len,
+        parts: Vec::new(),
+        nets: vec![start],
+        out: Vec::new(),
+    };
+    w.from(start);
+    w.out
+}
