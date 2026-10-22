@@ -1,0 +1,9 @@
+# What better_erc finds on lib-15_no_power_pins.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board lib-15_no_power_pins"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U1"]

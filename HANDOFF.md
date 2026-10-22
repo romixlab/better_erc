@@ -5,12 +5,12 @@ Tasks: P2503#22oct-0051h (BOM), #22oct-0051l (LIB), #22oct-0048d (MUX), #22oct-0
 ## Done
 
 - BOM: BOM-1, 3, 4, 8, 11, 14, 17 implemented with schematics; BOM-5 takes `calc` as a placeholder (its page says so); BOM-5, 6, 9, 10 checked against their pages.
+- LIB-14 (unplaced units, from the symbol's pins per unit; schematics only, the netlist importer keeps no unit per library pin) and LIB-15 (IC symbol without power pins by type or name); LIB-3 unchanged.
 - `erc_analysis::package` (footprint case size, SMD/THT, side), `ESeries::steps`.
 - berc and erc_checks project tests that count findings on i2c-1 run `--only I2C` (BOM-6 for the baseline step): new checks no longer move their numbers.
 
 ## Next
 
-- LIB-14 (unplaced units: from the symbol's pins per unit; the model has pins of placed units only), LIB-15 (no power pins over the symbol's pins).
 - MUX-1 and LOGIC-8 build on checks-wire's `erc_analysis::names` (commit 06522b7 on s/22oct2026-checks-wire, gpd-omarchy): cherry-pick it, extend additively with polarity sense and interface signals. My draft of that grammar is in the job's tmp (`names_mine.rs`); merge its ideas into theirs.
 - LOGIC-3, LOGIC-7 on pin types.
 

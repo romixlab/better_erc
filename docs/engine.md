@@ -351,6 +351,8 @@ of the threshold it used.
 | `BOM-11` | one value in two packages | `bom-11_packages` |
 | `BOM-14` | a fitted part in the BOM without an MPN (one finding for the board when no part has one) | `bom-14_mpn` |
 | `BOM-17` | one MPN on parts with different values | `bom-17_mpn_values` |
+| `LIB-14` | a unit of a multi-unit symbol not placed, with the pins that float | `lib-14_unplaced_units`, `io-1_inputs` |
+| `LIB-15` | an IC whose symbol has no pin typed or named power | `lib-15_no_power_pins`, `io-1_inputs` |
 | `LIB-3` | a MOSFET whose pins are not named G, D and S | `lib-3_mosfet_pin_names` |
 | `DEC-1` | a rail feeding power pins with no capacitor to a ground | `dec-1_no_decoupling` |
 | `DEC-4` | a ferrite between two rails, with the LC resonance against the capacitance behind it (`bead_inductance` assumed) | `dec-4_ferrite_beads` |

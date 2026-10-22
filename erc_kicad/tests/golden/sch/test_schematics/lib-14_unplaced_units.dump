@@ -1,0 +1,122 @@
+board lib-14_unplaced_units
+net unconnected-(U1A-+INA-Pad3) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U1A-+INA-Pad3) kind unconnected
+net unconnected-(U1A--INA-Pad2) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U1A--INA-Pad2) kind unconnected
+net unconnected-(U1A-OUTA-Pad1) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U1A-OUTA-Pad1) kind unconnected
+net unconnected-(U1C-V+-Pad8) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U1C-V+-Pad8) kind unconnected
+net unconnected-(U1C-V--Pad4) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U1C-V--Pad4) kind unconnected
+net unconnected-(U2A-+INA-Pad3) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U2A-+INA-Pad3) kind unconnected
+net unconnected-(U2A--INA-Pad2) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U2A--INA-Pad2) kind unconnected
+net unconnected-(U2A-OUTA-Pad1) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U2A-OUTA-Pad1) kind unconnected
+net unconnected-(U2B-+INB-Pad5) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U2B-+INB-Pad5) kind unconnected
+net unconnected-(U2B--INB-Pad6) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U2B--INB-Pad6) kind unconnected
+net unconnected-(U2B-OUTB-Pad7) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U2B-OUTB-Pad7) kind unconnected
+net unconnected-(U2C-V+-Pad8) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U2C-V+-Pad8) kind unconnected
+net unconnected-(U2C-V--Pad4) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U2C-V--Pad4) kind unconnected
+net unconnected-(U3A-+INA-Pad3) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U3A-+INA-Pad3) kind unconnected
+net unconnected-(U3A--INA-Pad2) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U3A--INA-Pad2) kind unconnected
+net unconnected-(U3A-OUTA-Pad1) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U3A-OUTA-Pad1) kind unconnected
+net unconnected-(U3C-V+-Pad8) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U3C-V+-Pad8) kind unconnected
+net unconnected-(U3C-V--Pad4) class = Default @ sch lib-14_unplaced_units.kicad_sch note "effective net class"
+net unconnected-(U3C-V--Pad4) kind unconnected
+part U1 field Description = "Dual operational amplifier" @ sch lib-14_unplaced_units.kicad_sch
+part U1 field Value = TLV9062 @ sch lib-14_unplaced_units.kicad_sch
+part U1 flag dnp = no @ sch lib-14_unplaced_units.kicad_sch
+part U1 flag exclude_from_sim = no @ sch lib-14_unplaced_units.kicad_sch
+part U1 flag in_bom = yes @ sch lib-14_unplaced_units.kicad_sch
+part U1 flag on_board = yes @ sch lib-14_unplaced_units.kicad_sch
+part U1 lib Amplifier_Operational:DUAL_OPAMP sheet / symbol Amplifier_Operational:DUAL_OPAMP
+part U1 unit 1 sheet / uuid l1400001-0000-4000-8000-000000000000 line 27 at 40,50 rot 0
+part U1 unit 3 sheet / uuid l1400005-0000-4000-8000-000000000000 line 38 at 40,90 rot 0
+part U1 value = text TLV9062 @ sch lib-14_unplaced_units.kicad_sch note "from the Value field"
+part U2 field Description = "Dual operational amplifier" @ sch lib-14_unplaced_units.kicad_sch
+part U2 field Value = TLV9062 @ sch lib-14_unplaced_units.kicad_sch
+part U2 flag dnp = no @ sch lib-14_unplaced_units.kicad_sch
+part U2 flag exclude_from_sim = no @ sch lib-14_unplaced_units.kicad_sch
+part U2 flag in_bom = yes @ sch lib-14_unplaced_units.kicad_sch
+part U2 flag on_board = yes @ sch lib-14_unplaced_units.kicad_sch
+part U2 lib Amplifier_Operational:DUAL_OPAMP sheet / symbol Amplifier_Operational:DUAL_OPAMP
+part U2 unit 1 sheet / uuid l1400008-0000-4000-8000-000000000000 line 48 at 100,50 rot 0
+part U2 unit 2 sheet / uuid l140000c-0000-4000-8000-000000000000 line 59 at 100,90 rot 0
+part U2 unit 3 sheet / uuid l1400010-0000-4000-8000-000000000000 line 70 at 100,130 rot 0
+part U2 value = text TLV9062 @ sch lib-14_unplaced_units.kicad_sch note "from the Value field"
+part U3 field Description = "Dual operational amplifier" @ sch lib-14_unplaced_units.kicad_sch
+part U3 field Value = TLV9062 @ sch lib-14_unplaced_units.kicad_sch
+part U3 flag dnp = yes @ sch lib-14_unplaced_units.kicad_sch
+part U3 flag exclude_from_sim = no @ sch lib-14_unplaced_units.kicad_sch
+part U3 flag in_bom = yes @ sch lib-14_unplaced_units.kicad_sch
+part U3 flag on_board = yes @ sch lib-14_unplaced_units.kicad_sch
+part U3 lib Amplifier_Operational:DUAL_OPAMP sheet / symbol Amplifier_Operational:DUAL_OPAMP
+part U3 unit 1 sheet / uuid l1400013-0000-4000-8000-000000000000 line 80 at 160,50 rot 0
+part U3 unit 3 sheet / uuid l1400017-0000-4000-8000-000000000000 line 91 at 160,90 rot 0
+part U3 value = text TLV9062 @ sch lib-14_unplaced_units.kicad_sch note "from the Value field"
+pin U1 1 name OUTA unit 1 net unconnected-(U1A-OUTA-Pad1)
+pin U1 1 type = output @ sch lib-14_unplaced_units.kicad_sch
+pin U1 2 name -INA unit 1 net unconnected-(U1A--INA-Pad2)
+pin U1 2 type = input @ sch lib-14_unplaced_units.kicad_sch
+pin U1 3 name +INA unit 1 net unconnected-(U1A-+INA-Pad3)
+pin U1 3 type = input @ sch lib-14_unplaced_units.kicad_sch
+pin U1 4 name V- unit 3 net unconnected-(U1C-V--Pad4)
+pin U1 4 type = power_in @ sch lib-14_unplaced_units.kicad_sch
+pin U1 8 name V+ unit 3 net unconnected-(U1C-V+-Pad8)
+pin U1 8 type = power_in @ sch lib-14_unplaced_units.kicad_sch
+pin U2 1 name OUTA unit 1 net unconnected-(U2A-OUTA-Pad1)
+pin U2 1 type = output @ sch lib-14_unplaced_units.kicad_sch
+pin U2 2 name -INA unit 1 net unconnected-(U2A--INA-Pad2)
+pin U2 2 type = input @ sch lib-14_unplaced_units.kicad_sch
+pin U2 3 name +INA unit 1 net unconnected-(U2A-+INA-Pad3)
+pin U2 3 type = input @ sch lib-14_unplaced_units.kicad_sch
+pin U2 4 name V- unit 3 net unconnected-(U2C-V--Pad4)
+pin U2 4 type = power_in @ sch lib-14_unplaced_units.kicad_sch
+pin U2 5 name +INB unit 2 net unconnected-(U2B-+INB-Pad5)
+pin U2 5 type = input @ sch lib-14_unplaced_units.kicad_sch
+pin U2 6 name -INB unit 2 net unconnected-(U2B--INB-Pad6)
+pin U2 6 type = input @ sch lib-14_unplaced_units.kicad_sch
+pin U2 7 name OUTB unit 2 net unconnected-(U2B-OUTB-Pad7)
+pin U2 7 type = output @ sch lib-14_unplaced_units.kicad_sch
+pin U2 8 name V+ unit 3 net unconnected-(U2C-V+-Pad8)
+pin U2 8 type = power_in @ sch lib-14_unplaced_units.kicad_sch
+pin U3 1 name OUTA unit 1 net unconnected-(U3A-OUTA-Pad1)
+pin U3 1 type = output @ sch lib-14_unplaced_units.kicad_sch
+pin U3 2 name -INA unit 1 net unconnected-(U3A--INA-Pad2)
+pin U3 2 type = input @ sch lib-14_unplaced_units.kicad_sch
+pin U3 3 name +INA unit 1 net unconnected-(U3A-+INA-Pad3)
+pin U3 3 type = input @ sch lib-14_unplaced_units.kicad_sch
+pin U3 4 name V- unit 3 net unconnected-(U3C-V--Pad4)
+pin U3 4 type = power_in @ sch lib-14_unplaced_units.kicad_sch
+pin U3 8 name V+ unit 3 net unconnected-(U3C-V+-Pad8)
+pin U3 8 type = power_in @ sch lib-14_unplaced_units.kicad_sch
+sheet / name "" file lib-14_unplaced_units.kicad_sch uuid /
+source file lib-14_unplaced_units.kicad_sch
+source tool kicad
+source version 8.0
+symbol Amplifier_Operational:DUAL_OPAMP description "Dual operational amplifier"
+symbol Amplifier_Operational:DUAL_OPAMP field Description "Dual operational amplifier"
+symbol Amplifier_Operational:DUAL_OPAMP field Reference U
+symbol Amplifier_Operational:DUAL_OPAMP field Value DUAL_OPAMP
+symbol Amplifier_Operational:DUAL_OPAMP hash f4bf4495a7a0e26a
+symbol Amplifier_Operational:DUAL_OPAMP pin 1 unit 1 body 1 name OUTA type output style line
+symbol Amplifier_Operational:DUAL_OPAMP pin 2 unit 1 body 1 name -INA type input style line
+symbol Amplifier_Operational:DUAL_OPAMP pin 3 unit 1 body 1 name +INA type input style line
+symbol Amplifier_Operational:DUAL_OPAMP pin 4 unit 3 body 1 name V- type power_in style line
+symbol Amplifier_Operational:DUAL_OPAMP pin 5 unit 2 body 1 name +INB type input style line
+symbol Amplifier_Operational:DUAL_OPAMP pin 6 unit 2 body 1 name -INB type input style line
+symbol Amplifier_Operational:DUAL_OPAMP pin 7 unit 2 body 1 name OUTB type output style line
+symbol Amplifier_Operational:DUAL_OPAMP pin 8 unit 3 body 1 name V+ type power_in style line
+symbol Amplifier_Operational:DUAL_OPAMP units 3

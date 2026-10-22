@@ -305,6 +305,9 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - 🚧 `NAME-11` Negative rail with its sign from a marker only or none; negative supply pins on a rail read positive ·
   `name/name_11.rs`, `name-11_negative_rail_names`. Missing: rails a negative regulator feeds (power sources, `NET-5`)
 - ✅ `NAME-12` Unannotated designators, one designator placed twice for one unit · `name/name_12.rs`, `name-12_designators`
+- ✅ `LIB-14` Unit of a multi-unit symbol not placed, with its floating pins · `lib/lib_14.rs`, `lib-14_unplaced_units`
+  (schematics only: the netlist importer keeps no unit per library pin yet)
+- ✅ `LIB-15` IC symbol without power pins (by type or name, hidden ones count) · `lib/lib_15.rs`, `lib-15_no_power_pins`
 - ✅ `ANA-3` Shunt (resistor below `max_shunt` = 1 Ω) whose ends reach a current-sense amplifier's sense inputs (by
   name, directly or through one series resistor each) with no capacitor across them and no RC at the output ·
   `ana/ana_3.rs`, `ana-3_shunt_filters`

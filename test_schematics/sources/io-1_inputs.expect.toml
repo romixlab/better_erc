@@ -4,6 +4,15 @@
 check = "BOM-14"
 subjects = ["board io-1_inputs"]
 
+[[finding]]
+check = "LIB-14"
+subjects = ["part U1"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U1"]
+confidence = "estimate"
+
 [[not_run]]
 check = "BOM-8"
 need = "rails"

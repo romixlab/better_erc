@@ -1,0 +1,9 @@
+# What better_erc finds on lib-14_unplaced_units.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board lib-14_unplaced_units"]
+
+[[finding]]
+check = "LIB-14"
+subjects = ["part U1"]

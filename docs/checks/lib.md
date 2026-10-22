@@ -426,7 +426,11 @@ wired as a buffer to a mid-rail or ground reference (`ANA-11`).
 
 **How to check.** The KiCad netlist lists every pin of the library part and the nets of the placed ones; pins of a unit
 that appear in no net at all, while other units of the same part are placed, are the finding. Parts whose unused units
-are explicitly allowed (no-connect flags on a placed unit) are not.
+are explicitly allowed (no-connect flags on a placed unit) are not. better_erc (`erc_checks/src/lib/lib_14.rs`) reads
+the units from the schematic's library symbol: for each fitted part of a multi-unit symbol, a unit that is not placed
+and has pins whose numbers no placed unit carries is reported with those pins (a unit whose pins all repeat on placed
+units floats nothing). A design read from a netlist alone gives no units per library pin yet, so the check finds
+nothing there.
 
 **Fix.** Place every unit; tie unused gate inputs to a rail and unused op-amps as followers to a valid common-mode
 voltage; or choose a part with fewer channels.
@@ -454,7 +458,11 @@ the board. DRC is clean, since the pads have no net to connect.
 
 **How to check.** From the netlist: parts of active classes (U, IC, oscillators, modules; not passives, connectors, test
 points or mechanical parts) whose pins include no power type and no power-like name. Hidden power pins that the netlist
-resolves to a net count as power pins.
+resolves to a net count as power pins. better_erc (`erc_checks/src/lib/lib_15.rs`) looks at the fitted parts whose
+class is an IC of any kind (MCU, regulator, logic, op-amp, oscillator, ...) and at all pins of their library symbol,
+every unit and alternate: a pin typed `power_in` or `power_out`, or named like a supply or ground by the power name
+grammar (`VDD`, `VCC`, `V+`, `AVDD`, `GND`, `VSS`), is a power pin, hidden or not. A class taken from the designator
+prefix alone makes the finding an estimate.
 
 **Fix.** Draw the power pins, visible, in the symbol (or in a power unit for multi-unit parts, KLC S3.8); avoid hidden
 power input pins outside power symbols (KLC S4.6).
