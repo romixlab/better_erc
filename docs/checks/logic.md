@@ -101,7 +101,9 @@ on a long star route double-clock. A buffer splits the load and gives each branc
 is around 60 pF, the edge is still fine at 1 MHz but rings at the far end and occasionally double-latches.
 
 **How to check.** Count input pins per net with one driver (`IMP-1`); suggest above a threshold (8 inputs, or a clock
-net with more than two).
+net with more than two). better_erc (`erc_checks/src/logic/logic_3.rs`): signal nets of the fitted parts with exactly
+one output-capable pin (output, tri-state, bidirectional, open collector or emitter) and at least `fan_out` (8) pins
+typed input, or `clock_fan_out` (3) when the net or its driver pin is named like a clock (`CLK`, `SCK`, `MCLK`, ...).
 
 **Fix.** A buffer (74LVC1G125, or a clock buffer like the CDCLVC11xx for clocks), series termination at the driver, or a
 daisy-chain route.
@@ -203,7 +205,11 @@ input reads low most of the time and "high" when a finger is near.
 
 **How to check.** Nets whose output-capable pins are all `open_collector` / `open_emitter` (KiCad pin types, `IMP-1`) or
 open-drain by part data (`NET-7`), with no resistor to a rail. `IO-15` is the same check narrowed to interrupt and fault
-outputs.
+outputs. better_erc (`erc_checks/src/logic/logic_7.rs`) takes the KiCad pin types of the fitted parts: a signal net
+with open-collector (or open-emitter) pins, no output, tri-state or power output pin, and a pin of another part to
+receive, is a finding when no fitted resistor, diode or ferrite chain (`max_hops` = 2: an LED and its resistor count)
+leads up to a rail (down to ground for open emitters). A bidirectional pin (an MCU GPIO) is not counted as a driver: its
+mode and internal pull-up need pin roles (`NET-7`), and so does open drain by part data.
 
 **Fix.** A pull-up to the receiver's rail, sized per `IO-17`.
 
@@ -223,11 +229,20 @@ with no inverter between: `PGOOD` into `~EN`, `~INT` into a pin configured for r
 is enabled exactly when the other is not good) or a deliberate inversion that deserves a comment. Both are cheap to
 list.
 
-**Example.** A sequencer wires rail A's `PG` (active high, "good") to rail B's `~SHDN` (active low, "shut down"): B runs
-while A is not good and shuts down when A is good.
+**Example.** A sequencer wires rail A's `PGOOD` (active high, "good") to rail B's `~EN` (active low, "enable"): B runs
+while A is not good and shuts down when A is good. The same `PG` into B's `~SHDN` (active low, "shut down") is right:
+the markers differ, and so do the words' senses.
 
 **How to check.** Parse active-low markers in pin names (and net names) on both ends of each net (`IMP-1`); report pairs
-whose markers differ when no inverting part (logic inverter, transistor stage) sits between.
+whose markers differ when no inverting part (logic inverter, transistor stage) sits between. better_erc
+(`erc_checks/src/logic/logic_8.rs`, `erc_analysis::names::polarity`) reads the marker (`~{X}`, `~X`, `X_N`, `nX`,
+`NRST`, `X#`, `Xn`) and the function word of the output pins (output, open collector or emitter, tri-state) and input
+pins of the fitted parts on each net; when no output names a polarity (a GPIO), the net's name stands for the driver.
+Words have a sense: `EN`, `CS`, `PG`, `READY` let something run, `SHDN`, `RESET`, `PD`, `FAULT` stop it, `INT`, `IRQ`,
+`ALERT` are events. Markers that differ between words of the same sense (or of an event) are a finding; between a
+run word and a stop word, markers that agree are (`PG` into `SHDN`). A driver and an input on one net have no inverter
+between them; a pin with an alternate-function list (`PA4/SPI1_NSS`) or a lone `_N` (a pair's negative half as likely)
+states no polarity.
 
 **Fix.** Fix the wiring, add an inverter, or rename so the polarity is visible.
 

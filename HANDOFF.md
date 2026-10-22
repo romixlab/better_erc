@@ -11,8 +11,8 @@ Tasks: P2503#22oct-0051h (BOM), #22oct-0051l (LIB), #22oct-0048d (MUX), #22oct-0
 
 ## Next
 
-- MUX-1 and LOGIC-8 build on checks-wire's `erc_analysis::names` (commit 06522b7 on s/22oct2026-checks-wire, gpd-omarchy): cherry-pick it, extend additively with polarity sense and interface signals. My draft of that grammar is in the job's tmp (`names_mine.rs`); merge its ideas into theirs.
-- LOGIC-3, LOGIC-7 on pin types.
+- Rebase onto checks-wire's e891308 (sample.dump fix) and, once checks-dec lands, `tpm work rebase`; then drop every `[[not_run]]` block BLESS wrote into the sidecars (user's rule: not_run blocks are hand-written subset assertions; BLESS writes findings only after checks-dec's test change).
+- `just test-full`, `just lint`, `git rm HANDOFF.md`, `tpm work ready`.
 
 ## Decisions
 
@@ -20,6 +20,11 @@ Tasks: P2503#22oct-0051h (BOM), #22oct-0051l (LIB), #22oct-0048d (MUX), #22oct-0
 - BOM-4: `min_group` 2 (arrays come with 2); I2C pull-up pairs show as candidates.
 - BOM-14: one board finding when no part has an MPN at all.
 - BOM-8: pins named A/K; walk through resistors and ferrites, `max_hops` 2.
+- MUX-1, LOGIC-8 build on checks-wire's `erc_analysis::names` (branch rebased onto their 06522b7, not cherry-picked); my additions live in `names/signals.rs` (one `mod`/`pub use` line in names.rs) to keep the merge surface small.
+- LOGIC-8: word senses (Go/Stop/Event): PG into ~SHDN is right, PGOOD into ~EN wrong; the logic.md example said PG into ~SHDN was a bug and was corrected.
+- LOGIC-7: bidirectional pins are not drivers (needs NET-7); a pull-up may run through an LED and resistor (`max_hops` 2).
+- MUX-1: UART judged pin against pin (net names may be from either side); connectors and test points left out.
+- Helper ref `wire-names-06522b7` (= checks-wire's 06522b7) left in this repo; the guard keeps it until landing.
 
 ## Gotchas
 

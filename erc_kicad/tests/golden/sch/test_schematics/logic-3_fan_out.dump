@@ -1,0 +1,258 @@
+board logic-3_fan_out
+label / local +3V3 at 22.38,52.38 net /+3V3
+label / local +3V3 at 62.38,32.38 net /+3V3
+label / local +3V3 at 62.38,82.38 net /+3V3
+label / local +3V3 at 92.38,32.38 net /+3V3
+label / local +3V3 at 92.38,82.38 net /+3V3
+label / local +3V3 at 122.38,32.38 net /+3V3
+label / local +3V3 at 122.38,82.38 net /+3V3
+label / local +3V3 at 152.38,32.38 net /+3V3
+label / local +3V3 at 152.38,82.38 net /+3V3
+label / local EN at 22.38,62.54 net /EN
+label / local EN at 62.38,42.54 net /EN
+label / local EN at 62.38,92.54 net /EN
+label / local EN at 92.38,42.54 net /EN
+label / local EN at 92.38,92.54 net /EN
+label / local EN at 122.38,42.54 net /EN
+label / local EN at 122.38,92.54 net /EN
+label / local EN at 152.38,42.54 net /EN
+label / local GND at 22.38,54.92 net /GND
+label / local GND at 62.38,34.92 net /GND
+label / local GND at 62.38,84.92 net /GND
+label / local GND at 92.38,34.92 net /GND
+label / local GND at 92.38,84.92 net /GND
+label / local GND at 122.38,34.92 net /GND
+label / local GND at 122.38,84.92 net /GND
+label / local GND at 152.38,34.92 net /GND
+label / local GND at 152.38,84.92 net /GND
+label / local LATCH_CLK at 22.38,57.46 net /LATCH_CLK
+label / local LATCH_CLK at 62.38,37.46 net /LATCH_CLK
+label / local LATCH_CLK at 92.38,37.46 net /LATCH_CLK
+label / local LATCH_CLK at 122.38,37.46 net /LATCH_CLK
+label / local LATCH_CLK at 152.38,37.46 net /LATCH_CLK
+label / local RESET at 22.38,60 net /RESET
+label / local RESET at 62.38,40 net /RESET
+label / local RESET at 62.38,90 net /RESET
+label / local RESET at 92.38,40 net /RESET
+label / local RESET at 92.38,90 net /RESET
+label / local RESET at 122.38,40 net /RESET
+label / local RESET at 122.38,90 net /RESET
+label / local RESET at 152.38,40 net /RESET
+label / local RESET at 152.38,90 net /RESET
+net /+3V3 class = Default @ sch logic-3_fan_out.kicad_sch note "effective net class"
+net /+3V3 kind named
+net /EN class = Default @ sch logic-3_fan_out.kicad_sch note "effective net class"
+net /EN kind named
+net /GND class = Default @ sch logic-3_fan_out.kicad_sch note "effective net class"
+net /GND kind named
+net /LATCH_CLK class = Default @ sch logic-3_fan_out.kicad_sch note "effective net class"
+net /LATCH_CLK kind named
+net /RESET class = Default @ sch logic-3_fan_out.kicad_sch note "effective net class"
+net /RESET kind named
+net unconnected-(U6-CP-Pad3) class = Default @ sch logic-3_fan_out.kicad_sch note "effective net class"
+net unconnected-(U6-CP-Pad3) kind unconnected
+net unconnected-(U7-CP-Pad3) class = Default @ sch logic-3_fan_out.kicad_sch note "effective net class"
+net unconnected-(U7-CP-Pad3) kind unconnected
+net unconnected-(U8-CP-Pad3) class = Default @ sch logic-3_fan_out.kicad_sch note "effective net class"
+net unconnected-(U8-CP-Pad3) kind unconnected
+net unconnected-(U9-CP-Pad3) class = Default @ sch logic-3_fan_out.kicad_sch note "effective net class"
+net unconnected-(U9-CP-Pad3) kind unconnected
+net unconnected-(U9-OE-Pad5) class = Default @ sch logic-3_fan_out.kicad_sch note "effective net class"
+net unconnected-(U9-OE-Pad5) kind unconnected
+part U1 field Description = Microcontroller @ sch logic-3_fan_out.kicad_sch
+part U1 field Value = MCU @ sch logic-3_fan_out.kicad_sch
+part U1 flag dnp = no @ sch logic-3_fan_out.kicad_sch
+part U1 flag exclude_from_sim = no @ sch logic-3_fan_out.kicad_sch
+part U1 flag in_bom = yes @ sch logic-3_fan_out.kicad_sch
+part U1 flag on_board = yes @ sch logic-3_fan_out.kicad_sch
+part U1 lib Fixture:DRIVER sheet / symbol Fixture:DRIVER
+part U1 unit 1 sheet / uuid g0300029-0000-4000-8000-000000000000 line 74 at 30,60 rot 0
+part U1 value = text MCU @ sch logic-3_fan_out.kicad_sch note "from the Value field"
+part U2 field Description = "Shift register IC" @ sch logic-3_fan_out.kicad_sch
+part U2 field Value = 74HC595 @ sch logic-3_fan_out.kicad_sch
+part U2 flag dnp = no @ sch logic-3_fan_out.kicad_sch
+part U2 flag exclude_from_sim = no @ sch logic-3_fan_out.kicad_sch
+part U2 flag in_bom = yes @ sch logic-3_fan_out.kicad_sch
+part U2 flag on_board = yes @ sch logic-3_fan_out.kicad_sch
+part U2 lib Fixture:SHIFT_REG sheet / symbol Fixture:SHIFT_REG
+part U2 unit 1 sheet / uuid g030002f-0000-4000-8000-000000000000 line 87 at 70,40 rot 0
+part U2 value = text 74HC595 @ sch logic-3_fan_out.kicad_sch note "from the Value field"
+part U3 field Description = "Shift register IC" @ sch logic-3_fan_out.kicad_sch
+part U3 field Value = 74HC595 @ sch logic-3_fan_out.kicad_sch
+part U3 flag dnp = no @ sch logic-3_fan_out.kicad_sch
+part U3 flag exclude_from_sim = no @ sch logic-3_fan_out.kicad_sch
+part U3 flag in_bom = yes @ sch logic-3_fan_out.kicad_sch
+part U3 flag on_board = yes @ sch logic-3_fan_out.kicad_sch
+part U3 lib Fixture:SHIFT_REG sheet / symbol Fixture:SHIFT_REG
+part U3 unit 1 sheet / uuid g0300035-0000-4000-8000-000000000000 line 100 at 100,40 rot 0
+part U3 value = text 74HC595 @ sch logic-3_fan_out.kicad_sch note "from the Value field"
+part U4 field Description = "Shift register IC" @ sch logic-3_fan_out.kicad_sch
+part U4 field Value = 74HC595 @ sch logic-3_fan_out.kicad_sch
+part U4 flag dnp = no @ sch logic-3_fan_out.kicad_sch
+part U4 flag exclude_from_sim = no @ sch logic-3_fan_out.kicad_sch
+part U4 flag in_bom = yes @ sch logic-3_fan_out.kicad_sch
+part U4 flag on_board = yes @ sch logic-3_fan_out.kicad_sch
+part U4 lib Fixture:SHIFT_REG sheet / symbol Fixture:SHIFT_REG
+part U4 unit 1 sheet / uuid g030003b-0000-4000-8000-000000000000 line 113 at 130,40 rot 0
+part U4 value = text 74HC595 @ sch logic-3_fan_out.kicad_sch note "from the Value field"
+part U5 field Description = "Shift register IC" @ sch logic-3_fan_out.kicad_sch
+part U5 field Value = 74HC595 @ sch logic-3_fan_out.kicad_sch
+part U5 flag dnp = no @ sch logic-3_fan_out.kicad_sch
+part U5 flag exclude_from_sim = no @ sch logic-3_fan_out.kicad_sch
+part U5 flag in_bom = yes @ sch logic-3_fan_out.kicad_sch
+part U5 flag on_board = yes @ sch logic-3_fan_out.kicad_sch
+part U5 lib Fixture:SHIFT_REG sheet / symbol Fixture:SHIFT_REG
+part U5 unit 1 sheet / uuid g0300041-0000-4000-8000-000000000000 line 126 at 160,40 rot 0
+part U5 value = text 74HC595 @ sch logic-3_fan_out.kicad_sch note "from the Value field"
+part U6 field Description = "Shift register IC" @ sch logic-3_fan_out.kicad_sch
+part U6 field Value = 74HC595 @ sch logic-3_fan_out.kicad_sch
+part U6 flag dnp = no @ sch logic-3_fan_out.kicad_sch
+part U6 flag exclude_from_sim = no @ sch logic-3_fan_out.kicad_sch
+part U6 flag in_bom = yes @ sch logic-3_fan_out.kicad_sch
+part U6 flag on_board = yes @ sch logic-3_fan_out.kicad_sch
+part U6 lib Fixture:SHIFT_REG sheet / symbol Fixture:SHIFT_REG
+part U6 unit 1 sheet / uuid g0300047-0000-4000-8000-000000000000 line 139 at 70,90 rot 0
+part U6 value = text 74HC595 @ sch logic-3_fan_out.kicad_sch note "from the Value field"
+part U7 field Description = "Shift register IC" @ sch logic-3_fan_out.kicad_sch
+part U7 field Value = 74HC595 @ sch logic-3_fan_out.kicad_sch
+part U7 flag dnp = no @ sch logic-3_fan_out.kicad_sch
+part U7 flag exclude_from_sim = no @ sch logic-3_fan_out.kicad_sch
+part U7 flag in_bom = yes @ sch logic-3_fan_out.kicad_sch
+part U7 flag on_board = yes @ sch logic-3_fan_out.kicad_sch
+part U7 lib Fixture:SHIFT_REG sheet / symbol Fixture:SHIFT_REG
+part U7 unit 1 sheet / uuid g030004d-0000-4000-8000-000000000000 line 152 at 100,90 rot 0
+part U7 value = text 74HC595 @ sch logic-3_fan_out.kicad_sch note "from the Value field"
+part U8 field Description = "Shift register IC" @ sch logic-3_fan_out.kicad_sch
+part U8 field Value = 74HC595 @ sch logic-3_fan_out.kicad_sch
+part U8 flag dnp = no @ sch logic-3_fan_out.kicad_sch
+part U8 flag exclude_from_sim = no @ sch logic-3_fan_out.kicad_sch
+part U8 flag in_bom = yes @ sch logic-3_fan_out.kicad_sch
+part U8 flag on_board = yes @ sch logic-3_fan_out.kicad_sch
+part U8 lib Fixture:SHIFT_REG sheet / symbol Fixture:SHIFT_REG
+part U8 unit 1 sheet / uuid g0300053-0000-4000-8000-000000000000 line 165 at 130,90 rot 0
+part U8 value = text 74HC595 @ sch logic-3_fan_out.kicad_sch note "from the Value field"
+part U9 field Description = "Shift register IC" @ sch logic-3_fan_out.kicad_sch
+part U9 field Value = 74HC595 @ sch logic-3_fan_out.kicad_sch
+part U9 flag dnp = no @ sch logic-3_fan_out.kicad_sch
+part U9 flag exclude_from_sim = no @ sch logic-3_fan_out.kicad_sch
+part U9 flag in_bom = yes @ sch logic-3_fan_out.kicad_sch
+part U9 flag on_board = yes @ sch logic-3_fan_out.kicad_sch
+part U9 lib Fixture:SHIFT_REG sheet / symbol Fixture:SHIFT_REG
+part U9 unit 1 sheet / uuid g0300059-0000-4000-8000-000000000000 line 178 at 160,90 rot 0
+part U9 value = text 74HC595 @ sch logic-3_fan_out.kicad_sch note "from the Value field"
+pin U1 1 name VDD unit 1 net /+3V3
+pin U1 1 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U1 2 name GND unit 1 net /GND
+pin U1 2 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U1 3 name LATCH unit 1 net /LATCH_CLK
+pin U1 3 type = output @ sch logic-3_fan_out.kicad_sch
+pin U1 4 name RESET unit 1 net /RESET
+pin U1 4 type = output @ sch logic-3_fan_out.kicad_sch
+pin U1 5 name EN unit 1 net /EN
+pin U1 5 type = output @ sch logic-3_fan_out.kicad_sch
+pin U2 1 name VDD unit 1 net /+3V3
+pin U2 1 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U2 2 name GND unit 1 net /GND
+pin U2 2 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U2 3 name CP unit 1 net /LATCH_CLK
+pin U2 3 type = input @ sch logic-3_fan_out.kicad_sch
+pin U2 4 name MR unit 1 net /RESET
+pin U2 4 type = input @ sch logic-3_fan_out.kicad_sch
+pin U2 5 name OE unit 1 net /EN
+pin U2 5 type = input @ sch logic-3_fan_out.kicad_sch
+pin U3 1 name VDD unit 1 net /+3V3
+pin U3 1 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U3 2 name GND unit 1 net /GND
+pin U3 2 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U3 3 name CP unit 1 net /LATCH_CLK
+pin U3 3 type = input @ sch logic-3_fan_out.kicad_sch
+pin U3 4 name MR unit 1 net /RESET
+pin U3 4 type = input @ sch logic-3_fan_out.kicad_sch
+pin U3 5 name OE unit 1 net /EN
+pin U3 5 type = input @ sch logic-3_fan_out.kicad_sch
+pin U4 1 name VDD unit 1 net /+3V3
+pin U4 1 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U4 2 name GND unit 1 net /GND
+pin U4 2 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U4 3 name CP unit 1 net /LATCH_CLK
+pin U4 3 type = input @ sch logic-3_fan_out.kicad_sch
+pin U4 4 name MR unit 1 net /RESET
+pin U4 4 type = input @ sch logic-3_fan_out.kicad_sch
+pin U4 5 name OE unit 1 net /EN
+pin U4 5 type = input @ sch logic-3_fan_out.kicad_sch
+pin U5 1 name VDD unit 1 net /+3V3
+pin U5 1 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U5 2 name GND unit 1 net /GND
+pin U5 2 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U5 3 name CP unit 1 net /LATCH_CLK
+pin U5 3 type = input @ sch logic-3_fan_out.kicad_sch
+pin U5 4 name MR unit 1 net /RESET
+pin U5 4 type = input @ sch logic-3_fan_out.kicad_sch
+pin U5 5 name OE unit 1 net /EN
+pin U5 5 type = input @ sch logic-3_fan_out.kicad_sch
+pin U6 1 name VDD unit 1 net /+3V3
+pin U6 1 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U6 2 name GND unit 1 net /GND
+pin U6 2 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U6 3 name CP unit 1 net unconnected-(U6-CP-Pad3)
+pin U6 3 type = input @ sch logic-3_fan_out.kicad_sch
+pin U6 4 name MR unit 1 net /RESET
+pin U6 4 type = input @ sch logic-3_fan_out.kicad_sch
+pin U6 5 name OE unit 1 net /EN
+pin U6 5 type = input @ sch logic-3_fan_out.kicad_sch
+pin U7 1 name VDD unit 1 net /+3V3
+pin U7 1 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U7 2 name GND unit 1 net /GND
+pin U7 2 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U7 3 name CP unit 1 net unconnected-(U7-CP-Pad3)
+pin U7 3 type = input @ sch logic-3_fan_out.kicad_sch
+pin U7 4 name MR unit 1 net /RESET
+pin U7 4 type = input @ sch logic-3_fan_out.kicad_sch
+pin U7 5 name OE unit 1 net /EN
+pin U7 5 type = input @ sch logic-3_fan_out.kicad_sch
+pin U8 1 name VDD unit 1 net /+3V3
+pin U8 1 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U8 2 name GND unit 1 net /GND
+pin U8 2 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U8 3 name CP unit 1 net unconnected-(U8-CP-Pad3)
+pin U8 3 type = input @ sch logic-3_fan_out.kicad_sch
+pin U8 4 name MR unit 1 net /RESET
+pin U8 4 type = input @ sch logic-3_fan_out.kicad_sch
+pin U8 5 name OE unit 1 net /EN
+pin U8 5 type = input @ sch logic-3_fan_out.kicad_sch
+pin U9 1 name VDD unit 1 net /+3V3
+pin U9 1 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U9 2 name GND unit 1 net /GND
+pin U9 2 type = power_in @ sch logic-3_fan_out.kicad_sch
+pin U9 3 name CP unit 1 net unconnected-(U9-CP-Pad3)
+pin U9 3 type = input @ sch logic-3_fan_out.kicad_sch
+pin U9 4 name MR unit 1 net /RESET
+pin U9 4 type = input @ sch logic-3_fan_out.kicad_sch
+pin U9 5 name OE unit 1 net unconnected-(U9-OE-Pad5)
+pin U9 5 type = input @ sch logic-3_fan_out.kicad_sch
+sheet / name "" file logic-3_fan_out.kicad_sch uuid /
+source file logic-3_fan_out.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:DRIVER description Microcontroller
+symbol Fixture:DRIVER field Description Microcontroller
+symbol Fixture:DRIVER field Reference U
+symbol Fixture:DRIVER field Value DRIVER
+symbol Fixture:DRIVER hash db79d9ab43c32d02
+symbol Fixture:DRIVER pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:DRIVER pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:DRIVER pin 3 unit 1 body 1 name LATCH type output style line
+symbol Fixture:DRIVER pin 4 unit 1 body 1 name RESET type output style line
+symbol Fixture:DRIVER pin 5 unit 1 body 1 name EN type output style line
+symbol Fixture:DRIVER units 1
+symbol Fixture:SHIFT_REG description "Shift register IC"
+symbol Fixture:SHIFT_REG field Description "Shift register IC"
+symbol Fixture:SHIFT_REG field Reference U
+symbol Fixture:SHIFT_REG field Value SHIFT_REG
+symbol Fixture:SHIFT_REG hash 23aac5cc203e7f63
+symbol Fixture:SHIFT_REG pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:SHIFT_REG pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:SHIFT_REG pin 3 unit 1 body 1 name CP type input style line
+symbol Fixture:SHIFT_REG pin 4 unit 1 body 1 name MR type input style line
+symbol Fixture:SHIFT_REG pin 5 unit 1 body 1 name OE type input style line
+symbol Fixture:SHIFT_REG units 1

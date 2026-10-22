@@ -1,0 +1,327 @@
+board mux-1_swapped_signals
+label / local +3V3 at 32.38,52.38 net /+3V3
+label / local +3V3 at 60,116.19 net /+3V3
+label / local +3V3 at 70,116.19 net /+3V3
+label / local +3V3 at 72.38,32.38 net /+3V3
+label / local +3V3 at 72.38,72.38 net /+3V3
+label / local +3V3 at 112.38,32.38 net /+3V3
+label / local +3V3 at 112.38,72.38 net /+3V3
+label / local +3V3 at 152.38,32.38 net /+3V3
+label / local +3V3 at 152.38,72.38 net /+3V3
+label / local DEBUG_TX at 32.38,80.32 net /DEBUG_TX
+label / local DEBUG_TX at 194.92,60 net /DEBUG_TX
+label / local GND at 32.38,54.92 net /GND
+label / local GND at 72.38,34.92 net /GND
+label / local GND at 72.38,74.92 net /GND
+label / local GND at 112.38,34.92 net /GND
+label / local GND at 112.38,74.92 net /GND
+label / local GND at 152.38,34.92 net /GND
+label / local GND at 152.38,74.92 net /GND
+label / local GND at 194.92,62.54 net /GND
+label / local GPS2_A at 32.38,75.24 net /GPS2_A
+label / local GPS2_A at 152.38,80 net /GPS2_A
+label / local GPS2_B at 32.38,77.78 net /GPS2_B
+label / local GPS2_B at 152.38,77.46 net /GPS2_B
+label / local I2C1_SCL at 32.38,57.46 net /I2C1_SCL
+label / local I2C1_SCL at 60,123.81 net /I2C1_SCL
+label / local I2C1_SCL at 72.38,40 net /I2C1_SCL
+label / local I2C1_SCL at 72.38,77.46 net /I2C1_SCL
+label / local I2C1_SDA at 32.38,60 net /I2C1_SDA
+label / local I2C1_SDA at 70,123.81 net /I2C1_SDA
+label / local I2C1_SDA at 72.38,37.46 net /I2C1_SDA
+label / local I2C1_SDA at 72.38,80 net /I2C1_SDA
+label / local SPI_MISO at 32.38,67.62 net /SPI_MISO
+label / local SPI_MISO at 112.38,40 net /SPI_MISO
+label / local SPI_MISO at 112.38,82.54 net /SPI_MISO
+label / local SPI_MOSI at 32.38,65.08 net /SPI_MOSI
+label / local SPI_MOSI at 112.38,42.54 net /SPI_MOSI
+label / local SPI_MOSI at 112.38,80 net /SPI_MOSI
+label / local SPI_SCK at 32.38,62.54 net /SPI_SCK
+label / local SPI_SCK at 112.38,37.46 net /SPI_SCK
+label / local SPI_SCK at 112.38,77.46 net /SPI_SCK
+label / local UART_RX at 32.38,72.7 net /UART_RX
+label / local UART_RX at 152.38,40 net /UART_RX
+label / local UART_TX at 32.38,70.16 net /UART_TX
+label / local UART_TX at 152.38,37.46 net /UART_TX
+net /+3V3 class = Default @ sch mux-1_swapped_signals.kicad_sch note "effective net class"
+net /+3V3 kind named
+net /DEBUG_TX class = Default @ sch mux-1_swapped_signals.kicad_sch note "effective net class"
+net /DEBUG_TX kind named
+net /GND class = Default @ sch mux-1_swapped_signals.kicad_sch note "effective net class"
+net /GND kind named
+net /GPS2_A class = Default @ sch mux-1_swapped_signals.kicad_sch note "effective net class"
+net /GPS2_A kind named
+net /GPS2_B class = Default @ sch mux-1_swapped_signals.kicad_sch note "effective net class"
+net /GPS2_B kind named
+net /I2C1_SCL class = Default @ sch mux-1_swapped_signals.kicad_sch note "effective net class"
+net /I2C1_SCL kind named
+net /I2C1_SDA class = Default @ sch mux-1_swapped_signals.kicad_sch note "effective net class"
+net /I2C1_SDA kind named
+net /SPI_MISO class = Default @ sch mux-1_swapped_signals.kicad_sch note "effective net class"
+net /SPI_MISO kind named
+net /SPI_MOSI class = Default @ sch mux-1_swapped_signals.kicad_sch note "effective net class"
+net /SPI_MOSI kind named
+net /SPI_SCK class = Default @ sch mux-1_swapped_signals.kicad_sch note "effective net class"
+net /SPI_SCK kind named
+net /UART_RX class = Default @ sch mux-1_swapped_signals.kicad_sch note "effective net class"
+net /UART_RX kind named
+net /UART_TX class = Default @ sch mux-1_swapped_signals.kicad_sch note "effective net class"
+net /UART_TX kind named
+part J1 field Description = "Debug connector" @ sch mux-1_swapped_signals.kicad_sch
+part J1 field Value = DEBUG @ sch mux-1_swapped_signals.kicad_sch
+part J1 flag dnp = no @ sch mux-1_swapped_signals.kicad_sch
+part J1 flag exclude_from_sim = no @ sch mux-1_swapped_signals.kicad_sch
+part J1 flag in_bom = yes @ sch mux-1_swapped_signals.kicad_sch
+part J1 flag on_board = yes @ sch mux-1_swapped_signals.kicad_sch
+part J1 lib Fixture:DEBUG_CONN sheet / symbol Fixture:DEBUG_CONN
+part J1 unit 1 sheet / uuid m0100060-0000-4000-8000-000000000000 line 261 at 200,60 rot 0
+part J1 value = text DEBUG @ sch mux-1_swapped_signals.kicad_sch note "from the Value field"
+part R1 field Description = Resistor @ sch mux-1_swapped_signals.kicad_sch
+part R1 field Value = 4k7 @ sch mux-1_swapped_signals.kicad_sch
+part R1 flag dnp = no @ sch mux-1_swapped_signals.kicad_sch
+part R1 flag exclude_from_sim = no @ sch mux-1_swapped_signals.kicad_sch
+part R1 flag in_bom = yes @ sch mux-1_swapped_signals.kicad_sch
+part R1 flag on_board = yes @ sch mux-1_swapped_signals.kicad_sch
+part R1 lib Fixture:R sheet / symbol Fixture:R
+part R1 unit 1 sheet / uuid m0100044-0000-4000-8000-000000000000 line 191 at 60,120 rot 0
+part R1 value = text 4k7 @ sch mux-1_swapped_signals.kicad_sch note "from the Value field"
+part R2 field Description = Resistor @ sch mux-1_swapped_signals.kicad_sch
+part R2 field Value = 4k7 @ sch mux-1_swapped_signals.kicad_sch
+part R2 flag dnp = no @ sch mux-1_swapped_signals.kicad_sch
+part R2 flag exclude_from_sim = no @ sch mux-1_swapped_signals.kicad_sch
+part R2 flag in_bom = yes @ sch mux-1_swapped_signals.kicad_sch
+part R2 flag on_board = yes @ sch mux-1_swapped_signals.kicad_sch
+part R2 lib Fixture:R sheet / symbol Fixture:R
+part R2 unit 1 sheet / uuid m0100047-0000-4000-8000-000000000000 line 201 at 70,120 rot 0
+part R2 value = text 4k7 @ sch mux-1_swapped_signals.kicad_sch note "from the Value field"
+part U1 field Description = Microcontroller @ sch mux-1_swapped_signals.kicad_sch
+part U1 field Value = MCU @ sch mux-1_swapped_signals.kicad_sch
+part U1 flag dnp = no @ sch mux-1_swapped_signals.kicad_sch
+part U1 flag exclude_from_sim = no @ sch mux-1_swapped_signals.kicad_sch
+part U1 flag in_bom = yes @ sch mux-1_swapped_signals.kicad_sch
+part U1 flag on_board = yes @ sch mux-1_swapped_signals.kicad_sch
+part U1 lib Fixture:MCU12 sheet / symbol Fixture:MCU12
+part U1 unit 1 sheet / uuid m010002d-0000-4000-8000-000000000000 line 147 at 40,60 rot 0
+part U1 value = text MCU @ sch mux-1_swapped_signals.kicad_sch note "from the Value field"
+part U2 field Description = "Sensor IC" @ sch mux-1_swapped_signals.kicad_sch
+part U2 field Value = SENSOR @ sch mux-1_swapped_signals.kicad_sch
+part U2 flag dnp = no @ sch mux-1_swapped_signals.kicad_sch
+part U2 flag exclude_from_sim = no @ sch mux-1_swapped_signals.kicad_sch
+part U2 flag in_bom = yes @ sch mux-1_swapped_signals.kicad_sch
+part U2 flag on_board = yes @ sch mux-1_swapped_signals.kicad_sch
+part U2 lib Fixture:I2C_SENSOR sheet / symbol Fixture:I2C_SENSOR
+part U2 unit 1 sheet / uuid m010003a-0000-4000-8000-000000000000 line 167 at 80,40 rot 0
+part U2 value = text SENSOR @ sch mux-1_swapped_signals.kicad_sch note "from the Value field"
+part U3 field Description = "Sensor IC" @ sch mux-1_swapped_signals.kicad_sch
+part U3 field Value = SPI_A @ sch mux-1_swapped_signals.kicad_sch
+part U3 flag dnp = no @ sch mux-1_swapped_signals.kicad_sch
+part U3 flag exclude_from_sim = no @ sch mux-1_swapped_signals.kicad_sch
+part U3 flag in_bom = yes @ sch mux-1_swapped_signals.kicad_sch
+part U3 flag on_board = yes @ sch mux-1_swapped_signals.kicad_sch
+part U3 lib Fixture:SPI_A sheet / symbol Fixture:SPI_A
+part U3 unit 1 sheet / uuid m010004a-0000-4000-8000-000000000000 line 211 at 120,40 rot 0
+part U3 value = text SPI_A @ sch mux-1_swapped_signals.kicad_sch note "from the Value field"
+part U4 field Description = "GPS module IC" @ sch mux-1_swapped_signals.kicad_sch
+part U4 field Value = GPS @ sch mux-1_swapped_signals.kicad_sch
+part U4 flag dnp = no @ sch mux-1_swapped_signals.kicad_sch
+part U4 flag exclude_from_sim = no @ sch mux-1_swapped_signals.kicad_sch
+part U4 flag in_bom = yes @ sch mux-1_swapped_signals.kicad_sch
+part U4 flag on_board = yes @ sch mux-1_swapped_signals.kicad_sch
+part U4 lib Fixture:GPS sheet / symbol Fixture:GPS
+part U4 unit 1 sheet / uuid m0100056-0000-4000-8000-000000000000 line 237 at 160,40 rot 0
+part U4 value = text GPS @ sch mux-1_swapped_signals.kicad_sch note "from the Value field"
+part U5 field Description = "Sensor IC" @ sch mux-1_swapped_signals.kicad_sch
+part U5 field Value = SENSOR @ sch mux-1_swapped_signals.kicad_sch
+part U5 flag dnp = no @ sch mux-1_swapped_signals.kicad_sch
+part U5 flag exclude_from_sim = no @ sch mux-1_swapped_signals.kicad_sch
+part U5 flag in_bom = yes @ sch mux-1_swapped_signals.kicad_sch
+part U5 flag on_board = yes @ sch mux-1_swapped_signals.kicad_sch
+part U5 lib Fixture:I2C_SENSOR sheet / symbol Fixture:I2C_SENSOR
+part U5 unit 1 sheet / uuid m010003f-0000-4000-8000-000000000000 line 179 at 80,80 rot 0
+part U5 value = text SENSOR @ sch mux-1_swapped_signals.kicad_sch note "from the Value field"
+part U6 field Description = "Sensor IC" @ sch mux-1_swapped_signals.kicad_sch
+part U6 field Value = SPI_B @ sch mux-1_swapped_signals.kicad_sch
+part U6 flag dnp = no @ sch mux-1_swapped_signals.kicad_sch
+part U6 flag exclude_from_sim = no @ sch mux-1_swapped_signals.kicad_sch
+part U6 flag in_bom = yes @ sch mux-1_swapped_signals.kicad_sch
+part U6 flag on_board = yes @ sch mux-1_swapped_signals.kicad_sch
+part U6 lib Fixture:SPI_B sheet / symbol Fixture:SPI_B
+part U6 unit 1 sheet / uuid m0100050-0000-4000-8000-000000000000 line 224 at 120,80 rot 0
+part U6 value = text SPI_B @ sch mux-1_swapped_signals.kicad_sch note "from the Value field"
+part U7 field Description = "GPS module IC" @ sch mux-1_swapped_signals.kicad_sch
+part U7 field Value = GPS @ sch mux-1_swapped_signals.kicad_sch
+part U7 flag dnp = no @ sch mux-1_swapped_signals.kicad_sch
+part U7 flag exclude_from_sim = no @ sch mux-1_swapped_signals.kicad_sch
+part U7 flag in_bom = yes @ sch mux-1_swapped_signals.kicad_sch
+part U7 flag on_board = yes @ sch mux-1_swapped_signals.kicad_sch
+part U7 lib Fixture:GPS sheet / symbol Fixture:GPS
+part U7 unit 1 sheet / uuid m010005b-0000-4000-8000-000000000000 line 249 at 160,80 rot 0
+part U7 value = text GPS @ sch mux-1_swapped_signals.kicad_sch note "from the Value field"
+pin J1 1 name TX unit 1 net /DEBUG_TX
+pin J1 1 type = passive @ sch mux-1_swapped_signals.kicad_sch
+pin J1 2 name GND unit 1 net /GND
+pin J1 2 type = passive @ sch mux-1_swapped_signals.kicad_sch
+pin R1 1 name "" unit 1 net /+3V3
+pin R1 1 type = passive @ sch mux-1_swapped_signals.kicad_sch
+pin R1 2 name "" unit 1 net /I2C1_SCL
+pin R1 2 type = passive @ sch mux-1_swapped_signals.kicad_sch
+pin R2 1 name "" unit 1 net /+3V3
+pin R2 1 type = passive @ sch mux-1_swapped_signals.kicad_sch
+pin R2 2 name "" unit 1 net /I2C1_SDA
+pin R2 2 type = passive @ sch mux-1_swapped_signals.kicad_sch
+pin U1 1 name VDD unit 1 net /+3V3
+pin U1 1 type = power_in @ sch mux-1_swapped_signals.kicad_sch
+pin U1 2 name GND unit 1 net /GND
+pin U1 2 type = power_in @ sch mux-1_swapped_signals.kicad_sch
+pin U1 3 name PB6/I2C1_SCL unit 1 net /I2C1_SCL
+pin U1 3 type = bidirectional @ sch mux-1_swapped_signals.kicad_sch
+pin U1 4 name PB7/I2C1_SDA unit 1 net /I2C1_SDA
+pin U1 4 type = bidirectional @ sch mux-1_swapped_signals.kicad_sch
+pin U1 5 name PA5/SPI1_SCK unit 1 net /SPI_SCK
+pin U1 5 type = bidirectional @ sch mux-1_swapped_signals.kicad_sch
+pin U1 6 name PA7/SPI1_MOSI unit 1 net /SPI_MOSI
+pin U1 6 type = bidirectional @ sch mux-1_swapped_signals.kicad_sch
+pin U1 7 name PA6/SPI1_MISO unit 1 net /SPI_MISO
+pin U1 7 type = bidirectional @ sch mux-1_swapped_signals.kicad_sch
+pin U1 8 name PA9/USART1_TX unit 1 net /UART_TX
+pin U1 8 type = bidirectional @ sch mux-1_swapped_signals.kicad_sch
+pin U1 9 name PA10/USART1_RX unit 1 net /UART_RX
+pin U1 9 type = bidirectional @ sch mux-1_swapped_signals.kicad_sch
+pin U1 10 name PA2/USART2_TX unit 1 net /GPS2_A
+pin U1 10 type = bidirectional @ sch mux-1_swapped_signals.kicad_sch
+pin U1 11 name PA3/USART2_RX unit 1 net /GPS2_B
+pin U1 11 type = bidirectional @ sch mux-1_swapped_signals.kicad_sch
+pin U1 12 name PB10/USART3_TX unit 1 net /DEBUG_TX
+pin U1 12 type = bidirectional @ sch mux-1_swapped_signals.kicad_sch
+pin U2 1 name VDD unit 1 net /+3V3
+pin U2 1 type = power_in @ sch mux-1_swapped_signals.kicad_sch
+pin U2 2 name GND unit 1 net /GND
+pin U2 2 type = power_in @ sch mux-1_swapped_signals.kicad_sch
+pin U2 3 name SCL unit 1 net /I2C1_SDA
+pin U2 3 type = input @ sch mux-1_swapped_signals.kicad_sch
+pin U2 4 name SDA unit 1 net /I2C1_SCL
+pin U2 4 type = bidirectional @ sch mux-1_swapped_signals.kicad_sch
+pin U3 1 name VDD unit 1 net /+3V3
+pin U3 1 type = power_in @ sch mux-1_swapped_signals.kicad_sch
+pin U3 2 name GND unit 1 net /GND
+pin U3 2 type = power_in @ sch mux-1_swapped_signals.kicad_sch
+pin U3 3 name SCK unit 1 net /SPI_SCK
+pin U3 3 type = input @ sch mux-1_swapped_signals.kicad_sch
+pin U3 4 name MOSI unit 1 net /SPI_MISO
+pin U3 4 type = input @ sch mux-1_swapped_signals.kicad_sch
+pin U3 5 name MISO unit 1 net /SPI_MOSI
+pin U3 5 type = output @ sch mux-1_swapped_signals.kicad_sch
+pin U4 1 name VDD unit 1 net /+3V3
+pin U4 1 type = power_in @ sch mux-1_swapped_signals.kicad_sch
+pin U4 2 name GND unit 1 net /GND
+pin U4 2 type = power_in @ sch mux-1_swapped_signals.kicad_sch
+pin U4 3 name TX unit 1 net /UART_TX
+pin U4 3 type = output @ sch mux-1_swapped_signals.kicad_sch
+pin U4 4 name RX unit 1 net /UART_RX
+pin U4 4 type = input @ sch mux-1_swapped_signals.kicad_sch
+pin U5 1 name VDD unit 1 net /+3V3
+pin U5 1 type = power_in @ sch mux-1_swapped_signals.kicad_sch
+pin U5 2 name GND unit 1 net /GND
+pin U5 2 type = power_in @ sch mux-1_swapped_signals.kicad_sch
+pin U5 3 name SCL unit 1 net /I2C1_SCL
+pin U5 3 type = input @ sch mux-1_swapped_signals.kicad_sch
+pin U5 4 name SDA unit 1 net /I2C1_SDA
+pin U5 4 type = bidirectional @ sch mux-1_swapped_signals.kicad_sch
+pin U6 1 name VDD unit 1 net /+3V3
+pin U6 1 type = power_in @ sch mux-1_swapped_signals.kicad_sch
+pin U6 2 name GND unit 1 net /GND
+pin U6 2 type = power_in @ sch mux-1_swapped_signals.kicad_sch
+pin U6 3 name SCK unit 1 net /SPI_SCK
+pin U6 3 type = input @ sch mux-1_swapped_signals.kicad_sch
+pin U6 4 name SDI unit 1 net /SPI_MOSI
+pin U6 4 type = input @ sch mux-1_swapped_signals.kicad_sch
+pin U6 5 name SDO unit 1 net /SPI_MISO
+pin U6 5 type = output @ sch mux-1_swapped_signals.kicad_sch
+pin U7 1 name VDD unit 1 net /+3V3
+pin U7 1 type = power_in @ sch mux-1_swapped_signals.kicad_sch
+pin U7 2 name GND unit 1 net /GND
+pin U7 2 type = power_in @ sch mux-1_swapped_signals.kicad_sch
+pin U7 3 name TX unit 1 net /GPS2_B
+pin U7 3 type = output @ sch mux-1_swapped_signals.kicad_sch
+pin U7 4 name RX unit 1 net /GPS2_A
+pin U7 4 type = input @ sch mux-1_swapped_signals.kicad_sch
+sheet / name "" file mux-1_swapped_signals.kicad_sch uuid /
+source file mux-1_swapped_signals.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:DEBUG_CONN description "Debug connector"
+symbol Fixture:DEBUG_CONN field Description "Debug connector"
+symbol Fixture:DEBUG_CONN field Reference J
+symbol Fixture:DEBUG_CONN field Value DEBUG_CONN
+symbol Fixture:DEBUG_CONN hash ec68fc5b637c0fef
+symbol Fixture:DEBUG_CONN pin 1 unit 1 body 1 name TX type passive style line
+symbol Fixture:DEBUG_CONN pin 2 unit 1 body 1 name GND type passive style line
+symbol Fixture:DEBUG_CONN units 1
+symbol Fixture:GPS description "GPS module IC"
+symbol Fixture:GPS field Description "GPS module IC"
+symbol Fixture:GPS field Reference U
+symbol Fixture:GPS field Value GPS
+symbol Fixture:GPS hash 3920d8de885567cd
+symbol Fixture:GPS pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:GPS pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:GPS pin 3 unit 1 body 1 name TX type output style line
+symbol Fixture:GPS pin 4 unit 1 body 1 name RX type input style line
+symbol Fixture:GPS units 1
+symbol Fixture:I2C_SENSOR description "Sensor IC"
+symbol Fixture:I2C_SENSOR field Description "Sensor IC"
+symbol Fixture:I2C_SENSOR field Reference U
+symbol Fixture:I2C_SENSOR field Value I2C_SENSOR
+symbol Fixture:I2C_SENSOR hash c1d9d96e85f7a194
+symbol Fixture:I2C_SENSOR pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:I2C_SENSOR pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:I2C_SENSOR pin 3 unit 1 body 1 name SCL type input style line
+symbol Fixture:I2C_SENSOR pin 4 unit 1 body 1 name SDA type bidirectional style line
+symbol Fixture:I2C_SENSOR units 1
+symbol Fixture:MCU12 description Microcontroller
+symbol Fixture:MCU12 field Description Microcontroller
+symbol Fixture:MCU12 field Reference U
+symbol Fixture:MCU12 field Value MCU12
+symbol Fixture:MCU12 hash 127064bd1d20d59e
+symbol Fixture:MCU12 pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:MCU12 pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:MCU12 pin 3 unit 1 body 1 name PB6/I2C1_SCL type bidirectional style line
+symbol Fixture:MCU12 pin 4 unit 1 body 1 name PB7/I2C1_SDA type bidirectional style line
+symbol Fixture:MCU12 pin 5 unit 1 body 1 name PA5/SPI1_SCK type bidirectional style line
+symbol Fixture:MCU12 pin 6 unit 1 body 1 name PA7/SPI1_MOSI type bidirectional style line
+symbol Fixture:MCU12 pin 7 unit 1 body 1 name PA6/SPI1_MISO type bidirectional style line
+symbol Fixture:MCU12 pin 8 unit 1 body 1 name PA9/USART1_TX type bidirectional style line
+symbol Fixture:MCU12 pin 9 unit 1 body 1 name PA10/USART1_RX type bidirectional style line
+symbol Fixture:MCU12 pin 10 unit 1 body 1 name PA2/USART2_TX type bidirectional style line
+symbol Fixture:MCU12 pin 11 unit 1 body 1 name PA3/USART2_RX type bidirectional style line
+symbol Fixture:MCU12 pin 12 unit 1 body 1 name PB10/USART3_TX type bidirectional style line
+symbol Fixture:MCU12 units 1
+symbol Fixture:R description Resistor
+symbol Fixture:R field Description Resistor
+symbol Fixture:R field Reference R
+symbol Fixture:R field Value R
+symbol Fixture:R hash 448da3f7f9000746
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:R units 1
+symbol Fixture:SPI_A description "Sensor IC"
+symbol Fixture:SPI_A field Description "Sensor IC"
+symbol Fixture:SPI_A field Reference U
+symbol Fixture:SPI_A field Value SPI_A
+symbol Fixture:SPI_A hash 822e495fea636919
+symbol Fixture:SPI_A pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:SPI_A pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:SPI_A pin 3 unit 1 body 1 name SCK type input style line
+symbol Fixture:SPI_A pin 4 unit 1 body 1 name MOSI type input style line
+symbol Fixture:SPI_A pin 5 unit 1 body 1 name MISO type output style line
+symbol Fixture:SPI_A units 1
+symbol Fixture:SPI_B description "Sensor IC"
+symbol Fixture:SPI_B field Description "Sensor IC"
+symbol Fixture:SPI_B field Reference U
+symbol Fixture:SPI_B field Value SPI_B
+symbol Fixture:SPI_B hash d60a406e3b6b987e
+symbol Fixture:SPI_B pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:SPI_B pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:SPI_B pin 3 unit 1 body 1 name SCK type input style line
+symbol Fixture:SPI_B pin 4 unit 1 body 1 name SDI type input style line
+symbol Fixture:SPI_B pin 5 unit 1 body 1 name SDO type output style line
+symbol Fixture:SPI_B units 1

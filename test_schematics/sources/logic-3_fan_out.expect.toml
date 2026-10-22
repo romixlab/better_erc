@@ -1,0 +1,13 @@
+# What better_erc finds on logic-3_fan_out.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board logic-3_fan_out"]
+
+[[finding]]
+check = "LOGIC-3"
+subjects = ["net /LATCH_CLK", "part U1"]
+
+[[finding]]
+check = "LOGIC-3"
+subjects = ["net /RESET", "part U1"]

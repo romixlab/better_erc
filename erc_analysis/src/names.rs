@@ -5,6 +5,11 @@
 
 use serde::{Deserialize, Serialize};
 
+mod signals;
+pub use signals::{
+    Interface, Polarity, Sense, Signal, interface_signals, mismatch, name_signals, polarity,
+};
+
 /// The last segment of a net name: `/MCU/SWDIO` is `SWDIO`
 pub fn base(name: &str) -> &str {
     name.rsplit('/').next().unwrap_or(name)

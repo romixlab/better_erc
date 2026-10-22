@@ -55,7 +55,14 @@ MCU's: the bus never acknowledges, and the scope shows clock on the data line.
 
 **How to check.** Normalise signal names on nets and pins (`IMP-1`); I2C and clock signals must match, UART TX must meet
 RX, SPI MOSI/SDO of the controller must meet MOSI/SDI of the peripheral, and a pin with an alternate-function list
-(`NET-12`) is matched against all of its names.
+(`NET-12`) is matched against all of its names. better_erc (`erc_checks/src/mux/mux_1.rs`, the signal grammar in
+`erc_analysis::names`) reads the I2C, SPI, USB and CAN signal a named net carries (`I2C1_SCL`, `SPI_MOSI`, `USB_D+`,
+`CAN_H`) and every pin on it by all its names: the pin name split at `/` (`PB6/I2C1_SCL`), the alternate chosen and the
+symbol's alternates. A pin whose names carry signals of the net's interface, none of them the net's, is a finding;
+`SDI`, `SDO`, `DIN` and `DOUT` fit either SPI data net, since they are named from the part's side. UART is judged pin
+against pin, because a net named `TX` may be named from either end: TX pins of two parts on one net, or RX pins of two
+parts with no TX and no connector to bring one, are findings; connector and test point pins are left out. Alternate
+functions from part data (`NET-12`) will add the MCU pins whose symbols list none.
 
 **Fix.** Swap the connection, or rename the net if the name is the error.
 

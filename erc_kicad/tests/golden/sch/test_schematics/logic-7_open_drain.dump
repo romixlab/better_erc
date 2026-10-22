@@ -1,0 +1,192 @@
+board logic-7_open_drain
+label / local +3V3 at 22.38,32.38 net /+3V3
+label / local +3V3 at 22.38,72.38 net /+3V3
+label / local +3V3 at 22.38,112.38 net /+3V3
+label / local +3V3 at 22.38,152.38 net /+3V3
+label / local +3V3 at 60,76.19 net /+3V3
+label / local +3V3 at 80,116.19 net /+3V3
+label / local +3V3 at 92.38,52.38 net /+3V3
+label / local CMP1 at 22.38,37.46 net /CMP1
+label / local CMP1 at 92.38,57.46 net /CMP1
+label / local CMP2 at 22.38,77.46 net /CMP2
+label / local CMP2 at 60,83.81 net /CMP2
+label / local CMP2 at 92.38,60 net /CMP2
+label / local CMP3 at 22.38,117.46 net /CMP3
+label / local CMP3 at 56.19,120 net /CMP3
+label / local CMP4 at 22.38,157.46 net /CMP4
+label / local D1_A at 63.81,120 net /D1_A
+label / local D1_A at 80,123.81 net /D1_A
+label / local GND at 22.38,34.92 net /GND
+label / local GND at 22.38,74.92 net /GND
+label / local GND at 22.38,114.92 net /GND
+label / local GND at 22.38,154.92 net /GND
+label / local GND at 92.38,54.92 net /GND
+net /+3V3 class = Default @ sch logic-7_open_drain.kicad_sch note "effective net class"
+net /+3V3 kind named
+net /CMP1 class = Default @ sch logic-7_open_drain.kicad_sch note "effective net class"
+net /CMP1 kind named
+net /CMP2 class = Default @ sch logic-7_open_drain.kicad_sch note "effective net class"
+net /CMP2 kind named
+net /CMP3 class = Default @ sch logic-7_open_drain.kicad_sch note "effective net class"
+net /CMP3 kind named
+net /CMP4 class = Default @ sch logic-7_open_drain.kicad_sch note "effective net class"
+net /CMP4 kind named
+net /D1_A class = Default @ sch logic-7_open_drain.kicad_sch note "effective net class"
+net /D1_A kind named
+net /GND class = Default @ sch logic-7_open_drain.kicad_sch note "effective net class"
+net /GND kind named
+part D1 field Description = "Light emitting diode" @ sch logic-7_open_drain.kicad_sch
+part D1 field Value = red @ sch logic-7_open_drain.kicad_sch
+part D1 flag dnp = no @ sch logic-7_open_drain.kicad_sch
+part D1 flag exclude_from_sim = no @ sch logic-7_open_drain.kicad_sch
+part D1 flag in_bom = yes @ sch logic-7_open_drain.kicad_sch
+part D1 flag on_board = yes @ sch logic-7_open_drain.kicad_sch
+part D1 lib Fixture:LED sheet / symbol Fixture:LED
+part D1 unit 1 sheet / uuid g070002f-0000-4000-8000-000000000000 line 141 at 60,120 rot 0
+part D1 value = text red @ sch logic-7_open_drain.kicad_sch note "from the Value field"
+part R1 field Description = Resistor @ sch logic-7_open_drain.kicad_sch
+part R1 field Value = 10k @ sch logic-7_open_drain.kicad_sch
+part R1 flag dnp = no @ sch logic-7_open_drain.kicad_sch
+part R1 flag exclude_from_sim = no @ sch logic-7_open_drain.kicad_sch
+part R1 flag in_bom = yes @ sch logic-7_open_drain.kicad_sch
+part R1 flag on_board = yes @ sch logic-7_open_drain.kicad_sch
+part R1 lib Fixture:R sheet / symbol Fixture:R
+part R1 unit 1 sheet / uuid g070002c-0000-4000-8000-000000000000 line 131 at 60,80 rot 0
+part R1 value = text 10k @ sch logic-7_open_drain.kicad_sch note "from the Value field"
+part R2 field Description = Resistor @ sch logic-7_open_drain.kicad_sch
+part R2 field Value = 1k @ sch logic-7_open_drain.kicad_sch
+part R2 flag dnp = no @ sch logic-7_open_drain.kicad_sch
+part R2 flag exclude_from_sim = no @ sch logic-7_open_drain.kicad_sch
+part R2 flag in_bom = yes @ sch logic-7_open_drain.kicad_sch
+part R2 flag on_board = yes @ sch logic-7_open_drain.kicad_sch
+part R2 lib Fixture:R sheet / symbol Fixture:R
+part R2 unit 1 sheet / uuid g0700032-0000-4000-8000-000000000000 line 151 at 80,120 rot 0
+part R2 value = text 1k @ sch logic-7_open_drain.kicad_sch note "from the Value field"
+part U1 field Description = Comparator @ sch logic-7_open_drain.kicad_sch
+part U1 field Value = LM393 @ sch logic-7_open_drain.kicad_sch
+part U1 flag dnp = no @ sch logic-7_open_drain.kicad_sch
+part U1 flag exclude_from_sim = no @ sch logic-7_open_drain.kicad_sch
+part U1 flag in_bom = yes @ sch logic-7_open_drain.kicad_sch
+part U1 flag on_board = yes @ sch logic-7_open_drain.kicad_sch
+part U1 lib Fixture:CMP sheet / symbol Fixture:CMP
+part U1 unit 1 sheet / uuid g0700017-0000-4000-8000-000000000000 line 75 at 30,40 rot 0
+part U1 value = text LM393 @ sch logic-7_open_drain.kicad_sch note "from the Value field"
+part U2 field Description = Comparator @ sch logic-7_open_drain.kicad_sch
+part U2 field Value = LM393 @ sch logic-7_open_drain.kicad_sch
+part U2 flag dnp = no @ sch logic-7_open_drain.kicad_sch
+part U2 flag exclude_from_sim = no @ sch logic-7_open_drain.kicad_sch
+part U2 flag in_bom = yes @ sch logic-7_open_drain.kicad_sch
+part U2 flag on_board = yes @ sch logic-7_open_drain.kicad_sch
+part U2 lib Fixture:CMP sheet / symbol Fixture:CMP
+part U2 unit 1 sheet / uuid g070001b-0000-4000-8000-000000000000 line 86 at 30,80 rot 0
+part U2 value = text LM393 @ sch logic-7_open_drain.kicad_sch note "from the Value field"
+part U3 field Description = Microcontroller @ sch logic-7_open_drain.kicad_sch
+part U3 field Value = MCU @ sch logic-7_open_drain.kicad_sch
+part U3 flag dnp = no @ sch logic-7_open_drain.kicad_sch
+part U3 flag exclude_from_sim = no @ sch logic-7_open_drain.kicad_sch
+part U3 flag in_bom = yes @ sch logic-7_open_drain.kicad_sch
+part U3 flag on_board = yes @ sch logic-7_open_drain.kicad_sch
+part U3 lib Fixture:MCU3 sheet / symbol Fixture:MCU3
+part U3 unit 1 sheet / uuid g0700027-0000-4000-8000-000000000000 line 119 at 100,60 rot 0
+part U3 value = text MCU @ sch logic-7_open_drain.kicad_sch note "from the Value field"
+part U4 field Description = Comparator @ sch logic-7_open_drain.kicad_sch
+part U4 field Value = LM393 @ sch logic-7_open_drain.kicad_sch
+part U4 flag dnp = no @ sch logic-7_open_drain.kicad_sch
+part U4 flag exclude_from_sim = no @ sch logic-7_open_drain.kicad_sch
+part U4 flag in_bom = yes @ sch logic-7_open_drain.kicad_sch
+part U4 flag on_board = yes @ sch logic-7_open_drain.kicad_sch
+part U4 lib Fixture:CMP sheet / symbol Fixture:CMP
+part U4 unit 1 sheet / uuid g070001f-0000-4000-8000-000000000000 line 97 at 30,120 rot 0
+part U4 value = text LM393 @ sch logic-7_open_drain.kicad_sch note "from the Value field"
+part U5 field Description = Comparator @ sch logic-7_open_drain.kicad_sch
+part U5 field Value = LM393 @ sch logic-7_open_drain.kicad_sch
+part U5 flag dnp = no @ sch logic-7_open_drain.kicad_sch
+part U5 flag exclude_from_sim = no @ sch logic-7_open_drain.kicad_sch
+part U5 flag in_bom = yes @ sch logic-7_open_drain.kicad_sch
+part U5 flag on_board = yes @ sch logic-7_open_drain.kicad_sch
+part U5 lib Fixture:CMP sheet / symbol Fixture:CMP
+part U5 unit 1 sheet / uuid g0700023-0000-4000-8000-000000000000 line 108 at 30,160 rot 0
+part U5 value = text LM393 @ sch logic-7_open_drain.kicad_sch note "from the Value field"
+pin D1 1 name K unit 1 net /CMP3
+pin D1 1 type = passive @ sch logic-7_open_drain.kicad_sch
+pin D1 2 name A unit 1 net /D1_A
+pin D1 2 type = passive @ sch logic-7_open_drain.kicad_sch
+pin R1 1 name "" unit 1 net /+3V3
+pin R1 1 type = passive @ sch logic-7_open_drain.kicad_sch
+pin R1 2 name "" unit 1 net /CMP2
+pin R1 2 type = passive @ sch logic-7_open_drain.kicad_sch
+pin R2 1 name "" unit 1 net /+3V3
+pin R2 1 type = passive @ sch logic-7_open_drain.kicad_sch
+pin R2 2 name "" unit 1 net /D1_A
+pin R2 2 type = passive @ sch logic-7_open_drain.kicad_sch
+pin U1 1 name VDD unit 1 net /+3V3
+pin U1 1 type = power_in @ sch logic-7_open_drain.kicad_sch
+pin U1 2 name GND unit 1 net /GND
+pin U1 2 type = power_in @ sch logic-7_open_drain.kicad_sch
+pin U1 3 name OUT unit 1 net /CMP1
+pin U1 3 type = open_collector @ sch logic-7_open_drain.kicad_sch
+pin U2 1 name VDD unit 1 net /+3V3
+pin U2 1 type = power_in @ sch logic-7_open_drain.kicad_sch
+pin U2 2 name GND unit 1 net /GND
+pin U2 2 type = power_in @ sch logic-7_open_drain.kicad_sch
+pin U2 3 name OUT unit 1 net /CMP2
+pin U2 3 type = open_collector @ sch logic-7_open_drain.kicad_sch
+pin U3 1 name VDD unit 1 net /+3V3
+pin U3 1 type = power_in @ sch logic-7_open_drain.kicad_sch
+pin U3 2 name GND unit 1 net /GND
+pin U3 2 type = power_in @ sch logic-7_open_drain.kicad_sch
+pin U3 3 name IN1 unit 1 net /CMP1
+pin U3 3 type = input @ sch logic-7_open_drain.kicad_sch
+pin U3 4 name IN2 unit 1 net /CMP2
+pin U3 4 type = input @ sch logic-7_open_drain.kicad_sch
+pin U4 1 name VDD unit 1 net /+3V3
+pin U4 1 type = power_in @ sch logic-7_open_drain.kicad_sch
+pin U4 2 name GND unit 1 net /GND
+pin U4 2 type = power_in @ sch logic-7_open_drain.kicad_sch
+pin U4 3 name OUT unit 1 net /CMP3
+pin U4 3 type = open_collector @ sch logic-7_open_drain.kicad_sch
+pin U5 1 name VDD unit 1 net /+3V3
+pin U5 1 type = power_in @ sch logic-7_open_drain.kicad_sch
+pin U5 2 name GND unit 1 net /GND
+pin U5 2 type = power_in @ sch logic-7_open_drain.kicad_sch
+pin U5 3 name OUT unit 1 net /CMP4
+pin U5 3 type = open_collector @ sch logic-7_open_drain.kicad_sch
+sheet / name "" file logic-7_open_drain.kicad_sch uuid /
+source file logic-7_open_drain.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:CMP description Comparator
+symbol Fixture:CMP field Description Comparator
+symbol Fixture:CMP field Reference U
+symbol Fixture:CMP field Value CMP
+symbol Fixture:CMP hash 93d21f1f4d7f9220
+symbol Fixture:CMP pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:CMP pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:CMP pin 3 unit 1 body 1 name OUT type open_collector style line
+symbol Fixture:CMP units 1
+symbol Fixture:LED description "Light emitting diode"
+symbol Fixture:LED field Description "Light emitting diode"
+symbol Fixture:LED field Reference D
+symbol Fixture:LED field Value LED
+symbol Fixture:LED hash b9e8b67e57a4b6af
+symbol Fixture:LED pin 1 unit 1 body 1 name K type passive style line
+symbol Fixture:LED pin 2 unit 1 body 1 name A type passive style line
+symbol Fixture:LED units 1
+symbol Fixture:MCU3 description Microcontroller
+symbol Fixture:MCU3 field Description Microcontroller
+symbol Fixture:MCU3 field Reference U
+symbol Fixture:MCU3 field Value MCU3
+symbol Fixture:MCU3 hash b1f0c5128274402d
+symbol Fixture:MCU3 pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:MCU3 pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:MCU3 pin 3 unit 1 body 1 name IN1 type input style line
+symbol Fixture:MCU3 pin 4 unit 1 body 1 name IN2 type input style line
+symbol Fixture:MCU3 units 1
+symbol Fixture:R description Resistor
+symbol Fixture:R field Description Resistor
+symbol Fixture:R field Reference R
+symbol Fixture:R field Value R
+symbol Fixture:R hash 448da3f7f9000746
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:R units 1

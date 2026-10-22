@@ -1,0 +1,17 @@
+# What better_erc finds on logic-8_polarity.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board logic-8_polarity"]
+
+[[finding]]
+check = "LOGIC-8"
+subjects = ["net /HUB_RESET_N", "part U6"]
+
+[[finding]]
+check = "LOGIC-8"
+subjects = ["net /PG_A", "part U1", "part U2"]
+
+[[finding]]
+check = "LOGIC-8"
+subjects = ["net /RST_B", "part U4", "part U5"]

@@ -16,3 +16,7 @@ confidence = "estimate"
 [[not_run]]
 check = "BOM-8"
 need = "rails"
+
+[[not_run]]
+check = "LOGIC-7"
+need = "rails"

@@ -308,6 +308,13 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `LIB-14` Unit of a multi-unit symbol not placed, with its floating pins · `lib/lib_14.rs`, `lib-14_unplaced_units`
   (schematics only: the netlist importer keeps no unit per library pin yet)
 - ✅ `LIB-15` IC symbol without power pins (by type or name, hidden ones count) · `lib/lib_15.rs`, `lib-15_no_power_pins`
+- ✅ `MUX-1` Interface signal on a pin named for another (SCL/SDA, MOSI/MISO, D+/D-, CANH/CANL), UART TX meeting TX ·
+  `mux/mux_1.rs`, `erc_analysis/src/names/signals.rs`, `mux-1_swapped_signals` (alternates from part data with `NET-12`)
+- ✅ `LOGIC-3` High fan-out: one driver on 8 inputs, a clock on 3 · `logic/logic_3.rs`, `logic-3_fan_out`
+- ✅ `LOGIC-7` Open-collector or open-emitter outputs alone on a net with no pull-up or pull-down · `logic/logic_7.rs`,
+  `logic-7_open_drain` (by KiCad pin types; open drain by part data and MCU pins in open-drain mode with `NET-7`)
+- ✅ `LOGIC-8` Polarity mismatch by name, with the sense of the function word · `logic/logic_8.rs`,
+  `erc_analysis/src/names/signals.rs`, `logic-8_polarity`
 - ✅ `ANA-3` Shunt (resistor below `max_shunt` = 1 Ω) whose ends reach a current-sense amplifier's sense inputs (by
   name, directly or through one series resistor each) with no capacitor across them and no RC at the output ·
   `ana/ana_3.rs`, `ana-3_shunt_filters`

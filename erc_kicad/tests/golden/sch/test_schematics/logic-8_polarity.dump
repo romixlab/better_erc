@@ -1,0 +1,295 @@
+board logic-8_polarity
+label / local +3V3 at 22.38,32.38 net /+3V3
+label / local +3V3 at 22.38,102.38 net /+3V3
+label / local +3V3 at 22.38,152.38 net /+3V3
+label / local +3V3 at 55,136.19 net /+3V3
+label / local +3V3 at 72.38,22.38 net /+3V3
+label / local +3V3 at 72.38,62.38 net /+3V3
+label / local +3V3 at 72.38,102.38 net /+3V3
+label / local +3V3 at 72.38,152.38 net /+3V3
+label / local +3V3 at 122.38,32.38 net /+3V3
+label / local +3V3 at 155,66.19 net /+3V3
+label / local +3V3 at 172.38,32.38 net /+3V3
+label / local GND at 22.38,34.92 net /GND
+label / local GND at 22.38,104.92 net /GND
+label / local GND at 22.38,154.92 net /GND
+label / local GND at 72.38,24.92 net /GND
+label / local GND at 72.38,64.92 net /GND
+label / local GND at 72.38,104.92 net /GND
+label / local GND at 72.38,154.92 net /GND
+label / local GND at 122.38,34.92 net /GND
+label / local GND at 172.38,34.92 net /GND
+label / local HUB_RESET_N at 22.38,157.46 net /HUB_RESET_N
+label / local HUB_RESET_N at 72.38,157.46 net /HUB_RESET_N
+label / local INT at 122.38,37.46 net /INT
+label / local INT at 155,73.81 net /INT
+label / local INT at 172.38,37.46 net /INT
+label / local PG_A at 22.38,37.46 net /PG_A
+label / local PG_A at 72.38,27.46 net /PG_A
+label / local PG_B at 22.38,40 net /PG_B
+label / local PG_B at 72.38,67.46 net /PG_B
+label / local RST_B at 22.38,107.46 net /RST_B
+label / local RST_B at 55,143.81 net /RST_B
+label / local RST_B at 72.38,107.46 net /RST_B
+net /+3V3 class = Default @ sch logic-8_polarity.kicad_sch note "effective net class"
+net /+3V3 kind named
+net /GND class = Default @ sch logic-8_polarity.kicad_sch note "effective net class"
+net /GND kind named
+net /HUB_RESET_N class = Default @ sch logic-8_polarity.kicad_sch note "effective net class"
+net /HUB_RESET_N kind named
+net /INT class = Default @ sch logic-8_polarity.kicad_sch note "effective net class"
+net /INT kind named
+net /PG_A class = Default @ sch logic-8_polarity.kicad_sch note "effective net class"
+net /PG_A kind named
+net /PG_B class = Default @ sch logic-8_polarity.kicad_sch note "effective net class"
+net /PG_B kind named
+net /RST_B class = Default @ sch logic-8_polarity.kicad_sch note "effective net class"
+net /RST_B kind named
+part R1 field Description = Resistor @ sch logic-8_polarity.kicad_sch
+part R1 field Value = 10k @ sch logic-8_polarity.kicad_sch
+part R1 flag dnp = no @ sch logic-8_polarity.kicad_sch
+part R1 flag exclude_from_sim = no @ sch logic-8_polarity.kicad_sch
+part R1 flag in_bom = yes @ sch logic-8_polarity.kicad_sch
+part R1 flag on_board = yes @ sch logic-8_polarity.kicad_sch
+part R1 lib Fixture:R sheet / symbol Fixture:R
+part R1 unit 1 sheet / uuid g0800036-0000-4000-8000-000000000000 line 202 at 55,140 rot 0
+part R1 value = text 10k @ sch logic-8_polarity.kicad_sch note "from the Value field"
+part R2 field Description = Resistor @ sch logic-8_polarity.kicad_sch
+part R2 field Value = 10k @ sch logic-8_polarity.kicad_sch
+part R2 flag dnp = no @ sch logic-8_polarity.kicad_sch
+part R2 flag exclude_from_sim = no @ sch logic-8_polarity.kicad_sch
+part R2 flag in_bom = yes @ sch logic-8_polarity.kicad_sch
+part R2 flag on_board = yes @ sch logic-8_polarity.kicad_sch
+part R2 lib Fixture:R sheet / symbol Fixture:R
+part R2 unit 1 sheet / uuid g0800049-0000-4000-8000-000000000000 line 256 at 155,70 rot 0
+part R2 value = text 10k @ sch logic-8_polarity.kicad_sch note "from the Value field"
+part U1 field Description = "Voltage regulator IC" @ sch logic-8_polarity.kicad_sch
+part U1 field Value = PMIC @ sch logic-8_polarity.kicad_sch
+part U1 flag dnp = no @ sch logic-8_polarity.kicad_sch
+part U1 flag exclude_from_sim = no @ sch logic-8_polarity.kicad_sch
+part U1 flag in_bom = yes @ sch logic-8_polarity.kicad_sch
+part U1 flag on_board = yes @ sch logic-8_polarity.kicad_sch
+part U1 lib Fixture:PMIC sheet / symbol Fixture:PMIC
+part U1 unit 1 sheet / uuid g0800021-0000-4000-8000-000000000000 line 146 at 30,40 rot 0
+part U1 value = text PMIC @ sch logic-8_polarity.kicad_sch note "from the Value field"
+part U2 field Description = "Load switch IC" @ sch logic-8_polarity.kicad_sch
+part U2 field Value = SWITCH @ sch logic-8_polarity.kicad_sch
+part U2 flag dnp = no @ sch logic-8_polarity.kicad_sch
+part U2 flag exclude_from_sim = no @ sch logic-8_polarity.kicad_sch
+part U2 flag in_bom = yes @ sch logic-8_polarity.kicad_sch
+part U2 flag on_board = yes @ sch logic-8_polarity.kicad_sch
+part U2 lib Fixture:RX_EN sheet / symbol Fixture:RX_EN
+part U2 unit 1 sheet / uuid g0800026-0000-4000-8000-000000000000 line 158 at 80,30 rot 0
+part U2 value = text SWITCH @ sch logic-8_polarity.kicad_sch note "from the Value field"
+part U3 field Description = "Load switch IC" @ sch logic-8_polarity.kicad_sch
+part U3 field Value = SWITCH @ sch logic-8_polarity.kicad_sch
+part U3 flag dnp = no @ sch logic-8_polarity.kicad_sch
+part U3 flag exclude_from_sim = no @ sch logic-8_polarity.kicad_sch
+part U3 flag in_bom = yes @ sch logic-8_polarity.kicad_sch
+part U3 flag on_board = yes @ sch logic-8_polarity.kicad_sch
+part U3 lib Fixture:RX_SHDN sheet / symbol Fixture:RX_SHDN
+part U3 unit 1 sheet / uuid g080002a-0000-4000-8000-000000000000 line 169 at 80,70 rot 0
+part U3 value = text SWITCH @ sch logic-8_polarity.kicad_sch note "from the Value field"
+part U4 field Description = "Voltage supervisor IC" @ sch logic-8_polarity.kicad_sch
+part U4 field Value = SUPERVISOR @ sch logic-8_polarity.kicad_sch
+part U4 flag dnp = no @ sch logic-8_polarity.kicad_sch
+part U4 flag exclude_from_sim = no @ sch logic-8_polarity.kicad_sch
+part U4 flag in_bom = yes @ sch logic-8_polarity.kicad_sch
+part U4 flag on_board = yes @ sch logic-8_polarity.kicad_sch
+part U4 lib Fixture:SUPERVISOR sheet / symbol Fixture:SUPERVISOR
+part U4 unit 1 sheet / uuid g080002e-0000-4000-8000-000000000000 line 180 at 30,110 rot 0
+part U4 value = text SUPERVISOR @ sch logic-8_polarity.kicad_sch note "from the Value field"
+part U5 field Description = "Load switch IC" @ sch logic-8_polarity.kicad_sch
+part U5 field Value = HUB @ sch logic-8_polarity.kicad_sch
+part U5 flag dnp = no @ sch logic-8_polarity.kicad_sch
+part U5 flag exclude_from_sim = no @ sch logic-8_polarity.kicad_sch
+part U5 flag in_bom = yes @ sch logic-8_polarity.kicad_sch
+part U5 flag on_board = yes @ sch logic-8_polarity.kicad_sch
+part U5 lib Fixture:RX_RESET sheet / symbol Fixture:RX_RESET
+part U5 unit 1 sheet / uuid g0800032-0000-4000-8000-000000000000 line 191 at 80,110 rot 0
+part U5 value = text HUB @ sch logic-8_polarity.kicad_sch note "from the Value field"
+part U6 field Description = "Load switch IC" @ sch logic-8_polarity.kicad_sch
+part U6 field Value = HUB @ sch logic-8_polarity.kicad_sch
+part U6 flag dnp = no @ sch logic-8_polarity.kicad_sch
+part U6 flag exclude_from_sim = no @ sch logic-8_polarity.kicad_sch
+part U6 flag in_bom = yes @ sch logic-8_polarity.kicad_sch
+part U6 flag on_board = yes @ sch logic-8_polarity.kicad_sch
+part U6 lib Fixture:RX_RESET sheet / symbol Fixture:RX_RESET
+part U6 unit 1 sheet / uuid g080003d-0000-4000-8000-000000000000 line 223 at 80,160 rot 0
+part U6 value = text HUB @ sch logic-8_polarity.kicad_sch note "from the Value field"
+part U7 field Description = "Sensor IC" @ sch logic-8_polarity.kicad_sch
+part U7 field Value = SENSOR @ sch logic-8_polarity.kicad_sch
+part U7 flag dnp = no @ sch logic-8_polarity.kicad_sch
+part U7 flag exclude_from_sim = no @ sch logic-8_polarity.kicad_sch
+part U7 flag in_bom = yes @ sch logic-8_polarity.kicad_sch
+part U7 flag on_board = yes @ sch logic-8_polarity.kicad_sch
+part U7 lib Fixture:INT_SRC sheet / symbol Fixture:INT_SRC
+part U7 unit 1 sheet / uuid g0800041-0000-4000-8000-000000000000 line 234 at 130,40 rot 0
+part U7 value = text SENSOR @ sch logic-8_polarity.kicad_sch note "from the Value field"
+part U8 field Description = "Load switch IC" @ sch logic-8_polarity.kicad_sch
+part U8 field Value = MCU @ sch logic-8_polarity.kicad_sch
+part U8 flag dnp = no @ sch logic-8_polarity.kicad_sch
+part U8 flag exclude_from_sim = no @ sch logic-8_polarity.kicad_sch
+part U8 flag in_bom = yes @ sch logic-8_polarity.kicad_sch
+part U8 flag on_board = yes @ sch logic-8_polarity.kicad_sch
+part U8 lib Fixture:RX_IRQ sheet / symbol Fixture:RX_IRQ
+part U8 unit 1 sheet / uuid g0800045-0000-4000-8000-000000000000 line 245 at 180,40 rot 0
+part U8 value = text MCU @ sch logic-8_polarity.kicad_sch note "from the Value field"
+part U9 field Description = Microcontroller @ sch logic-8_polarity.kicad_sch
+part U9 field Value = MCU @ sch logic-8_polarity.kicad_sch
+part U9 flag dnp = no @ sch logic-8_polarity.kicad_sch
+part U9 flag exclude_from_sim = no @ sch logic-8_polarity.kicad_sch
+part U9 flag in_bom = yes @ sch logic-8_polarity.kicad_sch
+part U9 flag on_board = yes @ sch logic-8_polarity.kicad_sch
+part U9 lib Fixture:MCU1 sheet / symbol Fixture:MCU1
+part U9 unit 1 sheet / uuid g0800039-0000-4000-8000-000000000000 line 212 at 30,160 rot 0
+part U9 value = text MCU @ sch logic-8_polarity.kicad_sch note "from the Value field"
+pin R1 1 name "" unit 1 net /+3V3
+pin R1 1 type = passive @ sch logic-8_polarity.kicad_sch
+pin R1 2 name "" unit 1 net /RST_B
+pin R1 2 type = passive @ sch logic-8_polarity.kicad_sch
+pin R2 1 name "" unit 1 net /+3V3
+pin R2 1 type = passive @ sch logic-8_polarity.kicad_sch
+pin R2 2 name "" unit 1 net /INT
+pin R2 2 type = passive @ sch logic-8_polarity.kicad_sch
+pin U1 1 name VDD unit 1 net /+3V3
+pin U1 1 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U1 2 name GND unit 1 net /GND
+pin U1 2 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U1 3 name PGOOD unit 1 net /PG_A
+pin U1 3 type = output @ sch logic-8_polarity.kicad_sch
+pin U1 4 name PG unit 1 net /PG_B
+pin U1 4 type = output @ sch logic-8_polarity.kicad_sch
+pin U2 1 name VDD unit 1 net /+3V3
+pin U2 1 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U2 2 name GND unit 1 net /GND
+pin U2 2 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U2 3 name ~{EN} unit 1 net /PG_A
+pin U2 3 type = input @ sch logic-8_polarity.kicad_sch
+pin U3 1 name VDD unit 1 net /+3V3
+pin U3 1 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U3 2 name GND unit 1 net /GND
+pin U3 2 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U3 3 name ~{SHDN} unit 1 net /PG_B
+pin U3 3 type = input @ sch logic-8_polarity.kicad_sch
+pin U4 1 name VDD unit 1 net /+3V3
+pin U4 1 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U4 2 name GND unit 1 net /GND
+pin U4 2 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U4 3 name ~{RESET} unit 1 net /RST_B
+pin U4 3 type = open_collector @ sch logic-8_polarity.kicad_sch
+pin U5 1 name VDD unit 1 net /+3V3
+pin U5 1 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U5 2 name GND unit 1 net /GND
+pin U5 2 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U5 3 name RESET unit 1 net /RST_B
+pin U5 3 type = input @ sch logic-8_polarity.kicad_sch
+pin U6 1 name VDD unit 1 net /+3V3
+pin U6 1 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U6 2 name GND unit 1 net /GND
+pin U6 2 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U6 3 name RESET unit 1 net /HUB_RESET_N
+pin U6 3 type = input @ sch logic-8_polarity.kicad_sch
+pin U7 1 name VDD unit 1 net /+3V3
+pin U7 1 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U7 2 name GND unit 1 net /GND
+pin U7 2 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U7 3 name ~{INT} unit 1 net /INT
+pin U7 3 type = open_collector @ sch logic-8_polarity.kicad_sch
+pin U8 1 name VDD unit 1 net /+3V3
+pin U8 1 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U8 2 name GND unit 1 net /GND
+pin U8 2 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U8 3 name ~{IRQ} unit 1 net /INT
+pin U8 3 type = input @ sch logic-8_polarity.kicad_sch
+pin U9 1 name VDD unit 1 net /+3V3
+pin U9 1 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U9 2 name GND unit 1 net /GND
+pin U9 2 type = power_in @ sch logic-8_polarity.kicad_sch
+pin U9 3 name PA0 unit 1 net /HUB_RESET_N
+pin U9 3 type = bidirectional @ sch logic-8_polarity.kicad_sch
+sheet / name "" file logic-8_polarity.kicad_sch uuid /
+source file logic-8_polarity.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:INT_SRC description "Sensor IC"
+symbol Fixture:INT_SRC field Description "Sensor IC"
+symbol Fixture:INT_SRC field Reference U
+symbol Fixture:INT_SRC field Value INT_SRC
+symbol Fixture:INT_SRC hash 219c951b0d87c9a1
+symbol Fixture:INT_SRC pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:INT_SRC pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:INT_SRC pin 3 unit 1 body 1 name ~{INT} type open_collector style line
+symbol Fixture:INT_SRC units 1
+symbol Fixture:MCU1 description Microcontroller
+symbol Fixture:MCU1 field Description Microcontroller
+symbol Fixture:MCU1 field Reference U
+symbol Fixture:MCU1 field Value MCU1
+symbol Fixture:MCU1 hash b5596b5ba0f478b6
+symbol Fixture:MCU1 pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:MCU1 pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:MCU1 pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol Fixture:MCU1 units 1
+symbol Fixture:PMIC description "Voltage regulator IC"
+symbol Fixture:PMIC field Description "Voltage regulator IC"
+symbol Fixture:PMIC field Reference U
+symbol Fixture:PMIC field Value PMIC
+symbol Fixture:PMIC hash ba783ab1d4f030f4
+symbol Fixture:PMIC pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:PMIC pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:PMIC pin 3 unit 1 body 1 name PGOOD type output style line
+symbol Fixture:PMIC pin 4 unit 1 body 1 name PG type output style line
+symbol Fixture:PMIC units 1
+symbol Fixture:R description Resistor
+symbol Fixture:R field Description Resistor
+symbol Fixture:R field Reference R
+symbol Fixture:R field Value R
+symbol Fixture:R hash 448da3f7f9000746
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:R units 1
+symbol Fixture:RX_EN description "Load switch IC"
+symbol Fixture:RX_EN field Description "Load switch IC"
+symbol Fixture:RX_EN field Reference U
+symbol Fixture:RX_EN field Value RX_EN
+symbol Fixture:RX_EN hash c9df5074f4ff9935
+symbol Fixture:RX_EN pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:RX_EN pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:RX_EN pin 3 unit 1 body 1 name ~{EN} type input style line
+symbol Fixture:RX_EN units 1
+symbol Fixture:RX_IRQ description "Load switch IC"
+symbol Fixture:RX_IRQ field Description "Load switch IC"
+symbol Fixture:RX_IRQ field Reference U
+symbol Fixture:RX_IRQ field Value RX_IRQ
+symbol Fixture:RX_IRQ hash e64e714774d83c57
+symbol Fixture:RX_IRQ pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:RX_IRQ pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:RX_IRQ pin 3 unit 1 body 1 name ~{IRQ} type input style line
+symbol Fixture:RX_IRQ units 1
+symbol Fixture:RX_RESET description "Load switch IC"
+symbol Fixture:RX_RESET field Description "Load switch IC"
+symbol Fixture:RX_RESET field Reference U
+symbol Fixture:RX_RESET field Value RX_RESET
+symbol Fixture:RX_RESET hash 0fe24ae2a8b44127
+symbol Fixture:RX_RESET pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:RX_RESET pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:RX_RESET pin 3 unit 1 body 1 name RESET type input style line
+symbol Fixture:RX_RESET units 1
+symbol Fixture:RX_SHDN description "Load switch IC"
+symbol Fixture:RX_SHDN field Description "Load switch IC"
+symbol Fixture:RX_SHDN field Reference U
+symbol Fixture:RX_SHDN field Value RX_SHDN
+symbol Fixture:RX_SHDN hash 63fa1a46d17ec9ad
+symbol Fixture:RX_SHDN pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:RX_SHDN pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:RX_SHDN pin 3 unit 1 body 1 name ~{SHDN} type input style line
+symbol Fixture:RX_SHDN units 1
+symbol Fixture:SUPERVISOR description "Voltage supervisor IC"
+symbol Fixture:SUPERVISOR field Description "Voltage supervisor IC"
+symbol Fixture:SUPERVISOR field Reference U
+symbol Fixture:SUPERVISOR field Value SUPERVISOR
+symbol Fixture:SUPERVISOR hash f898ecb15db50e07
+symbol Fixture:SUPERVISOR pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:SUPERVISOR pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:SUPERVISOR pin 3 unit 1 body 1 name ~{RESET} type open_collector style line
+symbol Fixture:SUPERVISOR units 1

@@ -36,6 +36,8 @@ mod library;
 mod name;
 mod short;
 mod test;
+mod logic;
+mod mux;
 #[cfg(test)]
 mod testing;
 mod text;

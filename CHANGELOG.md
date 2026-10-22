@@ -23,10 +23,14 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 - Stage 1 easy checks, batch checks-bom: `BOM-1` (values a step apart), `BOM-3` (assembly mixes), `BOM-4` (resistor
   array candidates), `BOM-8` (LED turned round), `BOM-11` (one value in two packages), `BOM-14` (fitted part without an
-  MPN), `BOM-17` (one MPN, different values), `LIB-14` (unit not placed), `LIB-15` (symbol without power pins), each
-  with its test schematic; `erc_analysis::package` (case size, SMD or
-  THT, board side from the footprint), `ESeries::steps`. `BOM-5` takes `calc` as a placeholder word, as its page says. The berc and project tests that count findings on `i2c-1` run
-  the I2C checks only, so new checks do not move their numbers.
+  MPN), `BOM-17` (one MPN, different values), `LIB-14` (unit not placed), `LIB-15` (symbol without power pins), `MUX-1`
+  (interface signal on the wrong pin), `LOGIC-3` (high fan-out), `LOGIC-7` (open drain without pull-up), `LOGIC-8`
+  (polarity mismatch by name), each with its test schematic. `erc_analysis::names` grows `polarity` and `mismatch`
+  (the marker with the sense of the function word) and the interface signals of pin and net names
+  (`names/signals.rs`); `erc_analysis::package` (case size, SMD or THT, board side from the footprint);
+  `ESeries::steps`. `BOM-5` takes `calc` as a placeholder word, as its page says. The berc and project tests that count
+  findings on `i2c-1` run the I2C checks only, and the berc snapshot writes the planned count as `N`, so new checks do
+  not move their numbers.
 - `erc_analysis::names`: the name grammar beyond power, for the NAME, WIRE and SHORT checks: active-low markers with
   their style (`~{X}`, `~X`, `X_N`, `X_n`, `nX`/`NRST`, `X#`, `Xn`), differential halves (`_P`/`_N`, `+`/`-`,
   `DP`/`DM`, `_H`/`_L`, glued `XP`/`XN` where both exist) and `pair_halves`, numbered families (`IO4`), the GPIO a pin

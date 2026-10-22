@@ -1,0 +1,33 @@
+# What better_erc finds on mux-1_swapped_signals.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board mux-1_swapped_signals"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net /+3V3", "part R1", "part R2"]
+
+[[finding]]
+check = "MUX-1"
+subjects = ["net /I2C1_SCL", "part U2"]
+
+[[finding]]
+check = "MUX-1"
+subjects = ["net /I2C1_SDA", "part U2"]
+
+[[finding]]
+check = "MUX-1"
+subjects = ["net /SPI_MISO", "part U3"]
+
+[[finding]]
+check = "MUX-1"
+subjects = ["net /SPI_MOSI", "part U3"]
+
+[[finding]]
+check = "MUX-1"
+subjects = ["net /UART_RX", "part U1", "part U4"]
+
+[[finding]]
+check = "MUX-1"
+subjects = ["net /UART_TX", "part U1", "part U4"]
