@@ -675,4 +675,93 @@ impl Board {
         let p = self.pin(id);
         format!("{}.{}", self.part(p.part).designator, p.number)
     }
+
+    /// A real component: not a virtual `#` part (power symbols, PWR_FLAG), not excluded from the board
+    pub fn is_component(&self, id: PartId) -> bool {
+        let p = self.part(id);
+        !p.designator.starts_with('#') && p.flags.on_board.get().copied().unwrap_or(true)
+    }
+
+    /// The variant's override of a part, if it has one
+    fn part_variant(&self, id: PartId, variant: Option<VariantId>) -> Option<&PartVariant> {
+        let v = variant?;
+        self.part(id).variants.iter().find(|pv| pv.variant == v)
+    }
+
+    /// Whether the part is fitted in `variant` (`None`: the base design): the variant's DNP flag when it sets
+    /// one, else the part's own
+    pub fn fitted(&self, id: PartId, variant: Option<VariantId>) -> bool {
+        match self.part_variant(id, variant).and_then(|pv| pv.flags.dnp.get()) {
+            Some(dnp) => !dnp,
+            None => self.part(id).flags.fitted(),
+        }
+    }
+
+    /// The resolved value of a field in `variant`: the variant's override when it has one, else the part's own
+    pub fn field(&self, id: PartId, name: &str, variant: Option<VariantId>) -> Option<&str> {
+        self.part_variant(id, variant)
+            .and_then(|pv| field_value(&pv.fields, name))
+            .or_else(|| self.part(id).field(name))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn sch() -> Provenance {
+        Provenance::Schematic {
+            file: "a.kicad_sch".into(),
+        }
+    }
+
+    fn part(designator: &str, value: &str) -> Part {
+        Part {
+            designator: designator.into(),
+            symbol: None,
+            lib_id: "Device:R".into(),
+            sheet: SheetId(0),
+            units: Vec::new(),
+            fields: vec![Field::new("Value", Fact::new(value.into(), sch()))],
+            value: Facts::default(),
+            flags: PartFlags::default(),
+            variants: Vec::new(),
+            pins: Vec::new(),
+            ties: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn variant_views() {
+        let mut r1 = part("R1", "10k");
+        r1.variants.push(PartVariant {
+            variant: VariantId(0),
+            flags: PartFlags {
+                dnp: Facts::one(Fact::new(true, sch())),
+                ..PartFlags::default()
+            },
+            fields: vec![Field::new("Value", Fact::new("4k7".into(), sch()))],
+        });
+        let mut r2 = part("R2", "1k");
+        r2.flags.dnp = Facts::one(Fact::new(true, sch()));
+        let board = Board {
+            parts: vec![r1, r2, part("#PWR01", "GND")],
+            variants: vec![Variant {
+                name: "Lite".into(),
+                description: None,
+            }],
+            ..Board::default()
+        };
+        let (r1, r2, pwr) = (PartId(0), PartId(1), PartId(2));
+        let lite = Some(VariantId(0));
+        assert!(board.fitted(r1, None));
+        assert!(!board.fitted(r1, lite));
+        assert!(!board.fitted(r2, None));
+        assert!(!board.fitted(r2, lite), "no override: the base flag");
+        assert_eq!(board.field(r1, "Value", None), Some("10k"));
+        assert_eq!(board.field(r1, "Value", lite), Some("4k7"));
+        assert_eq!(board.field(r2, "Value", lite), Some("1k"));
+        assert!(board.is_component(r1));
+        assert!(!board.is_component(pwr));
+    }
 }

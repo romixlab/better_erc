@@ -91,6 +91,12 @@ pub enum ValueWarning {
     UnitMismatch { written: Unit, expected: Unit },
     /// A decimal comma (`4,7k`)
     DecimalComma,
+    /// More than one space between the number and its multiplier or unit (`4.7  k`)
+    Spacing,
+    /// A small `r` for ohms (`4r7`, `10r`)
+    LowercaseR,
+    /// `R` after a multiplier that already makes it ohms (`10kR`)
+    RedundantR,
 }
 
 impl Value {
@@ -157,8 +163,10 @@ fn parse_quantity(text: &str, default: Option<Unit>) -> Option<(Quantity, Vec<Va
     // The first word is the value; the rest (`50V X7R`, `1%`) is trailing text
     let (head, rest) = match text.find(|c: char| c.is_whitespace() || c == '/') {
         Some(i) => {
-            // `4.7 kΩ`, `10 uF`: a lone number followed by a unit word belongs together
+            // `4.7 kΩ`, `10 uF`: a lone number followed by a unit word belongs together, and so does a lone
+            // multiplier when the unit is known (`4.7 k` for a resistor)
             let (h, r) = text.split_at(i);
+            let gap = r.len() - r.trim_start_matches(|c: char| c.is_whitespace()).len();
             let r = r.trim_start_matches(|c: char| c.is_whitespace());
             let unit_word_len = r
                 .find(|c: char| c.is_whitespace() || c == '/')
@@ -167,8 +175,14 @@ fn parse_quantity(text: &str, default: Option<Unit>) -> Option<(Quantity, Vec<Va
             if h.chars()
                 .all(|c| c.is_ascii_digit() || c == '.' || c == ',')
                 && !word.is_empty()
-                && unit_word(word)
+                && (unit_word(word)
+                    || default.is_some()
+                        && word.chars().count() == 1
+                        && word.chars().all(|c| multiplier(c).is_some()))
             {
+                if gap > 1 {
+                    warnings.push(ValueWarning::Spacing);
+                }
                 let end = text.len() - r.len() + unit_word_len;
                 (
                     format!("{h}{word}"),
@@ -215,6 +229,9 @@ fn parse_quantity(text: &str, default: Option<Unit>) -> Option<(Quantity, Vec<Va
             (String::new(), 1.0)
         } else {
             let u = Unit::from_suffix(&first.to_string())?;
+            if first == 'r' {
+                warnings.push(ValueWarning::LowercaseR);
+            }
             value += frac;
             (unit_name_for(u).to_string(), 1.0)
         }
@@ -224,8 +241,14 @@ fn parse_quantity(text: &str, default: Option<Unit>) -> Option<(Quantity, Vec<Va
         // `m` alone is milli, `M` alone mega; `mF`/`MHz` follow the unit
         && !(first == 'm' && after.is_empty() && default.is_none())
     {
+        if after == "R" || after == "r" {
+            warnings.push(ValueWarning::RedundantR);
+        }
         (after, m)
     } else {
+        if tail == "r" {
+            warnings.push(ValueWarning::LowercaseR);
+        }
         (tail, 1.0)
     };
 
@@ -336,5 +359,25 @@ mod tests {
         let (v, w) = Value::parse_as("4,7k", Unit::Ohm);
         assert_eq!(v.quantity().map(|q| q.value), Some(4700.0));
         assert_eq!(w, vec![ValueWarning::DecimalComma]);
+    }
+
+    #[test]
+    fn notation_warnings() {
+        let ohm = |t: &str| {
+            let (v, w) = Value::parse_as(t, Unit::Ohm);
+            (v.quantity().map(|q| q.value), w)
+        };
+        assert_eq!(ohm("4.7 k"), (Some(4700.0), vec![]));
+        assert_eq!(ohm("4.7  k"), (Some(4700.0), vec![ValueWarning::Spacing]));
+        assert_eq!(ohm("4r7"), (Some(4.7), vec![ValueWarning::LowercaseR]));
+        assert_eq!(ohm("10r"), (Some(10.0), vec![ValueWarning::LowercaseR]));
+        assert_eq!(ohm("10kR"), (Some(10000.0), vec![ValueWarning::RedundantR]));
+        assert_eq!(ohm("10R"), (Some(10.0), vec![]));
+        assert_eq!(ohm("2R2"), (Some(2.2), vec![]));
+        assert_eq!(ohm("3K3"), (Some(3300.0), vec![]));
+        assert_eq!(ohm("0"), (Some(0.0), vec![]));
+        assert_eq!(ohm("10x"), (None, vec![]));
+        // Without a known unit a lone multiplier is not joined
+        assert_eq!(q("4.7 k"), None);
     }
 }
