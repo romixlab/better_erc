@@ -172,6 +172,8 @@ is a `Fact` with `Provenance::Derived { rule }` (or `Assumed` for a guess), so a
 | `access::reach(view, classes, power, net)` | `access` | where a probe reaches a net: test point and connector pins on it or one series resistor, ferrite, net tie or jumper away (a far side on a rail or ground is a pull, not a path); `zero_ohm_groups`, the nets joined by 0 Ω resistors, net ties and jumpers | `Graph`, `PartClasses` |
 | `supply::power_in_pins(view, net)`, `caps_to_ground` | `supply` | the power-input pins of the fitted parts on a net, by part; the fitted capacitors from a net to a ground | `Rails` |
 | `pin_name::functions(name)` | `pin_name` | what a pin name states: SWD, JTAG, SWO, reset, UART TX/RX/RTS/CTS, SPI SCK/MOSI/MISO/CS, I2C, enable, interrupt, power good, fault, with the peripheral instance (`USART1` in `PA9/USART1_TX`) | `Graph` |
+| `pull::pulls(view, classes, values, power, net)` | `pull` | the fitted two-pin resistors from a net to a rail (pull-ups) and to a ground (pull-downs), 0 Ω ties left out | `Rails`, `Values` |
+| `analog::amp_units(board, part)`, `sense_pin`, `is_analog_input` | `analog` | an op-amp's or comparator's channels by pin name (`+`, `-`, `IN+`, `-INA`, `1IN-`, `OUTB`, KiCad's `~` output), its supply nets; the sense inputs of current-sense amplifiers (`IN+`/`IN-`, `VIN±`, `SENSE±`, `CSP`/`CSN`); analog and setting inputs a divider feeds on purpose (`FB`, `ADC1`, `VREF`, `UVLO`) | `Graph` |
 
 **Part classes.** A library symbol decides by its library and name (`Device:R`, `Transistor_FET:*`,
 `Regulator_Linear:*`, `MCU_*`, `74xGxx:*`, `Connector:USB_C_*`); a kind the name leaves open is taken from the
@@ -208,8 +210,11 @@ pull-up made DNP is no pull-up. Pin roles will add pins named `SCL`/`SDA` as a s
 **Pin functions by name** (`pin_name`, the name layer of pin roles, NET-7): a pin name is split into alternates at
 `/` (`PA13/JTMS-SWDIO`) and words at `_`, `-` and spaces; each word is matched whole (`SWDIO`, `TRACESWO`, `NRST`,
 `TXD`, `MOSI`, `NSS`, `EN`, `SHDN`, `ALERT`, `PGOOD`), past an overbar (`~{RESET}`), a leading `n` or trailing `N`
-(active low) and a number (`EN2`, `INT1`). A pin named by its port alone (`PA13`) says nothing until alternate
-functions are known (NET-12); the DBG and TEST checks do not judge a part whose names state no debug port or UART.
+(active low) and a number (`EN2`, `INT1`); a few names are read whole (`CHIP_PU`), and `RUN` is a reset, `MCO` and
+`CLKOUT` clock outputs. `active_low` says whether a pin name marks its signal active low: an alternate with a marker
+([`names::active_low`](#the-analyses)) or a name active low by definition (`MCLR`, `XRES`, `RUN`, `CHIP_PU`). A pin
+named by its port alone (`PA13`) says nothing until alternate functions are known (NET-12); the DBG, TEST and CLK
+checks do not judge a part whose names state no debug port, UART or reset.
 
 **Names** (`names`): the name grammar beyond power, plain functions over a net or pin name (no context needed).
 `active_low` reads an active-low marker and its style (`~{X}`, `~X`, `X_N`, `X_n`, `nX` and `NRST`, `X#`, `Xn`);
@@ -386,6 +391,29 @@ of the threshold it used.
 | `NAME-10` | a net on an active-low pin (marker or inversion bubble) without a marker in its own name | `name-10_active_low_unmarked` |
 | `NAME-11` | a negative rail whose sign comes only from a marker or not at all; negative supply pins on a rail read positive | `name-11_negative_rail_names` |
 | `NAME-12` | a designator ending in `?`; one designator placed twice for one unit | `name-12_designators` |
+| `IO-1` | input pins on a net nothing drives: no output, bidirectional, open-drain or unknown IC pin, rail, or resistor, inductor, ferrite, crystal, FET channel or switch to a driven net | `io-1_drive_sources`, `io-1_inputs` |
+| `IO-6` | an IO-1 net a test point, connector (one series part away included) or switch reaches (folds `IO-1` in) | `io-6_touch_inputs` |
+| `IO-7` | a switch to a rail or ground with a pull to the same level on its signal side (folds `IO-8` in) | `io-7_button_pulls` |
+| `IO-8` | a switch with no pull to the other level; an open-drain output (no flag, no I2C) on an MCU net with no pull-up | `io-8_internal_pulls` |
+| `IO-10` | an IO-1 net reaching a connector pin: driven only from off the board (folds `IO-6` in) | `io-10_connector_inputs` |
+| `IO-11` | a MOSFET gate (and the nets one series resistor away) with no resistor to its source or the off level and no push-pull IC output on it | `io-11_gate_pulls` |
+| `IO-15` | an open-drain interrupt, fault or power-good output with no pull-up and no push-pull driver | `io-15_open_drain_flags` |
+| `IO-16` | a signal net with a pull-up and a pull-down (divided voltage), unless it reaches an analog input, amplifier, regulator or load switch | `io-16_pull_up_and_down` |
+| `CLK-3` | a crystal with case pins connected to nothing; with the board file, pads beyond the symbol's pins with no net | `clk-3_crystal_case_pads` |
+| `CLK-5` | an active-low reset with no pull-up and no push-pull driver | `clk-5_reset_pull_ups` |
+| `CLK-6` | a reset net with a button and no capacitor to ground | `clk-6_reset_buttons` |
+| `CLK-7` | an active-low reset with no capacitor to ground (folds `CLK-6` in) | `clk-7_reset_capacitors` |
+| `CLK-14` | a push-pull output on a reset net with another driver, a connector or a switch | `clk-14_push_pull_reset` |
+| `CLK-15` | the reset of an MCU, SoC or FPGA shared with other parts' reset inputs | `clk-15_shared_reset` |
+| `CLK-18` | a clock driver (oscillator, `MCO`, an IC output on a `CLK` net) straight into two or more loads | `clk-18_clock_fan_out` |
+| `ANA-3` | a shunt (below `max_shunt`, 1 Ω) into a current-sense amplifier with no capacitor across the inputs and no RC at the output | `ana-3_shunt_filters` |
+| `ANA-4` | a shunt ending on a rail or ground where a sense input sits too | `ana-4_shunt_kelvin` |
+| `ANA-10` | an op-amp channel whose output does not reach its inverting input, or only the non-inverting one | `ana-10_opamp_feedback` |
+| `ANA-11` | an op-amp channel with an input connected to nothing, both inputs on rails, or a follower at a supply rail (estimate) | `ana-11_unused_channels` |
+| `ANA-12` | a comparator with no output-to-IN+ resistor and no hysteresis pin | `ana-12_comparator_hysteresis` |
+| `ANA-16` | gain network resistors outside `min_resistance`..`max_resistance` (1 kΩ-1 MΩ), feedback capacitors below `min_capacitance` (1 pF) | `ana-16_gain_resistor_range` |
+| `ANA-21` | an op-amp input whose DC path reaches no rail, ground, connector or driver while a capacitor (or a transformer, estimate) sits on it | `ana-21_dc_return` |
+| `ANA-22` | a rail-to-ground divider feeding an op-amp input with no capacitor to ground | `ana-22_bias_divider_caps` |
 
 The I2C buses come from `erc_analysis::i2c` ([The analyses](#the-analyses)), ported from the first analysis code (the
 removed `erc_core`). Pin roles will replace the names as the way to find a bus (NET-4, NET-7).

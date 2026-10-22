@@ -57,7 +57,7 @@ nothing else: the IRQ fires at random and the low-power mode never holds.
 
 **How to check.** From KiCad pin types (`IMP-1`), list nets whose pins are all inputs (and passives). A resistor counts
 as a source when its far end is a rail or a driven net; a FET or switch counts when its other side is (`NET-10`); a
-connector alone does not (`IO-10`). The code collects such inputs today without reporting them.
+connector alone does not (`IO-10`).
 
 **Fix.** A driver or a pull to the safe level.
 
