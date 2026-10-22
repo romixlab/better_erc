@@ -24,6 +24,7 @@ pub mod layout;
 pub mod netcmp;
 pub mod placecmp;
 pub mod value;
+pub mod view;
 
 pub use canon::{link_layout, natural_cmp, part_paths};
 pub use class::PartClass;
@@ -36,4 +37,5 @@ pub use import::{
     NoteKind, Source,
 };
 pub use layout::{Layout, Nm, Pt};
-pub use value::{Quantity, Unit, Value, ValueWarning};
+pub use value::{ESeries, Quantity, Reading, Unit, Value, ValueWarning};
+pub use view::View;
