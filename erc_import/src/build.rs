@@ -244,3 +244,14 @@ impl Builder {
         b
     }
 }
+
+/// Altium names unnamed nets `NetR13_1` (designator and pin of one of its pins)
+#[cfg_attr(not(any(feature = "altium", feature = "pdf")), allow(dead_code))]
+pub(crate) fn net_kind(name: &str) -> NetKind {
+    match name.strip_prefix("Net") {
+        Some(rest) if rest.starts_with(|c: char| c.is_ascii_uppercase()) && rest.contains('_') => {
+            NetKind::Auto
+        }
+        _ => NetKind::Named,
+    }
+}

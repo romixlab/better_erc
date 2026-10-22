@@ -1,0 +1,93 @@
+board smart_pdf
+label /U_Top/ hierarchical SDA net SDA
+label /U_Top/ local EN_µC at 52.916667,99.836111 net EN_µC
+label /U_Top/ local NRST at 52.916667,104.069444 net NRST
+label /U_Top/ local VIN at 52.916667,77.611111 net VIN
+label /U_Top/U_IO/ hierarchical NRST net NRST
+label /U_Top/U_IO/ local EN at 88.194444,93.486111 net /U_Top/U_IO/EN
+label /U_Top/U_MCU/ hierarchical NRST net NRST
+label /U_Top/U_MCU/ hierarchical SDA net SDA
+label /U_Top/U_MCU/ hierarchical VDD_3V3 net VDD_3V3
+label /U_Top/U_MCU/ local D0 at 88.194444,79.375 net D0
+label /U_Top/U_MCU/ local D1 at 88.194444,86.430556 net D1
+label /U_Top/U_MCU/ local D1 net D1
+label /U_Top/U_MCU/ local EN at 88.194444,93.486111 net /U_Top/U_MCU/EN
+label /U_Top/U_MCU/ local SDA at 88.194444,72.319444 net SDA
+net /U_Top/U_IO/EN kind named
+net /U_Top/U_MCU/EN kind named
+net D0 kind named
+net D1 kind named
+net EN_µC kind named
+net GND kind named
+net NRST kind named
+net NetR1_2 kind auto
+net SDA kind named
+net VDD_3V3 kind named
+net VIN kind named
+part C1 field "Library Reference" = CAP @ pdf smart_pdf.pdf position note "property popup"
+part C1 field "Supplier Part Number 1" = 81-GRM1 @ pdf smart_pdf.pdf position note "property popup"
+part C1 field Comment = CAPACITOR @ pdf smart_pdf.pdf position note "property popup"
+part C1 field Value = 100n @ pdf smart_pdf.pdf position note "property popup"
+part C1 lib CAP sheet /U_Top/U_MCU/
+part C1 unit 1 sheet /U_Top/U_MCU/ uuid ""
+part C1 value = text 100n @ pdf smart_pdf.pdf position note "from the Value property"
+part J1 field "Library Reference" = HEADER4 @ pdf smart_pdf.pdf position note "property popup"
+part J1 field "Mfr. PN" = 61300411121 @ pdf smart_pdf.pdf position note "property popup"
+part J1 field Comment = Header @ pdf smart_pdf.pdf position note "property popup"
+part J1 field Footprint = PH_4 @ pdf smart_pdf.pdf position note "property popup"
+part J1 lib HEADER4 sheet /U_Top/
+part J1 unit 1 sheet /U_Top/ uuid ""
+part J1 value = text Header @ pdf smart_pdf.pdf position note "from the Comment property"
+part R1 field Comment = RESISTOR @ pdf smart_pdf.pdf position note "property popup"
+part R1 field Description = "Resistor \"thick film\"" @ pdf smart_pdf.pdf position note "property popup"
+part R1 field Footprint = RESC0402M @ pdf smart_pdf.pdf position note "property popup"
+part R1 field Value = 4k7 @ pdf smart_pdf.pdf position note "property popup"
+part R1 lib "" sheet /U_Top/
+part R1 unit 1 sheet /U_Top/ uuid ""
+part R1 value = text 4k7 @ pdf smart_pdf.pdf position note "from the Value property"
+part R2 field "Library Reference" = RES @ pdf smart_pdf.pdf position note "property popup"
+part R2 field Comment = RESISTOR @ pdf smart_pdf.pdf position note "property popup"
+part R2 field Value = 10k @ pdf smart_pdf.pdf position note "property popup"
+part R2 lib RES sheet /U_Top/U_MCU/
+part R2 unit 1 sheet /U_Top/U_MCU/ uuid ""
+part R2 value = text 10k @ pdf smart_pdf.pdf position note "from the Value property"
+part R3 lib "" sheet /U_Top/U_IO/
+part R3 unit 1 sheet /U_Top/U_IO/ uuid ""
+part R4 lib "" sheet /U_Top/U_MCU/
+part R4 unit 1 sheet /U_Top/U_MCU/ uuid ""
+part U1 field "Library Reference" = STM32G0B1RE @ pdf smart_pdf.pdf position note "property popup"
+part U1 field Comment = STM32G0B1 @ pdf smart_pdf.pdf position note "property popup"
+part U1 lib STM32G0B1RE sheet /U_Top/
+part U1 unit 1 sheet /U_Top/U_MCU/ uuid ""
+part U1 unit 2 sheet /U_Top/ uuid ""
+part U1 value = text STM32G0B1 @ pdf smart_pdf.pdf position note "from the Comment property"
+pin C1 1 name "" unit 1 net VDD_3V3
+pin C1 2 name "" unit 1 net GND
+pin J1 1 name "" unit 1 net VIN
+pin J1 2 name "" unit 1 net SDA
+pin J1 3 name "" unit 1 net GND
+pin J1 4 name "" unit 1 net EN_µC
+pin J1 5 name "" unit 1 net NRST
+pin R1 1 name "" unit 1 net VIN
+pin R1 2 name "" unit 1 net NetR1_2
+pin R2 1 name "" unit 1 net SDA
+pin R2 2 name "" unit 1 net D1
+pin R3 1 name "" unit 1 net NRST
+pin R3 2 name "" unit 1 net /U_Top/U_IO/EN
+pin R4 1 name "" unit 1 net /U_Top/U_MCU/EN
+pin R4 2 name "" unit 1 net GND
+pin U1 1 name "" unit 1 net SDA
+pin U1 2 name "" unit 1 net D0
+pin U1 3 name "" unit 1 net D1
+pin U1 4 name "" unit 1 net GND
+pin U1 5 name "" unit 2 net NetR1_2
+pin U1 6 name "" unit 2 net GND
+pin U1 7 name "" unit 1 net NRST
+sheet / name "" file "" uuid ""
+sheet /U_Top/ name U_Top file Top.SchDoc uuid "" page 2
+sheet /U_Top/U_IO/ name U_IO file IO.SchDoc uuid "" page 4
+sheet /U_Top/U_MCU/ name U_MCU file MCU.SchDoc uuid "" page 3
+source connectivity pdf smart_pdf.pdf bookmarks
+source file smart_pdf.pdf
+source tool altium-pdf
+source version "Altium Designer (synthetic)"

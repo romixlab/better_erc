@@ -1,0 +1,5 @@
+smart_pdf.pdf: net labels: missing: 1 of 9 net labels have no position: no search word (`NL<label>`) with a position on their sheet's page
+smart_pdf.pdf: nets: missing: 2 net(s) join sheets through ports of one name: the wires between sheet entries on the parent sheets are not in the bookmarks, so same-named entries are taken as wired together
+smart_pdf.pdf: property popups: missing: 1 of 8 property popups have no component or pin word (`CO<designator>`, `PI<pin>`) inside them: their properties are not read
+smart_pdf.pdf: property popups: ignored: 1 of 8 property popups are on pages no sheet bookmark leads to (another document bound into the file): not read
+smart_pdf.pdf: sheet /U_Top/U_MCU/: missing: 1 port(s) meet no port or net of their name on another sheet: VDD_3V3

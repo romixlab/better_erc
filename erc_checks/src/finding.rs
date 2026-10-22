@@ -329,7 +329,7 @@ fn locations(board: &Board, s: Subject) -> Vec<Location> {
                 file: board.sheet(l.sheet).file.clone(),
                 what: format!("{} label {}", l.kind.name(), l.text),
                 line: None,
-                at: Some(mm(l.at)),
+                at: l.at.map(mm),
             })
             .collect(),
         Subject::Sheet(_, s) => vec![Location {
@@ -344,7 +344,7 @@ fn locations(board: &Board, s: Subject) -> Vec<Location> {
                 file: board.sheet(l.sheet).file.clone(),
                 what: format!("{} label {}", l.kind.name(), l.text),
                 line: None,
-                at: Some(mm(l.at)),
+                at: l.at.map(mm),
             }]
         }
         Subject::Board(_) | Subject::Pad(..) => Vec::new(),

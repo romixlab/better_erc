@@ -2,6 +2,8 @@
 
 #![allow(dead_code)]
 
+pub mod smart_pdf;
+
 use erc_model::MemFiles;
 use std::path::Path;
 
@@ -53,6 +55,7 @@ pub const CASES: &[(&str, &str, &str, &[&str])] = &[
         &[],
     ),
     ("pnp_allegro", "pnp", "pnp_allegro.csv", &[]),
+    ("pdf_smart", "pdf", "smart_pdf.pdf", &[]),
 ];
 
 pub fn fixture(name: &str) -> Vec<u8> {

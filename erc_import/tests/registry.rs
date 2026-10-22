@@ -10,7 +10,10 @@ mod common;
 fn picks_by_contents_and_name() {
     let reg = Registry::default();
     let names: Vec<&str> = reg.importers().map(|i| i.name()).collect();
-    assert_eq!(names, ["kicad", "kicad-netlist", "altium", "orcad", "pnp"]);
+    assert_eq!(
+        names,
+        ["kicad", "kicad-netlist", "altium", "orcad", "pnp", "pdf"]
+    );
 
     let kicad_net = std::fs::read(
         Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -53,7 +56,8 @@ fn scan_a_directory() {
         .filter(|c| c.confidence == Confidence::Yes)
         .map(|c| (c.main, c.importer))
         .collect();
-    assert_eq!(found.len(), 9, "{found:#?}");
+    assert_eq!(found.len(), 10, "{found:#?}");
+    assert!(found.contains(&("smart_pdf.pdf".into(), "pdf")));
     assert!(found.contains(&("netlist_orcad_pstchip.dat".into(), "orcad")));
     assert!(found.contains(&("pnp_allegro.csv".into(), "pnp")));
     // EDIF found beside the WireList in a real directory

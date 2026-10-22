@@ -1,0 +1,2412 @@
+%PDF-1.7
+%€€€€
+
+8 0 obj
+<<
+  /Length 48
+>>
+stream
+BT
+/F1 4 Tf
+3 Tr
+1 0 0 1 150 150 Tm
+(COR1) Tj
+ET
+endstream
+endobj
+
+9 0 obj
+<<
+  /Length 530
+>>
+stream
+BT
+/F1 8 Tf
+1 0 0 1 100 390 Tm
+(J1) Tj
+ET
+BT
+/F1 4 Tf
+3 Tr
+1 0 0 1 100.5 381 Tm
+(COJ1) Tj
+1 0 0 1 110 370 Tm
+(PIJ101) Tj
+1 0 0 1 110 350 Tm
+(PIJ102) Tj
+1 0 0 1 110 330 Tm
+(PIJ103) Tj
+1 0 0 1 110 310 Tm
+(PIJ104) Tj
+1 0 0 1 205 341 Tm
+(COR1) Tj
+1 0 0 1 207 338 Tm
+(PIR101) Tj
+1 0 0 1 207 302 Tm
+(PIR102) Tj
+1 0 0 1 300 346 Tm
+(COU1B) Tj
+1 0 0 1 302 320 Tm
+(PIU105) Tj
+1 0 0 1 302 300 Tm
+(PIU106) Tj
+1 0 0 1 150 375 Tm
+(NLVIN) Tj
+1 0 0 1 150 312 Tm
+<4E4C454E30B543> Tj
+1 0 0 1 110 300 Tm
+(PIJ105) Tj
+1 0 0 1 150 300 Tm
+(NLNRST) Tj
+ET
+endstream
+endobj
+
+10 0 obj
+<<
+  /Length 534
+>>
+stream
+BT
+/F1 4 Tf
+3 Tr
+1 0 0 1 100 401 Tm
+(COU1A) Tj
+1 0 0 1 110 390 Tm
+(PIU101) Tj
+1 0 0 1 110 370 Tm
+(PIU102) Tj
+1 0 0 1 110 350 Tm
+(PIU103) Tj
+1 0 0 1 110 210 Tm
+(PIU104) Tj
+1 0 0 1 405 341 Tm
+(COR2) Tj
+1 0 0 1 407 338 Tm
+(PIR201) Tj
+1 0 0 1 407 302 Tm
+(PIR202) Tj
+1 0 0 1 250 390 Tm
+(NLSDA) Tj
+1 0 0 1 250 370 Tm
+(NLD0) Tj
+1 0 0 1 250 350 Tm
+(NLD1) Tj
+1 0 0 1 250 330 Tm
+(NLEN) Tj
+1 0 0 1 110 230 Tm
+(PIU107) Tj
+1 0 0 1 505 341 Tm
+(COR4) Tj
+1 0 0 1 507 338 Tm
+(PIR401) Tj
+1 0 0 1 507 302 Tm
+(PIR402) Tj
+ET
+q
+1 0 0 1 100 100 cm
+/Fm0 Do
+Q
+endstream
+endobj
+
+11 0 obj
+<<
+  /Length 139
+>>
+stream
+BT
+/F1 4 Tf
+3 Tr
+1 0 0 1 205 341 Tm
+(COR3) Tj
+1 0 0 1 207 338 Tm
+(PIR301) Tj
+1 0 0 1 207 302 Tm
+(PIR302) Tj
+1 0 0 1 250 330 Tm
+(NLEN) Tj
+ET
+endstream
+endobj
+
+12 0 obj
+<<
+  /Length 100
+  /Type /XObject
+  /Subtype /Form
+  /BBox [0 0 50 50]
+  /Matrix [1 0 0 1 200 200]
+>>
+stream
+BT
+/F1 4 Tf
+3 Tr
+1 0 0 1 5 41 Tm
+(COC1) Tj
+1 0 0 1 7 38 Tm
+(PIC101) Tj
+1 0 0 1 7 2 Tm
+(PIC102) Tj
+ET
+endstream
+endobj
+
+3 0 obj
+<<
+  /Type /Font
+  /Subtype /Type1
+  /BaseFont /Helvetica
+>>
+endobj
+
+18 0 obj
+<<
+  /Type /Annot
+  /Subtype /Link
+  /Rect [100 100 200 200]
+  /A <<
+    /S /JavaScript
+    /JS (ShowCompProps_C1();)
+  >>
+>>
+endobj
+
+19 0 obj
+<<
+  /Type /Annot
+  /Subtype /Link
+  /Rect [100 300 130 380]
+  /A <<
+    /S /JavaScript
+    /JS (ShowCompProps_J1();)
+  >>
+>>
+endobj
+
+20 0 obj
+<<
+  /Type /Annot
+  /Subtype /Link
+  /Rect [200 300 215 340]
+  /A <<
+    /S /JavaScript
+    /JS (ShowCompProps_R1();)
+  >>
+>>
+endobj
+
+21 0 obj
+<<
+  /Type /Annot
+  /Subtype /Link
+  /Rect [300 280 360 340]
+  /A <<
+    /S /JavaScript
+    /JS (ShowCompProps_U1();)
+  >>
+>>
+endobj
+
+22 0 obj
+<<
+  /Type /Annot
+  /Subtype /Link
+  /Rect [600 100 650 150]
+  /A <<
+    /S /JavaScript
+    /JS (ShowCompProps_R1();)
+  >>
+>>
+endobj
+
+23 0 obj
+<<
+  /Type /Annot
+  /Subtype /Link
+  /Rect [700 100 750 150]
+  /A <<
+    /S /JavaScript
+    /JS (this.print();)
+  >>
+>>
+endobj
+
+24 0 obj
+<<
+  /Type /Annot
+  /Subtype /Link
+  /Rect [100 200 200 400]
+  /A <<
+    /S /JavaScript
+    /JS (ShowCompProps_U1();)
+  >>
+>>
+endobj
+
+25 0 obj
+<<
+  /Type /Annot
+  /Subtype /Link
+  /Rect [300 300 315 340]
+  /A <<
+    /S /JavaScript
+    /JS (ShowCompProps_C1();)
+  >>
+>>
+endobj
+
+26 0 obj
+<<
+  /Type /Annot
+  /Subtype /Link
+  /Rect [400 300 415 340]
+  /A <<
+    /S /JavaScript
+    /JS (var s = app.popUpMenu("Value: 10k", "Library Reference: RES", "Comment: RESISTOR");)
+  >>
+>>
+endobj
+
+4 0 obj
+<<
+  /Type /Page
+  /Parent 2 0 R
+  /MediaBox [0 0 842 595]
+  /Contents 8 0 R
+  /Annots [18 0 R]
+  /Resources <<
+    /Font <<
+      /F1 3 0 R
+    >>
+  >>
+>>
+endobj
+
+5 0 obj
+<<
+  /Type /Page
+  /Parent 2 0 R
+  /MediaBox [0 0 842 595]
+  /Contents 9 0 R
+  /Annots [19 0 R 20 0 R 21 0 R 22 0 R 23 0 R]
+  /Resources <<
+    /Font <<
+      /F1 3 0 R
+    >>
+  >>
+>>
+endobj
+
+6 0 obj
+<<
+  /Type /Page
+  /Parent 2 0 R
+  /MediaBox [0 0 842 595]
+  /Contents 10 0 R
+  /Annots [24 0 R 25 0 R 26 0 R]
+  /Resources <<
+    /Font <<
+      /F1 3 0 R
+    >>
+    /XObject <<
+      /Fm0 12 0 R
+    >>
+  >>
+>>
+endobj
+
+7 0 obj
+<<
+  /Type /Page
+  /Parent 2 0 R
+  /MediaBox [0 0 842 595]
+  /Contents 11 0 R
+  /Annots []
+  /Resources <<
+    /Font <<
+      /F1 3 0 R
+    >>
+  >>
+>>
+endobj
+
+2 0 obj
+<<
+  /Type /Pages
+  /Kids [4 0 R 5 0 R 6 0 R 7 0 R]
+  /Count 4
+>>
+endobj
+
+27 0 obj
+<<
+  /S /JavaScript
+  /JS (function ShowCompProps_C1(){var sChoice = app.popUpMenu('Value: 100n','Comment: CAPACITOR','Library Reference: CAP','Supplier Part Number 1: 81-GRM1'); if (sChoice) {app.launchURL(sChoice, true);}})
+>>
+endobj
+
+28 0 obj
+<<
+  /S /JavaScript
+  /JS (function ShowCompProps_J1(){var sChoice = app.popUpMenu("Comment: Header","Footprint: PH_4","Library Reference: HEADER4","Value: ","Mfr. PN: 61300411121");})
+>>
+endobj
+
+29 0 obj
+<<
+  /S /JavaScript
+  /JS (function ShowCompProps_R1(){var sChoice = app.popUpMenu("Comment: RESISTOR","Value: 4k7","Description: Resistor \\"thick film\\"","Footprint: RESC0402M");})
+>>
+endobj
+
+30 0 obj
+<<
+  /S /JavaScript
+  /JS (function ShowCompProps_U1(){var sChoice = app.popUpMenu("Comment: STM32G0B1","Library Reference: STM32G0B1RE","Value: ");})
+>>
+endobj
+
+31 0 obj
+<<
+  /S /JavaScript
+  /JS (function _FindWord(page, word){ this.pageNum = page; search.query(word); })
+>>
+endobj
+
+15 0 obj
+<<
+  /Kids [16 0 R 17 0 R]
+>>
+endobj
+
+16 0 obj
+<<
+  /Names [(ShowCompProps_C1) 27 0 R (ShowCompProps_J1) 28 0 R (ShowCompProps_R1) 29 0 R]
+>>
+endobj
+
+17 0 obj
+<<
+  /Names [(ShowCompProps_U1) 30 0 R (_FindWord) 31 0 R]
+>>
+endobj
+
+14 0 obj
+<<
+  /JavaScript 15 0 R
+>>
+endobj
+
+32 0 obj
+<<
+  /Title (Cover.pdf)
+  /Parent 13 0 R
+  /Next 33 0 R
+  /A <<
+    /S /GoTo
+    /D [4 0 R /Fit]
+  >>
+>>
+endobj
+
+42 0 obj
+<<
+  /Title (J1-1)
+  /Parent 39 0 R
+  /Next 43 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIJ101");)
+    >>
+  >>
+>>
+endobj
+
+43 0 obj
+<<
+  /Title (J1-2)
+  /Parent 39 0 R
+  /Prev 42 0 R
+  /Next 44 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIJ102");)
+    >>
+  >>
+>>
+endobj
+
+44 0 obj
+<<
+  /Title (J1-3)
+  /Parent 39 0 R
+  /Prev 43 0 R
+  /Next 45 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIJ103");)
+    >>
+  >>
+>>
+endobj
+
+45 0 obj
+<<
+  /Title (J1-4)
+  /Parent 39 0 R
+  /Prev 44 0 R
+  /Next 46 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIJ104");)
+    >>
+  >>
+>>
+endobj
+
+46 0 obj
+<<
+  /Title (J1-5)
+  /Parent 39 0 R
+  /Prev 45 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIJ105");)
+    >>
+  >>
+>>
+endobj
+
+39 0 obj
+<<
+  /Title (J1)
+  /Parent 35 0 R
+  /Next 40 0 R
+  /First 42 0 R
+  /Last 46 0 R
+  /Count -5
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+  >>
+>>
+endobj
+
+47 0 obj
+<<
+  /Title (R1-1)
+  /Parent 40 0 R
+  /Next 48 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIR101");)
+    >>
+  >>
+>>
+endobj
+
+48 0 obj
+<<
+  /Title (R1-2)
+  /Parent 40 0 R
+  /Prev 47 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIR102");)
+    >>
+  >>
+>>
+endobj
+
+40 0 obj
+<<
+  /Title (R1)
+  /Parent 35 0 R
+  /Prev 39 0 R
+  /Next 41 0 R
+  /First 47 0 R
+  /Last 48 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+  >>
+>>
+endobj
+
+49 0 obj
+<<
+  /Title (U1-5)
+  /Parent 41 0 R
+  /Next 50 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIU105");)
+    >>
+  >>
+>>
+endobj
+
+50 0 obj
+<<
+  /Title (U1-6)
+  /Parent 41 0 R
+  /Prev 49 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIU106");)
+    >>
+  >>
+>>
+endobj
+
+41 0 obj
+<<
+  /Title (U1B)
+  /Parent 35 0 R
+  /Prev 40 0 R
+  /First 49 0 R
+  /Last 50 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+  >>
+>>
+endobj
+
+35 0 obj
+<<
+  /Title (Components)
+  /Parent 34 0 R
+  /Next 36 0 R
+  /First 39 0 R
+  /Last 41 0 R
+  /Count -3
+>>
+endobj
+
+59 0 obj
+<<
+  /Title (J1-4)
+  /Parent 57 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIJ104");)
+    >>
+  >>
+>>
+endobj
+
+57 0 obj
+<<
+  /Title (Pins)
+  /Parent 51 0 R
+  /Next 58 0 R
+  /First 59 0 R
+  /Last 59 0 R
+  /Count -1
+>>
+endobj
+
+60 0 obj
+<<
+  /Title <FEFF0045004E005F00B50043>
+  /Parent 58 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS <5F46696E64576F726428312C20224E4C454E30C2B54322293B>
+    >>
+  >>
+>>
+endobj
+
+58 0 obj
+<<
+  /Title (NetLabels)
+  /Parent 51 0 R
+  /Prev 57 0 R
+  /First 60 0 R
+  /Last 60 0 R
+  /Count -1
+>>
+endobj
+
+51 0 obj
+<<
+  /Title <FEFF0045004E005F00B50043>
+  /Parent 36 0 R
+  /Next 52 0 R
+  /First 57 0 R
+  /Last 58 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+  >>
+>>
+endobj
+
+62 0 obj
+<<
+  /Title (J1-3)
+  /Parent 61 0 R
+  /Next 63 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIJ103");)
+    >>
+  >>
+>>
+endobj
+
+63 0 obj
+<<
+  /Title (U1-6)
+  /Parent 61 0 R
+  /Prev 62 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIU106");)
+    >>
+  >>
+>>
+endobj
+
+61 0 obj
+<<
+  /Title (Pins)
+  /Parent 52 0 R
+  /First 62 0 R
+  /Last 63 0 R
+  /Count -2
+>>
+endobj
+
+52 0 obj
+<<
+  /Title (GND)
+  /Parent 36 0 R
+  /Prev 51 0 R
+  /Next 53 0 R
+  /First 61 0 R
+  /Last 61 0 R
+  /Count -1
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+  >>
+>>
+endobj
+
+65 0 obj
+<<
+  /Title (R1-2)
+  /Parent 64 0 R
+  /Next 66 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIR102");)
+    >>
+  >>
+>>
+endobj
+
+66 0 obj
+<<
+  /Title (U1-5)
+  /Parent 64 0 R
+  /Prev 65 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIU105");)
+    >>
+  >>
+>>
+endobj
+
+64 0 obj
+<<
+  /Title (Pins)
+  /Parent 53 0 R
+  /First 65 0 R
+  /Last 66 0 R
+  /Count -2
+>>
+endobj
+
+53 0 obj
+<<
+  /Title (NetR1_2)
+  /Parent 36 0 R
+  /Prev 52 0 R
+  /Next 54 0 R
+  /First 64 0 R
+  /Last 64 0 R
+  /Count -1
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+  >>
+>>
+endobj
+
+69 0 obj
+<<
+  /Title (J1-5)
+  /Parent 67 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIJ105");)
+    >>
+  >>
+>>
+endobj
+
+67 0 obj
+<<
+  /Title (Pins)
+  /Parent 54 0 R
+  /Next 68 0 R
+  /First 69 0 R
+  /Last 69 0 R
+  /Count -1
+>>
+endobj
+
+70 0 obj
+<<
+  /Title (NRST)
+  /Parent 68 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "NLNRST");)
+    >>
+  >>
+>>
+endobj
+
+68 0 obj
+<<
+  /Title (NetLabels)
+  /Parent 54 0 R
+  /Prev 67 0 R
+  /First 70 0 R
+  /Last 70 0 R
+  /Count -1
+>>
+endobj
+
+54 0 obj
+<<
+  /Title (NRST)
+  /Parent 36 0 R
+  /Prev 53 0 R
+  /Next 55 0 R
+  /First 67 0 R
+  /Last 68 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+  >>
+>>
+endobj
+
+73 0 obj
+<<
+  /Title (J1-2)
+  /Parent 71 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIJ102");)
+    >>
+  >>
+>>
+endobj
+
+71 0 obj
+<<
+  /Title (Pins)
+  /Parent 55 0 R
+  /Next 72 0 R
+  /First 73 0 R
+  /Last 73 0 R
+  /Count -1
+>>
+endobj
+
+74 0 obj
+<<
+  /Title (SDA)
+  /Parent 72 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "POSDA");)
+    >>
+  >>
+>>
+endobj
+
+72 0 obj
+<<
+  /Title (Ports)
+  /Parent 55 0 R
+  /Prev 71 0 R
+  /First 74 0 R
+  /Last 74 0 R
+  /Count -1
+>>
+endobj
+
+55 0 obj
+<<
+  /Title (SDA)
+  /Parent 36 0 R
+  /Prev 54 0 R
+  /Next 56 0 R
+  /First 71 0 R
+  /Last 72 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+  >>
+>>
+endobj
+
+77 0 obj
+<<
+  /Title (J1-1)
+  /Parent 75 0 R
+  /Next 78 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIJ101");)
+    >>
+  >>
+>>
+endobj
+
+78 0 obj
+<<
+  /Title (R1-1)
+  /Parent 75 0 R
+  /Prev 77 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "PIR101");)
+    >>
+  >>
+>>
+endobj
+
+75 0 obj
+<<
+  /Title (Pins)
+  /Parent 56 0 R
+  /Next 76 0 R
+  /First 77 0 R
+  /Last 78 0 R
+  /Count -2
+>>
+endobj
+
+79 0 obj
+<<
+  /Title (VIN)
+  /Parent 76 0 R
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(1, "NLVIN");)
+    >>
+  >>
+>>
+endobj
+
+76 0 obj
+<<
+  /Title (NetLabels)
+  /Parent 56 0 R
+  /Prev 75 0 R
+  /First 79 0 R
+  /Last 79 0 R
+  /Count -1
+>>
+endobj
+
+56 0 obj
+<<
+  /Title (VIN)
+  /Parent 36 0 R
+  /Prev 55 0 R
+  /First 75 0 R
+  /Last 76 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+  >>
+>>
+endobj
+
+36 0 obj
+<<
+  /Title (Nets)
+  /Parent 34 0 R
+  /Prev 35 0 R
+  /Next 37 0 R
+  /First 51 0 R
+  /Last 56 0 R
+  /Count -6
+>>
+endobj
+
+87 0 obj
+<<
+  /Title (C1-1)
+  /Parent 83 0 R
+  /Next 88 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIC101");)
+    >>
+  >>
+>>
+endobj
+
+88 0 obj
+<<
+  /Title (C1-2)
+  /Parent 83 0 R
+  /Prev 87 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIC102");)
+    >>
+  >>
+>>
+endobj
+
+83 0 obj
+<<
+  /Title (C1)
+  /Parent 80 0 R
+  /Next 84 0 R
+  /First 87 0 R
+  /Last 88 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+  >>
+>>
+endobj
+
+89 0 obj
+<<
+  /Title (R2-1)
+  /Parent 84 0 R
+  /Next 90 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIR201");)
+    >>
+  >>
+>>
+endobj
+
+90 0 obj
+<<
+  /Title (R2-2)
+  /Parent 84 0 R
+  /Prev 89 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIR202");)
+    >>
+  >>
+>>
+endobj
+
+84 0 obj
+<<
+  /Title (R2)
+  /Parent 80 0 R
+  /Prev 83 0 R
+  /Next 85 0 R
+  /First 89 0 R
+  /Last 90 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+  >>
+>>
+endobj
+
+91 0 obj
+<<
+  /Title (R4-1)
+  /Parent 85 0 R
+  /Next 92 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIR401");)
+    >>
+  >>
+>>
+endobj
+
+92 0 obj
+<<
+  /Title (R4-2)
+  /Parent 85 0 R
+  /Prev 91 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIR402");)
+    >>
+  >>
+>>
+endobj
+
+85 0 obj
+<<
+  /Title (R4)
+  /Parent 80 0 R
+  /Prev 84 0 R
+  /Next 86 0 R
+  /First 91 0 R
+  /Last 92 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+  >>
+>>
+endobj
+
+93 0 obj
+<<
+  /Title (U1-1)
+  /Parent 86 0 R
+  /Next 94 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIU101");)
+    >>
+  >>
+>>
+endobj
+
+94 0 obj
+<<
+  /Title (U1-2)
+  /Parent 86 0 R
+  /Prev 93 0 R
+  /Next 95 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIU102");)
+    >>
+  >>
+>>
+endobj
+
+95 0 obj
+<<
+  /Title (U1-3)
+  /Parent 86 0 R
+  /Prev 94 0 R
+  /Next 96 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIU103");)
+    >>
+  >>
+>>
+endobj
+
+96 0 obj
+<<
+  /Title (U1-4)
+  /Parent 86 0 R
+  /Prev 95 0 R
+  /Next 97 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIU104");)
+    >>
+  >>
+>>
+endobj
+
+97 0 obj
+<<
+  /Title (U1-7)
+  /Parent 86 0 R
+  /Prev 96 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIU107");)
+    >>
+  >>
+>>
+endobj
+
+86 0 obj
+<<
+  /Title (U1A)
+  /Parent 80 0 R
+  /Prev 85 0 R
+  /First 93 0 R
+  /Last 97 0 R
+  /Count -5
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+  >>
+>>
+endobj
+
+80 0 obj
+<<
+  /Title (Components)
+  /Parent 37 0 R
+  /Next 81 0 R
+  /First 83 0 R
+  /Last 86 0 R
+  /Count -4
+>>
+endobj
+
+108 0 obj
+<<
+  /Title (U1-2)
+  /Parent 106 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIU102");)
+    >>
+  >>
+>>
+endobj
+
+106 0 obj
+<<
+  /Title (Pins)
+  /Parent 104 0 R
+  /Next 107 0 R
+  /First 108 0 R
+  /Last 108 0 R
+  /Count -1
+>>
+endobj
+
+109 0 obj
+<<
+  /Title (D0)
+  /Parent 107 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "NLD0");)
+    >>
+  >>
+>>
+endobj
+
+107 0 obj
+<<
+  /Title (NetLabels)
+  /Parent 104 0 R
+  /Prev 106 0 R
+  /First 109 0 R
+  /Last 109 0 R
+  /Count -1
+>>
+endobj
+
+104 0 obj
+<<
+  /Title (D0)
+  /Parent 98 0 R
+  /Next 105 0 R
+  /First 106 0 R
+  /Last 107 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+  >>
+>>
+endobj
+
+112 0 obj
+<<
+  /Title (R2-2)
+  /Parent 110 0 R
+  /Next 113 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIR202");)
+    >>
+  >>
+>>
+endobj
+
+113 0 obj
+<<
+  /Title (U1-3)
+  /Parent 110 0 R
+  /Prev 112 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIU103");)
+    >>
+  >>
+>>
+endobj
+
+110 0 obj
+<<
+  /Title (Pins)
+  /Parent 105 0 R
+  /Next 111 0 R
+  /First 112 0 R
+  /Last 113 0 R
+  /Count -2
+>>
+endobj
+
+114 0 obj
+<<
+  /Title (D1)
+  /Parent 111 0 R
+  /Next 115 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "NLD1");)
+    >>
+  >>
+>>
+endobj
+
+115 0 obj
+<<
+  /Title (D1)
+  /Parent 111 0 R
+  /Prev 114 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "NLD1");)
+    >>
+  >>
+>>
+endobj
+
+111 0 obj
+<<
+  /Title (NetLabels)
+  /Parent 105 0 R
+  /Prev 110 0 R
+  /First 114 0 R
+  /Last 115 0 R
+  /Count -2
+>>
+endobj
+
+105 0 obj
+<<
+  /Title (D1)
+  /Parent 98 0 R
+  /Prev 104 0 R
+  /First 110 0 R
+  /Last 111 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+  >>
+>>
+endobj
+
+98 0 obj
+<<
+  /Title (D[0..1])
+  /Parent 81 0 R
+  /Next 99 0 R
+  /First 104 0 R
+  /Last 105 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+  >>
+>>
+endobj
+
+118 0 obj
+<<
+  /Title (R4-1)
+  /Parent 116 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIR401");)
+    >>
+  >>
+>>
+endobj
+
+116 0 obj
+<<
+  /Title (Pins)
+  /Parent 99 0 R
+  /Next 117 0 R
+  /First 118 0 R
+  /Last 118 0 R
+  /Count -1
+>>
+endobj
+
+119 0 obj
+<<
+  /Title (EN)
+  /Parent 117 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "NLEN");)
+    >>
+  >>
+>>
+endobj
+
+117 0 obj
+<<
+  /Title (NetLabels)
+  /Parent 99 0 R
+  /Prev 116 0 R
+  /First 119 0 R
+  /Last 119 0 R
+  /Count -1
+>>
+endobj
+
+99 0 obj
+<<
+  /Title (EN)
+  /Parent 81 0 R
+  /Prev 98 0 R
+  /Next 100 0 R
+  /First 116 0 R
+  /Last 117 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+  >>
+>>
+endobj
+
+121 0 obj
+<<
+  /Title (C1-2)
+  /Parent 120 0 R
+  /Next 122 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIC102");)
+    >>
+  >>
+>>
+endobj
+
+122 0 obj
+<<
+  /Title (R4-2)
+  /Parent 120 0 R
+  /Prev 121 0 R
+  /Next 123 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIR402");)
+    >>
+  >>
+>>
+endobj
+
+123 0 obj
+<<
+  /Title (U1-4)
+  /Parent 120 0 R
+  /Prev 122 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIU104");)
+    >>
+  >>
+>>
+endobj
+
+120 0 obj
+<<
+  /Title (Pins)
+  /Parent 100 0 R
+  /First 121 0 R
+  /Last 123 0 R
+  /Count -3
+>>
+endobj
+
+100 0 obj
+<<
+  /Title (GND)
+  /Parent 81 0 R
+  /Prev 99 0 R
+  /Next 101 0 R
+  /First 120 0 R
+  /Last 120 0 R
+  /Count -1
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+  >>
+>>
+endobj
+
+126 0 obj
+<<
+  /Title (U1-7)
+  /Parent 124 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIU107");)
+    >>
+  >>
+>>
+endobj
+
+124 0 obj
+<<
+  /Title (Pins)
+  /Parent 101 0 R
+  /Next 125 0 R
+  /First 126 0 R
+  /Last 126 0 R
+  /Count -1
+>>
+endobj
+
+127 0 obj
+<<
+  /Title (NetU1_7)
+  /Parent 125 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PONRST");)
+    >>
+  >>
+>>
+endobj
+
+125 0 obj
+<<
+  /Title (Ports)
+  /Parent 101 0 R
+  /Prev 124 0 R
+  /First 127 0 R
+  /Last 127 0 R
+  /Count -1
+>>
+endobj
+
+101 0 obj
+<<
+  /Title (NetU1_7)
+  /Parent 81 0 R
+  /Prev 100 0 R
+  /Next 102 0 R
+  /First 124 0 R
+  /Last 125 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+  >>
+>>
+endobj
+
+131 0 obj
+<<
+  /Title (R2-1)
+  /Parent 128 0 R
+  /Next 132 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIR201");)
+    >>
+  >>
+>>
+endobj
+
+132 0 obj
+<<
+  /Title (U1-1)
+  /Parent 128 0 R
+  /Prev 131 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIU101");)
+    >>
+  >>
+>>
+endobj
+
+128 0 obj
+<<
+  /Title (Pins)
+  /Parent 102 0 R
+  /Next 129 0 R
+  /First 131 0 R
+  /Last 132 0 R
+  /Count -2
+>>
+endobj
+
+133 0 obj
+<<
+  /Title (SDA)
+  /Parent 129 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "NLSDA");)
+    >>
+  >>
+>>
+endobj
+
+129 0 obj
+<<
+  /Title (NetLabels)
+  /Parent 102 0 R
+  /Prev 128 0 R
+  /Next 130 0 R
+  /First 133 0 R
+  /Last 133 0 R
+  /Count -1
+>>
+endobj
+
+134 0 obj
+<<
+  /Title (SDA)
+  /Parent 130 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "POSDA");)
+    >>
+  >>
+>>
+endobj
+
+130 0 obj
+<<
+  /Title (Ports)
+  /Parent 102 0 R
+  /Prev 129 0 R
+  /First 134 0 R
+  /Last 134 0 R
+  /Count -1
+>>
+endobj
+
+102 0 obj
+<<
+  /Title (SDA)
+  /Parent 81 0 R
+  /Prev 101 0 R
+  /Next 103 0 R
+  /First 128 0 R
+  /Last 130 0 R
+  /Count -3
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+  >>
+>>
+endobj
+
+137 0 obj
+<<
+  /Title (C1-1)
+  /Parent 135 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PIC101");)
+    >>
+  >>
+>>
+endobj
+
+135 0 obj
+<<
+  /Title (Pins)
+  /Parent 103 0 R
+  /Next 136 0 R
+  /First 137 0 R
+  /Last 137 0 R
+  /Count -1
+>>
+endobj
+
+138 0 obj
+<<
+  /Title (VDD_3V3)
+  /Parent 136 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "POVDD03V3");)
+    >>
+  >>
+>>
+endobj
+
+136 0 obj
+<<
+  /Title (Ports)
+  /Parent 103 0 R
+  /Prev 135 0 R
+  /First 138 0 R
+  /Last 138 0 R
+  /Count -1
+>>
+endobj
+
+103 0 obj
+<<
+  /Title (VDD_3V3)
+  /Parent 81 0 R
+  /Prev 102 0 R
+  /First 135 0 R
+  /Last 136 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+  >>
+>>
+endobj
+
+81 0 obj
+<<
+  /Title (Nets)
+  /Parent 37 0 R
+  /Prev 80 0 R
+  /Next 82 0 R
+  /First 98 0 R
+  /Last 103 0 R
+  /Count -6
+>>
+endobj
+
+139 0 obj
+<<
+  /Title (NRST)
+  /Parent 82 0 R
+  /Next 140 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "PONRST");)
+    >>
+  >>
+>>
+endobj
+
+140 0 obj
+<<
+  /Title (SDA)
+  /Parent 82 0 R
+  /Prev 139 0 R
+  /Next 141 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "POSDA");)
+    >>
+  >>
+>>
+endobj
+
+141 0 obj
+<<
+  /Title (VDD_3V3)
+  /Parent 82 0 R
+  /Prev 140 0 R
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(2, "POVDD03V3");)
+    >>
+  >>
+>>
+endobj
+
+82 0 obj
+<<
+  /Title (Ports)
+  /Parent 37 0 R
+  /Prev 81 0 R
+  /First 139 0 R
+  /Last 141 0 R
+  /Count -3
+>>
+endobj
+
+37 0 obj
+<<
+  /Title (MCU.SchDoc(U_MCU))
+  /Parent 34 0 R
+  /Prev 36 0 R
+  /Next 38 0 R
+  /First 80 0 R
+  /Last 82 0 R
+  /Count -3
+  /A <<
+    /S /GoTo
+    /D [6 0 R /Fit]
+  >>
+>>
+endobj
+
+146 0 obj
+<<
+  /Title (R3-1)
+  /Parent 145 0 R
+  /Next 147 0 R
+  /A <<
+    /S /GoTo
+    /D [7 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(3, "PIR301");)
+    >>
+  >>
+>>
+endobj
+
+147 0 obj
+<<
+  /Title (R3-2)
+  /Parent 145 0 R
+  /Prev 146 0 R
+  /A <<
+    /S /GoTo
+    /D [7 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(3, "PIR302");)
+    >>
+  >>
+>>
+endobj
+
+145 0 obj
+<<
+  /Title (R3)
+  /Parent 142 0 R
+  /First 146 0 R
+  /Last 147 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [7 0 R /Fit]
+  >>
+>>
+endobj
+
+142 0 obj
+<<
+  /Title (Components)
+  /Parent 38 0 R
+  /Next 143 0 R
+  /First 145 0 R
+  /Last 145 0 R
+  /Count -1
+>>
+endobj
+
+152 0 obj
+<<
+  /Title (R3-2)
+  /Parent 150 0 R
+  /A <<
+    /S /GoTo
+    /D [7 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(3, "PIR302");)
+    >>
+  >>
+>>
+endobj
+
+150 0 obj
+<<
+  /Title (Pins)
+  /Parent 148 0 R
+  /Next 151 0 R
+  /First 152 0 R
+  /Last 152 0 R
+  /Count -1
+>>
+endobj
+
+153 0 obj
+<<
+  /Title (EN)
+  /Parent 151 0 R
+  /A <<
+    /S /GoTo
+    /D [7 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(3, "NLEN");)
+    >>
+  >>
+>>
+endobj
+
+151 0 obj
+<<
+  /Title (NetLabels)
+  /Parent 148 0 R
+  /Prev 150 0 R
+  /First 153 0 R
+  /Last 153 0 R
+  /Count -1
+>>
+endobj
+
+148 0 obj
+<<
+  /Title (EN)
+  /Parent 143 0 R
+  /Next 149 0 R
+  /First 150 0 R
+  /Last 151 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [7 0 R /Fit]
+  >>
+>>
+endobj
+
+156 0 obj
+<<
+  /Title (R3-1)
+  /Parent 154 0 R
+  /A <<
+    /S /GoTo
+    /D [7 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(3, "PIR301");)
+    >>
+  >>
+>>
+endobj
+
+154 0 obj
+<<
+  /Title (Pins)
+  /Parent 149 0 R
+  /Next 155 0 R
+  /First 156 0 R
+  /Last 156 0 R
+  /Count -1
+>>
+endobj
+
+157 0 obj
+<<
+  /Title (NetR3_1)
+  /Parent 155 0 R
+  /A <<
+    /S /GoTo
+    /D [7 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(3, "PONRST");)
+    >>
+  >>
+>>
+endobj
+
+155 0 obj
+<<
+  /Title (Ports)
+  /Parent 149 0 R
+  /Prev 154 0 R
+  /First 157 0 R
+  /Last 157 0 R
+  /Count -1
+>>
+endobj
+
+149 0 obj
+<<
+  /Title (NetR3_1)
+  /Parent 143 0 R
+  /Prev 148 0 R
+  /First 154 0 R
+  /Last 155 0 R
+  /Count -2
+  /A <<
+    /S /GoTo
+    /D [7 0 R /Fit]
+  >>
+>>
+endobj
+
+143 0 obj
+<<
+  /Title (Nets)
+  /Parent 38 0 R
+  /Prev 142 0 R
+  /Next 144 0 R
+  /First 148 0 R
+  /Last 149 0 R
+  /Count -2
+>>
+endobj
+
+158 0 obj
+<<
+  /Title (NRST)
+  /Parent 144 0 R
+  /A <<
+    /S /GoTo
+    /D [7 0 R /Fit]
+    /Next <<
+      /S /JavaScript
+      /JS (_FindWord(3, "PONRST");)
+    >>
+  >>
+>>
+endobj
+
+144 0 obj
+<<
+  /Title (Ports)
+  /Parent 38 0 R
+  /Prev 143 0 R
+  /First 158 0 R
+  /Last 158 0 R
+  /Count -1
+>>
+endobj
+
+38 0 obj
+<<
+  /Title (IO.SchDoc(U_IO))
+  /Parent 34 0 R
+  /Prev 37 0 R
+  /First 142 0 R
+  /Last 144 0 R
+  /Count -3
+  /A <<
+    /S /GoTo
+    /D [7 0 R /Fit]
+  >>
+>>
+endobj
+
+34 0 obj
+<<
+  /Title (Top.SchDoc(U_Top))
+  /Parent 33 0 R
+  /First 35 0 R
+  /Last 38 0 R
+  /Count -4
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+  >>
+>>
+endobj
+
+33 0 obj
+<<
+  /Title (Schematic Prints("All Documents",Physical))
+  /Parent 13 0 R
+  /Prev 32 0 R
+  /First 34 0 R
+  /Last 34 0 R
+  /Count -1
+  /A <<
+    /S /GoTo
+    /D [5 0 R /Fit]
+  >>
+>>
+endobj
+
+13 0 obj
+<<
+  /Type /Outlines
+  /First 32 0 R
+  /Last 33 0 R
+  /Count 2
+>>
+endobj
+
+1 0 obj
+<<
+  /Type /Catalog
+  /Pages 2 0 R
+  /Outlines 13 0 R
+  /Names 14 0 R
+>>
+endobj
+
+159 0 obj
+<<
+  /Creator (Altium Designer (synthetic))
+>>
+endobj
+
+xref
+0 160
+0000000000 65535 f
+0000026400 00000 n
+0000003910 00000 n
+0000001721 00000 n
+0000003143 00000 n
+0000003315 00000 n
+0000003515 00000 n
+0000003743 00000 n
+0000000016 00000 n
+0000000117 00000 n
+0000000701 00000 n
+0000001290 00000 n
+0000001484 00000 n
+0000026317 00000 n
+0000005179 00000 n
+0000004941 00000 n
+0000004988 00000 n
+0000005100 00000 n
+0000001798 00000 n
+0000001941 00000 n
+0000002084 00000 n
+0000002227 00000 n
+0000002370 00000 n
+0000002513 00000 n
+0000002650 00000 n
+0000002793 00000 n
+0000002936 00000 n
+0000003992 00000 n
+0000004238 00000 n
+0000004443 00000 n
+0000004647 00000 n
+0000004818 00000 n
+0000005223 00000 n
+0000026119 00000 n
+0000025961 00000 n
+0000007626 00000 n
+0000012372 00000 n
+0000022965 00000 n
+0000025788 00000 n
+0000006360 00000 n
+0000006906 00000 n
+0000007467 00000 n
+0000005345 00000 n
+0000005539 00000 n
+0000005748 00000 n
+0000005957 00000 n
+0000006166 00000 n
+0000006518 00000 n
+0000006712 00000 n
+0000007079 00000 n
+0000007273 00000 n
+0000008384 00000 n
+0000009051 00000 n
+0000009712 00000 n
+0000010481 00000 n
+0000011241 00000 n
+0000012213 00000 n
+0000007925 00000 n
+0000008265 00000 n
+0000007746 00000 n
+0000008039 00000 n
+0000008952 00000 n
+0000008564 00000 n
+0000008758 00000 n
+0000009613 00000 n
+0000009225 00000 n
+0000009419 00000 n
+0000010069 00000 n
+0000010362 00000 n
+0000009890 00000 n
+0000010183 00000 n
+0000010835 00000 n
+0000011126 00000 n
+0000010656 00000 n
+0000010949 00000 n
+0000011803 00000 n
+0000012094 00000 n
+0000011415 00000 n
+0000011609 00000 n
+0000011917 00000 n
+0000015343 00000 n
+0000022110 00000 n
+0000022848 00000 n
+0000012889 00000 n
+0000013435 00000 n
+0000013996 00000 n
+0000015184 00000 n
+0000012501 00000 n
+0000012695 00000 n
+0000013047 00000 n
+0000013241 00000 n
+0000013608 00000 n
+0000013802 00000 n
+0000014169 00000 n
+0000014363 00000 n
+0000014572 00000 n
+0000014781 00000 n
+0000014990 00000 n
+0000017411 00000 n
+0000018175 00000 n
+0000019061 00000 n
+0000019843 00000 n
+0000021157 00000 n
+0000021943 00000 n
+0000016064 00000 n
+0000017249 00000 n
+0000015644 00000 n
+0000015940 00000 n
+0000015463 00000 n
+0000015763 00000 n
+0000016620 00000 n
+0000017125 00000 n
+0000016226 00000 n
+0000016423 00000 n
+0000016739 00000 n
+0000016932 00000 n
+0000017757 00000 n
+0000018052 00000 n
+0000017576 00000 n
+0000017875 00000 n
+0000018958 00000 n
+0000018351 00000 n
+0000018548 00000 n
+0000018761 00000 n
+0000019420 00000 n
+0000019723 00000 n
+0000019239 00000 n
+0000019539 00000 n
+0000020420 00000 n
+0000020718 00000 n
+0000021037 00000 n
+0000020026 00000 n
+0000020223 00000 n
+0000020539 00000 n
+0000020858 00000 n
+0000021517 00000 n
+0000021823 00000 n
+0000021336 00000 n
+0000021636 00000 n
+0000022240 00000 n
+0000022436 00000 n
+0000022646 00000 n
+0000023694 00000 n
+0000025354 00000 n
+0000025669 00000 n
+0000023547 00000 n
+0000023153 00000 n
+0000023350 00000 n
+0000024419 00000 n
+0000025186 00000 n
+0000023999 00000 n
+0000024295 00000 n
+0000023818 00000 n
+0000024118 00000 n
+0000024763 00000 n
+0000025066 00000 n
+0000024582 00000 n
+0000024882 00000 n
+0000025488 00000 n
+0000026489 00000 n
+trailer
+<<
+  /Size 160
+  /Root 1 0 R
+  /Info 159 0 R
+>>
+startxref
+26554
+%%EOF

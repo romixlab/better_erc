@@ -541,7 +541,8 @@ pub struct Label {
     pub text: String,
     /// The sheet it is drawn on (for a sheet pin: the parent sheet)
     pub sheet: SheetId,
-    pub at: crate::layout::Pt,
+    /// Where it is drawn; `None` when the source does not say (a PDF label without a position)
+    pub at: Option<crate::layout::Pt>,
     /// `input`, `output`, `bidirectional`, `tri_state`, `passive` (global, hierarchical, sheet pins)
     pub shape: Option<String>,
     /// For a sheet pin: the child sheet it belongs to

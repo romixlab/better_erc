@@ -12,7 +12,7 @@
 mod edif;
 mod wirelist;
 
-use crate::build::Builder;
+use crate::build::{Builder, net_kind};
 use crate::notes::Notes;
 use crate::{dir_of, file_name, text};
 use erc_model::*;
@@ -334,15 +334,6 @@ fn ident(name: &str) -> String {
         .collect()
 }
 
-/// Altium names unnamed nets `NetR13_1` (designator and pin of one of its pins)
-fn net_kind(name: &str) -> NetKind {
-    match name.strip_prefix("Net") {
-        Some(rest) if rest.starts_with(|c: char| c.is_ascii_uppercase()) && rest.contains('_') => {
-            NetKind::Auto
-        }
-        _ => NetKind::Named,
-    }
-}
 
 fn wire_type(t: &str) -> (EcadPinType, Option<&'static str>) {
     match t {

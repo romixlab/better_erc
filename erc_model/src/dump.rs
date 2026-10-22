@@ -544,12 +544,14 @@ pub fn label_line(b: &Board, l: &Label) -> String {
 
 fn label_line_keys(b: &Board, l: &Label, net_keys: &[String]) -> String {
     let mut line = format!(
-        "label {} {} {} at {}",
+        "label {} {} {}",
         tok(&b.sheet_path(l.sheet)),
         l.kind.name(),
         tok(&l.text),
-        l.at
     );
+    if let Some(at) = l.at {
+        line += &format!(" at {at}");
+    }
     if let Some(s) = &l.shape {
         line += &format!(" shape {}", tok(s));
     }
@@ -1382,8 +1384,7 @@ impl BoardReader {
                 let kind =
                     LabelKind::from_name(ks).ok_or_else(|| format!("bad label kind `{ks}`"))?;
                 let text = c.next()?.to_string();
-                c.word("at")?;
-                let at = c.pt()?;
+                let at = if c.opt("at") { Some(c.pt()?) } else { None };
                 let mut l = Label {
                     kind,
                     text,

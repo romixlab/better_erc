@@ -1,5 +1,6 @@
 //! Every importer of better_erc behind one [`Registry`]: KiCad (through [`erc_kicad`]), Altium (EDIF plus
-//! WireList), OrCAD Capture (pstxnet, pstxprt, pstchip) and pick-and-place CSV files from KiCad, Altium and Allegro.
+//! WireList), OrCAD Capture (pstxnet, pstxprt, pstchip), pick-and-place CSV files from KiCad, Altium and Allegro,
+//! and schematic PDFs (Altium Smart PDF).
 //!
 //! Each importer implements [`erc_model::Importer`] and fills the same [`erc_model::Design`]: every attribute a
 //! [`erc_model::Fact`] with the file it came from, everything read past an [`erc_model::ImportNote`], no panic on
@@ -8,16 +9,18 @@
 //!
 //! The dependency points this way: `erc_import` → `erc_kicad` → `erc_model`. The trait lives in `erc_model`, so
 //! `erc_kicad` stands alone (a KiCad-only tool needs nothing else) and registers here through its public
-//! [`erc_kicad::importers`]. Each importer is a cargo feature (`kicad`, `altium`, `orcad`, `pnp`, all on by
+//! [`erc_kicad::importers`]. Each importer is a cargo feature (`kicad`, `altium`, `orcad`, `pnp`, `pdf`, all on by
 //! default), so a build that only reads KiCad, or a wasm GUI, leaves the rest out.
 
 #[cfg(feature = "altium")]
 pub mod altium;
-#[cfg(any(feature = "altium", feature = "orcad"))]
+#[cfg(any(feature = "altium", feature = "orcad", feature = "pdf"))]
 mod build;
 mod notes;
 #[cfg(feature = "orcad")]
 pub mod orcad;
+#[cfg(feature = "pdf")]
+pub mod pdf;
 #[cfg(feature = "pnp")]
 pub mod pnp;
 #[cfg(feature = "text")]
@@ -56,6 +59,8 @@ impl Default for Registry {
         r.register(Box::new(orcad::OrcadImporter));
         #[cfg(feature = "pnp")]
         r.register(Box::new(pnp::PnpImporter));
+        #[cfg(feature = "pdf")]
+        r.register(Box::new(pdf::PdfImporter));
         r
     }
 }
@@ -132,7 +137,12 @@ fn dir_of(path: &str) -> &str {
 
 /// The file name of a path in a file set
 #[cfg_attr(
-    not(any(feature = "altium", feature = "orcad", feature = "pnp")),
+    not(any(
+        feature = "altium",
+        feature = "orcad",
+        feature = "pnp",
+        feature = "pdf"
+    )),
     allow(dead_code)
 )]
 fn file_name(path: &str) -> &str {
