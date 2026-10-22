@@ -1,0 +1,50 @@
+# What better_erc finds on clk-5_reset_pull_ups.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "CLK-5"
+subjects = ["net /ESP_EN", "pin U3.3"]
+
+[[finding]]
+check = "CLK-5"
+subjects = ["net /NRST", "pin U1.3"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1", "part U2"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /NRST", "pin U1.3"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /ESP_EN", "pin U3.3"]
+also = ["IO-6"]
+
+[[finding]]
+check = "NAME-10"
+subjects = ["net /PHY_RST", "pin U4.1", "pin U5.3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

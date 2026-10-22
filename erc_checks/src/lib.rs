@@ -25,6 +25,7 @@ pub mod project;
 pub mod report;
 
 mod bom;
+mod clk;
 mod dbg;
 mod dec;
 mod i2c;

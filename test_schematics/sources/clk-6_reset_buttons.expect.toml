@@ -1,0 +1,42 @@
+# What better_erc finds on clk-6_reset_buttons.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "CLK-6"
+subjects = ["net /PHY_RESET", "pin U3.3"]
+
+[[finding]]
+check = "CLK-7"
+subjects = ["net /NRST", "pin U1.3"]
+also = ["CLK-6"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1", "part U2"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "SHORT-3"
+subjects = ["net /NRST2", "net GND", "part C1", "part SW2"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

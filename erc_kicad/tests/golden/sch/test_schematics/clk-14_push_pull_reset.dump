@@ -1,0 +1,310 @@
+board clk-14_push_pull_reset
+label / local NRST at 22.38,27.46 net /NRST
+label / local NRST at 70.38,22.38 net /NRST
+label / local NRST at 118.38,22.38 net /NRST
+label / local NRST at 174,26.19 net /NRST
+label / local NRST at 222,26.19 net /NRST
+label / local NRST3 at 30,76.19 net /NRST3
+label / local NRST3 at 78,76.19 net /NRST3
+label / local NRST3 at 262.38,27.46 net /NRST3
+label / local NRST3 at 310.38,22.38 net /NRST3
+label / local NRST3 at 358.38,22.38 net /NRST3
+label / local PHY_RST at 118.38,77.46 net /PHY_RST
+label / local PHY_RST at 174,76.19 net /PHY_RST
+label / local PHY_RST at 222,76.19 net /PHY_RST
+label / local PHY_RST at 262.38,30 net /PHY_RST
+label / power +3V3 at 22.38,22.38 net +3V3
+label / power +3V3 at 30,83.81 net +3V3
+label / power +3V3 at 70.38,27.46 net +3V3
+label / power +3V3 at 70.38,30 net +3V3
+label / power +3V3 at 118.38,27.46 net +3V3
+label / power +3V3 at 118.38,72.38 net +3V3
+label / power +3V3 at 174,33.81 net +3V3
+label / power +3V3 at 174,83.81 net +3V3
+label / power +3V3 at 262.38,22.38 net +3V3
+label / power +3V3 at 310.38,27.46 net +3V3
+label / power +3V3 at 310.38,30 net +3V3
+label / power +3V3 at 358.38,27.46 net +3V3
+label / power GND at 22.38,24.92 net GND
+label / power GND at 70.38,24.92 net GND
+label / power GND at 78,83.81 net GND
+label / power GND at 118.38,24.92 net GND
+label / power GND at 118.38,74.92 net GND
+label / power GND at 222,33.81 net GND
+label / power GND at 222,83.81 net GND
+label / power GND at 262.38,24.92 net GND
+label / power GND at 310.38,24.92 net GND
+label / power GND at 358.38,24.92 net GND
+nc / at 22.38,30 pin U1 4
+net +3V3 class = Default @ sch clk-14_push_pull_reset.kicad_sch note "effective net class"
+net +3V3 kind power
+net /NRST class = Default @ sch clk-14_push_pull_reset.kicad_sch note "effective net class"
+net /NRST kind named
+net /NRST3 class = Default @ sch clk-14_push_pull_reset.kicad_sch note "effective net class"
+net /NRST3 kind named
+net /PHY_RST class = Default @ sch clk-14_push_pull_reset.kicad_sch note "effective net class"
+net /PHY_RST kind named
+net GND class = Default @ sch clk-14_push_pull_reset.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U1-PA0-Pad4) class = Default @ sch clk-14_push_pull_reset.kicad_sch note "effective net class"
+net unconnected-(U1-PA0-Pad4) kind unconnected
+part C1 field Value = 100n @ sch clk-14_push_pull_reset.kicad_sch
+part C1 flag dnp = no @ sch clk-14_push_pull_reset.kicad_sch
+part C1 flag exclude_from_sim = no @ sch clk-14_push_pull_reset.kicad_sch
+part C1 flag in_bom = yes @ sch clk-14_push_pull_reset.kicad_sch
+part C1 flag on_board = yes @ sch clk-14_push_pull_reset.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 9a5d43b0-0000-4000-8000-000000000039 line 209 at 222,30 rot 0
+part C1 value = text 100n @ sch clk-14_push_pull_reset.kicad_sch note "from the Value field"
+part C2 field Value = 100n @ sch clk-14_push_pull_reset.kicad_sch
+part C2 flag dnp = no @ sch clk-14_push_pull_reset.kicad_sch
+part C2 flag exclude_from_sim = no @ sch clk-14_push_pull_reset.kicad_sch
+part C2 flag in_bom = yes @ sch clk-14_push_pull_reset.kicad_sch
+part C2 flag on_board = yes @ sch clk-14_push_pull_reset.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid 9a5d43b0-0000-4000-8000-000000000083 line 323 at 78,80 rot 0
+part C2 value = text 100n @ sch clk-14_push_pull_reset.kicad_sch note "from the Value field"
+part C3 field Value = 100n @ sch clk-14_push_pull_reset.kicad_sch
+part C3 flag dnp = no @ sch clk-14_push_pull_reset.kicad_sch
+part C3 flag exclude_from_sim = no @ sch clk-14_push_pull_reset.kicad_sch
+part C3 flag in_bom = yes @ sch clk-14_push_pull_reset.kicad_sch
+part C3 flag on_board = yes @ sch clk-14_push_pull_reset.kicad_sch
+part C3 lib Device:C sheet / symbol Device:C
+part C3 unit 1 sheet / uuid 9a5d43b0-0000-4000-8000-000000000104 line 379 at 222,80 rot 0
+part C3 value = text 100n @ sch clk-14_push_pull_reset.kicad_sch note "from the Value field"
+part J1 field Value = SWD @ sch clk-14_push_pull_reset.kicad_sch
+part J1 flag dnp = no @ sch clk-14_push_pull_reset.kicad_sch
+part J1 flag exclude_from_sim = no @ sch clk-14_push_pull_reset.kicad_sch
+part J1 flag in_bom = yes @ sch clk-14_push_pull_reset.kicad_sch
+part J1 flag on_board = yes @ sch clk-14_push_pull_reset.kicad_sch
+part J1 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J1 unit 1 sheet / uuid 9a5d43b0-0000-4000-8000-000000000024 line 169 at 126,30 rot 0
+part J1 value = text SWD @ sch clk-14_push_pull_reset.kicad_sch note "from the Value field"
+part J2 field Value = SWD @ sch clk-14_push_pull_reset.kicad_sch
+part J2 flag dnp = no @ sch clk-14_push_pull_reset.kicad_sch
+part J2 flag exclude_from_sim = no @ sch clk-14_push_pull_reset.kicad_sch
+part J2 flag in_bom = yes @ sch clk-14_push_pull_reset.kicad_sch
+part J2 flag on_board = yes @ sch clk-14_push_pull_reset.kicad_sch
+part J2 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J2 unit 1 sheet / uuid 9a5d43b0-0000-4000-8000-000000000068 line 283 at 366,30 rot 0
+part J2 value = text SWD @ sch clk-14_push_pull_reset.kicad_sch note "from the Value field"
+part R1 field Value = 10k @ sch clk-14_push_pull_reset.kicad_sch
+part R1 flag dnp = no @ sch clk-14_push_pull_reset.kicad_sch
+part R1 flag exclude_from_sim = no @ sch clk-14_push_pull_reset.kicad_sch
+part R1 flag in_bom = yes @ sch clk-14_push_pull_reset.kicad_sch
+part R1 flag on_board = yes @ sch clk-14_push_pull_reset.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 9a5d43b0-0000-4000-8000-000000000033 line 193 at 174,30 rot 0
+part R1 value = text 10k @ sch clk-14_push_pull_reset.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch clk-14_push_pull_reset.kicad_sch
+part R2 flag dnp = no @ sch clk-14_push_pull_reset.kicad_sch
+part R2 flag exclude_from_sim = no @ sch clk-14_push_pull_reset.kicad_sch
+part R2 flag in_bom = yes @ sch clk-14_push_pull_reset.kicad_sch
+part R2 flag on_board = yes @ sch clk-14_push_pull_reset.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 9a5d43b0-0000-4000-8000-000000000077 line 307 at 30,80 rot 0
+part R2 value = text 10k @ sch clk-14_push_pull_reset.kicad_sch note "from the Value field"
+part R3 field Value = 10k @ sch clk-14_push_pull_reset.kicad_sch
+part R3 flag dnp = no @ sch clk-14_push_pull_reset.kicad_sch
+part R3 flag exclude_from_sim = no @ sch clk-14_push_pull_reset.kicad_sch
+part R3 flag in_bom = yes @ sch clk-14_push_pull_reset.kicad_sch
+part R3 flag on_board = yes @ sch clk-14_push_pull_reset.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid 9a5d43b0-0000-4000-8000-000000000098 line 363 at 174,80 rot 0
+part R3 value = text 10k @ sch clk-14_push_pull_reset.kicad_sch note "from the Value field"
+part U1 field Value = MCU_NRST @ sch clk-14_push_pull_reset.kicad_sch
+part U1 flag dnp = no @ sch clk-14_push_pull_reset.kicad_sch
+part U1 flag exclude_from_sim = no @ sch clk-14_push_pull_reset.kicad_sch
+part U1 flag in_bom = yes @ sch clk-14_push_pull_reset.kicad_sch
+part U1 flag on_board = yes @ sch clk-14_push_pull_reset.kicad_sch
+part U1 lib MCU_Fixture:MCU_NRST sheet / symbol MCU_Fixture:MCU_NRST
+part U1 unit 1 sheet / uuid 9a5d43b0-0000-4000-8000-000000000001 line 111 at 30,30 rot 0
+part U1 value = text MCU_NRST @ sch clk-14_push_pull_reset.kicad_sch note "from the Value field"
+part U2 field Value = PushPull_Fixture @ sch clk-14_push_pull_reset.kicad_sch
+part U2 flag dnp = no @ sch clk-14_push_pull_reset.kicad_sch
+part U2 flag exclude_from_sim = no @ sch clk-14_push_pull_reset.kicad_sch
+part U2 flag in_bom = yes @ sch clk-14_push_pull_reset.kicad_sch
+part U2 flag on_board = yes @ sch clk-14_push_pull_reset.kicad_sch
+part U2 lib Power_Supervisor:PushPull_Fixture sheet / symbol Power_Supervisor:PushPull_Fixture
+part U2 unit 1 sheet / uuid 9a5d43b0-0000-4000-8000-000000000012 line 137 at 78,30 rot 0
+part U2 value = text PushPull_Fixture @ sch clk-14_push_pull_reset.kicad_sch note "from the Value field"
+part U3 field Value = MCU_NRST @ sch clk-14_push_pull_reset.kicad_sch
+part U3 flag dnp = no @ sch clk-14_push_pull_reset.kicad_sch
+part U3 flag exclude_from_sim = no @ sch clk-14_push_pull_reset.kicad_sch
+part U3 flag in_bom = yes @ sch clk-14_push_pull_reset.kicad_sch
+part U3 flag on_board = yes @ sch clk-14_push_pull_reset.kicad_sch
+part U3 lib MCU_Fixture:MCU_NRST sheet / symbol MCU_Fixture:MCU_NRST
+part U3 unit 1 sheet / uuid 9a5d43b0-0000-4000-8000-000000000045 line 225 at 270,30 rot 0
+part U3 value = text MCU_NRST @ sch clk-14_push_pull_reset.kicad_sch note "from the Value field"
+part U4 field Value = OpenDrain_Fixture @ sch clk-14_push_pull_reset.kicad_sch
+part U4 flag dnp = no @ sch clk-14_push_pull_reset.kicad_sch
+part U4 flag exclude_from_sim = no @ sch clk-14_push_pull_reset.kicad_sch
+part U4 flag in_bom = yes @ sch clk-14_push_pull_reset.kicad_sch
+part U4 flag on_board = yes @ sch clk-14_push_pull_reset.kicad_sch
+part U4 lib Power_Supervisor:OpenDrain_Fixture sheet / symbol Power_Supervisor:OpenDrain_Fixture
+part U4 unit 1 sheet / uuid 9a5d43b0-0000-4000-8000-000000000056 line 251 at 318,30 rot 0
+part U4 value = text OpenDrain_Fixture @ sch clk-14_push_pull_reset.kicad_sch note "from the Value field"
+part U5 field Value = PHY_Fixture @ sch clk-14_push_pull_reset.kicad_sch
+part U5 flag dnp = no @ sch clk-14_push_pull_reset.kicad_sch
+part U5 flag exclude_from_sim = no @ sch clk-14_push_pull_reset.kicad_sch
+part U5 flag in_bom = yes @ sch clk-14_push_pull_reset.kicad_sch
+part U5 flag on_board = yes @ sch clk-14_push_pull_reset.kicad_sch
+part U5 lib Interface_Ethernet:PHY_Fixture sheet / symbol Interface_Ethernet:PHY_Fixture
+part U5 unit 1 sheet / uuid 9a5d43b0-0000-4000-8000-000000000089 line 339 at 126,80 rot 0
+part U5 value = text PHY_Fixture @ sch clk-14_push_pull_reset.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net /NRST
+pin C1 1 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin C2 1 name "" unit 1 net /NRST3
+pin C2 1 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin C3 1 name "" unit 1 net /PHY_RST
+pin C3 1 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin C3 2 name "" unit 1 net GND
+pin C3 2 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin J1 1 name Pin_1 unit 1 net /NRST
+pin J1 1 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin J1 2 name Pin_2 unit 1 net GND
+pin J1 2 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin J1 3 name Pin_3 unit 1 net +3V3
+pin J1 3 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin J2 1 name Pin_1 unit 1 net /NRST3
+pin J2 1 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin J2 2 name Pin_2 unit 1 net GND
+pin J2 2 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin J2 3 name Pin_3 unit 1 net +3V3
+pin J2 3 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin R1 1 name "" unit 1 net /NRST
+pin R1 1 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin R1 2 name "" unit 1 net +3V3
+pin R1 2 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin R2 1 name "" unit 1 net /NRST3
+pin R2 1 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin R2 2 name "" unit 1 net +3V3
+pin R2 2 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin R3 1 name "" unit 1 net /PHY_RST
+pin R3 1 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin R3 2 name "" unit 1 net +3V3
+pin R3 2 type = passive @ sch clk-14_push_pull_reset.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch clk-14_push_pull_reset.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch clk-14_push_pull_reset.kicad_sch
+pin U1 3 name NRST unit 1 net /NRST
+pin U1 3 type = bidirectional @ sch clk-14_push_pull_reset.kicad_sch
+pin U1 4 name PA0 unit 1 nc net unconnected-(U1-PA0-Pad4)
+pin U1 4 type = bidirectional @ sch clk-14_push_pull_reset.kicad_sch
+pin U2 1 name ~{RESET} unit 1 net /NRST
+pin U2 1 type = output @ sch clk-14_push_pull_reset.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch clk-14_push_pull_reset.kicad_sch
+pin U2 3 name ~{MR} unit 1 net +3V3
+pin U2 3 type = input @ sch clk-14_push_pull_reset.kicad_sch
+pin U2 4 name VDD unit 1 net +3V3
+pin U2 4 type = power_in @ sch clk-14_push_pull_reset.kicad_sch
+pin U3 1 name VDD unit 1 net +3V3
+pin U3 1 type = power_in @ sch clk-14_push_pull_reset.kicad_sch
+pin U3 2 name VSS unit 1 net GND
+pin U3 2 type = power_in @ sch clk-14_push_pull_reset.kicad_sch
+pin U3 3 name NRST unit 1 net /NRST3
+pin U3 3 type = bidirectional @ sch clk-14_push_pull_reset.kicad_sch
+pin U3 4 name PA0 unit 1 net /PHY_RST
+pin U3 4 type = bidirectional @ sch clk-14_push_pull_reset.kicad_sch
+pin U4 1 name ~{RESET} unit 1 net /NRST3
+pin U4 1 type = open_collector @ sch clk-14_push_pull_reset.kicad_sch
+pin U4 2 name GND unit 1 net GND
+pin U4 2 type = power_in @ sch clk-14_push_pull_reset.kicad_sch
+pin U4 3 name ~{MR} unit 1 net +3V3
+pin U4 3 type = input @ sch clk-14_push_pull_reset.kicad_sch
+pin U4 4 name VDD unit 1 net +3V3
+pin U4 4 type = power_in @ sch clk-14_push_pull_reset.kicad_sch
+pin U5 1 name VDD unit 1 net +3V3
+pin U5 1 type = power_in @ sch clk-14_push_pull_reset.kicad_sch
+pin U5 2 name GND unit 1 net GND
+pin U5 2 type = power_in @ sch clk-14_push_pull_reset.kicad_sch
+pin U5 3 name ~{RST} unit 1 net /PHY_RST
+pin U5 3 type = input @ sch clk-14_push_pull_reset.kicad_sch
+sheet / name "" file clk-14_push_pull_reset.kicad_sch uuid /
+source file clk-14_push_pull_reset.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x03 description "Generic connector"
+symbol Connector_Generic:Conn_01x03 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x03 field Reference J
+symbol Connector_Generic:Conn_01x03 field Value Conn_01x03
+symbol Connector_Generic:Conn_01x03 hash 674cec87f5e4478a
+symbol Connector_Generic:Conn_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x03 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Interface_Ethernet:PHY_Fixture description "Ethernet PHY"
+symbol Interface_Ethernet:PHY_Fixture field Description "Ethernet PHY"
+symbol Interface_Ethernet:PHY_Fixture field Reference U
+symbol Interface_Ethernet:PHY_Fixture field Value PHY_Fixture
+symbol Interface_Ethernet:PHY_Fixture hash 7b46966e743e3606
+symbol Interface_Ethernet:PHY_Fixture pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Interface_Ethernet:PHY_Fixture pin 2 unit 1 body 1 name GND type power_in style line
+symbol Interface_Ethernet:PHY_Fixture pin 3 unit 1 body 1 name ~{RST} type input style line
+symbol Interface_Ethernet:PHY_Fixture units 1
+symbol MCU_Fixture:MCU_NRST description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_NRST field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_NRST field Reference U
+symbol MCU_Fixture:MCU_NRST field Value MCU_NRST
+symbol MCU_Fixture:MCU_NRST hash 04e4afe621ebc233
+symbol MCU_Fixture:MCU_NRST pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_NRST pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_NRST pin 3 unit 1 body 1 name NRST type bidirectional style line
+symbol MCU_Fixture:MCU_NRST pin 4 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Fixture:MCU_NRST units 1
+symbol Power_Supervisor:OpenDrain_Fixture description "Voltage supervisor, open-drain reset output"
+symbol Power_Supervisor:OpenDrain_Fixture field Description "Voltage supervisor, open-drain reset output"
+symbol Power_Supervisor:OpenDrain_Fixture field Reference U
+symbol Power_Supervisor:OpenDrain_Fixture field Value OpenDrain_Fixture
+symbol Power_Supervisor:OpenDrain_Fixture hash 644a0d6478eec318
+symbol Power_Supervisor:OpenDrain_Fixture pin 1 unit 1 body 1 name ~{RESET} type open_collector style line
+symbol Power_Supervisor:OpenDrain_Fixture pin 2 unit 1 body 1 name GND type power_in style line
+symbol Power_Supervisor:OpenDrain_Fixture pin 3 unit 1 body 1 name ~{MR} type input style line
+symbol Power_Supervisor:OpenDrain_Fixture pin 4 unit 1 body 1 name VDD type power_in style line
+symbol Power_Supervisor:OpenDrain_Fixture units 1
+symbol Power_Supervisor:PushPull_Fixture description "Voltage supervisor, push-pull reset output"
+symbol Power_Supervisor:PushPull_Fixture field Description "Voltage supervisor, push-pull reset output"
+symbol Power_Supervisor:PushPull_Fixture field Reference U
+symbol Power_Supervisor:PushPull_Fixture field Value PushPull_Fixture
+symbol Power_Supervisor:PushPull_Fixture hash 3157b4bac0b2e1cd
+symbol Power_Supervisor:PushPull_Fixture pin 1 unit 1 body 1 name ~{RESET} type output style line
+symbol Power_Supervisor:PushPull_Fixture pin 2 unit 1 body 1 name GND type power_in style line
+symbol Power_Supervisor:PushPull_Fixture pin 3 unit 1 body 1 name ~{MR} type input style line
+symbol Power_Supervisor:PushPull_Fixture pin 4 unit 1 body 1 name VDD type power_in style line
+symbol Power_Supervisor:PushPull_Fixture units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

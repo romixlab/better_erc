@@ -1,0 +1,231 @@
+board clk-6_reset_buttons
+label / local NRST at 22.38,27.46 net /NRST
+label / local NRST at 78,26.19 net /NRST
+label / local NRST at 126,26.19 net /NRST
+label / local NRST2 at 166.38,27.46 net /NRST2
+label / local NRST2 at 222,26.19 net /NRST2
+label / local NRST2 at 270,26.19 net /NRST2
+label / local NRST2 at 318,26.19 net /NRST2
+label / local PHY_RESET at 30,76.19 net /PHY_RESET
+label / local PHY_RESET at 78,76.19 net /PHY_RESET
+label / local PHY_RESET at 358.38,27.46 net /PHY_RESET
+label / power +3V3 at 22.38,22.38 net +3V3
+label / power +3V3 at 78,33.81 net +3V3
+label / power +3V3 at 78,83.81 net +3V3
+label / power +3V3 at 166.38,22.38 net +3V3
+label / power +3V3 at 222,33.81 net +3V3
+label / power +3V3 at 358.38,22.38 net +3V3
+label / power GND at 22.38,24.92 net GND
+label / power GND at 30,83.81 net GND
+label / power GND at 126,33.81 net GND
+label / power GND at 166.38,24.92 net GND
+label / power GND at 270,33.81 net GND
+label / power GND at 318,33.81 net GND
+label / power GND at 358.38,24.92 net GND
+nc / at 22.38,30 pin U1 4
+nc / at 166.38,30 pin U2 4
+net +3V3 class = Default @ sch clk-6_reset_buttons.kicad_sch note "effective net class"
+net +3V3 kind power
+net /NRST class = Default @ sch clk-6_reset_buttons.kicad_sch note "effective net class"
+net /NRST kind named
+net /NRST2 class = Default @ sch clk-6_reset_buttons.kicad_sch note "effective net class"
+net /NRST2 kind named
+net /PHY_RESET class = Default @ sch clk-6_reset_buttons.kicad_sch note "effective net class"
+net /PHY_RESET kind named
+net GND class = Default @ sch clk-6_reset_buttons.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U1-PA0-Pad4) class = Default @ sch clk-6_reset_buttons.kicad_sch note "effective net class"
+net unconnected-(U1-PA0-Pad4) kind unconnected
+net unconnected-(U2-PA0-Pad4) class = Default @ sch clk-6_reset_buttons.kicad_sch note "effective net class"
+net unconnected-(U2-PA0-Pad4) kind unconnected
+part C1 field Value = 100n @ sch clk-6_reset_buttons.kicad_sch
+part C1 flag dnp = no @ sch clk-6_reset_buttons.kicad_sch
+part C1 flag exclude_from_sim = no @ sch clk-6_reset_buttons.kicad_sch
+part C1 flag in_bom = yes @ sch clk-6_reset_buttons.kicad_sch
+part C1 flag on_board = yes @ sch clk-6_reset_buttons.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid eaa214dc-0000-4000-8000-000000000047 line 200 at 318,30 rot 0
+part C1 value = text 100n @ sch clk-6_reset_buttons.kicad_sch note "from the Value field"
+part R1 field Value = 10k @ sch clk-6_reset_buttons.kicad_sch
+part R1 flag dnp = no @ sch clk-6_reset_buttons.kicad_sch
+part R1 flag exclude_from_sim = no @ sch clk-6_reset_buttons.kicad_sch
+part R1 flag in_bom = yes @ sch clk-6_reset_buttons.kicad_sch
+part R1 flag on_board = yes @ sch clk-6_reset_buttons.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid eaa214dc-0000-4000-8000-000000000012 line 110 at 78,30 rot 0
+part R1 value = text 10k @ sch clk-6_reset_buttons.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch clk-6_reset_buttons.kicad_sch
+part R2 flag dnp = no @ sch clk-6_reset_buttons.kicad_sch
+part R2 flag exclude_from_sim = no @ sch clk-6_reset_buttons.kicad_sch
+part R2 flag in_bom = yes @ sch clk-6_reset_buttons.kicad_sch
+part R2 flag on_board = yes @ sch clk-6_reset_buttons.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid eaa214dc-0000-4000-8000-000000000035 line 168 at 222,30 rot 0
+part R2 value = text 10k @ sch clk-6_reset_buttons.kicad_sch note "from the Value field"
+part R3 field Value = 10k @ sch clk-6_reset_buttons.kicad_sch
+part R3 flag dnp = no @ sch clk-6_reset_buttons.kicad_sch
+part R3 flag exclude_from_sim = no @ sch clk-6_reset_buttons.kicad_sch
+part R3 flag in_bom = yes @ sch clk-6_reset_buttons.kicad_sch
+part R3 flag on_board = yes @ sch clk-6_reset_buttons.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid eaa214dc-0000-4000-8000-000000000062 line 240 at 30,80 rot 0
+part R3 value = text 10k @ sch clk-6_reset_buttons.kicad_sch note "from the Value field"
+part SW1 field Value = SW_Push @ sch clk-6_reset_buttons.kicad_sch
+part SW1 flag dnp = no @ sch clk-6_reset_buttons.kicad_sch
+part SW1 flag exclude_from_sim = no @ sch clk-6_reset_buttons.kicad_sch
+part SW1 flag in_bom = yes @ sch clk-6_reset_buttons.kicad_sch
+part SW1 flag on_board = yes @ sch clk-6_reset_buttons.kicad_sch
+part SW1 lib Switch:SW_Push sheet / symbol Switch:SW_Push
+part SW1 unit 1 sheet / uuid eaa214dc-0000-4000-8000-000000000018 line 126 at 126,30 rot 0
+part SW1 value = text SW_Push @ sch clk-6_reset_buttons.kicad_sch note "from the Value field"
+part SW2 field Value = SW_Push @ sch clk-6_reset_buttons.kicad_sch
+part SW2 flag dnp = no @ sch clk-6_reset_buttons.kicad_sch
+part SW2 flag exclude_from_sim = no @ sch clk-6_reset_buttons.kicad_sch
+part SW2 flag in_bom = yes @ sch clk-6_reset_buttons.kicad_sch
+part SW2 flag on_board = yes @ sch clk-6_reset_buttons.kicad_sch
+part SW2 lib Switch:SW_Push sheet / symbol Switch:SW_Push
+part SW2 unit 1 sheet / uuid eaa214dc-0000-4000-8000-000000000041 line 184 at 270,30 rot 0
+part SW2 value = text SW_Push @ sch clk-6_reset_buttons.kicad_sch note "from the Value field"
+part SW3 field Value = SW_Push @ sch clk-6_reset_buttons.kicad_sch
+part SW3 flag dnp = no @ sch clk-6_reset_buttons.kicad_sch
+part SW3 flag exclude_from_sim = no @ sch clk-6_reset_buttons.kicad_sch
+part SW3 flag in_bom = yes @ sch clk-6_reset_buttons.kicad_sch
+part SW3 flag on_board = yes @ sch clk-6_reset_buttons.kicad_sch
+part SW3 lib Switch:SW_Push sheet / symbol Switch:SW_Push
+part SW3 unit 1 sheet / uuid eaa214dc-0000-4000-8000-000000000068 line 256 at 78,80 rot 0
+part SW3 value = text SW_Push @ sch clk-6_reset_buttons.kicad_sch note "from the Value field"
+part U1 field Value = MCU_RST @ sch clk-6_reset_buttons.kicad_sch
+part U1 flag dnp = no @ sch clk-6_reset_buttons.kicad_sch
+part U1 flag exclude_from_sim = no @ sch clk-6_reset_buttons.kicad_sch
+part U1 flag in_bom = yes @ sch clk-6_reset_buttons.kicad_sch
+part U1 flag on_board = yes @ sch clk-6_reset_buttons.kicad_sch
+part U1 lib MCU_Fixture:MCU_RST sheet / symbol MCU_Fixture:MCU_RST
+part U1 unit 1 sheet / uuid eaa214dc-0000-4000-8000-000000000001 line 84 at 30,30 rot 0
+part U1 value = text MCU_RST @ sch clk-6_reset_buttons.kicad_sch note "from the Value field"
+part U2 field Value = MCU_RST @ sch clk-6_reset_buttons.kicad_sch
+part U2 flag dnp = no @ sch clk-6_reset_buttons.kicad_sch
+part U2 flag exclude_from_sim = no @ sch clk-6_reset_buttons.kicad_sch
+part U2 flag in_bom = yes @ sch clk-6_reset_buttons.kicad_sch
+part U2 flag on_board = yes @ sch clk-6_reset_buttons.kicad_sch
+part U2 lib MCU_Fixture:MCU_RST sheet / symbol MCU_Fixture:MCU_RST
+part U2 unit 1 sheet / uuid eaa214dc-0000-4000-8000-000000000024 line 142 at 174,30 rot 0
+part U2 value = text MCU_RST @ sch clk-6_reset_buttons.kicad_sch note "from the Value field"
+part U3 field Value = PHY_High_Fixture @ sch clk-6_reset_buttons.kicad_sch
+part U3 flag dnp = no @ sch clk-6_reset_buttons.kicad_sch
+part U3 flag exclude_from_sim = no @ sch clk-6_reset_buttons.kicad_sch
+part U3 flag in_bom = yes @ sch clk-6_reset_buttons.kicad_sch
+part U3 flag on_board = yes @ sch clk-6_reset_buttons.kicad_sch
+part U3 lib Interface_Ethernet:PHY_High_Fixture sheet / symbol Interface_Ethernet:PHY_High_Fixture
+part U3 unit 1 sheet / uuid eaa214dc-0000-4000-8000-000000000053 line 216 at 366,30 rot 0
+part U3 value = text PHY_High_Fixture @ sch clk-6_reset_buttons.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net /NRST2
+pin C1 1 type = passive @ sch clk-6_reset_buttons.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch clk-6_reset_buttons.kicad_sch
+pin R1 1 name "" unit 1 net /NRST
+pin R1 1 type = passive @ sch clk-6_reset_buttons.kicad_sch
+pin R1 2 name "" unit 1 net +3V3
+pin R1 2 type = passive @ sch clk-6_reset_buttons.kicad_sch
+pin R2 1 name "" unit 1 net /NRST2
+pin R2 1 type = passive @ sch clk-6_reset_buttons.kicad_sch
+pin R2 2 name "" unit 1 net +3V3
+pin R2 2 type = passive @ sch clk-6_reset_buttons.kicad_sch
+pin R3 1 name "" unit 1 net /PHY_RESET
+pin R3 1 type = passive @ sch clk-6_reset_buttons.kicad_sch
+pin R3 2 name "" unit 1 net GND
+pin R3 2 type = passive @ sch clk-6_reset_buttons.kicad_sch
+pin SW1 1 name 1 unit 1 net /NRST
+pin SW1 1 type = passive @ sch clk-6_reset_buttons.kicad_sch
+pin SW1 2 name 2 unit 1 net GND
+pin SW1 2 type = passive @ sch clk-6_reset_buttons.kicad_sch
+pin SW2 1 name 1 unit 1 net /NRST2
+pin SW2 1 type = passive @ sch clk-6_reset_buttons.kicad_sch
+pin SW2 2 name 2 unit 1 net GND
+pin SW2 2 type = passive @ sch clk-6_reset_buttons.kicad_sch
+pin SW3 1 name 1 unit 1 net /PHY_RESET
+pin SW3 1 type = passive @ sch clk-6_reset_buttons.kicad_sch
+pin SW3 2 name 2 unit 1 net +3V3
+pin SW3 2 type = passive @ sch clk-6_reset_buttons.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch clk-6_reset_buttons.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch clk-6_reset_buttons.kicad_sch
+pin U1 3 name NRST unit 1 net /NRST
+pin U1 3 type = input @ sch clk-6_reset_buttons.kicad_sch
+pin U1 4 name PA0 unit 1 nc net unconnected-(U1-PA0-Pad4)
+pin U1 4 type = bidirectional @ sch clk-6_reset_buttons.kicad_sch
+pin U2 1 name VDD unit 1 net +3V3
+pin U2 1 type = power_in @ sch clk-6_reset_buttons.kicad_sch
+pin U2 2 name VSS unit 1 net GND
+pin U2 2 type = power_in @ sch clk-6_reset_buttons.kicad_sch
+pin U2 3 name NRST unit 1 net /NRST2
+pin U2 3 type = input @ sch clk-6_reset_buttons.kicad_sch
+pin U2 4 name PA0 unit 1 nc net unconnected-(U2-PA0-Pad4)
+pin U2 4 type = bidirectional @ sch clk-6_reset_buttons.kicad_sch
+pin U3 1 name VDD unit 1 net +3V3
+pin U3 1 type = power_in @ sch clk-6_reset_buttons.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch clk-6_reset_buttons.kicad_sch
+pin U3 3 name RESET unit 1 net /PHY_RESET
+pin U3 3 type = input @ sch clk-6_reset_buttons.kicad_sch
+sheet / name "" file clk-6_reset_buttons.kicad_sch uuid /
+source file clk-6_reset_buttons.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Interface_Ethernet:PHY_High_Fixture description "Ethernet PHY"
+symbol Interface_Ethernet:PHY_High_Fixture field Description "Ethernet PHY"
+symbol Interface_Ethernet:PHY_High_Fixture field Reference U
+symbol Interface_Ethernet:PHY_High_Fixture field Value PHY_High_Fixture
+symbol Interface_Ethernet:PHY_High_Fixture hash 48eb0f3bd78e14d7
+symbol Interface_Ethernet:PHY_High_Fixture pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Interface_Ethernet:PHY_High_Fixture pin 2 unit 1 body 1 name GND type power_in style line
+symbol Interface_Ethernet:PHY_High_Fixture pin 3 unit 1 body 1 name RESET type input style line
+symbol Interface_Ethernet:PHY_High_Fixture units 1
+symbol MCU_Fixture:MCU_RST description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_RST field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_RST field Reference U
+symbol MCU_Fixture:MCU_RST field Value MCU_RST
+symbol MCU_Fixture:MCU_RST hash a6b1b4ef74e362aa
+symbol MCU_Fixture:MCU_RST pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_RST pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_RST pin 3 unit 1 body 1 name NRST type input style line
+symbol MCU_Fixture:MCU_RST pin 4 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Fixture:MCU_RST units 1
+symbol Switch:SW_Push description "Push button switch, generic, two pins"
+symbol Switch:SW_Push field Description "Push button switch, generic, two pins"
+symbol Switch:SW_Push field Reference SW
+symbol Switch:SW_Push field Value SW_Push
+symbol Switch:SW_Push hash b034fc69a532597f
+symbol Switch:SW_Push pin 1 unit 1 body 1 name 1 type passive style line
+symbol Switch:SW_Push pin 2 unit 1 body 1 name 2 type passive style line
+symbol Switch:SW_Push units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

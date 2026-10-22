@@ -1,6 +1,18 @@
 # What better_erc finds on dbg-17_swd_without_reset.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "CLK-5"
+subjects = ["net /NRST2", "pin U2.5"]
+
+[[finding]]
+check = "CLK-7"
+subjects = ["net /NRST", "pin U1.5"]
+
+[[finding]]
+check = "CLK-7"
+subjects = ["net /NRST2", "pin U2.5"]
+
+[[finding]]
 check = "DBG-17"
 subjects = ["part J1", "part U1", "pin U1.5", "pin U1.6"]
 

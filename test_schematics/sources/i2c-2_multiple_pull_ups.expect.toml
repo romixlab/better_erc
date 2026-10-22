@@ -1,6 +1,14 @@
 # What better_erc finds on i2c-2_multiple_pull_ups.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "CLK-5"
+subjects = ["net unconnected-(U501-NRST-Pad4)", "pin U501.4"]
+
+[[finding]]
+check = "CLK-7"
+subjects = ["net unconnected-(U501-NRST-Pad4)", "pin U501.4"]
+
+[[finding]]
 check = "DBG-18"
 subjects = ["net /SCL1_1V8", "net /SDA1_1V8"]
 

@@ -1,0 +1,320 @@
+board clk-18_clock_fan_out
+label / local CLK2 at 222,33.81 net /CLK2
+label / local CLK2 at 262.38,27.46 net /CLK2
+label / local CLK2 at 310.38,27.46 net /CLK2
+label / local CLK2_SRC at 166.38,27.46 net /CLK2_SRC
+label / local CLK2_SRC at 222,26.19 net /CLK2_SRC
+label / local CLK25 at 22.38,27.46 net /CLK25
+label / local CLK25 at 70.38,27.46 net /CLK25
+label / local CLK25 at 118.38,27.46 net /CLK25
+label / local MCO_OUT at 22.38,77.46 net /MCO_OUT
+label / local MCO_OUT at 70.38,77.46 net /MCO_OUT
+label / local MCO_OUT at 358.38,27.46 net /MCO_OUT
+label / local SPI_CLK at 118.38,77.46 net /SPI_CLK
+label / local SPI_CLK at 166.38,77.46 net /SPI_CLK
+label / local SPI_CLK at 214.38,77.46 net /SPI_CLK
+label / power +3V3 at 22.38,22.38 net +3V3
+label / power +3V3 at 22.38,30 net +3V3
+label / power +3V3 at 22.38,72.38 net +3V3
+label / power +3V3 at 70.38,22.38 net +3V3
+label / power +3V3 at 70.38,72.38 net +3V3
+label / power +3V3 at 118.38,22.38 net +3V3
+label / power +3V3 at 118.38,72.38 net +3V3
+label / power +3V3 at 166.38,22.38 net +3V3
+label / power +3V3 at 166.38,30 net +3V3
+label / power +3V3 at 166.38,72.38 net +3V3
+label / power +3V3 at 214.38,72.38 net +3V3
+label / power +3V3 at 262.38,22.38 net +3V3
+label / power +3V3 at 310.38,22.38 net +3V3
+label / power +3V3 at 358.38,22.38 net +3V3
+label / power GND at 22.38,24.92 net GND
+label / power GND at 22.38,74.92 net GND
+label / power GND at 70.38,24.92 net GND
+label / power GND at 70.38,74.92 net GND
+label / power GND at 118.38,24.92 net GND
+label / power GND at 118.38,74.92 net GND
+label / power GND at 166.38,24.92 net GND
+label / power GND at 166.38,74.92 net GND
+label / power GND at 214.38,74.92 net GND
+label / power GND at 262.38,24.92 net GND
+label / power GND at 310.38,24.92 net GND
+label / power GND at 358.38,24.92 net GND
+net +3V3 class = Default @ sch clk-18_clock_fan_out.kicad_sch note "effective net class"
+net +3V3 kind power
+net /CLK2 class = Default @ sch clk-18_clock_fan_out.kicad_sch note "effective net class"
+net /CLK2 kind named
+net /CLK2_SRC class = Default @ sch clk-18_clock_fan_out.kicad_sch note "effective net class"
+net /CLK2_SRC kind named
+net /CLK25 class = Default @ sch clk-18_clock_fan_out.kicad_sch note "effective net class"
+net /CLK25 kind named
+net /MCO_OUT class = Default @ sch clk-18_clock_fan_out.kicad_sch note "effective net class"
+net /MCO_OUT kind named
+net /SPI_CLK class = Default @ sch clk-18_clock_fan_out.kicad_sch note "effective net class"
+net /SPI_CLK kind named
+net GND class = Default @ sch clk-18_clock_fan_out.kicad_sch note "effective net class"
+net GND kind power
+part R1 field Value = 33 @ sch clk-18_clock_fan_out.kicad_sch
+part R1 flag dnp = no @ sch clk-18_clock_fan_out.kicad_sch
+part R1 flag exclude_from_sim = no @ sch clk-18_clock_fan_out.kicad_sch
+part R1 flag in_bom = yes @ sch clk-18_clock_fan_out.kicad_sch
+part R1 flag on_board = yes @ sch clk-18_clock_fan_out.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid e7920b59-0000-4000-8000-000000000043 line 222 at 222,30 rot 0
+part R1 value = text 33 @ sch clk-18_clock_fan_out.kicad_sch note "from the Value field"
+part U1 field Value = MCU_MCO @ sch clk-18_clock_fan_out.kicad_sch
+part U1 flag dnp = no @ sch clk-18_clock_fan_out.kicad_sch
+part U1 flag exclude_from_sim = no @ sch clk-18_clock_fan_out.kicad_sch
+part U1 flag in_bom = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U1 flag on_board = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U1 lib MCU_Fixture:MCU_MCO sheet / symbol MCU_Fixture:MCU_MCO
+part U1 unit 1 sheet / uuid e7920b59-0000-4000-8000-000000000066 line 280 at 366,30 rot 0
+part U1 value = text MCU_MCO @ sch clk-18_clock_fan_out.kicad_sch note "from the Value field"
+part U2 field Value = PHY_Clk_Fixture @ sch clk-18_clock_fan_out.kicad_sch
+part U2 flag dnp = no @ sch clk-18_clock_fan_out.kicad_sch
+part U2 flag exclude_from_sim = no @ sch clk-18_clock_fan_out.kicad_sch
+part U2 flag in_bom = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U2 flag on_board = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U2 lib Interface_Ethernet:PHY_Clk_Fixture sheet / symbol Interface_Ethernet:PHY_Clk_Fixture
+part U2 unit 1 sheet / uuid e7920b59-0000-4000-8000-000000000013 line 142 at 78,30 rot 0
+part U2 value = text PHY_Clk_Fixture @ sch clk-18_clock_fan_out.kicad_sch note "from the Value field"
+part U3 field Value = MCU_CLKIN @ sch clk-18_clock_fan_out.kicad_sch
+part U3 flag dnp = no @ sch clk-18_clock_fan_out.kicad_sch
+part U3 flag exclude_from_sim = no @ sch clk-18_clock_fan_out.kicad_sch
+part U3 flag in_bom = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U3 flag on_board = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U3 lib MCU_Fixture:MCU_CLKIN sheet / symbol MCU_Fixture:MCU_CLKIN
+part U3 unit 1 sheet / uuid e7920b59-0000-4000-8000-000000000022 line 166 at 126,30 rot 0
+part U3 value = text MCU_CLKIN @ sch clk-18_clock_fan_out.kicad_sch note "from the Value field"
+part U4 field Value = PHY_Clk_Fixture @ sch clk-18_clock_fan_out.kicad_sch
+part U4 flag dnp = no @ sch clk-18_clock_fan_out.kicad_sch
+part U4 flag exclude_from_sim = no @ sch clk-18_clock_fan_out.kicad_sch
+part U4 flag in_bom = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U4 flag on_board = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U4 lib Interface_Ethernet:PHY_Clk_Fixture sheet / symbol Interface_Ethernet:PHY_Clk_Fixture
+part U4 unit 1 sheet / uuid e7920b59-0000-4000-8000-000000000048 line 232 at 270,30 rot 0
+part U4 value = text PHY_Clk_Fixture @ sch clk-18_clock_fan_out.kicad_sch note "from the Value field"
+part U5 field Value = MCU_CLKIN @ sch clk-18_clock_fan_out.kicad_sch
+part U5 flag dnp = no @ sch clk-18_clock_fan_out.kicad_sch
+part U5 flag exclude_from_sim = no @ sch clk-18_clock_fan_out.kicad_sch
+part U5 flag in_bom = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U5 flag on_board = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U5 lib MCU_Fixture:MCU_CLKIN sheet / symbol MCU_Fixture:MCU_CLKIN
+part U5 unit 1 sheet / uuid e7920b59-0000-4000-8000-000000000057 line 256 at 318,30 rot 0
+part U5 value = text MCU_CLKIN @ sch clk-18_clock_fan_out.kicad_sch note "from the Value field"
+part U6 field Value = PHY_Clk_Fixture @ sch clk-18_clock_fan_out.kicad_sch
+part U6 flag dnp = no @ sch clk-18_clock_fan_out.kicad_sch
+part U6 flag exclude_from_sim = no @ sch clk-18_clock_fan_out.kicad_sch
+part U6 flag in_bom = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U6 flag on_board = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U6 lib Interface_Ethernet:PHY_Clk_Fixture sheet / symbol Interface_Ethernet:PHY_Clk_Fixture
+part U6 unit 1 sheet / uuid e7920b59-0000-4000-8000-000000000075 line 304 at 30,80 rot 0
+part U6 value = text PHY_Clk_Fixture @ sch clk-18_clock_fan_out.kicad_sch note "from the Value field"
+part U7 field Value = PHY_Clk_Fixture @ sch clk-18_clock_fan_out.kicad_sch
+part U7 flag dnp = no @ sch clk-18_clock_fan_out.kicad_sch
+part U7 flag exclude_from_sim = no @ sch clk-18_clock_fan_out.kicad_sch
+part U7 flag in_bom = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U7 flag on_board = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U7 lib Interface_Ethernet:PHY_Clk_Fixture sheet / symbol Interface_Ethernet:PHY_Clk_Fixture
+part U7 unit 1 sheet / uuid e7920b59-0000-4000-8000-000000000084 line 328 at 78,80 rot 0
+part U7 value = text PHY_Clk_Fixture @ sch clk-18_clock_fan_out.kicad_sch note "from the Value field"
+part U8 field Value = MCU_SPI @ sch clk-18_clock_fan_out.kicad_sch
+part U8 flag dnp = no @ sch clk-18_clock_fan_out.kicad_sch
+part U8 flag exclude_from_sim = no @ sch clk-18_clock_fan_out.kicad_sch
+part U8 flag in_bom = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U8 flag on_board = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U8 lib MCU_Fixture:MCU_SPI sheet / symbol MCU_Fixture:MCU_SPI
+part U8 unit 1 sheet / uuid e7920b59-0000-4000-8000-000000000093 line 352 at 126,80 rot 0
+part U8 value = text MCU_SPI @ sch clk-18_clock_fan_out.kicad_sch note "from the Value field"
+part U9 field Value = Flash_Fixture @ sch clk-18_clock_fan_out.kicad_sch
+part U9 flag dnp = no @ sch clk-18_clock_fan_out.kicad_sch
+part U9 flag exclude_from_sim = no @ sch clk-18_clock_fan_out.kicad_sch
+part U9 flag in_bom = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U9 flag on_board = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U9 lib Memory_Flash:Flash_Fixture sheet / symbol Memory_Flash:Flash_Fixture
+part U9 unit 1 sheet / uuid e7920b59-0000-4000-8000-000000000102 line 376 at 174,80 rot 0
+part U9 value = text Flash_Fixture @ sch clk-18_clock_fan_out.kicad_sch note "from the Value field"
+part U10 field Value = Flash_Fixture @ sch clk-18_clock_fan_out.kicad_sch
+part U10 flag dnp = no @ sch clk-18_clock_fan_out.kicad_sch
+part U10 flag exclude_from_sim = no @ sch clk-18_clock_fan_out.kicad_sch
+part U10 flag in_bom = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U10 flag on_board = yes @ sch clk-18_clock_fan_out.kicad_sch
+part U10 lib Memory_Flash:Flash_Fixture sheet / symbol Memory_Flash:Flash_Fixture
+part U10 unit 1 sheet / uuid e7920b59-0000-4000-8000-000000000111 line 400 at 222,80 rot 0
+part U10 value = text Flash_Fixture @ sch clk-18_clock_fan_out.kicad_sch note "from the Value field"
+part X1 field Value = 25MHz @ sch clk-18_clock_fan_out.kicad_sch
+part X1 flag dnp = no @ sch clk-18_clock_fan_out.kicad_sch
+part X1 flag exclude_from_sim = no @ sch clk-18_clock_fan_out.kicad_sch
+part X1 flag in_bom = yes @ sch clk-18_clock_fan_out.kicad_sch
+part X1 flag on_board = yes @ sch clk-18_clock_fan_out.kicad_sch
+part X1 lib Oscillator:ASE_Fixture sheet / symbol Oscillator:ASE_Fixture
+part X1 unit 1 sheet / uuid e7920b59-0000-4000-8000-000000000001 line 110 at 30,30 rot 0
+part X1 value = qty 25000000 Hz @ sch clk-18_clock_fan_out.kicad_sch note "from the Value field"
+part X2 field Value = 25MHz @ sch clk-18_clock_fan_out.kicad_sch
+part X2 flag dnp = no @ sch clk-18_clock_fan_out.kicad_sch
+part X2 flag exclude_from_sim = no @ sch clk-18_clock_fan_out.kicad_sch
+part X2 flag in_bom = yes @ sch clk-18_clock_fan_out.kicad_sch
+part X2 flag on_board = yes @ sch clk-18_clock_fan_out.kicad_sch
+part X2 lib Oscillator:ASE_Fixture sheet / symbol Oscillator:ASE_Fixture
+part X2 unit 1 sheet / uuid e7920b59-0000-4000-8000-000000000031 line 190 at 174,30 rot 0
+part X2 value = qty 25000000 Hz @ sch clk-18_clock_fan_out.kicad_sch note "from the Value field"
+pin R1 1 name "" unit 1 net /CLK2_SRC
+pin R1 1 type = passive @ sch clk-18_clock_fan_out.kicad_sch
+pin R1 2 name "" unit 1 net /CLK2
+pin R1 2 type = passive @ sch clk-18_clock_fan_out.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U1 3 name PA8/RCC_MCO unit 1 net /MCO_OUT
+pin U1 3 type = output @ sch clk-18_clock_fan_out.kicad_sch
+pin U2 1 name VDD unit 1 net +3V3
+pin U2 1 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U2 3 name XI unit 1 net /CLK25
+pin U2 3 type = input @ sch clk-18_clock_fan_out.kicad_sch
+pin U3 1 name VDD unit 1 net +3V3
+pin U3 1 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U3 2 name VSS unit 1 net GND
+pin U3 2 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U3 3 name OSC_IN unit 1 net /CLK25
+pin U3 3 type = input @ sch clk-18_clock_fan_out.kicad_sch
+pin U4 1 name VDD unit 1 net +3V3
+pin U4 1 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U4 2 name GND unit 1 net GND
+pin U4 2 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U4 3 name XI unit 1 net /CLK2
+pin U4 3 type = input @ sch clk-18_clock_fan_out.kicad_sch
+pin U5 1 name VDD unit 1 net +3V3
+pin U5 1 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U5 2 name VSS unit 1 net GND
+pin U5 2 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U5 3 name OSC_IN unit 1 net /CLK2
+pin U5 3 type = input @ sch clk-18_clock_fan_out.kicad_sch
+pin U6 1 name VDD unit 1 net +3V3
+pin U6 1 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U6 2 name GND unit 1 net GND
+pin U6 2 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U6 3 name XI unit 1 net /MCO_OUT
+pin U6 3 type = input @ sch clk-18_clock_fan_out.kicad_sch
+pin U7 1 name VDD unit 1 net +3V3
+pin U7 1 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U7 2 name GND unit 1 net GND
+pin U7 2 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U7 3 name XI unit 1 net /MCO_OUT
+pin U7 3 type = input @ sch clk-18_clock_fan_out.kicad_sch
+pin U8 1 name VDD unit 1 net +3V3
+pin U8 1 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U8 2 name VSS unit 1 net GND
+pin U8 2 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U8 3 name SPI1_SCK unit 1 net /SPI_CLK
+pin U8 3 type = output @ sch clk-18_clock_fan_out.kicad_sch
+pin U9 1 name VCC unit 1 net +3V3
+pin U9 1 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U9 2 name GND unit 1 net GND
+pin U9 2 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U9 3 name SCLK unit 1 net /SPI_CLK
+pin U9 3 type = input @ sch clk-18_clock_fan_out.kicad_sch
+pin U10 1 name VCC unit 1 net +3V3
+pin U10 1 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U10 2 name GND unit 1 net GND
+pin U10 2 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin U10 3 name SCLK unit 1 net /SPI_CLK
+pin U10 3 type = input @ sch clk-18_clock_fan_out.kicad_sch
+pin X1 1 name EN unit 1 net +3V3
+pin X1 1 type = input @ sch clk-18_clock_fan_out.kicad_sch
+pin X1 2 name GND unit 1 net GND
+pin X1 2 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin X1 3 name OUT unit 1 net /CLK25
+pin X1 3 type = output @ sch clk-18_clock_fan_out.kicad_sch
+pin X1 4 name VDD unit 1 net +3V3
+pin X1 4 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin X2 1 name EN unit 1 net +3V3
+pin X2 1 type = input @ sch clk-18_clock_fan_out.kicad_sch
+pin X2 2 name GND unit 1 net GND
+pin X2 2 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+pin X2 3 name OUT unit 1 net /CLK2_SRC
+pin X2 3 type = output @ sch clk-18_clock_fan_out.kicad_sch
+pin X2 4 name VDD unit 1 net +3V3
+pin X2 4 type = power_in @ sch clk-18_clock_fan_out.kicad_sch
+sheet / name "" file clk-18_clock_fan_out.kicad_sch uuid /
+source file clk-18_clock_fan_out.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Interface_Ethernet:PHY_Clk_Fixture description "Ethernet PHY"
+symbol Interface_Ethernet:PHY_Clk_Fixture field Description "Ethernet PHY"
+symbol Interface_Ethernet:PHY_Clk_Fixture field Reference U
+symbol Interface_Ethernet:PHY_Clk_Fixture field Value PHY_Clk_Fixture
+symbol Interface_Ethernet:PHY_Clk_Fixture hash 757fc83311ffa5db
+symbol Interface_Ethernet:PHY_Clk_Fixture pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Interface_Ethernet:PHY_Clk_Fixture pin 2 unit 1 body 1 name GND type power_in style line
+symbol Interface_Ethernet:PHY_Clk_Fixture pin 3 unit 1 body 1 name XI type input style line
+symbol Interface_Ethernet:PHY_Clk_Fixture units 1
+symbol MCU_Fixture:MCU_CLKIN description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_CLKIN field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_CLKIN field Reference U
+symbol MCU_Fixture:MCU_CLKIN field Value MCU_CLKIN
+symbol MCU_Fixture:MCU_CLKIN hash da34435a5aa73c60
+symbol MCU_Fixture:MCU_CLKIN pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_CLKIN pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_CLKIN pin 3 unit 1 body 1 name OSC_IN type input style line
+symbol MCU_Fixture:MCU_CLKIN units 1
+symbol MCU_Fixture:MCU_MCO description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_MCO field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_MCO field Reference U
+symbol MCU_Fixture:MCU_MCO field Value MCU_MCO
+symbol MCU_Fixture:MCU_MCO hash 0fb5012b7ec7865e
+symbol MCU_Fixture:MCU_MCO pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_MCO pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_MCO pin 3 unit 1 body 1 name PA8/RCC_MCO type output style line
+symbol MCU_Fixture:MCU_MCO units 1
+symbol MCU_Fixture:MCU_SPI description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_SPI field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_SPI field Reference U
+symbol MCU_Fixture:MCU_SPI field Value MCU_SPI
+symbol MCU_Fixture:MCU_SPI hash ee1a1ec828bb87ac
+symbol MCU_Fixture:MCU_SPI pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_SPI pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_SPI pin 3 unit 1 body 1 name SPI1_SCK type output style line
+symbol MCU_Fixture:MCU_SPI units 1
+symbol Memory_Flash:Flash_Fixture description "SPI flash memory"
+symbol Memory_Flash:Flash_Fixture field Description "SPI flash memory"
+symbol Memory_Flash:Flash_Fixture field Reference U
+symbol Memory_Flash:Flash_Fixture field Value Flash_Fixture
+symbol Memory_Flash:Flash_Fixture hash 2da468962d1693b9
+symbol Memory_Flash:Flash_Fixture pin 1 unit 1 body 1 name VCC type power_in style line
+symbol Memory_Flash:Flash_Fixture pin 2 unit 1 body 1 name GND type power_in style line
+symbol Memory_Flash:Flash_Fixture pin 3 unit 1 body 1 name SCLK type input style line
+symbol Memory_Flash:Flash_Fixture units 1
+symbol Oscillator:ASE_Fixture description "Crystal clock oscillator"
+symbol Oscillator:ASE_Fixture field Description "Crystal clock oscillator"
+symbol Oscillator:ASE_Fixture field Reference X
+symbol Oscillator:ASE_Fixture field Value ASE_Fixture
+symbol Oscillator:ASE_Fixture hash 52fc20ba4abb1285
+symbol Oscillator:ASE_Fixture pin 1 unit 1 body 1 name EN type input style line
+symbol Oscillator:ASE_Fixture pin 2 unit 1 body 1 name GND type power_in style line
+symbol Oscillator:ASE_Fixture pin 3 unit 1 body 1 name OUT type output style line
+symbol Oscillator:ASE_Fixture pin 4 unit 1 body 1 name VDD type power_in style line
+symbol Oscillator:ASE_Fixture units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

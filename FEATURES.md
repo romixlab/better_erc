@@ -294,6 +294,19 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - 🚧 `NAME-11` Negative rail with its sign from a marker only or none; negative supply pins on a rail read positive ·
   `name/name_11.rs`, `name-11_negative_rail_names`. Missing: rails a negative regulator feeds (power sources, `NET-5`)
 - ✅ `NAME-12` Unannotated designators, one designator placed twice for one unit · `name/name_12.rs`, `name-12_designators`
+- ✅ `CLK-3` Crystal of four pins or more with two connected and the others connected to nothing; with the board
+  file, crystal footprint pads beyond the symbol's pins with no net · `clk/clk_3.rs`, `clk-3_crystal_case_pads`
+- ✅ `CLK-5` Active-low reset input by name (`NRST`, `~{RESET}`, `RUN`, `CHIP_PU`; an MCU's reset) with no pull-up
+  and no push-pull driver; internal pull-ups wait for part data · `clk/clk_5.rs`, `clk-5_reset_pull_ups`
+- ✅ `CLK-6` Reset net with a switch on it or one series resistor away and no capacitor to ground (≈ by `CLK-7`) ·
+  `clk/clk_6.rs`, `clk-6_reset_buttons`
+- ✅ `CLK-7` Active-low reset net with no capacitor to ground · `clk/clk_7.rs`, `clk-7_reset_capacitors`
+- ✅ `CLK-14` Reset net with a push-pull output and another driver (bidirectional or open-drain pin, connector,
+  switch, a second output) · `clk/clk_14.rs`, `clk-14_push_pull_reset`
+- ✅ `CLK-15` Reset net shared by an MCU, SoC or FPGA and other parts' reset inputs · `clk/clk_15.rs`,
+  `clk-15_shared_reset`
+- ✅ `CLK-18` Clock driver (oscillator output, `MCO`/`CLKOUT` pin, an IC output on a `CLK` net; bus clocks left out)
+  straight into two or more loads · `clk/clk_18.rs`, `clk-18_clock_fan_out`
 - ✅ `IO-1` Input pins (pin type) on a net nothing drives: no output, bidirectional or open-drain pin, no IC pin of
   unknown role, no rail, and no resistor, inductor, ferrite, crystal, FET channel or switch to a driven net (a
   fixpoint over the board); a connector or test point is no source; pins with a no-connect flag left out ·

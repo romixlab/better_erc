@@ -15,13 +15,13 @@
     ],
     "variant": null,
     "errors": 3,
-    "warnings": 27,
+    "warnings": 37,
     "suggestions": 79,
     "infos": 0,
     "candidates": 0,
-    "ran": 66,
+    "ran": 73,
     "not_run": 0,
-    "planned": 447
+    "planned": 440
   },
   "checks": [
     {
@@ -332,7 +332,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 67
+      "micros": 105
     },
     {
       "id": "DEC-2",
@@ -355,7 +355,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 12
     },
     {
       "id": "DEC-5",
@@ -378,7 +378,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 10
+      "micros": 7
     },
     {
       "id": "DEC-8",
@@ -387,7 +387,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 28
+      "micros": 19
     },
     {
       "id": "DEC-9",
@@ -403,7 +403,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 88
+      "micros": 96
     },
     {
       "id": "DEC-11",
@@ -412,7 +412,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 8
     },
     {
       "id": "DEC-12",
@@ -421,7 +421,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 7
     },
     {
       "id": "DEC-13",
@@ -738,7 +738,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 245
+      "micros": 87
     },
     {
       "id": "SHORT-2",
@@ -747,7 +747,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 280
+      "micros": 254
     },
     {
       "id": "SHORT-3",
@@ -756,7 +756,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 137
+      "micros": 138
     },
     {
       "id": "SHORT-4",
@@ -765,7 +765,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 138
+      "micros": 115
     },
     {
       "id": "SHORT-5",
@@ -774,7 +774,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 620
+      "micros": 616
     },
     {
       "id": "SHORT-6",
@@ -783,7 +783,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 38
+      "micros": 42
     },
     {
       "id": "SHORT-7",
@@ -792,7 +792,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 126
+      "micros": 123
     },
     {
       "id": "SHORT-8",
@@ -822,7 +822,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 62
+      "micros": 60
     },
     {
       "id": "SHORT-12",
@@ -831,7 +831,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 2118
+      "micros": 3680
     },
     {
       "id": "WIRE-1",
@@ -840,7 +840,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 453
+      "micros": 3452
     },
     {
       "id": "WIRE-2",
@@ -849,7 +849,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 141
+      "micros": 173
     },
     {
       "id": "WIRE-3",
@@ -914,7 +914,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 2
+      "micros": 5
     },
     {
       "id": "WIRE-12",
@@ -939,7 +939,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 584
+      "micros": 534
     },
     {
       "id": "WIRE-15",
@@ -1207,7 +1207,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 11,
-      "micros": 257
+      "micros": 275
     },
     {
       "id": "IO-2",
@@ -1244,7 +1244,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 215
+      "micros": 218
     },
     {
       "id": "IO-7",
@@ -1253,7 +1253,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 7
     },
     {
       "id": "IO-8",
@@ -1262,7 +1262,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 452
+      "micros": 451
     },
     {
       "id": "IO-9",
@@ -1278,7 +1278,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 215
+      "micros": 206
     },
     {
       "id": "IO-11",
@@ -1287,7 +1287,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 14
+      "micros": 13
     },
     {
       "id": "IO-12",
@@ -1317,7 +1317,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 479
+      "micros": 442
     },
     {
       "id": "IO-16",
@@ -1326,7 +1326,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 294
+      "micros": 85
     },
     {
       "id": "IO-17",
@@ -1543,7 +1543,9 @@
       "title": "Crystal NC pins may need to go to ground",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 8
     },
     {
       "id": "CLK-4",
@@ -1557,21 +1559,27 @@
       "title": "No pull-up on a reset_n input",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 5,
+      "micros": 417
     },
     {
       "id": "CLK-6",
       "title": "Suggest a cap on buttons to reset inputs; note hw debounce in the programmer report",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 392
     },
     {
       "id": "CLK-7",
       "title": "No capacitor on a reset_n input: noise and brown-outs reach it ≈ CLK-6",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 5,
+      "micros": 412
     },
     {
       "id": "CLK-8",
@@ -1620,14 +1628,18 @@
       "title": "Reset input driven by a push-pull output: fights the debugger, supervisor or button that also drives it; reset lines are open-drain",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 5399
     },
     {
       "id": "CLK-15",
       "title": "One reset net shared by the MCU and its peripherals: a debugger reset (or a watchdog) resets the whole board, and peripherals lose configuration on every firmware restart ≈ IO-13",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 756
     },
     {
       "id": "CLK-16",
@@ -1648,7 +1660,9 @@
       "title": "Clock output fanned out to several loads without a buffer or series termination",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 444
     },
     {
       "id": "CLK-19",
@@ -1664,7 +1678,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 58
+      "micros": 495
     },
     {
       "id": "I2C-2",
@@ -1673,7 +1687,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 3,
-      "micros": 92
+      "micros": 96
     },
     {
       "id": "I2C-3",
@@ -1682,7 +1696,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 54
+      "micros": 58
     },
     {
       "id": "I2C-4",
@@ -1712,7 +1726,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 213
+      "micros": 78
     },
     {
       "id": "I2C-8",
@@ -1728,7 +1742,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 656
+      "micros": 174
     },
     {
       "id": "I2C-10",
@@ -1737,7 +1751,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 178
+      "micros": 153
     },
     {
       "id": "I2C-11",
@@ -2964,7 +2978,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1139
+      "micros": 1116
     },
     {
       "id": "DBG-2",
@@ -2973,7 +2987,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 191
+      "micros": 188
     },
     {
       "id": "DBG-3",
@@ -2982,7 +2996,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 50
+      "micros": 34
     },
     {
       "id": "DBG-4",
@@ -2991,7 +3005,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 21
+      "micros": 20
     },
     {
       "id": "DBG-5",
@@ -3014,7 +3028,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 1397
+      "micros": 409
     },
     {
       "id": "DBG-8",
@@ -3023,7 +3037,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 444
+      "micros": 8296
     },
     {
       "id": "DBG-9",
@@ -3039,7 +3053,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 67
+      "micros": 44
     },
     {
       "id": "DBG-11",
@@ -3048,7 +3062,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 507
+      "micros": 455
     },
     {
       "id": "DBG-12",
@@ -3071,7 +3085,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 218
+      "micros": 193
     },
     {
       "id": "DBG-15",
@@ -3087,7 +3101,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 18
+      "micros": 16
     },
     {
       "id": "DBG-17",
@@ -3096,7 +3110,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 410
+      "micros": 377
     },
     {
       "id": "DBG-18",
@@ -3105,7 +3119,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 14,
-      "micros": 703
+      "micros": 671
     },
     {
       "id": "DBG-19",
@@ -3156,7 +3170,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 20,
-      "micros": 706
+      "micros": 4317
     },
     {
       "id": "TEST-2",
@@ -3165,7 +3179,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 37
+      "micros": 38
     },
     {
       "id": "TEST-3",
@@ -3181,7 +3195,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 93
+      "micros": 108
     },
     {
       "id": "TEST-5",
@@ -3190,7 +3204,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 28,
-      "micros": 996
+      "micros": 874
     },
     {
       "id": "TEST-6",
@@ -3241,7 +3255,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 454
+      "micros": 468
     },
     {
       "id": "BOM-6",
@@ -3250,7 +3264,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 427
+      "micros": 430
     },
     {
       "id": "BOM-7",
@@ -3273,7 +3287,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 405
+      "micros": 427
     },
     {
       "id": "BOM-10",
@@ -3282,7 +3296,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 33
+      "micros": 32
     },
     {
       "id": "BOM-11",
@@ -3356,7 +3370,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 55
+      "micros": 72
     },
     {
       "id": "NAME-3",
@@ -3372,7 +3386,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 97
+      "micros": 100
     },
     {
       "id": "NAME-5",
@@ -3381,7 +3395,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 163
+      "micros": 179
     },
     {
       "id": "NAME-6",
@@ -3390,7 +3404,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 88
+      "micros": 83
     },
     {
       "id": "NAME-7",
@@ -3399,7 +3413,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 522
+      "micros": 583
     },
     {
       "id": "NAME-8",
@@ -3415,7 +3429,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 91
+      "micros": 1408
     },
     {
       "id": "NAME-10",
@@ -3424,7 +3438,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 96
+      "micros": 85
     },
     {
       "id": "NAME-11",
@@ -3433,7 +3447,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 187
+      "micros": 186
     },
     {
       "id": "NAME-12",
@@ -3442,7 +3456,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 51
+      "micros": 52
     },
     {
       "id": "LIB-1",
@@ -3465,7 +3479,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 10
+      "micros": 9
     },
     {
       "id": "LIB-4",
@@ -4953,6 +4967,476 @@
       "fingerprint": "IO-1:net unconnected-(U601-NRST-Pad4)|pin U601.4",
       "explain": "docs/checks/io.md#io-1",
       "fix": "a driver, or a pull to the safe level",
+      "locations": [
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "symbol U601",
+          "line": 1726,
+          "at": [
+            68.58,
+            63.5
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "CLK-5",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              45
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U201-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              96
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U201.4 (NRST) on unconnected-(U201-NRST-Pad4): an active-low reset with no pull-up; only an internal pull (if the part has one) holds it out of reset",
+      "facts": [],
+      "fingerprint": "CLK-5:net unconnected-(U201-NRST-Pad4)|pin U201.4",
+      "explain": "docs/checks/clk.md#clk-5",
+      "fix": "10 kΩ to the part's IO rail, with a capacitor to ground (CLK-7)",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol U201",
+          "line": 1913,
+          "at": [
+            49.53,
+            97.79
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "CLK-5",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              70
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U301-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              140
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U301.4 (NRST) on unconnected-(U301-NRST-Pad4): an active-low reset with no pull-up; only an internal pull (if the part has one) holds it out of reset",
+      "facts": [],
+      "fingerprint": "CLK-5:net unconnected-(U301-NRST-Pad4)|pin U301.4",
+      "explain": "docs/checks/clk.md#clk-5",
+      "fix": "10 kΩ to the part's IO rail, with a capacitor to ground (CLK-7)",
+      "locations": [
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "symbol U301",
+          "line": 1366,
+          "at": [
+            73.66,
+            68.58
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "CLK-5",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              89
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U401-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              168
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U401.4 (NRST) on unconnected-(U401-NRST-Pad4): an active-low reset with no pull-up; only an internal pull (if the part has one) holds it out of reset",
+      "facts": [],
+      "fingerprint": "CLK-5:net unconnected-(U401-NRST-Pad4)|pin U401.4",
+      "explain": "docs/checks/clk.md#clk-5",
+      "fix": "10 kΩ to the part's IO rail, with a capacitor to ground (CLK-7)",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U401",
+          "line": 5888,
+          "at": [
+            87.63,
+            73.66
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "CLK-5",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              124
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U501-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              244
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U501.4 (NRST) on unconnected-(U501-NRST-Pad4): an active-low reset with no pull-up; only an internal pull (if the part has one) holds it out of reset",
+      "facts": [],
+      "fingerprint": "CLK-5:net unconnected-(U501-NRST-Pad4)|pin U501.4",
+      "explain": "docs/checks/clk.md#clk-5",
+      "fix": "10 kΩ to the part's IO rail, with a capacitor to ground (CLK-7)",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol U501",
+          "line": 4027,
+          "at": [
+            48.26,
+            60.96
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "CLK-5",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              151
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U601-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              288
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U601.4 (NRST) on unconnected-(U601-NRST-Pad4): an active-low reset with no pull-up; only an internal pull (if the part has one) holds it out of reset",
+      "facts": [],
+      "fingerprint": "CLK-5:net unconnected-(U601-NRST-Pad4)|pin U601.4",
+      "explain": "docs/checks/clk.md#clk-5",
+      "fix": "10 kΩ to the part's IO rail, with a capacitor to ground (CLK-7)",
+      "locations": [
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "symbol U601",
+          "line": 1726,
+          "at": [
+            68.58,
+            63.5
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "CLK-7",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              45
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U201-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              96
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U201.4 (NRST) on unconnected-(U201-NRST-Pad4): an active-low reset with no capacitor to ground; noise, ESD and slow supply ramps reach it unfiltered",
+      "facts": [],
+      "fingerprint": "CLK-7:net unconnected-(U201-NRST-Pad4)|pin U201.4",
+      "explain": "docs/checks/clk.md#clk-7",
+      "fix": "10-100 nF to ground (1 µF where a power-up delay is wanted), within what the drivers can pull low",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol U201",
+          "line": 1913,
+          "at": [
+            49.53,
+            97.79
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "CLK-7",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              70
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U301-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              140
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U301.4 (NRST) on unconnected-(U301-NRST-Pad4): an active-low reset with no capacitor to ground; noise, ESD and slow supply ramps reach it unfiltered",
+      "facts": [],
+      "fingerprint": "CLK-7:net unconnected-(U301-NRST-Pad4)|pin U301.4",
+      "explain": "docs/checks/clk.md#clk-7",
+      "fix": "10-100 nF to ground (1 µF where a power-up delay is wanted), within what the drivers can pull low",
+      "locations": [
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "symbol U301",
+          "line": 1366,
+          "at": [
+            73.66,
+            68.58
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "CLK-7",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              89
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U401-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              168
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U401.4 (NRST) on unconnected-(U401-NRST-Pad4): an active-low reset with no capacitor to ground; noise, ESD and slow supply ramps reach it unfiltered",
+      "facts": [],
+      "fingerprint": "CLK-7:net unconnected-(U401-NRST-Pad4)|pin U401.4",
+      "explain": "docs/checks/clk.md#clk-7",
+      "fix": "10-100 nF to ground (1 µF where a power-up delay is wanted), within what the drivers can pull low",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U401",
+          "line": 5888,
+          "at": [
+            87.63,
+            73.66
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "CLK-7",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              124
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U501-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              244
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U501.4 (NRST) on unconnected-(U501-NRST-Pad4): an active-low reset with no capacitor to ground; noise, ESD and slow supply ramps reach it unfiltered",
+      "facts": [],
+      "fingerprint": "CLK-7:net unconnected-(U501-NRST-Pad4)|pin U501.4",
+      "explain": "docs/checks/clk.md#clk-7",
+      "fix": "10-100 nF to ground (1 µF where a power-up delay is wanted), within what the drivers can pull low",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol U501",
+          "line": 4027,
+          "at": [
+            48.26,
+            60.96
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "CLK-7",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              151
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U601-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              288
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U601.4 (NRST) on unconnected-(U601-NRST-Pad4): an active-low reset with no capacitor to ground; noise, ESD and slow supply ramps reach it unfiltered",
+      "facts": [],
+      "fingerprint": "CLK-7:net unconnected-(U601-NRST-Pad4)|pin U601.4",
+      "explain": "docs/checks/clk.md#clk-7",
+      "fix": "10-100 nF to ground (1 µF where a power-up delay is wanted), within what the drivers can pull low",
       "locations": [
         {
           "file": "i2c-10_non_equal_pull_ups.kicad_sch",
@@ -10436,7 +10920,7 @@
     }
   ],
   "timing": {
-    "checks_micros": 6891,
-    "total_micros": 7974
+    "checks_micros": 14203,
+    "total_micros": 15574
   }
 }

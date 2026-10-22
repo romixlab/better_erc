@@ -48,7 +48,8 @@ pub(crate) fn drives(cx: &Ctx, pin: PinId) -> bool {
 }
 
 /// The nets something can set the level of: rails and grounds, nets with a [`drives`] pin, and, until nothing
-/// changes, nets a fitted resistor, inductor, ferrite, jumper, net tie or crystal joins to a driven net, or a
+/// changes, nets a fitted resistor, inductor, ferrite, jumper, net tie or crystal (its pins off the grounds) joins
+/// to a driven net, or a
 /// transistor's channel or a switch connects to one (a FET's drain and source, a BJT's collector and emitter)
 pub(crate) fn driven_nets(cx: &Ctx) -> BTreeSet<NetId> {
     let b = cx.board();
@@ -76,13 +77,17 @@ pub(crate) fn driven_nets(cx: &Ctx) -> BTreeSet<NetId> {
             .iter()
             .filter_map(|p| b.pin(*p).net)
             .collect();
-        if (class.is_resistor()
-            || class.is_dc_tie()
-            || class == erc_model::PartClass::Inductor
-            || class == erc_model::PartClass::Crystal)
+        if (class.is_resistor() || class.is_dc_tie() || class == erc_model::PartClass::Inductor)
             && b.part(part).pins.len() == 2
         {
             joins.push(all);
+        } else if class == erc_model::PartClass::Crystal {
+            // The oscillator drives one side through the crystal; case pads on a ground are no path
+            joins.push(
+                all.into_iter()
+                    .filter(|n| !power.is_power_net(*n))
+                    .collect(),
+            );
         } else if class.is_mosfet() {
             joins.push(nets_of(&["S", "SOURCE", "D", "DRAIN"]));
         } else if class.is_bjt() {
