@@ -51,7 +51,10 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   · `erc_import/src/altium`
 - ✅ `IMP-5` PnP CSV from KiCad, Altium and Allegro; in the board model as a layout of footprints (position, rotation,
   side, value, package, the other columns as fields), mm, mil or inch · `erc_import/src/pnp.rs`
-- ✅ `IMP-6` Passive values (Ω with milli/micro, k, M, G; F, H, V, A, Hz, W) with notation warnings · `erc_model/src/value.rs`
+- ✅ `IMP-6` Passive values (Ω with milli/micro, k, M, G; F, H, V, A, Hz, W) with notation warnings; the whole field
+  read (`Value::read`: tolerance, ratings like `50V` and `1/4W`, dielectric, a ferrite's `@100MHz`); E-series E3..E192
+  (`ESeries`: membership, nearest value); the unit from the part class (`Values`) · `erc_model/src/value.rs`,
+  `erc_analysis/src/value.rs`
 - ✅ `IMP-7` Import tab in the app: any design the importer registry reads (a file or a directory), and the KiCad
   schematic, Altium (EDIF + WireList) and OrCAD (three files) pickers, all loading; each design's report below:
   findings with id, severity, subjects, facts and the catalogue explanation, not-run checks with their hints, notes ·
@@ -87,11 +90,17 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - ✅ `NET-3` Analysis results per board: first `PcbAssembly`, now the engine's context (`Ctx`, built lazily) and the
   run entry `Project`; `find_part_chains` is `graph::part_chains` · `erc_checks/src/{ctx,project}.rs`
 - ✅ `NET-4` I2C bus finder: direct and common segments, connected parts, voltage translators · `erc_analysis/src/i2c.rs`.
-  Buses are still found by net names; pin roles come with `NET-7`
-- 🚧 `NET-5` Power structure: rails from net names (strict mode needs `+xVy`, non-strict takes `VDD_1V8`), `+V`,
-  `VDD`, `VCC` and power pins, each a fact with its rule; grounds by name; voltage parsed from the name. Missing:
-  sources (LDO, DC-DC, connectors), 0R and shunt ties, power switches · `erc_analysis/src/power.rs`
-- 🚧 `NET-6` Switching nodes finder: the net between an IC and an inductor that is no ground or rail · `erc_analysis/src/power.rs`
+  On the parts a variant fits (`I2cBuses::on`); segments tied by resistors, ferrites, net ties and jumpers; discrete
+  translators (a BSS138 pair) with their gate nets; pull-ups per segment. Buses are still found by net names; pin roles
+  come with `NET-7` · test schematic `i2c-18_discrete_translator`
+- 🚧 `NET-5` Power structure, first layer: rails and grounds by the power name grammar (`+3V3`, `VDD_1V8`, `-5V`,
+  `5V0_NEG`, `VBUS`, `VBAT`, `+V...`, `GND_ISO`; strict mode only `+xVy`), power symbols and power pins as the second
+  signal, the project file as the third (`NetSource` hook); rail kinds (supply, USB, battery, analog, reference);
+  voltage from the name as a derived fact with its rule (sign from a `NEG` marker); ground groups joined through net
+  ties, 0 Ω and ferrites, and the links between them · `erc_analysis/src/power.rs`, `test_schematics/analyses/power`.
+  Missing: sources (LDO, DC-DC, connectors), the power tree, power switches, power states (`NET-8`)
+- 🚧 `NET-6` Switching nodes finder: the net between an IC and an inductor that is no ground or rail, by part class;
+  switching nodes are no rails · `erc_analysis/src/power.rs`. Missing: the regulator's SW pin by pin role (`NET-7`)
 - 📋 `NET-7` Pin model: digital/analog/power in, out, bidir, open drain; pulls; thresholds vs bank voltage; source
   and sink current per pin and bank; quiescent current per mode
 - 📋 `NET-8` Power states: which rails are on in each state, which parts are powered
@@ -109,9 +118,16 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   and note (highest rank wins, newest on a tie, disagreements listed); typed `Value`; the `Importer` trait; the
   canonical dump (one sorted fact per line, read back losslessly) as the golden format of importer tests; `netcmp`.
   Docs: [docs/model.md](docs/model.md). Missing: pin roles and the analyses on top (stage 1+)
-- 🚧 `NET-19` Part classes: resistor, capacitor, MOSFET, BJT, connector, translator, IC, ..., each a fact with the rule
-  that decided it (library symbol, description and keywords, designator prefix as an assumption) · `erc_analysis/src/class.rs`.
-  Missing: the part database and MPN as sources, the subclasses (diode kinds, regulator kinds) of the full model
+- ✅ `NET-19` Part classes: the full enum of architecture §1.3 with kinds (diode, BJT polarity, MOSFET channel,
+  connector, switch, regulator, translator, memory, transceiver, logic family, fuse), each a fact with the rule that
+  decided it: a `ClassSource` (the part database by MPN, `CFG-5`, plugs in here), the library symbol, description and
+  keywords, net-tie pad groups, the designator prefix as an assumption; coverage per board for `Need::PartClasses` ·
+  `erc_model/src/class.rs`, `erc_analysis/src/class.rs`, `test_schematics/analyses/parts`
+- ✅ `NET-20` Variant views: a board as a variant mounts it (`View`: DNP, BOM flags and field overrides applied); the
+  analyses and checks read the view, `Need::Variant` · `erc_model/src/view.rs`
+- ✅ `NET-21` Drawing facts: labels with their scope (local, global, hierarchical, power, local power, directive), sheet
+  pins matched to hierarchical labels, no-connect flags, dangling labels, flags on connected pins, as queryable facts
+  for the WIRE, NAME and SHORT checks; `Need::Drawing` · `erc_analysis/src/drawing.rs`, `test_schematics/analyses/drawing`
 - ✅ `NET-18` Each net's effective net class as KiCad resolves it (directive labels, project patterns as anchored regex
   or wildcard, priority order, `Default` filling unset rules), equal to kicad-cli's netlist classes · `erc_kicad/src/netclass.rs`
 
@@ -176,14 +192,15 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `BOM-5` Placeholder values (`?`, `??k`, `TBD`, `TODO`) · `bom/bom_5.rs`, `bom-10_values`
 - ✅ `BOM-6` Placeholder value on a fitted part (folds `BOM-5` in) · `bom/bom_6.rs`, `bom-10_values`
 - ✅ `BOM-9` Part without a value · `bom/bom_9.rs`, `bom-10_values`
-- 🚧 `BOM-10` Resistor value that doesn't read or has odd notation · `bom/bom_10.rs`, `bom-10_values`. Missing: the
-  E-series test and capacitor values
+- ✅ `BOM-10` Resistor, capacitor or inductor value that doesn't read, has odd notation or is in no E series (with the
+  nearest E24 and E96 values) · `bom/bom_10.rs`, `bom-10_values`
 - ✅ `LIB-3` MOSFET pins not named G, D, S · `lib/lib_3.rs`, `lib-3_mosfet_pin_names`
 - ⬜ `IO-1` Inputs without a drive source: the input pins on a net are collected (`graph::input_pins`), no check yet ·
   `erc_analysis/src/graph.rs`, test schematic `io-1_inputs`
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`
 - ✅ `DIAG-2` Every catalogue check reported as ran, not run (the missing need, why, and what would enable it) or
-  planned; each check declares its needs, availability is worked out per board before the run · `erc_checks/src/{meta,ctx,engine}.rs`
+  planned; each check declares its needs, availability is worked out per board before the run from the analyses
+  (part class coverage, rails, rail voltages with coverage, variant, drawing) · `erc_checks/src/{meta,ctx,engine}.rs`
 - ✅ `DIAG-3` One `Finding` across checks: catalogue id, severity (project override), confidence (certain, estimate
   when it rests on an assumed fact, candidate), subjects with names, variant, facts with their sources, fingerprint,
   link to the detail page, fix, locations; overlapping checks fold into one finding (`also BOM-5`) · `erc_checks/src/finding.rs`

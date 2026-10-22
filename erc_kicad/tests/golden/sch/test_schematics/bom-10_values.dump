@@ -1,4 +1,24 @@
 board bom-10_values
+net unconnected-(C1-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(C1-Pad1) kind unconnected
+net unconnected-(C1-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(C1-Pad2) kind unconnected
+net unconnected-(C2-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(C2-Pad1) kind unconnected
+net unconnected-(C2-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(C2-Pad2) kind unconnected
+net unconnected-(C3-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(C3-Pad1) kind unconnected
+net unconnected-(C3-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(C3-Pad2) kind unconnected
+net unconnected-(L1-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(L1-Pad1) kind unconnected
+net unconnected-(L1-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(L1-Pad2) kind unconnected
+net unconnected-(L2-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(L2-Pad1) kind unconnected
+net unconnected-(L2-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(L2-Pad2) kind unconnected
 net unconnected-(R1-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R1-Pad1) kind unconnected
 net unconnected-(R1-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
@@ -39,6 +59,58 @@ net unconnected-(R10-Pad1) class = Default @ sch bom-10_values.kicad_sch note "e
 net unconnected-(R10-Pad1) kind unconnected
 net unconnected-(R10-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R10-Pad2) kind unconnected
+net unconnected-(R11-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(R11-Pad1) kind unconnected
+net unconnected-(R11-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(R11-Pad2) kind unconnected
+net unconnected-(R12-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(R12-Pad1) kind unconnected
+net unconnected-(R12-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(R12-Pad2) kind unconnected
+net unconnected-(R13-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(R13-Pad1) kind unconnected
+net unconnected-(R13-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(R13-Pad2) kind unconnected
+part C1 field Value = "100n 50V X7R" @ sch bom-10_values.kicad_sch
+part C1 flag dnp = no @ sch bom-10_values.kicad_sch
+part C1 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part C1 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part C1 flag on_board = yes @ sch bom-10_values.kicad_sch
+part C1 lib Fixture:C sheet / symbol Fixture:C
+part C1 unit 1 sheet / uuid 5717e100-0000-4000-8000-000000000010 line 255 at 75,80 rot 0
+part C1 value = text "100n 50V X7R" @ sch bom-10_values.kicad_sch note "from the Value field"
+part C2 field Value = 4.8n @ sch bom-10_values.kicad_sch
+part C2 flag dnp = no @ sch bom-10_values.kicad_sch
+part C2 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part C2 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part C2 flag on_board = yes @ sch bom-10_values.kicad_sch
+part C2 lib Fixture:C sheet / symbol Fixture:C
+part C2 unit 1 sheet / uuid 5717e100-0000-4000-8000-000000000013 line 263 at 90,80 rot 0
+part C2 value = text 4.8n @ sch bom-10_values.kicad_sch note "from the Value field"
+part C3 field Value = 4,7u @ sch bom-10_values.kicad_sch
+part C3 flag dnp = no @ sch bom-10_values.kicad_sch
+part C3 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part C3 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part C3 flag on_board = yes @ sch bom-10_values.kicad_sch
+part C3 lib Fixture:C sheet / symbol Fixture:C
+part C3 unit 1 sheet / uuid 5717e100-0000-4000-8000-000000000016 line 271 at 105,80 rot 0
+part C3 value = text 4,7u @ sch bom-10_values.kicad_sch note "from the Value field"
+part L1 field Value = 10u @ sch bom-10_values.kicad_sch
+part L1 flag dnp = no @ sch bom-10_values.kicad_sch
+part L1 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part L1 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part L1 flag on_board = yes @ sch bom-10_values.kicad_sch
+part L1 lib Fixture:L sheet / symbol Fixture:L
+part L1 unit 1 sheet / uuid 5717e100-0000-4000-8000-000000000019 line 279 at 120,80 rot 0
+part L1 value = text 10u @ sch bom-10_values.kicad_sch note "from the Value field"
+part L2 field Value = 10x @ sch bom-10_values.kicad_sch
+part L2 flag dnp = no @ sch bom-10_values.kicad_sch
+part L2 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part L2 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part L2 flag on_board = yes @ sch bom-10_values.kicad_sch
+part L2 lib Fixture:L sheet / symbol Fixture:L
+part L2 unit 1 sheet / uuid 5717e100-0000-4000-8000-000000000022 line 287 at 135,80 rot 0
+part L2 value = text 10x @ sch bom-10_values.kicad_sch note "from the Value field"
 part R1 field Description = Resistor @ sch bom-10_values.kicad_sch
 part R1 field Value = 4k7 @ sch bom-10_values.kicad_sch
 part R1 flag dnp = no @ sch bom-10_values.kicad_sch
@@ -46,7 +118,7 @@ part R1 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
 part R1 flag in_bom = yes @ sch bom-10_values.kicad_sch
 part R1 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R1 lib Fixture:R sheet / symbol Fixture:R
-part R1 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000001 line 109 at 30,50 rot 0
+part R1 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000001 line 131 at 30,50 rot 0
 part R1 value = text 4k7 @ sch bom-10_values.kicad_sch note "from the Value field"
 part R2 field Description = Resistor @ sch bom-10_values.kicad_sch
 part R2 flag dnp = no @ sch bom-10_values.kicad_sch
@@ -54,7 +126,7 @@ part R2 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
 part R2 flag in_bom = yes @ sch bom-10_values.kicad_sch
 part R2 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R2 lib Fixture:R sheet / symbol Fixture:R
-part R2 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000004 line 119 at 45,50 rot 0
+part R2 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000004 line 141 at 45,50 rot 0
 part R2 value = text "" @ sch bom-10_values.kicad_sch note "from the Value field"
 part R3 field Description = Resistor @ sch bom-10_values.kicad_sch
 part R3 field Value = ? @ sch bom-10_values.kicad_sch
@@ -63,7 +135,7 @@ part R3 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
 part R3 flag in_bom = yes @ sch bom-10_values.kicad_sch
 part R3 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R3 lib Fixture:R sheet / symbol Fixture:R
-part R3 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000007 line 129 at 60,50 rot 0
+part R3 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000007 line 151 at 60,50 rot 0
 part R3 value = text ? @ sch bom-10_values.kicad_sch note "from the Value field"
 part R4 field Description = Resistor @ sch bom-10_values.kicad_sch
 part R4 field Value = 10x @ sch bom-10_values.kicad_sch
@@ -72,7 +144,7 @@ part R4 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
 part R4 flag in_bom = yes @ sch bom-10_values.kicad_sch
 part R4 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R4 lib Fixture:R sheet / symbol Fixture:R
-part R4 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000010 line 139 at 75,50 rot 0
+part R4 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000010 line 161 at 75,50 rot 0
 part R4 value = text 10x @ sch bom-10_values.kicad_sch note "from the Value field"
 part R5 field Description = Resistor @ sch bom-10_values.kicad_sch
 part R5 field Value = "4.7  k" @ sch bom-10_values.kicad_sch
@@ -81,7 +153,7 @@ part R5 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
 part R5 flag in_bom = yes @ sch bom-10_values.kicad_sch
 part R5 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R5 lib Fixture:R sheet / symbol Fixture:R
-part R5 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000013 line 149 at 90,50 rot 0
+part R5 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000013 line 171 at 90,50 rot 0
 part R5 value = text "4.7  k" @ sch bom-10_values.kicad_sch note "from the Value field"
 part R6 field Description = Resistor @ sch bom-10_values.kicad_sch
 part R6 field Value = 4r7 @ sch bom-10_values.kicad_sch
@@ -90,7 +162,7 @@ part R6 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
 part R6 flag in_bom = yes @ sch bom-10_values.kicad_sch
 part R6 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R6 lib Fixture:R sheet / symbol Fixture:R
-part R6 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000016 line 159 at 105,50 rot 0
+part R6 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000016 line 181 at 105,50 rot 0
 part R6 value = qty 4.7 ohm @ sch bom-10_values.kicad_sch note "from the Value field"
 part R7 field Description = Resistor @ sch bom-10_values.kicad_sch
 part R7 field Value = 10kR @ sch bom-10_values.kicad_sch
@@ -99,7 +171,7 @@ part R7 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
 part R7 flag in_bom = yes @ sch bom-10_values.kicad_sch
 part R7 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R7 lib Fixture:R sheet / symbol Fixture:R
-part R7 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000019 line 169 at 120,50 rot 0
+part R7 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000019 line 191 at 120,50 rot 0
 part R7 value = qty 10000 ohm @ sch bom-10_values.kicad_sch note "from the Value field"
 part R8 field Description = Resistor @ sch bom-10_values.kicad_sch
 part R8 field Value = DNP @ sch bom-10_values.kicad_sch
@@ -108,7 +180,7 @@ part R8 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
 part R8 flag in_bom = yes @ sch bom-10_values.kicad_sch
 part R8 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R8 lib Fixture:R sheet / symbol Fixture:R
-part R8 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000022 line 179 at 135,50 rot 0
+part R8 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000022 line 201 at 135,50 rot 0
 part R8 value = text DNP @ sch bom-10_values.kicad_sch note "from the Value field"
 part R9 field Description = Resistor @ sch bom-10_values.kicad_sch
 part R9 field Value = ? @ sch bom-10_values.kicad_sch
@@ -117,7 +189,7 @@ part R9 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
 part R9 flag in_bom = yes @ sch bom-10_values.kicad_sch
 part R9 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R9 lib Fixture:R sheet / symbol Fixture:R
-part R9 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000040 line 189 at 150,50 rot 0
+part R9 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000040 line 211 at 150,50 rot 0
 part R9 value = text ? @ sch bom-10_values.kicad_sch note "from the Value field"
 part R10 field Description = Resistor @ sch bom-10_values.kicad_sch
 part R10 field Value = TBD @ sch bom-10_values.kicad_sch
@@ -126,8 +198,52 @@ part R10 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
 part R10 flag in_bom = yes @ sch bom-10_values.kicad_sch
 part R10 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R10 lib Fixture:R sheet / symbol Fixture:R
-part R10 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000043 line 199 at 165,50 rot 0
+part R10 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000043 line 221 at 165,50 rot 0
 part R10 value = text TBD @ sch bom-10_values.kicad_sch note "from the Value field"
+part R11 field Value = 5k @ sch bom-10_values.kicad_sch
+part R11 flag dnp = no @ sch bom-10_values.kicad_sch
+part R11 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part R11 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part R11 flag on_board = yes @ sch bom-10_values.kicad_sch
+part R11 lib Fixture:R sheet / symbol Fixture:R
+part R11 unit 1 sheet / uuid 5717e100-0000-4000-8000-000000000001 line 231 at 30,80 rot 0
+part R11 value = text 5k @ sch bom-10_values.kicad_sch note "from the Value field"
+part R12 field Value = 4k99 @ sch bom-10_values.kicad_sch
+part R12 flag dnp = no @ sch bom-10_values.kicad_sch
+part R12 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part R12 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part R12 flag on_board = yes @ sch bom-10_values.kicad_sch
+part R12 lib Fixture:R sheet / symbol Fixture:R
+part R12 unit 1 sheet / uuid 5717e100-0000-4000-8000-000000000004 line 239 at 45,80 rot 0
+part R12 value = text 4k99 @ sch bom-10_values.kicad_sch note "from the Value field"
+part R13 field Value = "4k7 Ohm" @ sch bom-10_values.kicad_sch
+part R13 flag dnp = no @ sch bom-10_values.kicad_sch
+part R13 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part R13 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part R13 flag on_board = yes @ sch bom-10_values.kicad_sch
+part R13 lib Fixture:R sheet / symbol Fixture:R
+part R13 unit 1 sheet / uuid 5717e100-0000-4000-8000-000000000007 line 247 at 60,80 rot 0
+part R13 value = text "4k7 Ohm" @ sch bom-10_values.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net unconnected-(C1-Pad1)
+pin C1 1 type = passive @ sch bom-10_values.kicad_sch
+pin C1 2 name "" unit 1 net unconnected-(C1-Pad2)
+pin C1 2 type = passive @ sch bom-10_values.kicad_sch
+pin C2 1 name "" unit 1 net unconnected-(C2-Pad1)
+pin C2 1 type = passive @ sch bom-10_values.kicad_sch
+pin C2 2 name "" unit 1 net unconnected-(C2-Pad2)
+pin C2 2 type = passive @ sch bom-10_values.kicad_sch
+pin C3 1 name "" unit 1 net unconnected-(C3-Pad1)
+pin C3 1 type = passive @ sch bom-10_values.kicad_sch
+pin C3 2 name "" unit 1 net unconnected-(C3-Pad2)
+pin C3 2 type = passive @ sch bom-10_values.kicad_sch
+pin L1 1 name "" unit 1 net unconnected-(L1-Pad1)
+pin L1 1 type = passive @ sch bom-10_values.kicad_sch
+pin L1 2 name "" unit 1 net unconnected-(L1-Pad2)
+pin L1 2 type = passive @ sch bom-10_values.kicad_sch
+pin L2 1 name "" unit 1 net unconnected-(L2-Pad1)
+pin L2 1 type = passive @ sch bom-10_values.kicad_sch
+pin L2 2 name "" unit 1 net unconnected-(L2-Pad2)
+pin L2 2 type = passive @ sch bom-10_values.kicad_sch
 pin R1 1 name "" unit 1 net unconnected-(R1-Pad1)
 pin R1 1 type = passive @ sch bom-10_values.kicad_sch
 pin R1 2 name "" unit 1 net unconnected-(R1-Pad2)
@@ -168,10 +284,38 @@ pin R10 1 name "" unit 1 net unconnected-(R10-Pad1)
 pin R10 1 type = passive @ sch bom-10_values.kicad_sch
 pin R10 2 name "" unit 1 net unconnected-(R10-Pad2)
 pin R10 2 type = passive @ sch bom-10_values.kicad_sch
+pin R11 1 name "" unit 1 net unconnected-(R11-Pad1)
+pin R11 1 type = passive @ sch bom-10_values.kicad_sch
+pin R11 2 name "" unit 1 net unconnected-(R11-Pad2)
+pin R11 2 type = passive @ sch bom-10_values.kicad_sch
+pin R12 1 name "" unit 1 net unconnected-(R12-Pad1)
+pin R12 1 type = passive @ sch bom-10_values.kicad_sch
+pin R12 2 name "" unit 1 net unconnected-(R12-Pad2)
+pin R12 2 type = passive @ sch bom-10_values.kicad_sch
+pin R13 1 name "" unit 1 net unconnected-(R13-Pad1)
+pin R13 1 type = passive @ sch bom-10_values.kicad_sch
+pin R13 2 name "" unit 1 net unconnected-(R13-Pad2)
+pin R13 2 type = passive @ sch bom-10_values.kicad_sch
 sheet / name "" file bom-10_values.kicad_sch uuid /
 source file bom-10_values.kicad_sch
 source tool kicad
 source version 8.0
+symbol Fixture:C description "Unpolarized capacitor"
+symbol Fixture:C field Description "Unpolarized capacitor"
+symbol Fixture:C field Reference C
+symbol Fixture:C field Value C
+symbol Fixture:C hash 19a8ecfb835f772e
+symbol Fixture:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:C units 1
+symbol Fixture:L description Inductor
+symbol Fixture:L field Description Inductor
+symbol Fixture:L field Reference L
+symbol Fixture:L field Value L
+symbol Fixture:L hash 2494710c70aab28d
+symbol Fixture:L pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:L pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:L units 1
 symbol Fixture:R description Resistor
 symbol Fixture:R field Description Resistor
 symbol Fixture:R field Reference R

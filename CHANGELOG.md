@@ -11,6 +11,45 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- `erc_model::class::PartClass`: the part class enum of architecture §1.3 with kinds (diode kind, BJT polarity, MOSFET
+  channel, connector, switch, regulator, translator, memory, transceiver, logic family, fuse), `value_unit` for the
+  unit a Value field is read in. `erc_analysis::class` resolves it as a fact: a `ClassSource` hook (the part database
+  by MPN, later), the library symbol, description and keywords, net-tie pad groups, the designator prefix as Assumed;
+  `PartClasses::coverage` for `Need::PartClasses` (`NET-19`).
+- `erc_model::value`: `Value::read` reads the whole Value field (`Reading`: tolerance, ratings like `50V` and `1/4W`,
+  dielectric, a ferrite's `@100MHz`, signs, RKM with a unit), `ValueWarning::SeparateUnit` (`4k7 Ohm`); `ESeries` E3 to
+  E192 with membership and the nearest value. `erc_analysis::value::Values`: each fitted part's value in the unit of
+  its class, per variant (`IMP-6`).
+- `erc_model::View` (`Board::view(variant)`): a board as a variant mounts it, DNP and field overrides applied;
+  `Need::Variant` (`NET-20`).
+- `erc_analysis::power` rewritten on the power name grammar (§1.4): voltage tokens (`+3V3`, `VDD_1V8`, `+5V`, `3.3V`,
+  `3P3V`, `-5V`, `VCC3V3`), power words with rail kinds (USB, battery, analog, reference), ground words with ground
+  kinds, signal words that are no rail (`SCL_3V3`, `PWR_EN`); power symbols and power pins as signals, a `NetSource`
+  hook for the project file; the voltage a `Facts<f64>` derived from the name; `GroundGroup`s joined at DC through net
+  ties, jumpers, 0 Ω, ferrites and inductors, and `GroundLink`s between them (`NET-5` first layer, `NET-6`).
+- `erc_analysis::drawing::Drawing`: labels with their scope, sheet pins matched to hierarchical labels, no-connect
+  flags, dangling labels, flags on connected pins; `Need::Drawing` (`NET-21`). `LabelKind::LocalPower` for KiCad 10
+  local power symbols (`erc_kicad` reads them as such).
+- `erc_analysis::i2c`: `I2cBuses::on(view, classes)` on the fitted parts; ferrite, net-tie and jumper ties; discrete
+  translators (a BSS138 pair) with their gate nets; `pull_ups(segment)`, `direct_segment`, `segments_of_logical_bus`
+  (`NET-4`). Test schematic `i2c-18_discrete_translator`.
+- `erc_checks::Ctx` builds the analyses lazily (`view`, `classes`, `values`, `power`, `i2c`, `drawing`), and
+  availability comes from them (`Availability::of`, `Ctx::availability`): part class coverage, rails, rail voltages
+  with their coverage, variant, drawing (`DIAG-2`).
+- `test_schematics/analyses`: power, parts (with a KiCad 10 variant) and drawing schematics with `.expect.toml`
+  sidecars, checked by `erc_analysis/tests/analyses.rs` (`BLESS=1` rewrites them).
+
+### Changed
+
+- `BOM-10` checks capacitors and inductors too and reports a value in no E series with the nearest E24 and E96
+  values; the unit comes from the part class, not the letter.
+- The power name parser reads the whole grammar by default: `+5V` and `+3.3V` now have a voltage; the old `+xVy`-only
+  reading is `PowerOptions::strict`. `5V0_NEG` reads −5 V (the sign from its marker, said in the fact's note), `VEE`
+  is a negative rail and no longer a ground, `ISO_5V` is no ground.
+- The I2C recogniser and the checks on it see only the parts the variant fits: a DNP pull-up no longer counts.
+
 ## [0.4.1] - 2026-10-22
 
 ### Added

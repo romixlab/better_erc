@@ -177,17 +177,11 @@ pub trait NetSource {
 }
 
 /// How rails are read from names
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PowerOptions {
     /// Read a voltage only from `+xVy` (`+3V3`, `+12V0`: a `+`, the volts, `V`, the decimals), as the first
     /// better_erc did; NAME-7 asks whether a design has any. Off by default: the whole grammar of [`read_name`].
     pub strict: bool,
-}
-
-impl Default for PowerOptions {
-    fn default() -> PowerOptions {
-        PowerOptions { strict: false }
-    }
 }
 
 const BY_NAME: &str = "net name";

@@ -172,21 +172,24 @@ suggest the scheme when the project uses flat numbering.
 **What it catches.** A project where better_erc's strict power naming finds no rail with a voltage: no net name
 matches `+xVy` (`+3V3`, `+1V8`, `+12V0`).
 
-**Why it matters.** better_erc's power structure is derived from names today. In strict mode only names with a `+`,
-the integer volts, `V`, and the decimals (`+3V3`) count; non-strict mode also accepts `3V3` anywhere in a name. Nets
-named `+V...`, `VCC` or `VDD`, or carrying power pins, still become rails but without a voltage. A project using
-`VCC_3.3V`, `3.3V` or `+5V` gets no voltages at all, and every check that compares levels silently does nothing.
-The finding says why and what to change.
+**Why it matters.** better_erc's power structure is derived from names first. The default reads the whole power
+name grammar (`+3V3`, `VDD_1V8`, `+5V`, `3.3V`, `3P3V`, `-5V`, `VCC3V3`); strict mode (`PowerOptions::strict`) counts
+only names with a `+`, the integer volts, `V`, and the decimals (`+3V3`). Nets named `+V...`, `VCC`, `VDD` or `VBUS`,
+or carrying power pins or power symbols, still become rails but without a voltage. A project whose rails carry no
+voltage in their names gets no voltages at all, and every check that compares levels silently does nothing. The
+finding says why and what to change.
 
 **Example.** A design with `+3.3V`, `+5V` and `VDD_1V8`: strict mode reads no voltage from any of them (`+5V` lacks
-the decimal digit, `+3.3V` uses a dot); non-strict mode reads 1.8 V from `VDD_1V8` only.
+the decimal digit, `+3.3V` uses a dot); the default reads all three. A design with only `VCC`, `VDD` and `VIO` gets
+rails without a voltage in either mode.
 
 **How to check.** Run the strict detection; zero rails with a voltage is a finding, with the names that look like
 rails listed.
 
 **Fix.** Rename rails to `+xVy` (`+3V3`, `+5V0`), or run in non-strict mode and check what it picked up.
 
-**References.** better_erc `erc_analysis/src/power.rs` (`Power::of`: `+xVy` names, `+V`, `VDD`, `VCC`, power pins).
+**References.** better_erc `erc_analysis/src/power.rs` (`read_name`: the power name grammar; `Power::of`: names, power
+symbols, power pins).
 
 ## `NAME-8` Fixed-voltage name on a net that is not fixed <a id="name-8"></a>
 
@@ -269,10 +272,10 @@ catalogue `LOGIC-8`.
 **What it catches.** A negative rail named without a minus (`5V_NEG`, `VEE`, `V5N`), or with a sign in a form the
 name parser does not read.
 
-**Why it matters.** better_erc parses voltages from names and ignores a sign: in non-strict mode `-5V0` and
-`5V0_NEG` both read as +5 V, and `VEE` is classed as a ground. A check that compares pin ratings then sees a +5 V
-rail, or ground, where −5 V sits. People misread it the same way when they
-look for "the 5 V rail" with a meter.
+**Why it matters.** A name without its sign is read by a rule, not stated: better_erc reads `-5V0` as −5 V, and
+`5V0_NEG` as −5 V too, but only because of the `NEG` marker (the voltage fact says so in its note). A marker it does not
+know (`V5N`, `5V_M`) leaves a +5 V rail where −5 V sits, and a check that compares pin ratings sees the wrong sign.
+People misread it the same way when they look for "the 5 V rail" with a meter.
 
 **Example.** An op-amp supply `+5V0` and `5V0_NEG`: a parser that finds `5V0` in both gives the negative supply +5 V
 and the op-amp's V− pin looks shorted to V+ in every voltage check.
@@ -282,7 +285,8 @@ and the op-amp's V− pin looks shorted to V+ in every voltage check.
 
 **Fix.** Name negative rails with a leading minus (`-5V0`, `-12V`) and make sure the parser reads it.
 
-**References.** better_erc `erc_analysis/src/power.rs` (voltage parsed from the name without a sign; `VEE` taken as ground); catalogue `RAIL-3`.
+**References.** better_erc `erc_analysis/src/power.rs` (`read_name`: the sign from a `NEG`, `VEE`, `VNEG` or `V-` marker, `NetName::sign_from_marker`; `VEE` is a negative
+rail, not a ground); catalogue `RAIL-3`.
 
 ## `NAME-12` Unannotated or duplicate reference designators <a id="name-12"></a>
 

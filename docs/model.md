@@ -79,6 +79,35 @@ Identity is structure, not a fact: designators, net names, sheet paths and pin n
 with a multiplier (`10k`, `100n`) has no unit of its own: `Value::parse` keeps it as text and `Value::parse_as` reads it
 in the unit of a part class decided elsewhere, so the model never guesses a resistor from the letter `k`.
 
+`Value::read(text, unit)` reads the whole field into a `Reading`: the value (multipliers p to G, RKM notation like
+`4k7`, `2R2`, `3V3`, a sign, `1/4W` fractions), then what follows it: the tolerance in percent (`1%`, `±5 %`), ratings
+with their own unit (`50V`, `0.1W`), a ceramic dielectric (`X7R`, `C0G`) and, after `@`, a ferrite's test frequency
+(`600R@100MHz`). What still parsed but is odd is a `ValueWarning`: trailing text, a unit other than the expected one, a
+decimal comma, extra spacing, a small `r`, a redundant `R` (`10kR`), the unit as a separate word (`4k7 Ohm`). BOM-10
+reports these.
+
+`ESeries` is the IEC 60063 preferred number series E3 to E192: `ESeries::of(value)` gives the smallest series that has a
+value (`None` for `5k` or `4.8k`), `contains` and `nearest` test and round in any decade.
+
+### Part classes
+
+`PartClass` (`erc_model::class`) is what kind of part a designator is, the enum of the architecture §1.3: passives
+(resistor, capacitor with `polarized`, inductor, ferrite bead), diodes with their kind, BJTs with their polarity,
+MOSFETs with their channel, connectors and switches with their kind, relays, crystals and oscillators, regulators with
+their kind and load switches, level translators with their class, isolators, MCUs, SoCs, FPGAs, memories and
+transceivers with their kind, op-amps and comparators, logic with its family, fuses with their kind, batteries,
+transformers, net ties and jumpers, test points, fiducials and mounting holes, and `Transistor`, `Ic` or `Unknown` where
+the kind is not known. A kind the source does not tell is `None`, never a guess. `PartClass::value_unit` gives the unit
+a Value field is read in (Ω for a resistor or ferrite, F, H, Hz for a crystal, A for a fuse, V for a Zener or TVS), so
+the class decides it. `erc_analysis::class` resolves it
+([engine.md](engine.md) "The analyses").
+
+### Variant views
+
+`View` (`Board::view(variant)`) is a board as one variant mounts it: `fitted`, `in_bom`, `field` and `value_text`
+apply the variant's DNP flags and field overrides (KiCad 10 variants, OrCAD per-variant BOMs); `View::base` is the
+design without a variant. Analyses and checks that care about what is placed read the view, not the board.
+
 ### Importers
 
 `Importer` is the one trait every importer implements: `sniff` says whether it reads a `Source` (a main file among a

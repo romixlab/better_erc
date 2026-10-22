@@ -249,10 +249,12 @@ which is often a typo.
 
 **Example.** `5k` written for 5.1 kΩ (5.00 kΩ is in no E series, E96 has 4.99 kΩ), `10K` vs `10k` mixed, `2.2 K` with a space.
 
-**How to check.** Resistor values are read as resistances (`erc_checks/src/bom/bom_10.rs`): a value that does not read
-is reported, and so is odd notation (more than one space before the multiplier, a small `r`, an `R` after a
-multiplier, a decimal comma, text after the value). The E-series membership test and capacitor values are still to
-add.
+**How to check.** Resistor, capacitor and inductor values are read in the unit their part class gives
+(`erc_analysis::value::Values`, `erc_checks/src/bom/bom_10.rs`), on the parts the variant fits: a value that does not
+read is reported, and so is odd notation (more than one space before the multiplier, a small `r`, an `R` after a
+multiplier, a decimal comma, the unit as a separate word, text after the value that is no tolerance, rating or
+dielectric). A value in no E series up to E192 is reported with the nearest E24 and E96 values. Values of other
+classes (a crystal's frequency, a fuse's current) are read but not held to a series.
 
 **Fix.** One notation across the project (`4k7`, `100n`); values from the series the parts come from.
 
