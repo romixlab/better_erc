@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.3.9] - 2026-10-22
+
 ### Added
 
 - `berc check PROJECT` for CI (`RPT-20`): a directory with one design (its `.kicad_pro`) or any design file the
