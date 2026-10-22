@@ -4,13 +4,14 @@
 
 use crate::canon::natural_cmp;
 use crate::design::Board;
+use serde::{Deserialize, Serialize};
 use std::collections::{BTreeSet, HashMap};
 
 /// A net as the pins it connects
 pub type PinSet = BTreeSet<String>;
 
 /// How two boards' nets differ
-#[derive(Clone, Debug, Default, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 pub struct NetDiff {
     /// Nets of the first board with no net of the same pins in the second, by name
     pub only_a: Vec<(String, PinSet)>,
@@ -28,6 +29,11 @@ impl NetDiff {
     /// Same connectivity (names and classes may differ)
     pub fn same_connectivity(&self) -> bool {
         self.only_a.is_empty() && self.only_b.is_empty()
+    }
+
+    /// Nothing differs: connectivity, names and classes
+    pub fn is_empty(&self) -> bool {
+        self.same_connectivity() && self.renamed.is_empty() && self.classes.is_empty()
     }
 }
 

@@ -58,11 +58,15 @@ enum Command {
         #[arg(long, value_enum, default_value_t = ExplainFormat::Text)]
         format: ExplainFormat,
     },
-    /// Compare two designs: so far their placements (--pnp)
+    /// Compare two designs: their placements (--pnp) or their nets (--nets)
     ///
-    /// A and B are PnP files (KiCad, Altium, Allegro CSV), board files (.kicad_pcb) or KiCad projects with their
-    /// board. A board compared with a PnP file is brought into the PnP file's frame first: from --origin, y up,
-    /// without the footprints excluded from position files.
+    /// --pnp: A and B are PnP files (KiCad, Altium, Allegro CSV), board files (.kicad_pcb) or KiCad projects with
+    /// their board. A board compared with a PnP file is brought into the PnP file's frame first: from --origin, y
+    /// up, without the footprints excluded from position files.
+    ///
+    /// --nets: A and B are any designs with nets (a KiCad project or schematic, a netlist, Altium EDIF or WireList,
+    /// OrCAD, an Altium Smart PDF). Each net is the set of pins it connects: nets match by their pins whatever their
+    /// names, so a schematic and a PDF of the same board compare even where the PDF names nets per sheet.
     #[command(after_help = DIFF_AFTER_HELP)]
     Diff(DiffArgs),
     /// The check catalogue
@@ -124,6 +128,7 @@ struct CheckArgs {
 }
 
 #[derive(clap::Args)]
+#[command(group(clap::ArgGroup::new("mode").required(true).args(["pnp", "nets"])))]
 struct DiffArgs {
     /// The first design: a file or a directory
     #[arg(value_hint = ValueHint::AnyPath)]
@@ -132,8 +137,11 @@ struct DiffArgs {
     #[arg(value_hint = ValueHint::AnyPath)]
     b: PathBuf,
     /// Compare the placements: each footprint's position, rotation, side, value and package by reference
-    #[arg(long, required = true)]
+    #[arg(long)]
     pnp: bool,
+    /// Compare the nets: each net as the pins it connects; renamed, removed and added nets and net class changes
+    #[arg(long)]
+    nets: bool,
     /// The origin the PnP file was exported from, for a board compared with one
     #[arg(long, value_enum, default_value_t = OriginArg::Page)]
     origin: OriginArg,
@@ -330,6 +338,19 @@ fn check(args: CheckArgs) -> ExitCode {
 }
 
 fn diff(args: DiffArgs) -> ExitCode {
+    if args.nets {
+        let spinner = progress::Delayed::start();
+        spinner.set("reading the designs".into());
+        let d = better_erc::diff::nets(&args.a, &args.b);
+        spinner.finish();
+        return match d {
+            Ok(d) => show_diff(args.format, &d.to_text_color(), &d.to_json(), d.is_empty()),
+            Err(e) => {
+                error(&e.to_string());
+                ExitCode::from(DiffError::EXIT_CODE)
+            }
+        };
+    }
     let opts = PlaceOptions {
         position_tolerance: (args.tolerance * 1e6).round() as i64,
         rotation_tolerance: args.rotation_tolerance,
@@ -349,17 +370,20 @@ fn diff(args: DiffArgs) -> ExitCode {
             return ExitCode::from(DiffError::EXIT_CODE);
         }
     };
-    match args.format {
+    show_diff(args.format, &d.to_text_color(), &d.to_json(), d.is_empty())
+}
+
+/// A comparison on stdout; exit 1 when it found a difference
+fn show_diff(format: ListFormat, text: &str, json: &str, same: bool) -> ExitCode {
+    match format {
         ListFormat::Text => {
-            let _ = anstream::stdout()
-                .lock()
-                .write_all(d.to_text_color().as_bytes());
+            let _ = anstream::stdout().lock().write_all(text.as_bytes());
         }
         ListFormat::Json => {
-            let _ = writeln!(std::io::stdout().lock(), "{}", d.to_json());
+            let _ = writeln!(std::io::stdout().lock(), "{json}");
         }
     }
-    if d.is_empty() {
+    if same {
         ExitCode::SUCCESS
     } else {
         ExitCode::from(1)
