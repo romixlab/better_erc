@@ -137,6 +137,8 @@ pub enum NoteKind {
     Invalid,
     /// Known, read, and not kept in the model
     Ignored,
+    /// Two links or sources of the same fact disagree (a footprint's schematic path and its designator)
+    Conflict,
 }
 
 impl fmt::Display for ImportNote {
@@ -146,6 +148,7 @@ impl fmt::Display for ImportNote {
             NoteKind::Missing => "missing",
             NoteKind::Invalid => "invalid",
             NoteKind::Ignored => "ignored",
+            NoteKind::Conflict => "conflict",
         };
         write!(f, "{}: {}: {kind}: {}", self.file, self.at, self.message)
     }

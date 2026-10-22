@@ -255,6 +255,7 @@ fn sample() -> Design {
     lay.footprints.push(Footprint {
         reference: "R1".into(),
         part: None,
+        schematic_path: None,
         lib_id: "R:R_0603".into(),
         value: "10k".into(),
         side: Side::Back,

@@ -73,7 +73,7 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - ✅ `IMP-14` KiCad project and board files into the model: `.kicad_pro` (net classes, patterns and assignments, text
   variables, variants, ERC and DRC severities and exclusions, design rules, bus aliases) and `.kicad_pcb` (layers,
   stackup, setup, footprints with fields, attributes, pads, courtyard, silk and fab graphics, tracks, vias, zones and
-  rule areas, outline, texts), linked to the schematic by designator and net name · `erc_kicad/src/{pro,pcb}.rs`
+  rule areas, outline, texts), footprints linked to the schematic parts by KiCad's schematic UUID path (designator as the fallback, a `Conflict` note where they disagree), pads to nets by name · `erc_kicad/src/{pro,pcb}.rs`
 - ✅ `IMP-15` One importer registry: the importer for a file picked by its name and contents (KiCad project,
   schematic, board, KiCad netlist, Altium, OrCAD, PnP), a directory scanned for what can be imported, one cargo
   feature per importer; every import gives notes for what it read past and never panics on broken input (a test on

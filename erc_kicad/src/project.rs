@@ -100,6 +100,7 @@ pub fn read(files: &dyn Files, main: &str, opts: &ImportOptions) -> Result<Impor
         board.layout = Some(lay);
     }
     board.finish();
+    link_notes(&board, &mut notes);
     Ok(Imported {
         design: Design::single(board),
         notes,
@@ -124,5 +125,33 @@ impl Importer for KicadImporter {
 
     fn import(&self, src: &Source, opts: &ImportOptions) -> Result<Imported, ImportError> {
         read(src.files, &src.main, opts)
+    }
+}
+
+/// Where a footprint's link by schematic path and its designator disagree, or the path names no part
+fn link_notes(board: &Board, notes: &mut Vec<ImportNote>) {
+    let Some(lay) = &board.layout else { return };
+    let paths = erc_model::part_paths(board);
+    for f in &lay.footprints {
+        let (Some(path), Some(part)) = (&f.schematic_path, f.part) else {
+            continue;
+        };
+        let designator = &board.part(part).designator;
+        let message = if !paths.contains_key(path) {
+            format!("schematic path {path} names no symbol, linked to {designator} by designator")
+        } else if *designator != f.reference {
+            format!(
+                "schematic path {path} is part {designator}, not {} (re-annotated since the board was updated?), linked by path",
+                f.reference
+            )
+        } else {
+            continue;
+        };
+        notes.push(ImportNote {
+            file: lay.file.clone(),
+            at: format!("footprint {}", f.reference),
+            kind: NoteKind::Conflict,
+            message,
+        });
     }
 }

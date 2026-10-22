@@ -4,9 +4,15 @@ default:
 
 # erc_kicad's differential test exports the test schematics with kicad-cli first (skipped without KiCad).
 
-# Run every test in the workspace
+# Run every test in the workspace; the hw differential compares a sample of the boards (BERC_HW_FULL: all)
 test:
     cargo test --workspace
+
+# The hw boards (~41) take 30-50 s through kicad-cli; the default `just test` compares a sample of them.
+
+# Run every test with the full hw differential, for CI and before landing
+test-full:
+    BERC_HW_FULL=1 cargo test --workspace
 
 # Clippy with warnings as errors, and the format check
 lint:

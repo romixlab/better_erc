@@ -16,14 +16,14 @@ fp R1 gfx F.CrtYd width 0.05 rect 109.27,98.52 110.73,101.48
 fp R1 gfx F.Fab width 0.1 rect 109.5875,99.2 110.4125,100.8
 fp R1 gfx F.SilkS width 0.12 line 109.4775,100.237258 109.4775,99.762742
 fp R1 gfx F.SilkS width 0.12 line 110.5225,100.237258 110.5225,99.762742
-fp R1 lib Resistor_SMD:R_0603_1608Metric value 10k side front at 110,100 rot 90 mount smd
+fp R1 lib Resistor_SMD:R_0603_1608Metric value 10k side front at 110,100 rot 90 path /30000000-0000-4000-8000-000000000001 mount smd
 fp R1 model ${KICAD8_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.wrl
 fp R1 text F.Fab ${REFERENCE} at 110,100 size 0.4
 fp R1 text F.Fab 10k at 111.43,100 size 1
 fp R1 text F.Fab RC0603FR-0710KL at 110,100 size 1.27 hidden
 fp R1 text F.SilkS R1 at 108.57,100 size 1
 fp R5 gfx B.CrtYd width 0.05 rect 118.52,99.27 121.48,100.73
-fp R5 lib Resistor_SMD:R_0603_1608Metric value 10k side back at 120,100 rot 180 mount smd dnp
+fp R5 lib Resistor_SMD:R_0603_1608Metric value 10k side back at 120,100 rot 180 path /30000000-0000-4000-8000-000000000002 mount smd dnp
 fp R5 text B.Fab 10k at 120,101.43 size 1 mirrored
 fp R5 text B.SilkS R5 at 120,98.57 size 1 mirrored
 fp TP1 gfx F.CrtYd width 0.05 circle 130,100 1

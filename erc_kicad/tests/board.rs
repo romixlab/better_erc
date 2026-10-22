@@ -2,7 +2,7 @@
 //! (`board_kicad9.kicad_pcb`, `board_kicad10.kicad_pcb`, read alone): golden dumps (`BLESS=1` rewrites them), no
 //! import notes, the same geometry and nets from all three formats, and the board linked to the schematic.
 
-use erc_model::{Design, DirFiles, ImportOptions, Layout, NoteKind, dump};
+use erc_model::{Design, DirFiles, ImportOptions, Layout, MemFiles, NoteKind, dump};
 use std::path::Path;
 
 fn fixtures() -> std::path::PathBuf {
@@ -129,4 +129,77 @@ fn board_linked_to_schematic() {
             .net_tie_pad_groups,
         [vec!["1".to_string(), "2".to_string()]]
     );
+}
+
+/// The hierarchy fixture with its board text changed by `edit`
+fn import_edited(edit: impl Fn(&str) -> String) -> erc_model::Imported {
+    let read = |f: &str| std::fs::read(fixtures().join(f)).unwrap();
+    let pcb = String::from_utf8(read("hierarchy.kicad_pcb")).unwrap();
+    let files = MemFiles::default()
+        .with("hierarchy.kicad_sch", read("hierarchy.kicad_sch"))
+        .with("child.kicad_sch", read("child.kicad_sch"))
+        .with("hierarchy.kicad_pcb", edit(&pcb));
+    erc_kicad::project::read(&files, "hierarchy.kicad_sch", &ImportOptions::default()).unwrap()
+}
+
+fn conflicts(i: &erc_model::Imported) -> Vec<String> {
+    i.notes
+        .iter()
+        .filter(|n| n.kind == NoteKind::Conflict)
+        .map(|n| format!("{}: {}", n.at, n.message))
+        .collect()
+}
+
+/// A re-annotation after the board was updated: the footprint says R99, its schematic path is still R1's symbol
+#[test]
+fn footprint_linked_by_path_not_designator() {
+    let i = import_edited(|t| t.replace("\"Reference\" \"R1\"", "\"Reference\" \"R99\""));
+    let b = &i.design.boards[0];
+    let fp = b
+        .layout
+        .as_ref()
+        .unwrap()
+        .footprints
+        .iter()
+        .find(|f| f.reference == "R99")
+        .unwrap();
+    assert_eq!(b.part(fp.part.expect("linked by path")).designator, "R1");
+    let c = conflicts(&i);
+    assert_eq!(c.len(), 1, "{c:#?}");
+    assert!(
+        c[0].contains("footprint R99") && c[0].contains("R1"),
+        "{c:?}"
+    );
+}
+
+/// No path (or one that names no symbol): the designator links, and a dead path is noted
+#[test]
+fn footprint_designator_is_the_fallback() {
+    let none = import_edited(|t| t.replace("(path \"/30000000-0000-4000-8000-000000000001\")", ""));
+    assert!(conflicts(&none).is_empty());
+    let b = &none.design.boards[0];
+    let r1 = b
+        .layout
+        .as_ref()
+        .unwrap()
+        .footprints
+        .iter()
+        .find(|f| f.reference == "R1")
+        .unwrap();
+    assert_eq!(b.part(r1.part.unwrap()).designator, "R1");
+
+    let dead = import_edited(|t| t.replace("/30000000-0000-4000-8000-000000000009\"", "/dead\""));
+    let c = conflicts(&dead);
+    assert_eq!(c.len(), 1, "{c:#?}");
+    assert!(c[0].contains("names no symbol"), "{c:?}");
+    let b = &dead.design.boards[0];
+    let r1 = b
+        .layout
+        .as_ref()
+        .unwrap()
+        .footprints
+        .iter()
+        .find(|f| f.reference == "R1")
+        .unwrap();
+    assert!(r1.part.is_some());
 }

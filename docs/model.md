@@ -50,7 +50,9 @@ footprints (position, rotation, side, attributes, fields, courtyard, silk and fa
 coordinates, net-tie pad groups, 3D models), pads (number, kind, shape, position, rotation, size, drill, layers, net,
 test point and other properties, mask and paste margins, zone connection, custom-pad primitives), tracks and arcs,
 vias, zones and rule areas, board graphics (the outline is the `Edge.Cuts` layer) and texts. Footprints link to parts by
-designator and pads to nets by name (`link_layout`).
+their schematic UUID path (`Footprint::schematic_path`, KiCad's own link, so a re-annotation does not break it), by
+designator when there is no path or it names no symbol, and pads to nets by name (`link_layout`). The KiCad reader
+gives a `Conflict` import note where the two disagree.
 
 ### Facts and provenance
 
@@ -154,7 +156,7 @@ netlist writes only the classes of directive labels, KiCad 8's none):
   (`just kicad-fixtures` exports them again with KiCad's container images);
 - the test schematics in `test_schematics/sources`, through the installed kicad-cli;
 - every KiCad project under `~/git/hw` (or `BERC_HW_DIR`) when that folder exists, through the installed kicad-cli;
-  `BERC_DIFF_KICAD=8,9,10` adds the other versions through podman. Exports are cached by a hash of the project files.
+  `just test` compares a sample of six of them, `just test-full` (`BERC_HW_FULL=1`) all; `BERC_DIFF_KICAD=8,9,10` adds the other versions through podman. Exports are cached by a hash of the project files.
 
 Our connectivity follows KiCad 10's behaviour. Where an older release disagrees because of a bug, the importer does not
 copy it and the test records the difference as known, with the KiCad release and the bug next to it: kicad-cli 9.0.9

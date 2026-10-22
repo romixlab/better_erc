@@ -411,8 +411,26 @@ pub fn rebuild_adjacency(board: &mut Board) {
     }
 }
 
-/// Links the layout to the schematic by name: footprints to parts by designator, pads to nets by net name
+/// The schematic UUID path of every placed unit (`/sheet-uuid/.../symbol-uuid`, the root sheet left out), which is
+/// what KiCad writes into a footprint's `(path ...)`
+pub fn part_paths(board: &Board) -> HashMap<String, PartId> {
+    let mut out = HashMap::new();
+    for (i, p) in board.parts.iter().enumerate() {
+        for u in &p.units {
+            let sheet = &board.sheets[u.sheet.index()].uuid_path;
+            out.insert(
+                format!("{}/{}", sheet.trim_end_matches('/'), u.uuid),
+                PartId::from_index(i),
+            );
+        }
+    }
+    out
+}
+
+/// Links the layout to the schematic: footprints to parts by their schematic UUID path (KiCad's own link), by
+/// designator when there is no path or it names no part; pads to nets by net name
 pub fn link_layout(board: &mut Board) {
+    let paths = part_paths(board);
     let parts: HashMap<&str, PartId> = board
         .parts
         .iter()
@@ -427,7 +445,12 @@ pub fn link_layout(board: &mut Board) {
         .collect();
     let Some(lay) = &mut board.layout else { return };
     for f in &mut lay.footprints {
-        f.part = parts.get(f.reference.as_str()).copied();
+        f.part = f
+            .schematic_path
+            .as_ref()
+            .and_then(|p| paths.get(p))
+            .or_else(|| parts.get(f.reference.as_str()))
+            .copied();
     }
     for p in &mut lay.pads {
         p.net = p.net_name.as_deref().and_then(|n| nets.get(n).copied());

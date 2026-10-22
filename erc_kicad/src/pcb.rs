@@ -294,6 +294,7 @@ impl Reader<'_> {
         let mut fp = Footprint {
             reference: String::new(),
             part: None,
+            schematic_path: None,
             lib_id,
             value: String::new(),
             side,
@@ -373,6 +374,7 @@ impl Reader<'_> {
                             .push(g.split(',').map(|n| n.trim().to_string()).collect());
                     }
                 }
+                "path" => fp.schematic_path = item.arg(0).map(String::from),
                 "model" => fp.models.extend(item.arg(0).map(String::from)),
                 "pad" => self.pad(item, id, frame, &ctx),
                 h if h.starts_with("fp_") => match shape(item, frame) {
@@ -384,7 +386,6 @@ impl Reader<'_> {
                 | "uuid"
                 | "tstamp"
                 | "at"
-                | "path"
                 | "sheetname"
                 | "sheetfile"
                 | "descr"

@@ -7,7 +7,8 @@
 //! - The test schematics (`test_schematics/sources`), each sheet alone and the whole project, exported by the
 //!   installed kicad-cli (cached by content hash); skipped with a message when kicad-cli is not installed.
 //! - The KiCad projects under `~/git/hw` (or `BERC_HW_DIR`) when that folder exists: private boards, tested
-//!   here and never committed. `BERC_DIFF_KICAD=8,9,10` adds the KiCad versions other than the installed one
+//!   here and never committed. The default run compares an even sample of [`HW_SAMPLE`] of them (30-50 s for the
+//!   full set); `BERC_HW_FULL=1` (`just test-full`) compares all, for CI and before landing. `BERC_DIFF_KICAD=8,9,10` adds the KiCad versions other than the installed one
 //!   through podman; by default only the installed kicad-cli exports.
 //!
 //! Each fixture and test schematic also has a committed canonical dump of what we import (`tests/golden/sch`,
@@ -327,6 +328,20 @@ fn hw_projects(dir: &Path) -> Vec<PathBuf> {
     out
 }
 
+/// How many hw projects the default run compares
+const HW_SAMPLE: usize = 6;
+
+/// `all` itself with `BERC_HW_FULL` set, else `HW_SAMPLE` of them spread evenly over the sorted list, so the same
+/// ones are compared every run and every folder tends to be hit
+fn hw_sample(all: Vec<PathBuf>) -> Vec<PathBuf> {
+    if std::env::var_os("BERC_HW_FULL").is_some() || all.len() <= HW_SAMPLE {
+        return all;
+    }
+    (0..HW_SAMPLE)
+        .map(|i| all[i * all.len() / HW_SAMPLE].clone())
+        .collect()
+}
+
 #[test]
 fn hw_boards_equal_kicad() {
     let dir = std::env::var_os("BERC_HW_DIR")
@@ -350,7 +365,7 @@ fn hw_boards_equal_kicad() {
     let podman = project::podman_available();
     let mut failed = Vec::new();
     let mut compared = 0;
-    for sch in hw_projects(&dir) {
+    for sch in hw_sample(hw_projects(&dir)) {
         let rel = sch.strip_prefix(&dir).unwrap().display().to_string();
         let (board, _) = import(&sch, None);
         let newest = kicad_major(&sch, &board);

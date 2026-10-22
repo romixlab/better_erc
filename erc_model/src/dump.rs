@@ -757,6 +757,9 @@ fn layout_lines(lay: &Layout, keys: &Keys, out: &mut Vec<String>) {
             f.at,
             f.rotation
         );
+        if let Some(p) = &f.schematic_path {
+            line += &format!(" path {}", tok(p));
+        }
         let a = &f.attrs;
         if let Some(m) = &a.mount {
             line += &format!(" mount {}", tok(m));
@@ -1855,8 +1858,10 @@ impl BoardReader {
             c.word("rot")?;
             let rotation: f64 = c.num()?;
             let mut attrs = FootprintAttrs::default();
+            let mut schematic_path = None;
             while !c.done() {
                 match c.next()? {
+                    "path" => schematic_path = Some(c.next()?.into()),
                     "mount" => attrs.mount = Some(c.next()?.into()),
                     "board_only" => attrs.board_only = true,
                     "exclude_from_pos_files" => attrs.exclude_from_pos_files = true,
@@ -1872,6 +1877,7 @@ impl BoardReader {
             lay.footprints.push(Footprint {
                 reference: key.0.clone(),
                 part: None,
+                schematic_path,
                 lib_id,
                 value,
                 side,

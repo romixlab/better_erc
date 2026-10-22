@@ -11,6 +11,19 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- `erc_kicad`: footprints link to schematic parts by the footprint's schematic UUID path, KiCad's own link
+  (`Footprint::schematic_path`, read from `(path ...)`, in the canonical dump as `path`), so a part re-annotated in
+  the schematic but not yet on the board still finds its footprint; the designator is the fallback when there is no
+  path or it names no symbol. Where they disagree the import gives a new `NoteKind::Conflict` note (`IMP-14`).
+- `just test-full`: `just test` with every hw board in the differential (`BERC_HW_FULL=1`).
+
+### Changed
+
+- `just test` compares a sample of six hw boards in the differential test instead of all ~41 (30-50 s); the full set
+  runs with `just test-full`, for CI and before landing.
+
 ## [0.4.0] - 2026-10-22
 
 ### Added

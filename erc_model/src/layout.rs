@@ -186,8 +186,12 @@ pub struct FootprintAttrs {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Footprint {
     pub reference: String,
-    /// The schematic part with this designator, when the board belongs to a schematic
+    /// The schematic part this footprint belongs to, when the board belongs to a schematic: by
+    /// [`schematic_path`](Self::schematic_path), else by designator
     pub part: Option<PartId>,
+    /// KiCad's link to the schematic symbol: `/sheet-uuid/.../symbol-uuid` (not in the canonical dump)
+    #[serde(default)]
+    pub schematic_path: Option<String>,
     pub lib_id: String,
     pub value: String,
     pub side: Side,

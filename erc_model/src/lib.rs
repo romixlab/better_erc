@@ -24,7 +24,7 @@ pub mod netcmp;
 pub mod placecmp;
 pub mod value;
 
-pub use canon::{link_layout, natural_cmp};
+pub use canon::{link_layout, natural_cmp, part_paths};
 pub use design::*;
 pub use fact::{Fact, Facts, Provenance, Rank, Time};
 #[cfg(feature = "fs")]

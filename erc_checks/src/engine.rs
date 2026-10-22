@@ -61,6 +61,7 @@ pub fn run_imported(imported: &Imported, opts: &RunOptions) -> Result<Report, Ru
                 NoteKind::Missing => "missing",
                 NoteKind::Invalid => "invalid",
                 NoteKind::Ignored => "ignored",
+                NoteKind::Conflict => "conflict",
             },
             n.message
         ),

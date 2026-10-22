@@ -234,6 +234,7 @@ mod tests {
         Footprint {
             reference: reference.into(),
             part: None,
+            schematic_path: None,
             lib_id: lib.into(),
             value: value.into(),
             side,

@@ -175,6 +175,7 @@ impl Importer for PnpImporter {
             layout.footprints.push(Footprint {
                 reference: reference.to_string(),
                 part: None,
+                schematic_path: None,
                 lib_id: cp.map(cell).unwrap_or("").to_string(),
                 value: cv.map(cell).unwrap_or("").to_string(),
                 side,
