@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "tool": "better_erc 0.4.5",
+  "tool": "better_erc 0.4.6",
   "summary": {
     "boards": [
       {
@@ -15,13 +15,13 @@
     ],
     "variant": null,
     "errors": 3,
-    "warnings": 37,
-    "suggestions": 79,
+    "warnings": 38,
+    "suggestions": 97,
     "infos": 0,
     "candidates": 0,
-    "ran": 81,
+    "ran": 94,
     "not_run": 0,
-    "planned": 432
+    "planned": 419
   },
   "checks": [
     {
@@ -332,7 +332,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 87
+      "micros": 97
     },
     {
       "id": "DEC-2",
@@ -355,7 +355,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 25
+      "micros": 9
     },
     {
       "id": "DEC-5",
@@ -378,7 +378,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 26
+      "micros": 7
     },
     {
       "id": "DEC-8",
@@ -387,7 +387,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 20
+      "micros": 18
     },
     {
       "id": "DEC-9",
@@ -403,7 +403,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 86
+      "micros": 84
     },
     {
       "id": "DEC-11",
@@ -412,7 +412,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 13
     },
     {
       "id": "DEC-12",
@@ -738,7 +738,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 75
+      "micros": 82
     },
     {
       "id": "SHORT-2",
@@ -747,7 +747,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 254
+      "micros": 257
     },
     {
       "id": "SHORT-3",
@@ -756,7 +756,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 126
+      "micros": 131
     },
     {
       "id": "SHORT-4",
@@ -765,7 +765,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 147
+      "micros": 120
     },
     {
       "id": "SHORT-5",
@@ -774,7 +774,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 619
+      "micros": 609
     },
     {
       "id": "SHORT-6",
@@ -783,7 +783,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 40
+      "micros": 38
     },
     {
       "id": "SHORT-7",
@@ -792,7 +792,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 457
+      "micros": 123
     },
     {
       "id": "SHORT-8",
@@ -822,7 +822,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 57
+      "micros": 58
     },
     {
       "id": "SHORT-12",
@@ -831,7 +831,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1776
+      "micros": 1747
     },
     {
       "id": "WIRE-1",
@@ -840,7 +840,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 573
+      "micros": 567
     },
     {
       "id": "WIRE-2",
@@ -849,7 +849,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 127
+      "micros": 117
     },
     {
       "id": "WIRE-3",
@@ -930,7 +930,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 95
+      "micros": 96
     },
     {
       "id": "WIRE-14",
@@ -939,7 +939,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 538
+      "micros": 587
     },
     {
       "id": "WIRE-15",
@@ -1207,7 +1207,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 11,
-      "micros": 387
+      "micros": 278
     },
     {
       "id": "IO-2",
@@ -1244,7 +1244,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 236
+      "micros": 259
     },
     {
       "id": "IO-7",
@@ -1253,7 +1253,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 25
     },
     {
       "id": "IO-8",
@@ -1262,7 +1262,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 455
+      "micros": 487
     },
     {
       "id": "IO-9",
@@ -1278,7 +1278,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 995
+      "micros": 251
     },
     {
       "id": "IO-11",
@@ -1287,7 +1287,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 21
+      "micros": 14
     },
     {
       "id": "IO-12",
@@ -1317,7 +1317,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 440
+      "micros": 439
     },
     {
       "id": "IO-16",
@@ -1326,7 +1326,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 133
+      "micros": 89
     },
     {
       "id": "IO-17",
@@ -1361,7 +1361,9 @@
       "title": "Suggest buffering high fan-out signals",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 519
     },
     {
       "id": "LOGIC-4",
@@ -1389,21 +1391,27 @@
       "title": "Open-drain or open-collector output as the only driver of a net with no pull-up: never goes high",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 119
     },
     {
       "id": "LOGIC-8",
       "title": "Polarity mismatch by name: an active-low output (`_N`, `#`, `~`) into an active-high input or the reverse (`PGOOD` into `~EN`, `INT_N` into a rising-edge IRQ) with no inverter",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 176
     },
     {
       "id": "MUX-1",
       "title": "SCL goes to a pin named SCL, MISO to MISO etc",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 3166
     },
     {
       "id": "MUX-2",
@@ -1545,7 +1553,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 12
+      "micros": 9
     },
     {
       "id": "CLK-4",
@@ -1561,7 +1569,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 643
+      "micros": 427
     },
     {
       "id": "CLK-6",
@@ -1570,7 +1578,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 412
+      "micros": 396
     },
     {
       "id": "CLK-7",
@@ -1579,7 +1587,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 565
+      "micros": 410
     },
     {
       "id": "CLK-8",
@@ -1630,7 +1638,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 387
+      "micros": 383
     },
     {
       "id": "CLK-15",
@@ -1639,7 +1647,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 523
+      "micros": 394
     },
     {
       "id": "CLK-16",
@@ -1662,7 +1670,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 643
+      "micros": 405
     },
     {
       "id": "CLK-19",
@@ -1678,7 +1686,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 17
+      "micros": 15
     },
     {
       "id": "I2C-2",
@@ -1687,7 +1695,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 3,
-      "micros": 99
+      "micros": 490
     },
     {
       "id": "I2C-3",
@@ -1696,7 +1704,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 56
+      "micros": 58
     },
     {
       "id": "I2C-4",
@@ -1726,7 +1734,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 67
+      "micros": 65
     },
     {
       "id": "I2C-8",
@@ -1742,7 +1750,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 576
+      "micros": 3063
     },
     {
       "id": "I2C-10",
@@ -1751,7 +1759,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 169
+      "micros": 206
     },
     {
       "id": "I2C-11",
@@ -2665,7 +2673,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 262
+      "micros": 275
     },
     {
       "id": "ANA-5",
@@ -2718,7 +2726,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 10
+      "micros": 6
     },
     {
       "id": "ANA-12",
@@ -2803,7 +2811,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 80
+      "micros": 79
     },
     {
       "id": "ANA-23",
@@ -2994,7 +3002,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1225
+      "micros": 1124
     },
     {
       "id": "DBG-2",
@@ -3003,7 +3011,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 295
+      "micros": 191
     },
     {
       "id": "DBG-3",
@@ -3012,7 +3020,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 46
+      "micros": 34
     },
     {
       "id": "DBG-4",
@@ -3021,7 +3029,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 21
+      "micros": 17
     },
     {
       "id": "DBG-5",
@@ -3044,7 +3052,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 462
+      "micros": 412
     },
     {
       "id": "DBG-8",
@@ -3053,7 +3061,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 555
+      "micros": 445
     },
     {
       "id": "DBG-9",
@@ -3069,7 +3077,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 39
+      "micros": 35
     },
     {
       "id": "DBG-11",
@@ -3078,7 +3086,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 446
+      "micros": 436
     },
     {
       "id": "DBG-12",
@@ -3101,7 +3109,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 298
+      "micros": 196
     },
     {
       "id": "DBG-15",
@@ -3117,7 +3125,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 26
+      "micros": 14
     },
     {
       "id": "DBG-17",
@@ -3126,7 +3134,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 399
+      "micros": 377
     },
     {
       "id": "DBG-18",
@@ -3135,7 +3143,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 14,
-      "micros": 681
+      "micros": 644
     },
     {
       "id": "DBG-19",
@@ -3186,7 +3194,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 20,
-      "micros": 799
+      "micros": 622
     },
     {
       "id": "TEST-2",
@@ -3195,7 +3203,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 39
+      "micros": 32
     },
     {
       "id": "TEST-3",
@@ -3211,7 +3219,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 73
+      "micros": 44
     },
     {
       "id": "TEST-5",
@@ -3220,7 +3228,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 28,
-      "micros": 962
+      "micros": 816
     },
     {
       "id": "TEST-6",
@@ -3241,7 +3249,9 @@
       "title": "Resistors (or capacitors) with values a step apart that could be one value",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 6,
+      "micros": 356
     },
     {
       "id": "BOM-2",
@@ -3255,14 +3265,18 @@
       "title": "Big and small connectors, big and small parts, SMT and THT mixed and similar",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 308
     },
     {
       "id": "BOM-4",
       "title": "Propose consolidating identical resistors into resistor networks",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 12,
+      "micros": 305
     },
     {
       "id": "BOM-5",
@@ -3271,7 +3285,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 512
+      "micros": 437
     },
     {
       "id": "BOM-6",
@@ -3280,7 +3294,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 463
+      "micros": 428
     },
     {
       "id": "BOM-7",
@@ -3294,7 +3308,9 @@
       "title": "LED swapped (polarity)",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 7
     },
     {
       "id": "BOM-9",
@@ -3303,7 +3319,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 396
+      "micros": 403
     },
     {
       "id": "BOM-10",
@@ -3312,14 +3328,16 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 29
+      "micros": 30
     },
     {
       "id": "BOM-11",
       "title": "Same value in two packages",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 15
     },
     {
       "id": "BOM-12",
@@ -3340,7 +3358,9 @@
       "title": "Mounted part without an MPN",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 1,
+      "micros": 120
     },
     {
       "id": "BOM-15",
@@ -3361,7 +3381,9 @@
       "title": "One MPN with two different values (a copy-paste part)",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 79
     },
     {
       "id": "BOM-18",
@@ -3377,7 +3399,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 89
+      "micros": 76
     },
     {
       "id": "NAME-2",
@@ -3386,7 +3408,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 55
+      "micros": 63
     },
     {
       "id": "NAME-3",
@@ -3402,7 +3424,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 87
+      "micros": 82
     },
     {
       "id": "NAME-5",
@@ -3411,7 +3433,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 160
+      "micros": 145
     },
     {
       "id": "NAME-6",
@@ -3420,7 +3442,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 84
+      "micros": 82
     },
     {
       "id": "NAME-7",
@@ -3429,7 +3451,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 561
+      "micros": 525
     },
     {
       "id": "NAME-8",
@@ -3445,7 +3467,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 79
+      "micros": 75
     },
     {
       "id": "NAME-10",
@@ -3454,7 +3476,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 89
+      "micros": 87
     },
     {
       "id": "NAME-11",
@@ -3463,7 +3485,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 183
+      "micros": 188
     },
     {
       "id": "NAME-12",
@@ -3472,7 +3494,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 52
+      "micros": 49
     },
     {
       "id": "LIB-1",
@@ -3495,7 +3517,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 8
     },
     {
       "id": "LIB-4",
@@ -3572,14 +3594,18 @@
       "title": "Unit of a multi-unit symbol not placed: an unused gate or amplifier whose inputs float ≈ ANA-11",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 7
     },
     {
       "id": "LIB-15",
       "title": "Symbol with no power pins at all (hidden, or forgotten): the part is never checked for power ≈ WIRE-10",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 745
     },
     {
       "id": "LIB-16",
@@ -6350,6 +6376,30 @@
           ]
         }
       ],
+      "also": []
+    },
+    {
+      "check": "BOM-14",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Board": 0
+          },
+          "kind": "board",
+          "name": "test_schematics"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "no part has an MPN: 63 parts in the BOM (J401, Q401, Q402, Q403, Q404, Q503, Q504, R201, R202, R203, R204, R205, R301, R302, R401, R402, R403, R404, R405, R406, R407, R408, R409, R410, R411, R412, R413, R414, R415, R416, R501, R502, R503, R504, R505, R506, R507, R508, R509, R510, R511, R601, R602, U201, U202, U203, U204, U301, U302, U401, U402, U403, U404, U405, U406, U407, U408, U501, U502, U503, U506, U601, U602) leave the choice to the assembler",
+      "facts": [],
+      "fingerprint": "BOM-14:board test_schematics",
+      "explain": "docs/checks/bom.md#bom-14",
+      "fix": "add an MPN field (`MPN`, `Mpn1`) to the parts, with alternates for passives",
+      "locations": [],
       "also": []
     },
     {
@@ -10822,6 +10872,2304 @@
       "also": []
     },
     {
+      "check": "BOM-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              7
+            ]
+          },
+          "kind": "part",
+          "name": "R201"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              8
+            ]
+          },
+          "kind": "part",
+          "name": "R202"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              9
+            ]
+          },
+          "kind": "part",
+          "name": "R203"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              10
+            ]
+          },
+          "kind": "part",
+          "name": "R204"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              20
+            ]
+          },
+          "kind": "part",
+          "name": "R407"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              21
+            ]
+          },
+          "kind": "part",
+          "name": "R408"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              22
+            ]
+          },
+          "kind": "part",
+          "name": "R409"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              24
+            ]
+          },
+          "kind": "part",
+          "name": "R411"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              36
+            ]
+          },
+          "kind": "part",
+          "name": "R507"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              37
+            ]
+          },
+          "kind": "part",
+          "name": "R508"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              38
+            ]
+          },
+          "kind": "part",
+          "name": "R509"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              39
+            ]
+          },
+          "kind": "part",
+          "name": "R510"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              40
+            ]
+          },
+          "kind": "part",
+          "name": "R511"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              42
+            ]
+          },
+          "kind": "part",
+          "name": "R602"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "resistors 2.2 kΩ (R407, R408) and 3.3 kΩ (R201, R202, R203, R204, R409, R411, R507, R508, R509, R510, R511, R602) are one E6 step apart: could they be one value?",
+      "facts": [],
+      "fingerprint": "BOM-1:part R201|part R202|part R203|part R204|part R407|part R408|part R409|part R411|part R507|part R508|part R509|part R510|part R511|part R602",
+      "explain": "docs/checks/bom.md#bom-1",
+      "fix": "pick one value where the circuit allows (pull-ups, LED resistors, series terminations, bulk decoupling); leave dividers and filters alone",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R201",
+          "line": 2824,
+          "at": [
+            139.7,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R202",
+          "line": 2280,
+          "at": [
+            149.86,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R203",
+          "line": 2482,
+          "at": [
+            210.82,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R204",
+          "line": 2688,
+          "at": [
+            220.98,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R507",
+          "line": 2556,
+          "at": [
+            25.4,
+            181.61
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R508",
+          "line": 3119,
+          "at": [
+            35.56,
+            181.61
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R509",
+          "line": 2759,
+          "at": [
+            203.2,
+            39.37
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R510",
+          "line": 2486,
+          "at": [
+            72.39,
+            181.61
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R511",
+          "line": 3259,
+          "at": [
+            213.36,
+            39.37
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R407",
+          "line": 3921,
+          "at": [
+            231.14,
+            149.86
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R408",
+          "line": 5097,
+          "at": [
+            241.3,
+            149.86
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R409",
+          "line": 7387,
+          "at": [
+            242.57,
+            52.07
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R411",
+          "line": 4693,
+          "at": [
+            252.73,
+            52.07
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "symbol R602",
+          "line": 1300,
+          "at": [
+            101.6,
+            57.15
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              7
+            ]
+          },
+          "kind": "part",
+          "name": "R201"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              8
+            ]
+          },
+          "kind": "part",
+          "name": "R202"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              9
+            ]
+          },
+          "kind": "part",
+          "name": "R203"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              10
+            ]
+          },
+          "kind": "part",
+          "name": "R204"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              22
+            ]
+          },
+          "kind": "part",
+          "name": "R409"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              23
+            ]
+          },
+          "kind": "part",
+          "name": "R410"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              24
+            ]
+          },
+          "kind": "part",
+          "name": "R411"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              25
+            ]
+          },
+          "kind": "part",
+          "name": "R412"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              28
+            ]
+          },
+          "kind": "part",
+          "name": "R415"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              29
+            ]
+          },
+          "kind": "part",
+          "name": "R416"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              36
+            ]
+          },
+          "kind": "part",
+          "name": "R507"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              37
+            ]
+          },
+          "kind": "part",
+          "name": "R508"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              38
+            ]
+          },
+          "kind": "part",
+          "name": "R509"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              39
+            ]
+          },
+          "kind": "part",
+          "name": "R510"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              40
+            ]
+          },
+          "kind": "part",
+          "name": "R511"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              42
+            ]
+          },
+          "kind": "part",
+          "name": "R602"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "resistors 3.3 kΩ (R201, R202, R203, R204, R409, R411, R507, R508, R509, R510, R511, R602) and 4.7 kΩ (R410, R412, R415, R416) are one E6 step apart: could they be one value?",
+      "facts": [],
+      "fingerprint": "BOM-1:part R201|part R202|part R203|part R204|part R409|part R410|part R411|part R412|part R415|part R416|part R507|part R508|part R509|part R510|part R511|part R602",
+      "explain": "docs/checks/bom.md#bom-1",
+      "fix": "pick one value where the circuit allows (pull-ups, LED resistors, series terminations, bulk decoupling); leave dividers and filters alone",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R201",
+          "line": 2824,
+          "at": [
+            139.7,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R202",
+          "line": 2280,
+          "at": [
+            149.86,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R203",
+          "line": 2482,
+          "at": [
+            210.82,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R204",
+          "line": 2688,
+          "at": [
+            220.98,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R507",
+          "line": 2556,
+          "at": [
+            25.4,
+            181.61
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R508",
+          "line": 3119,
+          "at": [
+            35.56,
+            181.61
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R509",
+          "line": 2759,
+          "at": [
+            203.2,
+            39.37
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R510",
+          "line": 2486,
+          "at": [
+            72.39,
+            181.61
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R511",
+          "line": 3259,
+          "at": [
+            213.36,
+            39.37
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R409",
+          "line": 7387,
+          "at": [
+            242.57,
+            52.07
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R410",
+          "line": 4403,
+          "at": [
+            243.84,
+            196.85
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R411",
+          "line": 4693,
+          "at": [
+            252.73,
+            52.07
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R412",
+          "line": 4193,
+          "at": [
+            254.0,
+            196.85
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R415",
+          "line": 6220,
+          "at": [
+            201.93,
+            243.84
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R416",
+          "line": 5612,
+          "at": [
+            212.09,
+            243.84
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "symbol R602",
+          "line": 1300,
+          "at": [
+            101.6,
+            57.15
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              7
+            ]
+          },
+          "kind": "part",
+          "name": "R201"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              8
+            ]
+          },
+          "kind": "part",
+          "name": "R202"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              9
+            ]
+          },
+          "kind": "part",
+          "name": "R203"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              10
+            ]
+          },
+          "kind": "part",
+          "name": "R204"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              22
+            ]
+          },
+          "kind": "part",
+          "name": "R409"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              24
+            ]
+          },
+          "kind": "part",
+          "name": "R411"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              36
+            ]
+          },
+          "kind": "part",
+          "name": "R507"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              37
+            ]
+          },
+          "kind": "part",
+          "name": "R508"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              38
+            ]
+          },
+          "kind": "part",
+          "name": "R509"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              39
+            ]
+          },
+          "kind": "part",
+          "name": "R510"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              40
+            ]
+          },
+          "kind": "part",
+          "name": "R511"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              41
+            ]
+          },
+          "kind": "part",
+          "name": "R601"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              42
+            ]
+          },
+          "kind": "part",
+          "name": "R602"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "resistors 3 kΩ (R601) and 3.3 kΩ (R201, R202, R203, R204, R409, R411, R507, R508, R509, R510, R511, R602) are one E24 step apart: could they be one value?",
+      "facts": [],
+      "fingerprint": "BOM-1:part R201|part R202|part R203|part R204|part R409|part R411|part R507|part R508|part R509|part R510|part R511|part R601|part R602",
+      "explain": "docs/checks/bom.md#bom-1",
+      "fix": "pick one value where the circuit allows (pull-ups, LED resistors, series terminations, bulk decoupling); leave dividers and filters alone",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R201",
+          "line": 2824,
+          "at": [
+            139.7,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R202",
+          "line": 2280,
+          "at": [
+            149.86,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R203",
+          "line": 2482,
+          "at": [
+            210.82,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R204",
+          "line": 2688,
+          "at": [
+            220.98,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R507",
+          "line": 2556,
+          "at": [
+            25.4,
+            181.61
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R508",
+          "line": 3119,
+          "at": [
+            35.56,
+            181.61
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R509",
+          "line": 2759,
+          "at": [
+            203.2,
+            39.37
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R510",
+          "line": 2486,
+          "at": [
+            72.39,
+            181.61
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R511",
+          "line": 3259,
+          "at": [
+            213.36,
+            39.37
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R409",
+          "line": 7387,
+          "at": [
+            242.57,
+            52.07
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R411",
+          "line": 4693,
+          "at": [
+            252.73,
+            52.07
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "symbol R601",
+          "line": 1656,
+          "at": [
+            91.44,
+            57.15
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "symbol R602",
+          "line": 1300,
+          "at": [
+            101.6,
+            57.15
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              12
+            ]
+          },
+          "kind": "part",
+          "name": "R301"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              13
+            ]
+          },
+          "kind": "part",
+          "name": "R302"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              20
+            ]
+          },
+          "kind": "part",
+          "name": "R407"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              21
+            ]
+          },
+          "kind": "part",
+          "name": "R408"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              27
+            ]
+          },
+          "kind": "part",
+          "name": "R414"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "resistors 1 kΩ (R301, R302, R414) and 2.2 kΩ (R407, R408) are one E3 step apart: could they be one value?",
+      "facts": [],
+      "fingerprint": "BOM-1:part R301|part R302|part R407|part R408|part R414",
+      "explain": "docs/checks/bom.md#bom-1",
+      "fix": "pick one value where the circuit allows (pull-ups, LED resistors, series terminations, bulk decoupling); leave dividers and filters alone",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R407",
+          "line": 3921,
+          "at": [
+            231.14,
+            149.86
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R408",
+          "line": 5097,
+          "at": [
+            241.3,
+            149.86
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R414",
+          "line": 6290,
+          "at": [
+            182.88,
+            254.0
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "symbol R301",
+          "line": 1557,
+          "at": [
+            96.52,
+            62.23
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "symbol R302",
+          "line": 1913,
+          "at": [
+            106.68,
+            62.23
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              14
+            ]
+          },
+          "kind": "part",
+          "name": "R401"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              15
+            ]
+          },
+          "kind": "part",
+          "name": "R402"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              16
+            ]
+          },
+          "kind": "part",
+          "name": "R403"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              17
+            ]
+          },
+          "kind": "part",
+          "name": "R404"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              23
+            ]
+          },
+          "kind": "part",
+          "name": "R410"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              25
+            ]
+          },
+          "kind": "part",
+          "name": "R412"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              28
+            ]
+          },
+          "kind": "part",
+          "name": "R415"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              29
+            ]
+          },
+          "kind": "part",
+          "name": "R416"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              30
+            ]
+          },
+          "kind": "part",
+          "name": "R501"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              31
+            ]
+          },
+          "kind": "part",
+          "name": "R502"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              32
+            ]
+          },
+          "kind": "part",
+          "name": "R503"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              33
+            ]
+          },
+          "kind": "part",
+          "name": "R504"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "resistors 4.7 kΩ (R410, R412, R415, R416) and 10 kΩ (R401, R402, R403, R404, R501, R502, R503, R504) are one E3 step apart: could they be one value?",
+      "facts": [],
+      "fingerprint": "BOM-1:part R401|part R402|part R403|part R404|part R410|part R412|part R415|part R416|part R501|part R502|part R503|part R504",
+      "explain": "docs/checks/bom.md#bom-1",
+      "fix": "pick one value where the circuit allows (pull-ups, LED resistors, series terminations, bulk decoupling); leave dividers and filters alone",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R501",
+          "line": 2895,
+          "at": [
+            107.95,
+            52.07
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R502",
+          "line": 3759,
+          "at": [
+            171.45,
+            92.71
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R503",
+          "line": 3469,
+          "at": [
+            118.11,
+            52.07
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R504",
+          "line": 3189,
+          "at": [
+            181.61,
+            92.71
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R401",
+          "line": 7111,
+          "at": [
+            147.32,
+            64.77
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R402",
+          "line": 4763,
+          "at": [
+            147.32,
+            100.33
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R403",
+          "line": 4123,
+          "at": [
+            157.48,
+            64.77
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R404",
+          "line": 6777,
+          "at": [
+            157.48,
+            100.33
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R410",
+          "line": 4403,
+          "at": [
+            243.84,
+            196.85
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R412",
+          "line": 4193,
+          "at": [
+            254.0,
+            196.85
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R415",
+          "line": 6220,
+          "at": [
+            201.93,
+            243.84
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R416",
+          "line": 5612,
+          "at": [
+            212.09,
+            243.84
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              20
+            ]
+          },
+          "kind": "part",
+          "name": "R407"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              21
+            ]
+          },
+          "kind": "part",
+          "name": "R408"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              23
+            ]
+          },
+          "kind": "part",
+          "name": "R410"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              25
+            ]
+          },
+          "kind": "part",
+          "name": "R412"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              28
+            ]
+          },
+          "kind": "part",
+          "name": "R415"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              29
+            ]
+          },
+          "kind": "part",
+          "name": "R416"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "resistors 2.2 kΩ (R407, R408) and 4.7 kΩ (R410, R412, R415, R416) are one E3 step apart: could they be one value?",
+      "facts": [],
+      "fingerprint": "BOM-1:part R407|part R408|part R410|part R412|part R415|part R416",
+      "explain": "docs/checks/bom.md#bom-1",
+      "fix": "pick one value where the circuit allows (pull-ups, LED resistors, series terminations, bulk decoupling); leave dividers and filters alone",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R407",
+          "line": 3921,
+          "at": [
+            231.14,
+            149.86
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R408",
+          "line": 5097,
+          "at": [
+            241.3,
+            149.86
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R410",
+          "line": 4403,
+          "at": [
+            243.84,
+            196.85
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R412",
+          "line": 4193,
+          "at": [
+            254.0,
+            196.85
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R415",
+          "line": 6220,
+          "at": [
+            201.93,
+            243.84
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R416",
+          "line": 5612,
+          "at": [
+            212.09,
+            243.84
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              0
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/I2C1_EN"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              7
+            ]
+          },
+          "kind": "part",
+          "name": "R201"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              8
+            ]
+          },
+          "kind": "part",
+          "name": "R202"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "2 × 3.3 kΩ (R201, R202) between U203 and /C20: I2C no pull-ups/I2C1_EN: one array instead of 2 placements",
+      "facts": [
+        {
+          "name": "min_group",
+          "value": "2",
+          "source": {
+            "Derived": {
+              "rule": "BOM-4 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "BOM-4:net /C20: I2C no pull-ups/I2C1_EN|part R201|part R202",
+      "explain": "docs/checks/bom.md#bom-4",
+      "fix": "use an isolated-element array where values and layout allow; keep discrete parts where rework or precision matters",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label I2C1_EN",
+          "at": [
+            140.97,
+            88.9
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R201",
+          "line": 2824,
+          "at": [
+            139.7,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R202",
+          "line": 2280,
+          "at": [
+            149.86,
+            95.25
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              3
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/I2C3_P"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              9
+            ]
+          },
+          "kind": "part",
+          "name": "R203"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              10
+            ]
+          },
+          "kind": "part",
+          "name": "R204"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "2 × 3.3 kΩ (R203, R204) between U204 and /C20: I2C no pull-ups/I2C3_P: one array instead of 2 placements",
+      "facts": [
+        {
+          "name": "min_group",
+          "value": "2",
+          "source": {
+            "Derived": {
+              "rule": "BOM-4 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "BOM-4:net /C20: I2C no pull-ups/I2C3_P|part R203|part R204",
+      "explain": "docs/checks/bom.md#bom-4",
+      "fix": "use an isolated-element array where values and layout allow; keep discrete parts where rework or precision matters",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label I2C3_P",
+          "at": [
+            212.09,
+            88.9
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R203",
+          "line": 2482,
+          "at": [
+            210.82,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R204",
+          "line": 2688,
+          "at": [
+            220.98,
+            95.25
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              27
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA2_EN"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              15
+            ]
+          },
+          "kind": "part",
+          "name": "R402"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              17
+            ]
+          },
+          "kind": "part",
+          "name": "R404"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "2 × 10 kΩ (R402, R404) between J401 and U401 and /C22: I2C Segments/SDA2_EN: one array instead of 2 placements",
+      "facts": [
+        {
+          "name": "min_group",
+          "value": "2",
+          "source": {
+            "Derived": {
+              "rule": "BOM-4 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "BOM-4:net /C22: I2C Segments/SDA2_EN|part R402|part R404",
+      "explain": "docs/checks/bom.md#bom-4",
+      "fix": "use an isolated-element array where values and layout allow; keep discrete parts where rework or precision matters",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA2_EN",
+          "at": [
+            110.49,
+            73.66
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R402",
+          "line": 4763,
+          "at": [
+            147.32,
+            100.33
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R404",
+          "line": 6777,
+          "at": [
+            157.48,
+            100.33
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              40
+            ]
+          },
+          "kind": "net",
+          "name": "VCC2_3V3"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              20
+            ]
+          },
+          "kind": "part",
+          "name": "R407"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              21
+            ]
+          },
+          "kind": "part",
+          "name": "R408"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "2 × 2.2 kΩ (R407, R408) between U405 and VCC2_3V3: one array instead of 2 placements",
+      "facts": [
+        {
+          "name": "min_group",
+          "value": "2",
+          "source": {
+            "Derived": {
+              "rule": "BOM-4 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "BOM-4:net VCC2_3V3|part R407|part R408",
+      "explain": "docs/checks/bom.md#bom-4",
+      "fix": "use an isolated-element array where values and layout allow; keep discrete parts where rework or precision matters",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R407",
+          "line": 3921,
+          "at": [
+            231.14,
+            149.86
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R408",
+          "line": 5097,
+          "at": [
+            241.3,
+            149.86
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              41
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_1V2"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              23
+            ]
+          },
+          "kind": "part",
+          "name": "R410"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              25
+            ]
+          },
+          "kind": "part",
+          "name": "R412"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "2 × 4.7 kΩ (R410, R412) between U404 and U407 and VCC_1V2: one array instead of 2 placements",
+      "facts": [
+        {
+          "name": "min_group",
+          "value": "2",
+          "source": {
+            "Derived": {
+              "rule": "BOM-4 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "BOM-4:net VCC_1V2|part R410|part R412",
+      "explain": "docs/checks/bom.md#bom-4",
+      "fix": "use an isolated-element array where values and layout allow; keep discrete parts where rework or precision matters",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R410",
+          "line": 4403,
+          "at": [
+            243.84,
+            196.85
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R412",
+          "line": 4193,
+          "at": [
+            254.0,
+            196.85
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              42
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_1V8"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              22
+            ]
+          },
+          "kind": "part",
+          "name": "R409"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              24
+            ]
+          },
+          "kind": "part",
+          "name": "R411"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "2 × 3.3 kΩ (R409, R411) between U406 and VCC_1V8: one array instead of 2 placements",
+      "facts": [
+        {
+          "name": "min_group",
+          "value": "2",
+          "source": {
+            "Derived": {
+              "rule": "BOM-4 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "BOM-4:net VCC_1V8|part R409|part R411",
+      "explain": "docs/checks/bom.md#bom-4",
+      "fix": "use an isolated-element array where values and layout allow; keep discrete parts where rework or precision matters",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R409",
+          "line": 7387,
+          "at": [
+            242.57,
+            52.07
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R411",
+          "line": 4693,
+          "at": [
+            252.73,
+            52.07
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              42
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_1V8"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              36
+            ]
+          },
+          "kind": "part",
+          "name": "R507"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              37
+            ]
+          },
+          "kind": "part",
+          "name": "R508"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "2 × 3.3 kΩ (R507, R508) between U506 and VCC_1V8: one array instead of 2 placements",
+      "facts": [
+        {
+          "name": "min_group",
+          "value": "2",
+          "source": {
+            "Derived": {
+              "rule": "BOM-4 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "BOM-4:net VCC_1V8|part R507|part R508",
+      "explain": "docs/checks/bom.md#bom-4",
+      "fix": "use an isolated-element array where values and layout allow; keep discrete parts where rework or precision matters",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R507",
+          "line": 2556,
+          "at": [
+            25.4,
+            181.61
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R508",
+          "line": 3119,
+          "at": [
+            35.56,
+            181.61
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              43
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_3V3"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              14
+            ]
+          },
+          "kind": "part",
+          "name": "R401"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              16
+            ]
+          },
+          "kind": "part",
+          "name": "R403"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "2 × 10 kΩ (R401, R403) between U401 and U402 and U404 and VCC_3V3: one array instead of 2 placements",
+      "facts": [
+        {
+          "name": "min_group",
+          "value": "2",
+          "source": {
+            "Derived": {
+              "rule": "BOM-4 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "BOM-4:net VCC_3V3|part R401|part R403",
+      "explain": "docs/checks/bom.md#bom-4",
+      "fix": "use an isolated-element array where values and layout allow; keep discrete parts where rework or precision matters",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R401",
+          "line": 7111,
+          "at": [
+            147.32,
+            64.77
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R403",
+          "line": 4123,
+          "at": [
+            157.48,
+            64.77
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              43
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_3V3"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              28
+            ]
+          },
+          "kind": "part",
+          "name": "R415"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              29
+            ]
+          },
+          "kind": "part",
+          "name": "R416"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "2 × 4.7 kΩ (R415, R416) between U408 and VCC_3V3: one array instead of 2 placements",
+      "facts": [
+        {
+          "name": "min_group",
+          "value": "2",
+          "source": {
+            "Derived": {
+              "rule": "BOM-4 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "BOM-4:net VCC_3V3|part R415|part R416",
+      "explain": "docs/checks/bom.md#bom-4",
+      "fix": "use an isolated-element array where values and layout allow; keep discrete parts where rework or precision matters",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R415",
+          "line": 6220,
+          "at": [
+            201.93,
+            243.84
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R416",
+          "line": 5612,
+          "at": [
+            212.09,
+            243.84
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              43
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_3V3"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              30
+            ]
+          },
+          "kind": "part",
+          "name": "R501"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              32
+            ]
+          },
+          "kind": "part",
+          "name": "R503"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "2 × 10 kΩ (R501, R503) between U501 and U502 and VCC_3V3: one array instead of 2 placements",
+      "facts": [
+        {
+          "name": "min_group",
+          "value": "2",
+          "source": {
+            "Derived": {
+              "rule": "BOM-4 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "BOM-4:net VCC_3V3|part R501|part R503",
+      "explain": "docs/checks/bom.md#bom-4",
+      "fix": "use an isolated-element array where values and layout allow; keep discrete parts where rework or precision matters",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R501",
+          "line": 2895,
+          "at": [
+            107.95,
+            52.07
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R503",
+          "line": 3469,
+          "at": [
+            118.11,
+            52.07
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              43
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_3V3"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              31
+            ]
+          },
+          "kind": "part",
+          "name": "R502"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              33
+            ]
+          },
+          "kind": "part",
+          "name": "R504"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "2 × 10 kΩ (R502, R504) between U503 and VCC_3V3: one array instead of 2 placements",
+      "facts": [
+        {
+          "name": "min_group",
+          "value": "2",
+          "source": {
+            "Derived": {
+              "rule": "BOM-4 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "BOM-4:net VCC_3V3|part R502|part R504",
+      "explain": "docs/checks/bom.md#bom-4",
+      "fix": "use an isolated-element array where values and layout allow; keep discrete parts where rework or precision matters",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R502",
+          "line": 3759,
+          "at": [
+            171.45,
+            92.71
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R504",
+          "line": 3189,
+          "at": [
+            181.61,
+            92.71
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "BOM-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              39
+            ]
+          },
+          "kind": "net",
+          "name": "VCC"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              12
+            ]
+          },
+          "kind": "part",
+          "name": "R301"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              13
+            ]
+          },
+          "kind": "part",
+          "name": "R302"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "2 × 1 kΩ (R301, R302) between U301 and U302 and VCC: one array instead of 2 placements",
+      "facts": [
+        {
+          "name": "min_group",
+          "value": "2",
+          "source": {
+            "Derived": {
+              "rule": "BOM-4 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "BOM-4:net VCC|part R301|part R302",
+      "explain": "docs/checks/bom.md#bom-4",
+      "fix": "use an isolated-element array where values and layout allow; keep discrete parts where rework or precision matters",
+      "locations": [
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "symbol R301",
+          "line": 1557,
+          "at": [
+            96.52,
+            62.23
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "symbol R302",
+          "line": 1913,
+          "at": [
+            106.68,
+            62.23
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
       "check": "NAME-5",
       "severity": "suggestion",
       "confidence": "certain",
@@ -10936,7 +13284,7 @@
     }
   ],
   "timing": {
-    "checks_micros": 5519,
-    "total_micros": 6812
+    "checks_micros": 6621,
+    "total_micros": 8281
   }
 }
