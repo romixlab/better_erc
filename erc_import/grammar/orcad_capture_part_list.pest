@@ -5,13 +5,13 @@ file                   =  {
     "END." ~ EOI
 }
 exporter_comment       = ${ "{" ~ " "* ~ exporter_comment_inner ~ " "* ~ "}" }
-exporter_comment_inner = @{ (!("}" | (" "* ~ "}")) ~ ASCII)* }
+exporter_comment_inner = @{ (!("}" | (" "* ~ "}")) ~ ANY)* }
 
 directives = { param* }
 parts      = { part* }
 
 part           =  { "PART_NAME" ~ designator ~ primitive_name ~ ":"? ~ ";" ~ sections }
-designator     = @{ ASCII_ALPHANUMERIC+ }
+designator     = @{ (!(WHITESPACE | "'" | ":" | ";") ~ ANY)+ }
 sections       =  { section* }
 section        =  {
     "SECTION_NUMBER" ~ section_number ~
@@ -24,7 +24,7 @@ c_path         = ${ "'" ~ quote_string_inner ~ "'" }
 p_path         = ${ "'" ~ quote_string_inner ~ "'" }
 
 primitive_name     = ${ "'" ~ quote_string_inner ~ "'" }
-quote_string_inner = @{ (!"'" ~ ASCII)* }
+quote_string_inner = @{ (!"'" ~ ANY)* }
 
 param       =  { param_name ~ "=" ~ param_value ~ ";" }
 param_name  = @{ (ASCII_ALPHANUMERIC | "_")+ }

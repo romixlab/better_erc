@@ -1,0 +1,5 @@
+netlist_altium_wirelist.net: : missing: no EDIF netlist beside it: no library symbols, sheets or part properties beyond the comment and footprint
+netlist_altium_wirelist.net: net +5V0_DEV: invalid: J6.1: not in the component list
+netlist_altium_wirelist.net: net +5V0_DEV: invalid: J7.1: not in the component list
+netlist_altium_wirelist.net: net SBU2: invalid: J4.5: not in the component list
+netlist_altium_wirelist.net: net SBU2: invalid: SW4.1: not in the component list

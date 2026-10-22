@@ -1,38 +1,81 @@
-file = { SOI ~ s ~ "edif" ~ board_name ~ item* ~ e ~ EOI }
-s = _{ "(" }
-e = _ { ")" }
-board_name = ${ (ASCII_ALPHANUMERIC | "_")+ }
+// EDIF 2 0 0 as Altium's "EDIF for PCB" writes it. Keywords are case-insensitive (EDIF is); every list also takes
+// any other s-expression (`other`), which the importer reports as an unknown element instead of failing.
 
-item = { edif_version | edif_level | keyword_map | status | library | design }
-edif_version = { s ~ "edifVersion" ~ number ~ number ~ number ~ e }
-edif_level = { s ~ "edifLevel" ~ number ~ e }
-keyword_map = { s ~ "keywordMap" ~ s ~ "keywordLevel" ~ number ~ e ~ e }
-status = { s ~ "status" ~ sexpr ~ e }
+file = { SOI ~ s ~ k_edif ~ name ~ item* ~ e ~ EOI }
+s    = _{ "(" }
+e    = _{ ")" }
 
-library = { s ~ "library" ~ #name=symbol ~ edif_level ~ #technology=sexpr ~ cell* ~ e }
-cell = { s ~ "cell" ~ (symbol | rename) ~ cell_type ~ view ~ e }
-rename = { s ~ "rename" ~ symbol ~ string ~ e }
-cell_type = { s ~ "cellType" ~ symbol ~ e }
-view = { s ~ "view" ~ symbol ~ view_type ~ interface ~ contents? ~ e }
-view_type = { s ~ "viewType" ~ symbol ~ e }
-interface = { s ~ "interface" ~ port* ~ e}
-port = { s ~ "port" ~ (symbol | rename) ~ s ~ "direction" ~ symbol ~ e ~ e }
-contents = { s ~ "contents" ~ instance* ~ net* ~ e }
-instance = { s ~ "Instance" ~ #designator=symbol ~ view_ref ~ property* ~ e }
-view_ref = { s ~ "viewRef" ~ symbol ~ s ~ "cellRef" ~ #lib_part_name=symbol ~ s ~ "LibraryRef" ~ #lib_name=symbol ~ e ~ e ~ e }
-property = { s ~ "Property" ~ (symbol | rename) ~ s ~ #ty=symbol ~ #value=string ~ e ~ e }
-net = { s ~ "Net" ~ (symbol | rename) ~ joined ~ property* ~ e } // property can be diff pair and class name
-joined = { s ~ "Joined" ~ port_ref* ~ e }
-port_ref = { s ~ "PortRef" ~ symbol ~ s ~ "InstanceRef" ~ symbol ~ e ~ e }
+item = _{ status | library | design | boilerplate | other }
 
-design = { s ~ "design" ~ symbol ~ sexpr ~ e }
+// Version, level and keyword map: format boilerplate, nothing for the model
+boilerplate = { s ~ (k_edif_version | k_edif_level | k_keyword_map) ~ expr* ~ e }
 
-number = ${ ("+" | "-")? ~ ASCII_DIGIT+ }
+status = { s ~ k_status ~ expr* ~ e }
+
+library    = { s ~ k_library ~ name ~ (boilerplate | technology | cell | other)* ~ e }
+technology = { s ~ k_technology ~ expr* ~ e }
+cell       = { s ~ k_cell ~ name ~ (cell_type | view | other)* ~ e }
+cell_type  = { s ~ k_cell_type ~ expr* ~ e }
+view       = { s ~ k_view ~ name ~ (view_type | interface | contents | other)* ~ e }
+view_type  = { s ~ k_view_type ~ expr* ~ e }
+interface  = { s ~ k_interface ~ (port | other)* ~ e }
+port       = { s ~ k_port ~ name ~ (direction | other)* ~ e }
+direction  = { s ~ k_direction ~ symbol ~ e }
+contents   = { s ~ k_contents ~ (instance | net | other)* ~ e }
+instance   = { s ~ k_instance ~ name ~ (view_ref | property | other)* ~ e }
+view_ref   = { s ~ k_view_ref ~ name ~ cell_ref ~ e }
+cell_ref   = { s ~ k_cell_ref ~ name ~ library_ref? ~ e }
+library_ref = { s ~ k_library_ref ~ name ~ e }
+// (Property Name (String "value")); a value of another type (Integer, Boolean) is kept as its text
+property   = { s ~ k_property ~ name ~ typed ~ other* ~ e }
+typed      = { s ~ symbol ~ (string | atom | other)* ~ e }
+net        = { s ~ k_net ~ name ~ (joined | property | other)* ~ e }
+joined     = { s ~ k_joined ~ (port_ref | other)* ~ e }
+port_ref   = { s ~ k_port_ref ~ symbol ~ instance_ref? ~ e }
+instance_ref = { s ~ k_instance_ref ~ symbol ~ e }
+
+design = { s ~ k_design ~ name ~ expr* ~ e }
+
+// A name: an identifier, or (rename identifier "display name")
+name   = { rename | symbol }
+rename = { s ~ k_rename ~ symbol ~ string ~ e }
+
+// Keywords end where an identifier would (`port` must not match `portRef`)
+ident_char       = _{ ASCII_ALPHANUMERIC | "_" | "&" }
+k_edif           = @{ ^"edif" ~ !ident_char }
+k_edif_version   = @{ ^"edifVersion" ~ !ident_char }
+k_edif_level     = @{ ^"edifLevel" ~ !ident_char }
+k_keyword_map    = @{ ^"keywordMap" ~ !ident_char }
+k_status         = @{ ^"status" ~ !ident_char }
+k_library        = @{ ^"library" ~ !ident_char }
+k_technology     = @{ ^"technology" ~ !ident_char }
+k_cell           = @{ ^"cell" ~ !ident_char }
+k_cell_type      = @{ ^"cellType" ~ !ident_char }
+k_view           = @{ ^"view" ~ !ident_char }
+k_view_type      = @{ ^"viewType" ~ !ident_char }
+k_interface      = @{ ^"interface" ~ !ident_char }
+k_port           = @{ ^"port" ~ !ident_char }
+k_direction      = @{ ^"direction" ~ !ident_char }
+k_contents       = @{ ^"contents" ~ !ident_char }
+k_instance       = @{ ^"instance" ~ !ident_char }
+k_view_ref       = @{ ^"viewRef" ~ !ident_char }
+k_cell_ref       = @{ ^"cellRef" ~ !ident_char }
+k_library_ref    = @{ ^"libraryRef" ~ !ident_char }
+k_property       = @{ ^"property" ~ !ident_char }
+k_net            = @{ ^"net" ~ !ident_char }
+k_joined         = @{ ^"joined" ~ !ident_char }
+k_port_ref       = @{ ^"portRef" ~ !ident_char }
+k_instance_ref   = @{ ^"instanceRef" ~ !ident_char }
+k_design         = @{ ^"design" ~ !ident_char }
+k_rename         = @{ ^"rename" ~ !ident_char }
+
 string = ${ "\"" ~ inner ~ "\"" }
-inner = @{ (!"\"" ~ ANY)* }
-symbol = @{ (ASCII_ALPHA | ASCII_DIGIT | "_" | "&")+ }
+inner  = @{ (!"\"" ~ ANY)* }
+symbol = @{ ident_char+ }
+// Any other bare token (numbers, odd identifiers)
+atom   = @{ (!(WHITESPACE | "(" | ")" | "\"") ~ ANY)+ }
 
-sexpr = { "(" ~ expr* ~ ")" }
-expr = { number | symbol | string | sexpr }
+other = { s ~ expr* ~ e }
+expr  = _{ string | other | atom }
 
 WHITESPACE = _{ " " | "\t" | "\n" | "\r" }

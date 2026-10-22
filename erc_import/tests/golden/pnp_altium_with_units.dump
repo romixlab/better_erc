@@ -1,0 +1,15 @@
+board pnp_altium_with_units
+fp J1 field Pad-X(mm) = 1.3943mm @ pos pnp_altium_with_units.csv
+fp J1 field Pad-Y(mm) = 13.9400mm @ pos pnp_altium_with_units.csv
+fp J1 field Ref-X(mm) = 1.3943mm @ pos pnp_altium_with_units.csv
+fp J1 field Ref-Y(mm) = 13.9400mm @ pos pnp_altium_with_units.csv
+fp J1 lib HEADER-2 value HEADER-2.54-2x1 side front at 1.3943,12.67 rot 270
+fp R1 field Description = "22K 0.063W 1% 0402 (1005 Metric)  SMD" @ pos pnp_altium_with_units.csv
+fp R1 field Pad-X(mm) = 19.7000mm @ pos pnp_altium_with_units.csv
+fp R1 field Pad-Y(mm) = 15.1000mm @ pos pnp_altium_with_units.csv
+fp R1 field Ref-X(mm) = 20.2000mm @ pos pnp_altium_with_units.csv
+fp R1 field Ref-Y(mm) = 15.1000mm @ pos pnp_altium_with_units.csv
+fp R1 lib RESC0402(1005)_N value "22K 1%" side back at 20.2,15.1 rot 0
+layout file pnp_altium_with_units.csv
+source file pnp_altium_with_units.csv
+source tool pnp

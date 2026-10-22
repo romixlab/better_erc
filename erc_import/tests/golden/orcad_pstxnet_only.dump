@@ -1,0 +1,20 @@
+board netlist_orcad_pstxnet
+net CLKO2 kind named
+net N14794571 kind auto
+net TOUCH_INT_N kind named
+part Q34 lib "" sheet /
+part R610 lib "" sheet /
+part R636 lib "" sheet /
+part R643 lib "" sheet /
+part TP36 lib "" sheet /
+part U5 lib "" sheet /
+pin Q34 3 name D unit 0 net TOUCH_INT_N
+pin R610 2 name 2 unit 0 net TOUCH_INT_N
+pin R636 1 name 1 unit 0 net TOUCH_INT_N
+pin R643 1 name 1 unit 0 net N14794571
+pin TP36 1 name TP unit 0 net CLKO2
+pin U5 AA8 name ENET1_RD0 unit 0 net N14794571
+sheet / name "" file "" uuid ""
+source file netlist_orcad_pstxnet.dat
+source tool orcad
+source version "PSTWRITER 17.4.0"

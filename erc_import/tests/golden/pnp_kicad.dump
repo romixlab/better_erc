@@ -1,0 +1,6 @@
+board pnp_kicad
+fp C1 lib C_0402_1005Metric value 4.7uF side front at -12.3,5.85 rot 0
+fp R1 lib R_1206_3216Metric value 0 side back at 56.6,57.4 rot 90
+layout file pnp_kicad.csv
+source file pnp_kicad.csv
+source tool pnp

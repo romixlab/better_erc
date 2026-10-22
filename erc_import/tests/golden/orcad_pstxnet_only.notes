@@ -1,0 +1,9 @@
+netlist_orcad_pstxnet.dat: : missing: no pstchip beside it: no library parts: no pin types, values or footprints
+netlist_orcad_pstxnet.dat: : missing: no pstxprt beside it: no part list: no sections, pages or primitive per part
+netlist_orcad_pstxnet.dat: NET_NAME: ignored: full net names and C_SIGNAL are not kept (the short name is the net)
+netlist_orcad_pstxnet.dat: net CLKO2: invalid: node TP36.1: not in the part list, added without fields
+netlist_orcad_pstxnet.dat: net N14794571: invalid: node R643.1: not in the part list, added without fields
+netlist_orcad_pstxnet.dat: net N14794571: invalid: node U5.AA8: not in the part list, added without fields
+netlist_orcad_pstxnet.dat: net TOUCH_INT_N: invalid: node Q34.3: not in the part list, added without fields
+netlist_orcad_pstxnet.dat: net TOUCH_INT_N: invalid: node R610.2: not in the part list, added without fields
+netlist_orcad_pstxnet.dat: net TOUCH_INT_N: invalid: node R636.1: not in the part list, added without fields

@@ -1,0 +1,5 @@
+netlist_altium_edif.edf: : missing: no WireList beside it: pin names are missing and pin types are the EDIF port directions only
+netlist_altium_edif.edf: net NetR13_1: invalid: R13.1: no such instance, added without fields
+netlist_altium_edif.edf: net SBU2: invalid: J4.5: no such instance, added without fields
+netlist_altium_edif.edf: net SBU2: invalid: SW4.1: no such instance, added without fields
+netlist_altium_edif.edf: net SBU2: invalid: SW5.1: no such instance, added without fields

@@ -1,0 +1,8 @@
+netlist_altium_edif.edf: net NetR13_1: invalid: R13.1: no such instance, added without fields
+netlist_altium_edif.edf: net SBU2: invalid: J4.5: no such instance, added without fields
+netlist_altium_edif.edf: net SBU2: invalid: SW4.1: no such instance, added without fields
+netlist_altium_edif.edf: net SBU2: invalid: SW5.1: no such instance, added without fields
+netlist_altium_wirelist.net: net +5V0_DEV: invalid: J6.1: not in the component list
+netlist_altium_wirelist.net: net +5V0_DEV: invalid: J7.1: not in the component list
+netlist_altium_wirelist.net: net SBU2: invalid: J4.5: not in the component list
+netlist_altium_wirelist.net: net SBU2: invalid: SW4.1: not in the component list

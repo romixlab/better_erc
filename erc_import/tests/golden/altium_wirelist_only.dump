@@ -1,0 +1,59 @@
+board netlist_altium_wirelist
+net +5V0_DEV kind named
+net SBU1 kind named
+net SBU2 kind named
+part J1 field Comment = DX07P024AJ1R1500 @ net netlist_altium_wirelist.net
+part J1 field Footprint = DX07P024AJ1R1500-Footprint-1 @ net netlist_altium_wirelist.net
+part J1 lib "" sheet /
+part J1 value = text DX07P024AJ1R1500 @ net netlist_altium_wirelist.net note "from the component list"
+part J2 field Comment = 95278-101A06LF @ net netlist_altium_wirelist.net
+part J2 field Footprint = HEADER-2.54-2x3-VSMT @ net netlist_altium_wirelist.net
+part J2 lib "" sheet /
+part J2 value = text 95278-101A06LF @ net netlist_altium_wirelist.net note "from the component list"
+part J4 field Comment = HEADER-6 @ net netlist_altium_wirelist.net
+part J4 lib "" sheet /
+part J6 field Comment = HEADER-2.54-2x1 @ net netlist_altium_wirelist.net
+part J6 lib "" sheet /
+part J7 field Comment = HEADER-2.54-2x1 @ net netlist_altium_wirelist.net
+part J7 lib "" sheet /
+part SW4 field Comment = 219-2MST @ net netlist_altium_wirelist.net
+part SW4 lib "" sheet /
+part SW5 field Comment = 219-2MST @ net netlist_altium_wirelist.net
+part SW5 field Footprint = FP-219-2MST-MFG @ net netlist_altium_wirelist.net
+part SW5 lib "" sheet /
+part SW5 value = text 219-2MST @ net netlist_altium_wirelist.net note "from the component list"
+pin J1 A4 name VBUS unit 0 net +5V0_DEV
+pin J1 A4 type = power_in @ net netlist_altium_wirelist.net note "Altium POWER: the WireList does not say input or output (POWER)"
+pin J1 A8 name SBU1 unit 0 net SBU1
+pin J1 A8 type = bidirectional @ net netlist_altium_wirelist.net
+pin J1 A9 name VBUS unit 0 net +5V0_DEV
+pin J1 A9 type = power_in @ net netlist_altium_wirelist.net note "Altium POWER: the WireList does not say input or output (POWER)"
+pin J1 B4 name VBUS unit 0 net +5V0_DEV
+pin J1 B4 type = power_in @ net netlist_altium_wirelist.net note "Altium POWER: the WireList does not say input or output (POWER)"
+pin J1 B8 name SBU2 unit 0 net SBU2
+pin J1 B8 type = bidirectional @ net netlist_altium_wirelist.net
+pin J1 B9 name VBUS unit 0 net +5V0_DEV
+pin J1 B9 type = power_in @ net netlist_altium_wirelist.net note "Altium POWER: the WireList does not say input or output (POWER)"
+pin J2 1 name 1 unit 0 net SBU1
+pin J2 1 type = passive @ net netlist_altium_wirelist.net
+pin J2 3 name 3 unit 0 net SBU2
+pin J2 3 type = passive @ net netlist_altium_wirelist.net
+pin J4 4 name 4 unit 0 net SBU1
+pin J4 4 type = passive @ net netlist_altium_wirelist.net
+pin J4 5 name 5 unit 0 net SBU2
+pin J4 5 type = passive @ net netlist_altium_wirelist.net
+pin J6 1 name 1 unit 0 net +5V0_DEV
+pin J6 1 type = passive @ net netlist_altium_wirelist.net
+pin J7 1 name 1 unit 0 net +5V0_DEV
+pin J7 1 type = passive @ net netlist_altium_wirelist.net
+pin SW4 1 name A1 unit 0 net SBU2
+pin SW4 1 type = passive @ net netlist_altium_wirelist.net
+pin SW4 3 name A2 unit 0 net SBU1
+pin SW4 3 type = passive @ net netlist_altium_wirelist.net
+pin SW5 1 name A1 unit 0 net SBU2
+pin SW5 1 type = passive @ net netlist_altium_wirelist.net
+pin SW5 3 name A2 unit 0 net SBU1
+pin SW5 3 type = passive @ net netlist_altium_wirelist.net
+sheet / name "" file "" uuid ""
+source file netlist_altium_wirelist.net
+source tool altium

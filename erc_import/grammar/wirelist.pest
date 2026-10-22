@@ -1,26 +1,31 @@
+// Altium's WireList netlist: a component list and a wire list in fixed-width columns. A line that does not fit
+// the columns (`bad_line`) is kept for the importer to report instead of failing the whole file.
+
 file = { SOI ~ "Wire List" ~ component_list ~ wire_list ~ EOI }
 
-component_list = ${ "<<< Component List >>>" ~ nl ~ component* }
+component_list = ${ "<<< Component List >>>" ~ nl ~ (component | blank | bad_line)* }
 component      = ${
     component_name ~ maybe_space ~ #designator = string_space5 ~ space ~
-    #footprint = string_space5 ~ nl
+    #footprint = string_space5 ~ maybe_space ~ nl
 }
-component_name    = ${ (!(" "{2, } | nl) ~ ANY){1, 40} }
+component_name = ${ (!(" "{2, } | nl) ~ ANY){1, 40} }
 string_space5  = ${ (!(" "{5, } | nl) ~ ANY)+ }
 space          = _{ " "+ }
+blank          = _{ " "* ~ nl }
+bad_line       = ${ !(" "* ~ ("<<<" | "[")) ~ (!nl ~ ANY)+ ~ nl }
 
-wire_list   = ${ "<<< Wire List >>>" ~ (!"[" ~ ASCII)+ ~ net* }
-net         = ${ "[" ~ net_index ~ "]" ~ " " ~ net_name ~ nl ~ connection* ~ nl }
+wire_list   = ${ "<<< Wire List >>>" ~ (!"[" ~ ANY)* ~ net* }
+net         = ${ "[" ~ net_index ~ "]" ~ " "* ~ net_name ~ (nl | EOI) ~ (connection | bad_line)* ~ blank* }
 net_index   = ${ ASCII_DIGIT+ }
-net_name    = ${ (!nl ~ ASCII)+ }
+net_name    = ${ (!nl ~ ANY)* }
 connection  = ${
-    (!ASCII_ALPHA_UPPER ~ " ")+ ~ #designator = string_space5 ~ space ~
+    " "+ ~ #designator = string_space5 ~ space ~
     #pin_id = string_space5 ~ space ~ pin_name ~ maybe_space ~
-    io_type ~ maybe_space ~ #part_number = string_space5 ~ nl
+    io_type ~ maybe_space ~ #part_number = string_space5 ~ maybe_space ~ (nl | EOI)
 }
-pin_name    = ${ (!(" "{5, } | nl) ~ ASCII){1, 15} }
+pin_name    = ${ (!(" "{5, } | nl) ~ ANY){1, 15} }
 maybe_space = _{ " "* }
-io_type     =  { "PASSIVE" | "OUTPUT" | "INPUT" | "I/O" | "OPEN COLLECTOR" | "OPEN EMITTER" | "POWER" }
+io_type     =  { "PASSIVE" | "OUTPUT" | "INPUT" | "I/O" | "OPEN COLLECTOR" | "OPEN EMITTER" | "POWER" | "HIZ" | "HI-Z" }
 
 nl = _{ "\n" | "\r\n" }
 WHITESPACE = _{ " " | "\t" | "\n" | "\r" }

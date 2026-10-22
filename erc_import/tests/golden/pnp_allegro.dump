@@ -1,0 +1,16 @@
+board pnp_allegro
+fp C1 field "Rotation Edit" = 0 @ pos pnp_allegro.csv
+fp C1 field Org-X = 89.4000 @ pos pnp_allegro.csv
+fp C1 field Org-Y = -7.8000 @ pos pnp_allegro.csv
+fp C1 field Pin1-X = 89.4000 @ pos pnp_allegro.csv
+fp C1 field Pin1-Y = -7.8000 @ pos pnp_allegro.csv
+fp C1 lib FID_C40M120 value "" side front at 89.4,-7.8 rot 0
+fp R1 field "Rotation Edit" = 0 @ pos pnp_allegro.csv
+fp R1 field Org-X = 30.0200 @ pos pnp_allegro.csv
+fp R1 field Org-Y = 51.0600 @ pos pnp_allegro.csv
+fp R1 field Pin1-X = 30.0200 @ pos pnp_allegro.csv
+fp R1 field Pin1-Y = 50.5799 @ pos pnp_allegro.csv
+fp R1 lib RESC1005X40N value "" side back at 30.02,51.06 rot 270
+layout file pnp_allegro.csv
+source file pnp_allegro.csv
+source tool pnp

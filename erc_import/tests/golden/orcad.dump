@@ -1,0 +1,94 @@
+board PCBA_XX
+net CLKO2 kind named
+net N14794571 kind auto
+net TOUCH_INT_N kind named
+part C1 field CLASS = DISCRETE @ net netlist_orcad_pstchip.dat
+part C1 field Footprint = CAPC0603X33N @ net netlist_orcad_pstchip.dat note "pstchip JEDEC_TYPE"
+part C1 field PART_NAME = CAP_detailed @ net netlist_orcad_pstchip.dat
+part C1 field PART_NUMBER = CAP-00000266 @ net netlist_orcad_pstchip.dat
+part C1 field Value = 10pF @ net netlist_orcad_pstchip.dat note "pstchip VALUE"
+part C1 lib CAP_DETAILED_CAPC0603X33N_DISCRETE_10PF_CAP-00000266 sheet /page3/ symbol CAP_DETAILED_CAPC0603X33N_DISCRETE_10PF_CAP-00000266
+part C1 unit 1 sheet /page3/ uuid @PCBA_XX.SCHEMATIC1(SCH_1):INS11643525@CAPACITORS.CAP_DETAILED.NORMAL(CHIPS)
+part C1 value = qty 0.00000000001 F @ net netlist_orcad_pstchip.dat note "from the VALUE property"
+part Q34 lib "" sheet /
+part R610 lib "" sheet /
+part R636 lib "" sheet /
+part R643 lib "" sheet /
+part TP36 lib "" sheet /
+part U5 lib "" sheet /
+part U8 field CLASS = IC @ net netlist_orcad_pstchip.dat
+part U8 field Footprint = BGA153N50P14X14_1150X1300X80 @ net netlist_orcad_pstchip.dat note "pstchip JEDEC_TYPE"
+part U8 field PART_NAME = eMMC_4_51_BGA153 @ net netlist_orcad_pstchip.dat
+part U8 field PART_NUMBER = TMP-571 @ net netlist_orcad_pstchip.dat
+part U8 field SWAP_INFO = (S1+S2+S3) @ net netlist_orcad_pstchip.dat
+part U8 field Value = EMMC64G-TY29-GA5B-R @ net netlist_orcad_pstchip.dat note "pstchip VALUE"
+part U8 lib EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 sheet /page9/ symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571
+part U8 unit 1 sheet /page9/ uuid @PCBA.SCHEMATIC1(SCH_1):INS14495905@INTEGRATED_CIRCUITS.EMMC_4_51_BGA153A.NORMAL(CHIPS)
+part U8 unit 2 sheet /page9/ uuid @PCBA.SCHEMATIC1(SCH_1):INS14495851@INTEGRATED_CIRCUITS.EMMC_4_51_BGA153B.NORMAL(CHIPS)
+part U8 unit 3 sheet /page9/ uuid @PCBA.SCHEMATIC1(SCH_1):INS14495969@INTEGRATED_CIRCUITS.EMMC_4_51_BGA153C.NORMAL(CHIPS)
+part U8 value = text EMMC64G-TY29-GA5B-R @ net netlist_orcad_pstchip.dat note "from the VALUE property"
+part U41 lib 74XX2G14_NEXPERIA_SOT886_IC_74LVC2G14_IC-00000054 sheet /page11/ symbol 74XX2G14_NEXPERIA_SOT886_IC_74LVC2G14_IC-00000054
+part U41 unit 1 sheet /page11/ uuid @PCBA_XX.SCHEMATIC1(SCH_1):INS16776559@INTEGRATED_CIRCUITS.74XX2G14A.NORMAL(CHIPS)
+part U41 unit 2 sheet /page11/ uuid @PCBA_XX.SCHEMATIC1(SCH_1):INS16776647@INTEGRATED_CIRCUITS.74XX2G14B.NORMAL(CHIPS)
+part U41 unit 3 sheet /page11/ uuid @PCBA_XX.SCHEMATIC1(SCH_1):INS16776709@INTEGRATED_CIRCUITS.74XX2G14C.NORMAL(CHIPS)
+pin C1 1 name 1 unit 0
+pin C1 1 type = passive @ net netlist_orcad_pstchip.dat note PINUSE=UNSPEC
+pin C1 2 name 2 unit 0
+pin C1 2 type = passive @ net netlist_orcad_pstchip.dat note PINUSE=UNSPEC
+pin Q34 3 name D unit 0 net TOUCH_INT_N
+pin R610 2 name 2 unit 0 net TOUCH_INT_N
+pin R636 1 name 1 unit 0 net TOUCH_INT_N
+pin R643 1 name 1 unit 0 net N14794571
+pin TP36 1 name TP unit 0 net CLKO2
+pin U5 AA8 name ENET1_RD0 unit 0 net N14794571
+pin U8 A3 name DAT0 unit 1
+pin U8 A3 type = bidirectional @ net netlist_orcad_pstchip.dat note BIDIRECTIONAL=TRUE
+pin U8 C6 name VCCQ#C6 unit 2
+pin U8 C6 type = power_in @ net netlist_orcad_pstchip.dat note PINUSE=POWER
+pin U8 K5 name RST_N unit 1
+pin U8 K5 type = input @ net netlist_orcad_pstchip.dat note INPUT_LOAD
+pin U8 P14 name NC_P14 unit 3
+pin U8 P14 type = passive @ net netlist_orcad_pstchip.dat note PINUSE=UNSPEC
+sheet / name "" file "" uuid ""
+sheet /page3/ name page3 file "" uuid "" page 3
+sheet /page9/ name page9 file "" uuid "" page 9
+sheet /page11/ name page11 file "" uuid "" page 11
+source file netlist_orcad_pstchip.dat
+source file netlist_orcad_pstxnet.dat
+source file netlist_orcad_pstxprt.dat
+source tool orcad
+source version "PSTWRITER 17.4.0"
+symbol 74XX2G14_NEXPERIA_SOT886_IC_74LVC2G14_IC-00000054 unit-name 1 A
+symbol 74XX2G14_NEXPERIA_SOT886_IC_74LVC2G14_IC-00000054 unit-name 2 B
+symbol 74XX2G14_NEXPERIA_SOT886_IC_74LVC2G14_IC-00000054 unit-name 3 C
+symbol 74XX2G14_NEXPERIA_SOT886_IC_74LVC2G14_IC-00000054 units 3
+symbol CAP_DETAILED_CAPC0603X33N_DISCRETE_10PF_CAP-00000266 field CLASS DISCRETE
+symbol CAP_DETAILED_CAPC0603X33N_DISCRETE_10PF_CAP-00000266 field JEDEC_TYPE CAPC0603X33N
+symbol CAP_DETAILED_CAPC0603X33N_DISCRETE_10PF_CAP-00000266 field PART_NAME CAP_detailed
+symbol CAP_DETAILED_CAPC0603X33N_DISCRETE_10PF_CAP-00000266 field PART_NUMBER CAP-00000266
+symbol CAP_DETAILED_CAPC0603X33N_DISCRETE_10PF_CAP-00000266 field VALUE 10pF
+symbol CAP_DETAILED_CAPC0603X33N_DISCRETE_10PF_CAP-00000266 pin 1 unit 0 body 0 name 1 type passive style ""
+symbol CAP_DETAILED_CAPC0603X33N_DISCRETE_10PF_CAP-00000266 pin 2 unit 0 body 0 name 2 type passive style ""
+symbol CAP_DETAILED_CAPC0603X33N_DISCRETE_10PF_CAP-00000266 units 1
+symbol CAP_DETAILED_CAPC0603X35N_DISCRETE_220NF_CAP-00000025 field CLASS DISCRETE
+symbol CAP_DETAILED_CAPC0603X35N_DISCRETE_220NF_CAP-00000025 field JEDEC_TYPE CAPC0603X35N
+symbol CAP_DETAILED_CAPC0603X35N_DISCRETE_220NF_CAP-00000025 field PART_NAME CAP_detailed
+symbol CAP_DETAILED_CAPC0603X35N_DISCRETE_220NF_CAP-00000025 field PART_NUMBER CAP-00000025
+symbol CAP_DETAILED_CAPC0603X35N_DISCRETE_220NF_CAP-00000025 field VALUE 220nF
+symbol CAP_DETAILED_CAPC0603X35N_DISCRETE_220NF_CAP-00000025 pin 1 unit 0 body 0 name 1 type passive style ""
+symbol CAP_DETAILED_CAPC0603X35N_DISCRETE_220NF_CAP-00000025 pin 2 unit 0 body 0 name 2 type passive style ""
+symbol CAP_DETAILED_CAPC0603X35N_DISCRETE_220NF_CAP-00000025 units 1
+symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 field CLASS IC
+symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 field JEDEC_TYPE BGA153N50P14X14_1150X1300X80
+symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 field PART_NAME eMMC_4_51_BGA153
+symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 field PART_NUMBER TMP-571
+symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 field SWAP_INFO (S1+S2+S3)
+symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 field VALUE EMMC64G-TY29-GA5B-R
+symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 pin A3 unit 1 body 0 name DAT0 type bidirectional style ""
+symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 pin C6 unit 2 body 0 name VCCQ#C6 type power_in style ""
+symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 pin K5 unit 1 body 0 name RST_N type input style ""
+symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 pin P14 unit 3 body 0 name NC_P14 type passive style ""
+symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 unit-name 1 A
+symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 unit-name 2 B
+symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 unit-name 3 C
+symbol EMMC_4_51_BGA153_BGA153N50P14X14_1150X1300X80_IC_(S1+S2+S3)_EMMC64G-TY29-GA5B-R_TMP-571 units 3

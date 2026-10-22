@@ -1264,6 +1264,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "erc_import"
+version = "0.3.6"
+dependencies = [
+ "chardetng",
+ "csv",
+ "encoding_rs",
+ "erc_kicad",
+ "erc_model",
+ "pest",
+ "pest_derive",
+]
+
+[[package]]
 name = "erc_kicad"
 version = "0.3.7"
 dependencies = [
