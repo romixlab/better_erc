@@ -1,4 +1,4 @@
-use better_erc::analysis::{I2cBuses, PartClasses, Power};
+use better_erc::analysis::{I2cBuses, PartClasses, Power, Values};
 use better_erc::model::{Board, Design};
 use better_erc::{CheckOptions, CheckRun, Project};
 use std::path::PathBuf;
@@ -85,8 +85,9 @@ impl Loaded {
             .iter()
             .map(|b| {
                 let classes = PartClasses::of(b);
-                let i2c = I2cBuses::of(b, &classes);
-                let power = Power::of(b, &classes, &i2c);
+                let view = b.view(None);
+                let i2c = I2cBuses::on(view, &classes);
+                let power = Power::of(view, &classes, &Values::of(view, &classes));
                 Analyses {
                     classes,
                     i2c,

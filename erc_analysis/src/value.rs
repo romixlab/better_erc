@@ -1,7 +1,12 @@
-//! A part's Value field read in the unit its class gives it (`10k` on a resistor is 10 kΩ), per variant, with the
-//! source of the field.
+//! Part values: each part's Value field read in the unit its class gives it (`10k` on a resistor is 10 kΩ, `16M`
+//! on a crystal 16 MHz), as the variant checked mounts it, with the tolerance, ratings and dielectric the field
+//! states, the E-series it is in, and the source of the field. A part whose class has no value unit (an IC, a
+//! connector) still reads a value that names its unit (`3V3`), else keeps its text.
 
-use erc_model::{Board, Fact, PartId, Provenance, Unit, Value, ValueWarning, VariantId};
+use crate::class::PartClasses;
+use erc_model::{
+    Board, ESeries, Fact, PartId, Provenance, Quantity, Unit, Value, ValueWarning, VariantId, View,
+};
 
 /// A Value field read as a quantity
 #[derive(Clone, Debug, PartialEq)]
@@ -10,9 +15,76 @@ pub struct PartValue {
     pub text: String,
     /// The number in base units, `None` when the text does not read as one
     pub value: Option<f64>,
+    /// The unit read: the one written, else the part class's
+    pub unit: Option<Unit>,
+    /// The unit the part class expects (`None` for a class whose Value names the part)
+    pub expected: Option<Unit>,
+    /// Tolerance in percent, when the field states one
+    pub tolerance: Option<f64>,
+    /// Ratings stated after the value (`50V`, `0.1W`)
+    pub ratings: Vec<Quantity>,
+    /// A ceramic dielectric code (`X7R`)
+    pub dielectric: Option<String>,
+    /// The smallest E-series the value is in (resistors, capacitors, inductors with a positive value)
+    pub series: Option<ESeries>,
     pub warnings: Vec<ValueWarning>,
     /// Where the field came from
     pub source: Option<Provenance>,
+}
+
+impl PartValue {
+    /// The value as a quantity
+    pub fn quantity(&self) -> Option<Quantity> {
+        Some(Quantity {
+            value: self.value?,
+            unit: self.unit?,
+        })
+    }
+
+    /// Whether the E-series question applies: a resistance, capacitance or inductance above zero
+    pub fn series_applies(&self) -> bool {
+        matches!(self.unit, Some(Unit::Ohm | Unit::Farad | Unit::Henry))
+            && self.expected == self.unit
+            && self.value.is_some_and(|v| v > 0.0)
+    }
+}
+
+/// The Value field of every part as one variant mounts it, by [`PartId`] (Need::Values)
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct Values(pub Vec<PartValue>);
+
+impl Values {
+    /// Reads every part's Value field in `view`, in the unit of its class in `classes`
+    pub fn of(view: View, classes: &PartClasses) -> Values {
+        Values(
+            (0..view.board.parts.len())
+                .map(PartId::from_index)
+                .map(|p| read(view, p, classes.get(p).value_unit()))
+                .collect(),
+        )
+    }
+
+    pub fn get(&self, part: PartId) -> &PartValue {
+        &self.0[part.index()]
+    }
+
+    /// How many components have a Value field that reads in their class's unit, of those whose class has one
+    pub fn coverage(&self, board: &Board) -> (usize, usize) {
+        let mut have = 0;
+        let mut of = 0;
+        for i in 0..board.parts.len() {
+            let p = PartId::from_index(i);
+            let v = self.get(p);
+            if !board.is_component(p) || v.expected.is_none() {
+                continue;
+            }
+            of += 1;
+            if v.value.is_some() {
+                have += 1;
+            }
+        }
+        (have, of)
+    }
 }
 
 /// The Value field of `part` in `variant` (the variant's override first), with its source
@@ -21,33 +93,36 @@ pub fn value_field(
     part: PartId,
     variant: Option<VariantId>,
 ) -> Option<&Fact<String>> {
-    let p = board.part(part);
-    let in_variant = variant.and_then(|v| {
-        p.variants
-            .iter()
-            .find(|pv| pv.variant == v)
-            .and_then(|pv| pv.fields.iter().find(|f| f.name == "Value"))
-            .and_then(|f| f.value.resolve())
-    });
-    in_variant.or_else(|| {
-        p.fields
-            .iter()
-            .find(|f| f.name == "Value")
-            .and_then(|f| f.value.resolve())
-    })
+    board.view(variant).field_fact(part, "Value")
 }
 
-/// The Value field of `part` read in `unit`
+/// The Value field of `part` read in `unit` when it names none
 pub fn value_as(board: &Board, part: PartId, variant: Option<VariantId>, unit: Unit) -> PartValue {
-    let fact = value_field(board, part, variant);
+    read(board.view(variant), part, Some(unit))
+}
+
+/// The Value field of `part` in `view`, read in `unit` when it names none (`None`: only a written unit counts)
+pub fn read(view: View, part: PartId, unit: Option<Unit>) -> PartValue {
+    let fact = view.field_fact(part, "Value");
     let text = fact.map_or("", |f| f.value.as_str());
-    let (value, warnings) = Value::parse_as(text, unit);
-    PartValue {
+    let r = Value::read(text, unit);
+    let q = r.value.quantity();
+    let mut v = PartValue {
         text: text.to_string(),
-        value: value.quantity().map(|q| q.value),
-        warnings,
+        value: q.map(|q| q.value),
+        unit: q.map(|q| q.unit),
+        expected: unit,
+        tolerance: r.tolerance,
+        ratings: r.ratings,
+        dielectric: r.dielectric,
+        series: None,
+        warnings: r.warnings,
         source: fact.map(|f| f.source.clone()),
+    };
+    if v.series_applies() {
+        v.series = v.value.and_then(ESeries::of);
     }
+    v
 }
 
 /// `4.7 kΩ`, `100 nF`: a value with an SI prefix, for messages
@@ -87,6 +162,7 @@ pub fn format_si(value: f64, unit: Unit) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use erc_model::{Facts, Field, Part, PartFlags, PartVariant, SheetId, Variant};
 
     #[test]
     fn si_text() {
@@ -95,5 +171,77 @@ mod tests {
         assert_eq!(format_si(0.0, Unit::Ohm), "0 Ω");
         assert_eq!(format_si(1e-7, Unit::Farad), "100 nF");
         assert_eq!(format_si(2.2e6, Unit::Ohm), "2.2 MΩ");
+        assert_eq!(format_si(-5.0, Unit::Volt), "-5 V");
+    }
+
+    fn part(designator: &str, lib: &str, value: &str) -> Part {
+        let sch = Provenance::Schematic {
+            file: "a.kicad_sch".into(),
+        };
+        Part {
+            designator: designator.into(),
+            symbol: None,
+            lib_id: lib.into(),
+            sheet: SheetId(0),
+            units: Vec::new(),
+            fields: vec![Field::new("Value", Fact::new(value.into(), sch))],
+            value: Facts::default(),
+            flags: PartFlags::default(),
+            variants: Vec::new(),
+            pins: Vec::new(),
+            ties: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn unit_from_the_class() {
+        let mut r1 = part("R1", "Device:R", "5k 1%");
+        r1.variants.push(PartVariant {
+            variant: VariantId(0),
+            flags: PartFlags::default(),
+            fields: vec![Field::new(
+                "Value",
+                Fact::new("5k1".into(), Provenance::Manual { who: "t".into() }),
+            )],
+        });
+        let board = Board {
+            parts: vec![
+                r1,
+                part("C1", "Device:C", "100n 50V X7R"),
+                part("Y1", "Device:Crystal", "16M"),
+                part("U1", "MCU_ST_STM32G0:STM32G071KBTx", "STM32G071KBT6"),
+                part("X1", "Fixture:Thing", "10k"),
+            ],
+            variants: vec![Variant {
+                name: "B".into(),
+                description: None,
+            }],
+            ..Board::default()
+        };
+        let classes = PartClasses::of(&board);
+        let base = Values::of(board.view(None), &classes);
+        let r1 = base.get(PartId(0));
+        assert_eq!(r1.value, Some(5000.0));
+        assert_eq!(r1.tolerance, Some(1.0));
+        assert_eq!(r1.series, None, "5k is in no series");
+        let c1 = base.get(PartId(1));
+        assert_eq!((c1.value, c1.unit), (Some(1e-7), Some(Unit::Farad)));
+        assert_eq!(c1.series, Some(ESeries::E3));
+        assert_eq!(c1.dielectric.as_deref(), Some("X7R"));
+        assert_eq!(base.get(PartId(2)).value, Some(16e6));
+        assert_eq!(base.get(PartId(3)).value, None);
+        assert_eq!(
+            base.get(PartId(4)).value,
+            None,
+            "an X of unknown class: `10k` is no quantity"
+        );
+        let b = Values::of(board.view(Some(VariantId(0))), &classes);
+        assert_eq!(b.get(PartId(0)).value, Some(5100.0));
+        assert_eq!(b.get(PartId(0)).series, Some(ESeries::E24));
+        assert_eq!(
+            b.get(PartId(0)).source,
+            Some(Provenance::Manual { who: "t".into() })
+        );
+        assert_eq!(base.coverage(&board), (3, 3));
     }
 }

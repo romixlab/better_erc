@@ -2,7 +2,7 @@
 //! the IO-1 test schematic, what `erc_core`'s `power.rs` and `general.rs` found, on the board model.
 
 use erc_analysis::graph::input_pins;
-use erc_analysis::{I2cBuses, PartClasses, Power};
+use erc_analysis::{PartClasses, Power, Values};
 use erc_model::{Board, DirFiles, ImportOptions};
 use std::path::Path;
 
@@ -24,22 +24,23 @@ fn buck() {
     let text = include_str!("fixtures/buck.net");
     let (b, _) = erc_kicad::netlist::read(text, "buck.net").unwrap();
     let classes = PartClasses::of(&b);
-    let power = Power::of(&b, &classes, &I2cBuses::of(&b, &classes));
+    let view = b.view(None);
+    let power = Power::of(view, &classes, &Values::of(view, &classes));
     let rails: Vec<_> = power
         .rails
         .iter()
-        .map(|(n, v)| (b.net(*n).name.clone(), v.value))
+        .map(|(n, r)| (b.net(*n).name.clone(), r.volts()))
         .collect();
     assert_eq!(
         rails,
         [
             ("+1V25".to_string(), Some(1.25)),
-            ("+5V".to_string(), None),
+            ("+5V".to_string(), Some(5.0)),
             ("/AUX".to_string(), None),
         ],
         "the I2C lines are not rails although named with a voltage, the switching node neither"
     );
-    assert_eq!(names(&b, power.grounds.iter().copied()), ["GND"]);
+    assert_eq!(names(&b, power.grounds.keys().copied()), ["GND"]);
     assert_eq!(names(&b, power.switching_nodes.iter().copied()), ["/SW"]);
     let gnd = b.net_by_name("GND").unwrap();
     assert!(power.is_power_net(gnd));
@@ -69,7 +70,8 @@ fn part_chains() {
     use erc_analysis::graph::part_chains;
     let (b, _) = erc_kicad::netlist::read(include_str!("fixtures/buck.net"), "buck.net").unwrap();
     let classes = PartClasses::of(&b);
-    let power = Power::of(&b, &classes, &I2cBuses::of(&b, &classes));
+    let view = b.view(None);
+    let power = Power::of(view, &classes, &Values::of(view, &classes));
     let ic = |p| classes.get(p).is_ic();
     let inductor = |p| classes.is(p, PartClass::Inductor);
     let names = |chains: Vec<Vec<erc_model::PartId>>| -> Vec<Vec<String>> {

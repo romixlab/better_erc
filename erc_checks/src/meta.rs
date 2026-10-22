@@ -119,6 +119,8 @@ pub enum Need {
     Layout,
     /// The schematic drawing: labels, no-connect flags, sheet pins
     Drawing,
+    /// What is fitted: DNP flags and variant overrides the design states
+    Variant,
     /// Part data from the part database or mx3 (CFG-5)
     PartDb,
     /// A key of the better_erc project file (CFG-2)
@@ -143,6 +145,7 @@ impl Need {
             Need::Conduction => "signal following".into(),
             Need::Layout => "layout".into(),
             Need::Drawing => "schematic drawing".into(),
+            Need::Variant => "fitted parts".into(),
             Need::PartDb => "part data".into(),
             Need::Project(key) => format!("project file: {key}"),
             Need::MultiBoard => "multi-board".into(),
@@ -165,6 +168,7 @@ impl Need {
         Need::Conduction,
         Need::Layout,
         Need::Drawing,
+        Need::Variant,
         Need::PartDb,
         Need::MultiBoard,
     ];
@@ -184,6 +188,7 @@ impl Need {
             Need::Conduction => "conduction".into(),
             Need::Layout => "layout".into(),
             Need::Drawing => "drawing".into(),
+            Need::Variant => "variant".into(),
             Need::PartDb => "part-db".into(),
             Need::Project(key) => format!("project:{key}"),
             Need::MultiBoard => "multi-board".into(),
@@ -217,6 +222,7 @@ impl Need {
             Need::Conduction => "signal following through parts (NET-10)",
             Need::Layout => "the board file",
             Need::Drawing => "labels, no-connect flags, sheet pins",
+            Need::Variant => "DNP flags and variant overrides: what is fitted",
             Need::PartDb => "part data (CFG-5)",
             Need::Project(_) => "a key of the better_erc project file (CFG-2)",
             Need::MultiBoard => "several boards joined through connectors (NET-13)",

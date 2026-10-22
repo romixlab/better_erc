@@ -27,8 +27,8 @@ impl TabUi for Nets {
             for (board, a) in s.boards() {
                 let name = |n: &better_erc::model::NetId| board.net(*n).name.as_str();
                 ui.heading("Power rails:");
-                for (net, voltage) in &a.power.rails {
-                    match voltage.value {
+                for (net, rail) in &a.power.rails {
+                    match rail.volts() {
                         Some(v) => {
                             ui.label(format!("{} ({})", name(net), format_si(v, Unit::Volt)))
                         }
@@ -36,7 +36,7 @@ impl TabUi for Nets {
                     };
                 }
                 ui.heading("Ground nets:");
-                for net in &a.power.grounds {
+                for net in a.power.grounds.keys() {
                     ui.label(name(net));
                 }
                 ui.heading("Switching nodes");

@@ -489,13 +489,20 @@ pub enum LabelKind {
     Hierarchical,
     /// A pin on a sheet symbol, in the parent sheet
     SheetPin,
-    /// A power symbol (its text is the net name)
+    /// A power symbol (its text is the net name), visible everywhere
     Power,
+    /// A KiCad 10 local power symbol: its net is visible in its sheet only
+    LocalPower,
     /// A directive label (net class flag); its text is the joined fields
     Directive,
 }
 
 impl LabelKind {
+    /// A power symbol, global or local
+    pub fn is_power(self) -> bool {
+        matches!(self, LabelKind::Power | LabelKind::LocalPower)
+    }
+
     pub fn name(self) -> &'static str {
         match self {
             LabelKind::Local => "local",
@@ -503,6 +510,7 @@ impl LabelKind {
             LabelKind::Hierarchical => "hierarchical",
             LabelKind::SheetPin => "sheet_pin",
             LabelKind::Power => "power",
+            LabelKind::LocalPower => "local_power",
             LabelKind::Directive => "directive",
         }
     }
@@ -514,6 +522,7 @@ impl LabelKind {
             "hierarchical" => LabelKind::Hierarchical,
             "sheet_pin" => LabelKind::SheetPin,
             "power" => LabelKind::Power,
+            "local_power" => LabelKind::LocalPower,
             "directive" => LabelKind::Directive,
             _ => return None,
         })

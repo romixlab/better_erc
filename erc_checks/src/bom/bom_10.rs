@@ -4,8 +4,8 @@ use super::placeholder;
 use crate::meta::*;
 use crate::{Ctx, Finding};
 use erc_analysis::PartClass;
-use erc_analysis::value::value_as;
-use erc_model::{Unit, ValueWarning};
+use erc_analysis::value::format_si;
+use erc_model::{ESeries, Unit, ValueWarning};
 
 pub struct Bom10;
 
@@ -21,16 +21,30 @@ static META: CheckMeta = CheckMeta {
 };
 
 /// What is odd about a value's notation
-fn describe(w: &ValueWarning) -> String {
+fn describe(w: &ValueWarning, class: &str) -> String {
     match w {
         ValueWarning::Trailing(t) => format!("text after the value (`{t}`)"),
         ValueWarning::UnitMismatch { written, .. } => {
-            format!("written in {} on a resistor", written.name())
+            format!("written in {} on a {class}", written.name())
         }
         ValueWarning::DecimalComma => "a decimal comma".into(),
         ValueWarning::Spacing => "more than one space before the multiplier".into(),
         ValueWarning::LowercaseR => "a small `r` for ohms".into(),
         ValueWarning::RedundantR => "`R` after a multiplier".into(),
+        ValueWarning::SeparateUnit => "the unit apart from its value".into(),
+    }
+}
+
+/// `resistance` for a resistor
+fn quantity_name(unit: Unit) -> &'static str {
+    match unit {
+        Unit::Ohm => "resistance",
+        Unit::Farad => "capacitance",
+        Unit::Henry => "inductance",
+        Unit::Volt => "voltage",
+        Unit::Ampere => "current",
+        Unit::Hertz => "frequency",
+        Unit::Watt => "power",
     }
 }
 
@@ -39,40 +53,62 @@ impl Check for Bom10 {
         &META
     }
 
-    /// Resistors so far (capacitors and the E-series test are still to come)
+    /// Resistors, capacitors and inductors: a value that does not read in the class's unit, odd notation, or a
+    /// value in no E-series (E3..E192)
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let b = cx.board();
         let classes = cx.classes();
         let mut out = Vec::new();
         for p in cx.components() {
-            if !classes.is(p, PartClass::Resistor) {
+            let class = classes.get(p);
+            if !(class.is_resistor() || class.is_capacitor() || class == PartClass::Inductor) {
                 continue;
             }
-            let v = value_as(b, p, cx.variant, Unit::Ohm);
+            let v = cx.values().get(p);
+            let Some(unit) = v.expected else { continue };
             let text = v.text.trim();
             if text.is_empty() || placeholder(text) || text == "DNP" || text == "DNM" {
                 continue;
             }
             let designator = &b.part(p).designator;
-            let message = if v.value.is_none() {
-                format!("{designator}: `{}` does not read as a resistance", v.text)
-            } else if !v.warnings.is_empty() {
-                let odd: Vec<String> = v.warnings.iter().map(describe).collect();
-                format!("{designator}: `{}` has {}", v.text, odd.join(", "))
+            let mut odd: Vec<String> = Vec::new();
+            if v.value.is_none() {
+                odd.push(format!("does not read as a {}", quantity_name(unit)));
             } else {
+                odd.extend(v.warnings.iter().map(|w| describe(w, class.name())));
+                if v.series_applies() && v.series.is_none() {
+                    let value = v.value.unwrap_or_default();
+                    let nearest: Vec<String> = [ESeries::E24, ESeries::E96]
+                        .into_iter()
+                        .filter_map(|s| {
+                            Some(format!(
+                                "{} {}",
+                                s.name(),
+                                format_si(s.nearest(value)?, unit)
+                            ))
+                        })
+                        .collect();
+                    odd.push(format!(
+                        "{} is in no E-series (nearest {})",
+                        format_si(value, unit),
+                        nearest.join(", ")
+                    ));
+                }
+            }
+            if odd.is_empty() {
                 continue;
-            };
-            let class = classes.fact(p);
-            let mut f = cx.finding(&META).part(p).message(message).fact(
-                "class",
-                class.value.name(),
-                class.source.clone(),
-            );
-            if let Some(source) = v.source {
-                f = f.fact("Value", &v.text, source);
+            }
+            let class_fact = classes.fact(p);
+            let mut f = cx
+                .finding(&META)
+                .part(p)
+                .message(format!("{designator}: `{}` {}", v.text, odd.join("; ")))
+                .fact("class", class.describe(), class_fact.source.clone());
+            if let Some(source) = &v.source {
+                f = f.fact("Value", &v.text, source.clone());
             }
             out.push(
-                f.fix("one notation across the project: `4k7`, `100R`, `2R2`")
+                f.fix("one notation across the project (`4k7`, `100n`, `2R2`), values from the E-series the parts come from")
                     .build(),
             );
         }

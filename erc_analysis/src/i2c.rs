@@ -5,9 +5,11 @@
 //! - Its pull-up is a pair of resistors, one from each line, meeting on one net (the rail). Further resistors
 //!   from a line to that rail are redundant pull-ups.
 //! - The other parts on the lines are devices (ICs), connectors, test points, translators (a translator IC whose
-//!   other side is another bus), discrete translators (a FET per line to another bus), ties (a resistor per line,
-//!   0 Ω or a few ohms, to another bus, or to an unnamed pair of nets that becomes an ad-hoc bus named
-//!   `<bus>_to_<part>`), or unknown.
+//!   other side is another bus), discrete translators (a FET per line to another bus, the BSS138 pair, with the
+//!   nets of their gates), ties (a resistor, 0 Ω or a few ohms, a ferrite, net tie or jumper per line, to another
+//!   bus, or to an unnamed pair of nets that becomes an ad-hoc bus named `<bus>_to_<part>`), or unknown.
+//! - Only fitted parts count: the buses are found on a [`View`], so a pull-up made DNP in the variant checked is
+//!   no pull-up.
 //! - Buses joined by ties form a direct segment (one electrical bus: one pull-up pair wanted); buses joined by
 //!   ties or translators form one logical bus.
 //!
@@ -17,7 +19,7 @@ use crate::class::{PartClass, PartClasses};
 use crate::graph::{
     net_chains, net_degree, net_parts, part_nets, part_nets_except_pins, parts_connected,
 };
-use erc_model::{Board, NetId, PartId};
+use erc_model::{Board, NetId, PartId, View};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -57,13 +59,15 @@ pub enum Node {
         part: PartId,
         other_side: BusIdx,
     },
-    /// A FET per line to another bus
+    /// A FET per line to another bus (the BSS138 pair), with the nets of their gates (pins named `G`, `GATE`)
     DiscreteTranslator {
         scl_fet: PartId,
         sda_fet: PartId,
         other_side: BusIdx,
+        scl_gate: Option<NetId>,
+        sda_gate: Option<NetId>,
     },
-    /// A resistor (0 Ω, a few ohms) or a transistor per line to another bus
+    /// A resistor (0 Ω, a few ohms), ferrite, net tie or jumper per line to another bus
     Tie {
         scl_tie: PartId,
         sda_tie: PartId,
@@ -100,9 +104,44 @@ pub struct I2cBuses {
 }
 
 impl I2cBuses {
-    /// Finds the I2C buses of `board`
+    /// Finds the I2C buses of the base design of `board`
     pub fn of(board: &Board, classes: &PartClasses) -> I2cBuses {
-        Recogniser { board, classes }.run()
+        I2cBuses::on(board.view(None), classes)
+    }
+
+    /// Finds the I2C buses of `view`: the parts its variant fits
+    pub fn on(view: View, classes: &PartClasses) -> I2cBuses {
+        Recogniser {
+            board: view.board,
+            view,
+            classes,
+        }
+        .run()
+    }
+
+    /// The pull-up pairs of a segment's buses (a direct segment should have one)
+    pub fn pull_ups(&self, segment: &BTreeSet<BusIdx>) -> Vec<(BusIdx, PullUp)> {
+        segment
+            .iter()
+            .filter_map(|i| Some((*i, self.buses[*i].pull_up?)))
+            .collect()
+    }
+
+    /// The direct segment a bus is in
+    pub fn direct_segment(&self, bus: BusIdx) -> Option<&BTreeSet<BusIdx>> {
+        self.direct_segments.iter().find(|s| s.contains(&bus))
+    }
+
+    /// The buses of the direct segment of `bus`'s logical bus other than its own direct segment: the segments
+    /// behind translators, buffers and discrete translators
+    pub fn segments_of_logical_bus(&self, bus: BusIdx) -> Vec<&BTreeSet<BusIdx>> {
+        let Some(logical) = self.same_bus_segments.iter().find(|s| s.contains(&bus)) else {
+            return Vec::new();
+        };
+        self.direct_segments
+            .iter()
+            .filter(|s| s.iter().all(|b| logical.contains(b)))
+            .collect()
     }
 
     pub fn by_name(&self, name: &str) -> Option<&I2cBus> {
@@ -120,6 +159,7 @@ impl I2cBuses {
 
 struct Recogniser<'a> {
     board: &'a Board,
+    view: View<'a>,
     classes: &'a PartClasses,
 }
 
@@ -149,7 +189,35 @@ impl Recogniser<'_> {
     }
 
     fn is_resistor(&self, p: PartId) -> bool {
-        self.classes.is(p, PartClass::Resistor)
+        self.view.fitted(p) && self.classes.is(p, PartClass::Resistor)
+    }
+
+    /// A two-terminal part that ties a line to another: resistor, ferrite, net tie, jumper
+    fn is_tie(&self, p: PartId) -> bool {
+        let c = self.classes.get(p);
+        self.view.fitted(p) && (c == PartClass::Resistor || c.is_dc_tie())
+    }
+
+    fn is_fet(&self, p: PartId) -> bool {
+        self.view.fitted(p) && self.classes.get(p).is_transistor()
+    }
+
+    /// The fitted components on `nets`
+    fn parts_on(&self, nets: &[NetId]) -> BTreeSet<PartId> {
+        let mut parts = net_parts(self.board, nets);
+        parts.retain(|p| self.view.fitted(*p));
+        parts
+    }
+
+    /// The net of a part's pin named `G` or `GATE`
+    fn gate(&self, part: PartId) -> Option<NetId> {
+        self.board
+            .part(part)
+            .pins
+            .iter()
+            .map(|p| self.board.pin(*p))
+            .find(|p| matches!(p.name.to_uppercase().as_str(), "G" | "GATE"))
+            .and_then(|p| p.net)
     }
 
     /// A bus for every pair of nets named alike with `SCL` and `SDA`
@@ -176,7 +244,7 @@ impl Recogniser<'_> {
 
     /// A bus on two nets with its pull-ups and parts
     fn bus(&self, name: String, scl: NetId, sda: NetId) -> I2cBus {
-        let mut parts = net_parts(self.board, &[scl, sda]);
+        let mut parts = self.parts_on(&[scl, sda]);
         let mut redundant_pull_ups = BTreeSet::new();
         let pull_up = self.pull_up(scl, sda);
         if let Some(pu) = pull_up {
@@ -244,8 +312,8 @@ impl Recogniser<'_> {
                 if mentioned(&changes, part) {
                     continue;
                 }
-                let class = self.classes.get(part);
-                if !(class == PartClass::Resistor || class.is_transistor()) {
+                let tie = self.is_tie(part);
+                if !(tie || self.is_fet(part)) {
                     continue;
                 }
                 let nets = part_nets_except_pins(board, part, &["G", "GATE"]);
@@ -259,12 +327,7 @@ impl Recogniser<'_> {
                     continue;
                 };
                 let same_kind = move |p: PartId| {
-                    let c = self.classes.get(p);
-                    if class == PartClass::Resistor {
-                        c == PartClass::Resistor
-                    } else {
-                        c.is_transistor()
-                    }
+                    if tie { self.is_tie(p) } else { self.is_fet(p) }
                 };
                 let other_bus = buses
                     .iter()
@@ -277,8 +340,13 @@ impl Recogniser<'_> {
                         continue;
                     };
                     let (scl_part, sda_part) = (part, complement);
+                    let (scl_part, sda_part) = if is_scl {
+                        (scl_part, sda_part)
+                    } else {
+                        (sda_part, scl_part)
+                    };
                     let node = |other_side| {
-                        if class == PartClass::Resistor {
+                        if tie {
                             Node::Tie {
                                 scl_tie: scl_part,
                                 sda_tie: sda_part,
@@ -289,6 +357,8 @@ impl Recogniser<'_> {
                                 scl_fet: scl_part,
                                 sda_fet: sda_part,
                                 other_side,
+                                scl_gate: self.gate(scl_part),
+                                sda_gate: self.gate(sda_part),
                             }
                         }
                     };
@@ -296,7 +366,7 @@ impl Recogniser<'_> {
                     changes.entry(oi).or_default().push(node(bi));
                 } else {
                     // The other side may be an IC or connector behind a 0 Ω on unnamed nets
-                    let mut far_parts = net_parts(board, &[other_side]);
+                    let mut far_parts = self.parts_on(&[other_side]);
                     far_parts.remove(&part);
                     let mut targets = Vec::new();
                     for n in &bus.nodes {
@@ -329,13 +399,18 @@ impl Recogniser<'_> {
                     let name = format!("{}_to_{}", bus.name, board.part(target).designator);
                     let new_idx = buses.len() + created.len();
                     created.push(self.bus(name, scl, sda));
-                    let tie = |other_side| Node::Tie {
-                        scl_tie: part,
-                        sda_tie: complement,
+                    let (scl_tie, sda_tie) = if is_scl {
+                        (part, complement)
+                    } else {
+                        (complement, part)
+                    };
+                    let node = |other_side| Node::Tie {
+                        scl_tie,
+                        sda_tie,
                         other_side,
                     };
-                    changes.entry(bi).or_default().push(tie(new_idx));
-                    changes.entry(new_idx).or_default().push(tie(bi));
+                    changes.entry(bi).or_default().push(node(new_idx));
+                    changes.entry(new_idx).or_default().push(node(bi));
                 }
             }
         }

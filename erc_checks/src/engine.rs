@@ -120,6 +120,7 @@ pub fn run_with(
             .iter()
             .filter(|c| c.meta().scope == Scope::Board || bi == 0)
             .collect();
+        let cx = Ctx::new(design, board_id, variants[bi], &opts.config);
         let mut avail: BTreeMap<String, Availability> = BTreeMap::new();
         let mut runnable = Vec::new();
         for c in here {
@@ -127,7 +128,7 @@ pub fn run_with(
             for need in c.meta().needs {
                 let a = avail
                     .entry(need.name())
-                    .or_insert_with(|| Availability::of(*need, design, board))
+                    .or_insert_with(|| cx.availability(*need))
                     .clone();
                 if let Availability::Missing { why } = a {
                     missing = Some((*need, why));
@@ -154,7 +155,6 @@ pub fn run_with(
                 });
             }
         }
-        let cx = Ctx::new(design, board_id, variants[bi], &opts.config);
         let results: Vec<(&'static str, Vec<Finding>, u64)> = runnable
             .par_iter()
             .map(|c| {

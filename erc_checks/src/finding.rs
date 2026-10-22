@@ -323,7 +323,7 @@ fn locations(board: &Board, s: Subject) -> Vec<Location> {
             .labels
             .iter()
             .map(|l| board.label(*l))
-            .filter(|l| l.kind != erc_model::LabelKind::Power)
+            .filter(|l| !l.kind.is_power())
             .take(5)
             .map(|l| Location {
                 file: board.sheet(l.sheet).file.clone(),

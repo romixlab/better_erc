@@ -89,7 +89,7 @@ impl<'a> View<'a> {
     }
 
     /// The real components (no `#` virtual parts), fitted or not
-    pub fn components(&self) -> impl Iterator<Item = PartId> + 'a {
+    pub fn components(self) -> impl Iterator<Item = PartId> + 'a {
         let b = self.board;
         (0..b.parts.len())
             .map(PartId::from_index)
@@ -97,9 +97,8 @@ impl<'a> View<'a> {
     }
 
     /// The fitted real components
-    pub fn fitted_components(&self) -> impl Iterator<Item = PartId> + 'a {
-        let v = *self;
-        self.components().filter(move |p| v.fitted(*p))
+    pub fn fitted_components(self) -> impl Iterator<Item = PartId> + 'a {
+        self.components().filter(move |p| self.fitted(*p))
     }
 
     /// The resolved Value field (`field_value` of the variant's fields first)

@@ -546,7 +546,7 @@ fn assemble(
             }
             let unit_pins = connect::unit_pins(f, si, res.unit);
             // A power symbol is not a part: its pin names a net
-            if lib.is_some_and(|l| l.power.is_some()) {
+            if let Some(scope) = lib.and_then(|l| l.power) {
                 let net = unit_pins
                     .first()
                     .and_then(|(p, _)| nets.item_net.get(&Item::Pin(si, *p)))
@@ -555,7 +555,10 @@ fn assemble(
                     .first()
                     .is_some_and(|(p, _)| nets.alone.contains(&Item::Pin(si, *p)));
                 b.labels.push(Label {
-                    kind: LabelKind::Power,
+                    kind: match scope {
+                        PowerScope::Global => LabelKind::Power,
+                        PowerScope::Local => LabelKind::LocalPower,
+                    },
                     text: s.property("Value").unwrap_or("").to_string(),
                     sheet,
                     at: s.at,

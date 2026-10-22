@@ -1,12 +1,12 @@
 board local_power
 label / local LOWER at 30,23.81 net /LOWER
+label / local_power VLOC at 20,16.19 net /VLOC
+label / local_power VLOC at 30,16.19 net /VLOC
 label / power GND at 20,23.81 net GND
-label / power VLOC at 20,16.19 net /VLOC
-label / power VLOC at 30,16.19 net /VLOC
 label /Sub/ local LOWER at 30,16.19 net /Sub/LOWER
+label /Sub/ local_power VLOC at 20,16.19 net /Sub/VLOC
+label /Sub/ local_power VLOC at 30,23.81 net /Sub/VLOC
 label /Sub/ power GND at 20,23.81 net GND
-label /Sub/ power VLOC at 20,16.19 net /Sub/VLOC
-label /Sub/ power VLOC at 30,23.81 net /Sub/VLOC
 net /LOWER class = Default @ sch local_power.kicad_sch note "effective net class"
 net /LOWER kind named
 net /Sub/LOWER class = Default @ sch local_power.kicad_sch note "effective net class"

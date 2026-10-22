@@ -81,6 +81,7 @@ fn buses_text(b: &Board, buses: &better_erc::analysis::I2cBuses) -> String {
                     scl_fet,
                     sda_fet,
                     other_side,
+                    ..
                 } => format!(
                     "    discrete translator {} {} to {}\n",
                     part(scl_fet),

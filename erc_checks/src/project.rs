@@ -2,7 +2,7 @@
 //! the importer registry ([`erc_import`]), run the engine, compare with a baseline report, and decide the exit code
 //! as data ([`Verdict`]). Nothing here prints; every failure is a [`CheckError`].
 
-use crate::ctx::Availability;
+use crate::ctx::{Availability, Config, Ctx};
 use crate::engine::{RunError, RunOptions, run_imported};
 use crate::finding::BaselineState;
 use crate::meta::{Need, Severity};
@@ -288,10 +288,20 @@ impl Project {
         }
         let mut unavailable = Vec::new();
         for need in &opts.require {
-            for board in &self.imported.design.boards {
-                if let Availability::Missing { why } =
-                    Availability::of(*need, &self.imported.design, board)
-                {
+            for (bi, board) in self.imported.design.boards.iter().enumerate() {
+                let config = Config::default();
+                let variant = opts
+                    .run
+                    .variant
+                    .as_ref()
+                    .and_then(|v| board.variant_by_name(v));
+                let cx = Ctx::new(
+                    &self.imported.design,
+                    erc_model::BoardId::from_index(bi),
+                    variant,
+                    &config,
+                );
+                if let Availability::Missing { why } = cx.availability(*need) {
                     unavailable.push(Unavailable {
                         need: need.slug(),
                         board: board.name.clone(),

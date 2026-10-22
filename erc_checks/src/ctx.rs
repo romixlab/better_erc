@@ -4,8 +4,9 @@
 
 use crate::finding::FindingBuilder;
 use crate::meta::{CheckMeta, Need, Severity};
-use erc_analysis::{I2cBuses, PartClasses};
-use erc_model::{Board, BoardId, Design, PartId, Provenance, VariantId};
+use erc_analysis::drawing::Drawing;
+use erc_analysis::{I2cBuses, PartClasses, Power, Values};
+use erc_model::{Board, BoardId, Design, PartId, Provenance, VariantId, View};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::OnceLock;
@@ -41,15 +42,15 @@ pub enum Availability {
 }
 
 impl Availability {
-    /// What `board` of `design` has of `need`
-    pub fn of(need: Need, design: &Design, board: &Board) -> Availability {
-        let components: Vec<PartId> = (0..board.parts.len())
-            .map(PartId::from_index)
-            .filter(|p| board.is_component(*p))
-            .collect();
+    /// What the context's board has of `need`, from the analyses the checks will use (built here when first
+    /// asked, then shared)
+    pub fn of(need: Need, cx: &Ctx) -> Availability {
+        let design = cx.design;
+        let board = cx.board();
+        let components: Vec<PartId> = cx.components().collect();
         let missing = |why: &str| Availability::Missing { why: why.into() };
-        let count = |have: usize, what: &str| {
-            if components.is_empty() || have == components.len() {
+        let count = |have: usize, of: usize, what: &str| {
+            if of == 0 || have == of {
                 Availability::Available
             } else if have == 0 {
                 Availability::Missing {
@@ -58,7 +59,7 @@ impl Availability {
             } else {
                 Availability::Partial {
                     have,
-                    of: components.len(),
+                    of,
                     what: what.into(),
                 }
             }
@@ -71,13 +72,28 @@ impl Availability {
                     Availability::Available
                 }
             }
-            // Classes always resolve: by library, description, or the designator prefix as an assumption
-            Need::PartClasses => Availability::Available,
+            // Classes always resolve, by the designator prefix as an assumption at worst: partial, never missing
+            Need::PartClasses => {
+                let c = cx.classes().coverage(board);
+                if c.known == c.components() {
+                    Availability::Available
+                } else {
+                    Availability::Partial {
+                        have: c.known,
+                        of: c.components(),
+                        what: format!(
+                            "a class from the library symbol or its description ({} by designator prefix, assumed; {} unknown)",
+                            c.assumed, c.unknown
+                        ),
+                    }
+                }
+            }
             Need::Values => count(
                 components
                     .iter()
                     .filter(|p| board.part(**p).fields.iter().any(|f| f.name == "Value"))
                     .count(),
+                components.len(),
                 "a Value field",
             ),
             Need::Layout => {
@@ -88,11 +104,23 @@ impl Availability {
                 }
             }
             Need::Drawing => {
-                if board.source.tool == "kicad" && !board.sheets.is_empty() {
+                if Drawing::available(board) {
                     Availability::Available
                 } else {
                     missing(
                         "no schematic drawing (labels, no-connect flags): import the .kicad_sch, not a netlist",
+                    )
+                }
+            }
+            Need::Variant => {
+                let stated = matches!(board.source.tool.as_str(), "kicad" | "kicad-netlist")
+                    || !board.variants.is_empty()
+                    || board.parts.iter().any(|p| !p.flags.dnp.is_empty());
+                if stated {
+                    Availability::Available
+                } else {
+                    missing(
+                        "the design states no DNP flags or variants: every part counts as fitted",
                     )
                 }
             }
@@ -105,8 +133,33 @@ impl Availability {
                     Availability::Available
                 }
             }
-            Need::Rails | Need::RailVoltages => {
-                missing("rails and their voltages are not derived yet (NET-5)")
+            Need::Rails => {
+                let p = cx.power();
+                if p.rails.is_empty() && p.grounds.is_empty() {
+                    missing(
+                        "no net reads as a rail or ground: name rails `+3V3`, `VDD_1V8`, grounds `GND`, or use power symbols and power pins (NET-5)",
+                    )
+                } else {
+                    Availability::Available
+                }
+            }
+            Need::RailVoltages => {
+                let (have, of) = cx.power().voltage_coverage();
+                if of == 0 {
+                    missing("no rails (NET-5)")
+                } else if have == 0 {
+                    missing(
+                        "no rail name carries a voltage (`+3V3`, `VDD_1V8`, `-5V`); the project file will set them (CFG-2)",
+                    )
+                } else if have == of {
+                    Availability::Available
+                } else {
+                    Availability::Partial {
+                        have,
+                        of,
+                        what: "rails with a voltage".into(),
+                    }
+                }
             }
             Need::PinRoles | Need::PinThresholds => {
                 missing("pin roles are not derived yet (NET-7)")
@@ -130,7 +183,10 @@ pub struct Ctx<'a> {
     pub variant: Option<VariantId>,
     config: &'a Config,
     classes: OnceLock<PartClasses>,
+    values: OnceLock<Values>,
+    power: OnceLock<Power>,
     i2c: OnceLock<I2cBuses>,
+    drawing: OnceLock<Drawing>,
 }
 
 impl<'a> Ctx<'a> {
@@ -146,7 +202,10 @@ impl<'a> Ctx<'a> {
             variant,
             config,
             classes: OnceLock::new(),
+            values: OnceLock::new(),
+            power: OnceLock::new(),
             i2c: OnceLock::new(),
+            drawing: OnceLock::new(),
         }
     }
 
@@ -154,28 +213,53 @@ impl<'a> Ctx<'a> {
         self.design.board(self.board_id)
     }
 
+    /// The board as the variant checked mounts it (Need::Variant)
+    pub fn view(&self) -> View<'a> {
+        self.board().view(self.variant)
+    }
+
+    /// What the board has of `need`
+    pub fn availability(&self, need: Need) -> Availability {
+        Availability::of(need, self)
+    }
+
     /// Part classes (Need::PartClasses)
     pub fn classes(&self) -> &PartClasses {
         self.classes.get_or_init(|| PartClasses::of(self.board()))
     }
 
-    /// The I2C buses (Need::Graph, Need::PartClasses)
+    /// Every part's Value field read in its class's unit, in the variant checked (Need::Values)
+    pub fn values(&self) -> &Values {
+        self.values
+            .get_or_init(|| Values::of(self.view(), self.classes()))
+    }
+
+    /// Rails, grounds, ground groups and switching nodes in the variant checked (Need::Rails,
+    /// Need::RailVoltages)
+    pub fn power(&self) -> &Power {
+        self.power
+            .get_or_init(|| Power::of(self.view(), self.classes(), self.values()))
+    }
+
+    /// The I2C buses of the parts fitted in the variant checked (Need::Graph, Need::PartClasses)
     pub fn i2c(&self) -> &I2cBuses {
         self.i2c
-            .get_or_init(|| I2cBuses::of(self.board(), self.classes()))
+            .get_or_init(|| I2cBuses::on(self.view(), self.classes()))
+    }
+
+    /// Labels with their scopes, sheet pins, no-connect flags (Need::Drawing)
+    pub fn drawing(&self) -> &Drawing {
+        self.drawing.get_or_init(|| Drawing::of(self.board()))
     }
 
     /// The real components of the board, fitted or not
-    pub fn components(&self) -> impl Iterator<Item = PartId> + '_ {
-        let b = self.board();
-        (0..b.parts.len())
-            .map(PartId::from_index)
-            .filter(move |p| b.is_component(*p))
+    pub fn components(&self) -> impl Iterator<Item = PartId> + 'a {
+        self.view().components()
     }
 
     /// Whether a part is fitted in the variant checked
     pub fn fitted(&self, part: PartId) -> bool {
-        self.board().fitted(part, self.variant)
+        self.view().fitted(part)
     }
 
     /// A threshold: the project's value, else the check's default
