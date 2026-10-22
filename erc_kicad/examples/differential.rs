@@ -21,7 +21,7 @@ fn main() {
         .unwrap_or(Path::new("."));
     let files = DirFiles(dir.to_path_buf());
     let name = sch.file_name().and_then(|n| n.to_str()).unwrap_or_default();
-    let (ours, notes) = match erc_kicad::sch::read(
+    let (ours, notes) = match erc_kicad::project::read(
         &files,
         name,
         &erc_model::ImportOptions {
@@ -29,7 +29,7 @@ fn main() {
             ..Default::default()
         },
     ) {
-        Ok(x) => x,
+        Ok(mut x) => (x.design.boards.remove(0), x.notes),
         Err(e) => {
             eprintln!("{e}");
             std::process::exit(1);

@@ -72,3 +72,7 @@ kicad-fixtures:
     {{ kicad }}:9.0 kicad-cli sch export netlist -o hierarchy.kicad9.net hierarchy.kicad_sch
     {{ kicad }}:10.0 kicad-cli sch export netlist -o hierarchy.kicad10.net hierarchy.kicad_sch
     {{ kicad }}:10.0 kicad-cli sch export netlist -o local_power.kicad10.net local_power.kicad_sch
+    {{ kicad }}:8.0 kicad-cli sch export netlist -o alias.kicad8.net alias.kicad_sch
+    {{ kicad }}:9.0 kicad-cli sch export netlist -o alias.kicad9.net alias.kicad_sch
+    {{ kicad }}:10.0 kicad-cli sch export netlist -o alias.kicad10.net alias.kicad_sch
+    {{ kicad }}:10.0 kicad-cli sch export netlist -o alias_pro.kicad10.net alias_pro.kicad_sch

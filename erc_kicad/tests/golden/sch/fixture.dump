@@ -50,9 +50,9 @@ pin JP1 2 name C unit 1 net /MID
 pin JP1 2 type = passive @ sch fixture.kicad_sch
 pin JP1 3 name B unit 1 net /INA
 pin JP1 3 type = passive @ sch fixture.kicad_sch
-pin R1 1 name ~ unit 1 net /OUTA
+pin R1 1 name "" unit 1 net /OUTA
 pin R1 1 type = passive @ sch fixture.kicad_sch
-pin R1 2 name ~ unit 1 net /MID
+pin R1 2 name "" unit 1 net /MID
 pin R1 2 type = passive @ sch fixture.kicad_sch
 pin U1 1 name OUTA unit 1 net /OUTA
 pin U1 1 type = output @ sch fixture.kicad_sch
@@ -96,6 +96,6 @@ symbol Fixture:R field Description Resistor
 symbol Fixture:R field Reference R
 symbol Fixture:R field Value R
 symbol Fixture:R hash 87069a6c18644b32
-symbol Fixture:R pin 1 unit 1 body 1 name ~ type passive style line
-symbol Fixture:R pin 2 unit 1 body 1 name ~ type passive style line
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
 symbol Fixture:R units 1

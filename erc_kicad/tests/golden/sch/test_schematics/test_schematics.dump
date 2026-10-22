@@ -286,6 +286,21 @@ net unconnected-(U602-IO0-Pad1) kind unconnected
 net unconnected-(U602-IO1-Pad2) kind unconnected
 net unconnected-(U602-IO2-Pad3) kind unconnected
 net unconnected-(U602-IO3-Pad5) kind unconnected
+netclass Default
+netclass Default param bus_width = 12 @ pro test_schematics.kicad_pro
+netclass Default param clearance = 0.2 @ pro test_schematics.kicad_pro
+netclass Default param diff_pair_gap = 0.25 @ pro test_schematics.kicad_pro
+netclass Default param diff_pair_via_gap = 0.25 @ pro test_schematics.kicad_pro
+netclass Default param diff_pair_width = 0.2 @ pro test_schematics.kicad_pro
+netclass Default param line_style = 0 @ pro test_schematics.kicad_pro
+netclass Default param microvia_diameter = 0.3 @ pro test_schematics.kicad_pro
+netclass Default param microvia_drill = 0.1 @ pro test_schematics.kicad_pro
+netclass Default param pcb_color = "rgba(0, 0, 0, 0.000)" @ pro test_schematics.kicad_pro
+netclass Default param schematic_color = "rgba(0, 0, 0, 0.000)" @ pro test_schematics.kicad_pro
+netclass Default param track_width = 0.2 @ pro test_schematics.kicad_pro
+netclass Default param via_diameter = 0.6 @ pro test_schematics.kicad_pro
+netclass Default param via_drill = 0.3 @ pro test_schematics.kicad_pro
+netclass Default param wire_width = 6 @ pro test_schematics.kicad_pro
 part J401 field Description = "Generic connector, single row, 01x03, script generated" @ sch i2c_segments.kicad_sch
 part J401 field Value = Conn_01x03_Pin @ sch i2c_segments.kicad_sch
 part J401 flag dnp = no @ sch i2c_segments.kicad_sch
@@ -946,149 +961,149 @@ pin Q504 2 name S unit 1 net "/C107: I2C multiple pull-ups/SCL1_1V8"
 pin Q504 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
 pin Q504 3 name D unit 1 net "/C107: I2C multiple pull-ups/SCL1_3V3"
 pin Q504 3 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R201 1 name ~ unit 1 net "/C20: I2C no pull-ups/I2C1_EN"
+pin R201 1 name "" unit 1 net "/C20: I2C no pull-ups/I2C1_EN"
 pin R201 1 type = passive @ sch i2c_no_pull_ups.kicad_sch
-pin R201 2 name ~ unit 1 net "/C20: I2C no pull-ups/SDA2"
+pin R201 2 name "" unit 1 net "/C20: I2C no pull-ups/SDA2"
 pin R201 2 type = passive @ sch i2c_no_pull_ups.kicad_sch
-pin R202 1 name ~ unit 1 net "/C20: I2C no pull-ups/I2C1_EN"
+pin R202 1 name "" unit 1 net "/C20: I2C no pull-ups/I2C1_EN"
 pin R202 1 type = passive @ sch i2c_no_pull_ups.kicad_sch
-pin R202 2 name ~ unit 1 net "/C20: I2C no pull-ups/SCL2"
+pin R202 2 name "" unit 1 net "/C20: I2C no pull-ups/SCL2"
 pin R202 2 type = passive @ sch i2c_no_pull_ups.kicad_sch
-pin R203 1 name ~ unit 1 net "/C20: I2C no pull-ups/I2C3_P"
+pin R203 1 name "" unit 1 net "/C20: I2C no pull-ups/I2C3_P"
 pin R203 1 type = passive @ sch i2c_no_pull_ups.kicad_sch
-pin R203 2 name ~ unit 1 net "/C20: I2C no pull-ups/SDA3"
+pin R203 2 name "" unit 1 net "/C20: I2C no pull-ups/SDA3"
 pin R203 2 type = passive @ sch i2c_no_pull_ups.kicad_sch
-pin R204 1 name ~ unit 1 net "/C20: I2C no pull-ups/I2C3_P"
+pin R204 1 name "" unit 1 net "/C20: I2C no pull-ups/I2C3_P"
 pin R204 1 type = passive @ sch i2c_no_pull_ups.kicad_sch
-pin R204 2 name ~ unit 1 net "/C20: I2C no pull-ups/SCL3"
+pin R204 2 name "" unit 1 net "/C20: I2C no pull-ups/SCL3"
 pin R204 2 type = passive @ sch i2c_no_pull_ups.kicad_sch
-pin R205 1 name ~ unit 1 net "/C20: I2C no pull-ups/I2C3_EN"
+pin R205 1 name "" unit 1 net "/C20: I2C no pull-ups/I2C3_EN"
 pin R205 1 type = passive @ sch i2c_no_pull_ups.kicad_sch
-pin R205 2 name ~ unit 1 net "/C20: I2C no pull-ups/I2C3_P"
+pin R205 2 name "" unit 1 net "/C20: I2C no pull-ups/I2C3_P"
 pin R205 2 type = passive @ sch i2c_no_pull_ups.kicad_sch
-pin R301 1 name ~ unit 1 net VCC
+pin R301 1 name "" unit 1 net VCC
 pin R301 1 type = passive @ sch i2c_non_standard_pull_ups.kicad_sch
-pin R301 2 name ~ unit 1 net "/C20: I2C non standard pull-ups/SCL"
+pin R301 2 name "" unit 1 net "/C20: I2C non standard pull-ups/SCL"
 pin R301 2 type = passive @ sch i2c_non_standard_pull_ups.kicad_sch
-pin R302 1 name ~ unit 1 net VCC
+pin R302 1 name "" unit 1 net VCC
 pin R302 1 type = passive @ sch i2c_non_standard_pull_ups.kicad_sch
-pin R302 2 name ~ unit 1 net "/C20: I2C non standard pull-ups/SDA"
+pin R302 2 name "" unit 1 net "/C20: I2C non standard pull-ups/SDA"
 pin R302 2 type = passive @ sch i2c_non_standard_pull_ups.kicad_sch
-pin R401 1 name ~ unit 1 net VCC_3V3
+pin R401 1 name "" unit 1 net VCC_3V3
 pin R401 1 type = passive @ sch i2c_segments.kicad_sch
-pin R401 2 name ~ unit 1 net "/C22: I2C Segments/SCL1_3V3"
+pin R401 2 name "" unit 1 net "/C22: I2C Segments/SCL1_3V3"
 pin R401 2 type = passive @ sch i2c_segments.kicad_sch
-pin R402 1 name ~ unit 1 net "/C22: I2C Segments/SDA2_EN"
+pin R402 1 name "" unit 1 net "/C22: I2C Segments/SDA2_EN"
 pin R402 1 type = passive @ sch i2c_segments.kicad_sch
-pin R402 2 name ~ unit 1 net "/C22: I2C Segments/SDA2_3V3"
+pin R402 2 name "" unit 1 net "/C22: I2C Segments/SDA2_3V3"
 pin R402 2 type = passive @ sch i2c_segments.kicad_sch
-pin R403 1 name ~ unit 1 net VCC_3V3
+pin R403 1 name "" unit 1 net VCC_3V3
 pin R403 1 type = passive @ sch i2c_segments.kicad_sch
-pin R403 2 name ~ unit 1 net "/C22: I2C Segments/SDA1_3V3"
+pin R403 2 name "" unit 1 net "/C22: I2C Segments/SDA1_3V3"
 pin R403 2 type = passive @ sch i2c_segments.kicad_sch
-pin R404 1 name ~ unit 1 net "/C22: I2C Segments/SDA2_EN"
+pin R404 1 name "" unit 1 net "/C22: I2C Segments/SDA2_EN"
 pin R404 1 type = passive @ sch i2c_segments.kicad_sch
-pin R404 2 name ~ unit 1 net "/C22: I2C Segments/SCL2_3V3"
+pin R404 2 name "" unit 1 net "/C22: I2C Segments/SCL2_3V3"
 pin R404 2 type = passive @ sch i2c_segments.kicad_sch
-pin R405 1 name ~ unit 1 net "/C22: I2C Segments/SDA1_3V3"
+pin R405 1 name "" unit 1 net "/C22: I2C Segments/SDA1_3V3"
 pin R405 1 type = passive @ sch i2c_segments.kicad_sch
-pin R405 2 name ~ unit 1 net "/C22: I2C Segments/SDA_U7"
+pin R405 2 name "" unit 1 net "/C22: I2C Segments/SDA_U7"
 pin R405 2 type = passive @ sch i2c_segments.kicad_sch
-pin R406 1 name ~ unit 1 net "/C22: I2C Segments/SCL1_3V3"
+pin R406 1 name "" unit 1 net "/C22: I2C Segments/SCL1_3V3"
 pin R406 1 type = passive @ sch i2c_segments.kicad_sch
-pin R406 2 name ~ unit 1 net "/C22: I2C Segments/SCL_U7"
+pin R406 2 name "" unit 1 net "/C22: I2C Segments/SCL_U7"
 pin R406 2 type = passive @ sch i2c_segments.kicad_sch
-pin R407 1 name ~ unit 1 net VCC2_3V3
+pin R407 1 name "" unit 1 net VCC2_3V3
 pin R407 1 type = passive @ sch i2c_segments.kicad_sch
-pin R407 2 name ~ unit 1 net "/C22: I2C Segments/SDA1_3V3_VCC2"
+pin R407 2 name "" unit 1 net "/C22: I2C Segments/SDA1_3V3_VCC2"
 pin R407 2 type = passive @ sch i2c_segments.kicad_sch
-pin R408 1 name ~ unit 1 net VCC2_3V3
+pin R408 1 name "" unit 1 net VCC2_3V3
 pin R408 1 type = passive @ sch i2c_segments.kicad_sch
-pin R408 2 name ~ unit 1 net "/C22: I2C Segments/SCL1_3V3_VCC2"
+pin R408 2 name "" unit 1 net "/C22: I2C Segments/SCL1_3V3_VCC2"
 pin R408 2 type = passive @ sch i2c_segments.kicad_sch
-pin R409 1 name ~ unit 1 net VCC_1V8
+pin R409 1 name "" unit 1 net VCC_1V8
 pin R409 1 type = passive @ sch i2c_segments.kicad_sch
-pin R409 2 name ~ unit 1 net "/C22: I2C Segments/SDA1_1V8"
+pin R409 2 name "" unit 1 net "/C22: I2C Segments/SDA1_1V8"
 pin R409 2 type = passive @ sch i2c_segments.kicad_sch
-pin R410 1 name ~ unit 1 net VCC_1V2
+pin R410 1 name "" unit 1 net VCC_1V2
 pin R410 1 type = passive @ sch i2c_segments.kicad_sch
-pin R410 2 name ~ unit 1 net "/C22: I2C Segments/SDA1_1V2"
+pin R410 2 name "" unit 1 net "/C22: I2C Segments/SDA1_1V2"
 pin R410 2 type = passive @ sch i2c_segments.kicad_sch
-pin R411 1 name ~ unit 1 net VCC_1V8
+pin R411 1 name "" unit 1 net VCC_1V8
 pin R411 1 type = passive @ sch i2c_segments.kicad_sch
-pin R411 2 name ~ unit 1 net "/C22: I2C Segments/SCL1_1V8"
+pin R411 2 name "" unit 1 net "/C22: I2C Segments/SCL1_1V8"
 pin R411 2 type = passive @ sch i2c_segments.kicad_sch
-pin R412 1 name ~ unit 1 net VCC_1V2
+pin R412 1 name "" unit 1 net VCC_1V2
 pin R412 1 type = passive @ sch i2c_segments.kicad_sch
-pin R412 2 name ~ unit 1 net "/C22: I2C Segments/SCL1_1V2"
+pin R412 2 name "" unit 1 net "/C22: I2C Segments/SCL1_1V2"
 pin R412 2 type = passive @ sch i2c_segments.kicad_sch
-pin R413 1 name ~ unit 1 net "/C22: I2C Segments/SDA1_3V3"
+pin R413 1 name "" unit 1 net "/C22: I2C Segments/SDA1_3V3"
 pin R413 1 type = passive @ sch i2c_segments.kicad_sch
-pin R413 2 name ~ unit 1 net "/C22: I2C Segments/UNM1"
+pin R413 2 name "" unit 1 net "/C22: I2C Segments/UNM1"
 pin R413 2 type = passive @ sch i2c_segments.kicad_sch
-pin R414 1 name ~ unit 1 net "/C22: I2C Segments/SCL1_3V3"
+pin R414 1 name "" unit 1 net "/C22: I2C Segments/SCL1_3V3"
 pin R414 1 type = passive @ sch i2c_segments.kicad_sch
-pin R414 2 name ~ unit 1 net "/C22: I2C Segments/UNM2"
+pin R414 2 name "" unit 1 net "/C22: I2C Segments/UNM2"
 pin R414 2 type = passive @ sch i2c_segments.kicad_sch
-pin R415 1 name ~ unit 1 net VCC_3V3
+pin R415 1 name "" unit 1 net VCC_3V3
 pin R415 1 type = passive @ sch i2c_segments.kicad_sch
-pin R415 2 name ~ unit 1 net "/C22: I2C Segments/UNM1"
+pin R415 2 name "" unit 1 net "/C22: I2C Segments/UNM1"
 pin R415 2 type = passive @ sch i2c_segments.kicad_sch
-pin R416 1 name ~ unit 1 net VCC_3V3
+pin R416 1 name "" unit 1 net VCC_3V3
 pin R416 1 type = passive @ sch i2c_segments.kicad_sch
-pin R416 2 name ~ unit 1 net "/C22: I2C Segments/UNM2"
+pin R416 2 name "" unit 1 net "/C22: I2C Segments/UNM2"
 pin R416 2 type = passive @ sch i2c_segments.kicad_sch
-pin R501 1 name ~ unit 1 net VCC_3V3
+pin R501 1 name "" unit 1 net VCC_3V3
 pin R501 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R501 2 name ~ unit 1 net "/C107: I2C multiple pull-ups/SCL1_3V3"
+pin R501 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SCL1_3V3"
 pin R501 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R502 1 name ~ unit 1 net VCC_3V3
+pin R502 1 name "" unit 1 net VCC_3V3
 pin R502 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R502 2 name ~ unit 1 net "/C107: I2C multiple pull-ups/SDA_U7"
+pin R502 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SDA_U7"
 pin R502 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R503 1 name ~ unit 1 net VCC_3V3
+pin R503 1 name "" unit 1 net VCC_3V3
 pin R503 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R503 2 name ~ unit 1 net "/C107: I2C multiple pull-ups/SDA1_3V3"
+pin R503 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SDA1_3V3"
 pin R503 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R504 1 name ~ unit 1 net VCC_3V3
+pin R504 1 name "" unit 1 net VCC_3V3
 pin R504 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R504 2 name ~ unit 1 net "/C107: I2C multiple pull-ups/SCL_U7"
+pin R504 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SCL_U7"
 pin R504 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R505 1 name ~ unit 1 net "/C107: I2C multiple pull-ups/SDA1_3V3"
+pin R505 1 name "" unit 1 net "/C107: I2C multiple pull-ups/SDA1_3V3"
 pin R505 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R505 2 name ~ unit 1 net "/C107: I2C multiple pull-ups/SDA_U7"
+pin R505 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SDA_U7"
 pin R505 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R506 1 name ~ unit 1 net "/C107: I2C multiple pull-ups/SCL1_3V3"
+pin R506 1 name "" unit 1 net "/C107: I2C multiple pull-ups/SCL1_3V3"
 pin R506 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R506 2 name ~ unit 1 net "/C107: I2C multiple pull-ups/SCL_U7"
+pin R506 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SCL_U7"
 pin R506 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R507 1 name ~ unit 1 net VCC_1V8
+pin R507 1 name "" unit 1 net VCC_1V8
 pin R507 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R507 2 name ~ unit 1 net "/C107: I2C multiple pull-ups/SCL1_1V8"
+pin R507 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SCL1_1V8"
 pin R507 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R508 1 name ~ unit 1 net VCC_1V8
+pin R508 1 name "" unit 1 net VCC_1V8
 pin R508 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R508 2 name ~ unit 1 net "/C107: I2C multiple pull-ups/SDA1_1V8"
+pin R508 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SDA1_1V8"
 pin R508 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R509 1 name ~ unit 1 net VCC_1V8
+pin R509 1 name "" unit 1 net VCC_1V8
 pin R509 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R509 2 name ~ unit 1 net "/C107: I2C multiple pull-ups/SDA1_1V8"
+pin R509 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SDA1_1V8"
 pin R509 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R510 1 name ~ unit 1 net VCC_1V8
+pin R510 1 name "" unit 1 net VCC_1V8
 pin R510 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R510 2 name ~ unit 1 net "/C107: I2C multiple pull-ups/SDA1_1V8"
+pin R510 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SDA1_1V8"
 pin R510 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R511 1 name ~ unit 1 net VCC_1V8
+pin R511 1 name "" unit 1 net VCC_1V8
 pin R511 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R511 2 name ~ unit 1 net "/C107: I2C multiple pull-ups/SCL1_1V8"
+pin R511 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SCL1_1V8"
 pin R511 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R601 1 name ~ unit 1 net VCC
+pin R601 1 name "" unit 1 net VCC
 pin R601 1 type = passive @ sch i2c_non_equal_pull_ups.kicad_sch
-pin R601 2 name ~ unit 1 net "/C20: I2C non equal pull-ups/SCL"
+pin R601 2 name "" unit 1 net "/C20: I2C non equal pull-ups/SCL"
 pin R601 2 type = passive @ sch i2c_non_equal_pull_ups.kicad_sch
-pin R602 1 name ~ unit 1 net VCC
+pin R602 1 name "" unit 1 net VCC
 pin R602 1 type = passive @ sch i2c_non_equal_pull_ups.kicad_sch
-pin R602 2 name ~ unit 1 net "/C20: I2C non equal pull-ups/SDA"
+pin R602 2 name "" unit 1 net "/C20: I2C non equal pull-ups/SDA"
 pin R602 2 type = passive @ sch i2c_non_equal_pull_ups.kicad_sch
 pin U201 1 name BOOT0 unit 1 net unconnected-(U201-BOOT0-Pad1)
 pin U201 1 type = input @ sch i2c_no_pull_ups.kicad_sch
@@ -1530,6 +1545,39 @@ pin U602 7 name SDA unit 1 net "/C20: I2C non equal pull-ups/SDA"
 pin U602 7 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
 pin U602 8 name VDD unit 1 net VCC
 pin U602 8 type = power_in @ sch i2c_non_equal_pull_ups.kicad_sch
+setting erc-severity bus_definition_conflict = error @ pro test_schematics.kicad_pro
+setting erc-severity bus_entry_needed = error @ pro test_schematics.kicad_pro
+setting erc-severity bus_to_bus_conflict = error @ pro test_schematics.kicad_pro
+setting erc-severity bus_to_net_conflict = error @ pro test_schematics.kicad_pro
+setting erc-severity conflicting_netclasses = error @ pro test_schematics.kicad_pro
+setting erc-severity different_unit_footprint = error @ pro test_schematics.kicad_pro
+setting erc-severity different_unit_net = error @ pro test_schematics.kicad_pro
+setting erc-severity duplicate_reference = error @ pro test_schematics.kicad_pro
+setting erc-severity duplicate_sheet_names = error @ pro test_schematics.kicad_pro
+setting erc-severity endpoint_off_grid = warning @ pro test_schematics.kicad_pro
+setting erc-severity extra_units = error @ pro test_schematics.kicad_pro
+setting erc-severity global_label_dangling = warning @ pro test_schematics.kicad_pro
+setting erc-severity hier_label_mismatch = error @ pro test_schematics.kicad_pro
+setting erc-severity label_dangling = error @ pro test_schematics.kicad_pro
+setting erc-severity lib_symbol_issues = warning @ pro test_schematics.kicad_pro
+setting erc-severity missing_bidi_pin = warning @ pro test_schematics.kicad_pro
+setting erc-severity missing_input_pin = warning @ pro test_schematics.kicad_pro
+setting erc-severity missing_power_pin = error @ pro test_schematics.kicad_pro
+setting erc-severity missing_unit = warning @ pro test_schematics.kicad_pro
+setting erc-severity multiple_net_names = warning @ pro test_schematics.kicad_pro
+setting erc-severity net_not_bus_member = warning @ pro test_schematics.kicad_pro
+setting erc-severity no_connect_connected = warning @ pro test_schematics.kicad_pro
+setting erc-severity no_connect_dangling = warning @ pro test_schematics.kicad_pro
+setting erc-severity pin_not_connected = error @ pro test_schematics.kicad_pro
+setting erc-severity pin_not_driven = error @ pro test_schematics.kicad_pro
+setting erc-severity pin_to_pin = warning @ pro test_schematics.kicad_pro
+setting erc-severity power_pin_not_driven = error @ pro test_schematics.kicad_pro
+setting erc-severity similar_labels = warning @ pro test_schematics.kicad_pro
+setting erc-severity simulation_model_issue = ignore @ pro test_schematics.kicad_pro
+setting erc-severity unannotated = error @ pro test_schematics.kicad_pro
+setting erc-severity unit_value_mismatch = error @ pro test_schematics.kicad_pro
+setting erc-severity unresolved_variable = error @ pro test_schematics.kicad_pro
+setting erc-severity wire_dangling = error @ pro test_schematics.kicad_pro
 sheet "/C20: I2C no pull-ups/" name "C20: I2C no pull-ups" file i2c_no_pull_ups.kicad_sch uuid /29087d8a-217a-4d35-b399-b64f9dad2246 page 2
 sheet "/C20: I2C non equal pull-ups/" name "C20: I2C non equal pull-ups" file i2c_non_equal_pull_ups.kicad_sch uuid /4cfb0621-a35b-481b-a0c0-c81dca4e1433 page 6
 sheet "/C20: I2C non standard pull-ups/" name "C20: I2C non standard pull-ups" file i2c_non_standard_pull_ups.kicad_sch uuid /1284c5bc-3fac-4644-8578-1906a627e12f page 3
@@ -1541,11 +1589,12 @@ source file i2c_no_pull_ups.kicad_sch
 source file i2c_non_equal_pull_ups.kicad_sch
 source file i2c_non_standard_pull_ups.kicad_sch
 source file i2c_segments.kicad_sch
+source file test_schematics.kicad_pro
 source file test_schematics.kicad_sch
 source tool kicad
 source version 8.0
 symbol Connector:Conn_01x03_Pin description "Generic connector, single row, 01x03, script generated"
-symbol Connector:Conn_01x03_Pin field Datasheet ~
+symbol Connector:Conn_01x03_Pin field Datasheet ""
 symbol Connector:Conn_01x03_Pin field Description "Generic connector, single row, 01x03, script generated"
 symbol Connector:Conn_01x03_Pin field Reference J
 symbol Connector:Conn_01x03_Pin field Value Conn_01x03_Pin
@@ -1557,15 +1606,15 @@ symbol Connector:Conn_01x03_Pin pin 2 unit 1 body 1 name Pin_2 type passive styl
 symbol Connector:Conn_01x03_Pin pin 3 unit 1 body 1 name Pin_3 type passive style line
 symbol Connector:Conn_01x03_Pin units 1
 symbol Device:R description Resistor
-symbol Device:R field Datasheet ~
+symbol Device:R field Datasheet ""
 symbol Device:R field Description Resistor
 symbol Device:R field Reference R
 symbol Device:R field Value R
 symbol Device:R fp-filter R_*
 symbol Device:R hash 87aa0c9880114c8e
 symbol Device:R keywords "R res resistor"
-symbol Device:R pin 1 unit 1 body 1 name ~ type passive style line
-symbol Device:R pin 2 unit 1 body 1 name ~ type passive style line
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
 symbol Device:R units 1
 symbol Interface:PCA9306 description "Dual bidirectional I2C Bus and SMBus voltage level translator"
 symbol Interface:PCA9306 field Datasheet http://www.ti.com/lit/ds/symlink/pca9306.pdf
@@ -1698,7 +1747,7 @@ symbol power:GND field Reference "#PWR"
 symbol power:GND field Value GND
 symbol power:GND hash 161db5076481e95b
 symbol power:GND keywords "global power"
-symbol power:GND pin 1 unit 1 body 1 name ~ type power_in style line
+symbol power:GND pin 1 unit 1 body 1 name "" type power_in style line
 symbol power:GND units 1 power global
 symbol power:VCC description "Power symbol creates a global label with name \"VCC\""
 symbol power:VCC field Description "Power symbol creates a global label with name \"VCC\""
@@ -1706,5 +1755,5 @@ symbol power:VCC field Reference "#PWR"
 symbol power:VCC field Value VCC
 symbol power:VCC hash 042cb09b0b5eeabc
 symbol power:VCC keywords "global power"
-symbol power:VCC pin 1 unit 1 body 1 name ~ type power_in style line
+symbol power:VCC pin 1 unit 1 body 1 name "" type power_in style line
 symbol power:VCC units 1 power global

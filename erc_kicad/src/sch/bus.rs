@@ -2,6 +2,8 @@
 //! `USB.DP`, `USB.DM`; members may be vectors themselves, `{PU_EN[0..7],PD_EN[0..7]}`). Formatting braces
 //! (`~{RST}`, `^{2}`, `_{n}`) are part of a name, not a group.
 
+use std::collections::HashMap;
+
 /// A bus as its label names it
 #[derive(Clone, Debug, PartialEq)]
 pub enum Bus {
@@ -52,6 +54,35 @@ impl Bus {
                     })
                     .collect()
             }
+        }
+    }
+
+    /// The bus with the members of a group that name a bus alias replaced by the alias's members, as KiCad
+    /// does (`{USB}` with `USB = DP DM` has the members `DP` and `DM`; `X{USB}` has `X.DP` and `X.DM`)
+    pub fn with_aliases(self, aliases: &HashMap<String, Vec<String>>) -> Bus {
+        match self {
+            Bus::Group { prefix, members } => Bus::Group {
+                prefix,
+                members: members
+                    .into_iter()
+                    .flat_map(|m| match &m {
+                        GroupMember::Net(n) if aliases.contains_key(n) => aliases[n]
+                            .iter()
+                            .map(|a| {
+                                let name = a.replace('/', "{slash}");
+                                match vector(&name) {
+                                    Some(Bus::Vector { members, .. }) => {
+                                        GroupMember::Vector(members)
+                                    }
+                                    _ => GroupMember::Net(name),
+                                }
+                            })
+                            .collect(),
+                        _ => vec![m],
+                    })
+                    .collect(),
+            },
+            v => v,
         }
     }
 

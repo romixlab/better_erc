@@ -259,11 +259,13 @@ impl Loader<'_> {
     }
 }
 
-/// Reads the schematic hierarchy whose root sheet is `root` (a path among `files`)
+/// Reads the schematic hierarchy whose root sheet is `root` (a path among `files`). `project_aliases` are the
+/// bus aliases of the project file (KiCad 9 and 10 keep them there; KiCad 8 in the sheets, which are read too).
 pub fn read(
     files: &dyn Files,
     root: &str,
     opts: &ImportOptions,
+    project_aliases: &[(String, Vec<String>)],
 ) -> Result<(Board, Vec<ImportNote>), ImportError> {
     let mut ld = Loader {
         files,
@@ -408,7 +410,21 @@ pub fn read(
             .max()
             .map_or(10, kicad_of_format)
     });
-    let conn = connect::build(&sch, &insts, &syms, kicad);
+    let mut aliases: HashMap<String, Vec<String>> = HashMap::new();
+    for (name, members) in sch
+        .iter()
+        .flat_map(|f| &f.bus_aliases)
+        .chain(project_aliases)
+    {
+        aliases.insert(name.clone(), members.clone());
+    }
+    let conn = connect::build(&connect::Input {
+        files: &sch,
+        insts: &insts,
+        syms: &syms,
+        kicad,
+        aliases: &aliases,
+    });
     let board = assemble(&sch, &names, &insts, &syms, &conn, &project, &mut notes);
     all_notes.extend(notes.into_vec());
     Ok((board, all_notes))
@@ -588,14 +604,14 @@ fn assemble(
                     }
                     let mut fields = Vec::new();
                     for (k, v) in &s.properties {
-                        if k == "Reference" || v.is_empty() || v == "~" {
+                        if k == "Reference" || v.is_empty() {
                             continue;
                         }
                         if !fields.iter().any(|f: &Field| f.name == *k) {
                             fields.push(Field::new(k.clone(), fact(v.clone())));
                         }
                     }
-                    let value = s.property("Value").filter(|v| *v != "~").unwrap_or("");
+                    let value = s.property("Value").unwrap_or("");
                     let mut flags = PartFlags::default();
                     let flag =
                         |v: Option<bool>, inherited: Option<bool>, what: &str| -> Facts<bool> {
@@ -796,37 +812,6 @@ fn assemble(
     }
     b.finish();
     b
-}
-
-/// The KiCad schematic (and, from a project file, the whole project) as an [`Importer`]
-pub struct SchematicImporter;
-
-impl Importer for SchematicImporter {
-    fn name(&self) -> &'static str {
-        "kicad"
-    }
-
-    fn sniff(&self, src: &Source) -> Confidence {
-        let starts = |b: &[u8], tag: &[u8]| b.trim_ascii_start().starts_with(tag);
-        match src.files.read(&src.main) {
-            Some(b) if starts(&b, b"(kicad_sch") => Confidence::Yes,
-            Some(_) if src.main.ends_with(".kicad_pro") => Confidence::Yes,
-            Some(_) if src.main.ends_with(".kicad_sch") => Confidence::Maybe,
-            _ => Confidence::No,
-        }
-    }
-
-    fn import(&self, src: &Source, opts: &ImportOptions) -> Result<Imported, ImportError> {
-        let root = match src.main.strip_suffix(".kicad_pro") {
-            Some(stem) => format!("{stem}.kicad_sch"),
-            None => src.main.clone(),
-        };
-        let (board, notes) = read(src.files, &root, opts)?;
-        Ok(Imported {
-            design: Design::single(board),
-            notes,
-        })
-    }
 }
 
 #[cfg(test)]

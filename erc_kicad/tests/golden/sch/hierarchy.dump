@@ -185,69 +185,69 @@ part R24 flag on_board = yes @ sch child.kicad_sch
 part R24 lib Fixture:R sheet /B/ symbol Fixture:R
 part R24 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000024 at 32.54,66.19 rot 0
 part R24 value = text 10k @ sch child.kicad_sch note "from the Value field"
-pin R1 1 name ~ unit 1 net unconnected-(R1-Pad1)
+pin R1 1 name "" unit 1 net unconnected-(R1-Pad1)
 pin R1 1 type = passive @ sch hierarchy.kicad_sch
-pin R1 2 name ~ unit 1 net /A/IN
+pin R1 2 name "" unit 1 net /A/IN
 pin R1 2 type = passive @ sch hierarchy.kicad_sch
-pin R2 1 name ~ unit 1 net /B/OUT
+pin R2 1 name "" unit 1 net /B/OUT
 pin R2 1 type = passive @ sch hierarchy.kicad_sch
-pin R2 2 name ~ unit 1 net unconnected-(R2-Pad2)
+pin R2 2 name "" unit 1 net unconnected-(R2-Pad2)
 pin R2 2 type = passive @ sch hierarchy.kicad_sch
-pin R3 1 name ~ unit 1 net /DATA2
+pin R3 1 name "" unit 1 net /DATA2
 pin R3 1 type = passive @ sch hierarchy.kicad_sch
-pin R3 2 name ~ unit 1 net unconnected-(R3-Pad2)
+pin R3 2 name "" unit 1 net unconnected-(R3-Pad2)
 pin R3 2 type = passive @ sch hierarchy.kicad_sch
-pin R4 1 name ~ unit 1 net /CTL.EN
+pin R4 1 name "" unit 1 net /CTL.EN
 pin R4 1 type = passive @ sch hierarchy.kicad_sch
-pin R4 2 name ~ unit 1 net unconnected-(R4-Pad2)
+pin R4 2 name "" unit 1 net unconnected-(R4-Pad2)
 pin R4 2 type = passive @ sch hierarchy.kicad_sch
-pin R5 1 name ~ unit 1 net GLOB
+pin R5 1 name "" unit 1 net GLOB
 pin R5 1 type = passive @ sch hierarchy.kicad_sch
-pin R5 2 name ~ unit 1 net +3V3
+pin R5 2 name "" unit 1 net +3V3
 pin R5 2 type = passive @ sch hierarchy.kicad_sch
-pin R6 1 name ~ unit 1 net /LOC
+pin R6 1 name "" unit 1 net /LOC
 pin R6 1 type = passive @ sch hierarchy.kicad_sch
-pin R6 2 name ~ unit 1 net unconnected-(R6-Pad2)
+pin R6 2 name "" unit 1 net unconnected-(R6-Pad2)
 pin R6 2 type = passive @ sch hierarchy.kicad_sch
-pin R10 1 name ~ unit 1 net /A/IN
+pin R10 1 name "" unit 1 net /A/IN
 pin R10 1 type = passive @ sch child.kicad_sch
-pin R10 2 name ~ unit 1 net /MID
+pin R10 2 name "" unit 1 net /MID
 pin R10 2 type = passive @ sch child.kicad_sch
-pin R11 1 name ~ unit 1 net +3V3
+pin R11 1 name "" unit 1 net +3V3
 pin R11 1 type = passive @ sch child.kicad_sch
-pin R11 2 name ~ unit 1 net /DATA0
+pin R11 2 name "" unit 1 net /DATA0
 pin R11 2 type = passive @ sch child.kicad_sch
-pin R12 1 name ~ unit 1 net /A/LOC
+pin R12 1 name "" unit 1 net /A/LOC
 pin R12 1 type = passive @ sch child.kicad_sch
-pin R12 2 name ~ unit 1 net /DATA2
+pin R12 2 name "" unit 1 net /DATA2
 pin R12 2 type = passive @ sch child.kicad_sch
-pin R13 1 name ~ unit 1 net /A/LOC
+pin R13 1 name "" unit 1 net /A/LOC
 pin R13 1 type = passive @ sch child.kicad_sch
-pin R13 2 name ~ unit 1 net GLOB
+pin R13 2 name "" unit 1 net GLOB
 pin R13 2 type = passive @ sch child.kicad_sch
-pin R14 1 name ~ unit 1 net GND
+pin R14 1 name "" unit 1 net GND
 pin R14 1 type = passive @ sch child.kicad_sch
-pin R14 2 name ~ unit 1 net /CTL.EN
+pin R14 2 name "" unit 1 net /CTL.EN
 pin R14 2 type = passive @ sch child.kicad_sch
-pin R20 1 name ~ unit 1 net /MID
+pin R20 1 name "" unit 1 net /MID
 pin R20 1 type = passive @ sch child.kicad_sch
-pin R20 2 name ~ unit 1 net /B/OUT
+pin R20 2 name "" unit 1 net /B/OUT
 pin R20 2 type = passive @ sch child.kicad_sch
-pin R21 1 name ~ unit 1 net +3V3
+pin R21 1 name "" unit 1 net +3V3
 pin R21 1 type = passive @ sch child.kicad_sch
-pin R21 2 name ~ unit 1 net /DATA0
+pin R21 2 name "" unit 1 net /DATA0
 pin R21 2 type = passive @ sch child.kicad_sch
-pin R22 1 name ~ unit 1 net /B/LOC
+pin R22 1 name "" unit 1 net /B/LOC
 pin R22 1 type = passive @ sch child.kicad_sch
-pin R22 2 name ~ unit 1 net /DATA2
+pin R22 2 name "" unit 1 net /DATA2
 pin R22 2 type = passive @ sch child.kicad_sch
-pin R23 1 name ~ unit 1 net /B/LOC
+pin R23 1 name "" unit 1 net /B/LOC
 pin R23 1 type = passive @ sch child.kicad_sch
-pin R23 2 name ~ unit 1 net GLOB
+pin R23 2 name "" unit 1 net GLOB
 pin R23 2 type = passive @ sch child.kicad_sch
-pin R24 1 name ~ unit 1 net GND
+pin R24 1 name "" unit 1 net GND
 pin R24 1 type = passive @ sch child.kicad_sch
-pin R24 2 name ~ unit 1 net /CTL.EN
+pin R24 2 name "" unit 1 net /CTL.EN
 pin R24 2 type = passive @ sch child.kicad_sch
 sheet / name "" file hierarchy.kicad_sch uuid /
 sheet /A/ name A file child.kicad_sch uuid /30000000-0000-4000-8000-0000000000a1 page 2
@@ -285,8 +285,8 @@ symbol Fixture:R field Description Resistor
 symbol Fixture:R field Reference R
 symbol Fixture:R field Value R
 symbol Fixture:R hash 87069a6c18644b32
-symbol Fixture:R pin 1 unit 1 body 1 name ~ type passive style line
-symbol Fixture:R pin 2 unit 1 body 1 name ~ type passive style line
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
 symbol Fixture:R units 1
 symbol power:+3V3 field Reference "#PWR"
 symbol power:+3V3 field Value +3V3

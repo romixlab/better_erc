@@ -388,6 +388,9 @@ fn board_lines(b: &Board) -> Vec<String> {
         for p in &c.patterns {
             out.push(format!("netclass {n} pattern {}", tok(p)));
         }
+        for a in &c.assigned {
+            out.push(format!("netclass {n} assign {}", tok(a)));
+        }
         for p in &c.params {
             fact_lines(
                 &mut out,
@@ -1284,6 +1287,7 @@ impl BoardReader {
                         name,
                         params: Vec::new(),
                         patterns: Vec::new(),
+                        assigned: Vec::new(),
                     });
                     return Ok(());
                 }
@@ -1295,6 +1299,7 @@ impl BoardReader {
                     .ok_or_else(|| format!("no net class `{name}`"))?;
                 match c.next()? {
                     "pattern" => class.patterns.push(c.next()?.into()),
+                    "assign" => class.assigned.push(c.next()?.into()),
                     "param" => {
                         let key = c.next()?.to_string();
                         let f = c.fact(read_string)?;

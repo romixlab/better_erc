@@ -110,11 +110,11 @@ part R8 flag on_board = yes @ sch style_values.kicad_sch
 part R8 lib Fixture:R sheet / symbol Fixture:R
 part R8 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000022 at 135,50 rot 0
 part R8 value = text DNP @ sch style_values.kicad_sch note "from the Value field"
-pin Q1 1 name ~ unit 1 net unconnected-(Q1-Pad1)
+pin Q1 1 name "" unit 1 net unconnected-(Q1-Pad1)
 pin Q1 1 type = passive @ sch style_values.kicad_sch
-pin Q1 2 name ~ unit 1 net unconnected-(Q1-Pad2)
+pin Q1 2 name "" unit 1 net unconnected-(Q1-Pad2)
 pin Q1 2 type = passive @ sch style_values.kicad_sch
-pin Q1 3 name ~ unit 1 net unconnected-(Q1-Pad3)
+pin Q1 3 name "" unit 1 net unconnected-(Q1-Pad3)
 pin Q1 3 type = passive @ sch style_values.kicad_sch
 pin Q2 1 name G unit 1 net unconnected-(Q2-G-Pad1)
 pin Q2 1 type = passive @ sch style_values.kicad_sch
@@ -122,37 +122,37 @@ pin Q2 2 name S unit 1 net unconnected-(Q2-S-Pad2)
 pin Q2 2 type = passive @ sch style_values.kicad_sch
 pin Q2 3 name D unit 1 net unconnected-(Q2-D-Pad3)
 pin Q2 3 type = passive @ sch style_values.kicad_sch
-pin R1 1 name ~ unit 1 net unconnected-(R1-Pad1)
+pin R1 1 name "" unit 1 net unconnected-(R1-Pad1)
 pin R1 1 type = passive @ sch style_values.kicad_sch
-pin R1 2 name ~ unit 1 net unconnected-(R1-Pad2)
+pin R1 2 name "" unit 1 net unconnected-(R1-Pad2)
 pin R1 2 type = passive @ sch style_values.kicad_sch
-pin R2 1 name ~ unit 1 net unconnected-(R2-Pad1)
+pin R2 1 name "" unit 1 net unconnected-(R2-Pad1)
 pin R2 1 type = passive @ sch style_values.kicad_sch
-pin R2 2 name ~ unit 1 net unconnected-(R2-Pad2)
+pin R2 2 name "" unit 1 net unconnected-(R2-Pad2)
 pin R2 2 type = passive @ sch style_values.kicad_sch
-pin R3 1 name ~ unit 1 net unconnected-(R3-Pad1)
+pin R3 1 name "" unit 1 net unconnected-(R3-Pad1)
 pin R3 1 type = passive @ sch style_values.kicad_sch
-pin R3 2 name ~ unit 1 net unconnected-(R3-Pad2)
+pin R3 2 name "" unit 1 net unconnected-(R3-Pad2)
 pin R3 2 type = passive @ sch style_values.kicad_sch
-pin R4 1 name ~ unit 1 net unconnected-(R4-Pad1)
+pin R4 1 name "" unit 1 net unconnected-(R4-Pad1)
 pin R4 1 type = passive @ sch style_values.kicad_sch
-pin R4 2 name ~ unit 1 net unconnected-(R4-Pad2)
+pin R4 2 name "" unit 1 net unconnected-(R4-Pad2)
 pin R4 2 type = passive @ sch style_values.kicad_sch
-pin R5 1 name ~ unit 1 net unconnected-(R5-Pad1)
+pin R5 1 name "" unit 1 net unconnected-(R5-Pad1)
 pin R5 1 type = passive @ sch style_values.kicad_sch
-pin R5 2 name ~ unit 1 net unconnected-(R5-Pad2)
+pin R5 2 name "" unit 1 net unconnected-(R5-Pad2)
 pin R5 2 type = passive @ sch style_values.kicad_sch
-pin R6 1 name ~ unit 1 net unconnected-(R6-Pad1)
+pin R6 1 name "" unit 1 net unconnected-(R6-Pad1)
 pin R6 1 type = passive @ sch style_values.kicad_sch
-pin R6 2 name ~ unit 1 net unconnected-(R6-Pad2)
+pin R6 2 name "" unit 1 net unconnected-(R6-Pad2)
 pin R6 2 type = passive @ sch style_values.kicad_sch
-pin R7 1 name ~ unit 1 net unconnected-(R7-Pad1)
+pin R7 1 name "" unit 1 net unconnected-(R7-Pad1)
 pin R7 1 type = passive @ sch style_values.kicad_sch
-pin R7 2 name ~ unit 1 net unconnected-(R7-Pad2)
+pin R7 2 name "" unit 1 net unconnected-(R7-Pad2)
 pin R7 2 type = passive @ sch style_values.kicad_sch
-pin R8 1 name ~ unit 1 net unconnected-(R8-Pad1)
+pin R8 1 name "" unit 1 net unconnected-(R8-Pad1)
 pin R8 1 type = passive @ sch style_values.kicad_sch
-pin R8 2 name ~ unit 1 net unconnected-(R8-Pad2)
+pin R8 2 name "" unit 1 net unconnected-(R8-Pad2)
 pin R8 2 type = passive @ sch style_values.kicad_sch
 sheet / name "" file style_values.kicad_sch uuid /
 source file style_values.kicad_sch
@@ -163,9 +163,9 @@ symbol Fixture:NMOS field Description "N-Channel MOSFET"
 symbol Fixture:NMOS field Reference Q
 symbol Fixture:NMOS field Value NMOS
 symbol Fixture:NMOS hash 25eace0aea4c3bd2
-symbol Fixture:NMOS pin 1 unit 1 body 1 name ~ type passive style line
-symbol Fixture:NMOS pin 2 unit 1 body 1 name ~ type passive style line
-symbol Fixture:NMOS pin 3 unit 1 body 1 name ~ type passive style line
+symbol Fixture:NMOS pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:NMOS pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:NMOS pin 3 unit 1 body 1 name "" type passive style line
 symbol Fixture:NMOS units 1
 symbol Fixture:NMOS_GSD description "N-Channel MOSFET"
 symbol Fixture:NMOS_GSD field Description "N-Channel MOSFET"
@@ -181,6 +181,6 @@ symbol Fixture:R field Description Resistor
 symbol Fixture:R field Reference R
 symbol Fixture:R field Value R
 symbol Fixture:R hash 87069a6c18644b32
-symbol Fixture:R pin 1 unit 1 body 1 name ~ type passive style line
-symbol Fixture:R pin 2 unit 1 body 1 name ~ type passive style line
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
 symbol Fixture:R units 1

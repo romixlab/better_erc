@@ -46,6 +46,14 @@ const FIXTURES: &[Fixture] = &[
         versions: &[10],
     },
     Fixture {
+        root: "erc_kicad/tests/fixtures/alias.kicad_sch",
+        versions: &[8, 9, 10],
+    },
+    Fixture {
+        root: "erc_kicad/tests/fixtures/alias_pro.kicad_sch",
+        versions: &[10],
+    },
+    Fixture {
         root: "ecad_file_format/test_input/kicad_versions/fixture.kicad_sch",
         versions: &[8, 9, 10],
     },
@@ -57,10 +65,11 @@ const FIXTURES: &[Fixture] = &[
 
 /// Where KiCad itself is wrong, and we read the design as the other versions do: (root, KiCad version, the
 /// difference as [`render`] writes it, why)
-const KNOWN: &[(&str, u32, &str, &str)] = &[(
-    "erc_kicad/tests/fixtures/hierarchy.kicad_sch",
-    9,
-    "ours  /CTL.EN R14.2 R24.2 R4.1
+const KNOWN: &[(&str, u32, &str, &str)] = &[
+    (
+        "erc_kicad/tests/fixtures/hierarchy.kicad_sch",
+        9,
+        "ours  /CTL.EN R14.2 R24.2 R4.1
 ours  /DATA0 R11.2 R21.2
 ours  /DATA2 R12.2 R22.2 R3.1
 kicad /B/CTL.EN R24.2
@@ -70,9 +79,24 @@ kicad /CTL.EN R14.2 R4.1
 kicad /DATA0 R11.2
 kicad /DATA2 R12.2 R3.1
 ",
-    "KiCad 9.0.9 does not carry buses through the sheet pins of the second instance of a sheet used twice; \
+        "KiCad 9.0.9 does not carry buses through the sheet pins of the second instance of a sheet used twice; \
      KiCad 8 and 10 do",
-)];
+    ),
+    (
+        "erc_kicad/tests/fixtures/alias.kicad_sch",
+        9,
+        "renamed ours /DP kicad /Sub/DP
+ours  /DM R1.2 R11.2
+ours  /X.DP R12.2 R2.1
+kicad /DM R1.2
+kicad /Sub/DM R11.2
+kicad /Sub/X.DP R12.2
+kicad /X.DP R2.1
+",
+        "KiCad 9.0.9's kicad-cli does not read the bus aliases of a KiCad 8 sheet (9 keeps them in the project \
+         file); KiCad 10 reads them",
+    ),
+];
 
 /// A net difference as text, one net per line
 fn render(d: &netcmp::NetDiff) -> String {
@@ -89,7 +113,8 @@ fn render(d: &netcmp::NetDiff) -> String {
     out
 }
 
-/// Our import of the hierarchy rooted at `root`, read as KiCad `version` would (`None`: the files' version)
+/// Our import of the project whose root sheet is `root`, read as KiCad `version` would (`None`: the files'
+/// version)
 fn import(root: &Path, version: Option<u32>) -> (erc_model::Board, Vec<erc_model::ImportNote>) {
     let dir = root.parent().unwrap().to_path_buf();
     let name = root.file_name().unwrap().to_str().unwrap();
@@ -97,8 +122,9 @@ fn import(root: &Path, version: Option<u32>) -> (erc_model::Board, Vec<erc_model
         kicad_version: version,
         ..Default::default()
     };
-    erc_kicad::sch::read(&DirFiles(dir), name, &opts)
-        .unwrap_or_else(|e| panic!("{}: {e}", root.display()))
+    let mut imported = erc_kicad::project::read(&DirFiles(dir), name, &opts)
+        .unwrap_or_else(|e| panic!("{}: {e}", root.display()));
+    (imported.design.boards.remove(0), imported.notes)
 }
 
 /// The difference between our nets and those of a KiCad netlist, as text (empty: the same)

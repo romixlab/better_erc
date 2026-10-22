@@ -1,0 +1,138 @@
+board alias
+label / local DM at 42.54,15 net /DM
+label / local X.DP at 52.54,35 net /X.DP
+label / local X{USB} at 30,25.08
+label / local {USB} at 30,22.54
+label / sheet_pin X{USB} at 60,25.08 shape bidirectional child /Sub/
+label / sheet_pin {USB} at 60,22.54 shape bidirectional child /Sub/
+label /Sub/ hierarchical X{USB} at 20,60 shape bidirectional
+label /Sub/ hierarchical {USB} at 20,40 shape bidirectional
+label /Sub/ local DM at 42.54,30 net /DM
+label /Sub/ local DP at 32.54,30 net /DP
+label /Sub/ local X.DP at 32.54,50 net /X.DP
+net /DM kind named
+net /DP kind named
+net /X.DP kind named
+net unconnected-(R1-Pad1) kind unconnected
+net unconnected-(R2-Pad2) kind unconnected
+net unconnected-(R10-Pad1) kind unconnected
+net unconnected-(R11-Pad1) kind unconnected
+net unconnected-(R12-Pad1) kind unconnected
+part R1 field Value = 10k @ sch alias.kicad_sch
+part R1 flag dnp = no @ sch alias.kicad_sch
+part R1 flag exclude_from_sim = no @ sch alias.kicad_sch
+part R1 flag in_bom = yes @ sch alias.kicad_sch
+part R1 flag on_board = yes @ sch alias.kicad_sch
+part R1 lib Fixture:R sheet / symbol Fixture:R
+part R1 unit 1 sheet / uuid 50000000-0000-4000-8000-000000000008 at 42.54,11.19 rot 0
+part R1 value = text 10k @ sch alias.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch alias.kicad_sch
+part R2 flag dnp = no @ sch alias.kicad_sch
+part R2 flag exclude_from_sim = no @ sch alias.kicad_sch
+part R2 flag in_bom = yes @ sch alias.kicad_sch
+part R2 flag on_board = yes @ sch alias.kicad_sch
+part R2 lib Fixture:R sheet / symbol Fixture:R
+part R2 unit 1 sheet / uuid 50000000-0000-4000-8000-000000000014 at 52.54,38.81 rot 0
+part R2 value = text 10k @ sch alias.kicad_sch note "from the Value field"
+part R10 field Value = 10k @ sch alias_child.kicad_sch
+part R10 flag dnp = no @ sch alias_child.kicad_sch
+part R10 flag exclude_from_sim = no @ sch alias_child.kicad_sch
+part R10 flag in_bom = yes @ sch alias_child.kicad_sch
+part R10 flag on_board = yes @ sch alias_child.kicad_sch
+part R10 lib Fixture:R sheet /Sub/ symbol Fixture:R
+part R10 unit 1 sheet /Sub/ uuid 51000000-0000-4000-8000-000000000006 at 32.54,26.19 rot 0
+part R10 value = text 10k @ sch alias_child.kicad_sch note "from the Value field"
+part R11 field Value = 10k @ sch alias_child.kicad_sch
+part R11 flag dnp = no @ sch alias_child.kicad_sch
+part R11 flag exclude_from_sim = no @ sch alias_child.kicad_sch
+part R11 flag in_bom = yes @ sch alias_child.kicad_sch
+part R11 flag on_board = yes @ sch alias_child.kicad_sch
+part R11 lib Fixture:R sheet /Sub/ symbol Fixture:R
+part R11 unit 1 sheet /Sub/ uuid 51000000-0000-4000-8000-000000000010 at 42.54,26.19 rot 0
+part R11 value = text 10k @ sch alias_child.kicad_sch note "from the Value field"
+part R12 field Value = 10k @ sch alias_child.kicad_sch
+part R12 flag dnp = no @ sch alias_child.kicad_sch
+part R12 flag exclude_from_sim = no @ sch alias_child.kicad_sch
+part R12 flag in_bom = yes @ sch alias_child.kicad_sch
+part R12 flag on_board = yes @ sch alias_child.kicad_sch
+part R12 lib Fixture:R sheet /Sub/ symbol Fixture:R
+part R12 unit 1 sheet /Sub/ uuid 51000000-0000-4000-8000-000000000016 at 32.54,46.19 rot 0
+part R12 value = text 10k @ sch alias_child.kicad_sch note "from the Value field"
+pin R1 1 name "" unit 1 net unconnected-(R1-Pad1)
+pin R1 1 type = passive @ sch alias.kicad_sch
+pin R1 2 name "" unit 1 net /DM
+pin R1 2 type = passive @ sch alias.kicad_sch
+pin R2 1 name "" unit 1 net /X.DP
+pin R2 1 type = passive @ sch alias.kicad_sch
+pin R2 2 name "" unit 1 net unconnected-(R2-Pad2)
+pin R2 2 type = passive @ sch alias.kicad_sch
+pin R10 1 name "" unit 1 net unconnected-(R10-Pad1)
+pin R10 1 type = passive @ sch alias_child.kicad_sch
+pin R10 2 name "" unit 1 net /DP
+pin R10 2 type = passive @ sch alias_child.kicad_sch
+pin R11 1 name "" unit 1 net unconnected-(R11-Pad1)
+pin R11 1 type = passive @ sch alias_child.kicad_sch
+pin R11 2 name "" unit 1 net /DM
+pin R11 2 type = passive @ sch alias_child.kicad_sch
+pin R12 1 name "" unit 1 net unconnected-(R12-Pad1)
+pin R12 1 type = passive @ sch alias_child.kicad_sch
+pin R12 2 name "" unit 1 net /X.DP
+pin R12 2 type = passive @ sch alias_child.kicad_sch
+sheet / name "" file alias.kicad_sch uuid /
+sheet /Sub/ name Sub file alias_child.kicad_sch uuid /50000000-0000-4000-8000-000000000001 page 2
+source file alias.kicad_sch
+source file alias_child.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:DualAmp description "Dual amplifier, two units"
+symbol Fixture:DualAmp field Description "Dual amplifier, two units"
+symbol Fixture:DualAmp field Reference U
+symbol Fixture:DualAmp field Value DualAmp
+symbol Fixture:DualAmp hash 1e39e4d8a19b568e
+symbol Fixture:DualAmp pin 1 unit 1 body 1 name OUTA type output style line
+symbol Fixture:DualAmp pin 2 unit 1 body 1 name -INA type input style line
+symbol Fixture:DualAmp pin 3 unit 1 body 1 name +INA type input style line
+symbol Fixture:DualAmp pin 5 unit 2 body 1 name +INB type input style line
+symbol Fixture:DualAmp pin 6 unit 2 body 1 name -INB type input style line
+symbol Fixture:DualAmp pin 7 unit 2 body 1 name OUTB type output style line
+symbol Fixture:DualAmp units 2
+symbol Fixture:IC field Reference U
+symbol Fixture:IC field Value IC
+symbol Fixture:IC hash 1197febd51e4469b
+symbol Fixture:IC pin 1 unit 1 body 1 name IN type input style line
+symbol Fixture:IC pin 2 unit 1 body 1 name OUT type output style line
+symbol Fixture:IC pin 3 unit 1 body 1 name VDD type power_in style line hidden
+symbol Fixture:IC pin 4 unit 1 body 1 name GND type power_in style line hidden
+symbol Fixture:IC pin 5 unit 1 body 1 alt SDA type open_collector style line
+symbol Fixture:IC pin 5 unit 1 body 1 alt TX type output style line
+symbol Fixture:IC pin 5 unit 1 body 1 name IO type bidirectional style line
+symbol Fixture:IC pin 6 unit 1 body 1 name NC type no_connect style line
+symbol Fixture:IC units 1
+symbol Fixture:R description Resistor
+symbol Fixture:R field Description Resistor
+symbol Fixture:R field Reference R
+symbol Fixture:R field Value R
+symbol Fixture:R hash 87069a6c18644b32
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:R units 1
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 32f22f09c03fc124
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line hidden
+symbol power:+3V3 units 1 power global
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash cb6a747b7bfb0c44
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line hidden
+symbol power:GND units 1 power global
+symbol power:PWR_FLAG field Reference "#FLG"
+symbol power:PWR_FLAG field Value PWR_FLAG
+symbol power:PWR_FLAG hash 1747a8f6eb221e0e
+symbol power:PWR_FLAG pin 1 unit 0 body 0 name pwr type power_out style line
+symbol power:PWR_FLAG units 1 power global
+symbol power:VDD field Reference "#PWR"
+symbol power:VDD field Value VDD
+symbol power:VDD hash 5d35e1da63ab18c5
+symbol power:VDD pin 1 unit 1 body 1 name VDD type power_in style line hidden
+symbol power:VDD units 1 power global

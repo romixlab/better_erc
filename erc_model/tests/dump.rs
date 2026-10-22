@@ -85,6 +85,7 @@ fn sample() -> Design {
             ),
         )],
         patterns: vec!["+*".into()],
+        assigned: vec!["/VBUS_IN".into()],
     });
     b.settings.text_vars.push(Param::new(
         "REV",

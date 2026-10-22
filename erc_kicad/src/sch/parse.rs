@@ -269,7 +269,36 @@ pub fn read(root: &Sexp, notes: &mut Notes) -> SchFile {
             _ => notes.unknown("kicad_sch", item),
         }
     }
+    let format = f.version.as_deref().and_then(|v| v.parse::<u32>().ok());
+    if format.is_none_or(|v| v < 20250318) {
+        tilde_is_empty(&mut f);
+    }
     f
+}
+
+/// Before format 20250318 (KiCad 10) a field value, pin name or pin number of `~` means empty; since then `~`
+/// is the text itself
+fn tilde_is_empty(f: &mut SchFile) {
+    let clear = |s: &mut String| {
+        if s == "~" {
+            s.clear();
+        }
+    };
+    for l in f.lib_symbols.values_mut() {
+        l.fields.iter_mut().for_each(|(_, v)| clear(v));
+        for p in &mut l.pins {
+            clear(&mut p.name);
+            clear(&mut p.number);
+        }
+    }
+    for s in &mut f.symbols {
+        s.properties.iter_mut().for_each(|(_, v)| clear(v));
+        for i in &mut s.instances {
+            for v in &mut i.variants {
+                v.fields.iter_mut().for_each(|(_, v)| clear(v));
+            }
+        }
+    }
 }
 
 /// `NAME_U_B` of a library sub-symbol: unit and body style

@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "filename": "alias_pro.kicad_pro",
+    "version": 3
+  },
+  "schematic": {
+    "bus_aliases": {
+      "USB": [
+        "DP",
+        "DM"
+      ]
+    }
+  }
+}

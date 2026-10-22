@@ -240,49 +240,49 @@ pin Q504 2 name S unit 1 net /SCL1_1V8
 pin Q504 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
 pin Q504 3 name D unit 1 net /SCL1_3V3
 pin Q504 3 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R501 1 name ~ unit 1 net VCC_3V3
+pin R501 1 name "" unit 1 net VCC_3V3
 pin R501 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R501 2 name ~ unit 1 net /SCL1_3V3
+pin R501 2 name "" unit 1 net /SCL1_3V3
 pin R501 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R502 1 name ~ unit 1 net VCC_3V3
+pin R502 1 name "" unit 1 net VCC_3V3
 pin R502 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R502 2 name ~ unit 1 net /SDA_U7
+pin R502 2 name "" unit 1 net /SDA_U7
 pin R502 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R503 1 name ~ unit 1 net VCC_3V3
+pin R503 1 name "" unit 1 net VCC_3V3
 pin R503 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R503 2 name ~ unit 1 net /SDA1_3V3
+pin R503 2 name "" unit 1 net /SDA1_3V3
 pin R503 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R504 1 name ~ unit 1 net VCC_3V3
+pin R504 1 name "" unit 1 net VCC_3V3
 pin R504 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R504 2 name ~ unit 1 net /SCL_U7
+pin R504 2 name "" unit 1 net /SCL_U7
 pin R504 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R505 1 name ~ unit 1 net /SDA1_3V3
+pin R505 1 name "" unit 1 net /SDA1_3V3
 pin R505 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R505 2 name ~ unit 1 net /SDA_U7
+pin R505 2 name "" unit 1 net /SDA_U7
 pin R505 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R506 1 name ~ unit 1 net /SCL1_3V3
+pin R506 1 name "" unit 1 net /SCL1_3V3
 pin R506 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R506 2 name ~ unit 1 net /SCL_U7
+pin R506 2 name "" unit 1 net /SCL_U7
 pin R506 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R507 1 name ~ unit 1 net VCC_1V8
+pin R507 1 name "" unit 1 net VCC_1V8
 pin R507 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R507 2 name ~ unit 1 net /SCL1_1V8
+pin R507 2 name "" unit 1 net /SCL1_1V8
 pin R507 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R508 1 name ~ unit 1 net VCC_1V8
+pin R508 1 name "" unit 1 net VCC_1V8
 pin R508 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R508 2 name ~ unit 1 net /SDA1_1V8
+pin R508 2 name "" unit 1 net /SDA1_1V8
 pin R508 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R509 1 name ~ unit 1 net VCC_1V8
+pin R509 1 name "" unit 1 net VCC_1V8
 pin R509 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R509 2 name ~ unit 1 net /SDA1_1V8
+pin R509 2 name "" unit 1 net /SDA1_1V8
 pin R509 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R510 1 name ~ unit 1 net VCC_1V8
+pin R510 1 name "" unit 1 net VCC_1V8
 pin R510 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R510 2 name ~ unit 1 net /SDA1_1V8
+pin R510 2 name "" unit 1 net /SDA1_1V8
 pin R510 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R511 1 name ~ unit 1 net VCC_1V8
+pin R511 1 name "" unit 1 net VCC_1V8
 pin R511 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
-pin R511 2 name ~ unit 1 net /SCL1_1V8
+pin R511 2 name "" unit 1 net /SCL1_1V8
 pin R511 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
 pin U501 1 name BOOT0 unit 1 net unconnected-(U501-BOOT0-Pad1)
 pin U501 1 type = input @ sch i2c_multiple_pull_ups.kicad_sch
@@ -377,15 +377,15 @@ source file i2c_multiple_pull_ups.kicad_sch
 source tool kicad
 source version 8.0
 symbol Device:R description Resistor
-symbol Device:R field Datasheet ~
+symbol Device:R field Datasheet ""
 symbol Device:R field Description Resistor
 symbol Device:R field Reference R
 symbol Device:R field Value R
 symbol Device:R fp-filter R_*
 symbol Device:R hash 87aa0c9880114c8e
 symbol Device:R keywords "R res resistor"
-symbol Device:R pin 1 unit 1 body 1 name ~ type passive style line
-symbol Device:R pin 2 unit 1 body 1 name ~ type passive style line
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
 symbol Device:R units 1
 symbol Interface_Expansion:PCA9536DP description "4-bit I2C-bus and SMBus IO port, TSSOP-8"
 symbol Interface_Expansion:PCA9536DP field Datasheet http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf
@@ -499,7 +499,7 @@ symbol power:GND field Reference "#PWR"
 symbol power:GND field Value GND
 symbol power:GND hash 161db5076481e95b
 symbol power:GND keywords "global power"
-symbol power:GND pin 1 unit 1 body 1 name ~ type power_in style line
+symbol power:GND pin 1 unit 1 body 1 name "" type power_in style line
 symbol power:GND units 1 power global
 symbol power:VCC description "Power symbol creates a global label with name \"VCC\""
 symbol power:VCC field Description "Power symbol creates a global label with name \"VCC\""
@@ -507,5 +507,5 @@ symbol power:VCC field Reference "#PWR"
 symbol power:VCC field Value VCC
 symbol power:VCC hash 042cb09b0b5eeabc
 symbol power:VCC keywords "global power"
-symbol power:VCC pin 1 unit 1 body 1 name ~ type power_in style line
+symbol power:VCC pin 1 unit 1 body 1 name "" type power_in style line
 symbol power:VCC units 1 power global

@@ -236,6 +236,7 @@ impl Board {
         for c in &mut self.net_classes {
             c.params.sort_by(|a, b| natural_cmp(&a.key, &b.key));
             c.patterns.sort();
+            c.assigned.sort();
         }
         let s = &mut self.settings;
         for list in [

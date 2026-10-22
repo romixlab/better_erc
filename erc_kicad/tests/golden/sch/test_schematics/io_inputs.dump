@@ -24,9 +24,9 @@ part U1 flag on_board = yes @ sch io_inputs.kicad_sch
 part U1 lib Fixture:DualAmp sheet / symbol Fixture:DualAmp
 part U1 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000001 at 130,50 rot 0
 part U1 value = text DualAmp @ sch io_inputs.kicad_sch note "from the Value field"
-pin R1 1 name ~ unit 1 net /SIG_FLOATING
+pin R1 1 name "" unit 1 net /SIG_FLOATING
 pin R1 1 type = passive @ sch io_inputs.kicad_sch
-pin R1 2 name ~ unit 1 net unconnected-(R1-Pad2)
+pin R1 2 name "" unit 1 net unconnected-(R1-Pad2)
 pin R1 2 type = passive @ sch io_inputs.kicad_sch
 pin U1 1 name OUTA unit 1 net /SIG_DRIVEN
 pin U1 1 type = output @ sch io_inputs.kicad_sch
@@ -55,6 +55,6 @@ symbol Fixture:R field Description Resistor
 symbol Fixture:R field Reference R
 symbol Fixture:R field Value R
 symbol Fixture:R hash 87069a6c18644b32
-symbol Fixture:R pin 1 unit 1 body 1 name ~ type passive style line
-symbol Fixture:R pin 2 unit 1 body 1 name ~ type passive style line
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
 symbol Fixture:R units 1

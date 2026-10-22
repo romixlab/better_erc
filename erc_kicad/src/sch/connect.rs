@@ -209,12 +209,23 @@ pub fn unit_letter(unit: u32) -> String {
     s.iter().rev().collect()
 }
 
-/// Builds the connectivity of all sheet instances as KiCad major version `kicad` does
-pub fn build(files: &[SchFile], insts: &[Inst], syms: &[Vec<SymRes>], kicad: u32) -> Connectivity {
+/// What connectivity is built from: the sheet files, their instances, the placed symbols per instance, the
+/// KiCad major version whose rules apply, and the bus aliases by name (all sheets' and the project's)
+pub struct Input<'a> {
+    pub files: &'a [SchFile],
+    pub insts: &'a [Inst],
+    pub syms: &'a [Vec<SymRes>],
+    pub kicad: u32,
+    pub aliases: &'a HashMap<String, Vec<String>>,
+}
+
+/// Builds the connectivity of all sheet instances as KiCad major version `inp.kicad` does
+pub fn build(inp: &Input) -> Connectivity {
+    let (files, insts) = (inp.files, inp.insts);
     let mut sgs: Vec<Subgraph> = Vec::new();
     let mut inst_items: Vec<HashMap<Item, usize>> = Vec::new();
     for (ii, inst) in insts.iter().enumerate() {
-        let (items_sg, new) = geometry(files, insts, syms, ii, inst, sgs.len(), kicad);
+        let (items_sg, new) = geometry(inp, ii, inst, sgs.len());
         sgs.extend(new);
         inst_items.push(items_sg);
     }
@@ -553,14 +564,12 @@ fn better(a: &Driver, b: &Driver) -> bool {
 
 /// The subgraphs of one sheet instance, numbered from `base`; and the subgraph of each item
 fn geometry(
-    files: &[SchFile],
-    insts: &[Inst],
-    syms: &[Vec<SymRes>],
+    inp: &Input,
     ii: usize,
     inst: &Inst,
     base: usize,
-    kicad: u32,
 ) -> (HashMap<Item, usize>, Vec<Subgraph>) {
+    let (files, syms, kicad) = (inp.files, inp.syms, inp.kicad);
     let f = &files[inst.file];
     let mut items: Vec<Item> = Vec::new();
     let mut pts: HashMap<Pt, Vec<usize>> = HashMap::new();
@@ -670,19 +679,14 @@ fn geometry(
         for it in &its {
             item_sg.insert(*it, idx);
         }
-        out.push(subgraph(files, insts, syms, ii, its));
+        out.push(subgraph(inp, ii, its));
     }
     (item_sg, out)
 }
 
 /// A subgraph with its drivers resolved
-fn subgraph(
-    files: &[SchFile],
-    insts: &[Inst],
-    syms: &[Vec<SymRes>],
-    ii: usize,
-    items: Vec<Item>,
-) -> Subgraph {
+fn subgraph(inp: &Input, ii: usize, items: Vec<Item>) -> Subgraph {
+    let (files, insts, syms) = (inp.files, inp.insts, inp.syms);
     let inst = &insts[ii];
     let f = &files[inst.file];
     let has_nc = items.iter().any(|it| match it {
@@ -713,7 +717,7 @@ fn subgraph(
                 Driver {
                     item: *it,
                     prio,
-                    bus: Bus::parse(&unescape(&lab.text)),
+                    bus: Bus::parse(&unescape(&lab.text)).map(|b| b.with_aliases(inp.aliases)),
                     name,
                     full,
                     global_power_parent: false,
@@ -728,7 +732,7 @@ fn subgraph(
                 Driver {
                     item: *it,
                     prio: Priority::SheetPin,
-                    bus: Bus::parse(&unescape(&pin.name)),
+                    bus: Bus::parse(&unescape(&pin.name)).map(|b| b.with_aliases(inp.aliases)),
                     full: format!("{}{name}", inst.path),
                     name,
                     global_power_parent: false,
@@ -809,7 +813,7 @@ fn pin_driver(f: &SchFile, inst: &Inst, res: &SymRes, s: usize, p: usize, has_nc
     }
 }
 
-/// The name a pin shows: the alternate chosen, else the library name; `~` is no name
+/// The name a pin shows: the alternate chosen, else the library name
 fn shown_name(f: &SchFile, s: usize, p: usize) -> String {
     let sym = &f.symbols[s];
     let Some(lib) = f.lib_symbols.get(sym.lib_key()) else {
@@ -819,11 +823,7 @@ fn shown_name(f: &SchFile, s: usize, p: usize) -> String {
     if let Some(alt) = sym.alternates.get(&pin.number) {
         return alt.clone();
     }
-    if pin.name == "~" {
-        String::new()
-    } else {
-        pin.name.clone()
-    }
+    pin.name.clone()
 }
 
 /// KiCad's default net name of a pin: `Net-(R1-Pad2)`, `Net-(U1-PA3)`, `unconnected-(U1A-+INA-Pad3)`

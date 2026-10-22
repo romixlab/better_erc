@@ -572,8 +572,10 @@ pub struct NetClass {
     pub name: String,
     /// Rules of the class (`clearance`, `track_width`, `diff_pair_gap`, ...), in mm as the project writes them
     pub params: Vec<Param>,
-    /// Net name patterns assigned to the class (`netclass_patterns`)
+    /// Net name patterns assigned to the class (`netclass_patterns`): wildcards, or a regex between slashes
     pub patterns: Vec<String>,
+    /// Nets assigned to the class by name (`netclass_assignments`, written by the board editor)
+    pub assigned: Vec<String>,
 }
 
 /// What the project file says beyond the drawing
@@ -581,11 +583,11 @@ pub struct NetClass {
 pub struct ProjectSettings {
     /// Text variables (`${REV}`)
     pub text_vars: Vec<Param>,
-    /// ERC rule severities that differ from KiCad's defaults (`pin_not_connected` = `ignore`)
+    /// ERC rule severities as the project states them (`pin_not_connected` = `ignore`)
     pub erc_severities: Vec<Param>,
     /// ERC exclusions as KiCad stores them, each a param with its comment as the value
     pub erc_exclusions: Vec<Param>,
-    /// DRC rule severities that differ from KiCad's defaults
+    /// DRC rule severities as the project states them
     pub drc_severities: Vec<Param>,
     /// DRC exclusions, like the ERC ones
     pub drc_exclusions: Vec<Param>,

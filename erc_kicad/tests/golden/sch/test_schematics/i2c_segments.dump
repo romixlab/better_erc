@@ -419,69 +419,69 @@ pin Q404 2 name S unit 1 net /SCL1_1V8
 pin Q404 2 type = passive @ sch i2c_segments.kicad_sch
 pin Q404 3 name D unit 1 net /SCL1_3V3
 pin Q404 3 type = passive @ sch i2c_segments.kicad_sch
-pin R401 1 name ~ unit 1 net VCC_3V3
+pin R401 1 name "" unit 1 net VCC_3V3
 pin R401 1 type = passive @ sch i2c_segments.kicad_sch
-pin R401 2 name ~ unit 1 net /SCL1_3V3
+pin R401 2 name "" unit 1 net /SCL1_3V3
 pin R401 2 type = passive @ sch i2c_segments.kicad_sch
-pin R402 1 name ~ unit 1 net /SDA2_EN
+pin R402 1 name "" unit 1 net /SDA2_EN
 pin R402 1 type = passive @ sch i2c_segments.kicad_sch
-pin R402 2 name ~ unit 1 net /SDA2_3V3
+pin R402 2 name "" unit 1 net /SDA2_3V3
 pin R402 2 type = passive @ sch i2c_segments.kicad_sch
-pin R403 1 name ~ unit 1 net VCC_3V3
+pin R403 1 name "" unit 1 net VCC_3V3
 pin R403 1 type = passive @ sch i2c_segments.kicad_sch
-pin R403 2 name ~ unit 1 net /SDA1_3V3
+pin R403 2 name "" unit 1 net /SDA1_3V3
 pin R403 2 type = passive @ sch i2c_segments.kicad_sch
-pin R404 1 name ~ unit 1 net /SDA2_EN
+pin R404 1 name "" unit 1 net /SDA2_EN
 pin R404 1 type = passive @ sch i2c_segments.kicad_sch
-pin R404 2 name ~ unit 1 net /SCL2_3V3
+pin R404 2 name "" unit 1 net /SCL2_3V3
 pin R404 2 type = passive @ sch i2c_segments.kicad_sch
-pin R405 1 name ~ unit 1 net /SDA1_3V3
+pin R405 1 name "" unit 1 net /SDA1_3V3
 pin R405 1 type = passive @ sch i2c_segments.kicad_sch
-pin R405 2 name ~ unit 1 net /SDA_U7
+pin R405 2 name "" unit 1 net /SDA_U7
 pin R405 2 type = passive @ sch i2c_segments.kicad_sch
-pin R406 1 name ~ unit 1 net /SCL1_3V3
+pin R406 1 name "" unit 1 net /SCL1_3V3
 pin R406 1 type = passive @ sch i2c_segments.kicad_sch
-pin R406 2 name ~ unit 1 net /SCL_U7
+pin R406 2 name "" unit 1 net /SCL_U7
 pin R406 2 type = passive @ sch i2c_segments.kicad_sch
-pin R407 1 name ~ unit 1 net VCC2_3V3
+pin R407 1 name "" unit 1 net VCC2_3V3
 pin R407 1 type = passive @ sch i2c_segments.kicad_sch
-pin R407 2 name ~ unit 1 net /SDA1_3V3_VCC2
+pin R407 2 name "" unit 1 net /SDA1_3V3_VCC2
 pin R407 2 type = passive @ sch i2c_segments.kicad_sch
-pin R408 1 name ~ unit 1 net VCC2_3V3
+pin R408 1 name "" unit 1 net VCC2_3V3
 pin R408 1 type = passive @ sch i2c_segments.kicad_sch
-pin R408 2 name ~ unit 1 net /SCL1_3V3_VCC2
+pin R408 2 name "" unit 1 net /SCL1_3V3_VCC2
 pin R408 2 type = passive @ sch i2c_segments.kicad_sch
-pin R409 1 name ~ unit 1 net VCC_1V8
+pin R409 1 name "" unit 1 net VCC_1V8
 pin R409 1 type = passive @ sch i2c_segments.kicad_sch
-pin R409 2 name ~ unit 1 net /SDA1_1V8
+pin R409 2 name "" unit 1 net /SDA1_1V8
 pin R409 2 type = passive @ sch i2c_segments.kicad_sch
-pin R410 1 name ~ unit 1 net VCC_1V2
+pin R410 1 name "" unit 1 net VCC_1V2
 pin R410 1 type = passive @ sch i2c_segments.kicad_sch
-pin R410 2 name ~ unit 1 net /SDA1_1V2
+pin R410 2 name "" unit 1 net /SDA1_1V2
 pin R410 2 type = passive @ sch i2c_segments.kicad_sch
-pin R411 1 name ~ unit 1 net VCC_1V8
+pin R411 1 name "" unit 1 net VCC_1V8
 pin R411 1 type = passive @ sch i2c_segments.kicad_sch
-pin R411 2 name ~ unit 1 net /SCL1_1V8
+pin R411 2 name "" unit 1 net /SCL1_1V8
 pin R411 2 type = passive @ sch i2c_segments.kicad_sch
-pin R412 1 name ~ unit 1 net VCC_1V2
+pin R412 1 name "" unit 1 net VCC_1V2
 pin R412 1 type = passive @ sch i2c_segments.kicad_sch
-pin R412 2 name ~ unit 1 net /SCL1_1V2
+pin R412 2 name "" unit 1 net /SCL1_1V2
 pin R412 2 type = passive @ sch i2c_segments.kicad_sch
-pin R413 1 name ~ unit 1 net /SDA1_3V3
+pin R413 1 name "" unit 1 net /SDA1_3V3
 pin R413 1 type = passive @ sch i2c_segments.kicad_sch
-pin R413 2 name ~ unit 1 net /UNM1
+pin R413 2 name "" unit 1 net /UNM1
 pin R413 2 type = passive @ sch i2c_segments.kicad_sch
-pin R414 1 name ~ unit 1 net /SCL1_3V3
+pin R414 1 name "" unit 1 net /SCL1_3V3
 pin R414 1 type = passive @ sch i2c_segments.kicad_sch
-pin R414 2 name ~ unit 1 net /UNM2
+pin R414 2 name "" unit 1 net /UNM2
 pin R414 2 type = passive @ sch i2c_segments.kicad_sch
-pin R415 1 name ~ unit 1 net VCC_3V3
+pin R415 1 name "" unit 1 net VCC_3V3
 pin R415 1 type = passive @ sch i2c_segments.kicad_sch
-pin R415 2 name ~ unit 1 net /UNM1
+pin R415 2 name "" unit 1 net /UNM1
 pin R415 2 type = passive @ sch i2c_segments.kicad_sch
-pin R416 1 name ~ unit 1 net VCC_3V3
+pin R416 1 name "" unit 1 net VCC_3V3
 pin R416 1 type = passive @ sch i2c_segments.kicad_sch
-pin R416 2 name ~ unit 1 net /UNM2
+pin R416 2 name "" unit 1 net /UNM2
 pin R416 2 type = passive @ sch i2c_segments.kicad_sch
 pin U401 1 name BOOT0 unit 1 net unconnected-(U401-BOOT0-Pad1)
 pin U401 1 type = input @ sch i2c_segments.kicad_sch
@@ -640,7 +640,7 @@ source file i2c_segments.kicad_sch
 source tool kicad
 source version 8.0
 symbol Connector:Conn_01x03_Pin description "Generic connector, single row, 01x03, script generated"
-symbol Connector:Conn_01x03_Pin field Datasheet ~
+symbol Connector:Conn_01x03_Pin field Datasheet ""
 symbol Connector:Conn_01x03_Pin field Description "Generic connector, single row, 01x03, script generated"
 symbol Connector:Conn_01x03_Pin field Reference J
 symbol Connector:Conn_01x03_Pin field Value Conn_01x03_Pin
@@ -652,15 +652,15 @@ symbol Connector:Conn_01x03_Pin pin 2 unit 1 body 1 name Pin_2 type passive styl
 symbol Connector:Conn_01x03_Pin pin 3 unit 1 body 1 name Pin_3 type passive style line
 symbol Connector:Conn_01x03_Pin units 1
 symbol Device:R description Resistor
-symbol Device:R field Datasheet ~
+symbol Device:R field Datasheet ""
 symbol Device:R field Description Resistor
 symbol Device:R field Reference R
 symbol Device:R field Value R
 symbol Device:R fp-filter R_*
 symbol Device:R hash 87aa0c9880114c8e
 symbol Device:R keywords "R res resistor"
-symbol Device:R pin 1 unit 1 body 1 name ~ type passive style line
-symbol Device:R pin 2 unit 1 body 1 name ~ type passive style line
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
 symbol Device:R units 1
 symbol Interface:PCA9306 description "Dual bidirectional I2C Bus and SMBus voltage level translator"
 symbol Interface:PCA9306 field Datasheet http://www.ti.com/lit/ds/symlink/pca9306.pdf
@@ -793,7 +793,7 @@ symbol power:GND field Reference "#PWR"
 symbol power:GND field Value GND
 symbol power:GND hash 161db5076481e95b
 symbol power:GND keywords "global power"
-symbol power:GND pin 1 unit 1 body 1 name ~ type power_in style line
+symbol power:GND pin 1 unit 1 body 1 name "" type power_in style line
 symbol power:GND units 1 power global
 symbol power:VCC description "Power symbol creates a global label with name \"VCC\""
 symbol power:VCC field Description "Power symbol creates a global label with name \"VCC\""
@@ -801,5 +801,5 @@ symbol power:VCC field Reference "#PWR"
 symbol power:VCC field Value VCC
 symbol power:VCC hash 042cb09b0b5eeabc
 symbol power:VCC keywords "global power"
-symbol power:VCC pin 1 unit 1 body 1 name ~ type power_in style line
+symbol power:VCC pin 1 unit 1 body 1 name "" type power_in style line
 symbol power:VCC units 1 power global
