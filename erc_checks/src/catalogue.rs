@@ -299,6 +299,56 @@ pub fn list() -> Vec<CheckInfo> {
         .collect()
 }
 
+/// What a run did with a catalogue check
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RunState {
+    Ran,
+    NotRun,
+    Planned,
+}
+
+impl RunState {
+    pub fn name(self) -> &'static str {
+        match self {
+            RunState::Ran => "ran",
+            RunState::NotRun => "not-run",
+            RunState::Planned => "planned",
+        }
+    }
+}
+
+/// A catalogue check with what a run on a design did with it
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ListedCheck {
+    #[serde(flatten)]
+    pub info: CheckInfo,
+    /// Ran, not run or planned on the design of the report; `None` without one
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub run: Option<RunState>,
+    /// Why it did not run and what would enable it
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hint: Option<String>,
+}
+
+/// Every catalogue check ([`list`]), with its state in `report` when there is one (`berc checks list`)
+pub fn list_for(report: Option<&crate::report::Report>) -> Vec<ListedCheck> {
+    use crate::report::Status;
+    list()
+        .into_iter()
+        .map(|info| {
+            let status = report.and_then(|r| r.checks.iter().find(|c| c.id == info.id));
+            let (run, hint) = match status.map(|s| &s.status) {
+                Some(Status::Ran { .. }) => (Some(RunState::Ran), None),
+                Some(Status::NotRun(n)) => (Some(RunState::NotRun), Some(n.hint.clone())),
+                Some(Status::Planned) => (Some(RunState::Planned), None),
+                None => (None, None),
+            };
+            ListedCheck { info, run, hint }
+        })
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

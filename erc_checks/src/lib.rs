@@ -31,7 +31,9 @@ mod library;
 #[cfg(test)]
 mod testing;
 
-pub use catalogue::{CheckInfo, CheckState, Explanation, explain, list};
+pub use catalogue::{
+    CheckInfo, CheckState, Explanation, ListedCheck, RunState, explain, list, list_for,
+};
 pub use ctx::{Availability, Config, Ctx};
 pub use engine::{RunError, RunOptions, run, run_imported, run_with};
 pub use finding::{BaselineState, Confidence, Finding, FindingFact, Location, NotRun, SubjectRef};
