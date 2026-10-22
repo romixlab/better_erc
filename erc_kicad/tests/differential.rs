@@ -63,13 +63,28 @@ const FIXTURES: &[Fixture] = &[
     },
 ];
 
-/// Where KiCad itself is wrong, and we read the design as the other versions do: (root, KiCad version, the
-/// difference as [`render`] writes it, why)
-const KNOWN: &[(&str, u32, &str, &str)] = &[
-    (
-        "erc_kicad/tests/fixtures/hierarchy.kicad_sch",
-        9,
-        "ours  /CTL.EN R14.2 R24.2 R4.1
+/// A difference between our reading and one KiCad release's netlist that is that release's bug: where KiCad
+/// versions disagree and one of them is wrong, our connectivity follows KiCad 10
+struct Known {
+    root: &'static str,
+    /// The KiCad major version whose netlist is compared
+    version: u32,
+    /// The release whose kicad-cli shows the bug
+    kicad: &'static str,
+    /// The bug, and what the other versions do
+    bug: &'static str,
+    /// The difference as [`render`] writes it
+    diff: &'static str,
+}
+
+const KNOWN: &[Known] = &[
+    Known {
+        root: "erc_kicad/tests/fixtures/hierarchy.kicad_sch",
+        version: 9,
+        kicad: "9.0.9",
+        bug: "buses are not carried through the sheet pins of the second instance of a sheet used twice; KiCad 8 \
+              and 10 carry them",
+        diff: "ours  /CTL.EN R14.2 R24.2 R4.1
 ours  /DATA0 R11.2 R21.2
 ours  /DATA2 R12.2 R22.2 R3.1
 kicad /B/CTL.EN R24.2
@@ -79,13 +94,14 @@ kicad /CTL.EN R14.2 R4.1
 kicad /DATA0 R11.2
 kicad /DATA2 R12.2 R3.1
 ",
-        "KiCad 9.0.9 does not carry buses through the sheet pins of the second instance of a sheet used twice; \
-     KiCad 8 and 10 do",
-    ),
-    (
-        "erc_kicad/tests/fixtures/alias.kicad_sch",
-        9,
-        "renamed ours /DP kicad /Sub/DP
+    },
+    Known {
+        root: "erc_kicad/tests/fixtures/alias.kicad_sch",
+        version: 9,
+        kicad: "9.0.9",
+        bug: "kicad-cli does not read the bus aliases of a KiCad 8 sheet (9 keeps aliases in the project file); \
+              KiCad 10 reads them",
+        diff: "renamed ours /DP kicad /Sub/DP
 ours  /DM R1.2 R11.2
 ours  /X.DP R12.2 R2.1
 kicad /DM R1.2
@@ -93,9 +109,7 @@ kicad /Sub/DM R11.2
 kicad /Sub/X.DP R12.2
 kicad /X.DP R2.1
 ",
-        "KiCad 9.0.9's kicad-cli does not read the bus aliases of a KiCad 8 sheet (9 keeps them in the project \
-         file); KiCad 10 reads them",
-    ),
+    },
 ];
 
 /// A net difference as text, one net per line
@@ -219,12 +233,12 @@ fn check(root_rel: &str, root: &Path, netlist: &Path, version: u32, failed: &mut
     let diff = differ(root, netlist, Some(version));
     let known = KNOWN
         .iter()
-        .find(|k| k.0 == root_rel && k.1 == version)
-        .map(|k| k.2);
+        .find(|k| k.root == root_rel && k.version == version);
     match known {
-        Some(want) if diff == want => {}
-        Some(want) => failed.push(format!(
-            "{root_rel} KiCad {version}: the known difference changed\nwas:\n{want}now:\n{diff}"
+        Some(k) if diff == k.diff => {}
+        Some(k) => failed.push(format!(
+            "{root_rel} KiCad {version}: the known difference (KiCad {}: {}) changed\nwas:\n{}now:\n{diff}",
+            k.kicad, k.bug, k.diff
         )),
         None if diff.is_empty() => {}
         None => failed.push(format!("{root_rel} KiCad {version}:\n{diff}")),

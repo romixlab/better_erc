@@ -8,6 +8,9 @@
 //! - [`netlist`]: the KiCad netlist (`kicad-cli sch export netlist`), the oracle of the schematic importer.
 //!
 //! Every element a reader does not know becomes an [`erc_model::ImportNote`], never a panic.
+//!
+//! Connectivity follows KiCad 10's behaviour: rule changes between versions are followed by
+//! [`erc_model::ImportOptions::kicad_version`], bugs of older releases (kicad-cli 9.0.9's) are not copied.
 
 pub mod netclass;
 pub mod netlist;

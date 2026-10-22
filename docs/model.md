@@ -95,7 +95,8 @@ schematic hierarchy, joined into one board. A board without a schematic is read 
 `kicad-cli sch export netlist` file.
 
 - `sexpr`: the s-expression reader every KiCad file goes through: zero-copy, iterative, never panics.
-- `sch`: the hierarchy (every sheet instance with its own references) and connectivity built by KiCad's rules: wires,
+- `sch`: the hierarchy (every sheet instance with its own references) and connectivity built by KiCad's rules (KiCad
+  10's behaviour; KiCad bugs of older releases are not copied): wires,
   junctions and pins by geometry, local labels per sheet instance, global labels and power symbols everywhere, KiCad 10
   local power symbols per sheet, hierarchical labels through sheet pins, vector buses (`D[0..7]`) and group buses
   (`CTL{EN RST}`, members `CTL.EN`), bus entries, bus aliases from the sheets (KiCad 8) and the project file (9, 10),
@@ -127,8 +128,11 @@ netlist writes only the classes of directive labels, KiCad 8's none):
 - every KiCad project under `~/git/hw` (or `BERC_HW_DIR`) when that folder exists, through the installed kicad-cli;
   `BERC_DIFF_KICAD=8,9,10` adds the other versions through podman. Exports are cached by a hash of the project files.
 
-Where kicad-cli 9.0.9 differs from both 8 and 10 (it drops buses into the second instance of a repeated sheet, and the
-bus aliases of a KiCad 8 sheet), the importer reads the design as 8 and 10 do and the test records the difference.
+Our connectivity follows KiCad 10's behaviour. Where an older release disagrees because of a bug, the importer does not
+copy it and the test records the difference as known, with the KiCad release and the bug next to it: kicad-cli 9.0.9
+drops buses into the second instance of a repeated sheet, and ignores the bus aliases of a KiCad 8 sheet; KiCad 8 and 10
+agree on both. Rule changes between versions that are not bugs (the KiCad 8 junction and label-on-crossing rules) are
+followed by `ImportOptions::kicad_version`.
 Every fixture and test schematic also has a committed canonical dump (`erc_kicad/tests/golden`, `BLESS=1` rewrites
 them). `erc_kicad/tests/board.rs` reads one board saved by KiCad 8, 9 and 10 and checks that all three give the same
 geometry and nets, and that the board links to its schematic.
