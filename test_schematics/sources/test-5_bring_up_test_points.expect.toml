@@ -29,6 +29,22 @@ check = "DEC-1"
 subjects = ["net +3V3"]
 
 [[finding]]
+check = "NAME-4"
+subjects = ["net /CON_RX", "pin U1.6"]
+
+[[finding]]
+check = "NAME-4"
+subjects = ["net /CON_TX", "pin U1.5"]
+
+[[finding]]
+check = "NAME-4"
+subjects = ["net /UART_RX", "pin U1.4"]
+
+[[finding]]
+check = "NAME-4"
+subjects = ["net /UART_TX", "pin U1.3"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.4", "pin U1.8"]
 
@@ -51,3 +67,11 @@ subjects = ["net /SWCLK"]
 [[finding]]
 check = "TEST-5"
 subjects = ["net /UART_RX"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SWCLK", "pin U1.8"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /UART_RX", "pin U1.4"]

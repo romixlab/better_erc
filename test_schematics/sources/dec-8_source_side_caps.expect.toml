@@ -48,3 +48,11 @@ subjects = ["net +3V3_VDDA"]
 [[finding]]
 check = "TEST-4"
 subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SENSE2_IN", "pin U2.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SENSE_IN", "pin U1.3"]

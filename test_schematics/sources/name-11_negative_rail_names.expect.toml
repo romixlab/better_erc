@@ -1,9 +1,81 @@
 # What better_erc finds on name-11_negative_rail_names.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DBG-4"
+subjects = ["net +12V"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V0"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net -12V"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net 5V0_NEG"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net VAUX"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +12V"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V0"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net -12V"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net 5V0_NEG"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net VAUX"]
+
+[[finding]]
 check = "NAME-11"
 subjects = ["net 5V0_NEG", "pin U1.4"]
 
 [[finding]]
 check = "NAME-11"
 subjects = ["net VAUX", "pin U2.4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.4", "pin U1.8"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U3", "pin U3.4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +12V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V0"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net -12V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net 5V0_NEG"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VAUX"]

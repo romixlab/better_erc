@@ -41,6 +41,14 @@ check = "I2C-2"
 subjects = ["net /SCL1_3V3", "net /SCL_U7", "net /SDA1_3V3", "net /SDA_U7", "part R501", "part R502", "part R503", "part R504"]
 
 [[finding]]
+check = "NAME-5"
+subjects = ["part U503", "part U506"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board i2c-2_multiple_pull_ups"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U501", "pin U501.1", "pin U501.10", "pin U501.11", "pin U501.12", "pin U501.13", "pin U501.14", "pin U501.19", "pin U501.2", "pin U501.20", "pin U501.3", "pin U501.4", "pin U501.6", "pin U501.7", "pin U501.8", "pin U501.9"]
 

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "tool": "better_erc 0.4.2",
+  "tool": "better_erc 0.4.4",
   "summary": {
     "boards": [
       {
@@ -15,13 +15,13 @@
     ],
     "variant": null,
     "errors": 3,
-    "warnings": 11,
-    "suggestions": 77,
+    "warnings": 16,
+    "suggestions": 79,
     "infos": 0,
     "candidates": 0,
-    "ran": 34,
+    "ran": 58,
     "not_run": 0,
-    "planned": 479
+    "planned": 455
   },
   "checks": [
     {
@@ -332,7 +332,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 116
+      "micros": 258
     },
     {
       "id": "DEC-2",
@@ -355,7 +355,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 14
+      "micros": 48
     },
     {
       "id": "DEC-5",
@@ -378,7 +378,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7
+      "micros": 46
     },
     {
       "id": "DEC-8",
@@ -387,7 +387,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 19
+      "micros": 57
     },
     {
       "id": "DEC-9",
@@ -403,7 +403,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 84
+      "micros": 219
     },
     {
       "id": "DEC-11",
@@ -412,7 +412,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 25
     },
     {
       "id": "DEC-12",
@@ -421,7 +421,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7
+      "micros": 14
     },
     {
       "id": "DEC-13",
@@ -736,49 +736,63 @@
       "title": "Net shunting a known part (R, C, L, transistor...): most likely a net label collision, or a port and net label with the same name ≈ SHORT-2",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 194
     },
     {
       "id": "SHORT-2",
       "title": "Accidental net name collision, e.g. on I2C: VCCa-R-R-VCCa/b, or two 0R leading to the same net",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 491
     },
     {
       "id": "SHORT-3",
       "title": "Non-DNM part shunting another mounted part",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 254
     },
     {
       "id": "SHORT-4",
       "title": "Short circuit between power and ground through low value resistor(s)",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 283
     },
     {
       "id": "SHORT-5",
       "title": "VDD/VCC pins shorted to GND, or GND/VEE to power nets",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 924
     },
     {
       "id": "SHORT-6",
       "title": "Inputs shorted to ground or power without a resistor",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 32
     },
     {
       "id": "SHORT-7",
       "title": "Shorted IOs: warn that they must be driven together",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 230
     },
     {
       "id": "SHORT-8",
@@ -806,28 +820,36 @@
       "title": "Two push-pull outputs on one net (output-output conflict)",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 120
     },
     {
       "id": "SHORT-12",
       "title": "Differential pair with P tied to N: a label typo or a wrong bus entry",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 2721
     },
     {
       "id": "WIRE-1",
       "title": "Net with a single pin (a label with no partner, a typo in one of two labels)",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 5,
+      "micros": 652
     },
     {
       "id": "WIRE-2",
       "title": "Net names that differ only in case, separator or suffix (`RESET_N` and `RESET_n`, `3V3` and `+3V3`): almost always one net meant",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 187
     },
     {
       "id": "WIRE-3",
@@ -890,7 +912,9 @@
       "title": "Unnamed (auto-named) net with many pins or crossing sheets: give it a name",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 6
     },
     {
       "id": "WIRE-12",
@@ -904,14 +928,18 @@
       "title": "Output pin whose net reaches no input (an output into nothing but passives or a test point)",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 171
     },
     {
       "id": "WIRE-14",
       "title": "Ground-named pin (GND, VSS, AGND, PGND) on a net that is not a ground",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 696
     },
     {
       "id": "WIRE-15",
@@ -1620,7 +1648,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 423
+      "micros": 33
     },
     {
       "id": "I2C-2",
@@ -1629,7 +1657,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 3,
-      "micros": 93
+      "micros": 232
     },
     {
       "id": "I2C-3",
@@ -1638,7 +1666,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 56
+      "micros": 145
     },
     {
       "id": "I2C-4",
@@ -1668,7 +1696,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 63
+      "micros": 141
     },
     {
       "id": "I2C-8",
@@ -1684,7 +1712,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 113
+      "micros": 262
     },
     {
       "id": "I2C-10",
@@ -1693,7 +1721,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 83
+      "micros": 306
     },
     {
       "id": "I2C-11",
@@ -2920,7 +2948,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 5044
+      "micros": 1450
     },
     {
       "id": "DBG-2",
@@ -2929,7 +2957,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 201
+      "micros": 300
     },
     {
       "id": "DBG-3",
@@ -2938,7 +2966,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 38
+      "micros": 94
     },
     {
       "id": "DBG-4",
@@ -2947,7 +2975,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 21
+      "micros": 73
     },
     {
       "id": "DBG-5",
@@ -2970,7 +2998,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 461
+      "micros": 644
     },
     {
       "id": "DBG-8",
@@ -2979,7 +3007,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 469
+      "micros": 489
     },
     {
       "id": "DBG-9",
@@ -2995,7 +3023,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 58
+      "micros": 105
     },
     {
       "id": "DBG-11",
@@ -3004,7 +3032,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 424
+      "micros": 734
     },
     {
       "id": "DBG-12",
@@ -3027,7 +3055,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 191
+      "micros": 311
     },
     {
       "id": "DBG-15",
@@ -3043,7 +3071,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 14
+      "micros": 49
     },
     {
       "id": "DBG-17",
@@ -3052,7 +3080,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 366
+      "micros": 658
     },
     {
       "id": "DBG-18",
@@ -3061,7 +3089,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 14,
-      "micros": 665
+      "micros": 1859
     },
     {
       "id": "DBG-19",
@@ -3112,7 +3140,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 20,
-      "micros": 635
+      "micros": 987
     },
     {
       "id": "TEST-2",
@@ -3121,7 +3149,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 49
+      "micros": 69
     },
     {
       "id": "TEST-3",
@@ -3137,7 +3165,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 50
+      "micros": 130
     },
     {
       "id": "TEST-5",
@@ -3146,7 +3174,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 28,
-      "micros": 821
+      "micros": 2312
     },
     {
       "id": "TEST-6",
@@ -3197,7 +3225,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 61
+      "micros": 795
     },
     {
       "id": "BOM-6",
@@ -3206,7 +3234,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 43
+      "micros": 794
     },
     {
       "id": "BOM-7",
@@ -3229,7 +3257,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 18
+      "micros": 483
     },
     {
       "id": "BOM-10",
@@ -3238,7 +3266,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 29
+      "micros": 45
     },
     {
       "id": "BOM-11",
@@ -3301,14 +3329,18 @@
       "title": "Inconsistent naming of inverted signals: suggest one notation",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 127
     },
     {
       "id": "NAME-2",
       "title": "Inconsistent naming of differential pairs: suggest one notation",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 118
     },
     {
       "id": "NAME-3",
@@ -3322,28 +3354,36 @@
       "title": "UART: suggest `X_TX_Y_RX` style names",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 74
     },
     {
       "id": "NAME-5",
       "title": "Gaps in designator series on rev A or standalone ≈ NAME-6",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 1,
+      "micros": 358
     },
     {
       "id": "NAME-6",
       "title": "Suggest per page designators; highlight missing ones",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 136
     },
     {
       "id": "NAME-7",
       "title": "No nets found in strict mode: suggest `+xVy` power names and non-strict mode",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 1,
+      "micros": 1901
     },
     {
       "id": "NAME-8",
@@ -3357,28 +3397,36 @@
       "title": "IO numbering out of order against the part's pins (IO4 on GPIO17 while IO5 is on GPIO16)",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 161
     },
     {
       "id": "NAME-10",
       "title": "Active-low signal without a marker in its name (`_N`, `#`, `~`): reviewers and LOGIC-8 cannot see the polarity",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 203
     },
     {
       "id": "NAME-11",
       "title": "Negative rail named without its sign (`5V_NEG` vs `-5V`), or with a sign the tool does not parse",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 296
     },
     {
       "id": "NAME-12",
       "title": "Unannotated or duplicate reference designators",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 114
     },
     {
       "id": "LIB-1",
@@ -3401,7 +3449,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 23
     },
     {
       "id": "LIB-4",
@@ -4108,6 +4156,281 @@
       "explain": "docs/checks/dec.md#dec-1",
       "fix": "a 100 nF ceramic from the rail to ground at each power pin, plus bulk on the rail",
       "locations": [],
+      "also": []
+    },
+    {
+      "check": "WIRE-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              1
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/I2C2_EN"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              99
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.7"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C20: I2C no pull-ups/I2C2_EN reaches one pin only (U201.7): a label without a partner, or a misspelled one",
+      "facts": [],
+      "fingerprint": "WIRE-1:net /C20: I2C no pull-ups/I2C2_EN|pin U201.7",
+      "explain": "docs/checks/wire.md#wire-1",
+      "fix": "rename the label to match its partner, or delete it and mark the pin no-connect (WIRE-8)",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label I2C2_EN",
+          "at": [
+            74.93,
+            85.09
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol U201",
+          "line": 1913,
+          "at": [
+            49.53,
+            97.79
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "WIRE-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              2
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/I2C3_EN"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              29
+            ]
+          },
+          "kind": "pin",
+          "name": "R205.1"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C20: I2C no pull-ups/I2C3_EN reaches one pin only (R205.1): a label without a partner, or a misspelled one",
+      "facts": [],
+      "fingerprint": "WIRE-1:net /C20: I2C no pull-ups/I2C3_EN|pin R205.1",
+      "explain": "docs/checks/wire.md#wire-1",
+      "fix": "rename the label to match its partner, or delete it and mark the pin no-connect (WIRE-8)",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label I2C3_EN",
+          "at": [
+            196.85,
+            74.93
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R205",
+          "line": 2618,
+          "at": [
+            210.82,
+            82.55
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "WIRE-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              4
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/I2C4_EN"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              98
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.6"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C20: I2C no pull-ups/I2C4_EN reaches one pin only (U201.6): a label without a partner, or a misspelled one",
+      "facts": [],
+      "fingerprint": "WIRE-1:net /C20: I2C no pull-ups/I2C4_EN|pin U201.6",
+      "explain": "docs/checks/wire.md#wire-1",
+      "fix": "rename the label to match its partner, or delete it and mark the pin no-connect (WIRE-8)",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label I2C4_EN",
+          "at": [
+            74.93,
+            82.55
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol U201",
+          "line": 1913,
+          "at": [
+            49.53,
+            97.79
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "WIRE-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              20
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL_NOT_I2C"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              170
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.6"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/SCL_NOT_I2C reaches one pin only (U401.6): a label without a partner, or a misspelled one",
+      "facts": [],
+      "fingerprint": "WIRE-1:net /C22: I2C Segments/SCL_NOT_I2C|pin U401.6",
+      "explain": "docs/checks/wire.md#wire-1",
+      "fix": "rename the label to match its partner, or delete it and mark the pin no-connect (WIRE-8)",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL_NOT_I2C",
+          "at": [
+            119.38,
+            58.42
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U401",
+          "line": 5888,
+          "at": [
+            87.63,
+            73.66
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "WIRE-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              28
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDATA_SMTH_ELSE"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              171
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.7"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/SDATA_SMTH_ELSE reaches one pin only (U401.7): a label without a partner, or a misspelled one",
+      "facts": [],
+      "fingerprint": "WIRE-1:net /C22: I2C Segments/SDATA_SMTH_ELSE|pin U401.7",
+      "explain": "docs/checks/wire.md#wire-1",
+      "fix": "rename the label to match its partner, or delete it and mark the pin no-connect (WIRE-8)",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDATA_SMTH_ELSE",
+          "at": [
+            119.38,
+            60.96
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U401",
+          "line": 5888,
+          "at": [
+            87.63,
+            73.66
+          ]
+        }
+      ],
       "also": []
     },
     {
@@ -9464,6 +9787,106 @@
         }
       ],
       "also": []
+    },
+    {
+      "check": "NAME-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              59
+            ]
+          },
+          "kind": "part",
+          "name": "U503"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              60
+            ]
+          },
+          "kind": "part",
+          "name": "U506"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U501-U506: U504-U505 missing",
+      "facts": [
+        {
+          "name": "revision",
+          "value": "not stated",
+          "source": {
+            "Schematic": {
+              "file": "test_schematics.kicad_sch"
+            }
+          }
+        }
+      ],
+      "fingerprint": "NAME-5:part U503|part U506",
+      "explain": "docs/checks/name.md#name-5",
+      "fix": "re-annotate before the first release; afterwards keep gaps and note removals in the change list",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol U503",
+          "line": 3031,
+          "at": [
+            204.47,
+            104.14
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol U506",
+          "line": 3539,
+          "at": [
+            248.92,
+            44.45
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "NAME-7",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Board": 0
+          },
+          "kind": "board",
+          "name": "test_schematics"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "no rail name reads as `+xVy` (VCC, VCC2_3V3, VCC_1V2, VCC_1V8, VCC_3V3): strict mode finds no voltage; the full grammar reads 4 of 5",
+      "facts": [
+        {
+          "name": "power names",
+          "value": "strict: `+`, volts, `V`, decimals (`+3V3`)",
+          "source": {
+            "Derived": {
+              "rule": "erc_analysis::power::read_name, strict"
+            }
+          }
+        }
+      ],
+      "fingerprint": "NAME-7:board test_schematics",
+      "explain": "docs/checks/name.md#name-7",
+      "fix": "name rails `+3V3`, `+5V0`, or run in non-strict mode and check what it picked up",
+      "locations": [],
+      "also": []
     }
   ],
   "candidates": [],
@@ -9480,7 +9903,7 @@
     }
   ],
   "timing": {
-    "checks_micros": 9379,
-    "total_micros": 11180
+    "checks_micros": 8331,
+    "total_micros": 9855
   }
 }

@@ -17,6 +17,10 @@ check = "DEC-12"
 subjects = ["net -5V", "net GND", "part C2"]
 
 [[finding]]
+check = "NAME-7"
+subjects = ["board dec-12_reversed_polarized"]
+
+[[finding]]
 check = "TEST-4"
 subjects = ["net +12V"]
 

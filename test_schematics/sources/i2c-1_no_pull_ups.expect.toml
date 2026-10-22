@@ -37,6 +37,10 @@ check = "I2C-3"
 subjects = ["net /I2C3_P", "net /SCL3", "net /SDA3", "part R203", "part R204"]
 
 [[finding]]
+check = "NAME-7"
+subjects = ["board i2c-1_no_pull_ups"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U201", "pin U201.1", "pin U201.10", "pin U201.11", "pin U201.12", "pin U201.13", "pin U201.14", "pin U201.19", "pin U201.2", "pin U201.20", "pin U201.3", "pin U201.4", "pin U201.6", "pin U201.7", "pin U201.8", "pin U201.9"]
 
@@ -83,3 +87,15 @@ subjects = ["net /SDA2"]
 [[finding]]
 check = "TEST-5"
 subjects = ["net /SDA3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /I2C2_EN", "pin U201.7"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /I2C3_EN", "pin R205.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /I2C4_EN", "pin U201.6"]

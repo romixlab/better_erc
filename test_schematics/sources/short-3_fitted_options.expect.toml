@@ -1,9 +1,29 @@
 # What better_erc finds on short-3_fitted_options.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
 check = "SHORT-3"
 subjects = ["net +3V3", "net +5V", "net /SEL", "part R5", "part R6"]
 
 [[finding]]
 check = "SHORT-3"
 subjects = ["net /FILT_IN", "net /FILT_OUT", "part R1", "part R2"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

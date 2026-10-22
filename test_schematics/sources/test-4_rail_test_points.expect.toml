@@ -31,3 +31,7 @@ subjects = ["net +5V"]
 [[finding]]
 check = "TEST-4"
 subjects = ["net GNDA"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SENSE_IN", "pin U2.3"]

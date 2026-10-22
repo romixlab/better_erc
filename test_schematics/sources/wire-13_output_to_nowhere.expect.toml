@@ -1,5 +1,25 @@
 # What better_erc finds on wire-13_output_to_nowhere.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DBG-3"
+subjects = ["part U2"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
 check = "WIRE-13"
 subjects = ["net /QH_CHK", "pin U1.9"]

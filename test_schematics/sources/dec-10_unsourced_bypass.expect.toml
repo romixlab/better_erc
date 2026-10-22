@@ -35,3 +35,27 @@ subjects = ["net +5V0_USBIN"]
 [[finding]]
 check = "TEST-4"
 subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /AIN1", "pin U1.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /AIN2", "pin U2.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /AIN3", "pin U3.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /AOUT1", "pin U1.4"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /AOUT2", "pin U2.4"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /AOUT3", "pin U3.4"]

@@ -1,5 +1,33 @@
 # What better_erc finds on name-7_no_strict_power_names.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DBG-4"
+subjects = ["net +3.3V"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net VDD_1V8"]
+
+[[finding]]
 check = "NAME-7"
 subjects = ["board name-7_no_strict_power_names"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3.3V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VDD_1V8"]

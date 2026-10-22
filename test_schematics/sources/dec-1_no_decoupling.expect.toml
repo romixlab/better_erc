@@ -35,3 +35,11 @@ subjects = ["net +3V3_IO"]
 [[finding]]
 check = "TEST-4"
 subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SER1", "pin U1.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SER3", "pin U2.4"]

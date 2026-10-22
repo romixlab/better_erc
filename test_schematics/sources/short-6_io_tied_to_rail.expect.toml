@@ -1,5 +1,25 @@
 # What better_erc finds on short-6_io_tied_to_rail.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
 check = "SHORT-6"
 subjects = ["net GND", "part U1", "pin U1.3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

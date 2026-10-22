@@ -29,6 +29,18 @@ check = "DEC-1"
 subjects = ["net +3V3"]
 
 [[finding]]
+check = "NAME-4"
+subjects = ["net /GPS_RX", "pin U2.4"]
+
+[[finding]]
+check = "NAME-4"
+subjects = ["net /GPS_RX_R", "pin U1.4"]
+
+[[finding]]
+check = "NAME-4"
+subjects = ["net /GPS_TX", "pin U1.3", "pin U2.2"]
+
+[[finding]]
 check = "TEST-4"
 subjects = ["net +3V3"]
 

@@ -1,5 +1,29 @@
 # What better_erc finds on short-11_output_conflict.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-7"
+subjects = ["net +3V3", "pin X1.1"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
 check = "SHORT-11"
 subjects = ["net /REF_CLK", "part U1", "part X1", "pin U1.1", "pin X1.3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

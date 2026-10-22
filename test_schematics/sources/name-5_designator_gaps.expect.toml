@@ -1,5 +1,17 @@
 # What better_erc finds on name-5_designator_gaps.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
 check = "NAME-5"
 subjects = ["part R2", "part R4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

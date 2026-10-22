@@ -40,3 +40,15 @@ subjects = ["net GND"]
 [[finding]]
 check = "TEST-4"
 subjects = ["net GNDA"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /CLK_IN", "pin FB2.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /CLK_OUT", "pin FB2.2"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SENSE_IN", "pin U2.3"]

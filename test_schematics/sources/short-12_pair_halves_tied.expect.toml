@@ -1,6 +1,22 @@
 # What better_erc finds on short-12_pair_halves_tied.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DBG-3"
+subjects = ["part U1", "part U3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net VBUS"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
 check = "SHORT-12"
 subjects = ["net /ETH_TX_N"]
 
@@ -11,6 +27,18 @@ subjects = ["net /USB_D_P", "part U1", "pin U1.1", "pin U1.2"]
 [[finding]]
 check = "SHORT-7"
 subjects = ["net /USB_D_P", "part U1"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VBUS"]
 
 [[finding]]
 check = "WIRE-1"

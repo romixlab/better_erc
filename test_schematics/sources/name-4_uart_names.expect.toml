@@ -1,6 +1,38 @@
 # What better_erc finds on name-4_uart_names.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DBG-11"
+subjects = ["net /DBG_TX_MCU_RX", "pin U1.6", "pin U4.2"]
+
+[[finding]]
+check = "DBG-11"
+subjects = ["net /GPS_RX", "pin U1.2", "pin U2.1"]
+
+[[finding]]
+check = "DBG-11"
+subjects = ["net /GPS_TX", "pin U1.1", "pin U2.2"]
+
+[[finding]]
+check = "DBG-11"
+subjects = ["net /MCU_TX_DBG_RX", "pin U1.5", "pin U4.1"]
+
+[[finding]]
+check = "DBG-11"
+subjects = ["net /MCU_TX_MDM_RX", "pin U1.3", "pin U3.2"]
+
+[[finding]]
+check = "DBG-11"
+subjects = ["net /MDM_TX_MCU_RX", "pin U1.4", "pin U3.1"]
+
+[[finding]]
+check = "DBG-14"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
 check = "NAME-4"
 subjects = ["net /DBG_TX_MCU_RX", "pin U1.6", "pin U4.2"]
 
@@ -21,29 +53,29 @@ check = "SHORT-11"
 subjects = ["net /MCU_TX_DBG_RX", "part U1", "part U4", "pin U1.5", "pin U4.1"]
 
 [[finding]]
+check = "TEST-5"
+subjects = ["net /DBG_TX_MCU_RX"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /GPS_RX"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /GPS_TX"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /MCU_TX_DBG_RX"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /MCU_TX_MDM_RX"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /MDM_TX_MCU_RX"]
+
+[[finding]]
 check = "WIRE-13"
 subjects = ["net /MCU_TX_DBG_RX", "pin U1.5", "pin U4.1"]
-
-[[not_run]]
-check = "NAME-11"
-need = "rails"
-
-[[not_run]]
-check = "NAME-7"
-need = "rails"
-
-[[not_run]]
-check = "SHORT-4"
-need = "rails"
-
-[[not_run]]
-check = "SHORT-5"
-need = "rails"
-
-[[not_run]]
-check = "SHORT-6"
-need = "rails"
-
-[[not_run]]
-check = "WIRE-14"
-need = "rails"

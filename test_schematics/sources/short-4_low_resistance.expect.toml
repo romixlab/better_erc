@@ -1,6 +1,14 @@
 # What better_erc finds on short-4_low_resistance.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
 check = "NAME-5"
 subjects = ["part R4", "part R6"]
 
@@ -15,3 +23,15 @@ subjects = ["net +3V3", "net GND", "part R1"]
 [[finding]]
 check = "SHORT-4"
 subjects = ["net +5V", "net GND", "part R3", "part R4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

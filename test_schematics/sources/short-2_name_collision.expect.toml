@@ -1,9 +1,49 @@
 # What better_erc finds on short-2_name_collision.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DBG-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net VCCA"]
+
+[[finding]]
+check = "DBG-7"
+subjects = ["net +3V3", "pin U1.8"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
 check = "SHORT-2"
 subjects = ["net /SDA", "part U1"]
 
 [[finding]]
 check = "SHORT-2"
 subjects = ["net VCCA", "part R1", "part R2"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VCCA"]

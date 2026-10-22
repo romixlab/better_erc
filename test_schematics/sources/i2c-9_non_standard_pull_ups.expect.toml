@@ -21,6 +21,10 @@ check = "I2C-9"
 subjects = ["net /SCL", "net /SDA", "part R301", "part R302"]
 
 [[finding]]
+check = "NAME-7"
+subjects = ["board i2c-9_non_standard_pull_ups"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U301", "pin U301.1", "pin U301.10", "pin U301.11", "pin U301.12", "pin U301.13", "pin U301.14", "pin U301.19", "pin U301.2", "pin U301.20", "pin U301.3", "pin U301.4", "pin U301.6", "pin U301.7", "pin U301.8", "pin U301.9"]
 
