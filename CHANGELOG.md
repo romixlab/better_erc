@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-10-22
+
 ### Added
 
 - `erc_model::class::PartClass`: the part class enum of architecture §1.3 with kinds (diode kind, BJT polarity, MOSFET
