@@ -1,0 +1,51 @@
+# What better_erc finds on hs-15_mipi_lane_parts.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DEC-10"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "HS-15"
+subjects = ["net /CSI_D0_N", "part R2"]
+
+[[finding]]
+check = "HS-15"
+subjects = ["net /CSI_D0_P", "part C1"]
+
+[[finding]]
+check = "HS-15"
+subjects = ["net /CSI_D0_P", "part R1"]
+
+[[finding]]
+check = "HS-4"
+subjects = ["net /CSI_D0_N", "net /CSI_D0_P", "part C1"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /CSI_D0_N", "pin U1.8"]
+also = ["IO-6"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /CSI_D0_P", "pin U1.7"]
+also = ["IO-6"]
+
+[[finding]]
+check = "NAME-2"
+subjects = ["net /CAM_D0N", "net /CAM_D0P"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

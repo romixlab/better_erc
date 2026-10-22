@@ -1,0 +1,37 @@
+# What better_erc finds on hs-7_usb_dp_dm_swapped.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1", "part U2"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net VBUS"]
+
+[[finding]]
+check = "DEC-10"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U2"]
+
+[[finding]]
+check = "HS-7"
+subjects = ["net /J1_DM", "net /J1_DP", "part J1", "part U1", "pin J1.A6", "pin J1.A7", "pin J1.B6", "pin J1.B7", "pin U1.3", "pin U1.4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VBUS"]

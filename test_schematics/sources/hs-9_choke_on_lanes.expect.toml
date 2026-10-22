@@ -1,0 +1,43 @@
+# What better_erc finds on hs-9_choke_on_lanes.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part L1"]
+confidence = "estimate"
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part L2"]
+confidence = "estimate"
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-10"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "HS-9"
+subjects = ["net /SSTX_HUB_N", "net /SSTX_HUB_P", "net /SSTX_N", "net /SSTX_P", "part L1"]
+
+[[finding]]
+check = "NAME-2"
+subjects = ["net /USB_DM", "net /USB_DP"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-13"
+subjects = ["net /SSTX_HUB_N", "pin U1.4"]
+
+[[finding]]
+check = "WIRE-13"
+subjects = ["net /SSTX_HUB_P", "pin U1.3"]

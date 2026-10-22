@@ -451,6 +451,15 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   each other · `conn/conn_16.rs`, `conn-16_floating_shell`
 - ✅ `CONN-17` Connectors of one footprint (else part number) with a pin on a rail on one and on a ground or signal on
   the other · `conn/conn_17.rs`, `conn-17_look_alike_pinouts`
+- ✅ `HS-4` Differential pair (by net name; rails left out) whose lines carry different fitted parts by class, value
+  and footprint; a USB D+ pull-up to a rail left out (`HS-6`) · `hs/hs_4.rs`, `hs-4_pair_asymmetry`
+- 🚧 `HS-7` USB connector D+ (D-) pin reaching an IC pin named for the other line through up to 3 series resistors,
+  ferrites, inductors or ties (`max_hops`) · `hs/hs_7.rs`, `hs-7_usb_dp_dm_swapped`. Missing: chokes and analog
+  switches in the path (signal following, `NET-10`), the warning for parts with a swap feature (part data, `CFG-5`)
+- ✅ `HS-9` Common-mode choke (four pins) with two or more nets on a USB 3, PCIe, SATA, HDMI, DisplayPort or FPGA
+  transceiver lane (net or pin names, Type-C SuperSpeed contacts) · `hs/hs_9.rs`, `hs-9_choke_on_lanes`
+- 🚧 `HS-15` Fitted part on a MIPI D-PHY lane (net or pin names) that is no connector and has no lane pin of its own ·
+  `hs/hs_15.rs`, `hs-15_mipi_lane_parts`. Missing: the waiver for D-PHY rated parts (part data, `CFG-5`)
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`
 - ✅ `DIAG-2` Every catalogue check reported as ran, not run (the missing need, why, and what would enable it) or
   planned; each check declares its needs, availability is worked out per board before the run from the analyses

@@ -1,0 +1,481 @@
+board hs-4_pair_asymmetry
+label / local CAN_H at 166.38,80.48 net /CAN_H
+label / local CAN_H at 222,69.05 net /CAN_H
+label / local CAN_H at 262.38,65.24 net /CAN_H
+label / local CAN_L at 166.38,77.94 net /CAN_L
+label / local CAN_L at 222,76.67 net /CAN_L
+label / local CAN_L at 262.38,67.78 net /CAN_L
+label / local CAN_RX at 166.38,72.86 net /CAN_RX
+label / local CAN_TX at 166.38,65.24 net /CAN_TX
+label / local ETH_TX_N at 78,69.05 net /ETH_TX_N
+label / local ETH_TX_N at 358.38,30 net /ETH_TX_N
+label / local ETH_TX_N_C at 78,76.67 net /ETH_TX_N_C
+label / local ETH_TX_N_C at 118.38,67.78 net /ETH_TX_N_C
+label / local ETH_TX_P at 30,69.05 net /ETH_TX_P
+label / local ETH_TX_P at 358.38,27.46 net /ETH_TX_P
+label / local ETH_TX_P_C at 30,76.67 net /ETH_TX_P_C
+label / local ETH_TX_P_C at 118.38,65.24 net /ETH_TX_P_C
+label / local LVDS_N at 214.38,32.54 net /LVDS_N
+label / local LVDS_N at 262.38,24.92 net /LVDS_N
+label / local LVDS_P at 214.38,30 net /LVDS_P
+label / local LVDS_P at 262.38,22.38 net /LVDS_P
+label / local LVDS_P at 310.38,22.38 net /LVDS_P
+label / local RS485_N at 22.38,115.72 net /RS485_N
+label / local RS485_N at 366,69.05 net /RS485_N
+label / local RS485_P at 22.38,113.18 net /RS485_P
+label / local RS485_P at 318,69.05 net /RS485_P
+label / local USB_DM at 22.38,27.46 net /USB_DM
+label / local USB_DM at 70.38,24.92 net /USB_DM
+label / local USB_DP at 22.38,30 net /USB_DP
+label / local USB_DP at 70.38,27.46 net /USB_DP
+label / local USB_DP at 126,26.19 net /USB_DP
+label / local USB_DP at 174,26.19 net /USB_DP
+label / power +3V3 at 22.38,22.38 net +3V3
+label / power +3V3 at 166.38,75.4 net +3V3
+label / power +3V3 at 174,33.81 net +3V3
+label / power +3V3 at 214.38,22.38 net +3V3
+label / power +3V3 at 358.38,22.38 net +3V3
+label / power +5V at 78,116.99 net +5V
+label / power +5V at 166.38,70.32 net +5V
+label / power +5V at 318,76.67 net +5V
+label / power GND at 22.38,24.92 net GND
+label / power GND at 22.38,118.26 net GND
+label / power GND at 70.38,32.54 net GND
+label / power GND at 70.38,35.08 net GND
+label / power GND at 78,124.61 net GND
+label / power GND at 118.38,70.32 net GND
+label / power GND at 126,33.81 net GND
+label / power GND at 166.38,67.78 net GND
+label / power GND at 166.38,83.02 net GND
+label / power GND at 214.38,24.92 net GND
+label / power GND at 262.38,27.46 net GND
+label / power GND at 262.38,70.32 net GND
+label / power GND at 358.38,24.92 net GND
+label / power GND at 366,76.67 net GND
+label / power VBUS at 70.38,22.38 net VBUS
+nc / at 70.38,30 pin J1 4
+net +3V3 class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net +3V3 kind power
+net +5V class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net +5V kind power
+net /CAN_H class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net /CAN_H kind named
+net /CAN_L class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net /CAN_L kind named
+net /CAN_RX class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net /CAN_RX kind named
+net /CAN_TX class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net /CAN_TX kind named
+net /ETH_TX_N class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net /ETH_TX_N kind named
+net /ETH_TX_N_C class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net /ETH_TX_N_C kind named
+net /ETH_TX_P class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net /ETH_TX_P kind named
+net /ETH_TX_P_C class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net /ETH_TX_P_C kind named
+net /LVDS_N class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net /LVDS_N kind named
+net /LVDS_P class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net /LVDS_P kind named
+net /RS485_N class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net /RS485_N kind named
+net /RS485_P class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net /RS485_P kind named
+net /USB_DM class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net /USB_DM kind named
+net /USB_DP class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net /USB_DP kind named
+net GND class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net GND kind power
+net VBUS class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net VBUS kind power
+net unconnected-(J1-ID-Pad4) class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net unconnected-(J1-ID-Pad4) kind unconnected
+net unconnected-(U2-IN-Pad3) class = Default @ sch hs-4_pair_asymmetry.kicad_sch note "effective net class"
+net unconnected-(U2-IN-Pad3) kind unconnected
+part C1 field Value = 100n @ sch hs-4_pair_asymmetry.kicad_sch
+part C1 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part C1 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part C1 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part C1 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000073 line 346 at 30,72.86 rot 0
+part C1 value = text 100n @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part C2 field Value = 100n @ sch hs-4_pair_asymmetry.kicad_sch
+part C2 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part C2 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part C2 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part C2 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000078 line 356 at 78,72.86 rot 0
+part C2 value = text 100n @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part C3 field Value = 100n @ sch hs-4_pair_asymmetry.kicad_sch
+part C3 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part C3 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part C3 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part C3 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part C3 lib Device:C sheet / symbol Device:C
+part C3 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000145 line 508 at 78,120.8 rot 0
+part C3 value = text 100n @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part D1 field Value = TPD1E10B06 @ sch hs-4_pair_asymmetry.kicad_sch
+part D1 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part D1 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part D1 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part D1 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part D1 lib Device:D_TVS sheet / symbol Device:D_TVS
+part D1 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000027 line 235 at 126,30 rot 0
+part D1 value = text TPD1E10B06 @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part J1 field Value = USB_B_Micro @ sch hs-4_pair_asymmetry.kicad_sch
+part J1 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part J1 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part J1 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part J1 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part J1 lib Connector:USB_B_Micro sheet / symbol Connector:USB_B_Micro
+part J1 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000011 line 199 at 78,30 rot 0
+part J1 value = text USB_B_Micro @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part J2 field Value = Conn_01x03 @ sch hs-4_pair_asymmetry.kicad_sch
+part J2 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part J2 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part J2 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part J2 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part J2 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J2 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000051 line 294 at 270,30 rot 0
+part J2 value = text Conn_01x03 @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part J3 field Value = Conn_01x03 @ sch hs-4_pair_asymmetry.kicad_sch
+part J3 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part J3 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part J3 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part J3 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part J3 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J3 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000083 line 366 at 126,72.86 rot 0
+part J3 value = text Conn_01x03 @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part J4 field Value = Conn_01x03 @ sch hs-4_pair_asymmetry.kicad_sch
+part J4 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part J4 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part J4 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part J4 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part J4 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J4 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000117 line 440 at 270,72.86 rot 0
+part J4 value = text Conn_01x03 @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part J5 field Value = Conn_01x03 @ sch hs-4_pair_asymmetry.kicad_sch
+part J5 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part J5 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part J5 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part J5 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part J5 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J5 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000137 line 490 at 30,120.8 rot 0
+part J5 value = text Conn_01x03 @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part R1 field Value = 1k5 @ sch hs-4_pair_asymmetry.kicad_sch
+part R1 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part R1 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part R1 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part R1 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000033 line 251 at 174,30 rot 0
+part R1 value = text 1k5 @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part R2 field Value = 120 @ sch hs-4_pair_asymmetry.kicad_sch
+part R2 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part R2 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part R2 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part R2 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000112 line 430 at 222,72.86 rot 0
+part R2 value = text 120 @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part R3 field Value = 680 @ sch hs-4_pair_asymmetry.kicad_sch
+part R3 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part R3 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part R3 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part R3 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000125 line 458 at 318,72.86 rot 0
+part R3 value = text 680 @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part R4 field Value = 680 @ sch hs-4_pair_asymmetry.kicad_sch
+part R4 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part R4 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part R4 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part R4 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000131 line 474 at 366,72.86 rot 0
+part R4 value = text 680 @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part TP1 field Value = TestPoint @ sch hs-4_pair_asymmetry.kicad_sch
+part TP1 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part TP1 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part TP1 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part TP1 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part TP1 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP1 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000059 line 312 at 318,30 rot 0
+part TP1 value = text TestPoint @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part U1 field Value = MCU_USB @ sch hs-4_pair_asymmetry.kicad_sch
+part U1 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part U1 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part U1 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part U1 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part U1 lib MCU_Fixture:MCU_USB sheet / symbol MCU_Fixture:MCU_USB
+part U1 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000000 line 173 at 30,30 rot 0
+part U1 value = text MCU_USB @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part U2 field Value = LVDS_TX @ sch hs-4_pair_asymmetry.kicad_sch
+part U2 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part U2 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part U2 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part U2 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part U2 lib Interface_Fixture:LVDS_TX sheet / symbol Interface_Fixture:LVDS_TX
+part U2 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000039 line 267 at 222,30 rot 0
+part U2 value = text LVDS_TX @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part U3 field Value = PHY @ sch hs-4_pair_asymmetry.kicad_sch
+part U3 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part U3 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part U3 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part U3 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part U3 lib Interface_Ethernet:PHY_FIXTURE sheet / symbol Interface_Ethernet:PHY_FIXTURE
+part U3 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000062 line 320 at 366,30 rot 0
+part U3 value = text PHY @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+part U4 field Value = TCAN1042 @ sch hs-4_pair_asymmetry.kicad_sch
+part U4 flag dnp = no @ sch hs-4_pair_asymmetry.kicad_sch
+part U4 flag exclude_from_sim = no @ sch hs-4_pair_asymmetry.kicad_sch
+part U4 flag in_bom = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part U4 flag on_board = yes @ sch hs-4_pair_asymmetry.kicad_sch
+part U4 lib Interface_CAN_LIN:TCAN1042 sheet / symbol Interface_CAN_LIN:TCAN1042
+part U4 unit 1 sheet / uuid 71b3806b-0000-4000-8000-000000000091 line 384 at 174,72.86 rot 0
+part U4 value = text TCAN1042 @ sch hs-4_pair_asymmetry.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net /ETH_TX_P
+pin C1 1 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin C1 2 name "" unit 1 net /ETH_TX_P_C
+pin C1 2 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin C2 1 name "" unit 1 net /ETH_TX_N
+pin C2 1 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin C2 2 name "" unit 1 net /ETH_TX_N_C
+pin C2 2 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin C3 1 name "" unit 1 net +5V
+pin C3 1 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin C3 2 name "" unit 1 net GND
+pin C3 2 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin D1 1 name A1 unit 1 net /USB_DP
+pin D1 1 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin D1 2 name A2 unit 1 net GND
+pin D1 2 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J1 1 name VBUS unit 1 net VBUS
+pin J1 1 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J1 2 name D- unit 1 net /USB_DM
+pin J1 2 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J1 3 name D+ unit 1 net /USB_DP
+pin J1 3 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J1 4 name ID unit 1 nc net unconnected-(J1-ID-Pad4)
+pin J1 4 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J1 5 name GND unit 1 net GND
+pin J1 5 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J1 6 name Shield unit 1 net GND
+pin J1 6 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J2 1 name Pin_1 unit 1 net /LVDS_P
+pin J2 1 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J2 2 name Pin_2 unit 1 net /LVDS_N
+pin J2 2 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J2 3 name Pin_3 unit 1 net GND
+pin J2 3 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J3 1 name Pin_1 unit 1 net /ETH_TX_P_C
+pin J3 1 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J3 2 name Pin_2 unit 1 net /ETH_TX_N_C
+pin J3 2 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J3 3 name Pin_3 unit 1 net GND
+pin J3 3 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J4 1 name Pin_1 unit 1 net /CAN_H
+pin J4 1 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J4 2 name Pin_2 unit 1 net /CAN_L
+pin J4 2 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J4 3 name Pin_3 unit 1 net GND
+pin J4 3 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J5 1 name Pin_1 unit 1 net /RS485_P
+pin J5 1 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J5 2 name Pin_2 unit 1 net /RS485_N
+pin J5 2 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin J5 3 name Pin_3 unit 1 net GND
+pin J5 3 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin R1 1 name "" unit 1 net /USB_DP
+pin R1 1 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin R1 2 name "" unit 1 net +3V3
+pin R1 2 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin R2 1 name "" unit 1 net /CAN_H
+pin R2 1 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin R2 2 name "" unit 1 net /CAN_L
+pin R2 2 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin R3 1 name "" unit 1 net /RS485_P
+pin R3 1 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin R3 2 name "" unit 1 net +5V
+pin R3 2 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin R4 1 name "" unit 1 net /RS485_N
+pin R4 1 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin R4 2 name "" unit 1 net GND
+pin R4 2 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin TP1 1 name 1 unit 1 net /LVDS_P
+pin TP1 1 type = passive @ sch hs-4_pair_asymmetry.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch hs-4_pair_asymmetry.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch hs-4_pair_asymmetry.kicad_sch
+pin U1 3 name PA11/USB_DM unit 1 net /USB_DM
+pin U1 3 type = bidirectional @ sch hs-4_pair_asymmetry.kicad_sch
+pin U1 4 name PA12/USB_DP unit 1 net /USB_DP
+pin U1 4 type = bidirectional @ sch hs-4_pair_asymmetry.kicad_sch
+pin U2 1 name VCC unit 1 net +3V3
+pin U2 1 type = power_in @ sch hs-4_pair_asymmetry.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch hs-4_pair_asymmetry.kicad_sch
+pin U2 3 name IN unit 1 net unconnected-(U2-IN-Pad3)
+pin U2 3 type = input @ sch hs-4_pair_asymmetry.kicad_sch
+pin U2 4 name OUT+ unit 1 net /LVDS_P
+pin U2 4 type = output @ sch hs-4_pair_asymmetry.kicad_sch
+pin U2 5 name OUT- unit 1 net /LVDS_N
+pin U2 5 type = output @ sch hs-4_pair_asymmetry.kicad_sch
+pin U3 1 name VDD unit 1 net +3V3
+pin U3 1 type = power_in @ sch hs-4_pair_asymmetry.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch hs-4_pair_asymmetry.kicad_sch
+pin U3 3 name TXP unit 1 net /ETH_TX_P
+pin U3 3 type = output @ sch hs-4_pair_asymmetry.kicad_sch
+pin U3 4 name TXN unit 1 net /ETH_TX_N
+pin U3 4 type = output @ sch hs-4_pair_asymmetry.kicad_sch
+pin U4 1 name TXD unit 1 net /CAN_TX
+pin U4 1 type = input @ sch hs-4_pair_asymmetry.kicad_sch
+pin U4 2 name GND unit 1 net GND
+pin U4 2 type = power_in @ sch hs-4_pair_asymmetry.kicad_sch
+pin U4 3 name VCC unit 1 net +5V
+pin U4 3 type = power_in @ sch hs-4_pair_asymmetry.kicad_sch
+pin U4 4 name RXD unit 1 net /CAN_RX
+pin U4 4 type = output @ sch hs-4_pair_asymmetry.kicad_sch
+pin U4 5 name VIO unit 1 net +3V3
+pin U4 5 type = power_in @ sch hs-4_pair_asymmetry.kicad_sch
+pin U4 6 name CANL unit 1 net /CAN_L
+pin U4 6 type = bidirectional @ sch hs-4_pair_asymmetry.kicad_sch
+pin U4 7 name CANH unit 1 net /CAN_H
+pin U4 7 type = bidirectional @ sch hs-4_pair_asymmetry.kicad_sch
+pin U4 8 name STB unit 1 net GND
+pin U4 8 type = input @ sch hs-4_pair_asymmetry.kicad_sch
+sheet / name "" file hs-4_pair_asymmetry.kicad_sch uuid /
+source file hs-4_pair_asymmetry.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:TestPoint description "test point"
+symbol Connector:TestPoint field Description "test point"
+symbol Connector:TestPoint field Reference TP
+symbol Connector:TestPoint field Value TestPoint
+symbol Connector:TestPoint hash c5f1d64ae086cd7d
+symbol Connector:TestPoint pin 1 unit 1 body 1 name 1 type passive style line
+symbol Connector:TestPoint units 1
+symbol Connector:USB_B_Micro description "USB Micro Type B connector"
+symbol Connector:USB_B_Micro field Description "USB Micro Type B connector"
+symbol Connector:USB_B_Micro field Reference J
+symbol Connector:USB_B_Micro field Value USB_B_Micro
+symbol Connector:USB_B_Micro hash fe0ded7e2eadfaf9
+symbol Connector:USB_B_Micro pin 1 unit 1 body 1 name VBUS type passive style line
+symbol Connector:USB_B_Micro pin 2 unit 1 body 1 name D- type passive style line
+symbol Connector:USB_B_Micro pin 3 unit 1 body 1 name D+ type passive style line
+symbol Connector:USB_B_Micro pin 4 unit 1 body 1 name ID type passive style line
+symbol Connector:USB_B_Micro pin 5 unit 1 body 1 name GND type passive style line
+symbol Connector:USB_B_Micro pin 6 unit 1 body 1 name Shield type passive style line
+symbol Connector:USB_B_Micro units 1
+symbol Connector_Generic:Conn_01x03 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x03 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x03 field Reference J
+symbol Connector_Generic:Conn_01x03 field Value Conn_01x03
+symbol Connector_Generic:Conn_01x03 hash 413aba5a4e317b82
+symbol Connector_Generic:Conn_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x03 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:D_TVS description "Bidirectional transient-voltage-suppression diode"
+symbol Device:D_TVS field Description "Bidirectional transient-voltage-suppression diode"
+symbol Device:D_TVS field Reference D
+symbol Device:D_TVS field Value D_TVS
+symbol Device:D_TVS hash d86434bc9ce9380c
+symbol Device:D_TVS pin 1 unit 1 body 1 name A1 type passive style line
+symbol Device:D_TVS pin 2 unit 1 body 1 name A2 type passive style line
+symbol Device:D_TVS units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Interface_CAN_LIN:TCAN1042 description "CAN transceiver"
+symbol Interface_CAN_LIN:TCAN1042 field Description "CAN transceiver"
+symbol Interface_CAN_LIN:TCAN1042 field Reference U
+symbol Interface_CAN_LIN:TCAN1042 field Value TCAN1042
+symbol Interface_CAN_LIN:TCAN1042 hash 20938e730be3ae86
+symbol Interface_CAN_LIN:TCAN1042 pin 1 unit 1 body 1 name TXD type input style line
+symbol Interface_CAN_LIN:TCAN1042 pin 2 unit 1 body 1 name GND type power_in style line
+symbol Interface_CAN_LIN:TCAN1042 pin 3 unit 1 body 1 name VCC type power_in style line
+symbol Interface_CAN_LIN:TCAN1042 pin 4 unit 1 body 1 name RXD type output style line
+symbol Interface_CAN_LIN:TCAN1042 pin 5 unit 1 body 1 name VIO type power_in style line
+symbol Interface_CAN_LIN:TCAN1042 pin 6 unit 1 body 1 name CANL type bidirectional style line
+symbol Interface_CAN_LIN:TCAN1042 pin 7 unit 1 body 1 name CANH type bidirectional style line
+symbol Interface_CAN_LIN:TCAN1042 pin 8 unit 1 body 1 name STB type input style line
+symbol Interface_CAN_LIN:TCAN1042 units 1
+symbol Interface_Ethernet:PHY_FIXTURE description "Ethernet PHY"
+symbol Interface_Ethernet:PHY_FIXTURE field Description "Ethernet PHY"
+symbol Interface_Ethernet:PHY_FIXTURE field Reference U
+symbol Interface_Ethernet:PHY_FIXTURE field Value PHY_FIXTURE
+symbol Interface_Ethernet:PHY_FIXTURE hash e1ae2a8a6e58f451
+symbol Interface_Ethernet:PHY_FIXTURE pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Interface_Ethernet:PHY_FIXTURE pin 2 unit 1 body 1 name GND type power_in style line
+symbol Interface_Ethernet:PHY_FIXTURE pin 3 unit 1 body 1 name TXP type output style line
+symbol Interface_Ethernet:PHY_FIXTURE pin 4 unit 1 body 1 name TXN type output style line
+symbol Interface_Ethernet:PHY_FIXTURE units 1
+symbol Interface_Fixture:LVDS_TX description "LVDS driver"
+symbol Interface_Fixture:LVDS_TX field Description "LVDS driver"
+symbol Interface_Fixture:LVDS_TX field Reference U
+symbol Interface_Fixture:LVDS_TX field Value LVDS_TX
+symbol Interface_Fixture:LVDS_TX hash 29413b8aea3afec1
+symbol Interface_Fixture:LVDS_TX pin 1 unit 1 body 1 name VCC type power_in style line
+symbol Interface_Fixture:LVDS_TX pin 2 unit 1 body 1 name GND type power_in style line
+symbol Interface_Fixture:LVDS_TX pin 3 unit 1 body 1 name IN type input style line
+symbol Interface_Fixture:LVDS_TX pin 4 unit 1 body 1 name OUT+ type output style line
+symbol Interface_Fixture:LVDS_TX pin 5 unit 1 body 1 name OUT- type output style line
+symbol Interface_Fixture:LVDS_TX units 1
+symbol MCU_Fixture:MCU_USB description "Microcontroller with USB"
+symbol MCU_Fixture:MCU_USB field Description "Microcontroller with USB"
+symbol MCU_Fixture:MCU_USB field Reference U
+symbol MCU_Fixture:MCU_USB field Value MCU_USB
+symbol MCU_Fixture:MCU_USB hash 3b63f92b5b209916
+symbol MCU_Fixture:MCU_USB pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_USB pin 2 unit 1 body 1 name GND type power_in style line
+symbol MCU_Fixture:MCU_USB pin 3 unit 1 body 1 name PA11/USB_DM type bidirectional style line
+symbol MCU_Fixture:MCU_USB pin 4 unit 1 body 1 name PA12/USB_DP type bidirectional style line
+symbol MCU_Fixture:MCU_USB units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global
+symbol power:VBUS description "Power symbol VBUS"
+symbol power:VBUS field Description "Power symbol VBUS"
+symbol power:VBUS field Reference "#PWR"
+symbol power:VBUS field Value VBUS
+symbol power:VBUS hash 296adfea007b1a14
+symbol power:VBUS pin 1 unit 1 body 1 name VBUS type power_in style line
+symbol power:VBUS units 1 power global

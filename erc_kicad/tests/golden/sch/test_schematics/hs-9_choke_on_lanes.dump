@@ -1,0 +1,183 @@
+board hs-9_choke_on_lanes
+label / local SSTX_HUB_N at 22.38,30 net /SSTX_HUB_N
+label / local SSTX_HUB_N at 70.38,24.92 net /SSTX_HUB_N
+label / local SSTX_HUB_P at 22.38,27.46 net /SSTX_HUB_P
+label / local SSTX_HUB_P at 70.38,22.38 net /SSTX_HUB_P
+label / local SSTX_N at 70.38,30 net /SSTX_N
+label / local SSTX_N at 166.38,24.92 net /SSTX_N
+label / local SSTX_P at 70.38,27.46 net /SSTX_P
+label / local SSTX_P at 166.38,22.38 net /SSTX_P
+label / local USB_DM at 118.38,30 net /USB_DM
+label / local USB_DM at 166.38,30 net /USB_DM
+label / local USB_DM_HUB at 22.38,35.08 net /USB_DM_HUB
+label / local USB_DM_HUB at 118.38,24.92 net /USB_DM_HUB
+label / local USB_DP at 118.38,27.46 net /USB_DP
+label / local USB_DP at 166.38,27.46 net /USB_DP
+label / local USB_DP_HUB at 22.38,32.54 net /USB_DP_HUB
+label / local USB_DP_HUB at 118.38,22.38 net /USB_DP_HUB
+label / power +3V3 at 22.38,22.38 net +3V3
+label / power +3V3 at 222,26.19 net +3V3
+label / power GND at 22.38,24.92 net GND
+label / power GND at 166.38,32.54 net GND
+label / power GND at 222,33.81 net GND
+net +3V3 class = Default @ sch hs-9_choke_on_lanes.kicad_sch note "effective net class"
+net +3V3 kind power
+net /SSTX_HUB_N class = Default @ sch hs-9_choke_on_lanes.kicad_sch note "effective net class"
+net /SSTX_HUB_N kind named
+net /SSTX_HUB_P class = Default @ sch hs-9_choke_on_lanes.kicad_sch note "effective net class"
+net /SSTX_HUB_P kind named
+net /SSTX_N class = Default @ sch hs-9_choke_on_lanes.kicad_sch note "effective net class"
+net /SSTX_N kind named
+net /SSTX_P class = Default @ sch hs-9_choke_on_lanes.kicad_sch note "effective net class"
+net /SSTX_P kind named
+net /USB_DM class = Default @ sch hs-9_choke_on_lanes.kicad_sch note "effective net class"
+net /USB_DM kind named
+net /USB_DM_HUB class = Default @ sch hs-9_choke_on_lanes.kicad_sch note "effective net class"
+net /USB_DM_HUB kind named
+net /USB_DP class = Default @ sch hs-9_choke_on_lanes.kicad_sch note "effective net class"
+net /USB_DP kind named
+net /USB_DP_HUB class = Default @ sch hs-9_choke_on_lanes.kicad_sch note "effective net class"
+net /USB_DP_HUB kind named
+net GND class = Default @ sch hs-9_choke_on_lanes.kicad_sch note "effective net class"
+net GND kind power
+part C1 field Value = 100n @ sch hs-9_choke_on_lanes.kicad_sch
+part C1 flag dnp = no @ sch hs-9_choke_on_lanes.kicad_sch
+part C1 flag exclude_from_sim = no @ sch hs-9_choke_on_lanes.kicad_sch
+part C1 flag in_bom = yes @ sch hs-9_choke_on_lanes.kicad_sch
+part C1 flag on_board = yes @ sch hs-9_choke_on_lanes.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid f918d909-0000-4000-8000-000000000045 line 159 at 222,30 rot 0
+part C1 value = text 100n @ sch hs-9_choke_on_lanes.kicad_sch note "from the Value field"
+part J1 field Value = Conn_01x05 @ sch hs-9_choke_on_lanes.kicad_sch
+part J1 flag dnp = no @ sch hs-9_choke_on_lanes.kicad_sch
+part J1 flag exclude_from_sim = no @ sch hs-9_choke_on_lanes.kicad_sch
+part J1 flag in_bom = yes @ sch hs-9_choke_on_lanes.kicad_sch
+part J1 flag on_board = yes @ sch hs-9_choke_on_lanes.kicad_sch
+part J1 lib Connector_Generic:Conn_01x05 sheet / symbol Connector_Generic:Conn_01x05
+part J1 unit 1 sheet / uuid f918d909-0000-4000-8000-000000000033 line 137 at 174,30 rot 0
+part J1 value = text Conn_01x05 @ sch hs-9_choke_on_lanes.kicad_sch note "from the Value field"
+part L1 field Value = ACM2012-900 @ sch hs-9_choke_on_lanes.kicad_sch
+part L1 flag dnp = no @ sch hs-9_choke_on_lanes.kicad_sch
+part L1 flag exclude_from_sim = no @ sch hs-9_choke_on_lanes.kicad_sch
+part L1 flag in_bom = yes @ sch hs-9_choke_on_lanes.kicad_sch
+part L1 flag on_board = yes @ sch hs-9_choke_on_lanes.kicad_sch
+part L1 lib Filter:Choke_CommonMode_4p sheet / symbol Filter:Choke_CommonMode_4p
+part L1 unit 1 sheet / uuid f918d909-0000-4000-8000-000000000015 line 109 at 78,30 rot 0
+part L1 value = text ACM2012-900 @ sch hs-9_choke_on_lanes.kicad_sch note "from the Value field"
+part L2 field Value = DLW21SN900 @ sch hs-9_choke_on_lanes.kicad_sch
+part L2 flag dnp = no @ sch hs-9_choke_on_lanes.kicad_sch
+part L2 flag exclude_from_sim = no @ sch hs-9_choke_on_lanes.kicad_sch
+part L2 flag in_bom = yes @ sch hs-9_choke_on_lanes.kicad_sch
+part L2 flag on_board = yes @ sch hs-9_choke_on_lanes.kicad_sch
+part L2 lib Filter:Choke_CommonMode_4p sheet / symbol Filter:Choke_CommonMode_4p
+part L2 unit 1 sheet / uuid f918d909-0000-4000-8000-000000000024 line 123 at 126,30 rot 0
+part L2 value = text DLW21SN900 @ sch hs-9_choke_on_lanes.kicad_sch note "from the Value field"
+part U1 field Value = USB3_HUB @ sch hs-9_choke_on_lanes.kicad_sch
+part U1 flag dnp = no @ sch hs-9_choke_on_lanes.kicad_sch
+part U1 flag exclude_from_sim = no @ sch hs-9_choke_on_lanes.kicad_sch
+part U1 flag in_bom = yes @ sch hs-9_choke_on_lanes.kicad_sch
+part U1 flag on_board = yes @ sch hs-9_choke_on_lanes.kicad_sch
+part U1 lib Interface_USB:USB3_HUB_FIXTURE sheet / symbol Interface_USB:USB3_HUB_FIXTURE
+part U1 unit 1 sheet / uuid f918d909-0000-4000-8000-000000000000 line 79 at 30,30 rot 0
+part U1 value = text USB3_HUB @ sch hs-9_choke_on_lanes.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +3V3
+pin C1 1 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin J1 1 name Pin_1 unit 1 net /SSTX_P
+pin J1 1 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin J1 2 name Pin_2 unit 1 net /SSTX_N
+pin J1 2 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin J1 3 name Pin_3 unit 1 net /USB_DP
+pin J1 3 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin J1 4 name Pin_4 unit 1 net /USB_DM
+pin J1 4 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin J1 5 name Pin_5 unit 1 net GND
+pin J1 5 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin L1 1 name 1 unit 1 net /SSTX_HUB_P
+pin L1 1 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin L1 2 name 2 unit 1 net /SSTX_HUB_N
+pin L1 2 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin L1 3 name 3 unit 1 net /SSTX_P
+pin L1 3 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin L1 4 name 4 unit 1 net /SSTX_N
+pin L1 4 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin L2 1 name 1 unit 1 net /USB_DP_HUB
+pin L2 1 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin L2 2 name 2 unit 1 net /USB_DM_HUB
+pin L2 2 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin L2 3 name 3 unit 1 net /USB_DP
+pin L2 3 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin L2 4 name 4 unit 1 net /USB_DM
+pin L2 4 type = passive @ sch hs-9_choke_on_lanes.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch hs-9_choke_on_lanes.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch hs-9_choke_on_lanes.kicad_sch
+pin U1 3 name SSTX+ unit 1 net /SSTX_HUB_P
+pin U1 3 type = output @ sch hs-9_choke_on_lanes.kicad_sch
+pin U1 4 name SSTX- unit 1 net /SSTX_HUB_N
+pin U1 4 type = output @ sch hs-9_choke_on_lanes.kicad_sch
+pin U1 5 name USB_DP unit 1 net /USB_DP_HUB
+pin U1 5 type = bidirectional @ sch hs-9_choke_on_lanes.kicad_sch
+pin U1 6 name USB_DM unit 1 net /USB_DM_HUB
+pin U1 6 type = bidirectional @ sch hs-9_choke_on_lanes.kicad_sch
+sheet / name "" file hs-9_choke_on_lanes.kicad_sch uuid /
+source file hs-9_choke_on_lanes.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x05 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x05 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x05 field Reference J
+symbol Connector_Generic:Conn_01x05 field Value Conn_01x05
+symbol Connector_Generic:Conn_01x05 hash 0a4b7930abe3ac46
+symbol Connector_Generic:Conn_01x05 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x05 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x05 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x05 pin 4 unit 1 body 1 name Pin_4 type passive style line
+symbol Connector_Generic:Conn_01x05 pin 5 unit 1 body 1 name Pin_5 type passive style line
+symbol Connector_Generic:Conn_01x05 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Filter:Choke_CommonMode_4p description "Common mode choke, two windings"
+symbol Filter:Choke_CommonMode_4p field Description "Common mode choke, two windings"
+symbol Filter:Choke_CommonMode_4p field Reference L
+symbol Filter:Choke_CommonMode_4p field Value Choke_CommonMode_4p
+symbol Filter:Choke_CommonMode_4p hash fcd4d47a720d33c6
+symbol Filter:Choke_CommonMode_4p pin 1 unit 1 body 1 name 1 type passive style line
+symbol Filter:Choke_CommonMode_4p pin 2 unit 1 body 1 name 2 type passive style line
+symbol Filter:Choke_CommonMode_4p pin 3 unit 1 body 1 name 3 type passive style line
+symbol Filter:Choke_CommonMode_4p pin 4 unit 1 body 1 name 4 type passive style line
+symbol Filter:Choke_CommonMode_4p units 1
+symbol Interface_USB:USB3_HUB_FIXTURE description "USB 3 hub"
+symbol Interface_USB:USB3_HUB_FIXTURE field Description "USB 3 hub"
+symbol Interface_USB:USB3_HUB_FIXTURE field Reference U
+symbol Interface_USB:USB3_HUB_FIXTURE field Value USB3_HUB_FIXTURE
+symbol Interface_USB:USB3_HUB_FIXTURE hash 8a24a4ac2284d53a
+symbol Interface_USB:USB3_HUB_FIXTURE pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Interface_USB:USB3_HUB_FIXTURE pin 2 unit 1 body 1 name GND type power_in style line
+symbol Interface_USB:USB3_HUB_FIXTURE pin 3 unit 1 body 1 name SSTX+ type output style line
+symbol Interface_USB:USB3_HUB_FIXTURE pin 4 unit 1 body 1 name SSTX- type output style line
+symbol Interface_USB:USB3_HUB_FIXTURE pin 5 unit 1 body 1 name USB_DP type bidirectional style line
+symbol Interface_USB:USB3_HUB_FIXTURE pin 6 unit 1 body 1 name USB_DM type bidirectional style line
+symbol Interface_USB:USB3_HUB_FIXTURE units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

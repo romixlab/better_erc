@@ -32,6 +32,7 @@ mod dbg;
 mod dec;
 mod drv;
 mod gnd;
+mod hs;
 mod i2c;
 mod io;
 mod leak;

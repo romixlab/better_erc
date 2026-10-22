@@ -21,6 +21,14 @@ check = "DEC-1"
 subjects = ["net +3V3"]
 
 [[finding]]
+check = "HS-4"
+subjects = ["net /USB_D_N", "net /USB_D_P", "part U1"]
+
+[[finding]]
+check = "HS-7"
+subjects = ["net /USB_D_P", "part J1", "part U1", "pin J1.3", "pin U1.2"]
+
+[[finding]]
 check = "IO-10"
 subjects = ["net /ETH_RX", "pin U2.3"]
 also = ["IO-6"]
