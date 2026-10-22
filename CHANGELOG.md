@@ -11,6 +11,27 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- `erc_model`, the board model of the rewrite (`NET-17`): an arena-indexed design of boards, sheets, symbols, parts,
+  pin instances, nets, labels, variants, net classes, project settings and the board layout; every attribute a fact
+  with its source, rank, time and note, resolved to the highest rank (newest on a tie) with disagreements listed; typed
+  values; one `Importer` trait for every tool; a canonical text dump, one sorted fact per line, that reads back to the
+  same design and is the golden format of the importer tests. Described in [docs/model.md](docs/model.md).
+- `erc_kicad`, KiCad 8, 9 and 10 read by better_erc itself (`IMP-13`, `IMP-14`, `NET-18`): the schematic hierarchy
+  with KiCad's connectivity rules (label scopes, power symbols, sheet pins, vector and group buses, bus entries and
+  aliases, hidden power pins, junctions, the version differences between KiCad 8 and 9/10), the project file (net
+  classes, text variables, variants, ERC and DRC settings, design rules), each net's effective net class, and the board
+  (footprints, pads, tracks, vias, zones, graphics, stackup). The KiCad netlist importer moved onto the same trait.
+- The differential test: our nets against kicad-cli's netlist as pin sets, names and net classes, on fixtures with
+  KiCad 8, 9 and 10 netlists, the test schematics, and every board under `~/git/hw` when it is there (41 boards equal
+  KiCad 10's netlists, 94 comparisons over KiCad 8, 9 and 10). `just kicad-fixtures` exports the fixture netlists.
+
+### Changed
+
+- The s-expression reader moved from `berc` to `erc_kicad::sexpr`; `berc` re-exports it and `berc textconv` is
+  unchanged (`NET-16`).
+
 ## [0.3.5] - 2026-10-22
 
 ### Added

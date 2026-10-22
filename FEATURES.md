@@ -20,6 +20,10 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 
 ## Crates
 
+- `erc_model`: the board model of the rewrite: arenas of parts, pins, nets, sheets, the layout; facts with
+  provenance; the importer trait; the canonical dump ([docs/model.md](docs/model.md))
+- `erc_kicad`: KiCad 8, 9 and 10 read by us: s-expression reader, schematic hierarchy with KiCad's connectivity,
+  project file, board, the KiCad netlist as the oracle
 - `ecad_file_format`: netlist, BOM and PnP parsers, the common `Netlist` model, passive value parsing
 - `erc_core`: analysis (`PcbAssembly`, power structure, I2C buses) and the checks, `config.rs` for thresholds
 - `ecad_compare`: board file comparisons (PnP so far)
@@ -44,6 +48,17 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - 💡 `IMP-11` Watch the netlist file and reload on change
 - ✅ `IMP-12` KiCad 9 and 10 netlists load (a fixture per KiCad version, `test_input/kicad_versions`); the `general` and
   `style` tests run on test schematics in `test_schematics` instead of project files that only existed on one PC
+- ✅ `IMP-13` KiCad schematic hierarchy read by us (KiCad 8, 9, 10) into the board model: sheet instances, parts with
+  units, fields, flags and KiCad 10 variants, pin instances, labels, no-connects, and connectivity by KiCad's rules
+  (label scopes, power symbols global and KiCad 10 local, sheet pins, vector and group buses, bus entries and aliases,
+  hidden power pins, junctions; the 8 vs 9/10 junction and label-on-crossing rules by `ImportOptions::kicad_version`);
+  the KiCad netlist importer on the same `Importer` trait as the oracle. Differential test against kicad-cli's netlist
+  (nets as pin sets, names and net classes): fixtures with KiCad 8, 9 and 10 netlists, the test schematics, and every
+  `~/git/hw` board when present · `erc_kicad/src/{sch,netlist.rs,project.rs}`, `erc_kicad/tests/differential.rs`
+- ✅ `IMP-14` KiCad project and board files into the model: `.kicad_pro` (net classes, patterns and assignments, text
+  variables, variants, ERC and DRC severities and exclusions, design rules, bus aliases) and `.kicad_pcb` (layers,
+  stackup, setup, footprints with fields, attributes, pads, courtyard, silk and fab graphics, tracks, vias, zones and
+  rule areas, outline, texts), linked to the schematic by designator and net name · `erc_kicad/src/{pro,pcb}.rs`
 
 ## Netlist model and analysis (`NET`)
 
@@ -64,7 +79,14 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - 📋 `NET-13` Multi-board: several netlists joined through connectors
 - 📋 `NET-14` Standard plug-in cards for multi-board (M.2 device, DP cable...)
 - 💡 `NET-15` Select a piece of schematic and simulate it
-- 📋 `NET-16` Drop lexpr / serde-lexpr: `ecad_file_format` parses KiCad through them, pinned to upstream master `09a61d3` (Aug 2024) because crates.io 0.2.7 (Mar 2023) lacks numeric-looking symbols. Move it onto `berc`'s own s-expr reader (`berc/src/sexpr.rs`, lift into a shared module) and remove the dependency
+- 🚧 `NET-16` Drop lexpr / serde-lexpr: `ecad_file_format` parses KiCad through them, pinned to upstream master `09a61d3` (Aug 2024) because crates.io 0.2.7 (Mar 2023) lacks numeric-looking symbols. The s-expr reader now lives in `erc_kicad::sexpr` (berc re-exports it) and the new importers use it; lexpr goes with `ecad_file_format` once the checks run on the new model
+- 🚧 `NET-17` Board model (`erc_model`): arena-indexed design of boards, sheets, symbols, parts, pin instances, nets,
+  labels, variants, net classes, project settings and the layout; every attribute a `Fact` with provenance, rank, time
+  and note (highest rank wins, newest on a tie, disagreements listed); typed `Value`; the `Importer` trait; the
+  canonical dump (one sorted fact per line, read back losslessly) as the golden format of importer tests; `netcmp`.
+  Docs: [docs/model.md](docs/model.md). Missing: part classes, pin roles and the analyses on top (stage 1+)
+- ✅ `NET-18` Each net's effective net class as KiCad resolves it (directive labels, project patterns as anchored regex
+  or wildcard, priority order, `Default` filling unset rules), equal to kicad-cli's netlist classes · `erc_kicad/src/netclass.rs`
 
 ## Checks and diagnostics (`DIAG`)
 
