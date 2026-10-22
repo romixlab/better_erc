@@ -176,6 +176,8 @@ is a `Fact` with `Provenance::Derived { rule }` (or `Assumed` for a guess), so a
 | `pin_name::functions(name)` | `pin_name` | what a pin name states: SWD, JTAG, SWO, reset, UART TX/RX/RTS/CTS, SPI SCK/MOSI/MISO/CS, I2C, enable, interrupt, power good, fault, with the peripheral instance (`USART1` in `PA9/USART1_TX`) | `Graph` |
 | `pull::pulls(view, classes, values, power, net)` | `pull` | the fitted two-pin resistors from a net to a rail (pull-ups) and to a ground (pull-downs), 0 Ω ties left out | `Rails`, `Values` |
 | `analog::amp_units(board, part)`, `sense_pin`, `is_analog_input` | `analog` | an op-amp's or comparator's channels by pin name (`+`, `-`, `IN+`, `-INA`, `1IN-`, `OUTB`, KiCad's `~` output), its supply nets; the sense inputs of current-sense amplifiers (`IN+`/`IN-`, `VIN±`, `SENSE±`, `CSP`/`CSN`); analog and setting inputs a divider feeds on purpose (`FB`, `ADC1`, `VREF`, `UVLO`) | `Graph` |
+| `connector::is_shell_pin`, `type_c_pin`, `is_plug` | `connector` | shell, shield and mounting pins (`SHIELD`, `MP`, `S1`); a Type-C contact by number (`A5` CC1, `B6` D+ of row B, `A4` VBUS) or name (`CC2`, `VCONN`, `DN1`); a plug by its symbol | `Graph` |
+| `interface::usb_data`, `is_mdio`, `can_line`, `sd_pins`, `ddr_pin`, `is_mipi_lane`, `is_high_speed_lane` | `interface` | interface pins and nets by name: USB D+/D- (`USBDP`, `PA12/USB_DP`, `DN1`), MDIO, CANH/CANL, SD and eMMC `CMD`, `DAT0`-`DAT7`, `CLK`, `CD`, `WP` (`DAT3/CD` is both), DDR `ZQ`, reset and `CKE`, MIPI D-PHY lanes (`DSI_D0P`), multi-gigabit lanes (`SSTX+`, `PCIE_TX0_P`, `PERP0`, Type-C `TX1+`) | `Graph` |
 
 **Part classes.** A library symbol decides by its library and name (`Device:R`, `Transistor_FET:*`,
 `Regulator_Linear:*`, `MCU_*`, `74xGxx:*`, `Connector:USB_C_*`); a kind the name leaves open is taken from the
@@ -452,6 +454,28 @@ of the threshold it used.
 | `RAIL-5` | a rail with power-input pins and no source on it or behind a feed link (`max_feed` 100 Ω for resistors) | `rail-5_unsourced_rail` |
 | `RAIL-18` | a rail driven by two or more regulators | `rail-18_parallel_regulators` |
 | `RAIL-19` | an analog supply pin on the digital supply's net, or behind 0 Ω, jumpers or net ties only | `rail-19_unfiltered_analog_supply` |
+| `USB-1` | a Type-C receptacle CC pin with no 5.1 kΩ (± `tolerance`) to ground and no IC CC pin on its net; a pull-up (Rp) is a source | `usb-1_no_rd` |
+| `USB-4` | a USB connector shell connected to nothing, reaching the signal ground only through L, ferrite, R or C, or reaching no ground | `usb-4_shield` |
+| `USB-9` | a Type-C receptacle's CC1 and CC2 on one net or joined by 0 Ω | `usb-9_cc_tied` |
+| `USB-10` | a Type-C plug with resistors to ground on both CC (A5) and VCONN (B5) | `usb-10_plug_rd` |
+| `USB-11` | a Type-C receptacle with A6/B6 or A7/B7 not joined (directly, 0 Ω, or through one IC such as a mux) | `usb-11_one_orientation` |
+| `USB-16` | a Type-C receptacle with VBUS or GND contacts open, on several nets, or GND on no ground | `usb-16_vbus_gnd_pins` |
+| `CONN-2` | a connector pin on the net of an MCU, SoC, FPGA or logic pin with nothing in series (pairs, USB, lanes left out) | `conn-2_gpio_protection` |
+| `CONN-4` | a connector with connected pins and none on a ground | `conn-4_no_ground` |
+| `CONN-8` | a micro HDMI (symbol or footprint) with TMDS on pin 1, HPD on 19 or a rail on 18 | `conn-8_micro_hdmi_pinout` |
+| `CONN-10` | a connector with `min_signals` (10) signals or more and over `max_signals_per_ground` (6) per ground, or a signal over `max_distance` (8) pins from a ground | `conn-10_few_grounds` |
+| `CONN-16` | connector shell or mounting pins connected to nothing or only to each other | `conn-16_floating_shell` |
+| `CONN-17` | connectors of one footprint (or part number) with a rail on a pin where another has a ground or signal | `conn-17_look_alike_pinouts` |
+| `HS-4` | a differential pair (net names) whose lines carry different parts by class, value and footprint; a USB D+ pull-up left out | `hs-4_pair_asymmetry` |
+| `HS-7` | a USB connector D+ (D-) reaching an IC pin named for the other line through up to `max_hops` (3) series parts | `hs-7_usb_dp_dm_swapped` |
+| `HS-9` | a four-pin common-mode choke on two or more multi-gigabit lane nets | `hs-9_choke_on_lanes` |
+| `HS-15` | a part on a MIPI D-PHY lane that is no connector and has no lane pin | `hs-15_mipi_lane_parts` |
+| `MEM-1` | an SD socket or eMMC CMD or DAT line with no pull-up in `min_pull_up`..`max_pull_up` (10k-100k); a socket's CMD and DAT0-3 open | `mem-1_sd_pull_ups` |
+| `MEM-3` | an SD or eMMC CLK line with a pull-up; a card-detect or write-protect contact with no pull | `mem-3_clk_and_detect_pulls` |
+| `MEM-8` | a ZQ pin with no, several, shared or wrong (rail, off 240 Ω ± 1 %) resistors | `mem-8_ddr_zq` |
+| `MEM-10` | a DRAM with a reset pin whose RESET or CKE line has no pull-down | `mem-10_ddr_reset_cke` |
+| `ETH-3` | an MDIO line with no pull-up in `min_pull_up`..`max_pull_up` (1k-10k) | `eth-3_mdio_pull_up` |
+| `SER-14` | two 50-70 Ω resistors between lines to one transceiver's CANH and CANL with no fitted capacitor from the centre to ground | `ser-14_can_split_termination` |
 
 The I2C buses come from `erc_analysis::i2c` ([The analyses](#the-analyses)), ported from the first analysis code (the
 removed `erc_core`). Pin roles will replace the names as the way to find a bus (NET-4, NET-7).
