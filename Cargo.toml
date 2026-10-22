@@ -27,6 +27,11 @@ members = [
 [profile.release]
 opt-level = 2 # fast and small wasm
 
+# just install: release, but incremental so a rebuild after a small change is quick
+[profile.deploy]
+inherits = "release"
+incremental = true
+
 # Optimize all dependencies even in debug builds:
 [profile.dev.package."*"]
 opt-level = 2

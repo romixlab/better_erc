@@ -4,6 +4,18 @@
 // When compiling natively:
 #[cfg(not(target_arch = "wasm32"))]
 fn main() -> eframe::Result {
+    if std::env::args()
+        .nth(1)
+        .is_some_and(|a| a == "--version" || a == "-V")
+    {
+        println!(
+            "better_erc {} ({}, commit {})",
+            env!("CARGO_PKG_VERSION"),
+            env!("GIT_SHA"),
+            env!("BUILD_TIME")
+        );
+        return Ok(());
+    }
     env_logger::init(); // Log to stderr (if you run with `RUST_LOG=debug`).
 
     let native_options = eframe::NativeOptions {

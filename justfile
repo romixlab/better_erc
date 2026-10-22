@@ -45,18 +45,16 @@ check-baseline:
 netlists:
     cargo run -p generate_netlists
 
-# --force: the app's binary `better_erc` was installed by the package `better_erc` before 0.4 (now the library), and
-# cargo refuses to take a binary over from another package without it.
+# Both binaries go on PATH once, through tpm's kept-releases stack in ~/.local/bin (a stale ~/.cargo/bin copy is trashed).
 
-# Install the better_erc app and the berc command line tool to ~/.cargo/bin
+# Build the better_erc app and the berc command line tool and install them on this PC
 install:
-    cargo install --locked --force --path better_erc_app
-    cargo install --locked --path berc
+    cargo build --profile deploy --locked -p better_erc_app -p berc
+    tpm install target/deploy/better_erc target/deploy/berc
 
-# Refuses on local changes (names them, never discards them). No systemd units. better_erc has no --version,
-# so only berc's version is printed.
+# Refuses on local changes (names them, never discards them). No systemd units.
 
-# Bring this PC up to main: pull, install, check both binaries are on PATH
+# Bring this PC up to main: pull --ff-only, install, check both --versions against main
 deploy:
     #!/usr/bin/env bash
     set -eu
@@ -64,10 +62,10 @@ deploy:
     if [ -n "$dirty" ]; then echo "local changes, not deploying:"; echo "$dirty"; exit 1; fi
     git pull --ff-only
     just install
-    command -v better_erc
-    command -v berc
-    berc --version
-    echo "ok: better_erc and berc installed from $(git rev-parse --short HEAD)"
+    for bin in better_erc berc; do \
+        $bin --version | grep -q "($(git rev-parse --short HEAD)" || { echo "$bin --version does not show $(git rev-parse --short HEAD):"; $bin --version; exit 1; }; \
+        $bin --version; \
+    done
 
 kicad := "podman run --rm --userns=keep-id -v $PWD:/w:Z -w /w docker.io/kicad/kicad"
 

@@ -57,14 +57,16 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 
 ## Install
 
-You need a Rust toolchain (1.86 or newer, from [rustup](https://rustup.rs)). From a clone of this repository:
+You need a Rust toolchain (1.86 or newer, from [rustup](https://rustup.rs)). From a clone of this repository, with
+[just](https://github.com/casey/just) and tpm: `just install` builds both binaries and puts each on PATH once
+(kept releases in `~/.local/bin`). Without tpm:
 
 ```sh
 cargo install --locked --path berc             # the berc command line tool
 cargo install --locked --path better_erc_app   # the desktop app (binary better_erc)
 ```
 
-or both at once with [just](https://github.com/casey/just): `just install`. `berc --version` shows the version,
+`berc --version` shows the version,
 the git commit it was built from and that commit's time.
 
 ## Quick start

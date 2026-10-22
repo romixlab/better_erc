@@ -11,6 +11,10 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Changed
+
+- `just install` builds with `--profile deploy` and installs `better_erc` and `berc` through `tpm install` (each once on PATH, kept releases in `~/.local/bin`) instead of `cargo install`; `better_erc --version` shows version, git sha and commit time (as berc does); `just deploy` checks both `--version`s against main's short sha. The README names `cargo install` for users without tpm.
+
 ## [0.4.7] - 2026-10-22
 
 ### Added
