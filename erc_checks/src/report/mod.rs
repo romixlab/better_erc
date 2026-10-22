@@ -222,12 +222,24 @@ impl Report {
                     .iter()
                     .find(|x| x.id == c)
                     .map_or(c, |x| x.title.as_str());
-                writeln!(out, "\n{}{c} - {title}{}", st.bold.render(), st.bold.render_reset()).unwrap();
+                writeln!(
+                    out,
+                    "\n{}{c} - {title}{}",
+                    st.bold.render(),
+                    st.bold.render_reset()
+                )
+                .unwrap();
             }
             write_finding(&mut out, f, &st);
         }
         if !self.candidates.is_empty() {
-            writeln!(out, "\n{}Candidates (to judge){}", st.bold.render(), st.bold.render_reset()).unwrap();
+            writeln!(
+                out,
+                "\n{}Candidates (to judge){}",
+                st.bold.render(),
+                st.bold.render_reset()
+            )
+            .unwrap();
             for f in &self.candidates {
                 write_finding(&mut out, f, &st);
             }
@@ -248,7 +260,13 @@ impl Report {
         }
         let not_run: Vec<&NotRun> = self.not_run().collect();
         if !not_run.is_empty() {
-            writeln!(out, "\n{}Not run{}", st.bold.render(), st.bold.render_reset()).unwrap();
+            writeln!(
+                out,
+                "\n{}Not run{}",
+                st.bold.render(),
+                st.bold.render_reset()
+            )
+            .unwrap();
             for n in not_run {
                 writeln!(out, "  {:<8} needs {}: {}", n.check, n.need, n.hint).unwrap();
             }

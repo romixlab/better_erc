@@ -45,6 +45,8 @@ pub fn variants() -> Vec<CompletionCandidate> {
     project
         .variants()
         .into_iter()
-        .map(|v| CompletionCandidate::new(v).help(Some(format!("variant of {}", project.main).into())))
+        .map(|v| {
+            CompletionCandidate::new(v).help(Some(format!("variant of {}", project.main).into()))
+        })
         .collect()
 }

@@ -57,9 +57,11 @@ impl Report {
         if let Some(d) = &self.baseline
             && !d.fixed.is_empty()
         {
-            details(&mut out, &format!("Fixed since the baseline ({})", d.fixed.len()), |o| {
-                table(o, &d.fixed)
-            });
+            details(
+                &mut out,
+                &format!("Fixed since the baseline ({})", d.fixed.len()),
+                |o| table(o, &d.fixed),
+            );
         }
         if !self.candidates.is_empty() {
             details(

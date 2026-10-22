@@ -119,7 +119,10 @@ pub enum CheckError {
     /// No file in the directory is a design an importer reads
     NoDesign(PathBuf),
     /// Several files in the directory could each be the design
-    Ambiguous { dir: PathBuf, candidates: Vec<String> },
+    Ambiguous {
+        dir: PathBuf,
+        candidates: Vec<String>,
+    },
     /// The importer failed on the design
     Import { file: PathBuf, error: ImportError },
     /// The run options do not fit the design (an unknown variant or check)
@@ -149,7 +152,9 @@ impl fmt::Display for CheckError {
             ),
             CheckError::Import { file, error } => match error {
                 // The error names the file relative to the project directory; say where that is
-                ImportError::Missing(p) => write!(f, "{}: no such file", file.with_file_name(p).display()),
+                ImportError::Missing(p) => {
+                    write!(f, "{}: no such file", file.with_file_name(p).display())
+                }
                 _ => write!(f, "{} ({})", error, file.display()),
             },
             CheckError::Run(e) => e.fmt(f),
@@ -246,7 +251,9 @@ impl Project {
         let mut unavailable = Vec::new();
         for need in &opts.require {
             for board in &self.imported.design.boards {
-                if let Availability::Missing { why } = Availability::of(*need, &self.imported.design, board) {
+                if let Availability::Missing { why } =
+                    Availability::of(*need, &self.imported.design, board)
+                {
                     unavailable.push(Unavailable {
                         need: need.slug(),
                         board: board.name.clone(),
@@ -391,9 +398,7 @@ fn pick_main(registry: &Registry, dir: &Path) -> Result<String, CheckError> {
     if let [one] = projects[..] {
         return Ok(one.to_string());
     }
-    let best = candidates
-        .first()
-        .map_or(Confidence::No, |c| c.confidence);
+    let best = candidates.first().map_or(Confidence::No, |c| c.confidence);
     let top: Vec<String> = candidates
         .iter()
         .filter(|c| c.confidence == best)

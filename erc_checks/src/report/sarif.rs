@@ -306,7 +306,10 @@ fn result(f: &Finding, rule_index: usize, uri_base: &str, main: &str) -> SarifRe
         },
         message: Text { text },
         locations,
-        partial_fingerprints: BTreeMap::from([("berc/v1", format!("{}:{}", f.board, f.fingerprint))]),
+        partial_fingerprints: BTreeMap::from([(
+            "berc/v1",
+            format!("{}:{}", f.board, f.fingerprint),
+        )]),
         baseline_state: f.baseline.map(|b| match b {
             BaselineState::New => "new",
             BaselineState::Unchanged => "unchanged",

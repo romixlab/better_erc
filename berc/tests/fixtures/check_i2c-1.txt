@@ -1,0 +1,25 @@
+i2c-1_no_pull_ups (kicad: 1 sheets, 9 parts, 38 nets)
+
+I2C - I2C
+  error      I2C-1    I2C bus /I2C1: no pull-ups on SCL and SDA
+                      net /SCL1, net /SDA1
+                      fix: one pull-up pair per bus segment, to the IO rail of the devices on it
+  error      I2C-3    I2C bus /I2C2: pull-ups R202 and R201 meet on /I2C1_EN, which reaches no rail
+                      net /I2C1_EN, net /SCL2, net /SDA2, part R201, part R202
+                      fix: pull up straight from the rail
+  error      I2C-3    I2C bus /I2C3: pull-ups R204 and R203 meet on /I2C3_P, which reaches no rail
+                      net /I2C3_P, net /SCL3, net /SDA3, part R203, part R204
+                      fix: pull up straight from the rail
+
+Notes
+  import i2c-1_no_pull_ups.kicad_sch: symbol U204 in i2c-1_no_pull_ups.kicad_sch: missing: no instance for sheet path /de541268-6318-4200-9bfc-af7855f4819c; the Reference field is used
+  import i2c-1_no_pull_ups.kicad_sch: symbol U201 in i2c-1_no_pull_ups.kicad_sch: missing: no instance for sheet path /de541268-6318-4200-9bfc-af7855f4819c; the Reference field is used
+  import i2c-1_no_pull_ups.kicad_sch: symbol U202 in i2c-1_no_pull_ups.kicad_sch: missing: no instance for sheet path /de541268-6318-4200-9bfc-af7855f4819c; the Reference field is used
+  import i2c-1_no_pull_ups.kicad_sch: symbol U203 in i2c-1_no_pull_ups.kicad_sch: missing: no instance for sheet path /de541268-6318-4200-9bfc-af7855f4819c; the Reference field is used
+  import i2c-1_no_pull_ups.kicad_sch: symbol R202 in i2c-1_no_pull_ups.kicad_sch: missing: no instance for sheet path /de541268-6318-4200-9bfc-af7855f4819c; the Reference field is used
+  import i2c-1_no_pull_ups.kicad_sch: symbol R203 in i2c-1_no_pull_ups.kicad_sch: missing: no instance for sheet path /de541268-6318-4200-9bfc-af7855f4819c; the Reference field is used
+  import i2c-1_no_pull_ups.kicad_sch: symbol R205 in i2c-1_no_pull_ups.kicad_sch: missing: no instance for sheet path /de541268-6318-4200-9bfc-af7855f4819c; the Reference field is used
+  import i2c-1_no_pull_ups.kicad_sch: symbol R204 in i2c-1_no_pull_ups.kicad_sch: missing: no instance for sheet path /de541268-6318-4200-9bfc-af7855f4819c; the Reference field is used
+  import i2c-1_no_pull_ups.kicad_sch: symbol R201 in i2c-1_no_pull_ups.kicad_sch: missing: no instance for sheet path /de541268-6318-4200-9bfc-af7855f4819c; the Reference field is used
+
+3 errors, 0 warnings, 0 suggestions, 0 info, 0 candidates · checks: 11 ran, 0 not run, 502 planned · N ms

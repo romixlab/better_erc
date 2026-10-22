@@ -381,13 +381,26 @@ mod tests {
         assert!(md.contains("**What it catches.**"));
         assert!(md.contains("better_erc runs this check"));
         let text = e.to_text();
-        assert!(text.starts_with("I2C-3 Pull-up from two series resistors to nowhere\n"), "{text}");
+        assert!(
+            text.starts_with("I2C-3 Pull-up from two series resistors to nowhere\n"),
+            "{text}"
+        );
         assert!(text.contains("What it catches. A pull-up"), "{text}");
-        assert!(text.contains("resistor chains · catalogue entry\n"), "{text}");
-        assert!(!text.contains('`') && !text.contains("**") && !text.contains("<a "), "{text}");
+        assert!(
+            text.contains("resistor chains · catalogue entry\n"),
+            "{text}"
+        );
+        assert!(
+            !text.contains('`') && !text.contains("**") && !text.contains("<a "),
+            "{text}"
+        );
         let planned = explain("PIN-1").unwrap();
         assert!(!planned.implemented);
-        assert!(planned.to_text().contains("planned: better_erc does not run this check yet"));
+        assert!(
+            planned
+                .to_text()
+                .contains("planned: better_erc does not run this check yet")
+        );
     }
 
     #[test]

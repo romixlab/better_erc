@@ -42,7 +42,7 @@ pub use meta::{
 };
 #[cfg(feature = "import")]
 pub use project::{
-    CheckError, CheckOptions, CheckRun, Exit, Format, Project, Stage, Unavailable, Verdict, check_path,
-    read_baseline,
+    CheckError, CheckOptions, CheckRun, Exit, Format, Project, Stage, Unavailable, Verdict,
+    check_path, read_baseline,
 };
 pub use report::{Delta, Report, Status};
