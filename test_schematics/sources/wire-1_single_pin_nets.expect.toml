@@ -1,0 +1,21 @@
+# What better_erc finds on wire-1_single_pin_nets.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "NAME-4"
+subjects = ["net /UART2_RX", "pin U1.2"]
+
+[[finding]]
+check = "NAME-4"
+subjects = ["net /UART2_TX", "pin U1.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /UART2_TX", "pin U1.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /UART_2_TX", "pin J1.1"]
+
+[[finding]]
+check = "WIRE-2"
+subjects = ["net /UART2_TX", "net /UART_2_TX"]

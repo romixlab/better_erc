@@ -1,0 +1,160 @@
+board wire-2_similar_names
+label / local PWR_EN at 101.6,38.1 net /PWR_EN
+label / local PWR_EN at 142.24,38.1 net /PWR_EN
+label / local RESET_N at 101.6,35.56 net /RESET_N
+label / local RESET_N at 193.04,26.67 net /RESET_N
+label / local RESET_n at 142.24,35.56 net /RESET_n
+label / local RESET_n at 233.68,26.67 net /RESET_n
+label / power +3V3 at 30.48,26.67 net +3V3
+label / power +3V3 at 101.6,30.48 net +3V3
+label / power +3V3 at 193.04,34.29 net +3V3
+label / power 3V3 at 71.12,26.67 net 3V3
+label / power 3V3 at 142.24,30.48 net 3V3
+label / power 3V3 at 233.68,34.29 net 3V3
+label / power GND at 30.48,34.29 net GND
+label / power GND at 71.12,34.29 net GND
+label / power GND at 101.6,33.02 net GND
+label / power GND at 142.24,33.02 net GND
+net +3V3 class = Default @ sch wire-2_similar_names.kicad_sch note "effective net class"
+net +3V3 kind power
+net /PWR_EN class = Default @ sch wire-2_similar_names.kicad_sch note "effective net class"
+net /PWR_EN kind named
+net /RESET_N class = Default @ sch wire-2_similar_names.kicad_sch note "effective net class"
+net /RESET_N kind named
+net /RESET_n class = Default @ sch wire-2_similar_names.kicad_sch note "effective net class"
+net /RESET_n kind named
+net 3V3 class = Default @ sch wire-2_similar_names.kicad_sch note "effective net class"
+net 3V3 kind power
+net GND class = Default @ sch wire-2_similar_names.kicad_sch note "effective net class"
+net GND kind power
+part C1 field Value = 100n @ sch wire-2_similar_names.kicad_sch
+part C1 flag dnp = no @ sch wire-2_similar_names.kicad_sch
+part C1 flag exclude_from_sim = no @ sch wire-2_similar_names.kicad_sch
+part C1 flag in_bom = yes @ sch wire-2_similar_names.kicad_sch
+part C1 flag on_board = yes @ sch wire-2_similar_names.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 31e00200-0000-4000-8000-000000000001 line 71 at 30.48,30.48 rot 0
+part C1 value = text 100n @ sch wire-2_similar_names.kicad_sch note "from the Value field"
+part C2 field Value = 100n @ sch wire-2_similar_names.kicad_sch
+part C2 flag dnp = no @ sch wire-2_similar_names.kicad_sch
+part C2 flag exclude_from_sim = no @ sch wire-2_similar_names.kicad_sch
+part C2 flag in_bom = yes @ sch wire-2_similar_names.kicad_sch
+part C2 flag on_board = yes @ sch wire-2_similar_names.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid 31e00200-0000-4000-8000-000000000008 line 93 at 71.12,30.48 rot 0
+part C2 value = text 100n @ sch wire-2_similar_names.kicad_sch note "from the Value field"
+part R1 field Value = 10k @ sch wire-2_similar_names.kicad_sch
+part R1 flag dnp = no @ sch wire-2_similar_names.kicad_sch
+part R1 flag exclude_from_sim = no @ sch wire-2_similar_names.kicad_sch
+part R1 flag in_bom = yes @ sch wire-2_similar_names.kicad_sch
+part R1 flag on_board = yes @ sch wire-2_similar_names.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 31e00200-0000-4000-8000-000000000025 line 167 at 193.04,30.48 rot 0
+part R1 value = text 10k @ sch wire-2_similar_names.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch wire-2_similar_names.kicad_sch
+part R2 flag dnp = no @ sch wire-2_similar_names.kicad_sch
+part R2 flag exclude_from_sim = no @ sch wire-2_similar_names.kicad_sch
+part R2 flag in_bom = yes @ sch wire-2_similar_names.kicad_sch
+part R2 flag on_board = yes @ sch wire-2_similar_names.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 31e00200-0000-4000-8000-00000000002b line 183 at 233.68,30.48 rot 0
+part R2 value = text 10k @ sch wire-2_similar_names.kicad_sch note "from the Value field"
+part U1 field Value = SENSOR @ sch wire-2_similar_names.kicad_sch
+part U1 flag dnp = no @ sch wire-2_similar_names.kicad_sch
+part U1 flag exclude_from_sim = no @ sch wire-2_similar_names.kicad_sch
+part U1 flag in_bom = yes @ sch wire-2_similar_names.kicad_sch
+part U1 flag on_board = yes @ sch wire-2_similar_names.kicad_sch
+part U1 lib Fixture:SENSOR sheet / symbol Fixture:SENSOR
+part U1 unit 1 sheet / uuid 31e00200-0000-4000-8000-00000000000f line 115 at 111.76,30.48 rot 0
+part U1 value = text SENSOR @ sch wire-2_similar_names.kicad_sch note "from the Value field"
+part U2 field Value = SENSOR @ sch wire-2_similar_names.kicad_sch
+part U2 flag dnp = no @ sch wire-2_similar_names.kicad_sch
+part U2 flag exclude_from_sim = no @ sch wire-2_similar_names.kicad_sch
+part U2 flag in_bom = yes @ sch wire-2_similar_names.kicad_sch
+part U2 flag on_board = yes @ sch wire-2_similar_names.kicad_sch
+part U2 lib Fixture:SENSOR sheet / symbol Fixture:SENSOR
+part U2 unit 1 sheet / uuid 31e00200-0000-4000-8000-00000000001a line 141 at 152.4,30.48 rot 0
+part U2 value = text SENSOR @ sch wire-2_similar_names.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +3V3
+pin C1 1 type = passive @ sch wire-2_similar_names.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch wire-2_similar_names.kicad_sch
+pin C2 1 name "" unit 1 net 3V3
+pin C2 1 type = passive @ sch wire-2_similar_names.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch wire-2_similar_names.kicad_sch
+pin R1 1 name "" unit 1 net /RESET_N
+pin R1 1 type = passive @ sch wire-2_similar_names.kicad_sch
+pin R1 2 name "" unit 1 net +3V3
+pin R1 2 type = passive @ sch wire-2_similar_names.kicad_sch
+pin R2 1 name "" unit 1 net /RESET_n
+pin R2 1 type = passive @ sch wire-2_similar_names.kicad_sch
+pin R2 2 name "" unit 1 net 3V3
+pin R2 2 type = passive @ sch wire-2_similar_names.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch wire-2_similar_names.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch wire-2_similar_names.kicad_sch
+pin U1 3 name ~{RST} unit 1 net /RESET_N
+pin U1 3 type = input @ sch wire-2_similar_names.kicad_sch
+pin U1 4 name EN unit 1 net /PWR_EN
+pin U1 4 type = input @ sch wire-2_similar_names.kicad_sch
+pin U2 1 name VDD unit 1 net 3V3
+pin U2 1 type = power_in @ sch wire-2_similar_names.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch wire-2_similar_names.kicad_sch
+pin U2 3 name ~{RST} unit 1 net /RESET_n
+pin U2 3 type = input @ sch wire-2_similar_names.kicad_sch
+pin U2 4 name EN unit 1 net /PWR_EN
+pin U2 4 type = input @ sch wire-2_similar_names.kicad_sch
+sheet / name "" file wire-2_similar_names.kicad_sch uuid /
+source file wire-2_similar_names.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 4f61469a234b07ab
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 7be2b59127b371a9
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Fixture:SENSOR description Sensor
+symbol Fixture:SENSOR field Description Sensor
+symbol Fixture:SENSOR field Reference U
+symbol Fixture:SENSOR field Value SENSOR
+symbol Fixture:SENSOR hash 2ce6508671c78f73
+symbol Fixture:SENSOR pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:SENSOR pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:SENSOR pin 3 unit 1 body 1 name ~{RST} type input style line
+symbol Fixture:SENSOR pin 4 unit 1 body 1 name EN type input style line
+symbol Fixture:SENSOR units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:3V3 description "Power symbol 3V3"
+symbol power:3V3 field Description "Power symbol 3V3"
+symbol power:3V3 field Reference "#PWR"
+symbol power:3V3 field Value 3V3
+symbol power:3V3 hash 1ed156aa6d13c84e
+symbol power:3V3 pin 1 unit 1 body 1 name 3V3 type power_in style line
+symbol power:3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

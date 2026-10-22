@@ -35,6 +35,7 @@ mod test;
 #[cfg(test)]
 mod testing;
 mod text;
+mod wire;
 
 pub use catalogue::{
     CheckInfo, CheckState, Explanation, ListedCheck, RunState, explain, list, list_for,

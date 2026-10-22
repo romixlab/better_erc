@@ -1,0 +1,9 @@
+# What better_erc finds on wire-14_ground_pin_not_ground.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board wire-14_ground_pin_not_ground"]
+
+[[finding]]
+check = "WIRE-14"
+subjects = ["net /SW", "part U1", "pin U1.2"]

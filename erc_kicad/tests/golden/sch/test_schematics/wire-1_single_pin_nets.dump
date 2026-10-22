@@ -1,0 +1,90 @@
+board wire-1_single_pin_nets
+label / local UART2_RX at 20.32,33.02 net /UART2_RX
+label / local UART2_RX at 60.96,33.02 net /UART2_RX
+label / local UART2_TX at 20.32,30.48 net /UART2_TX
+label / local UART_2_TX at 60.96,30.48 net /UART_2_TX
+label / power +3V3 at 20.32,35.56 net +3V3
+label / power GND at 20.32,38.1 net GND
+label / power GND at 60.96,35.56 net GND
+net +3V3 class = Default @ sch wire-1_single_pin_nets.kicad_sch note "effective net class"
+net +3V3 kind power
+net /UART2_RX class = Default @ sch wire-1_single_pin_nets.kicad_sch note "effective net class"
+net /UART2_RX kind named
+net /UART2_TX class = Default @ sch wire-1_single_pin_nets.kicad_sch note "effective net class"
+net /UART2_TX kind named
+net /UART_2_TX class = Default @ sch wire-1_single_pin_nets.kicad_sch note "effective net class"
+net /UART_2_TX kind named
+net GND class = Default @ sch wire-1_single_pin_nets.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U1-PA7-Pad5) class = Default @ sch wire-1_single_pin_nets.kicad_sch note "effective net class"
+net unconnected-(U1-PA7-Pad5) kind unconnected
+part J1 field Value = Conn @ sch wire-1_single_pin_nets.kicad_sch
+part J1 flag dnp = no @ sch wire-1_single_pin_nets.kicad_sch
+part J1 flag exclude_from_sim = no @ sch wire-1_single_pin_nets.kicad_sch
+part J1 flag in_bom = yes @ sch wire-1_single_pin_nets.kicad_sch
+part J1 flag on_board = yes @ sch wire-1_single_pin_nets.kicad_sch
+part J1 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J1 unit 1 sheet / uuid 31e00100-0000-4000-8000-00000000000d line 79 at 71.12,30.48 rot 0
+part J1 value = text Conn @ sch wire-1_single_pin_nets.kicad_sch note "from the Value field"
+part U1 field Value = MCU @ sch wire-1_single_pin_nets.kicad_sch
+part U1 flag dnp = no @ sch wire-1_single_pin_nets.kicad_sch
+part U1 flag exclude_from_sim = no @ sch wire-1_single_pin_nets.kicad_sch
+part U1 flag in_bom = yes @ sch wire-1_single_pin_nets.kicad_sch
+part U1 flag on_board = yes @ sch wire-1_single_pin_nets.kicad_sch
+part U1 lib MCU_Fixture:MCU sheet / symbol MCU_Fixture:MCU
+part U1 unit 1 sheet / uuid 31e00100-0000-4000-8000-000000000001 line 52 at 30.48,30.48 rot 0
+part U1 value = text MCU @ sch wire-1_single_pin_nets.kicad_sch note "from the Value field"
+pin J1 1 name Pin_1 unit 1 net /UART_2_TX
+pin J1 1 type = passive @ sch wire-1_single_pin_nets.kicad_sch
+pin J1 2 name Pin_2 unit 1 net /UART2_RX
+pin J1 2 type = passive @ sch wire-1_single_pin_nets.kicad_sch
+pin J1 3 name Pin_3 unit 1 net GND
+pin J1 3 type = passive @ sch wire-1_single_pin_nets.kicad_sch
+pin U1 1 name UART2_TX unit 1 net /UART2_TX
+pin U1 1 type = output @ sch wire-1_single_pin_nets.kicad_sch
+pin U1 2 name UART2_RX unit 1 net /UART2_RX
+pin U1 2 type = input @ sch wire-1_single_pin_nets.kicad_sch
+pin U1 3 name VDD unit 1 net +3V3
+pin U1 3 type = power_in @ sch wire-1_single_pin_nets.kicad_sch
+pin U1 4 name VSS unit 1 net GND
+pin U1 4 type = power_in @ sch wire-1_single_pin_nets.kicad_sch
+pin U1 5 name PA7 unit 1 net unconnected-(U1-PA7-Pad5)
+pin U1 5 type = bidirectional @ sch wire-1_single_pin_nets.kicad_sch
+sheet / name "" file wire-1_single_pin_nets.kicad_sch uuid /
+source file wire-1_single_pin_nets.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x03 description "Generic connector"
+symbol Connector_Generic:Conn_01x03 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x03 field Reference J
+symbol Connector_Generic:Conn_01x03 field Value Conn_01x03
+symbol Connector_Generic:Conn_01x03 hash 816adfd6b6d7dcf5
+symbol Connector_Generic:Conn_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x03 units 1
+symbol MCU_Fixture:MCU description Microcontroller
+symbol MCU_Fixture:MCU field Description Microcontroller
+symbol MCU_Fixture:MCU field Reference U
+symbol MCU_Fixture:MCU field Value MCU
+symbol MCU_Fixture:MCU hash 555706313ae7b6fb
+symbol MCU_Fixture:MCU pin 1 unit 1 body 1 name UART2_TX type output style line
+symbol MCU_Fixture:MCU pin 2 unit 1 body 1 name UART2_RX type input style line
+symbol MCU_Fixture:MCU pin 3 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU pin 4 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU pin 5 unit 1 body 1 name PA7 type bidirectional style line
+symbol MCU_Fixture:MCU units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

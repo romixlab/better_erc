@@ -1,0 +1,5 @@
+# What better_erc finds on wire-13_output_to_nowhere.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "WIRE-13"
+subjects = ["net /QH_CHK", "pin U1.9"]

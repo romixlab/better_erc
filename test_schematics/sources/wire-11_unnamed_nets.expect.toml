@@ -1,0 +1,5 @@
+# What better_erc finds on wire-11_unnamed_nets.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "WIRE-11"
+subjects = ["net Net-(U1-FB)"]

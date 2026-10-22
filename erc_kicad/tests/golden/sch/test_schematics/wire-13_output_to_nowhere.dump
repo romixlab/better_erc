@@ -1,0 +1,167 @@
+board wire-13_output_to_nowhere
+label / local LED_A at 152.4,34.29 net /LED_A
+label / local LED_A at 193.04,26.67 net /LED_A
+label / local QA at 20.32,30.48 net /QA
+label / local QA at 152.4,26.67 net /QA
+label / local QH_CHK at 20.32,33.02 net /QH_CHK
+label / local QH_CHK at 71.12,30.48 net /QH_CHK
+label / local QH_CHK at 111.76,26.67 net /QH_CHK
+label / local SER at 20.32,35.56 net /SER
+label / local SER at 223.52,30.48 net /SER
+label / power +3V3 at 20.32,40.64 net +3V3
+label / power +3V3 at 223.52,33.02 net +3V3
+label / power GND at 20.32,38.1 net GND
+label / power GND at 111.76,34.29 net GND
+label / power GND at 193.04,34.29 net GND
+label / power GND at 223.52,35.56 net GND
+net +3V3 class = Default @ sch wire-13_output_to_nowhere.kicad_sch note "effective net class"
+net +3V3 kind power
+net /LED_A class = Default @ sch wire-13_output_to_nowhere.kicad_sch note "effective net class"
+net /LED_A kind named
+net /QA class = Default @ sch wire-13_output_to_nowhere.kicad_sch note "effective net class"
+net /QA kind named
+net /QH_CHK class = Default @ sch wire-13_output_to_nowhere.kicad_sch note "effective net class"
+net /QH_CHK kind named
+net /SER class = Default @ sch wire-13_output_to_nowhere.kicad_sch note "effective net class"
+net /SER kind named
+net GND class = Default @ sch wire-13_output_to_nowhere.kicad_sch note "effective net class"
+net GND kind power
+part D1 field Value = LED @ sch wire-13_output_to_nowhere.kicad_sch
+part D1 flag dnp = no @ sch wire-13_output_to_nowhere.kicad_sch
+part D1 flag exclude_from_sim = no @ sch wire-13_output_to_nowhere.kicad_sch
+part D1 flag in_bom = yes @ sch wire-13_output_to_nowhere.kicad_sch
+part D1 flag on_board = yes @ sch wire-13_output_to_nowhere.kicad_sch
+part D1 lib Device:D sheet / symbol Device:D
+part D1 unit 1 sheet / uuid 31e01300-0000-4000-8000-00000000001c line 146 at 193.04,30.48 rot 0
+part D1 value = text LED @ sch wire-13_output_to_nowhere.kicad_sch note "from the Value field"
+part R1 field Value = 330 @ sch wire-13_output_to_nowhere.kicad_sch
+part R1 flag dnp = no @ sch wire-13_output_to_nowhere.kicad_sch
+part R1 flag exclude_from_sim = no @ sch wire-13_output_to_nowhere.kicad_sch
+part R1 flag in_bom = yes @ sch wire-13_output_to_nowhere.kicad_sch
+part R1 flag on_board = yes @ sch wire-13_output_to_nowhere.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 31e01300-0000-4000-8000-000000000017 line 136 at 152.4,30.48 rot 0
+part R1 value = text 330 @ sch wire-13_output_to_nowhere.kicad_sch note "from the Value field"
+part R2 field Value = 100k @ sch wire-13_output_to_nowhere.kicad_sch
+part R2 flag dnp = no @ sch wire-13_output_to_nowhere.kicad_sch
+part R2 flag exclude_from_sim = no @ sch wire-13_output_to_nowhere.kicad_sch
+part R2 flag in_bom = yes @ sch wire-13_output_to_nowhere.kicad_sch
+part R2 flag on_board = yes @ sch wire-13_output_to_nowhere.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 31e01300-0000-4000-8000-000000000011 line 120 at 111.76,30.48 rot 0
+part R2 value = text 100k @ sch wire-13_output_to_nowhere.kicad_sch note "from the Value field"
+part TP1 field Value = TP @ sch wire-13_output_to_nowhere.kicad_sch
+part TP1 flag dnp = no @ sch wire-13_output_to_nowhere.kicad_sch
+part TP1 flag exclude_from_sim = no @ sch wire-13_output_to_nowhere.kicad_sch
+part TP1 flag in_bom = yes @ sch wire-13_output_to_nowhere.kicad_sch
+part TP1 flag on_board = yes @ sch wire-13_output_to_nowhere.kicad_sch
+part TP1 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP1 unit 1 sheet / uuid 31e01300-0000-4000-8000-00000000000e line 112 at 71.12,30.48 rot 0
+part TP1 value = text TP @ sch wire-13_output_to_nowhere.kicad_sch note "from the Value field"
+part U1 field Value = 74HC595 @ sch wire-13_output_to_nowhere.kicad_sch
+part U1 flag dnp = no @ sch wire-13_output_to_nowhere.kicad_sch
+part U1 flag exclude_from_sim = no @ sch wire-13_output_to_nowhere.kicad_sch
+part U1 flag in_bom = yes @ sch wire-13_output_to_nowhere.kicad_sch
+part U1 flag on_board = yes @ sch wire-13_output_to_nowhere.kicad_sch
+part U1 lib 74xx:74HC595 sheet / symbol 74xx:74HC595
+part U1 unit 1 sheet / uuid 31e01300-0000-4000-8000-000000000001 line 84 at 30.48,30.48 rot 0
+part U1 value = text 74HC595 @ sch wire-13_output_to_nowhere.kicad_sch note "from the Value field"
+part U2 field Value = MCU @ sch wire-13_output_to_nowhere.kicad_sch
+part U2 flag dnp = no @ sch wire-13_output_to_nowhere.kicad_sch
+part U2 flag exclude_from_sim = no @ sch wire-13_output_to_nowhere.kicad_sch
+part U2 flag in_bom = yes @ sch wire-13_output_to_nowhere.kicad_sch
+part U2 flag on_board = yes @ sch wire-13_output_to_nowhere.kicad_sch
+part U2 lib MCU_Fixture:MCU sheet / symbol MCU_Fixture:MCU
+part U2 unit 1 sheet / uuid 31e01300-0000-4000-8000-000000000022 line 162 at 233.68,30.48 rot 0
+part U2 value = text MCU @ sch wire-13_output_to_nowhere.kicad_sch note "from the Value field"
+pin D1 1 name K unit 1 net /LED_A
+pin D1 1 type = passive @ sch wire-13_output_to_nowhere.kicad_sch
+pin D1 2 name A unit 1 net GND
+pin D1 2 type = passive @ sch wire-13_output_to_nowhere.kicad_sch
+pin R1 1 name "" unit 1 net /QA
+pin R1 1 type = passive @ sch wire-13_output_to_nowhere.kicad_sch
+pin R1 2 name "" unit 1 net /LED_A
+pin R1 2 type = passive @ sch wire-13_output_to_nowhere.kicad_sch
+pin R2 1 name "" unit 1 net /QH_CHK
+pin R2 1 type = passive @ sch wire-13_output_to_nowhere.kicad_sch
+pin R2 2 name "" unit 1 net GND
+pin R2 2 type = passive @ sch wire-13_output_to_nowhere.kicad_sch
+pin TP1 1 name 1 unit 1 net /QH_CHK
+pin TP1 1 type = passive @ sch wire-13_output_to_nowhere.kicad_sch
+pin U1 8 name GND unit 1 net GND
+pin U1 8 type = power_in @ sch wire-13_output_to_nowhere.kicad_sch
+pin U1 9 name QH' unit 1 net /QH_CHK
+pin U1 9 type = output @ sch wire-13_output_to_nowhere.kicad_sch
+pin U1 14 name SER unit 1 net /SER
+pin U1 14 type = input @ sch wire-13_output_to_nowhere.kicad_sch
+pin U1 15 name QA unit 1 net /QA
+pin U1 15 type = tri_state @ sch wire-13_output_to_nowhere.kicad_sch
+pin U1 16 name VCC unit 1 net +3V3
+pin U1 16 type = power_in @ sch wire-13_output_to_nowhere.kicad_sch
+pin U2 1 name SER_OUT unit 1 net /SER
+pin U2 1 type = output @ sch wire-13_output_to_nowhere.kicad_sch
+pin U2 2 name VDD unit 1 net +3V3
+pin U2 2 type = power_in @ sch wire-13_output_to_nowhere.kicad_sch
+pin U2 3 name VSS unit 1 net GND
+pin U2 3 type = power_in @ sch wire-13_output_to_nowhere.kicad_sch
+sheet / name "" file wire-13_output_to_nowhere.kicad_sch uuid /
+source file wire-13_output_to_nowhere.kicad_sch
+source tool kicad
+source version 8.0
+symbol 74xx:74HC595 description "8-bit serial in, parallel out shift register"
+symbol 74xx:74HC595 field Description "8-bit serial in, parallel out shift register"
+symbol 74xx:74HC595 field Reference U
+symbol 74xx:74HC595 field Value 74HC595
+symbol 74xx:74HC595 hash 71b50d7286abbcff
+symbol 74xx:74HC595 pin 8 unit 1 body 1 name GND type power_in style line
+symbol 74xx:74HC595 pin 9 unit 1 body 1 name QH' type output style line
+symbol 74xx:74HC595 pin 14 unit 1 body 1 name SER type input style line
+symbol 74xx:74HC595 pin 15 unit 1 body 1 name QA type tri_state style line
+symbol 74xx:74HC595 pin 16 unit 1 body 1 name VCC type power_in style line
+symbol 74xx:74HC595 units 1
+symbol Connector:TestPoint description "test point"
+symbol Connector:TestPoint field Description "test point"
+symbol Connector:TestPoint field Reference TP
+symbol Connector:TestPoint field Value TestPoint
+symbol Connector:TestPoint hash 628289b26f78f9ac
+symbol Connector:TestPoint pin 1 unit 1 body 1 name 1 type passive style line
+symbol Connector:TestPoint units 1
+symbol Device:D description Diode
+symbol Device:D field Description Diode
+symbol Device:D field Reference D
+symbol Device:D field Value D
+symbol Device:D hash bf1f831fcfef1133
+symbol Device:D pin 1 unit 1 body 1 name K type passive style line
+symbol Device:D pin 2 unit 1 body 1 name A type passive style line
+symbol Device:D units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 7be2b59127b371a9
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Fixture:MCU description Microcontroller
+symbol MCU_Fixture:MCU field Description Microcontroller
+symbol MCU_Fixture:MCU field Reference U
+symbol MCU_Fixture:MCU field Value MCU
+symbol MCU_Fixture:MCU hash a955ab3e19a1f5b9
+symbol MCU_Fixture:MCU pin 1 unit 1 body 1 name SER_OUT type output style line
+symbol MCU_Fixture:MCU pin 2 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU pin 3 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

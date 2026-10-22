@@ -1,0 +1,13 @@
+# What better_erc finds on wire-2_similar_names.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "NAME-1"
+subjects = ["net /RESET_n"]
+
+[[finding]]
+check = "WIRE-2"
+subjects = ["net +3V3", "net 3V3"]
+
+[[finding]]
+check = "WIRE-2"
+subjects = ["net /RESET_N", "net /RESET_n"]
