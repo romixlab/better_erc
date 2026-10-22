@@ -265,9 +265,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `DIAG-5` The catalogue and its detail pages embedded in the library: `list()` (every check, implemented or
   planned), `explain(id)`, the not-run hints; a test holds each registered check's id, category, severity and tier to
   its catalogue line · `erc_checks/src/catalogue.rs`, `tests/catalogue.rs`
-- ✅ `DIAG-6` Test schematics as the spec: `<id>_<slug>.kicad_sch` with an `.expect.toml` of findings and not-run
-  checks; one test runs the engine on all of them, and fails on a schematic without expectations or a check no
-  schematic shows firing (`BLESS=1` rewrites the sidecars) · `erc_checks/tests/schematics.rs`
+- ✅ `DIAG-6` Test schematics as the spec: `<id>_<slug>.kicad_sch` with an `.expect.toml` of findings (exact) and
+  hand-written not-run assertions (a subset); one test runs the engine on all of them, and fails on a schematic without
+  expectations or a check no schematic shows firing (`BLESS=1` rewrites the findings, keeps the not-run blocks) ·
+  `erc_checks/tests/schematics.rs`
 
 ## Configuration and waivers (`CFG`)
 

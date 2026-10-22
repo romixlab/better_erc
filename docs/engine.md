@@ -266,7 +266,8 @@ or `needs:` line is missing, or when it declares an overlap no catalogue line ma
 
 Every schematic in `test_schematics/sources` is named after the check it is for, `<id>_<slug>.kicad_sch`
 (`i2c-7_segments.kicad_sch`), holds failing cases next to correct ones that must not fire, and has a sidecar
-`<id>_<slug>.expect.toml` with everything the engine must report on it:
+`<id>_<slug>.expect.toml` with every finding the engine must report on it, and, by hand, the checks that must not
+run on it where a detail page says so:
 
 ```toml
 [[finding]]
@@ -275,16 +276,19 @@ subjects = ["part R3"]
 also = ["BOM-5"]          # optional
 confidence = "estimate"   # optional, "certain" by default
 
-[[not_run]]
+[[not_run]]                # written by hand, only to assert what a page says
 check = "LAY-1"
 need = "layout"
 ```
 
 `erc_checks/tests/schematics.rs` imports each schematic with `erc_kicad`, runs every registered check and compares
-findings and not-run checks with the sidecar. It fails on a difference, on a schematic without a sidecar (or the
-other way round), on a name that does not start with a catalogue id, and on a registered check that no schematic
-shows firing. `BLESS=1 cargo test -p erc_checks --test schematics` writes the sidecars from what the engine finds,
-for review in the diff. `just netlists` exports the SVG pictures of the schematics.
+with the sidecar: the findings exactly, in both directions; the `[[not_run]]` entries as a subset, each one must be
+reported as not run with its need, while other checks not running is fine (every check runs on every schematic, so
+listing them all would make each new check rewrite every sidecar). It fails on a difference, on a schematic without a
+sidecar (or the other way round), on a name that does not start with a catalogue id, and on a registered check that
+no schematic shows firing. `BLESS=1 cargo test -p erc_checks --test schematics` rewrites the findings from what the
+engine finds, for review in the diff, and keeps the sidecar's `[[not_run]]` blocks as they are; it never adds any.
+`just netlists` exports the SVG pictures of the schematics.
 
 ## Thresholds and overrides
 
@@ -305,7 +309,9 @@ of the threshold it used.
    when it is observable there), a lazy accessor on `Ctx` and, when it is new data, a `Need` with its availability;
    a missing accessor of the model goes into `erc_model` (with its test).
 4. `test_schematics/sources/<id>_<slug>.kicad_sch` with the failing and the correct case, and its
-   `.expect.toml`; `just netlists` for the picture.
+   `.expect.toml` (`BLESS=1` writes the findings; a `[[not_run]]` block only by hand, where the page says the check
+   must not run without a need); `just netlists` for the picture. A new check fires on other schematics too:
+   `BLESS=1` and review their findings.
 5. FEATURES.md and CHANGELOG.
 
 ## The checks that run

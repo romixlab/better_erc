@@ -1,9 +1,11 @@
 //! The test schematics are the spec: every `test_schematics/sources/<id>_<slug>.kicad_sch` has a sidecar
 //! `<id>_<slug>.expect.toml` listing the findings the engine must report on it (check, subjects, confidence, the
-//! checks it folds in) and the checks it must report as not run. This test imports each schematic, runs every
-//! registered check, and compares; a schematic without expectations, expectations without a schematic, or a
-//! registered check that no expectation shows firing fails it. `BLESS=1` writes the sidecars from what the engine
-//! finds, for review in the diff.
+//! checks it folds in), compared exactly in both directions, and, written by hand where a page says so, checks
+//! that must not run on it with the need they lack, compared as a subset (other checks not running is fine, so a
+//! new check does not rewrite every sidecar). This test imports each schematic, runs every registered check, and
+//! compares; a schematic without expectations, expectations without a schematic, or a registered check that no
+//! expectation shows firing fails it. `BLESS=1` rewrites the findings from what the engine finds, for review in
+//! the diff, and keeps the sidecar's `[[not_run]]` blocks as they are (it never adds any).
 
 use erc_checks::catalogue::catalogue;
 use erc_checks::{Confidence, Report, RunOptions, registered, run_imported};
@@ -138,24 +140,40 @@ fn schematics_match_their_expectations() {
         let got = actual(&report);
         fired.extend(got.findings.iter().map(|f| f.check.clone()));
         let sidecar = dir.join(format!("{name}.expect.toml"));
+        let existing = std::fs::read_to_string(&sidecar).ok();
+        let read = |text: &str| -> Expect {
+            toml::from_str(text).unwrap_or_else(|e| panic!("{name}.expect.toml: {e}"))
+        };
         if bless {
-            write_sidecar(&sidecar, name, &got);
+            let kept = existing.as_deref().map(read).unwrap_or_default().not_run;
+            write_sidecar(
+                &sidecar,
+                name,
+                &Expect {
+                    findings: got.findings,
+                    not_run: kept,
+                },
+            );
             continue;
         }
-        let Ok(text) = std::fs::read_to_string(&sidecar) else {
+        let Some(text) = existing else {
             failed.push(format!(
                 "{name}.kicad_sch: no {name}.expect.toml (BLESS=1 writes it)"
             ));
             continue;
         };
-        let mut want: Expect =
-            toml::from_str(&text).unwrap_or_else(|e| panic!("{name}.expect.toml: {e}"));
+        let mut want = read(&text);
         for f in &mut want.findings {
             f.subjects.sort();
         }
         want.findings.sort();
         want.not_run.sort();
-        if want != got {
+        let not_run_missing: Vec<_> = want
+            .not_run
+            .iter()
+            .filter(|n| !got.not_run.contains(n))
+            .collect();
+        if want.findings != got.findings || !not_run_missing.is_empty() {
             let missing: Vec<_> = want
                 .findings
                 .iter()
@@ -167,9 +185,7 @@ fn schematics_match_their_expectations() {
                 .filter(|f| !want.findings.contains(f))
                 .collect();
             failed.push(format!(
-                "{name}: expected but not found {missing:#?}\nfound but not expected {extra:#?}\nnot run: expected {:?}, got {:?}\n{}",
-                want.not_run,
-                got.not_run,
+                "{name}: expected but not found {missing:#?}\nfound but not expected {extra:#?}\nexpected not to run, but ran or lacked another need: {not_run_missing:?}\n{}",
                 report.to_text()
             ));
         }

@@ -15,6 +15,10 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 - Stage 1 easy checks, batch checks-dec: `DEC-1`, `DEC-4`, `DEC-7`, `DEC-8`, `DEC-10`, `DEC-11`, `DEC-12`, `DBG-1`, `DBG-2`, `DBG-3`, `DBG-4`, `DBG-7`, `DBG-8`, `DBG-10`, `DBG-11`, `DBG-14`, `DBG-16`, `DBG-17`, `DBG-18`, `TEST-1`, `TEST-2`, `TEST-4`, `TEST-5`, each with its test schematic and sidecar; `erc_analysis::{pin_name, access, supply}` (`NET-22`), `PartClass::is_programmable`.
 
+### Changed
+
+- Test schematic sidecars: findings compared exactly, `[[not_run]]` entries are hand-written assertions compared as a subset; `BLESS=1` writes findings only and keeps the not-run blocks; the generated not-run blocks are gone from all sidecars (`DIAG-6`).
+
 ## [0.4.3] - 2026-10-22
 
 ### Added

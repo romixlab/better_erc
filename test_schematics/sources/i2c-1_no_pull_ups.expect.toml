@@ -83,7 +83,3 @@ subjects = ["net /SDA2"]
 [[finding]]
 check = "TEST-5"
 subjects = ["net /SDA3"]
-
-[[not_run]]
-check = "DEC-12"
-need = "rail voltages"
