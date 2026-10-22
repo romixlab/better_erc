@@ -116,7 +116,8 @@ schematic hierarchy, joined into one board. A board without a schematic is read 
 ### The differential test
 
 `erc_kicad/tests/differential.rs` compares our import with kicad-cli's netlist of the same schematic, net by net as pin
-sets, names and net classes included, for every KiCad version that can read the file:
+sets, names included, for every KiCad version that can read the file, and net classes against KiCad 10 (KiCad 9's
+netlist writes only the classes of directive labels, KiCad 8's none):
 
 - the fixtures in `erc_kicad/tests/fixtures` (connectivity cases on one sheet, a hierarchy with a sheet used twice and
   buses through sheet pins, KiCad 10 local power symbols, bus aliases in a sheet and in a project file with net class

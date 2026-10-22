@@ -137,16 +137,23 @@ fn differ(root: &Path, netlist: &Path, version: Option<u32>) -> String {
         std::fs::read_to_string(netlist).unwrap_or_else(|e| panic!("{}: {e}", netlist.display()));
     let (theirs, _) = erc_kicad::netlist::read(&text, &netlist.display().to_string())
         .unwrap_or_else(|e| panic!("{}: {e}", netlist.display()));
-    render(&netcmp::compare(&ours, &theirs))
+    let mut d = netcmp::compare(&ours, &theirs);
+    // Only KiCad 10's netlist writes the effective net class; 9 writes the class of directive labels alone (no
+    // patterns), 8 none
+    if version.is_some_and(|v| v < 10) {
+        d.classes.clear();
+    }
+    render(&d)
 }
 
-/// The newest schematic format among the files of a design we read, as a KiCad major version
+/// The newest schematic format among the sheet files of a design we read, as a KiCad major version
 fn kicad_major(root: &Path, board: &erc_model::Board) -> u32 {
     let dir = root.parent().unwrap();
     board
         .source
         .files
         .iter()
+        .filter(|f| f.ends_with(".kicad_sch"))
         .filter_map(|f| {
             let text = std::fs::read_to_string(dir.join(f)).ok()?;
             let at = text.find("(version")? + "(version".len();
