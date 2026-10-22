@@ -1,6 +1,6 @@
 //! The canonical dump: a design as sorted text, one fact per line, deterministic, in the style of `berc
 //! textconv`. It is the golden-file format of every importer test (a parser change shows as a readable diff) and
-//! it is lossless: [`read`] gives back the design that [`write`] wrote, so `import → dump → import` is checked.
+//! it is lossless: [`read`] gives back the design that [`write()`] wrote, so `import → dump → import` is checked.
 //!
 //! A line is tokens separated by spaces: bare words, or quoted strings with `\"`, `\\`, `\n`, `\t`, `\r`
 //! escapes. An entity line names the entity and its structural attributes as keyword-value pairs:
