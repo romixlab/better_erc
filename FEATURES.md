@@ -334,6 +334,13 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   counts) to discharge them; the capacitance and stored energy in the message · `seq/seq_5.rs`, `seq-5_bleeder`
 - ✅ `LEAK-1` Two or more resistors in series from a rail to a ground (no switch, no regulator feedback tap) drawing
   more than `max_current` (100 µA) · `leak/leak_1.rs`, `leak-1_rail_dividers`
+- ✅ `LVL-4` BSS138-pair shifter (`NET-4`) with both sides pulled to one rail, the source side to a higher voltage than
+  the drain side, or a side pulled above its devices' supply · `lvl/lvl_4.rs`, `lvl-4_translator_pull_ups`
+- ✅ `LVL-7` Part (not a regulator or load switch) with power-input pins on two or more rails: no bank data says which
+  supply its pins follow · `lvl/lvl_7.rs`, `lvl-7_several_rails`. Missing: bank data from the library or part data
+  (`NET-7`), and reporting the level checks on such pins as not run (`DIAG-2`) once those checks exist
+- ✅ `LVL-9` BSS138-pair shifter whose gates are on no rail, or above the low side's rail (its devices' supply, else its
+  pull-up rail) · `lvl/lvl_9.rs`, `lvl-9_gate_reference`
 - ✅ `PIN-3` Connector pin handing out a regulated rail (or a USB, barrel or battery input passed on to a header) that
   reaches on-board power pins through passive links only, no load switch or eFuse; through a fuse on every way a
   suggestion · `pin/pin_3.rs`, `pin-3_unprotected_outputs`

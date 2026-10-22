@@ -1,0 +1,81 @@
+# What better_erc finds on lvl-7_several_rails.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1", "part U3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_A"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3_A"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-4"
+subjects = ["net +3V3", "net +3V3_A", "part FB1"]
+
+[[finding]]
+check = "LVL-7"
+subjects = ["net +1V8", "net +3V3", "part U2"]
+
+[[finding]]
+check = "LVL-7"
+subjects = ["net +3V3", "net +3V3_A", "part U1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +5V", "part J1"]
+
+[[finding]]
+check = "RAIL-19"
+subjects = ["net +3V3", "part U3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_A"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

@@ -1,0 +1,510 @@
+board lvl-4_translator_pull_ups
+label / local SCL_1V8 at 91.44,88.9 net /SCL_1V8
+label / local SCL_1V8 at 236.22,50.8 net /SCL_1V8
+label / local SCL_1V8 at 340.36,54.61 net /SCL_1V8
+label / local SCL_3V3 at 91.44,50.8 net /SCL_3V3
+label / local SCL_3V3 at 147.32,54.61 net /SCL_3V3
+label / local SCL_3V3 at 236.22,53.34 net /SCL_3V3
+label / local SCL_3V3B at 139.7,124.46 net /SCL_3V3B
+label / local SCL_3V3B at 195.58,125.73 net /SCL_3V3B
+label / local SCL_3V3B at 284.48,121.92 net /SCL_3V3B
+label / local SCL_5V at 50.8,161.29 net /SCL_5V
+label / local SCL_5V at 139.7,160.02 net /SCL_5V
+label / local SCL_5V at 284.48,124.46 net /SCL_5V
+label / local SCL_LV at 91.44,124.46 net /SCL_LV
+label / local SCL_LV at 236.22,86.36 net /SCL_LV
+label / local SCL_LV at 340.36,90.17 net /SCL_LV
+label / local SCL_M at 91.44,55.88 net /SCL_M
+label / local SCL_M at 147.32,90.17 net /SCL_M
+label / local SCL_M at 236.22,88.9 net /SCL_M
+label / local SDA_1V8 at 50.8,90.17 net /SDA_1V8
+label / local SDA_1V8 at 91.44,91.44 net /SDA_1V8
+label / local SDA_1V8 at 284.48,50.8 net /SDA_1V8
+label / local SDA_3V3 at 91.44,53.34 net /SDA_3V3
+label / local SDA_3V3 at 195.58,54.61 net /SDA_3V3
+label / local SDA_3V3 at 284.48,53.34 net /SDA_3V3
+label / local SDA_3V3B at 139.7,127 net /SDA_3V3B
+label / local SDA_3V3B at 243.84,125.73 net /SDA_3V3B
+label / local SDA_3V3B at 332.74,121.92 net /SDA_3V3B
+label / local SDA_5V at 99.06,161.29 net /SDA_5V
+label / local SDA_5V at 139.7,162.56 net /SDA_5V
+label / local SDA_5V at 332.74,124.46 net /SDA_5V
+label / local SDA_LV at 50.8,125.73 net /SDA_LV
+label / local SDA_LV at 91.44,127 net /SDA_LV
+label / local SDA_LV at 284.48,86.36 net /SDA_LV
+label / local SDA_M at 91.44,58.42 net /SDA_M
+label / local SDA_M at 195.58,90.17 net /SDA_M
+label / local SDA_M at 284.48,88.9 net /SDA_M
+label / power +1V8 at 43.18,53.34 net +1V8
+label / power +1V8 at 50.8,82.55 net +1V8
+label / power +1V8 at 91.44,83.82 net +1V8
+label / power +1V8 at 91.44,119.38 net +1V8
+label / power +1V8 at 236.22,48.26 net +1V8
+label / power +1V8 at 236.22,83.82 net +1V8
+label / power +1V8 at 284.48,48.26 net +1V8
+label / power +1V8 at 284.48,83.82 net +1V8
+label / power +1V8 at 340.36,46.99 net +1V8
+label / power +3V3 at 43.18,50.8 net +3V3
+label / power +3V3 at 50.8,118.11 net +3V3
+label / power +3V3 at 50.8,153.67 net +3V3
+label / power +3V3 at 91.44,45.72 net +3V3
+label / power +3V3 at 99.06,153.67 net +3V3
+label / power +3V3 at 139.7,119.38 net +3V3
+label / power +3V3 at 147.32,46.99 net +3V3
+label / power +3V3 at 147.32,82.55 net +3V3
+label / power +3V3 at 195.58,46.99 net +3V3
+label / power +3V3 at 195.58,82.55 net +3V3
+label / power +3V3 at 284.48,119.38 net +3V3
+label / power +3V3 at 332.74,119.38 net +3V3
+label / power +3V3 at 340.36,82.55 net +3V3
+label / power +5V at 43.18,48.26 net +5V
+label / power +5V at 139.7,154.94 net +5V
+label / power +5V at 195.58,118.11 net +5V
+label / power +5V at 243.84,118.11 net +5V
+label / power GND at 43.18,55.88 net GND
+label / power GND at 91.44,48.26 net GND
+label / power GND at 91.44,86.36 net GND
+label / power GND at 91.44,121.92 net GND
+label / power GND at 139.7,121.92 net GND
+label / power GND at 139.7,157.48 net GND
+net +1V8 class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net +1V8 kind power
+net +3V3 class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net +3V3 kind power
+net +5V class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net +5V kind power
+net /SCL_1V8 class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net /SCL_1V8 kind named
+net /SCL_3V3 class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net /SCL_3V3 kind named
+net /SCL_3V3B class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net /SCL_3V3B kind named
+net /SCL_5V class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net /SCL_5V kind named
+net /SCL_LV class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net /SCL_LV kind named
+net /SCL_M class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net /SCL_M kind named
+net /SDA_1V8 class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net /SDA_1V8 kind named
+net /SDA_3V3 class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net /SDA_3V3 kind named
+net /SDA_3V3B class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net /SDA_3V3B kind named
+net /SDA_5V class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net /SDA_5V kind named
+net /SDA_LV class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net /SDA_LV kind named
+net /SDA_M class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net /SDA_M kind named
+net GND class = Default @ sch lvl-4_translator_pull_ups.kicad_sch note "effective net class"
+net GND kind power
+part J1 field Value = PWR @ sch lvl-4_translator_pull_ups.kicad_sch
+part J1 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part J1 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part J1 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part J1 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part J1 lib Connector_Generic:Conn_01x04 sheet / symbol Connector_Generic:Conn_01x04
+part J1 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000001 line 110 at 50.8,50.8 rot 0
+part J1 value = text PWR @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part Q1 field Value = BSS138 @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q1 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q1 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q1 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q1 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q1 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q1 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000041 line 210 at 243.84,50.8 rot 0
+part Q1 value = text BSS138 @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part Q2 field Value = BSS138 @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q2 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q2 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q2 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q2 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q2 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q2 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000049 line 228 at 292.1,50.8 rot 0
+part Q2 value = text BSS138 @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part Q3 field Value = BSS138 @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q3 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q3 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q3 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q3 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q3 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q3 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000092 line 336 at 243.84,86.36 rot 0
+part Q3 value = text BSS138 @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part Q4 field Value = BSS138 @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q4 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q4 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q4 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q4 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q4 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q4 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000100 line 354 at 292.1,86.36 rot 0
+part Q4 value = text BSS138 @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part Q5 field Value = BSS138 @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q5 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q5 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q5 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q5 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q5 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q5 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000154 line 488 at 292.1,121.92 rot 0
+part Q5 value = text BSS138 @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part Q6 field Value = BSS138 @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q6 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q6 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q6 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q6 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part Q6 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q6 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000162 line 506 at 340.36,121.92 rot 0
+part Q6 value = text BSS138 @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part R1 field Value = 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch
+part R1 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R1 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R1 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R1 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000029 line 178 at 147.32,50.8 rot 0
+part R1 value = text 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part R2 field Value = 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch
+part R2 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R2 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R2 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R2 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000035 line 194 at 195.58,50.8 rot 0
+part R2 value = text 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part R3 field Value = 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch
+part R3 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R3 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R3 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R3 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000057 line 246 at 340.36,50.8 rot 0
+part R3 value = text 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part R4 field Value = 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch
+part R4 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R4 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R4 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R4 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000063 line 262 at 50.8,86.36 rot 0
+part R4 value = text 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part R5 field Value = 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch
+part R5 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R5 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R5 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R5 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R5 lib Device:R sheet / symbol Device:R
+part R5 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000108 line 372 at 340.36,86.36 rot 0
+part R5 value = text 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part R6 field Value = 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch
+part R6 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R6 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R6 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R6 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R6 lib Device:R sheet / symbol Device:R
+part R6 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000114 line 388 at 50.8,121.92 rot 0
+part R6 value = text 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part R7 field Value = 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch
+part R7 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R7 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R7 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R7 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R7 lib Device:R sheet / symbol Device:R
+part R7 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000080 line 304 at 147.32,86.36 rot 0
+part R7 value = text 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part R8 field Value = 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch
+part R8 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R8 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R8 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R8 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R8 lib Device:R sheet / symbol Device:R
+part R8 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000086 line 320 at 195.58,86.36 rot 0
+part R8 value = text 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part R9 field Value = 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch
+part R9 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R9 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R9 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R9 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R9 lib Device:R sheet / symbol Device:R
+part R9 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000142 line 456 at 195.58,121.92 rot 0
+part R9 value = text 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part R10 field Value = 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch
+part R10 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R10 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R10 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R10 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R10 lib Device:R sheet / symbol Device:R
+part R10 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000148 line 472 at 243.84,121.92 rot 0
+part R10 value = text 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part R11 field Value = 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch
+part R11 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R11 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R11 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R11 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R11 lib Device:R sheet / symbol Device:R
+part R11 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000170 line 524 at 50.8,157.48 rot 0
+part R11 value = text 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part R12 field Value = 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch
+part R12 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R12 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part R12 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R12 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part R12 lib Device:R sheet / symbol Device:R
+part R12 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000176 line 540 at 99.06,157.48 rot 0
+part R12 value = text 4.7k @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part U1 field Value = STM32 @ sch lvl-4_translator_pull_ups.kicad_sch
+part U1 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part U1 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part U1 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part U1 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part U1 lib MCU_Test:MCU_Generic sheet / symbol MCU_Test:MCU_Generic
+part U1 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000014 line 148 at 99.06,50.8 rot 0
+part U1 value = text STM32 @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part U2 field Value = SHT40 @ sch lvl-4_translator_pull_ups.kicad_sch
+part U2 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part U2 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part U2 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part U2 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part U2 lib Sensor:I2C_Sensor_Test sheet / symbol Sensor:I2C_Sensor_Test
+part U2 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000069 line 278 at 99.06,86.36 rot 0
+part U2 value = text SHT40 @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part U4 field Value = SHT40 @ sch lvl-4_translator_pull_ups.kicad_sch
+part U4 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part U4 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part U4 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part U4 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part U4 lib Sensor:I2C_Sensor_Test sheet / symbol Sensor:I2C_Sensor_Test
+part U4 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000120 line 404 at 99.06,121.92 rot 0
+part U4 value = text SHT40 @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part U5 field Value = BME280 @ sch lvl-4_translator_pull_ups.kicad_sch
+part U5 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part U5 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part U5 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part U5 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part U5 lib Sensor:I2C_Sensor_Test sheet / symbol Sensor:I2C_Sensor_Test
+part U5 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000131 line 430 at 147.32,121.92 rot 0
+part U5 value = text BME280 @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+part U6 field Value = SENSOR_5V @ sch lvl-4_translator_pull_ups.kicad_sch
+part U6 flag dnp = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part U6 flag exclude_from_sim = no @ sch lvl-4_translator_pull_ups.kicad_sch
+part U6 flag in_bom = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part U6 flag on_board = yes @ sch lvl-4_translator_pull_ups.kicad_sch
+part U6 lib Sensor:I2C_Sensor_Test sheet / symbol Sensor:I2C_Sensor_Test
+part U6 unit 1 sheet / uuid 1e140001-0000-4000-8000-000000000182 line 556 at 147.32,157.48 rot 0
+part U6 value = text SENSOR_5V @ sch lvl-4_translator_pull_ups.kicad_sch note "from the Value field"
+pin J1 1 name Pin_1 unit 1 net +5V
+pin J1 1 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin J1 2 name Pin_2 unit 1 net +3V3
+pin J1 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin J1 3 name Pin_3 unit 1 net +1V8
+pin J1 3 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin J1 4 name Pin_4 unit 1 net GND
+pin J1 4 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q1 1 name G unit 1 net +1V8
+pin Q1 1 type = input @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q1 2 name S unit 1 net /SCL_1V8
+pin Q1 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q1 3 name D unit 1 net /SCL_3V3
+pin Q1 3 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q2 1 name G unit 1 net +1V8
+pin Q2 1 type = input @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q2 2 name S unit 1 net /SDA_1V8
+pin Q2 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q2 3 name D unit 1 net /SDA_3V3
+pin Q2 3 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q3 1 name G unit 1 net +1V8
+pin Q3 1 type = input @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q3 2 name S unit 1 net /SCL_LV
+pin Q3 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q3 3 name D unit 1 net /SCL_M
+pin Q3 3 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q4 1 name G unit 1 net +1V8
+pin Q4 1 type = input @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q4 2 name S unit 1 net /SDA_LV
+pin Q4 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q4 3 name D unit 1 net /SDA_M
+pin Q4 3 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q5 1 name G unit 1 net +3V3
+pin Q5 1 type = input @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q5 2 name S unit 1 net /SCL_3V3B
+pin Q5 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q5 3 name D unit 1 net /SCL_5V
+pin Q5 3 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q6 1 name G unit 1 net +3V3
+pin Q6 1 type = input @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q6 2 name S unit 1 net /SDA_3V3B
+pin Q6 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin Q6 3 name D unit 1 net /SDA_5V
+pin Q6 3 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R1 1 name "" unit 1 net +3V3
+pin R1 1 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R1 2 name "" unit 1 net /SCL_3V3
+pin R1 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R2 1 name "" unit 1 net +3V3
+pin R2 1 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R2 2 name "" unit 1 net /SDA_3V3
+pin R2 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R3 1 name "" unit 1 net +1V8
+pin R3 1 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R3 2 name "" unit 1 net /SCL_1V8
+pin R3 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R4 1 name "" unit 1 net +1V8
+pin R4 1 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R4 2 name "" unit 1 net /SDA_1V8
+pin R4 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R5 1 name "" unit 1 net +3V3
+pin R5 1 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R5 2 name "" unit 1 net /SCL_LV
+pin R5 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R6 1 name "" unit 1 net +3V3
+pin R6 1 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R6 2 name "" unit 1 net /SDA_LV
+pin R6 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R7 1 name "" unit 1 net +3V3
+pin R7 1 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R7 2 name "" unit 1 net /SCL_M
+pin R7 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R8 1 name "" unit 1 net +3V3
+pin R8 1 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R8 2 name "" unit 1 net /SDA_M
+pin R8 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R9 1 name "" unit 1 net +5V
+pin R9 1 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R9 2 name "" unit 1 net /SCL_3V3B
+pin R9 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R10 1 name "" unit 1 net +5V
+pin R10 1 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R10 2 name "" unit 1 net /SDA_3V3B
+pin R10 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R11 1 name "" unit 1 net +3V3
+pin R11 1 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R11 2 name "" unit 1 net /SCL_5V
+pin R11 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R12 1 name "" unit 1 net +3V3
+pin R12 1 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin R12 2 name "" unit 1 net /SDA_5V
+pin R12 2 type = passive @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U1 3 name PA0 unit 1 net /SCL_3V3
+pin U1 3 type = bidirectional @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U1 4 name PA1 unit 1 net /SDA_3V3
+pin U1 4 type = bidirectional @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U1 5 name PA2 unit 1 net /SCL_M
+pin U1 5 type = bidirectional @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U1 6 name PA3 unit 1 net /SDA_M
+pin U1 6 type = bidirectional @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U2 1 name VDD unit 1 net +1V8
+pin U2 1 type = power_in @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U2 3 name SCL unit 1 net /SCL_1V8
+pin U2 3 type = input @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U2 4 name SDA unit 1 net /SDA_1V8
+pin U2 4 type = bidirectional @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U4 1 name VDD unit 1 net +1V8
+pin U4 1 type = power_in @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U4 2 name GND unit 1 net GND
+pin U4 2 type = power_in @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U4 3 name SCL unit 1 net /SCL_LV
+pin U4 3 type = input @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U4 4 name SDA unit 1 net /SDA_LV
+pin U4 4 type = bidirectional @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U5 1 name VDD unit 1 net +3V3
+pin U5 1 type = power_in @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U5 2 name GND unit 1 net GND
+pin U5 2 type = power_in @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U5 3 name SCL unit 1 net /SCL_3V3B
+pin U5 3 type = input @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U5 4 name SDA unit 1 net /SDA_3V3B
+pin U5 4 type = bidirectional @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U6 1 name VDD unit 1 net +5V
+pin U6 1 type = power_in @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U6 2 name GND unit 1 net GND
+pin U6 2 type = power_in @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U6 3 name SCL unit 1 net /SCL_5V
+pin U6 3 type = input @ sch lvl-4_translator_pull_ups.kicad_sch
+pin U6 4 name SDA unit 1 net /SDA_5V
+pin U6 4 type = bidirectional @ sch lvl-4_translator_pull_ups.kicad_sch
+sheet / name "" file lvl-4_translator_pull_ups.kicad_sch uuid /
+source file lvl-4_translator_pull_ups.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x04 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x04 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x04 field Reference J
+symbol Connector_Generic:Conn_01x04 field Value Conn_01x04
+symbol Connector_Generic:Conn_01x04 hash c99b91f4bbddb0d6
+symbol Connector_Generic:Conn_01x04 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 4 unit 1 body 1 name Pin_4 type passive style line
+symbol Connector_Generic:Conn_01x04 units 1
+symbol Device:Q_NMOS_GSD description "N-MOSFET transistor, gate/source/drain"
+symbol Device:Q_NMOS_GSD field Description "N-MOSFET transistor, gate/source/drain"
+symbol Device:Q_NMOS_GSD field Reference Q
+symbol Device:Q_NMOS_GSD field Value Q_NMOS_GSD
+symbol Device:Q_NMOS_GSD hash 06dd853b5ca1d89f
+symbol Device:Q_NMOS_GSD pin 1 unit 1 body 1 name G type input style line
+symbol Device:Q_NMOS_GSD pin 2 unit 1 body 1 name S type passive style line
+symbol Device:Q_NMOS_GSD pin 3 unit 1 body 1 name D type passive style line
+symbol Device:Q_NMOS_GSD units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Test:MCU_Generic description "Microcontroller, test symbol"
+symbol MCU_Test:MCU_Generic field Description "Microcontroller, test symbol"
+symbol MCU_Test:MCU_Generic field Reference U
+symbol MCU_Test:MCU_Generic field Value MCU_Generic
+symbol MCU_Test:MCU_Generic hash 0bf76a84752c3321
+symbol MCU_Test:MCU_Generic pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Test:MCU_Generic pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Test:MCU_Generic pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Test:MCU_Generic pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Test:MCU_Generic pin 5 unit 1 body 1 name PA2 type bidirectional style line
+symbol MCU_Test:MCU_Generic pin 6 unit 1 body 1 name PA3 type bidirectional style line
+symbol MCU_Test:MCU_Generic units 1
+symbol Sensor:I2C_Sensor_Test description "Humidity sensor, I2C, test symbol"
+symbol Sensor:I2C_Sensor_Test field Description "Humidity sensor, I2C, test symbol"
+symbol Sensor:I2C_Sensor_Test field Reference U
+symbol Sensor:I2C_Sensor_Test field Value I2C_Sensor_Test
+symbol Sensor:I2C_Sensor_Test hash 72ea6e3ddb608455
+symbol Sensor:I2C_Sensor_Test pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Sensor:I2C_Sensor_Test pin 2 unit 1 body 1 name GND type power_in style line
+symbol Sensor:I2C_Sensor_Test pin 3 unit 1 body 1 name SCL type input style line
+symbol Sensor:I2C_Sensor_Test pin 4 unit 1 body 1 name SDA type bidirectional style line
+symbol Sensor:I2C_Sensor_Test units 1
+symbol power:+1V8 description "Power symbol +1V8"
+symbol power:+1V8 field Description "Power symbol +1V8"
+symbol power:+1V8 field Reference "#PWR"
+symbol power:+1V8 field Value +1V8
+symbol power:+1V8 hash a241c49db20b5bea
+symbol power:+1V8 pin 1 unit 1 body 1 name +1V8 type power_in style line
+symbol power:+1V8 units 1 power global
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

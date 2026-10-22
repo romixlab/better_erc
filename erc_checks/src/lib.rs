@@ -38,6 +38,7 @@ mod leak;
 mod library;
 mod logic;
 mod mux;
+mod lvl;
 mod name;
 mod pin;
 mod rail;

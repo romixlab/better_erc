@@ -1,0 +1,212 @@
+board lvl-7_several_rails
+label / local SDA_A at 91.44,55.88 net /SDA_A
+label / local SDA_A at 187.96,53.34 net /SDA_A
+label / local SDA_B at 187.96,55.88 net /SDA_B
+label / local SDA_B at 236.22,55.88 net /SDA_B
+label / power +1V8 at 187.96,45.72 net +1V8
+label / power +1V8 at 284.48,53.34 net +1V8
+label / power +3V3 at 43.18,50.8 net +3V3
+label / power +3V3 at 91.44,48.26 net +3V3
+label / power +3V3 at 147.32,46.99 net +3V3
+label / power +3V3 at 187.96,48.26 net +3V3
+label / power +3V3 at 236.22,48.26 net +3V3
+label / power +3V3 at 236.22,50.8 net +3V3
+label / power +3V3_A at 91.44,50.8 net +3V3_A
+label / power +3V3_A at 147.32,54.61 net +3V3_A
+label / power +5V at 43.18,48.26 net +5V
+label / power +5V at 284.48,48.26 net +5V
+label / power GND at 43.18,53.34 net GND
+label / power GND at 91.44,53.34 net GND
+label / power GND at 187.96,50.8 net GND
+label / power GND at 236.22,53.34 net GND
+label / power GND at 284.48,50.8 net GND
+net +1V8 class = Default @ sch lvl-7_several_rails.kicad_sch note "effective net class"
+net +1V8 kind power
+net +3V3 class = Default @ sch lvl-7_several_rails.kicad_sch note "effective net class"
+net +3V3 kind power
+net +3V3_A class = Default @ sch lvl-7_several_rails.kicad_sch note "effective net class"
+net +3V3_A kind power
+net +5V class = Default @ sch lvl-7_several_rails.kicad_sch note "effective net class"
+net +5V kind power
+net /SDA_A class = Default @ sch lvl-7_several_rails.kicad_sch note "effective net class"
+net /SDA_A kind named
+net /SDA_B class = Default @ sch lvl-7_several_rails.kicad_sch note "effective net class"
+net /SDA_B kind named
+net GND class = Default @ sch lvl-7_several_rails.kicad_sch note "effective net class"
+net GND kind power
+part FB1 field Value = 600R @ sch lvl-7_several_rails.kicad_sch
+part FB1 flag dnp = no @ sch lvl-7_several_rails.kicad_sch
+part FB1 flag exclude_from_sim = no @ sch lvl-7_several_rails.kicad_sch
+part FB1 flag in_bom = yes @ sch lvl-7_several_rails.kicad_sch
+part FB1 flag on_board = yes @ sch lvl-7_several_rails.kicad_sch
+part FB1 lib Device:FerriteBead sheet / symbol Device:FerriteBead
+part FB1 unit 1 sheet / uuid 1e170001-0000-4000-8000-000000000023 line 180 at 147.32,50.8 rot 0
+part FB1 value = qty 600 ohm @ sch lvl-7_several_rails.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch lvl-7_several_rails.kicad_sch
+part J1 flag dnp = no @ sch lvl-7_several_rails.kicad_sch
+part J1 flag exclude_from_sim = no @ sch lvl-7_several_rails.kicad_sch
+part J1 flag in_bom = yes @ sch lvl-7_several_rails.kicad_sch
+part J1 flag on_board = yes @ sch lvl-7_several_rails.kicad_sch
+part J1 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J1 unit 1 sheet / uuid 1e170001-0000-4000-8000-000000000001 line 118 at 50.8,50.8 rot 0
+part J1 value = text PWR @ sch lvl-7_several_rails.kicad_sch note "from the Value field"
+part U1 field Value = STM32 @ sch lvl-7_several_rails.kicad_sch
+part U1 flag dnp = no @ sch lvl-7_several_rails.kicad_sch
+part U1 flag exclude_from_sim = no @ sch lvl-7_several_rails.kicad_sch
+part U1 flag in_bom = yes @ sch lvl-7_several_rails.kicad_sch
+part U1 flag on_board = yes @ sch lvl-7_several_rails.kicad_sch
+part U1 lib MCU_Test:MCU_Analog sheet / symbol MCU_Test:MCU_Analog
+part U1 unit 1 sheet / uuid 1e170001-0000-4000-8000-000000000011 line 148 at 99.06,50.8 rot 0
+part U1 value = text STM32 @ sch lvl-7_several_rails.kicad_sch note "from the Value field"
+part U2 field Value = TXS0102 @ sch lvl-7_several_rails.kicad_sch
+part U2 flag dnp = no @ sch lvl-7_several_rails.kicad_sch
+part U2 flag exclude_from_sim = no @ sch lvl-7_several_rails.kicad_sch
+part U2 flag in_bom = yes @ sch lvl-7_several_rails.kicad_sch
+part U2 flag on_board = yes @ sch lvl-7_several_rails.kicad_sch
+part U2 lib Logic_LevelTranslator:TXS0102_Test sheet / symbol Logic_LevelTranslator:TXS0102_Test
+part U2 unit 1 sheet / uuid 1e170001-0000-4000-8000-000000000030 line 202 at 195.58,50.8 rot 0
+part U2 value = text TXS0102 @ sch lvl-7_several_rails.kicad_sch note "from the Value field"
+part U3 field Value = STM32 @ sch lvl-7_several_rails.kicad_sch
+part U3 flag dnp = no @ sch lvl-7_several_rails.kicad_sch
+part U3 flag exclude_from_sim = no @ sch lvl-7_several_rails.kicad_sch
+part U3 flag in_bom = yes @ sch lvl-7_several_rails.kicad_sch
+part U3 flag on_board = yes @ sch lvl-7_several_rails.kicad_sch
+part U3 lib MCU_Test:MCU_Analog sheet / symbol MCU_Test:MCU_Analog
+part U3 unit 1 sheet / uuid 1e170001-0000-4000-8000-000000000044 line 236 at 243.84,50.8 rot 0
+part U3 value = text STM32 @ sch lvl-7_several_rails.kicad_sch note "from the Value field"
+part U4 field Value = TLV75518 @ sch lvl-7_several_rails.kicad_sch
+part U4 flag dnp = no @ sch lvl-7_several_rails.kicad_sch
+part U4 flag exclude_from_sim = no @ sch lvl-7_several_rails.kicad_sch
+part U4 flag in_bom = yes @ sch lvl-7_several_rails.kicad_sch
+part U4 flag on_board = yes @ sch lvl-7_several_rails.kicad_sch
+part U4 lib Regulator_Linear:LDO_Test sheet / symbol Regulator_Linear:LDO_Test
+part U4 unit 1 sheet / uuid 1e170001-0000-4000-8000-000000000056 line 268 at 292.1,50.8 rot 0
+part U4 value = text TLV75518 @ sch lvl-7_several_rails.kicad_sch note "from the Value field"
+pin FB1 1 name "" unit 1 net +3V3
+pin FB1 1 type = passive @ sch lvl-7_several_rails.kicad_sch
+pin FB1 2 name "" unit 1 net +3V3_A
+pin FB1 2 type = passive @ sch lvl-7_several_rails.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +5V
+pin J1 1 type = passive @ sch lvl-7_several_rails.kicad_sch
+pin J1 2 name Pin_2 unit 1 net +3V3
+pin J1 2 type = passive @ sch lvl-7_several_rails.kicad_sch
+pin J1 3 name Pin_3 unit 1 net GND
+pin J1 3 type = passive @ sch lvl-7_several_rails.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch lvl-7_several_rails.kicad_sch
+pin U1 2 name VDDA unit 1 net +3V3_A
+pin U1 2 type = power_in @ sch lvl-7_several_rails.kicad_sch
+pin U1 3 name VSS unit 1 net GND
+pin U1 3 type = power_in @ sch lvl-7_several_rails.kicad_sch
+pin U1 4 name PA0 unit 1 net /SDA_A
+pin U1 4 type = bidirectional @ sch lvl-7_several_rails.kicad_sch
+pin U2 1 name VCCA unit 1 net +1V8
+pin U2 1 type = power_in @ sch lvl-7_several_rails.kicad_sch
+pin U2 2 name VCCB unit 1 net +3V3
+pin U2 2 type = power_in @ sch lvl-7_several_rails.kicad_sch
+pin U2 3 name GND unit 1 net GND
+pin U2 3 type = power_in @ sch lvl-7_several_rails.kicad_sch
+pin U2 4 name A1 unit 1 net /SDA_A
+pin U2 4 type = bidirectional @ sch lvl-7_several_rails.kicad_sch
+pin U2 5 name B1 unit 1 net /SDA_B
+pin U2 5 type = bidirectional @ sch lvl-7_several_rails.kicad_sch
+pin U3 1 name VDD unit 1 net +3V3
+pin U3 1 type = power_in @ sch lvl-7_several_rails.kicad_sch
+pin U3 2 name VDDA unit 1 net +3V3
+pin U3 2 type = power_in @ sch lvl-7_several_rails.kicad_sch
+pin U3 3 name VSS unit 1 net GND
+pin U3 3 type = power_in @ sch lvl-7_several_rails.kicad_sch
+pin U3 4 name PA0 unit 1 net /SDA_B
+pin U3 4 type = bidirectional @ sch lvl-7_several_rails.kicad_sch
+pin U4 1 name VIN unit 1 net +5V
+pin U4 1 type = power_in @ sch lvl-7_several_rails.kicad_sch
+pin U4 2 name GND unit 1 net GND
+pin U4 2 type = power_in @ sch lvl-7_several_rails.kicad_sch
+pin U4 3 name VOUT unit 1 net +1V8
+pin U4 3 type = power_out @ sch lvl-7_several_rails.kicad_sch
+sheet / name "" file lvl-7_several_rails.kicad_sch uuid /
+source file lvl-7_several_rails.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x03 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x03 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x03 field Reference J
+symbol Connector_Generic:Conn_01x03 field Value Conn_01x03
+symbol Connector_Generic:Conn_01x03 hash a7ec9647f5161425
+symbol Connector_Generic:Conn_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x03 units 1
+symbol Device:FerriteBead description "Ferrite bead"
+symbol Device:FerriteBead field Description "Ferrite bead"
+symbol Device:FerriteBead field Reference FB
+symbol Device:FerriteBead field Value FerriteBead
+symbol Device:FerriteBead hash 80acd11562c9b610
+symbol Device:FerriteBead pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:FerriteBead pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:FerriteBead units 1
+symbol Logic_LevelTranslator:TXS0102_Test description "2-bit bidirectional voltage-level translator, open-drain, test symbol"
+symbol Logic_LevelTranslator:TXS0102_Test field Description "2-bit bidirectional voltage-level translator, open-drain, test symbol"
+symbol Logic_LevelTranslator:TXS0102_Test field Reference U
+symbol Logic_LevelTranslator:TXS0102_Test field Value TXS0102_Test
+symbol Logic_LevelTranslator:TXS0102_Test hash 788738e12638a922
+symbol Logic_LevelTranslator:TXS0102_Test pin 1 unit 1 body 1 name VCCA type power_in style line
+symbol Logic_LevelTranslator:TXS0102_Test pin 2 unit 1 body 1 name VCCB type power_in style line
+symbol Logic_LevelTranslator:TXS0102_Test pin 3 unit 1 body 1 name GND type power_in style line
+symbol Logic_LevelTranslator:TXS0102_Test pin 4 unit 1 body 1 name A1 type bidirectional style line
+symbol Logic_LevelTranslator:TXS0102_Test pin 5 unit 1 body 1 name B1 type bidirectional style line
+symbol Logic_LevelTranslator:TXS0102_Test units 1
+symbol MCU_Test:MCU_Analog description "Microcontroller with analog supply, test symbol"
+symbol MCU_Test:MCU_Analog field Description "Microcontroller with analog supply, test symbol"
+symbol MCU_Test:MCU_Analog field Reference U
+symbol MCU_Test:MCU_Analog field Value MCU_Analog
+symbol MCU_Test:MCU_Analog hash 703d41dec22bc3f3
+symbol MCU_Test:MCU_Analog pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Test:MCU_Analog pin 2 unit 1 body 1 name VDDA type power_in style line
+symbol MCU_Test:MCU_Analog pin 3 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Test:MCU_Analog pin 4 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Test:MCU_Analog units 1
+symbol Regulator_Linear:LDO_Test description "Low dropout regulator, test symbol"
+symbol Regulator_Linear:LDO_Test field Description "Low dropout regulator, test symbol"
+symbol Regulator_Linear:LDO_Test field Reference U
+symbol Regulator_Linear:LDO_Test field Value LDO_Test
+symbol Regulator_Linear:LDO_Test hash 21c208fd1fffd030
+symbol Regulator_Linear:LDO_Test pin 1 unit 1 body 1 name VIN type power_in style line
+symbol Regulator_Linear:LDO_Test pin 2 unit 1 body 1 name GND type power_in style line
+symbol Regulator_Linear:LDO_Test pin 3 unit 1 body 1 name VOUT type power_out style line
+symbol Regulator_Linear:LDO_Test units 1
+symbol power:+1V8 description "Power symbol +1V8"
+symbol power:+1V8 field Description "Power symbol +1V8"
+symbol power:+1V8 field Reference "#PWR"
+symbol power:+1V8 field Value +1V8
+symbol power:+1V8 hash a241c49db20b5bea
+symbol power:+1V8 pin 1 unit 1 body 1 name +1V8 type power_in style line
+symbol power:+1V8 units 1 power global
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+3V3_A description "Power symbol +3V3_A"
+symbol power:+3V3_A field Description "Power symbol +3V3_A"
+symbol power:+3V3_A field Reference "#PWR"
+symbol power:+3V3_A field Value +3V3_A
+symbol power:+3V3_A hash cac8e9b52d0bdb07
+symbol power:+3V3_A pin 1 unit 1 body 1 name +3V3_A type power_in style line
+symbol power:+3V3_A units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

@@ -440,6 +440,9 @@ of the threshold it used.
 | `GND-7` | a floating chassis or earth net; a connector shell or mounting hole straight on signal ground | `gnd-7_chassis_ground` |
 | `SEQ-5` | a rail above `min_voltage` (50 V) with capacitors and no bleeder resistor | `seq-5_bleeder` |
 | `LEAK-1` | an always-on resistor divider from a rail to ground drawing over `max_current` (100 µA) | `leak-1_rail_dividers` |
+| `LVL-4` | a BSS138-pair shifter with its pull-ups on the wrong side's rail or above its devices' supply | `lvl-4_translator_pull_ups` |
+| `LVL-7` | a part with power-input pins on two or more rails and no bank data | `lvl-7_several_rails` |
+| `LVL-9` | a BSS138-pair shifter whose gates are on no rail or above the low side's rail | `lvl-9_gate_reference` |
 | `PIN-3` | a connector pin handing a regulated rail out that reaches on-board power pins through passive links only (through a fuse: a suggestion) | `pin-3_unprotected_outputs` |
 | `PIN-4` | a power input reaching a part's power pins with no fuse or eFuse | `pin-4_unfused_inputs` |
 | `PIN-6` | a power input reaching a switching regulator with no ferrite, inductor or capacitor of its own | `pin-6_unfiltered_inputs` |

@@ -25,6 +25,10 @@ check = "DEC-11"
 subjects = ["net +1V2_CORE", "part C2", "part C3"]
 
 [[finding]]
+check = "LVL-7"
+subjects = ["net +1V2_CORE", "net +3V3", "part U1"]
+
+[[finding]]
 check = "PIN-4"
 subjects = ["net +1V2_CORE", "part J1"]
 

@@ -1,0 +1,342 @@
+board lvl-9_gate_reference
+label / local SCL_1V8 at 91.44,88.9 net /SCL_1V8
+label / local SCL_1V8 at 236.22,50.8 net /SCL_1V8
+label / local SCL_1V8 at 340.36,54.61 net /SCL_1V8
+label / local SCL_3V3 at 91.44,50.8 net /SCL_3V3
+label / local SCL_3V3 at 139.7,86.36 net /SCL_3V3
+label / local SCL_3V3 at 147.32,54.61 net /SCL_3V3
+label / local SCL_3V3 at 236.22,53.34 net /SCL_3V3
+label / local SCL_5V at 139.7,88.9 net /SCL_5V
+label / local SCL_5V at 243.84,90.17 net /SCL_5V
+label / local SCL_5V at 332.74,88.9 net /SCL_5V
+label / local SDA_1V8 at 50.8,90.17 net /SDA_1V8
+label / local SDA_1V8 at 91.44,91.44 net /SDA_1V8
+label / local SDA_1V8 at 284.48,50.8 net /SDA_1V8
+label / local SDA_3V3 at 91.44,53.34 net /SDA_3V3
+label / local SDA_3V3 at 187.96,86.36 net /SDA_3V3
+label / local SDA_3V3 at 195.58,54.61 net /SDA_3V3
+label / local SDA_3V3 at 284.48,53.34 net /SDA_3V3
+label / local SDA_5V at 187.96,88.9 net /SDA_5V
+label / local SDA_5V at 292.1,90.17 net /SDA_5V
+label / local SDA_5V at 332.74,91.44 net /SDA_5V
+label / power +1V8 at 43.18,53.34 net +1V8
+label / power +1V8 at 50.8,82.55 net +1V8
+label / power +1V8 at 91.44,83.82 net +1V8
+label / power +1V8 at 236.22,48.26 net +1V8
+label / power +1V8 at 284.48,48.26 net +1V8
+label / power +1V8 at 340.36,46.99 net +1V8
+label / power +3V3 at 43.18,50.8 net +3V3
+label / power +3V3 at 91.44,45.72 net +3V3
+label / power +3V3 at 147.32,46.99 net +3V3
+label / power +3V3 at 195.58,46.99 net +3V3
+label / power +5V at 43.18,48.26 net +5V
+label / power +5V at 139.7,83.82 net +5V
+label / power +5V at 187.96,83.82 net +5V
+label / power +5V at 243.84,82.55 net +5V
+label / power +5V at 292.1,82.55 net +5V
+label / power +5V at 332.74,83.82 net +5V
+label / power GND at 43.18,55.88 net GND
+label / power GND at 91.44,48.26 net GND
+label / power GND at 91.44,86.36 net GND
+label / power GND at 332.74,86.36 net GND
+net +1V8 class = Default @ sch lvl-9_gate_reference.kicad_sch note "effective net class"
+net +1V8 kind power
+net +3V3 class = Default @ sch lvl-9_gate_reference.kicad_sch note "effective net class"
+net +3V3 kind power
+net +5V class = Default @ sch lvl-9_gate_reference.kicad_sch note "effective net class"
+net +5V kind power
+net /SCL_1V8 class = Default @ sch lvl-9_gate_reference.kicad_sch note "effective net class"
+net /SCL_1V8 kind named
+net /SCL_3V3 class = Default @ sch lvl-9_gate_reference.kicad_sch note "effective net class"
+net /SCL_3V3 kind named
+net /SCL_5V class = Default @ sch lvl-9_gate_reference.kicad_sch note "effective net class"
+net /SCL_5V kind named
+net /SDA_1V8 class = Default @ sch lvl-9_gate_reference.kicad_sch note "effective net class"
+net /SDA_1V8 kind named
+net /SDA_3V3 class = Default @ sch lvl-9_gate_reference.kicad_sch note "effective net class"
+net /SDA_3V3 kind named
+net /SDA_5V class = Default @ sch lvl-9_gate_reference.kicad_sch note "effective net class"
+net /SDA_5V kind named
+net GND class = Default @ sch lvl-9_gate_reference.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U1-PA2-Pad5) class = Default @ sch lvl-9_gate_reference.kicad_sch note "effective net class"
+net unconnected-(U1-PA2-Pad5) kind unconnected
+net unconnected-(U1-PA3-Pad6) class = Default @ sch lvl-9_gate_reference.kicad_sch note "effective net class"
+net unconnected-(U1-PA3-Pad6) kind unconnected
+part J1 field Value = PWR @ sch lvl-9_gate_reference.kicad_sch
+part J1 flag dnp = no @ sch lvl-9_gate_reference.kicad_sch
+part J1 flag exclude_from_sim = no @ sch lvl-9_gate_reference.kicad_sch
+part J1 flag in_bom = yes @ sch lvl-9_gate_reference.kicad_sch
+part J1 flag on_board = yes @ sch lvl-9_gate_reference.kicad_sch
+part J1 lib Connector_Generic:Conn_01x04 sheet / symbol Connector_Generic:Conn_01x04
+part J1 unit 1 sheet / uuid 1e190001-0000-4000-8000-000000000001 line 110 at 50.8,50.8 rot 0
+part J1 value = text PWR @ sch lvl-9_gate_reference.kicad_sch note "from the Value field"
+part Q1 field Value = BSS138 @ sch lvl-9_gate_reference.kicad_sch
+part Q1 flag dnp = no @ sch lvl-9_gate_reference.kicad_sch
+part Q1 flag exclude_from_sim = no @ sch lvl-9_gate_reference.kicad_sch
+part Q1 flag in_bom = yes @ sch lvl-9_gate_reference.kicad_sch
+part Q1 flag on_board = yes @ sch lvl-9_gate_reference.kicad_sch
+part Q1 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q1 unit 1 sheet / uuid 1e190001-0000-4000-8000-000000000039 line 208 at 243.84,50.8 rot 0
+part Q1 value = text BSS138 @ sch lvl-9_gate_reference.kicad_sch note "from the Value field"
+part Q2 field Value = BSS138 @ sch lvl-9_gate_reference.kicad_sch
+part Q2 flag dnp = no @ sch lvl-9_gate_reference.kicad_sch
+part Q2 flag exclude_from_sim = no @ sch lvl-9_gate_reference.kicad_sch
+part Q2 flag in_bom = yes @ sch lvl-9_gate_reference.kicad_sch
+part Q2 flag on_board = yes @ sch lvl-9_gate_reference.kicad_sch
+part Q2 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q2 unit 1 sheet / uuid 1e190001-0000-4000-8000-000000000047 line 226 at 292.1,50.8 rot 0
+part Q2 value = text BSS138 @ sch lvl-9_gate_reference.kicad_sch note "from the Value field"
+part Q3 field Value = BSS138 @ sch lvl-9_gate_reference.kicad_sch
+part Q3 flag dnp = no @ sch lvl-9_gate_reference.kicad_sch
+part Q3 flag exclude_from_sim = no @ sch lvl-9_gate_reference.kicad_sch
+part Q3 flag in_bom = yes @ sch lvl-9_gate_reference.kicad_sch
+part Q3 flag on_board = yes @ sch lvl-9_gate_reference.kicad_sch
+part Q3 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q3 unit 1 sheet / uuid 1e190001-0000-4000-8000-000000000078 line 302 at 147.32,86.36 rot 0
+part Q3 value = text BSS138 @ sch lvl-9_gate_reference.kicad_sch note "from the Value field"
+part Q4 field Value = BSS138 @ sch lvl-9_gate_reference.kicad_sch
+part Q4 flag dnp = no @ sch lvl-9_gate_reference.kicad_sch
+part Q4 flag exclude_from_sim = no @ sch lvl-9_gate_reference.kicad_sch
+part Q4 flag in_bom = yes @ sch lvl-9_gate_reference.kicad_sch
+part Q4 flag on_board = yes @ sch lvl-9_gate_reference.kicad_sch
+part Q4 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q4 unit 1 sheet / uuid 1e190001-0000-4000-8000-000000000086 line 320 at 195.58,86.36 rot 0
+part Q4 value = text BSS138 @ sch lvl-9_gate_reference.kicad_sch note "from the Value field"
+part R1 field Value = 4.7k @ sch lvl-9_gate_reference.kicad_sch
+part R1 flag dnp = no @ sch lvl-9_gate_reference.kicad_sch
+part R1 flag exclude_from_sim = no @ sch lvl-9_gate_reference.kicad_sch
+part R1 flag in_bom = yes @ sch lvl-9_gate_reference.kicad_sch
+part R1 flag on_board = yes @ sch lvl-9_gate_reference.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 1e190001-0000-4000-8000-000000000027 line 176 at 147.32,50.8 rot 0
+part R1 value = text 4.7k @ sch lvl-9_gate_reference.kicad_sch note "from the Value field"
+part R2 field Value = 4.7k @ sch lvl-9_gate_reference.kicad_sch
+part R2 flag dnp = no @ sch lvl-9_gate_reference.kicad_sch
+part R2 flag exclude_from_sim = no @ sch lvl-9_gate_reference.kicad_sch
+part R2 flag in_bom = yes @ sch lvl-9_gate_reference.kicad_sch
+part R2 flag on_board = yes @ sch lvl-9_gate_reference.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 1e190001-0000-4000-8000-000000000033 line 192 at 195.58,50.8 rot 0
+part R2 value = text 4.7k @ sch lvl-9_gate_reference.kicad_sch note "from the Value field"
+part R3 field Value = 4.7k @ sch lvl-9_gate_reference.kicad_sch
+part R3 flag dnp = no @ sch lvl-9_gate_reference.kicad_sch
+part R3 flag exclude_from_sim = no @ sch lvl-9_gate_reference.kicad_sch
+part R3 flag in_bom = yes @ sch lvl-9_gate_reference.kicad_sch
+part R3 flag on_board = yes @ sch lvl-9_gate_reference.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid 1e190001-0000-4000-8000-000000000055 line 244 at 340.36,50.8 rot 0
+part R3 value = text 4.7k @ sch lvl-9_gate_reference.kicad_sch note "from the Value field"
+part R4 field Value = 4.7k @ sch lvl-9_gate_reference.kicad_sch
+part R4 flag dnp = no @ sch lvl-9_gate_reference.kicad_sch
+part R4 flag exclude_from_sim = no @ sch lvl-9_gate_reference.kicad_sch
+part R4 flag in_bom = yes @ sch lvl-9_gate_reference.kicad_sch
+part R4 flag on_board = yes @ sch lvl-9_gate_reference.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid 1e190001-0000-4000-8000-000000000061 line 260 at 50.8,86.36 rot 0
+part R4 value = text 4.7k @ sch lvl-9_gate_reference.kicad_sch note "from the Value field"
+part R5 field Value = 4.7k @ sch lvl-9_gate_reference.kicad_sch
+part R5 flag dnp = no @ sch lvl-9_gate_reference.kicad_sch
+part R5 flag exclude_from_sim = no @ sch lvl-9_gate_reference.kicad_sch
+part R5 flag in_bom = yes @ sch lvl-9_gate_reference.kicad_sch
+part R5 flag on_board = yes @ sch lvl-9_gate_reference.kicad_sch
+part R5 lib Device:R sheet / symbol Device:R
+part R5 unit 1 sheet / uuid 1e190001-0000-4000-8000-000000000094 line 338 at 243.84,86.36 rot 0
+part R5 value = text 4.7k @ sch lvl-9_gate_reference.kicad_sch note "from the Value field"
+part R6 field Value = 4.7k @ sch lvl-9_gate_reference.kicad_sch
+part R6 flag dnp = no @ sch lvl-9_gate_reference.kicad_sch
+part R6 flag exclude_from_sim = no @ sch lvl-9_gate_reference.kicad_sch
+part R6 flag in_bom = yes @ sch lvl-9_gate_reference.kicad_sch
+part R6 flag on_board = yes @ sch lvl-9_gate_reference.kicad_sch
+part R6 lib Device:R sheet / symbol Device:R
+part R6 unit 1 sheet / uuid 1e190001-0000-4000-8000-000000000100 line 354 at 292.1,86.36 rot 0
+part R6 value = text 4.7k @ sch lvl-9_gate_reference.kicad_sch note "from the Value field"
+part U1 field Value = STM32 @ sch lvl-9_gate_reference.kicad_sch
+part U1 flag dnp = no @ sch lvl-9_gate_reference.kicad_sch
+part U1 flag exclude_from_sim = no @ sch lvl-9_gate_reference.kicad_sch
+part U1 flag in_bom = yes @ sch lvl-9_gate_reference.kicad_sch
+part U1 flag on_board = yes @ sch lvl-9_gate_reference.kicad_sch
+part U1 lib MCU_Test:MCU_Generic sheet / symbol MCU_Test:MCU_Generic
+part U1 unit 1 sheet / uuid 1e190001-0000-4000-8000-000000000014 line 148 at 99.06,50.8 rot 0
+part U1 value = text STM32 @ sch lvl-9_gate_reference.kicad_sch note "from the Value field"
+part U2 field Value = SHT40 @ sch lvl-9_gate_reference.kicad_sch
+part U2 flag dnp = no @ sch lvl-9_gate_reference.kicad_sch
+part U2 flag exclude_from_sim = no @ sch lvl-9_gate_reference.kicad_sch
+part U2 flag in_bom = yes @ sch lvl-9_gate_reference.kicad_sch
+part U2 flag on_board = yes @ sch lvl-9_gate_reference.kicad_sch
+part U2 lib Sensor:I2C_Sensor_Test sheet / symbol Sensor:I2C_Sensor_Test
+part U2 unit 1 sheet / uuid 1e190001-0000-4000-8000-000000000067 line 276 at 99.06,86.36 rot 0
+part U2 value = text SHT40 @ sch lvl-9_gate_reference.kicad_sch note "from the Value field"
+part U3 field Value = SENSOR_5V @ sch lvl-9_gate_reference.kicad_sch
+part U3 flag dnp = no @ sch lvl-9_gate_reference.kicad_sch
+part U3 flag exclude_from_sim = no @ sch lvl-9_gate_reference.kicad_sch
+part U3 flag in_bom = yes @ sch lvl-9_gate_reference.kicad_sch
+part U3 flag on_board = yes @ sch lvl-9_gate_reference.kicad_sch
+part U3 lib Sensor:I2C_Sensor_Test sheet / symbol Sensor:I2C_Sensor_Test
+part U3 unit 1 sheet / uuid 1e190001-0000-4000-8000-000000000106 line 370 at 340.36,86.36 rot 0
+part U3 value = text SENSOR_5V @ sch lvl-9_gate_reference.kicad_sch note "from the Value field"
+pin J1 1 name Pin_1 unit 1 net +5V
+pin J1 1 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin J1 2 name Pin_2 unit 1 net +3V3
+pin J1 2 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin J1 3 name Pin_3 unit 1 net +1V8
+pin J1 3 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin J1 4 name Pin_4 unit 1 net GND
+pin J1 4 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin Q1 1 name G unit 1 net +1V8
+pin Q1 1 type = input @ sch lvl-9_gate_reference.kicad_sch
+pin Q1 2 name S unit 1 net /SCL_1V8
+pin Q1 2 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin Q1 3 name D unit 1 net /SCL_3V3
+pin Q1 3 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin Q2 1 name G unit 1 net +1V8
+pin Q2 1 type = input @ sch lvl-9_gate_reference.kicad_sch
+pin Q2 2 name S unit 1 net /SDA_1V8
+pin Q2 2 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin Q2 3 name D unit 1 net /SDA_3V3
+pin Q2 3 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin Q3 1 name G unit 1 net +5V
+pin Q3 1 type = input @ sch lvl-9_gate_reference.kicad_sch
+pin Q3 2 name S unit 1 net /SCL_3V3
+pin Q3 2 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin Q3 3 name D unit 1 net /SCL_5V
+pin Q3 3 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin Q4 1 name G unit 1 net +5V
+pin Q4 1 type = input @ sch lvl-9_gate_reference.kicad_sch
+pin Q4 2 name S unit 1 net /SDA_3V3
+pin Q4 2 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin Q4 3 name D unit 1 net /SDA_5V
+pin Q4 3 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin R1 1 name "" unit 1 net +3V3
+pin R1 1 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin R1 2 name "" unit 1 net /SCL_3V3
+pin R1 2 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin R2 1 name "" unit 1 net +3V3
+pin R2 1 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin R2 2 name "" unit 1 net /SDA_3V3
+pin R2 2 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin R3 1 name "" unit 1 net +1V8
+pin R3 1 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin R3 2 name "" unit 1 net /SCL_1V8
+pin R3 2 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin R4 1 name "" unit 1 net +1V8
+pin R4 1 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin R4 2 name "" unit 1 net /SDA_1V8
+pin R4 2 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin R5 1 name "" unit 1 net +5V
+pin R5 1 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin R5 2 name "" unit 1 net /SCL_5V
+pin R5 2 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin R6 1 name "" unit 1 net +5V
+pin R6 1 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin R6 2 name "" unit 1 net /SDA_5V
+pin R6 2 type = passive @ sch lvl-9_gate_reference.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch lvl-9_gate_reference.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch lvl-9_gate_reference.kicad_sch
+pin U1 3 name PA0 unit 1 net /SCL_3V3
+pin U1 3 type = bidirectional @ sch lvl-9_gate_reference.kicad_sch
+pin U1 4 name PA1 unit 1 net /SDA_3V3
+pin U1 4 type = bidirectional @ sch lvl-9_gate_reference.kicad_sch
+pin U1 5 name PA2 unit 1 net unconnected-(U1-PA2-Pad5)
+pin U1 5 type = bidirectional @ sch lvl-9_gate_reference.kicad_sch
+pin U1 6 name PA3 unit 1 net unconnected-(U1-PA3-Pad6)
+pin U1 6 type = bidirectional @ sch lvl-9_gate_reference.kicad_sch
+pin U2 1 name VDD unit 1 net +1V8
+pin U2 1 type = power_in @ sch lvl-9_gate_reference.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch lvl-9_gate_reference.kicad_sch
+pin U2 3 name SCL unit 1 net /SCL_1V8
+pin U2 3 type = input @ sch lvl-9_gate_reference.kicad_sch
+pin U2 4 name SDA unit 1 net /SDA_1V8
+pin U2 4 type = bidirectional @ sch lvl-9_gate_reference.kicad_sch
+pin U3 1 name VDD unit 1 net +5V
+pin U3 1 type = power_in @ sch lvl-9_gate_reference.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch lvl-9_gate_reference.kicad_sch
+pin U3 3 name SCL unit 1 net /SCL_5V
+pin U3 3 type = input @ sch lvl-9_gate_reference.kicad_sch
+pin U3 4 name SDA unit 1 net /SDA_5V
+pin U3 4 type = bidirectional @ sch lvl-9_gate_reference.kicad_sch
+sheet / name "" file lvl-9_gate_reference.kicad_sch uuid /
+source file lvl-9_gate_reference.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x04 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x04 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x04 field Reference J
+symbol Connector_Generic:Conn_01x04 field Value Conn_01x04
+symbol Connector_Generic:Conn_01x04 hash c99b91f4bbddb0d6
+symbol Connector_Generic:Conn_01x04 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 4 unit 1 body 1 name Pin_4 type passive style line
+symbol Connector_Generic:Conn_01x04 units 1
+symbol Device:Q_NMOS_GSD description "N-MOSFET transistor, gate/source/drain"
+symbol Device:Q_NMOS_GSD field Description "N-MOSFET transistor, gate/source/drain"
+symbol Device:Q_NMOS_GSD field Reference Q
+symbol Device:Q_NMOS_GSD field Value Q_NMOS_GSD
+symbol Device:Q_NMOS_GSD hash 06dd853b5ca1d89f
+symbol Device:Q_NMOS_GSD pin 1 unit 1 body 1 name G type input style line
+symbol Device:Q_NMOS_GSD pin 2 unit 1 body 1 name S type passive style line
+symbol Device:Q_NMOS_GSD pin 3 unit 1 body 1 name D type passive style line
+symbol Device:Q_NMOS_GSD units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Test:MCU_Generic description "Microcontroller, test symbol"
+symbol MCU_Test:MCU_Generic field Description "Microcontroller, test symbol"
+symbol MCU_Test:MCU_Generic field Reference U
+symbol MCU_Test:MCU_Generic field Value MCU_Generic
+symbol MCU_Test:MCU_Generic hash 0bf76a84752c3321
+symbol MCU_Test:MCU_Generic pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Test:MCU_Generic pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Test:MCU_Generic pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Test:MCU_Generic pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Test:MCU_Generic pin 5 unit 1 body 1 name PA2 type bidirectional style line
+symbol MCU_Test:MCU_Generic pin 6 unit 1 body 1 name PA3 type bidirectional style line
+symbol MCU_Test:MCU_Generic units 1
+symbol Sensor:I2C_Sensor_Test description "Humidity sensor, I2C, test symbol"
+symbol Sensor:I2C_Sensor_Test field Description "Humidity sensor, I2C, test symbol"
+symbol Sensor:I2C_Sensor_Test field Reference U
+symbol Sensor:I2C_Sensor_Test field Value I2C_Sensor_Test
+symbol Sensor:I2C_Sensor_Test hash 72ea6e3ddb608455
+symbol Sensor:I2C_Sensor_Test pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Sensor:I2C_Sensor_Test pin 2 unit 1 body 1 name GND type power_in style line
+symbol Sensor:I2C_Sensor_Test pin 3 unit 1 body 1 name SCL type input style line
+symbol Sensor:I2C_Sensor_Test pin 4 unit 1 body 1 name SDA type bidirectional style line
+symbol Sensor:I2C_Sensor_Test units 1
+symbol power:+1V8 description "Power symbol +1V8"
+symbol power:+1V8 field Description "Power symbol +1V8"
+symbol power:+1V8 field Reference "#PWR"
+symbol power:+1V8 field Value +1V8
+symbol power:+1V8 hash a241c49db20b5bea
+symbol power:+1V8 pin 1 unit 1 body 1 name +1V8 type power_in style line
+symbol power:+1V8 units 1 power global
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

@@ -230,10 +230,13 @@ impl Power {
             let power_pins = pins.iter().filter(is_power_pin).count();
             let ground_named = pins
                 .iter()
-                .filter(|p| ground_word(&p.name.to_uppercase()).is_some())
+                .filter(|p| ground_pin_word(&p.name).is_some())
                 .count();
-            // Most power pins on the net are named like a ground
-            let ground_pins = ground_named > 0 && ground_named * 2 > power_pins;
+            // Most power pins on the net are named like a ground; a pin alone (`unconnected-(J3-Shield-Pad6)`) is
+            // no ground
+            let ground_pins = net.kind != NetKind::Unconnected
+                && ground_named > 0
+                && ground_named * 2 > power_pins;
             let power_pins = power_pins > 0;
             let fact = |s, rule: &str| Fact::new(s, derived(rule));
             // The project decides first
@@ -616,8 +619,29 @@ pub fn voltage_token(t: &str, strict: bool) -> Option<(f64, bool)> {
     Some((v * sign.unwrap_or(1.0), sign.is_some()))
 }
 
-/// Reads a net name by the power name grammar (architecture §1.4); the sheet path (`/Power/`) is left out
+/// A name KiCad gives a net nobody named: `Net-(R1-Pad2)`, `unconnected-(J3-Shield-Pad6)`. Its words are a part's
+/// and a pin's, never a rail's or a ground's.
+pub fn is_auto_name(full: &str) -> bool {
+    let leaf = full.rsplit('/').next().unwrap_or(full);
+    leaf.starts_with("Net-(") || leaf.starts_with("unconnected-(")
+}
+
+/// The ground a pin name states, for the ground-pin rule: `GND`, `VSS`, `AGND`, `PGND`; a shield, chassis or earth
+/// pin is left out (a connector shell goes to ground through an RC on purpose, it does not make its net a ground)
+pub fn ground_pin_word(name: &str) -> Option<GroundKind> {
+    match read_name(name, false).role {
+        NameRole::Ground(GroundKind::Chassis | GroundKind::Earth) => None,
+        NameRole::Ground(k) => Some(k),
+        _ => None,
+    }
+}
+
+/// Reads a net name by the power name grammar (architecture §1.4); the sheet path (`/Power/`) is left out, and a
+/// KiCad auto name ([`is_auto_name`]) reads as nothing
 pub fn read_name(full: &str, strict: bool) -> NetName {
+    if is_auto_name(full) {
+        return NetName::default();
+    }
     let base = full.rsplit('/').next().unwrap_or(full).to_uppercase();
     // `~{...}` overbars are not part of the word
     let base = base.replace("~{", "").replace('}', "");
@@ -747,6 +771,36 @@ mod tests {
         assert_eq!(loose("SCL1_3V3"), None, "a signal");
         assert!(read_name("5V0_NEG", false).sign_from_marker);
         assert!(!read_name("-5V0", false).sign_from_marker);
+    }
+
+    #[test]
+    fn auto_names_read_as_nothing() {
+        for n in [
+            "unconnected-(J3-Shield-Pad6)",
+            "Net-(U1-GND)",
+            "Net-(R1-Pad2)",
+            "/Power/Net-(C3-Pad1)",
+            "unconnected-(U2-VDD-Pad1)",
+        ] {
+            assert!(is_auto_name(n), "{n}");
+            assert_eq!(role(n), NameRole::None, "{n}");
+        }
+        assert!(!is_auto_name("NET_1"));
+        assert_eq!(role("SHIELD"), NameRole::Ground(GroundKind::Chassis));
+    }
+
+    #[test]
+    fn ground_pin_words() {
+        assert_eq!(ground_pin_word("GND"), Some(GroundKind::Signal));
+        assert_eq!(ground_pin_word("AGND"), Some(GroundKind::Analog));
+        assert_eq!(ground_pin_word("VSS"), Some(GroundKind::Signal));
+        assert_eq!(
+            ground_pin_word("Shield"),
+            None,
+            "a shell pin makes no ground"
+        );
+        assert_eq!(ground_pin_word("EARTH"), None);
+        assert_eq!(ground_pin_word("VDD"), None);
     }
 
     #[test]

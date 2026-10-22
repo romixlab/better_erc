@@ -1,0 +1,101 @@
+# What better_erc finds on lvl-9_gate_reference.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-18"
+subjects = ["net /SCL_1V8", "net /SDA_1V8"]
+
+[[finding]]
+check = "DBG-18"
+subjects = ["net /SCL_3V3", "net /SDA_3V3"]
+
+[[finding]]
+check = "DBG-18"
+subjects = ["net /SCL_5V", "net /SDA_5V"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "LVL-9"
+subjects = ["net +5V", "part Q3", "part Q4"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +1V8", "part J1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +5V", "part J1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.5", "pin U1.6"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SCL_1V8"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SCL_3V3"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SCL_5V"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA_1V8"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA_3V3"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA_5V"]
