@@ -39,6 +39,16 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ### Changed
 
+- **Breaking:** the app crate is `better_erc_app` (directory `better_erc_app/`, binary still `better_erc`, so
+  `just install`, `just run` and `just deploy` work as before); the crate name `better_erc` is the library facade.
+- The app runs on the new core (`IMP-7`): the import tab opens any design through the importer registry (a file or
+  a directory), keeps the KiCad schematic, Altium (EDIF + WireList) and OrCAD (three files) pickers, which now all
+  load, and shows each design's report: findings with their check id, severity, subjects, facts and the catalogue's
+  explanation, the checks that did not run and why, the import notes; a design loaded again replaces itself, Close
+  removes it. The context holds the designs with their check run and per board the part classes, I2C buses and power
+  structure. Nets (`VIEW-1`: rails with their voltage, grounds, switching nodes, nets with node count), I2C
+  (`VIEW-2`: the I2C findings and the buses with designators and net names), Style (`VIEW-3`: BOM and LIB findings)
+  and Inputs (`VIEW-4`) read them.
 - The KiCad netlist fixtures move from `ecad_file_format/test_input` to `erc_kicad/tests/fixtures/netlist`;
   `just netlist-fixtures` exports them there.
 

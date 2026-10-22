@@ -1,5 +1,8 @@
 use crate::prelude::*;
 use crate::tabs::TabUi;
+use better_erc::analysis::graph::net_degree;
+use better_erc::analysis::value::format_si;
+use better_erc::model::Unit;
 
 #[derive(Default, Serialize, Deserialize)]
 pub struct Nets {
@@ -21,29 +24,36 @@ impl TabUi for Nets {
         let s = cx.blocking_read();
         // TODO: switch to TableView for nets
         ScrollArea::vertical().show(ui, |ui| {
-            for board in &s.boards {
+            for (board, a) in s.boards() {
+                let name = |n: &better_erc::model::NetId| board.net(*n).name.as_str();
                 ui.heading("Power rails:");
-                for net_name in board.power.power_rails.keys() {
-                    ui.label(net_name.0.as_str());
+                for (net, voltage) in &a.power.rails {
+                    match voltage.value {
+                        Some(v) => {
+                            ui.label(format!("{} ({})", name(net), format_si(v, Unit::Volt)))
+                        }
+                        None => ui.label(name(net)),
+                    };
                 }
                 ui.heading("Ground nets:");
-                for net_name in &board.power.ground_nets {
-                    ui.label(net_name.0.as_str());
+                for net in &a.power.grounds {
+                    ui.label(name(net));
                 }
                 ui.heading("Switching nodes");
-                for net_name in &board.switching_nodes {
-                    ui.label(net_name.0.as_str());
+                for net in &a.power.switching_nodes {
+                    ui.label(name(net));
                 }
                 ui.heading("All nets");
-                for (net_name, net) in &board.netlist.nets {
+                for (i, net) in board.nets.iter().enumerate() {
+                    let id = better_erc::model::NetId::from_index(i);
                     ui.horizontal(|ui| {
                         ui.label(
-                            RichText::new(net_name.0.as_str())
+                            RichText::new(net.name.as_str())
                                 .monospace()
                                 // .size(18.0)
                                 .strong(),
                         );
-                        ui.label(format!("{}", net.nodes.len()));
+                        ui.label(format!("{}", net_degree(board, id)));
                     });
                 }
             }

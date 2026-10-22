@@ -406,14 +406,12 @@ dependencies = [
 name = "better_erc_app"
 version = "0.3.9"
 dependencies = [
- "ecad_compare",
- "ecad_file_format",
+ "better_erc",
  "eframe",
  "egui",
  "egui-phosphor",
  "egui_tiles",
  "env_logger",
- "erc_core",
  "log",
  "rfd",
  "serde",

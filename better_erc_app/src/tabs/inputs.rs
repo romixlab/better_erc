@@ -1,5 +1,6 @@
 use crate::prelude::*;
 use crate::tabs::TabUi;
+use better_erc::model::EcadPinType;
 
 #[derive(Default, Serialize, Deserialize)]
 pub struct Inputs {
@@ -20,24 +21,27 @@ impl TabUi for Inputs {
         };
         let s = cx.blocking_read();
         ScrollArea::vertical().show(ui, |ui| {
-            for board in &s.boards {
-                for (part_key, part) in &board.netlist.lib_parts {
-                    for (pin_id, pin) in &part.pins {
-                        if pin.default_mode.ty.is_input() {
-                            ui.label(format!(
-                                "{}: {:?} {:?} {:?}",
-                                part_key.1.0, pin.default_mode.ty, pin_id, pin.name
-                            ));
-                            for (d, _c) in board
-                                .netlist
-                                .components
-                                .iter()
-                                .filter(|(_d, c)| c.lib_source == *part_key)
-                            {
-                                ui.label(format!("{d:?}"));
-                            }
-                            ui.separator();
+            for (board, _) in s.boards() {
+                for (i, symbol) in board.symbols.iter().enumerate() {
+                    for pin in &symbol.pins {
+                        if !matches!(pin.etype, EcadPinType::Input | EcadPinType::PowerIn) {
+                            continue;
                         }
+                        ui.label(format!(
+                            "{}: {} {} {}",
+                            symbol.name,
+                            pin.etype.name(),
+                            pin.number,
+                            pin.name
+                        ));
+                        for part in board
+                            .parts
+                            .iter()
+                            .filter(|p| p.symbol.is_some_and(|s| s.index() == i))
+                        {
+                            ui.label(part.designator.as_str());
+                        }
+                        ui.separator();
                     }
                 }
             }

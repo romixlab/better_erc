@@ -19,6 +19,16 @@ pub enum Tab {
     Inputs(inputs::Inputs),
 }
 
+/// The colour a finding of this severity is shown in
+pub fn severity_color(s: better_erc::Severity) -> Color32 {
+    match s {
+        better_erc::Severity::Error => Color32::RED,
+        better_erc::Severity::Warning => Color32::ORANGE,
+        better_erc::Severity::Suggestion => Color32::LIGHT_BLUE,
+        better_erc::Severity::Info => Color32::GRAY,
+    }
+}
+
 pub trait TabUi {
     fn init(&mut self, cx: &Context);
     fn ui(&mut self, ui: &mut Ui, cx: &mut Context, id: Id);

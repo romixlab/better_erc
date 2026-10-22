@@ -1,5 +1,5 @@
 use crate::prelude::*;
-use crate::tabs::TabUi;
+use crate::tabs::{TabUi, severity_color};
 
 #[derive(Default, Serialize, Deserialize)]
 pub struct Style {
@@ -8,6 +8,11 @@ pub struct Style {
 }
 
 struct Transient {}
+
+/// The findings of the style checks: values and notation (BOM), symbol pin names (LIB)
+fn is_style(check: &str) -> bool {
+    check.starts_with("BOM-") || check.starts_with("LIB-")
+}
 
 impl TabUi for Style {
     fn init(&mut self, _cx: &Context) {
@@ -20,11 +25,17 @@ impl TabUi for Style {
         };
         let s = cx.blocking_read();
         ScrollArea::vertical().show(ui, |ui| {
-            for board in &s.boards {
-                for d in &board.diagnostics.style {
-                    ui.colored_label(Color32::ORANGE, format!("{:?}", d));
+            for d in &s.designs {
+                let mut any = false;
+                for f in d.run.report.findings.iter().filter(|f| is_style(&f.check)) {
+                    any = true;
+                    let subjects: Vec<&str> = f.subjects.iter().map(|s| s.name.as_str()).collect();
+                    ui.colored_label(
+                        severity_color(f.severity),
+                        format!("{} {}: {}", f.check, subjects.join(", "), f.message),
+                    );
                 }
-                if board.diagnostics.style.is_empty() {
+                if !any {
                     ui.label("No style warnings found");
                 }
             }
