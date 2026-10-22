@@ -17,6 +17,10 @@ check = "DBG-4"
 subjects = ["net +3V3"]
 
 [[finding]]
+check = "HS-4"
+subjects = ["net /USB_D_N", "net /USB_D_P", "part R6"]
+
+[[finding]]
 check = "LIB-15"
 subjects = ["part U1"]
 confidence = "estimate"

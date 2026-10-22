@@ -3,7 +3,7 @@
 //! until pin roles come from part data (NET-7). A name is split into alternates at `/` (`PA12/USB_DP`) and words at
 //! `_`, spaces and dots; `+` and `-` stay in a word (`D+`, `TX1-`).
 
-use crate::names::{Half, base, diff_half};
+use crate::names::{Half, Signal, base, diff_half, interface_signals};
 
 fn alternates(name: &str) -> impl Iterator<Item = Vec<String>> + '_ {
     let plain = name.replace("~{", "").replace(['}', '#'], "");
@@ -19,27 +19,15 @@ fn alternates(name: &str) -> impl Iterator<Item = Vec<String>> + '_ {
         .into_iter()
 }
 
-/// The USB 2.0 data line a pin name states: `D+`, `DP`, `USBDP`, `USB_DP`, `UD+`, `OTG_FS_DP`, `DP1` (Type-C) are
-/// D+; `D-`, `DM`, `USBDM`, `UD-`, `DN1` are D-. The first such word of a name decides (`USBDP_DN1`, a hub's
-/// downstream D+, is D+).
+/// The USB 2.0 data line a pin name states ([`interface_signals`]: `D+`, `USB_DP`, `PA12/USB_DP`, `USBDP`, `UD+`,
+/// `OTG_FS_DP` are D+; `D-`, `USB_DM`, `USBDM` are D-; a bare `DP` is DisplayPort). The first such signal of a name
+/// decides (`USBDP_DN1`, a hub's downstream D+, is D+).
 pub fn usb_data(name: &str) -> Option<Half> {
-    for words in alternates(name) {
-        for w in &words {
-            let w = w
-                .strip_prefix("USB")
-                .or_else(|| w.strip_prefix('U'))
-                .unwrap_or(w);
-            let stem = w.trim_end_matches(|c: char| c.is_ascii_digit());
-            match stem {
-                "D+" | "DP" => return Some(Half::Pos),
-                "D-" | "DM" => return Some(Half::Neg),
-                // `DN` alone is too common a word: only with a number (`DN1`)
-                "DN" if stem.len() < w.len() => return Some(Half::Neg),
-                _ => {}
-            }
-        }
-    }
-    None
+    interface_signals([name]).into_iter().find_map(|s| match s {
+        Signal::UsbDp => Some(Half::Pos),
+        Signal::UsbDm => Some(Half::Neg),
+        _ => None,
+    })
 }
 
 /// Whether a pin name states MDIO, the management data line of an Ethernet PHY (`MDIO`, `ETH_MDIO`, `PA2/ETH_MDIO`)
@@ -47,20 +35,13 @@ pub fn is_mdio(name: &str) -> bool {
     alternates(name).any(|words| words.iter().any(|w| w == "MDIO"))
 }
 
-/// The CAN bus line a pin name states: `CANH`, `CAN_H`, `CANH1` are high, `CANL`, `CAN_L` low
+/// The CAN bus line a pin name states ([`interface_signals`]): `CANH`, `CAN_H`, `CANH1` are high, `CANL`, `CAN_L` low
 pub fn can_line(name: &str) -> Option<Half> {
-    for words in alternates(name) {
-        for (i, w) in words.iter().enumerate() {
-            let stem = w.trim_end_matches(|c: char| c.is_ascii_digit());
-            let next = words.get(i + 1).map(String::as_str);
-            match (stem, next) {
-                ("CANH", _) | ("CAN", Some("H")) => return Some(Half::Pos),
-                ("CANL", _) | ("CAN", Some("L")) => return Some(Half::Neg),
-                _ => {}
-            }
-        }
-    }
-    None
+    interface_signals([name]).into_iter().find_map(|s| match s {
+        Signal::CanH => Some(Half::Pos),
+        Signal::CanL => Some(Half::Neg),
+        _ => None,
+    })
 }
 
 /// What an SD card socket or eMMC pin is for
@@ -214,22 +195,20 @@ mod tests {
     fn usb_data_lines() {
         for n in [
             "D+",
-            "DP",
             "USBDP",
             "USB_DP",
             "UD+",
             "PA12/USB_DP",
             "OTG_FS_DP",
-            "DP1",
             "USBDP_DN1",
             "USB_D+",
         ] {
             assert_eq!(usb_data(n), Some(Half::Pos), "{n}");
         }
-        for n in ["D-", "DM", "USBDM", "UD-", "PA11/USB_DM", "DN2", "USBDM_UP"] {
+        for n in ["D-", "USB_DM", "USBDM", "UD-", "PA11/USB_DM", "USBDM_UP"] {
             assert_eq!(usb_data(n), Some(Half::Neg), "{n}");
         }
-        for n in ["DN", "PA12", "DATA", "SDA", "DPLL"] {
+        for n in ["DN", "DP", "DM", "PA12", "DATA", "SDA", "DPLL"] {
             assert_eq!(usb_data(n), None, "{n}");
         }
     }

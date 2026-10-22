@@ -5,6 +5,10 @@ check = "BOM-14"
 subjects = ["board short-5_supply_pins_swapped"]
 
 [[finding]]
+check = "CONN-4"
+subjects = ["part J1"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +3V3"]
 

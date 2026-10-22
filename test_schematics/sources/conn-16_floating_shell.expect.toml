@@ -1,6 +1,10 @@
 # What better_erc finds on conn-16_floating_shell.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board conn-16_floating_shell"]
+
+[[finding]]
 check = "CONN-16"
 subjects = ["part J1", "pin J1.MP"]
 

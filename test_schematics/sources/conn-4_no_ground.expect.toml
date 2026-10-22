@@ -1,6 +1,10 @@
 # What better_erc finds on conn-4_no_ground.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board conn-4_no_ground"]
+
+[[finding]]
 check = "CONN-4"
 subjects = ["part J1"]
 

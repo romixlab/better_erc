@@ -17,6 +17,22 @@ check = "BOM-10"
 subjects = ["part R4"]
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board ser-14_can_split_termination"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net /CAN1_SPLIT", "part R1", "part R2"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net /CAN2_SPLIT", "part R3", "part R4"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net /CAN3_SPLIT", "part R5", "part R6"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +3V3"]
 

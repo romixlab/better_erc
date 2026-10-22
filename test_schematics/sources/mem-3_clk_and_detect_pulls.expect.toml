@@ -1,6 +1,18 @@
 # What better_erc finds on mem-3_clk_and_detect_pulls.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board mem-3_clk_and_detect_pulls"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R1", "part R2", "part R3", "part R4", "part R5", "part R6"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R10", "part R11", "part R12", "part R13", "part R8", "part R9"]
+
+[[finding]]
 check = "CONN-2"
 subjects = ["net /SD1_CK", "pin J1.5", "pin U1.8"]
 

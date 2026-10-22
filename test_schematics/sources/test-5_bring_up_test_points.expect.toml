@@ -9,6 +9,14 @@ check = "BOM-4"
 subjects = ["net +3V3", "part R1", "part R2"]
 
 [[finding]]
+check = "CONN-2"
+subjects = ["net /CON_RX", "pin J2.2", "pin U1.6"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /CON_TX", "pin J2.1", "pin U1.5"]
+
+[[finding]]
 check = "DBG-1"
 subjects = ["part U1", "pin U1.8"]
 

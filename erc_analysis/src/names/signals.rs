@@ -202,8 +202,9 @@ fn signal_word(w: &str) -> Option<Signal> {
         "MISO" | "CIPO" | "SOMI" => Signal::Miso,
         "SDI" | "SDO" | "DIN" | "DOUT" => Signal::SpiData,
         "CS" | "NCS" | "CSN" | "SS" | "NSS" => Signal::Cs,
-        "D+" => Signal::UsbDp,
-        "D-" => Signal::UsbDm,
+        // `UD+`/`UD-`: the CH340's USB pins
+        "D+" | "UD+" => Signal::UsbDp,
+        "D-" | "UD-" => Signal::UsbDm,
         "CANH" => Signal::CanH,
         "CANL" => Signal::CanL,
         _ => return None,
@@ -227,9 +228,13 @@ pub fn name_signals(name: &str) -> Vec<Signal> {
             }
         })
         .collect();
-    let usb = w
-        .iter()
-        .any(|x| x.trim_end_matches(|c: char| c.is_ascii_digit()) == "USB");
+    // `OTG_FS_DP`: an STM32's OTG peripheral is USB too
+    let usb = w.iter().any(|x| {
+        matches!(
+            x.trim_end_matches(|c: char| c.is_ascii_digit()),
+            "USB" | "OTG"
+        )
+    });
     let mut out = Vec::new();
     let mut push = |s: Signal| {
         if !out.contains(&s) {
@@ -347,6 +352,8 @@ mod tests {
         assert_eq!(name_signals("USB1_D_N"), [Signal::UsbDm]);
         assert_eq!(name_signals("D+"), [Signal::UsbDp]);
         assert_eq!(name_signals("DP_AUX"), []);
+        assert_eq!(name_signals("OTG_FS_DP"), [Signal::UsbDp]);
+        assert_eq!(name_signals("UD-"), [Signal::UsbDm]);
         assert_eq!(name_signals("CAN_H"), [Signal::CanH]);
         assert_eq!(name_signals("~{CS}"), [Signal::Cs]);
         assert_eq!(name_signals("SPI_MOSI"), [Signal::Mosi]);

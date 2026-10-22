@@ -5,6 +5,10 @@ check = "BOM-14"
 subjects = ["board short-12_pair_halves_tied"]
 
 [[finding]]
+check = "CONN-4"
+subjects = ["part J2"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1", "part U3"]
 

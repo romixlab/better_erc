@@ -1,6 +1,14 @@
 # What better_erc finds on mem-8_ddr_zq.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-1"
+subjects = ["part R1", "part R2", "part R3", "part R5", "part R6", "part R7"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board mem-8_ddr_zq"]
+
+[[finding]]
 check = "DBG-10"
 subjects = ["net +1V35"]
 

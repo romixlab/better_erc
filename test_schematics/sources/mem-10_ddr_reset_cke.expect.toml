@@ -1,6 +1,14 @@
 # What better_erc finds on mem-10_ddr_reset_cke.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board mem-10_ddr_reset_cke"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net GND", "part R2", "part R4"]
+
+[[finding]]
 check = "CLK-7"
 subjects = ["net /DDR_RESETN", "pin U2.4"]
 

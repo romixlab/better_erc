@@ -1,6 +1,14 @@
 # What better_erc finds on conn-17_look_alike_pinouts.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board conn-17_look_alike_pinouts"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R1", "part R2", "part R3", "part R4"]
+
+[[finding]]
 check = "CONN-17"
 subjects = ["part J5", "part J6"]
 

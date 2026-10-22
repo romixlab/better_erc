@@ -1,6 +1,26 @@
 # What better_erc finds on usb-11_one_orientation.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board usb-11_one_orientation"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net GND", "part R1", "part R2"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net GND", "part R3", "part R4"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net GND", "part R5", "part R6"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net GND", "part R7", "part R8"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1", "part U2", "part U4", "part U5"]
 

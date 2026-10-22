@@ -13,7 +13,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ### Added
 
-- Stage 1 easy checks, batch checks-bus: `USB-1`, `USB-4`, `USB-9`, `USB-10`, `USB-11`, `USB-16`, `CONN-2`, `CONN-4`, `CONN-8`, `CONN-10`, `CONN-16`, `CONN-17`, `HS-4`, `HS-7`, `HS-9`, `HS-15`, `MEM-1`, `MEM-3`, `MEM-8`, `MEM-10`, `ETH-3`, `SER-14`, each with its test schematic and sidecar; `erc_analysis::connector` (shell and mounting pins, Type-C contacts by number or name, plugs) and `erc_analysis::interface` (USB data, MDIO, CAN, SD/eMMC, DDR, MIPI and multi-gigabit lane names).
+- Stage 1 easy checks, batch checks-bus: `USB-1`, `USB-4`, `USB-9`, `USB-10`, `USB-11`, `USB-16`, `CONN-2`, `CONN-4`, `CONN-8`, `CONN-10`, `CONN-16`, `CONN-17`, `HS-4`, `HS-7`, `HS-9`, `HS-15`, `MEM-1`, `MEM-3`, `MEM-8`, `MEM-10`, `ETH-3`, `SER-14`, each with its test schematic and sidecar; `erc_analysis::connector` (shell and mounting pins, Type-C contacts by number or name, plugs) and `erc_analysis::interface` (USB data, MDIO, CAN, SD/eMMC, DDR, MIPI and multi-gigabit lane names; `usb_data` and `can_line` read through `names::interface_signals`, which now takes `OTG` as a USB word and `UD+`/`UD-`).
+- Stage 1 easy checks, batch checks-bom: BOM-1, BOM-3, BOM-4, BOM-8, BOM-11, BOM-14, BOM-17, LIB-14, LIB-15, MUX-1, LOGIC-3, LOGIC-7, LOGIC-8 with a test schematic each; erc_analysis::package and names::signals (polarity by word sense, interface signals); LOGIC-8 page example corrected.
 
 ## [0.4.9] - 2026-10-22
 

@@ -11,6 +11,10 @@ subjects = ["part L2"]
 confidence = "estimate"
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board hs-9_choke_on_lanes"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +3V3"]
 

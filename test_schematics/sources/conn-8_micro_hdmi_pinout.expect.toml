@@ -1,6 +1,10 @@
 # What better_erc finds on conn-8_micro_hdmi_pinout.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board conn-8_micro_hdmi_pinout"]
+
+[[finding]]
 check = "CONN-8"
 subjects = ["net +5V", "net /HPD1", "net /TMDS1_D2+", "part J1"]
 

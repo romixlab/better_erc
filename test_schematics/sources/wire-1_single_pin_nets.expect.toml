@@ -5,6 +5,10 @@ check = "BOM-14"
 subjects = ["board wire-1_single_pin_nets"]
 
 [[finding]]
+check = "CONN-2"
+subjects = ["net /UART2_RX", "pin J1.2", "pin U1.2"]
+
+[[finding]]
 check = "DBG-11"
 subjects = ["net /UART2_RX", "pin J1.2", "pin U1.2"]
 

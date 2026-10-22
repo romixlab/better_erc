@@ -1,6 +1,18 @@
 # What better_erc finds on usb-1_no_rd.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board usb-1_no_rd"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +5V", "part R4", "part R5"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net GND", "part R2", "part R3"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 

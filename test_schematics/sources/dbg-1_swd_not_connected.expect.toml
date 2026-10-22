@@ -5,6 +5,10 @@ check = "BOM-14"
 subjects = ["board dbg-1_swd_not_connected"]
 
 [[finding]]
+check = "CONN-2"
+subjects = ["net /SWCLK2", "pin J2.3", "pin U2.4"]
+
+[[finding]]
 check = "DBG-1"
 subjects = ["part U1", "pin U1.3", "pin U1.4"]
 

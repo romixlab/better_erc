@@ -1,6 +1,10 @@
 # What better_erc finds on conn-2_gpio_protection.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board conn-2_gpio_protection"]
+
+[[finding]]
 check = "CONN-2"
 subjects = ["net /IO_A", "pin J1.2", "pin U1.3"]
 

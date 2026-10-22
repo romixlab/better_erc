@@ -29,6 +29,14 @@ check = "BOM-14"
 subjects = ["board ana-16_gain_resistor_range"]
 
 [[finding]]
+check = "CONN-4"
+subjects = ["part J1"]
+
+[[finding]]
+check = "CONN-4"
+subjects = ["part J2"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +5V"]
 

@@ -5,6 +5,10 @@ check = "BOM-14"
 subjects = ["board name-11_negative_rail_names"]
 
 [[finding]]
+check = "CONN-4"
+subjects = ["part J1"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +12V"]
 
