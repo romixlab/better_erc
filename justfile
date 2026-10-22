@@ -21,6 +21,18 @@ fmt:
 run:
     cargo run --release -p better_erc
 
+# The test schematics have findings on purpose: only a finding that is not in the committed baseline fails.
+
+# Run berc check on the test schematics, against test_schematics/berc-baseline.json
+check:
+    cargo run -q -p berc -- check test_schematics/sources --baseline test_schematics/berc-baseline.json
+
+# The leading `-`: berc exits 1 on the findings it writes into the baseline.
+
+# Write the baseline `just check` compares with, after a change in what the checks find
+check-baseline:
+    -cargo run -q -p berc -- check test_schematics/sources --format json > test_schematics/berc-baseline.json
+
 # Only the changed schematics are exported again; the netlists are cached by content hash.
 
 # Export the test schematics to netlists and SVG pictures with kicad-cli

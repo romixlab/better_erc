@@ -50,9 +50,40 @@ One type for every check:
 | `locations` | the sheet files and positions of the parts and labels involved |
 | `also` | the overlapping checks this finding folded in |
 
+## A run on a path
+
+What `berc check` does, and what the MCP server and the GUI reuse: `erc_checks::project` (cargo feature `import`,
+on by default) opens a path through the importer registry, runs the engine, compares with a baseline and decides
+the exit code as data.
+
+```rust
+use erc_checks::{CheckOptions, Format, Need, Severity, check_path, read_baseline};
+
+let opts = CheckOptions {
+    require: vec![Need::Layout],
+    fail_on: Severity::Warning,
+    baseline: Some(read_baseline("berc-baseline.json".as_ref())?),
+    ..CheckOptions::default()           // run: RunOptions { variant, only, config }
+};
+let run = check_path("hw/board".as_ref(), &opts, &mut |stage| eprintln!("{stage:?}"))?;
+print!("{}", run.render(Format::Sarif, false));
+std::process::exit(run.verdict.exit.code().into());
+```
+
+- `Project::open(path)`: a design file (whatever an importer reads), or a directory: its `.kicad_pro` when there is
+  exactly one, else the one file an importer is surest about; several equally likely files are an error naming
+  them. `Project::variants()` lists the variants (shell completion uses it), `Project::check(&opts)` runs.
+- `CheckRun { dir, main, importer, report, verdict }`; `render(format, color)` gives text (coloured on request),
+  JSON, SARIF (file URIs relative to the current directory) or Markdown.
+- `Verdict { exit, fail_on, failing, unavailable }`: `Exit::Unavailable` (code 3) when a required need is missing
+  on a board, else `Exit::Findings` (1) when findings at or above `fail_on` exist (with a baseline: new ones only;
+  candidates never count), else `Exit::Clean` (0).
+- `CheckError`: the path does not exist, holds no design or several, the import failed, the run options do not
+  fit the design (unknown variant or check), the baseline cannot be read or has another schema; all exit code 2.
+
 ## The report
 
-`Report { schema, tool, summary, checks, findings, candidates, notes, timing }`:
+`Report { schema, tool, summary, checks, findings, candidates, notes, timing, baseline }`:
 
 - `summary`: each board (tool, sheets, parts, nets, variants, layout or not), the counts per severity, and how many
   checks ran, did not run and are planned;
@@ -61,9 +92,54 @@ One type for every check:
 - `notes`: import notes (what the importer read past), analysis notes (an I2C part in no known role) and coverage
   notes (a need known for only some parts).
 
-`to_json` writes it with a versioned schema (`schema: 1`, `erc_checks::report::SCHEMA_VERSION`), `from_json` reads it
-back; `to_text` renders the findings grouped by category, the checks that did not run, the notes and a summary
-line.
+- `baseline`: after `compare` with a previous report, the delta: how many findings are new and unchanged, and the
+  baseline's findings that are gone (`fixed`); each finding carries `baseline: new | unchanged`. Findings are
+  matched by board and fingerprint, a fingerprint found twice in the baseline matches two findings, candidates are
+  not compared.
+
+`to_json` writes it with a versioned schema (`schema: 1`, `erc_checks::report::SCHEMA_VERSION`; `baseline` and a
+location's `line` are optional fields, absent when empty), `from_json` reads it back. The renderings:
+
+- `to_text` (`to_text_color` with ANSI colours): findings worst first, grouped by category, new ones marked, then
+  candidates, the fixed findings, the checks that did not run with what would enable each, the notes and a summary
+  line;
+- `to_markdown`: a headline with the counts, the baseline delta, a table of the findings, and the fixed findings,
+  candidates, not-run checks and notes folded in `<details>`, for a pull request comment;
+- `to_sarif(uri_base, main)`: SARIF 2.1.0 with our own small structs (`report::sarif`): one run, a rule per check
+  that ran or found something (id = catalogue id, short description = its title, help = its detail page section,
+  default level from the catalogue's severity), a result per finding with level error → `error`, warning →
+  `warning`, suggestion and info → `note` (a candidate is `kind: review`, level `none`), located at the schematic
+  file and line of its symbols, or the label files of its nets, or the design file alone; a partial fingerprint
+  `berc/v1` (board and fingerprint) so code scanning tracks a finding across commits; `baselineState` after a
+  compare; the checks that did not run as notifications.
+
+A symbol's line comes from `erc_kicad`: the s-expression reader borrows its atoms from the file text, so
+`sexpr::Lines` finds the line of any expression without the parser tracking positions, and `UnitPlacement::line`
+keeps it in the model.
+
+## The command line
+
+`berc` (the `berc` crate) is a thin client of the library; nothing it does is missing there.
+
+- `berc check PROJECT [--variant V] [--only CAT,ID] [--format text|json|sarif|md] [--baseline report.json]
+  [--fail-on error|warning|suggestion] [--require NEED]`: `check_path` and `render`. Exit codes 0 clean, 1 findings
+  at or above `--fail-on` (default `error`; with `--baseline` new ones only), 2 usage or import error, 3 a required
+  need unavailable (before 1). `--require` takes the needs by slug, repeated or comma-separated (`graph`,
+  `part-classes`, `values`, `rails`, `rail-voltages`, `pin-roles`, `pin-thresholds`, `pin-functions`,
+  `power-states`, `conduction`, `layout`, `drawing`, `part-db`, `multi-board`; `project:KEY` for a project key a
+  check declares). `--state S` is reserved for power states (NET-8) and refused with exit code 2.
+- `berc explain ID [--format text|md]`: `explain(id)`, the catalogue line and detail page section of any catalogue
+  check, implemented or planned, as plain text or Markdown.
+- `berc checks list [--tier easy|mid|hard|judgement] [--status ran|not-run|planned] [--project PATH]
+  [--format text|json]`: `list_for(report)`, every catalogue check with severity, tier and state; with `--project`
+  what a run there does with each (ran, not run with the hint, planned), which `--status ran` and `not-run` need.
+- `berc textconv FILE`: readable git diffs of KiCad files (README "Readable git diffs").
+
+Text goes through `anstream`, so colour is dropped on a pipe and with `NO_COLOR`; a spinner on stderr shows what a
+run is doing once it has taken two seconds, never when stderr is not a terminal. Shell completion (`COMPLETE=bash
+berc`, `zsh`, `fish`) asks berc itself and offers check ids and categories from the embedded catalogue, the needs,
+and the variants of the design in the current directory, each with its help text. `berc --version` names the
+version, git commit and commit time.
 
 ## Needs
 

@@ -221,10 +221,25 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - 📋 `RPT-17` BOM change report
 - 📋 `RPT-18` Revision page: group net changes, add descriptions
 - 📋 `RPT-19` Revision resistor calculator (table → alpha / numeric value)
-- 📋 `RPT-20` Batch mode: run checks, generate reports and pictures from the command line
+- 🚧 `RPT-20` Batch mode: run checks, generate reports and pictures from the command line. Done: `berc check
+  PROJECT` on a directory or design file (the importer registry picks KiCad, KiCad netlist, Altium, OrCAD, PnP) with
+  `--variant`, `--only`, `--format text|json|sarif|md`, `--baseline`, `--fail-on`, `--require`; exit codes 0 clean,
+  1 findings at or above `--fail-on`, 2 usage or import error, 3 a required need unavailable; the library entry
+  `erc_checks::project` (`check_path`, `Project`, `CheckRun`, `Verdict`, typed `CheckError`). Missing: pictures
+  (`just netlists` exports SVGs, berc does not); `--state` waits for power states (NET-8) · `erc_checks/src/project.rs`,
+  `berc/src/main.rs`, `berc/tests/check.rs`
 - 📋 `RPT-21` Mark findings as found by hand-written rules or by AI
 - ✅ `RPT-22` Report of a run: design summary, every check ran / not run / planned, findings, candidates, notes,
-  timing; JSON with a versioned schema (read back by `from_json`) and a text rendering · `erc_checks/src/report.rs`
+  timing; JSON with a versioned schema (read back by `from_json`) and a text rendering (coloured on request) ·
+  `erc_checks/src/report/mod.rs`
+- ✅ `RPT-23` Baseline delta: a run compared with a previous JSON report marks each finding new or unchanged (by board
+  and fingerprint, repeated fingerprints counted) and lists the fixed ones; with `berc check --baseline` only new
+  findings fail · `Report::compare` in `erc_checks/src/report/mod.rs`
+- ✅ `RPT-24` SARIF 2.1.0 output for GitHub code scanning: rule ids = catalogue ids with title and detail page as
+  help, error/warning/suggestion → error/warning/note, results at the schematic file and symbol line (`sexpr::Lines`,
+  `UnitPlacement::line`), partial fingerprints, baseline states, not-run checks as notifications · `erc_checks/src/report/sarif.rs`
+- ✅ `RPT-25` Markdown report for a pull request comment: counts, baseline delta, findings table, fixed findings,
+  candidates, not-run checks and notes folded · `erc_checks/src/report/markdown.rs`
 
 ## Views (`VIEW`)
 
@@ -269,7 +284,12 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `TOOL-4` `berc` CLI basics: `--version` with version, git SHA (`-dirty`) and commit time (`berc/build.rs`); shell
   completion for bash, zsh and fish (`COMPLETE=bash berc`, file paths completed), told in `--help`; colour in help
   and errors only on a terminal and never with `NO_COLOR`; `textconv` output always plain (git colours the diff).
-  No progress bar: `textconv` converts one file in milliseconds · `berc/src/main.rs`, `berc/tests/cli.rs`
+  No progress bar for `textconv` (one file in milliseconds); `berc check` and `checks list` show a spinner on stderr
+  after two seconds, only on a terminal · `berc/src/main.rs`, `berc/src/progress.rs`, `berc/tests/cli.rs`
+- ✅ `TOOL-5` The catalogue from the shell: `berc explain ID` (the detail page section of any catalogue check as plain
+  text or Markdown) and `berc checks list` (every catalogue id, `--tier`, `--status ran|not-run|planned` with
+  `--project`, text or JSON); completion of check ids, categories, needs and the variants of the design in the
+  current directory, each with a help text · `berc/src/main.rs`, `berc/src/complete.rs`, `erc_checks::list_for`
 
 ## Code generation (`GEN`)
 

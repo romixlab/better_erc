@@ -11,6 +11,29 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- `berc check PROJECT` for CI (`RPT-20`): a directory with one design (its `.kicad_pro`) or any design file the
+  importer registry reads, `--variant`, `--only CAT,ID`, `--format text|json|sarif|md`, `--baseline report.json`,
+  `--fail-on error|warning|suggestion`, `--require NEED`; exit codes 0 clean, 1 findings at or above `--fail-on`,
+  2 usage or import error, 3 a required need unavailable. `--state` is reserved for power states and refused.
+- `erc_checks::project`, the library entry under it, for the MCP server and the GUI too: `Project::open` through the
+  importer registry, `Project::check` / `check_path` with `CheckOptions { run, require, fail_on, baseline }`,
+  `CheckRun` with the report and the `Verdict` (exit code as data), typed `CheckError`s, `read_baseline`, progress
+  stages. Cargo feature `import`, on by default.
+- Baselines (`RPT-23`): `Report::compare` marks each finding new or unchanged by board and fingerprint and keeps the
+  fixed ones; with a baseline only new findings fail.
+- SARIF 2.1.0 (`RPT-24`) for GitHub code scanning, with rule ids from the catalogue and findings at the schematic
+  file and the line of their symbol; Markdown (`RPT-25`) for a PR comment; coloured text on a terminal.
+- `berc explain ID` and `berc checks list [--tier] [--status] [--project]` (`TOOL-5`), `erc_checks::list_for`,
+  `Explanation::to_text` / `to_markdown`; completion of check ids, categories, needs and variants of the design in
+  the current directory; a spinner for runs over two seconds.
+- `erc_kicad::sexpr::Lines`: the line of any parsed expression; `UnitPlacement::line` (in the canonical dump as
+  `line N`) and `Location::line` carry a symbol's line into findings. `Need::slug` / `from_slug`.
+- README "Checks in CI" with a GitHub Actions example uploading SARIF to code scanning; `just check` runs berc check on
+  the test schematics against `test_schematics/berc-baseline.json`, `just check-baseline` rewrites it;
+  docs/engine.md describes the library entry, the formats and the command line.
+
 ## [0.3.8] - 2026-10-22
 
 ### Added

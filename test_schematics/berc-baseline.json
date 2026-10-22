@@ -1,0 +1,4825 @@
+{
+  "schema": 1,
+  "tool": "better_erc 0.3.8",
+  "summary": {
+    "boards": [
+      {
+        "name": "test_schematics",
+        "tool": "kicad",
+        "sheets": 6,
+        "parts": 63,
+        "nets": 169,
+        "variants": [],
+        "layout": true
+      }
+    ],
+    "variant": null,
+    "errors": 3,
+    "warnings": 6,
+    "suggestions": 0,
+    "infos": 0,
+    "candidates": 0,
+    "ran": 11,
+    "not_run": 0,
+    "planned": 502
+  },
+  "checks": [
+    {
+      "id": "PIN-1",
+      "title": "No reverse polarity protection on a power input",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-2",
+      "title": "Fast blow fuse where inrush is expected (bulk capacitance, motors, hot-plug): nuisance trips",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-3",
+      "title": "Power outputs on connectors from nets used on board: suggest an eFuse or switch with short and overload protection",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-4",
+      "title": "No overcurrent protection (fuse, polyfuse, eFuse) on a power input",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-5",
+      "title": "No overvoltage protection (TVS, clamp, OVP switch) on a power input",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-6",
+      "title": "No input filter (bulk capacitor, ferrite or LC) on a power input",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-7",
+      "title": "Fuse rating vs the expected current: holds the worst-case normal load, blows on the fault it is there for",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-8",
+      "title": "TVS standoff voltage below the input's operating maximum: it conducts in normal operation and burns",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-9",
+      "title": "TVS clamping voltage above the absolute maximum of what it protects (the regulator or part behind it)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-10",
+      "title": "Polyfuse hold current below the load, or its resistance in series with a supply that needs to be accurate",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-11",
+      "title": "Fuse or polyfuse rated above the connector, cable or trace it protects",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-12",
+      "title": "Two power sources on one net (battery and USB, two inputs, two connectors) without ORing diodes, an ideal-diode controller or a switch",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-13",
+      "title": "Reverse protection by a series diode on an input over about 1 A: suggest a PMOS ideal diode (dissipation, dropout)",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-14",
+      "title": "No bulk capacitance where a supply arrives through a long cable or is hot-plugged: inductive overshoot on connection can exceed ratings",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-15",
+      "title": "Fuse voltage rating below the supply voltage (32 V DC fuses on a 48 V input)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-16",
+      "title": "No undervoltage lockout on a power input whose source can sag (battery, long cable): regulators restart in a loop and loads see a brown-out",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "PIN-17",
+      "title": "PMOS reverse-polarity switch with |Vin| above its Vgs(max) and no gate zener or divider, or a standard-threshold FET on an input of 5 V or less that never turns fully on ≈ DRV-10",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-1",
+      "title": "Power input pins of parts not powered",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-2",
+      "title": "DC-DC or LDO ref voltage known: find the divider, calculate output, compare with net name or specified voltage ≈ RAIL-3",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-3",
+      "title": "Net name carries a voltage (e.g. `_3V3`) that is wrong",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-4",
+      "title": "Fixed-output regulator whose MPN voltage differs from the net it feeds (a 3.3 V TLV70233 on `+1V8_LDO`) ≈ RAIL-2",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-5",
+      "title": "Power net with loads but no source: no regulator output, connector, switch, ferrite or 0R from a sourced net (`+5V0_FLT` with nothing feeding it) ≈ RAIL-1",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-6",
+      "title": "Current-limit resistor (ILIM, ISET, RLIM) vs the limit the design states: recompute from the datasheet formula",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-7",
+      "title": "Feedback divider impedance outside the datasheet range: too high for the FB bias current and noise, too low for the quiescent budget",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-8",
+      "title": "LDO output capacitor not what the part needs for stability: value below the minimum, ceramic on a part that needs ESR, or the other way round",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-9",
+      "title": "LDO headroom below its dropout at load (3.3 V from a 3.6 V battery through a 0.5 V dropout part)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-10",
+      "title": "Switching regulator bootstrap (BST, BOOT) capacitor missing or far from the datasheet value",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-11",
+      "title": "Feedback divider sensing the wrong node: before a ferrite, filter or switch, so the regulated voltage is not the one the load sees",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-12",
+      "title": "Conversion ratio vs switching frequency: minimum on-time or maximum duty cycle violated (24 V to 1 V at 2 MHz, 3.3 V from 3.6 V on a buck without 100 % mode)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-13",
+      "title": "Boost converter output not isolated when disabled: the input reaches the output through the inductor and diode, so \"off\" is Vin",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-14",
+      "title": "PGOOD / PG open-drain output without a pull-up, or pulled to a rail that is not up when it is read",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-15",
+      "title": "Enable pin tied or driven above its maximum (EN rated 6 V tied to a 12 V Vin), or driven from a rail below its high threshold",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-16",
+      "title": "Soft-start, compensation or timing pins (SS, COMP, RT, CT) without the parts the datasheet requires",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-17",
+      "title": "Regulator configuration pins (MODE, SYNC, FREQ, FPWM, VSEL) floating where the datasheet says tie them",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-18",
+      "title": "Two regulator outputs tied together without a part that allows it (parallel LDOs fight, one sinks)",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-19",
+      "title": "Analog supply (VDDA, AVDD, VREF+) fed straight from the digital rail without a filter",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-20",
+      "title": "Reference input (VREF+, REF, VREFIN) without its own decoupling, or sourced from a noisy rail",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-21",
+      "title": "Total output capacitance of a regulator outside its stable range after ceramic DC-bias derating (a 10 µF 0603 at 5 V is about 4 µF), or more than its soft-start and current limit can charge",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-22",
+      "title": "Inductor value outside the datasheet range for the switching frequency and current",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-23",
+      "title": "Regulator symbol shared by orderable siblings with different VFB or Vout (0.6 / 0.8 V, 1.8 / 3.3 V): the divider or the net was computed for the other sibling, the MPN decides ≈ RAIL-2, RAIL-4",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-24",
+      "title": "Regulator EN pin floating on a part without an internal pull: never starts, or starts at random",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-25",
+      "title": "Input range below the regulator's minimum Vin or UVLO at the low end (a 4.5 V-minimum buck on a 3-cell battery) ≈ RATE-12",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RAIL-26",
+      "title": "Asynchronous converter rectifying through a slow diode or a MOSFET body diode instead of a Schottky: losses and reverse recovery",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DEC-1",
+      "title": "No decoupling capacitors on power nets",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DEC-2",
+      "title": "Recommended decoupling values",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DEC-3",
+      "title": "STM32 VCAP pins need 2.2 µF ceramic caps",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DEC-4",
+      "title": "Caution against ferrite beads without measurements",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DEC-5",
+      "title": "Datasheet-specified filter or bypass capacitors (PLL, CRFILT, VCORE, VCAP, VDDA filter) missing or at a different value than the datasheet gives",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DEC-6",
+      "title": "Bulk capacitance on a rail below what its regulator or load needs (sum per rail, derated)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DEC-7",
+      "title": "Fewer decoupling capacitors than power pins on a part that wants one per pin",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DEC-8",
+      "title": "Decoupling only on the source side of a ferrite, filter or series resistor: nothing at the pin it serves",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DEC-9",
+      "title": "Ferrite bead in series with a high-current rail: saturates, and its DC resistance drops the rail",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DEC-10",
+      "title": "Bypass capacitor on the IC's power pin but not on the rail: a two-pin net of one passive and one power pin passes every ERC and powers nothing",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DEC-11",
+      "title": "Parallel ceramics a decade apart (10 µF with 10 nF): anti-resonance between them; prefer multiples of one value or a graded set",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DEC-12",
+      "title": "Polarized capacitor (electrolytic, tantalum) with its negative terminal on the higher-potential net",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DEC-13",
+      "title": "Datasheet-specified bias or set resistors (RBIAS, ISET, RZQ, RREF, EXTRES) missing, off value, or looser than the tolerance asked (240 Ω 1 %, 4.87k 1 %) ≈ DEC-5",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SEQ-1",
+      "title": "Power sequencing: intermittent problems on power on or off",
+      "severity": "warning",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "SEQ-2",
+      "title": "Feedback or bootstrap loops, e.g. EN set by a divider powered by the device's own output, never starts",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SEQ-3",
+      "title": "SD card insertion inrush: no power switch or resistor; decoupling after that switch or resistor ≈ SEQ-6",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SEQ-4",
+      "title": "Soft start circuits with a MOSFET or resistor as load; if load is specified, report performance",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "SEQ-5",
+      "title": "High voltage net without self-discharge resistors",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "SEQ-6",
+      "title": "Power switch turning hard on into a capacitive load (a downstream board, a hot-plug port): the inrush dips the source and resets the board's own parts. Slow turn-on, fast turn-off (gate RC with a diode, or a load switch with soft start)",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "SEQ-7",
+      "title": "Multi-rail part (SoC, FPGA, DDR) whose datasheet orders its supplies, with nothing on the board enforcing the order",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "SEQ-8",
+      "title": "Reset of a multi-rail part released by an RC alone, not gated by its rails being valid: no supervisor or PGOOD chain",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SEQ-9",
+      "title": "Output capacitors not discharged at power-off for a part that needs a full power-on reset: a quick off-on leaves it half powered",
+      "severity": "suggestion",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "GND-1",
+      "title": "Split grounds without an isolated circuit: warn, point to books and pages",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "GND-2",
+      "title": "Suggest a Y cap between isolated grounds",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "GND-3",
+      "title": "Analog and digital grounds joined at more than one point, or not joined at all",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "GND-4",
+      "title": "Net crossing an isolation barrier: a label or power symbol of one side used on the other (`GND` on the isolated side)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "GND-5",
+      "title": "Non-isolated part or structure spanning the barrier: a pull-up, capacitor, resistor or protection diode between the two sides, a debug header ground, a shield or a mounting hole bonded on both",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "GND-6",
+      "title": "Isolation rating of the isolators, transformers and Y capacitors vs the voltage the barrier must hold",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "GND-7",
+      "title": "Chassis or shield ground tied straight to signal ground, or left floating, without a decision (R, C, or direct) ≈ USB-4",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-1",
+      "title": "MOSFET gate threshold vs driving level",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-2",
+      "title": "High side MOSFETs driven incorrectly",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-3",
+      "title": "PWM from MCU or SoC pins driving transistors directly: suggest a driver to protect the pin",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-4",
+      "title": "Several gates on one driver: check charge pump capacity",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-5",
+      "title": "MOSFET as inverter: gate resistor to stop Cgd pulling the output below ground",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-6",
+      "title": "Q-Q chain not back to back, e.g. pogo-pin VBUS protection; double check thresholds",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-7",
+      "title": "No snubbers on half bridge output",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-8",
+      "title": "Flyback without feedback and no resistive or zener load on output",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-9",
+      "title": "Relays without flyback diode",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-10",
+      "title": "Gate drive beyond Vgs(max): a high-side PMOS on a 24 V rail with its gate pulled to ground sees −24 V on a ±20 V gate",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-11",
+      "title": "MOSFET body diode conducting in the off state: source and drain swapped, or a load switch oriented so the load is fed through the diode",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-12",
+      "title": "BJT base driven from a logic pin without a base resistor",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-13",
+      "title": "Low-side switch under a load whose signals are ground-referenced elsewhere: the load's ground floats when off",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-14",
+      "title": "Inductive load (solenoid, motor, coil, transformer) switched without a freewheel diode, TVS or snubber ≈ DRV-9",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-15",
+      "title": "Half bridge driven by one signal and its inverter with no dead time: both transistors on during the edge",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-16",
+      "title": "Gate driver bootstrap diode or capacitor missing",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-17",
+      "title": "LED driven from a GPIO or a rail without a series resistor or current limit",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-18",
+      "title": "LED forward voltage above its rail (a white or blue LED on 1.8 V, two in series on 3.3 V): never lights",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-19",
+      "title": "No gate resistor between a gate driver and a MOSFET: ringing and EMI",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DRV-20",
+      "title": "Rds(on) only specified at a gate voltage above the drive available (a 10 V-rated FET driven at 3.3 V) ≈ DRV-1",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BAT-1",
+      "title": "Rechargeable lithium cell without protection (overvoltage, undervoltage, overcurrent), on the pack or the board",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BAT-2",
+      "title": "Charger thermistor pin (TS, NTC) floating or tied in a way that disables charging, instead of a thermistor or the documented fixed divider",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BAT-3",
+      "title": "Charger without power path while the system load sits on the battery: the load defeats termination and the cell never finishes charging",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BAT-4",
+      "title": "Primary cell (coin cell, alkaline) with a path that can charge it (a diode-less connection to a rail, a charger)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BAT-5",
+      "title": "Battery connector polarity vs the common convention for that connector (JST PH packs, barrel jacks)",
+      "severity": "suggestion",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "BAT-6",
+      "title": "Regulator or boost running from a battery without undervoltage lockout: drains the cell to zero",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BAT-7",
+      "title": "Fuel gauge sense resistor not in the leg the gauge expects (low side vs high side)",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SHORT-1",
+      "title": "Net shunting a known part (R, C, L, transistor...): most likely a net label collision, or a port and net label with the same name ≈ SHORT-2",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "SHORT-2",
+      "title": "Accidental net name collision, e.g. on I2C: VCCa-R-R-VCCa/b, or two 0R leading to the same net",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "SHORT-3",
+      "title": "Non-DNM part shunting another mounted part",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "SHORT-4",
+      "title": "Short circuit between power and ground through low value resistor(s)",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "SHORT-5",
+      "title": "VDD/VCC pins shorted to GND, or GND/VEE to power nets",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "SHORT-6",
+      "title": "Inputs shorted to ground or power without a resistor",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "SHORT-7",
+      "title": "Shorted IOs: warn that they must be driven together",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "SHORT-8",
+      "title": "Direct connections to battery and other high energy nets",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SHORT-9",
+      "title": "Power to ground through a forward-biased diode or a MOSFET body diode",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SHORT-10",
+      "title": "Power to ground through a TVS or zener whose standoff voltage is below the net voltage",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SHORT-11",
+      "title": "Two push-pull outputs on one net (output-output conflict)",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "SHORT-12",
+      "title": "Differential pair with P tied to N: a label typo or a wrong bus entry",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-1",
+      "title": "Net with a single pin (a label with no partner, a typo in one of two labels)",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-2",
+      "title": "Net names that differ only in case, separator or suffix (`RESET_N` and `RESET_n`, `3V3` and `+3V3`): almost always one net meant",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-3",
+      "title": "Label not attached to a wire or pin (dangling, offset by a grid step)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-4",
+      "title": "Hierarchical sheet pin without a matching label inside the sheet, or unconnected on the parent",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-5",
+      "title": "Power symbol and a signal label with the same name: the signal is silently on the rail",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-6",
+      "title": "Global label used on one sheet only, where a local label was meant (or the other end is misspelled)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-7",
+      "title": "No-connect flag on a pin that also has a wire",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-8",
+      "title": "Unconnected pin without a no-connect flag: not decided, or forgotten",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-9",
+      "title": "No-connect flag on a pin the datasheet says must be tied (an unused input, a mode pin, an exposed pad)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-10",
+      "title": "Hidden power pins on a symbol connected implicitly by name: the connection is not visible on the sheet",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-11",
+      "title": "Unnamed (auto-named) net with many pins or crossing sheets: give it a name",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-12",
+      "title": "Same label text in different scopes (a local and a global label, a sheet pin and a global label): joined in one tool, separate in another, and the designer assumes one of the two",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-13",
+      "title": "Output pin whose net reaches no input (an output into nothing but passives or a test point)",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-14",
+      "title": "Ground-named pin (GND, VSS, AGND, PGND) on a net that is not a ground",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-15",
+      "title": "Four-way wire junction, or a label placed over several wires: the connection is ambiguous to a reader",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-16",
+      "title": "Bus mismatch: a member net not in the bus it joins, bus widths that differ, indices out of range",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "WIRE-17",
+      "title": "ERC or DRC rules silenced in the project file: list them in the report, they hide findings",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BKF-1",
+      "title": "Power backfeed through IO, suggest Ioff capable buffers",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "BKF-2",
+      "title": "General case: two power domains, IO across, one domain goes off, IO powers it through protection diodes ≈ BKF-1",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "BKF-3",
+      "title": "Same through a MOSFET body diode, e.g. in an I2C voltage translator",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "BKF-4",
+      "title": "Backfeed through MOSFETs, e.g. in DC-DC converters",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "BKF-5",
+      "title": "Backfeed through LDOs",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "BKF-6",
+      "title": "Backfeed through internal IC structure where known (beyond IO protection diodes)",
+      "severity": "warning",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "BKF-7",
+      "title": "Power through IO or I2C lines; also spots 1-Wire, can exclude",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "BKF-8",
+      "title": "I2C device on a rail that can be off (backfeed should catch this)",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "BKF-9",
+      "title": "Pins on a connector that an external device can drive while this board is unpowered: op-amp and MCU input clamps, pull-up PMOS body diodes and ESD diodes feed the rails. Needs powered-off-safe inputs, large series resistance or back-to-back switches",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "BKF-10",
+      "title": "Level shifter or buffer whose own pull-ups feed an unpowered target through its outputs",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BKF-11",
+      "title": "USB VBUS joined to a system rail without a diode or switch on a board that can also be externally powered or act as host",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BKF-12",
+      "title": "Pull-up from a rail that can be off onto a bus that stays on: the bus feeds the off rail through the resistor and drags low ≈ BKF-7",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LEAK-1",
+      "title": "Resistor divider straight on a power rail, draining power all the time",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "LEAK-2",
+      "title": "Pins that can't be high in some power states (go to another domain): list them even if the warning is suppressed",
+      "severity": "suggestion",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LEAK-3",
+      "title": "NC pins: suggest setting them to analog or pulling them to cut power draw",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LEAK-4",
+      "title": "Resistor divider or pull through a normally closed button or switch: current flows in the rest state",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LEAK-5",
+      "title": "Indicator LED permanently on a battery rail",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LEAK-6",
+      "title": "Pull-up on a line that is held low in sleep (or pull-down on one held high): steady current in the low power state",
+      "severity": "suggestion",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LEAK-7",
+      "title": "Battery measurement divider always connected: suggest a switched divider or a high-side switch ≈ LEAK-1",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-1",
+      "title": "Pull-up, divider or other circuitry to a different voltage level (needs IO bank voltage; easy for single supply parts)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-2",
+      "title": "1V8 output to 3V3 input and similar: compare thresholds",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-3",
+      "title": "I2C thresholds may allow skipping a translator, e.g. 1V8 into a 3V3 device with Vth 1.4 V",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-4",
+      "title": "I2C discrete translator pull-up to the wrong voltage",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-5",
+      "title": "Bidirectional level shifter used for unidirectional signals (e.g. USART + boot mode)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-6",
+      "title": "A better suited bank exists for the net voltage or target bank voltage",
+      "severity": "suggestion",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-7",
+      "title": "Several power rails on a part and no banks defined: warn",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-8",
+      "title": "Signal not referenced to GND, e.g. an inverting buck and its enable signal",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-9",
+      "title": "Discrete translator (BSS138 pair) with a gate reference that gives the wrong threshold for one side",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-10",
+      "title": "Higher-voltage output into a lower-voltage input above its absolute maximum (5 V into a 3.3 V pin that is not 5 V tolerant)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-11",
+      "title": "Edge-accelerated auto-direction shifter (TXS01xx class) driving push-pull signals into a pull-down, a long line or capacitance: the high is held only by its weak pull-up, so SWD, UART and SPI come out slow and low. Use a direction-controlled translator (2T45 class)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-12",
+      "title": "Level shifter direction pin (DIR) floating, or fixed against the signal's direction",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-13",
+      "title": "Level shifter output enable floating, or enabled before both of its rails are up",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-14",
+      "title": "Digital isolator or transceiver channel direction against the signal (TX into an input channel)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LVL-15",
+      "title": "Single-MOSFET open-drain shifter (BSS138 pair) on a fast push-pull line (SPI over a few MHz, WS2812 data): too slow, use a buffer or a direction-controlled translator",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "IO-1",
+      "title": "Input pin without a drive source, smart about resistors, FETs etc. ≈ IO-2",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "IO-2",
+      "title": "IO to an input without pull-up/down: High-Z gives an undefined state",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "IO-3",
+      "title": "Enable driven by an MCU or SoC GPIO without a pull: think of uninit and reboot state; `default_gpio_state` part property overrides",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "IO-4",
+      "title": "Assume IO pins are high/low/Z by default and look for bugs ≈ IO-5",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "IO-5",
+      "title": "If IO pin default states are known, derive checks",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "IO-6",
+      "title": "High impedance nets acting as touch buttons",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "IO-7",
+      "title": "Button to ground with a pull-down, or button to power with a pull-up ≈ IO-8",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "IO-8",
+      "title": "Mention a needed pull-up or down where it applies, e.g. buttons",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "IO-9",
+      "title": "Pins a part drives in its non-firmware modes: ROM bootloader, factory test, reset and fault states. A ROM bootloader configures its interfaces (UART, I2C, SPI, CAN, USB) and may drive or toggle those pins while it scans for a host, with no firmware to keep anything else safe; check what each such pin controls (switches, enables, buses, resets) and what that level does there. Example: an STM32 ROM bootloader drives its USART TX pin high while it scans for a host; if that pin also selects a USB data switch, a firmware update over the ROM cuts the downstream device's data ≈ IO-3, IO-4",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "IO-10",
+      "title": "Input driven only from a connector: floats when nothing is plugged in",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "IO-11",
+      "title": "MOSFET gate without a pull: floats while its driver is in reset or unpowered",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "IO-12",
+      "title": "Output enable (`~OE`, `~G`, `EN`) of a shift register, driver, mux or buffer without a pull to its disabled state: outputs do whatever until firmware loads them",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "IO-13",
+      "title": "Peripheral reset pin pulled into reset by default, driven by a controller that resets: every controller reset (also into its ROM bootloader) takes the peripheral down with it. Decide on purpose: a pull-up with the controller able to drive low keeps the peripheral configured ≈ LOGIC-5",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "IO-14",
+      "title": "Configuration, mode or address straps of a non-MCU part (PHY, hub, codec, sensor) floating where the datasheet requires a level",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "IO-15",
+      "title": "Open-drain interrupt or fault output without a pull-up",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "IO-16",
+      "title": "Pull-up and pull-down both on one net: an accidental divider, neither level clean",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "IO-17",
+      "title": "Pull value too weak for the leakage on the net (1 MΩ against ESD diode and input leakage) or too strong for the driver (1 kΩ on an open-drain output)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "IO-18",
+      "title": "Button without a debounce capacitor where the firmware assumes an RC filter",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LOGIC-1",
+      "title": "Logical contradictions in GPIO or GPIO expander connections · AI prompt: check that GPIOs that drive multiple things have no logical contradictions, table of each occurrence",
+      "severity": "error",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "LOGIC-2",
+      "title": "IO going to two MCUs or SoCs: odd requirements likely, esp. IRQs and buttons not going to reset inputs",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LOGIC-3",
+      "title": "Suggest buffering high fan-out signals",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "LOGIC-4",
+      "title": "Total IO current per IC or bank",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LOGIC-5",
+      "title": "Dependency loops in bring-up, update or recovery: part A only works once part B has set it up, while B needs A to start, update or recover. Then the board works while the firmware runs and fails exactly when it is needed (dead or half-written firmware, reset, ROM bootloader). Walk every boot, update and recovery path with each programmable part in its reset or unconfigured state. Example: an MCU whose only update path (its USB ROM bootloader) goes through a USB hub that the MCU itself must release from reset and configure over I2C: after a reset the bootloader never reaches the host. Same shape elsewhere: a sequencer or supervisor powered or configured by what it controls, a clock or PHY configured by the chip it serves, a config memory written through the bus it configures, a mux or level shifter on the programming path driven by the target ≈ SEQ-2",
+      "severity": "error",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "LOGIC-6",
+      "title": "Current through one pin above its maximum (an LED without resistor, a relay coil, a long pull chain) ≈ LOGIC-4",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LOGIC-7",
+      "title": "Open-drain or open-collector output as the only driver of a net with no pull-up: never goes high",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "LOGIC-8",
+      "title": "Polarity mismatch by name: an active-low output (`_N`, `#`, `~`) into an active-high input or the reverse (`PGOOD` into `~EN`, `INT_N` into a rising-edge IRQ) with no inverter",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "MUX-1",
+      "title": "SCL goes to a pin named SCL, MISO to MISO etc",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "MUX-2",
+      "title": "MCUs with SVD/pin data: check the alternate function actually supports the mode used",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "MUX-3",
+      "title": "SLG* (GreenPAK): suggest using all pins, e.g. to monitor things, connect to ENs, route EN through if inverting or delay is needed",
+      "severity": "suggestion",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "MUX-4",
+      "title": "GPIO on a pin that is NRST, BOOT or another reset-time function by default (STM32G0 PF2-NRST, option-byte controlled): the firmware never gets the pin, or a low resets the chip",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "MUX-5",
+      "title": "Debug pins (SWDIO, SWCLK, JTAG) reused as GPIO: debugging and flashing lost once the firmware runs ≈ DBG-1",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "MUX-6",
+      "title": "Analog signal (ADC, DAC, comparator) on a pin without that analog function",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "MUX-7",
+      "title": "One peripheral signal on two pins, or two uses of a shared peripheral (USB and CAN on an STM32F103 share one SRAM block)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "MUX-8",
+      "title": "5 V net on a pin that is not 5 V tolerant where the part has tolerant (FT) pins to choose from ≈ LVL-10",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BOOT-1",
+      "title": "Boot or strapping pin with no defined level at reset (no pull, no driver that is up at that moment)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BOOT-2",
+      "title": "Strapping pin shared with a signal that another device may drive at reset: a UART bridge on ESP32 GPIO0, a card or display on an i.MX boot config pin, a PHY LED with a pull that changes its mode strap",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "BOOT-3",
+      "title": "Strapping pin pulled to a mode the design does not want (STM32 BOOT0 high boots the ROM, ESP32 GPIO12 high selects 1.8 V flash)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BOOT-4",
+      "title": "Boot pin wired but ignored by the factory option bytes or fuses (STM32G0 nBOOT_SEL): a programming step must enable it, say so in the bring-up notes",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BOOT-5",
+      "title": "No way to force the ROM bootloader (button, jumper, header pin) on a board updated in the field",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BOOT-6",
+      "title": "ROM bootloader interface not reachable from outside with the firmware dead: behind a hub, mux or shifter that only firmware configures ≈ LOGIC-5",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "BOOT-7",
+      "title": "Boot memory on pins or a bus the ROM cannot boot from (QSPI flash on a non-boot CS, SD on a non-boot SDIO instance), or a flash whose command set the ROM's loader does not support",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BOOT-8",
+      "title": "Part strapped for a configuration that assumes a controller (a hub strapped for SMBus config powers up with every register at zero): fine only if that controller is always there first",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BOOT-9",
+      "title": "Strapping pin shared with a peripheral signal without a series resistor between them: the peripheral loads the strap during the latch window, the strap must win",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BOOT-10",
+      "title": "FPGA configuration pins (mode select MSEL/CFG, nCONFIG/PROGRAM_B, nSTATUS/INIT_B, CONF_DONE/DONE, PUDC_B, nCE/nCEO) floating or without the pull-ups and pull-downs the configuration guide requires",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-1",
+      "title": "MCU with CAN or USB and no crystal",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-2",
+      "title": "HS crystal capacitors should be high frequency rated",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-3",
+      "title": "Crystal NC pins may need to go to ground",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-4",
+      "title": "Crystal pins used as IO: warn about low drive strength",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-5",
+      "title": "No pull-up on a reset_n input",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-6",
+      "title": "Suggest a cap on buttons to reset inputs; note hw debounce in the programmer report",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-7",
+      "title": "No capacitor on a reset_n input: noise and brown-outs reach it ≈ CLK-6",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-8",
+      "title": "Crystal load capacitors vs the crystal's CL: C1 = C2 ≈ 2·CL − Cstray; far off means the frequency is off or it does not start",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-9",
+      "title": "Crystal ESR and drive level vs the oscillator: gain margin (gm / gm_crit) under 5, or no series resistor where the drive level is exceeded (ST AN2867)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-10",
+      "title": "Crystal frequency outside the range the part's oscillator supports",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-11",
+      "title": "32.768 kHz crystal with a CL or ESR the low-power oscillator cannot drive",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-12",
+      "title": "Active oscillator output into a crystal pin without bypass mode or the attenuation the datasheet asks for",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-13",
+      "title": "Oscillator or clock buffer output-enable / standby pin floating",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-14",
+      "title": "Reset input driven by a push-pull output: fights the debugger, supervisor or button that also drives it; reset lines are open-drain",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-15",
+      "title": "One reset net shared by the MCU and its peripherals: a debugger reset (or a watchdog) resets the whole board, and peripherals lose configuration on every firmware restart ≈ IO-13",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-16",
+      "title": "RTC in use with VBAT floating, no backup source, or no 32 kHz crystal",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-17",
+      "title": "External watchdog with no way to disable it for debugging (jumper, DNM resistor)",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-18",
+      "title": "Clock output fanned out to several loads without a buffer or series termination",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "CLK-19",
+      "title": "Crystal tolerance vs the interface that uses it: USB HS ±500 ppm, Ethernet ±50 ppm, BLE ±50 ppm or tighter, CAN FD per bit rate",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-1",
+      "title": "No pull-ups on an I2C bus",
+      "severity": "error",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 1,
+      "micros": 562
+    },
+    {
+      "id": "I2C-2",
+      "title": "I2C multiple pull-ups",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 3,
+      "micros": 632
+    },
+    {
+      "id": "I2C-3",
+      "title": "Pull-up from two series resistors to nowhere (part of I2C-1)",
+      "severity": "error",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 2,
+      "micros": 586
+    },
+    {
+      "id": "I2C-4",
+      "title": "Pull-up to a non-rail net (resistor with only two pins connected)?",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-5",
+      "title": "I2C address collision (needs addresses in the library, maybe AI can pull them out)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-6",
+      "title": "I2C going to a connector that isn't FPC or fine pitch B2B: suggest another interface, keep I2C on board?",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-7",
+      "title": "Series tie resistor on an I2C line too high (over 100 Ω)",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 1,
+      "micros": 566
+    },
+    {
+      "id": "I2C-8",
+      "title": "Pull-up too weak for the bus speed: Rp > tr_max / (0.847 · Cb), tr (30-70 %) max 1000 ns at 100k, 300 ns at 400k, 120 ns at 1M; Cb estimated from the pins on the net (or a project setting). Measured on a bench: ~135 pF per line, 10k gives 1170 ns (fails 100k), 2.2k 277 ns (meets 400k), 1M needs ≤ 1.05k",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-9",
+      "title": "Pull-up value outside the recommended range (2.2k-10k): too strong for the sink current (3 mA, 20 mA in Fm+), too weak for the edges ≈ I2C-8",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 1,
+      "micros": 737
+    },
+    {
+      "id": "I2C-10",
+      "title": "SCL and SDA pull-ups of different value",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 1,
+      "micros": 591
+    },
+    {
+      "id": "I2C-11",
+      "title": "I2C device whose supply can be off while the bus is on, without fail-safe (Ioff) inputs: it feeds itself through its ESD diodes and clamps both lines to ~0.6 V, the whole bus is dead ≈ BKF-8",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-12",
+      "title": "SMBus device on an I2C bus: it times out when the clock drops under 10 kHz or a transfer stalls over 25-35 ms, and its fixed thresholds (0.8 / 2.1 V in SMBus 2.0, 0.8 / 1.35 V in 3.0) do not match I2C's 0.3 / 0.7 VDD on 5 V and 1.8 V buses",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-13",
+      "title": "Static-offset bus buffers (P82B96, PCA9600, PCA9515 class) in series, or one facing a device with a low VIL: the buffer's ~0.5 V low is never seen as low, the bus locks",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-14",
+      "title": "Push-pull auto-direction shifter (TXB010x class) on I2C: its direction sensing fails on open-drain lines and with pull-ups under ~50k. Edge-accelerated open-drain parts (TXS01xx) work but their one-shots can glitch slow edges; a plain open-drain shifter (PCA9306, BSS138 pair) is the safe choice ≈ LVL-11",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-15",
+      "title": "I2C mux or switch whose channels, joined by firmware, carry devices with the same address, or whose summed capacitance exceeds the limit",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-16",
+      "title": "Device at a reserved address: 0x00-0x07 (general call, CBUS, Hs master codes) or 0x78-0x7F (10-bit prefix, device ID)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-17",
+      "title": "Address straps (A0-A2, ADDR, SA0) floating: the address is undefined, or read at power-up only",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-18",
+      "title": "Bus segment behind a translator, isolator, buffer or mux with no pull-ups of its own",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-19",
+      "title": "Pull-ups of a segment to a rail that can be off while the rest of the bus is on ≈ BKF-12",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-20",
+      "title": "Device that stretches the clock for its conversions on a master known not to support stretching (BCM2835 and its errata)",
+      "severity": "suggestion",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-21",
+      "title": "Estimated bus capacitance over 400 pF (long cable, many devices): needs a buffer or a slower mode ≈ I2C-8",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "I2C-22",
+      "title": "Several masters on one bus: all controllers must support multi-master arbitration, and the firmware must handle bus-busy",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-1",
+      "title": "USART TX connected to TX (not crossed)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-2",
+      "title": "SPI CS line grounded: some ICs need it to work",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-3",
+      "title": "CAN terminator based on MOSFETs or SSRs",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-4",
+      "title": "LVDS without terminators",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-5",
+      "title": "Not the whole bus is present, maybe nets shorted out ≈ SER-6",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-6",
+      "title": "Not the whole bus is connected to a device",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-7",
+      "title": "CAN TX and RX crossed between MCU and transceiver (they are not crossed, unlike UART)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-8",
+      "title": "UART flow control mis-paired: CTS to CTS, or RTS of one side not to CTS of the other",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-9",
+      "title": "RS-485 bus without termination at both ends (120 Ω) where this board is an end node",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-10",
+      "title": "RS-485 without fail-safe biasing (A pulled up, B pulled down) on a transceiver without built-in fail-safe: idle bus reads noise",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-11",
+      "title": "RS-485 DE / ~RE without a pull to the receive state: the transceiver may drive the bus while the MCU is in reset",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-12",
+      "title": "RS-485 A/B or CAN H/L swapped against the connector's documented pinout",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-13",
+      "title": "CAN termination wrong for the node's place: none at a bus end, or a 120 Ω on a node in the middle",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-14",
+      "title": "CAN split termination (2 × 60 Ω) without the centre capacitor to ground",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "SER-15",
+      "title": "CAN transceiver STB, S or EN pin floating: it stays in standby or silent mode",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-16",
+      "title": "CAN FD data rate above the transceiver's class (a classic 1 Mbit/s transceiver on a 5 Mbit/s FD bus)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-17",
+      "title": "Transceiver logic side (VIO) on a different rail than the MCU pins it talks to",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-18",
+      "title": "SPI chip select shared by two slaves, or a slave whose MISO does not tri-state when deselected on a shared MISO",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-19",
+      "title": "SPI slave CS without a pull-up (flash, sensor, any slave): floats during the host's reset, the slave sees commands in the noise and a second slave answers on a shared MISO",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-20",
+      "title": "RS-232 levels (±12 V) straight into MCU pins, no transceiver",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-21",
+      "title": "USB-UART bridge RTS / DTR wired to boot and reset for auto-programming, or deliberately not: say which",
+      "severity": "suggestion",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "SER-22",
+      "title": "1-Wire with parasitically powered devices and only a weak pull-up: suggest a strong pull-up switch",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "SER-23",
+      "title": "RS-485 or CAN node with no ground reference to the bus (no ground wire, no isolation), or its ground tied straight to the remote ground (loop): the standards want a resistor-separated ground or an isolated node",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "SER-24",
+      "title": "RS-485 unit-load budget exceeded: nodes plus the bias network over 32 UL (256 with 1/8-UL transceivers)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ETH-1",
+      "title": "Magnetics centre taps terminated for the wrong PHY type (current-mode PHYs want the taps tied to the supply, voltage-mode PHYs want separate taps to ground through capacitors; DP83848C §7.2, KSZ9031 §12), or only two of the four taps terminated on a gigabit design copied from 10/100",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ETH-2",
+      "title": "RGMII delay: neither the PHY's internal delay strap nor the MAC provides the 2 ns skew, or both do",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "ETH-3",
+      "title": "MDIO without a pull-up (1.5k-10k)",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "ETH-4",
+      "title": "PHY address straps unset, two PHYs on one MDIO bus with the same address, or address 0 on a PHY that treats it as broadcast",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ETH-5",
+      "title": "Unused pairs and centre taps without Bob Smith termination (75 Ω to a 1 nF 2 kV capacitor to chassis), or with it returned to signal ground, on the PHY side, or through a cap below 2 kV",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ETH-6",
+      "title": "RMII REF_CLK direction wrong: both or neither side sources the 50 MHz",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ETH-7",
+      "title": "PHY LED pins that double as configuration straps: the LED and its pull set a mode at reset",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ETH-8",
+      "title": "MDI pair polarity or pair order against the jack's pinout (Auto-MDIX saves pair swaps, not always polarity)",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "ETH-9",
+      "title": "PHY crystal tolerance above ±50 ppm",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ETH-10",
+      "title": "PoE powered device without isolation of the PD side, or without the classification resistor",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "ETH-11",
+      "title": "RGMII / RMII lines without the series resistors the PHY's reference design uses",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ETH-12",
+      "title": "PHY reset released before its clock is stable, or with no pull at all",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "ETH-13",
+      "title": "Magnetics not rated for the design: isolation under 1500 Vac, or not PoE-rated where PoE current biases the core",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ETH-14",
+      "title": "PHY multi-level strap divider computed without the pin's internal pull (9k-40k, ±25 %), with 5 % resistors, or with a capacitor straight on the strap",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "MEM-1",
+      "title": "SD / eMMC CMD and DAT lines without pull-ups (10k-100k)",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "MEM-2",
+      "title": "DDR pin swap across bytes and other errors",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "MEM-3",
+      "title": "SD / eMMC CLK with a pull-up, or CD / WP switch pins without one",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "MEM-4",
+      "title": "SPI / QSPI flash WP#, HOLD# or RESET# floating: writes blocked or the part held at random",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "MEM-5",
+      "title": "SD card detect wired to the wrong pins (shell instead of the switch pins, or to ground on a socket that signals to VDD)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "MEM-6",
+      "title": "eMMC VCCQ on a different voltage than the host's IO bank, or RST_n without a pull-up",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "MEM-7",
+      "title": "SD host IO voltage vs card mode: UHS needs 1.8 V signalling, a 3.3 V-only host stays at high-speed",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "MEM-8",
+      "title": "DDR ZQ pin without its 240 Ω to VSS",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "MEM-9",
+      "title": "DDR VREF (CA, DQ) not at VDD/2, or VTT termination missing on a fly-by topology",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "MEM-10",
+      "title": "DDR RESET_n without a pull-down and CKE without a defined level at power-up",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "MEM-11",
+      "title": "EEPROM or flash write-protect pin floating",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "MEM-12",
+      "title": "SD card power not switchable: a card that hangs cannot be re-initialised without a board power cycle ≈ SEQ-3",
+      "severity": "suggestion",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "HS-1",
+      "title": "PCIe, DP: correct AC caps present vs connector or onboard IC",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "HS-2",
+      "title": "Lane swaps, bit swaps: warn to check actual support",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "HS-3",
+      "title": "Clocked buses where some signals go through dividers or buffers and others don't: delay, setup/hold problems",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "HS-4",
+      "title": "Differential asymmetry",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "HS-5",
+      "title": "Series resistors on USB D+/D−; skip only for known parts that need them, e.g. F103",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "HS-6",
+      "title": "External D+ pull-up on a USB device that has it built in (or none on one that has not)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "HS-7",
+      "title": "USB D+ and D− swapped (by pin name on the part vs the connector)",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "HS-8",
+      "title": "Protection device capacitance too high for the data rate (over ~1 pF on USB 2.0 HS, over ~0.3 pF on USB 3, PCIe, HDMI)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "HS-9",
+      "title": "Common-mode choke on USB 3 or PCIe lanes: hurts more than it helps at these rates",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "HS-10",
+      "title": "Differential pair P and N swapped across a connector or between two parts (where the receiver cannot invert polarity)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "HS-11",
+      "title": "PCIe sideband missing or unpulled: PERST#, WAKE#, CLKREQ#, REFCLK; PRSNT pins on a card",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "HS-12",
+      "title": "PCIe, USB 3, SATA TX/RX not crossed between host and device (host TX goes to device RX)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "HS-13",
+      "title": "HDMI: +5V not supplied by the source, DDC without level translation and pull-ups, HPD without its pull",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "HS-14",
+      "title": "DisplayPort: AUX pull-up / pull-down pair missing or on the wrong side, HPD, DP_PWR; DP++ dual-mode pins vs native DP",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "HS-15",
+      "title": "MIPI DSI / CSI lanes with series parts or protection in line: the lanes go straight to the connector",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "HS-16",
+      "title": "Reference clock coupling vs receiver type: HCSL needs 50 Ω to ground at the source, LVDS 100 Ω across at the receiver, LVPECL its bias; AC coupling only where the receiver self-biases",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "RF-1",
+      "title": "RF port without tuning network",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RF-2",
+      "title": "RF net to connector without PI network",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RF-3",
+      "title": "Suggest DC block caps between RF parts",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RF-4",
+      "title": "Suggest an inline RF test connector",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RF-5",
+      "title": "RF switch, LNA or PA control pins floating",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RF-6",
+      "title": "Radio crystal or TCXO tolerance looser than the radio requires (BLE, LoRa, Wi-Fi each have their own) ≈ CLK-19",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RF-7",
+      "title": "Module ANT pin wired to an external antenna while the module's onboard antenna is selected (or both)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RF-8",
+      "title": "DC present on an RF port that cannot take it (bias tee without a block, a biased antenna into a DC-coupled input) ≈ RF-3",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "RF-9",
+      "title": "Radio with nothing on its RF port (no antenna, connector or load): transmitting into an open can damage the PA",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "USB-1",
+      "title": "Type-C without 5k1",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "USB-2",
+      "title": "No overvoltage protection on Type-C CC and SBU",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "USB-3",
+      "title": "Directly exposed Type-C SBU: resistance must be over the \"safe state\" zSBUTermination > 950k",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "USB-4",
+      "title": "USB shield connected through L/R/C, or not connected",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "USB-5",
+      "title": "USB device: more than 10 µF on VBUS (the host sees a short at attach)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "USB-6",
+      "title": "USB host port with less than 120 µF bulk on VBUS",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "USB-7",
+      "title": "More than one Rd or Rp source on a CC line: a fixed Rd next to a PD controller's own Rd, or two Rp; two in parallel are out of spec and break PD",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "USB-8",
+      "title": "CC resistors against the port role: Rp on a sink, Rd on a source, Rp on the receptacle side of a pass-through where the plug side needs it",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "USB-9",
+      "title": "CC1 and CC2 tied together on a receptacle: orientation detection and PD are gone, and a cable's VCONN lands on the device",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "USB-10",
+      "title": "Plug or captive cable with Rd on both CC pins: one is CC, the other is VCONN",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "USB-11",
+      "title": "Type-C receptacle with USB 2.0 wired to one orientation only: A6/B6 and A7/B7 must be joined",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "USB-12",
+      "title": "Self-powered USB device without VBUS detection: it must not pull D+ up before VBUS is there",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "USB-13",
+      "title": "VBUS straight into a sense pin above its rating: a PD-capable VBUS reaches 20 V, a divider is needed",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "USB-14",
+      "title": "USB hub configuration straps and upstream VBUS detect not wired per its datasheet (non-removable ports, self/bus powered)",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "USB-15",
+      "title": "USB 3 SuperSpeed pairs on a Type-C receptacle without an orientation mux (or a PHY that handles both orientations)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "USB-16",
+      "title": "Type-C receptacle with some VBUS or GND pins left unconnected",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "USB-17",
+      "title": "Micro-B / Mini-B ID pin left floating on a port meant to be OTG, or wired on a device-only port",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "USB-18",
+      "title": "CC or SBU protection that clamps inside the normal range (CC sees up to 5.5 V in operation, must clamp before a 20 V VBUS short) or adds more capacitance than cReceiver allows ≈ USB-2",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "USB-19",
+      "title": "Type-C receptacle variant (6, 12, 16 or 24 pin) without the pins the design needs: SBU or TX/RX for an alternate mode, SuperSpeed pairs for USB 3",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-1",
+      "title": "No protection on lines going to connectors",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-2",
+      "title": "GPIOs going straight to connectors without series protection: 1k on long lines or better",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-3",
+      "title": "Unipolar protector on a bipolar signal (clamps the negative half)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-4",
+      "title": "Connector without a ground pin",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-5",
+      "title": "High speed on a connector: a ground for each pair",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-6",
+      "title": "Connectors with spare pins: suggest spreading power over more pins; use pin rating and currents if known",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-7",
+      "title": "Reverse/flip insertion: with many similar signals, suggest a pinout that avoids power shorts",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-8",
+      "title": "MicroHDMI wired with the full size HDMI pinout",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-9",
+      "title": "Bipolar protector on a unipolar signal: clamps a diode drop later than a unipolar one would",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-10",
+      "title": "Many pins and few grounds on a connector: suggest more",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-11",
+      "title": "Connector pin current rating below the current on that pin",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-12",
+      "title": "Connector voltage rating below the net it carries",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-13",
+      "title": "Mating pair pinout not mirrored: board-to-board plug and receptacle, or two boards joined by an FPC, both drawn from the same side",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-14",
+      "title": "FPC / FFC contact side (top or bottom) and pin order vs the cable: a same-side cable reverses the pin order",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-15",
+      "title": "Debug header pinout against the standard it claims (ARM 10-pin SWD, 20-pin JTAG, Tag-Connect) ≈ LIB-2",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-16",
+      "title": "Connector shell or mounting pins left floating without a decision (ground, chassis, or isolated)",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-17",
+      "title": "Two identical connectors on one board with incompatible pinouts: a cable fits the wrong one",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-18",
+      "title": "Power and ground on adjacent pins where a tilted insertion shorts them; prefer a signal or a gap between",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-19",
+      "title": "High voltage and logic on adjacent pins of one connector: creepage and a wrong-pin fault reach the logic",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "CONN-20",
+      "title": "Exposed metal a user can touch (connector shells, button frames, card housings, pot shafts) with no ESD path to chassis or ground",
+      "severity": "warning",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-1",
+      "title": "ADC input from a high impedance source without buffer",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-2",
+      "title": "Sensitive signals (ADC, high impedance) next to high speed ones on a part (by pin or ball number)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-3",
+      "title": "Shunt lines to the amplifier without a filter",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-4",
+      "title": "Current sense resistor straight to ground or power: suggest net ties",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-5",
+      "title": "Reference or bias input (REF, VBIAS) fed from a divider: divider impedance vs the pin's input current shifts the reference",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-6",
+      "title": "Op-amp input common-mode range vs the signal: a signal at a rail on a non-rail-to-rail input",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-7",
+      "title": "Op-amp output swing vs what the next stage needs: an output expected at 0 V on a single-supply part that stops 50 mV short",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-8",
+      "title": "Op-amp input driven beyond its supply with no series resistance: phase reversal on older parts, damage on all",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-9",
+      "title": "Op-amp driving a capacitive load (an ADC input, a long line) without an isolation resistor",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-10",
+      "title": "Op-amp with no feedback path, or feedback into the non-inverting input (a comparator by accident)",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-11",
+      "title": "Unused op-amp channel left floating: wire it as a buffer to mid-rail or ground",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-12",
+      "title": "Comparator on a slow or noisy signal without hysteresis",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-13",
+      "title": "ADC input range exceeded without scaling (a 5 V signal into a 3.3 V ADC) ≈ LVL-10",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-14",
+      "title": "Current sense amplifier common-mode rating below the bus it sits on (a 26 V part on 48 V)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-15",
+      "title": "Sense gain times shunt drop saturates below the current that must be measured, or wastes most of the ADC range",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-16",
+      "title": "Gain or filter resistors far outside the sane range for the op-amp (10 Ω loading the output, 10 MΩ against bias current)",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-17",
+      "title": "Thermistor or sensor divider referenced to VDD while the ADC uses a separate reference (or the reverse): the ratio drifts with the rail",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-18",
+      "title": "No anti-aliasing filter before an ADC on a noisy or fast source",
+      "severity": "suggestion",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-19",
+      "title": "DAC output into a load it cannot drive (low impedance, capacitance) without a buffer",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-20",
+      "title": "Analog input (ADC, comparator, op-amp) above VDDA + 0.3 V, also on a 5 V-tolerant pin: tolerance is for the digital input, the analog path has its own diodes ≈ LVL-10, ANA-13",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-21",
+      "title": "AC-coupled (or transformer-coupled) amplifier input with no DC return path for the bias current: the coupling capacitor charges until the amplifier saturates, hours later",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-22",
+      "title": "Mid-rail bias divider without a capacitor to ground: the supply noise rides on the bias",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "ANA-23",
+      "title": "Sense path from a shunt through a copper trace or a part with high TCR (copper is 3900 ppm/°C), or sense lines taken from the power pads instead of Kelvin points ≈ ANA-4",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-1",
+      "title": "Capacitor voltage rating margins",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-2",
+      "title": "Resistor power rating",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-3",
+      "title": "Shunt power ratings",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-4",
+      "title": "MOSFET Vds rating",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-5",
+      "title": "MOSFET power dissipation estimate",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-6",
+      "title": "LDO current rating, when power draw is known",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-7",
+      "title": "LED brightness estimate: warn if too bright",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-8",
+      "title": "Temperature ranges that make no sense, e.g. X7R caps but 85 °C ICs",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-9",
+      "title": "Resistor voltage rating (high voltage dividers, a single 0402 across 100 V)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-10",
+      "title": "LED current above its maximum forward current",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-11",
+      "title": "Supply pin voltage outside the part's operating range or above its absolute maximum (a 3.3 V rail into a 1.8 V-only part)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-12",
+      "title": "Regulator input above its maximum Vin (24 V into a 6 V LDO)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-13",
+      "title": "Diode forward current or reverse voltage vs the circuit (a 20 V Schottky on a 24 V rail, a 200 mA diode in a 1 A path)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-14",
+      "title": "TVS clamping voltage above the absolute maximum of the pin it protects ≈ PIN-9",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-15",
+      "title": "Inductor saturation current below the peak current of its converter (Iout plus half the ripple)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-16",
+      "title": "Ceramic capacitor DC-bias derating ignored: effective capacitance at the working voltage below what the circuit needs",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-17",
+      "title": "Electrolytic or tantalum without voltage derating (50 % for tantalum), or tantalum on a low-impedance rail without surge limiting",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-18",
+      "title": "Relay, solenoid or motor current above its driver's rating (BJT Ic, driver IC, GPIO)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-19",
+      "title": "Parts on a PD-capable VBUS rated below 22 V: the port can negotiate 20 V",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-20",
+      "title": "Bus termination resistors not rated for a bus fault (RS-485 or CAN shorted to the supply)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-21",
+      "title": "Linear regulator dissipation (Vin − Vout) × Iout vs its package (a SOT-23 at 200 °C/W does not do 0.3 W) ≈ RATE-6",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-22",
+      "title": "Zener power at the maximum current its series resistor allows",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-23",
+      "title": "Optocoupler LED current vs its CTR at the load: not enough drive, or over its maximum",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "RATE-24",
+      "title": "LED reverse voltage exceeded (LEDs across AC or a reversed supply)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "ERR-1",
+      "title": "Part with a known hardware erratum that touches this circuit (by MPN, from a database): RP2350-E9 input pull-down latch needs an external 8.2k, STM32 I2C v1 BUSY flag stuck after a glitch, BCM2835 clock stretching, STM32F103 USB and CAN sharing one SRAM",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-1",
+      "title": "SWD/JTAG not connected",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-2",
+      "title": "No series resistors on an obvious debug header (e.g. SWD)",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-3",
+      "title": "No LEDs on the board at all: suggest at least one for debug",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-4",
+      "title": "No power rail LEDs",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-5",
+      "title": "No error flag LEDs when flags aren't routed to IOs",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-6",
+      "title": "Power rails not monitored by an ADC",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-7",
+      "title": "Suggest DNM pull-up and down on EN pins",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-8",
+      "title": "Suggest DNM pull-ups on open drain pins; test point detector should highlight those nets",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-9",
+      "title": "Suggest DNM 0R bypasses on power switches",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-10",
+      "title": "Many things on one power net: suggest splitting with a 0R before each power input",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-11",
+      "title": "Suggest 0R on USART TX, RX, CTS, RTS and SPI MOSI, MISO, as they're often wrong",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-12",
+      "title": "Spot potentially useful 0R series resistors (AI?)",
+      "severity": "suggestion",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-13",
+      "title": "No early power-fail signal on a board that writes storage (SD, eMMC, flash): a comparator on the input ahead of the rail lets firmware stop writing before the rail drops",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-14",
+      "title": "No UART console reachable on a header or test points",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-15",
+      "title": "Board revision and variant not readable by firmware (ID resistor divider on an ADC pin, straps): the firmware cannot tell boards apart",
+      "severity": "suggestion",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-16",
+      "title": "No firmware-driven LED (heartbeat), only power LEDs ≈ DBG-3",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-17",
+      "title": "SWD header without NRST (and SWO): the probe cannot reset a stuck target or trace",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-18",
+      "title": "I2C or SPI buses not reachable at a header or test points for a bus analyser",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-19",
+      "title": "Debug header VTref not wired straight to the target rail (a series resistor, or not connected): the probe senses level and power through it; and a header VCC pin able to source current into the rail back-powers the board to a half-alive state",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-20",
+      "title": "No hardware way to reset or power-cycle bus peripherals after an MCU-only reset: a stuck I2C slave stays stuck",
+      "severity": "suggestion",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-21",
+      "title": "JTAG pulls: TCK without a pull-down, TMS and TDI without pull-ups, nTRST floating where the header has no nTRST pin (the debug logic resets)",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-22",
+      "title": "SWDIO without a pull-up or SWCLK without a pull-down (10k-100k): noise on an unplugged header enters the debug port ≈ DBG-2",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-23",
+      "title": "Spare GPIOs not brought to pads or a header for bodges and debug",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DBG-24",
+      "title": "No non-volatile or backup storage for reset cause and crash logs (backup registers, FRAM, a few flash pages reserved)",
+      "severity": "suggestion",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "TEST-1",
+      "title": "Unconnected pins without test points (optional report table)",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "TEST-2",
+      "title": "Several test points on one net (incl. through 0R), unless top and bottom",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "TEST-3",
+      "title": "All harness connector pins self-testable",
+      "severity": "suggestion",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "TEST-4",
+      "title": "Power rail or ground without a test point",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "TEST-5",
+      "title": "Bring-up bus (UART, I2C, SPI, SWD) without test points",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "TEST-6",
+      "title": "Clock, reset or enable net without a test point",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "TEST-7",
+      "title": "Test points too small or too close for the probe or fixture they are meant for (layout)",
+      "severity": "suggestion",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "BOM-1",
+      "title": "Resistors (or capacitors) with values a step apart that could be one value",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "BOM-2",
+      "title": "Capacitor voltage, size and dielectric report: find odd ones",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BOM-3",
+      "title": "Big and small connectors, big and small parts, SMT and THT mixed and similar",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "BOM-4",
+      "title": "Propose consolidating identical resistors into resistor networks",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "BOM-5",
+      "title": "No TODOs or \"calculate later\" values left ≈ BOM-6",
+      "severity": "error",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 0,
+      "micros": 52
+    },
+    {
+      "id": "BOM-6",
+      "title": "\"Calculate later\" part mounted",
+      "severity": "error",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 0,
+      "micros": 60
+    },
+    {
+      "id": "BOM-7",
+      "title": "Depopulate spare and debug parts for release",
+      "severity": "suggestion",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "BOM-8",
+      "title": "LED swapped (polarity)",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "BOM-9",
+      "title": "Part without a value",
+      "severity": "error",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 0,
+      "micros": 37
+    },
+    {
+      "id": "BOM-10",
+      "title": "Value that doesn't parse or isn't a standard series value",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 0,
+      "micros": 412
+    },
+    {
+      "id": "BOM-11",
+      "title": "Same value in two packages",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "BOM-12",
+      "title": "Value field vs the MPN's parameters: resistance, capacitance, voltage, tolerance or package decoded from the part number disagree with the value or footprint (B200A R201/R203 13k3 for 13k7, B153A R219/R222 13k3 for 3k3; B135B C405, C509 MPN errors)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BOM-13",
+      "title": "Variant: a part's DNP flag disagrees with its per-variant fields, or a variant BOM is built from the base DNP flags",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BOM-14",
+      "title": "Mounted part without an MPN",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "BOM-15",
+      "title": "MPN not recommended for new designs, obsolete or single-source (DPO2036)",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BOM-16",
+      "title": "Tolerance missing or loose on a part in a precision role (regulator feedback, ADC reference divider, sense gain)",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "BOM-17",
+      "title": "One MPN with two different values (a copy-paste part)",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "BOM-18",
+      "title": "Parts of the vendor's typical application or reference design left out without a stated reason",
+      "severity": "suggestion",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "NAME-1",
+      "title": "Inconsistent naming of inverted signals: suggest one notation",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "NAME-2",
+      "title": "Inconsistent naming of differential pairs: suggest one notation",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "NAME-3",
+      "title": "Power net names without voltage when it's clearly fixed (DC-DC or LDO output, USB 2, Type-C with 5k1)",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "NAME-4",
+      "title": "UART: suggest `X_TX_Y_RX` style names",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "NAME-5",
+      "title": "Gaps in designator series on rev A or standalone ≈ NAME-6",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "NAME-6",
+      "title": "Suggest per page designators; highlight missing ones",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "NAME-7",
+      "title": "No nets found in strict mode: suggest `+xVy` power names and non-strict mode",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "NAME-8",
+      "title": "Fixed-voltage name on a net that is not fixed: a header `+5V` that is the receptacle VBUS, 5 to 20 V after PD ≈ RAIL-3",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "NAME-9",
+      "title": "IO numbering out of order against the part's pins (IO4 on GPIO17 while IO5 is on GPIO16)",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "NAME-10",
+      "title": "Active-low signal without a marker in its name (`_N`, `#`, `~`): reviewers and LOGIC-8 cannot see the polarity",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "NAME-11",
+      "title": "Negative rail named without its sign (`5V_NEG` vs `-5V`), or with a sign the tool does not parse",
+      "severity": "suggestion",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "NAME-12",
+      "title": "Unannotated or duplicate reference designators",
+      "severity": "error",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-1",
+      "title": "Symbol pin names differ from the same part elsewhere in the database",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-2",
+      "title": "Global pinout database for common connectors, check against it",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-3",
+      "title": "MOSFET symbol pins not named G/D/S (other checks need them)",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 0,
+      "micros": 104
+    },
+    {
+      "id": "LIB-4",
+      "title": "Pin electrical type wrong (a power pin as passive, an output as input): the type-based checks go blind",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-5",
+      "title": "Pins missing or duplicated against the package's pin count",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-6",
+      "title": "Footprint does not match the MPN's package (an inductor on the wrong footprint, a diode in another case size)",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-7",
+      "title": "Symbol pin name lacks a shared special function the pin has (`PF2` for a pin that is `PF2-NRST`): the reviewer and MUX-4 never see it",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-8",
+      "title": "Footprint pads too small or too large for the part's terminals (poor wetting, tombstoning, bridging)",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-9",
+      "title": "Footprint without a pin-1 or polarity mark on silk and fab layers",
+      "severity": "suggestion",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-10",
+      "title": "Exposed or thermal pad not connected (where it is the ground or substrate), or connected when the datasheet says float",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-11",
+      "title": "Footprint pad to symbol pin mapping wrong for a polarized part (anode and cathode, pin 1 of a diode package) ≈ BOM-8",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-12",
+      "title": "Footprint without a courtyard ≈ LAY-3",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-13",
+      "title": "Units of one multi-unit symbol with different footprints, values or power nets",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-14",
+      "title": "Unit of a multi-unit symbol not placed: an unused gate or amplifier whose inputs float ≈ ANA-11",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-15",
+      "title": "Symbol with no power pins at all (hidden, or forgotten): the part is never checked for power ≈ WIRE-10",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-16",
+      "title": "Symbol pin without a footprint pad, pad without a pin, or a pin mapped to a pad twice",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-17",
+      "title": "Placed symbol differs from its library copy, or its footprint link is broken or fails the symbol's footprint filter",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LIB-18",
+      "title": "Footprint built from a bottom-view drawing: the pinout is mirrored (regulators, transistors and connectors most often)",
+      "severity": "error",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-1",
+      "title": "Schematic and layout match",
+      "severity": "error",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-2",
+      "title": "Parts in component areas, test points in designated areas, nothing in forbidden areas",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-3",
+      "title": "Auto courtyard check and fix",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-4",
+      "title": "Check stackup",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-5",
+      "title": "Stitching vias",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-6",
+      "title": "Polarized part or IC without a pin-1 / polarity mark on the silk",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-7",
+      "title": "Test points without their net name on the silk",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-8",
+      "title": "No fiducials (three global, local ones at fine-pitch parts) on a machine-assembled board",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-9",
+      "title": "No tooling holes or panel rails planned",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-10",
+      "title": "Large pads (exposed pads, screw pads, big THT) with a full paste aperture: window-pane it",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-11",
+      "title": "Small parts (0402 and under) packed too closely for hand assembly where hand assembly is planned",
+      "severity": "suggestion",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-12",
+      "title": "Big THT pads or connector pins into a plane without thermal relief: hard to solder",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-13",
+      "title": "Track barely touching a via or pad it should connect to (DRC passes, the connection is a sliver)",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-14",
+      "title": "Creepage and clearance below the requirement across high voltage and isolation barriers",
+      "severity": "error",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-15",
+      "title": "Mounting holes without a decision (grounded, chassis, or isolated with a keepout), or without clearance for the screw head and washer",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-16",
+      "title": "Trace width below the current it carries (per net current, from the project data)",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-17",
+      "title": "Decoupling capacitor far from the pin it serves",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-18",
+      "title": "No keepout under the antenna or around the crystal",
+      "severity": "suggestion",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-19",
+      "title": "Assembly drawing without the marking codes of parts that are hard to tell apart",
+      "severity": "suggestion",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-20",
+      "title": "Pin-1 orientation differs between connectors of one type on the board",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-21",
+      "title": "Silk without revision, date code or a blank for serial and assembly revision",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-22",
+      "title": "Copper or parts too close to the board edge or a V-score line (copper under 0.5 mm, parts under 3 mm)",
+      "severity": "warning",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-23",
+      "title": "Silk over pads or vias, text too small for the fab, bottom text not mirrored",
+      "severity": "suggestion",
+      "tier": "hard",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-24",
+      "title": "Fab notes without the stackup, controlled-impedance nets and targets, or an IPC-356 netlist (catches inverted inner layers)",
+      "severity": "suggestion",
+      "tier": "judgement",
+      "status": "planned"
+    },
+    {
+      "id": "LAY-25",
+      "title": "Hot parts next to oscillators, references, ADCs or temperature sensors",
+      "severity": "suggestion",
+      "tier": "hard",
+      "status": "planned"
+    }
+  ],
+  "findings": [
+    {
+      "check": "I2C-1",
+      "severity": "error",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              5
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SCL1"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              8
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SDA1"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C20: I2C no pull-ups/I2C1: no pull-ups on SCL and SDA",
+      "facts": [],
+      "fingerprint": "I2C-1:net /C20: I2C no pull-ups/SCL1|net /C20: I2C no pull-ups/SDA1",
+      "explain": "docs/checks/i2c.md#i2c-1",
+      "fix": "one pull-up pair per bus segment, to the IO rail of the devices on it",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SCL1",
+          "at": [
+            74.93,
+            102.87
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SCL1",
+          "at": [
+            82.55,
+            105.41
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SDA1",
+          "at": [
+            74.93,
+            105.41
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SDA1",
+          "at": [
+            82.55,
+            102.87
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "I2C-3",
+      "severity": "error",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              0
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/I2C1_EN"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              6
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SCL2"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              9
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SDA2"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              7
+            ]
+          },
+          "kind": "part",
+          "name": "R201"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              8
+            ]
+          },
+          "kind": "part",
+          "name": "R202"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C20: I2C no pull-ups/I2C2: pull-ups R202 and R201 meet on /C20: I2C no pull-ups/I2C1_EN, which reaches no rail",
+      "facts": [],
+      "fingerprint": "I2C-3:net /C20: I2C no pull-ups/I2C1_EN|net /C20: I2C no pull-ups/SCL2|net /C20: I2C no pull-ups/SDA2|part R201|part R202",
+      "explain": "docs/checks/i2c.md#i2c-3",
+      "fix": "pull up straight from the rail",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label I2C1_EN",
+          "at": [
+            140.97,
+            88.9
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SCL2",
+          "at": [
+            129.54,
+            105.41
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SDA2",
+          "at": [
+            129.54,
+            102.87
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R201",
+          "line": 2824,
+          "at": [
+            139.7,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R202",
+          "line": 2280,
+          "at": [
+            149.86,
+            95.25
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "I2C-3",
+      "severity": "error",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              3
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/I2C3_P"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              7
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SCL3"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              10
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SDA3"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              9
+            ]
+          },
+          "kind": "part",
+          "name": "R203"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              10
+            ]
+          },
+          "kind": "part",
+          "name": "R204"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C20: I2C no pull-ups/I2C3: pull-ups R204 and R203 meet on /C20: I2C no pull-ups/I2C3_P, which reaches no rail",
+      "facts": [],
+      "fingerprint": "I2C-3:net /C20: I2C no pull-ups/I2C3_P|net /C20: I2C no pull-ups/SCL3|net /C20: I2C no pull-ups/SDA3|part R203|part R204",
+      "explain": "docs/checks/i2c.md#i2c-3",
+      "fix": "pull up straight from the rail",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label I2C3_P",
+          "at": [
+            212.09,
+            88.9
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SCL3",
+          "at": [
+            200.66,
+            105.41
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SDA3",
+          "at": [
+            200.66,
+            102.87
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R203",
+          "line": 2482,
+          "at": [
+            210.82,
+            95.25
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol R204",
+          "line": 2688,
+          "at": [
+            220.98,
+            95.25
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "I2C-2",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              32
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SCL1_1V8"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              35
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SDA1_1V8"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              38
+            ]
+          },
+          "kind": "part",
+          "name": "R509"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              39
+            ]
+          },
+          "kind": "part",
+          "name": "R510"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              40
+            ]
+          },
+          "kind": "part",
+          "name": "R511"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C107: I2C multiple pull-ups/I2C1_1V8: R509, R510, R511 pull up besides the pair R507 and R508",
+      "facts": [],
+      "fingerprint": "I2C-2:net /C107: I2C multiple pull-ups/SCL1_1V8|net /C107: I2C multiple pull-ups/SDA1_1V8|part R509|part R510|part R511",
+      "explain": "docs/checks/i2c.md#i2c-2",
+      "fix": "keep one pair; make the others DNP",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SCL1_1V8",
+          "at": [
+            50.8,
+            190.5
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SCL1_1V8",
+          "at": [
+            222.25,
+            49.53
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA1_1V8",
+          "at": [
+            50.8,
+            187.96
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA1_1V8",
+          "at": [
+            87.63,
+            187.96
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA1_1V8",
+          "at": [
+            222.25,
+            46.99
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R509",
+          "line": 2759,
+          "at": [
+            203.2,
+            39.37
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R510",
+          "line": 2486,
+          "at": [
+            72.39,
+            181.61
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R511",
+          "line": 3259,
+          "at": [
+            213.36,
+            39.37
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "I2C-2",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              33
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SCL1_3V3"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              34
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SCL_U7"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              36
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SDA1_3V3"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              37
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SDA_U7"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              30
+            ]
+          },
+          "kind": "part",
+          "name": "R501"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              31
+            ]
+          },
+          "kind": "part",
+          "name": "R502"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              32
+            ]
+          },
+          "kind": "part",
+          "name": "R503"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              33
+            ]
+          },
+          "kind": "part",
+          "name": "R504"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C107: I2C multiple pull-ups/I2C1_3V3 and /C107: I2C multiple pull-ups/I2C_U7: 2 pull-up pairs on one segment (R501, R503, R504, R502)",
+      "facts": [],
+      "fingerprint": "I2C-2:net /C107: I2C multiple pull-ups/SCL1_3V3|net /C107: I2C multiple pull-ups/SCL_U7|net /C107: I2C multiple pull-ups/SDA1_3V3|net /C107: I2C multiple pull-ups/SDA_U7|part R501|part R502|part R503|part R504",
+      "explain": "docs/checks/i2c.md#i2c-2",
+      "fix": "keep one pair per segment; make the others DNP",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SCL1_3V3",
+          "at": [
+            80.01,
+            66.04
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SCL_U7",
+          "at": [
+            149.86,
+            109.22
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA1_3V3",
+          "at": [
+            80.01,
+            68.58
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA_U7",
+          "at": [
+            149.86,
+            106.68
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R501",
+          "line": 2895,
+          "at": [
+            107.95,
+            52.07
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R502",
+          "line": 3759,
+          "at": [
+            171.45,
+            92.71
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R503",
+          "line": 3469,
+          "at": [
+            118.11,
+            52.07
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol R504",
+          "line": 3189,
+          "at": [
+            181.61,
+            92.71
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "I2C-2",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              17
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL1_3V3"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              24
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA1_3V3"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              30
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/UNM1"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              31
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/UNM2"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              14
+            ]
+          },
+          "kind": "part",
+          "name": "R401"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              16
+            ]
+          },
+          "kind": "part",
+          "name": "R403"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              28
+            ]
+          },
+          "kind": "part",
+          "name": "R415"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              29
+            ]
+          },
+          "kind": "part",
+          "name": "R416"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C22: I2C Segments/I2C1_3V3 and /C22: I2C Segments/I2C_U7 and /C22: I2C Segments/I2C1_3V3_to_U408: 2 pull-up pairs on one segment (R401, R403, R416, R415)",
+      "facts": [],
+      "fingerprint": "I2C-2:net /C22: I2C Segments/SCL1_3V3|net /C22: I2C Segments/SDA1_3V3|net /C22: I2C Segments/UNM1|net /C22: I2C Segments/UNM2|part R401|part R403|part R415|part R416",
+      "explain": "docs/checks/i2c.md#i2c-2",
+      "fix": "keep one pair per segment; make the others DNP",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL1_3V3",
+          "at": [
+            119.38,
+            78.74
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA1_3V3",
+          "at": [
+            119.38,
+            81.28
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label UNM1",
+          "at": [
+            189.23,
+            251.46
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label UNM2",
+          "at": [
+            189.23,
+            254.0
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R401",
+          "line": 7111,
+          "at": [
+            147.32,
+            64.77
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R403",
+          "line": 4123,
+          "at": [
+            157.48,
+            64.77
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R415",
+          "line": 6220,
+          "at": [
+            201.93,
+            243.84
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R416",
+          "line": 5612,
+          "at": [
+            212.09,
+            243.84
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "I2C-7",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              17
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL1_3V3"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              24
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA1_3V3"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              30
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/UNM1"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              31
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/UNM2"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              26
+            ]
+          },
+          "kind": "part",
+          "name": "R413"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              27
+            ]
+          },
+          "kind": "part",
+          "name": "R414"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C22: I2C Segments/I2C1_3V3 to /C22: I2C Segments/I2C1_3V3_to_U408: tie R413/R414 is 1 kΩ, over 100 Ω",
+      "facts": [
+        {
+          "name": "R413",
+          "value": "10 Ω",
+          "source": {
+            "Schematic": {
+              "file": "i2c-7_segments.kicad_sch"
+            }
+          }
+        },
+        {
+          "name": "R414",
+          "value": "1 kΩ",
+          "source": {
+            "Schematic": {
+              "file": "i2c-7_segments.kicad_sch"
+            }
+          }
+        },
+        {
+          "name": "max_tie",
+          "value": "100 Ω",
+          "source": {
+            "Derived": {
+              "rule": "I2C-7 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "I2C-7:net /C22: I2C Segments/SCL1_3V3|net /C22: I2C Segments/SDA1_3V3|net /C22: I2C Segments/UNM1|net /C22: I2C Segments/UNM2|part R413|part R414",
+      "explain": "docs/checks/i2c.md#i2c-7",
+      "fix": "0 Ω ties; for protection a TVS, not a resistor",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL1_3V3",
+          "at": [
+            119.38,
+            78.74
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA1_3V3",
+          "at": [
+            119.38,
+            81.28
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label UNM1",
+          "at": [
+            189.23,
+            251.46
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label UNM2",
+          "at": [
+            189.23,
+            254.0
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R413",
+          "line": 6511,
+          "at": [
+            182.88,
+            251.46
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R414",
+          "line": 6290,
+          "at": [
+            182.88,
+            254.0
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "I2C-9",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              13
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C non standard pull-ups/SCL"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              14
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C non standard pull-ups/SDA"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              12
+            ]
+          },
+          "kind": "part",
+          "name": "R301"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              13
+            ]
+          },
+          "kind": "part",
+          "name": "R302"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C20: I2C non standard pull-ups/I2C: pull-up R301 1 kΩ, R302 1 kΩ outside 2.2 kΩ..10 kΩ",
+      "facts": [
+        {
+          "name": "R301",
+          "value": "1 kΩ",
+          "source": {
+            "Schematic": {
+              "file": "i2c-9_non_standard_pull_ups.kicad_sch"
+            }
+          }
+        },
+        {
+          "name": "R302",
+          "value": "1 kΩ",
+          "source": {
+            "Schematic": {
+              "file": "i2c-9_non_standard_pull_ups.kicad_sch"
+            }
+          }
+        },
+        {
+          "name": "window",
+          "value": "2.2 kΩ..10 kΩ",
+          "source": {
+            "Derived": {
+              "rule": "I2C-9 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "I2C-9:net /C20: I2C non standard pull-ups/SCL|net /C20: I2C non standard pull-ups/SDA|part R301|part R302",
+      "explain": "docs/checks/i2c.md#i2c-9",
+      "fix": "pick a value inside the window for the bus voltage and mode (TI SLVA689)",
+      "locations": [
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "local label SCL",
+          "at": [
+            114.3,
+            73.66
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "local label SCL",
+          "at": [
+            127.0,
+            76.2
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "local label SDA",
+          "at": [
+            114.3,
+            76.2
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "local label SDA",
+          "at": [
+            127.0,
+            73.66
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "symbol R301",
+          "line": 1557,
+          "at": [
+            96.52,
+            62.23
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "symbol R302",
+          "line": 1913,
+          "at": [
+            106.68,
+            62.23
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "I2C-10",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              11
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C non equal pull-ups/SCL"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              12
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C non equal pull-ups/SDA"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              41
+            ]
+          },
+          "kind": "part",
+          "name": "R601"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              42
+            ]
+          },
+          "kind": "part",
+          "name": "R602"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C20: I2C non equal pull-ups/I2C: SCL pull-up R601 is 3 kΩ, SDA pull-up R602 is 3.3 kΩ",
+      "facts": [
+        {
+          "name": "R601",
+          "value": "3 kΩ",
+          "source": {
+            "Schematic": {
+              "file": "i2c-10_non_equal_pull_ups.kicad_sch"
+            }
+          }
+        },
+        {
+          "name": "R602",
+          "value": "3.3 kΩ",
+          "source": {
+            "Schematic": {
+              "file": "i2c-10_non_equal_pull_ups.kicad_sch"
+            }
+          }
+        }
+      ],
+      "fingerprint": "I2C-10:net /C20: I2C non equal pull-ups/SCL|net /C20: I2C non equal pull-ups/SDA|part R601|part R602",
+      "explain": "docs/checks/i2c.md#i2c-10",
+      "fix": "the same value on both lines",
+      "locations": [
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "local label SCL",
+          "at": [
+            109.22,
+            68.58
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "local label SCL",
+          "at": [
+            121.92,
+            71.12
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "local label SDA",
+          "at": [
+            109.22,
+            71.12
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "local label SDA",
+          "at": [
+            121.92,
+            68.58
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "symbol R601",
+          "line": 1656,
+          "at": [
+            91.44,
+            57.15
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "symbol R602",
+          "line": 1300,
+          "at": [
+            101.6,
+            57.15
+          ]
+        }
+      ],
+      "also": []
+    }
+  ],
+  "candidates": [],
+  "notes": [],
+  "timing": {
+    "checks_micros": 1166,
+    "total_micros": 1406
+  }
+}

@@ -7,8 +7,8 @@ what an I2C bus, a pull-up, a MOSFET or a power rail is, read from the netlist y
 For hardware engineers who review schematics (their own or someone else's) and want the repetitive part of a
 review done by a tool, and for teams that keep KiCad projects in git.
 
-The project is early. The KiCad diff tool is ready for daily use; the checks run as a Rust library and in tests,
-and the desktop app is a first prototype.
+The project is early. The KiCad diff tool is ready for daily use; the checks run from the shell and in CI with
+`berc check` and as a Rust library; the desktop app is a first prototype.
 
 ## What works today
 
@@ -27,12 +27,14 @@ and the desktop app is a first prototype.
   - parts without a value, placeholder values like `?` or `TBD` (fitted or not), resistor values that don't read
     or are written in a non-standard way (`BOM-5`, `BOM-6`, `BOM-9`, `BOM-10`)
   - MOSFET symbols whose pins aren't named G, S and D (`LIB-3`)
+- **`berc check`**: the checks on a KiCad project (or a KiCad netlist, Altium, OrCAD or PnP file) from the shell
+  or a CI job, as text, JSON, SARIF (GitHub code scanning) or Markdown (a PR comment), with an exit code by
+  severity and a baseline so only new findings fail. `berc explain ID` and `berc checks list` show the catalogue.
+  See [Checks in CI](#checks-in-ci).
 - **The app** (`better_erc`, egui): tabs for nets, power rails (rails and grounds derived from net names), I2C
   buses, style findings and inputs, still on the first analysis code (`erc_core`). Its import tab loads Altium
   netlists so far; KiCad and OrCAD import in the app are still to come.
 - **Tools**: a pick-and-place file comparison (`ecad_compare`).
-
-There is no command to run the checks from the shell yet; that is planned (`RPT-20` in FEATURES.md).
 
 ## Documentation
 
@@ -69,27 +71,89 @@ printf '*.kicad_sch diff=kicad\n*.kicad_pcb diff=kicad\n*.kicad_pro diff=kicad\n
 git diff   # changed parts, values, nets and settings instead of raw s-expressions
 ```
 
-Run the checks on a KiCad design from Rust: export the netlist with
-`kicad-cli sch export netlist -o board.net board.kicad_sch`, then
+Run the checks on a KiCad project (its directory, or the `.kicad_pro` / `.kicad_sch`):
 
-```rust
-use ecad_file_format::load_kicad_netlist;
-use erc_core::PcbAssembly;
-
-let netlist = load_kicad_netlist(std::path::Path::new("board.net"))?;
-let pcba = PcbAssembly::new(netlist);
-println!("{:#?}", pcba.diagnostics); // I2C and style findings
+```sh
+berc check hw/board                  # findings worst first, the checks that could not run and why
+berc explain I2C-3                   # what a check catches, why it matters, how to fix it
+berc checks list --project hw/board  # every catalogue check: ran, not run (and why), planned
 ```
+
+From Rust, the same run is `erc_checks::check_path` (or `erc_checks::Project::open` and `check`), see
+[docs/engine.md](docs/engine.md).
 
 Start the app with `just run` (or `better_erc` once installed).
 
 Shell completion for `berc`: add `source <(COMPLETE=bash berc)` to `~/.bashrc`, `source <(COMPLETE=zsh berc)`
 to `~/.zshrc`, or `COMPLETE=fish berc | source` to `~/.config/fish/config.fish`.
 
+## Checks in CI
+
+```sh
+berc check PROJECT [--variant V] [--only CAT,ID] [--format text|json|sarif|md]
+                   [--baseline report.json] [--fail-on error|warning|suggestion] [--require NEED]
+```
+
+`PROJECT` is a directory with one design in it (its `.kicad_pro`) or a design file. Exit codes:
+
+| code | meaning |
+|---|---|
+| 0 | no finding at or above `--fail-on` (default `error`) |
+| 1 | findings at or above `--fail-on`; with `--baseline`, only findings that are not in the baseline count |
+| 2 | usage or import error: no such path, several designs in the directory, an unreadable file, an unknown variant or check, a baseline of another schema |
+| 3 | a `--require`d need is not available on a board (`--require layout` without a `.kicad_pcb`); wins over 1 |
+
+`--format json` writes the report with its versioned schema; that file is also what `--baseline` takes: findings are
+matched by board and fingerprint (check id and the names of the nets and parts involved), marked new or unchanged,
+and the fixed ones listed. `--format sarif` writes SARIF 2.1.0: one rule per catalogue check, error → `error`,
+warning → `warning`, suggestion → `note`, each finding located at the schematic file and the line of its symbol
+(the file alone where no line is known). `--format md` is a summary for a pull request comment. `--state` is
+reserved for power states and refused until they exist.
+
+A GitHub Actions job that fails on errors, shows the findings in code scanning on the schematic files and puts the
+Markdown summary on the run page:
+
+```yaml
+name: schematic checks
+on: [push, pull_request]
+jobs:
+  berc:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write # upload SARIF to code scanning
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo install --locked --git https://github.com/romixlab/better_erc berc
+      - name: berc check
+        run: berc check hw/board --format sarif > berc.sarif
+      - name: Summary
+        if: always()
+        run: berc check hw/board --format md >> "$GITHUB_STEP_SUMMARY" || true
+      - name: Upload to code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: berc.sarif
+          category: better_erc
+```
+
+Run it from the repository root with a relative project path: the SARIF file names the schematic files relative to
+the current directory, which is what code scanning expects. To adopt better_erc on a board with known findings,
+commit a baseline (`berc check hw/board --format json > hw/board/berc-baseline.json`) and add
+`--baseline hw/board/berc-baseline.json`: from then on only new findings fail the job.
+
+In this repository `just check` runs `berc check` on the test schematics against the committed
+`test_schematics/berc-baseline.json` (they have findings on purpose), and `just check-baseline` rewrites it.
+
 ## Development
 
-The workspace has five crates: `ecad_file_format` (importers and the netlist model), `erc_core` (analysis and
-checks), `ecad_compare` (board file comparisons), `better_erc` (the app) and `berc` (the command line tool).
+The workspace has the crates of the new core, `erc_model` (the board model), `erc_kicad` (KiCad read by us),
+`erc_import` (the importer registry with Altium, OrCAD and PnP), `erc_analysis` and `erc_checks` (the engine, the
+checks, the report and its formats), and of the old one, `ecad_file_format` (importers and the netlist model),
+`erc_core` (analysis and checks) and `ecad_compare` (board file comparisons), which go once the new core has
+taken over; plus `better_erc` (the app) and `berc` (the command line tool).
 `test_schematics` holds a small KiCad schematic per check; the tests export them with `kicad-cli`, so KiCad must
 be installed to run them.
 
@@ -98,6 +162,7 @@ just test       # all tests
 just lint       # clippy with warnings as errors, and the format check
 just fmt        # format the code
 just run        # start the app
+just check      # berc check on the test schematics, against their baseline
 just netlists   # export the test schematics to netlists and pictures
 just            # list every recipe
 ```
