@@ -23,7 +23,7 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 ### Fixed
 
 - The power name grammar reads KiCad's auto net names (`Net-(U1-GND)`, `unconnected-(J3-Shield-Pad6)`) as nothing,
-  a pin alone on an unconnected net makes no ground, and shield, chassis or earth pins no longer make their net a
+  a ground pin alone on an unconnected net is neither a ground nor a rail, and shield, chassis or earth pins no longer make their net a
   ground (`erc_analysis::power::is_auto_name`, `ground_pin_word`).
 
 ## [0.4.6] - 2026-10-22

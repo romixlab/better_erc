@@ -1,6 +1,14 @@
 # What better_erc finds on drv-9_relay_flyback.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board drv-9_relay_flyback"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["part R1", "part R2"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 
@@ -23,6 +31,14 @@ subjects = ["net +3V3"]
 [[finding]]
 check = "DRV-9"
 subjects = ["net /K1_COIL", "part K1"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /K3_IN", "part Q3"]
+
+[[finding]]
+check = "LOGIC-7"
+subjects = ["net /K4_COIL", "part U2"]
 
 [[finding]]
 check = "PIN-4"

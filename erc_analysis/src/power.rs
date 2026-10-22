@@ -237,6 +237,10 @@ impl Power {
             let ground_pins = net.kind != NetKind::Unconnected
                 && ground_named > 0
                 && ground_named * 2 > power_pins;
+            // A ground pin alone is neither a ground nor, by its power-pin type, a rail
+            if net.kind == NetKind::Unconnected && ground_named > 0 && ground_named == pins.len() {
+                continue;
+            }
             let power_pins = power_pins > 0;
             let fact = |s, rule: &str| Fact::new(s, derived(rule));
             // The project decides first

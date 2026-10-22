@@ -1,6 +1,18 @@
 # What better_erc finds on drv-12_base_resistor.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-1"
+subjects = ["part R1", "part R3"]
+
+[[finding]]
+check = "BOM-1"
+subjects = ["part R2", "part R5"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board drv-12_base_resistor"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 

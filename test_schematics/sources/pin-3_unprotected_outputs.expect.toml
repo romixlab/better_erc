@@ -1,6 +1,10 @@
 # What better_erc finds on pin-3_unprotected_outputs.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board pin-3_unprotected_outputs"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U2"]
 
@@ -55,6 +59,10 @@ subjects = ["net +5V0", "part U4"]
 [[finding]]
 check = "DRV-7"
 subjects = ["net /SW1", "part U1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /EN_EXT", "pin U3.4"]
 
 [[finding]]
 check = "PIN-3"

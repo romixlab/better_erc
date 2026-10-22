@@ -21,6 +21,14 @@ check = "IO-16"
 subjects = ["net Net-(R5-Pad2)", "part R5", "part R6"]
 
 [[finding]]
+check = "LEAK-1"
+subjects = ["net +3V3", "part R5", "part R6"]
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net +5V", "part U1"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.1"]
 

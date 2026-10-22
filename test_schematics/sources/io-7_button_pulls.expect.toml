@@ -31,6 +31,11 @@ subjects = ["net /BTN_B", "part SW2"]
 also = ["IO-8"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "SHORT-3"
 subjects = ["net +3V3", "net /BTN_B", "part R2", "part SW2"]
 

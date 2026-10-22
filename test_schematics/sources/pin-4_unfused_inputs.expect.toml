@@ -1,6 +1,14 @@
 # What better_erc finds on pin-4_unfused_inputs.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-1"
+subjects = ["part C1", "part C2", "part C5"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board pin-4_unfused_inputs"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +12V_IN"]
 
@@ -71,6 +79,10 @@ subjects = ["net /SW1", "part U1"]
 [[finding]]
 check = "DRV-7"
 subjects = ["net /SW2", "part U5"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /EN_24V", "pin U4.4"]
 
 [[finding]]
 check = "PIN-4"

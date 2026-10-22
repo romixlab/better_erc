@@ -29,6 +29,11 @@ check = "IO-8"
 subjects = ["net /IN_SW", "part SW1"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U2", "pin U2.9"]
 

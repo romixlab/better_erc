@@ -65,6 +65,11 @@ check = "NAME-10"
 subjects = ["net /RST_B", "pin U4.3"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net /+3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-4"
 subjects = ["net /+3V3"]
 

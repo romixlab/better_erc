@@ -1,6 +1,10 @@
 # What better_erc finds on rail-1_unpowered_pins.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board rail-1_unpowered_pins"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 

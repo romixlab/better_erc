@@ -1,6 +1,18 @@
 # What better_erc finds on pin-6_unfiltered_inputs.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-1"
+subjects = ["part C1", "part C2", "part C3", "part C4", "part C6", "part C8", "part C9"]
+
+[[finding]]
+check = "BOM-1"
+subjects = ["part C1", "part C3", "part C7", "part C8"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board pin-6_unfiltered_inputs"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +12V_IN"]
 

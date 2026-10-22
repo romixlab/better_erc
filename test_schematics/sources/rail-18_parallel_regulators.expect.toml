@@ -1,6 +1,10 @@
 # What better_erc finds on rail-18_parallel_regulators.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board rail-18_parallel_regulators"]
+
+[[finding]]
 check = "DBG-10"
 subjects = ["net +5V"]
 

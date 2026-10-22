@@ -61,6 +61,14 @@ check = "NAME-7"
 subjects = ["board lib-15_no_power_pins"]
 
 [[finding]]
+check = "RAIL-1"
+subjects = ["net VCC", "part U4"]
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net unconnected-(U2-VCC-Pad5)", "part U2"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.1", "pin U1.2", "pin U1.4"]
 
@@ -86,12 +94,4 @@ subjects = ["net VCC"]
 
 [[finding]]
 check = "TEST-4"
-subjects = ["net unconnected-(U2-GND-Pad3)"]
-
-[[finding]]
-check = "TEST-4"
 subjects = ["net unconnected-(U2-VCC-Pad5)"]
-
-[[finding]]
-check = "TEST-4"
-subjects = ["net unconnected-(U3-GND-Pad3)"]

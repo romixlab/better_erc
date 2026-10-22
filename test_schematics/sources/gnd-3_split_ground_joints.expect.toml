@@ -1,6 +1,10 @@
 # What better_erc finds on gnd-3_split_ground_joints.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board gnd-3_split_ground_joints"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +3V3"]
 
@@ -23,6 +27,14 @@ subjects = ["net AGND", "net GND", "part FB1", "part NT1", "part U1"]
 [[finding]]
 check = "GND-3"
 subjects = ["net GND", "net GNDA"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /AIN0", "pin U1.5"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /AIN2", "pin U3.5"]
 
 [[finding]]
 check = "PIN-4"

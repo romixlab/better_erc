@@ -145,6 +145,10 @@ check = "IO-1"
 subjects = ["net unconnected-(U404-EN-Pad8)", "pin U404.8"]
 
 [[finding]]
+check = "LVL-7"
+subjects = ["net VCC_1V2", "net VCC_3V3", "part U404"]
+
+[[finding]]
 check = "NAME-7"
 subjects = ["board i2c-7_segments"]
 

@@ -60,6 +60,11 @@ check = "NAME-7"
 subjects = ["board ana-16_gain_resistor_range"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net +5V"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-4"
 subjects = ["net +5V"]
 

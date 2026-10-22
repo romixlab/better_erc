@@ -1,6 +1,30 @@
 # What better_erc finds on lvl-4_translator_pull_ups.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board lvl-4_translator_pull_ups"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +1V8", "part R3", "part R4"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R1", "part R2", "part R7", "part R8"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R11", "part R12"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R5", "part R6"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +5V", "part R10", "part R9"]
+
+[[finding]]
 check = "DBG-18"
 subjects = ["net /SCL_1V8", "net /SDA_1V8"]
 

@@ -23,6 +23,10 @@ subjects = ["net /TOUCH_TP", "pin U1.3"]
 also = ["IO-1"]
 
 [[finding]]
+check = "RAIL-1"
+subjects = ["net +3V3", "part U1"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.1", "pin U1.6", "pin U1.7", "pin U1.8", "pin U1.9"]
 

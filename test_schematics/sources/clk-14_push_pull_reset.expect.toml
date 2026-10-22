@@ -33,6 +33,14 @@ check = "NAME-10"
 subjects = ["net /PHY_RST", "pin U5.3"]
 
 [[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J2"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.4"]
 

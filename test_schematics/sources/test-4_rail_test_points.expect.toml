@@ -29,6 +29,10 @@ check = "IO-1"
 subjects = ["net /SENSE_IN", "pin U2.3"]
 
 [[finding]]
+check = "PIN-4"
+subjects = ["net +5V", "part J1"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U2", "pin U2.3"]
 

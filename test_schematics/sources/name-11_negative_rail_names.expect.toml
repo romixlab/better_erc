@@ -60,6 +60,18 @@ subjects = ["net /IN3", "pin U3.3"]
 also = ["IO-6"]
 
 [[finding]]
+check = "LVL-7"
+subjects = ["net +12V", "net -12V", "part U3"]
+
+[[finding]]
+check = "LVL-7"
+subjects = ["net +12V", "net VAUX", "part U2"]
+
+[[finding]]
+check = "LVL-7"
+subjects = ["net +5V0", "net 5V0_NEG", "part U1"]
+
+[[finding]]
 check = "NAME-11"
 subjects = ["net 5V0_NEG", "pin U1.4"]
 

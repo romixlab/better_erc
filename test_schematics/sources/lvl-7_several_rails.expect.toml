@@ -1,6 +1,10 @@
 # What better_erc finds on lvl-7_several_rails.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board lvl-7_several_rails"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1", "part U3"]
 

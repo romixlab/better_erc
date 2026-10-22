@@ -1,6 +1,10 @@
 # What better_erc finds on rail-5_unsourced_rail.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board rail-5_unsourced_rail"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +3V3"]
 
@@ -52,6 +56,14 @@ subjects = ["net +3V3_WEAK", "part R1"]
 [[finding]]
 check = "DEC-8"
 subjects = ["net +5V0_USBIN", "part FB1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /EN_SW", "pin Q1.1"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /EN_SW", "part Q1"]
 
 [[finding]]
 check = "PIN-4"

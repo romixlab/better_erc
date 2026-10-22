@@ -1,6 +1,14 @@
 # What better_erc finds on drv-7_half_bridge_snubber.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-1"
+subjects = ["part R1", "part R2"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board drv-7_half_bridge_snubber"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +12V"]
 
@@ -27,6 +35,38 @@ subjects = ["net /PHASE_A", "part Q1", "part Q2"]
 [[finding]]
 check = "DRV-7"
 subjects = ["net /SW1", "part U1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /HG_A", "pin Q1.1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /HG_B", "pin Q3.1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /LG_A", "pin Q2.1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /LG_B", "pin Q4.1"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /HG_A", "part Q1"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /HG_B", "part Q3"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /LG_A", "part Q2"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /LG_B", "part Q4"]
 
 [[finding]]
 check = "PIN-4"

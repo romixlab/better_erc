@@ -39,6 +39,11 @@ check = "MUX-1"
 subjects = ["net /USB_D_P", "part U1"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "SHORT-12"
 subjects = ["net /ETH_TX_N"]
 

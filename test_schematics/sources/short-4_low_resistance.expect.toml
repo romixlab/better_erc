@@ -21,6 +21,10 @@ check = "IO-16"
 subjects = ["net /ADC2", "part R6", "part R7"]
 
 [[finding]]
+check = "LEAK-1"
+subjects = ["net +5V", "part R3", "part R4"]
+
+[[finding]]
 check = "NAME-5"
 subjects = ["part R4", "part R6"]
 

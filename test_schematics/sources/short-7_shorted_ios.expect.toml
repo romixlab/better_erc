@@ -22,6 +22,11 @@ subjects = ["net /IN", "pin U3.3"]
 also = ["IO-6"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "SHORT-7"
 subjects = ["net /SPI_SCK", "part U1", "part U2"]
 

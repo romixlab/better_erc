@@ -85,8 +85,32 @@ check = "LIB-14"
 subjects = ["part U1"]
 
 [[finding]]
+check = "LVL-7"
+subjects = ["net unconnected-(U1C-V+-Pad8)", "net unconnected-(U1C-V--Pad4)", "part U1"]
+
+[[finding]]
+check = "LVL-7"
+subjects = ["net unconnected-(U2C-V+-Pad8)", "net unconnected-(U2C-V--Pad4)", "part U2"]
+
+[[finding]]
 check = "NAME-7"
 subjects = ["board lib-14_unplaced_units"]
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net unconnected-(U1C-V+-Pad8)", "part U1"]
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net unconnected-(U1C-V--Pad4)", "part U1"]
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net unconnected-(U2C-V+-Pad8)", "part U2"]
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net unconnected-(U2C-V--Pad4)", "part U2"]
 
 [[finding]]
 check = "TEST-1"

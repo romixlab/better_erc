@@ -33,8 +33,20 @@ check = "DEC-1"
 subjects = ["net +5V"]
 
 [[finding]]
+check = "DRV-7"
+subjects = ["net /SW", "part U2"]
+
+[[finding]]
 check = "IO-16"
 subjects = ["net /BOOT", "part R1", "part R2"]
+
+[[finding]]
+check = "LEAK-1"
+subjects = ["net +3V3", "part R1", "part R2"]
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net +5V", "part U2"]
 
 [[finding]]
 check = "TEST-1"

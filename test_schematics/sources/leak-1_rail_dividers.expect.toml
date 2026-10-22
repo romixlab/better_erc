@@ -1,6 +1,10 @@
 # What better_erc finds on leak-1_rail_dividers.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board leak-1_rail_dividers"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +1V8"]
 
@@ -23,6 +27,18 @@ subjects = ["net +5V"]
 [[finding]]
 check = "DRV-7"
 subjects = ["net /SW1", "part U2"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /DIV_EN", "pin Q1.1"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /DIV_EN", "part Q1"]
+
+[[finding]]
+check = "IO-16"
+subjects = ["net /VSENSE", "part R3", "part R4"]
 
 [[finding]]
 check = "LEAK-1"

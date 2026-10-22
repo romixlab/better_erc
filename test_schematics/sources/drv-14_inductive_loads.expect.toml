@@ -1,6 +1,10 @@
 # What better_erc finds on drv-14_inductive_loads.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board drv-14_inductive_loads"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 
@@ -19,6 +23,18 @@ subjects = ["net +3V3"]
 [[finding]]
 check = "DRV-14"
 subjects = ["net /VALVE_SW", "part SOL1"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /MOTOR_G", "part Q2"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /VALVE2_G", "part Q3"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /VALVE_G", "part Q1"]
 
 [[finding]]
 check = "PIN-4"

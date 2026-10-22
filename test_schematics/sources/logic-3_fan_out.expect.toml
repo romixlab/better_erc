@@ -57,6 +57,11 @@ check = "LOGIC-3"
 subjects = ["net /RESET", "part U1"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net /+3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U6", "pin U6.3"]
 

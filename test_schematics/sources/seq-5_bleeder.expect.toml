@@ -1,6 +1,18 @@
 # What better_erc finds on seq-5_bleeder.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-1"
+subjects = ["part C1", "part C3"]
+
+[[finding]]
+check = "BOM-1"
+subjects = ["part C1", "part C4"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board seq-5_bleeder"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +100V"]
 
@@ -11,6 +23,10 @@ subjects = ["net +24V"]
 [[finding]]
 check = "DBG-4"
 subjects = ["net +60V"]
+
+[[finding]]
+check = "IO-16"
+subjects = ["net /BLEED_MID", "part R1", "part R2"]
 
 [[finding]]
 check = "NAME-7"

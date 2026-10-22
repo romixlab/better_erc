@@ -23,6 +23,11 @@ subjects = ["net /REMOTE_EN", "pin U1.3"]
 also = ["IO-6"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.6", "pin U1.7", "pin U1.8", "pin U1.9"]
 

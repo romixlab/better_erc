@@ -34,8 +34,16 @@ subjects = ["net /SIG_B", "pin U1.5"]
 also = ["IO-6"]
 
 [[finding]]
+check = "LEAK-1"
+subjects = ["net +5V", "part R4", "part R5"]
+
+[[finding]]
 check = "NAME-7"
 subjects = ["board ana-10_opamp_feedback"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +5V", "part J3"]
 
 [[finding]]
 check = "TEST-4"

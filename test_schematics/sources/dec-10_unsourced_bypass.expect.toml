@@ -41,6 +41,15 @@ check = "IO-1"
 subjects = ["net /AIN3", "pin U3.3"]
 
 [[finding]]
+check = "PIN-4"
+subjects = ["net +5V0_USBIN", "part J1"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +5V0_FLT"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.3", "pin U1.4"]
 

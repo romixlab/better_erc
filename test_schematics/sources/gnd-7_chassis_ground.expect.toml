@@ -1,6 +1,10 @@
 # What better_erc finds on gnd-7_chassis_ground.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board gnd-7_chassis_ground"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net VBUS"]
 

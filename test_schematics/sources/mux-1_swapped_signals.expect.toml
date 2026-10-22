@@ -101,6 +101,11 @@ check = "NAME-4"
 subjects = ["net /UART_TX", "pin U1.8", "pin U4.3"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net /+3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-4"
 subjects = ["net /+3V3"]
 

@@ -33,6 +33,10 @@ check = "DEC-1"
 subjects = ["net +5V"]
 
 [[finding]]
+check = "DRV-5"
+subjects = ["net /GPIO3", "part Q4"]
+
+[[finding]]
 check = "IO-10"
 subjects = ["net /GATE6", "pin Q6.1"]
 also = ["IO-6"]
@@ -48,6 +52,15 @@ subjects = ["net /GATE6", "part Q6"]
 [[finding]]
 check = "IO-11"
 subjects = ["net /GATE7", "part Q7"]
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net +3V3", "part U1"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +5V"]
+also = ["RAIL-1"]
 
 [[finding]]
 check = "TEST-1"

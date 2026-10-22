@@ -1,6 +1,14 @@
 # What better_erc finds on drv-6_back_to_back.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board drv-6_back_to_back"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["part R1", "part R2"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 
@@ -27,6 +35,18 @@ subjects = ["net /MID_B", "part Q3", "part Q4"]
 [[finding]]
 check = "DRV-7"
 subjects = ["net /LOAD_SW", "part Q5", "part Q6"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /SEL_A", "part Q5"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /SEL_B", "part Q4"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /SEL_B", "part Q6"]
 
 [[finding]]
 check = "PIN-4"

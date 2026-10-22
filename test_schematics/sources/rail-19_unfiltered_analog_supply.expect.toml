@@ -1,6 +1,14 @@
 # What better_erc finds on rail-19_unfiltered_analog_supply.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-1"
+subjects = ["part C1", "part C2", "part C4"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board rail-19_unfiltered_analog_supply"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1", "part U2", "part U4"]
 
@@ -56,6 +64,14 @@ subjects = ["net +3V3_AN", "part U5"]
 [[finding]]
 check = "DEC-7"
 subjects = ["net +3V3_VDDA", "part U2"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /AIN0", "pin U5.3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /AIN1", "pin U7.3"]
 
 [[finding]]
 check = "LVL-7"
