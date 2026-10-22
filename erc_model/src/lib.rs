@@ -20,6 +20,7 @@ pub mod dump;
 pub mod fact;
 pub mod import;
 pub mod layout;
+pub mod netcmp;
 pub mod value;
 
 pub use canon::{link_layout, natural_cmp};

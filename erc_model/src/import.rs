@@ -103,6 +103,9 @@ pub enum Confidence {
 pub struct ImportOptions {
     /// Skip the board file even when there is one
     pub no_layout: bool,
+    /// Read the design as this KiCad major version would (8, 9, 10): connectivity rules changed between
+    /// versions. `None`: the version that wrote the newest file of the project.
+    pub kicad_version: Option<u32>,
 }
 
 /// What an import produced
