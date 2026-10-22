@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-22
+
 ### Added
 
 - `erc_analysis::power` (`NET-5`, first layer): rails (by a voltage in the name, `+V`/`VDD`/`VCC`, or a power pin on
@@ -34,19 +36,6 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 - The old readers' tests as acceptance tests on the new core: `ecad_file_format::kicad_netlist`'s asserts in
   `erc_kicad/tests/netlist.rs`, the passive value table in `erc_model::value`.
 
-### Fixed
-
-- The KiCad netlist importer keeps KiCad 10's unit names (`A`, `B`) and unit count on the symbol, as the old reader
-  did (`IMP-12`).
-
-### Removed
-
-- **Breaking:** the old crates `ecad_file_format` (netlist model and readers), `erc_core` (`PcbAssembly`, its checks
-  and analyses) and `ecad_compare` (PnP compare), and with them `lexpr` and `serde-lexpr` (`NET-16`). Everything they
-  did runs on the new core: the readers in `erc_kicad` and `erc_import`, values in `erc_model::value`, the
-  analyses in `erc_analysis` (classes, graph, I2C, power), the eleven checks in `erc_checks`, the PnP compare as
-  `berc diff --pnp`; their tests are acceptance tests there.
-
 ### Changed
 
 - **Breaking:** the app crate is `better_erc_app` (directory `better_erc_app/`, binary still `better_erc`, so
@@ -61,6 +50,19 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
   and Inputs (`VIEW-4`) read them.
 - The KiCad netlist fixtures move from `ecad_file_format/test_input` to `erc_kicad/tests/fixtures/netlist`;
   `just netlist-fixtures` exports them there.
+
+### Removed
+
+- **Breaking:** the old crates `ecad_file_format` (netlist model and readers), `erc_core` (`PcbAssembly`, its checks
+  and analyses) and `ecad_compare` (PnP compare), and with them `lexpr` and `serde-lexpr` (`NET-16`). Everything they
+  did runs on the new core: the readers in `erc_kicad` and `erc_import`, values in `erc_model::value`, the
+  analyses in `erc_analysis` (classes, graph, I2C, power), the eleven checks in `erc_checks`, the PnP compare as
+  `berc diff --pnp`; their tests are acceptance tests there.
+
+### Fixed
+
+- The KiCad netlist importer keeps KiCad 10's unit names (`A`, `B`) and unit count on the symbol, as the old reader
+  did (`IMP-12`).
 
 ## [0.3.9] - 2026-10-22
 
