@@ -111,7 +111,7 @@ mod tests {
     #[test]
     fn can_read_altium_wirelist_netlist() {
         let netlist =
-            load_wirelist_netlist(Path::new("test_input/netlist_altium_wirelist.net")).unwrap();
+            load_wirelist_netlist(Path::new("../erc_import/tests/fixtures/netlist_altium_wirelist.net")).unwrap();
         println!("{:#?}", netlist);
     }
 }

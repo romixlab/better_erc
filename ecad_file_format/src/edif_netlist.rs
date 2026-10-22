@@ -233,7 +233,7 @@ mod tests {
 
     #[test]
     fn can_read_edif_netlist() {
-        let path = Path::new("test_input/netlist_altium_edif.edf");
+        let path = Path::new("../erc_import/tests/fixtures/netlist_altium_edif.edf");
         let netlist = load_edif_netlist(path).unwrap();
         println!("{:#?}", netlist);
         let part = netlist

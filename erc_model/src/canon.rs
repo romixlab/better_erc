@@ -116,6 +116,7 @@ impl Board {
         for s in &mut self.symbols {
             s.footprint_filters.sort();
             s.fields.sort();
+            s.unit_names.sort();
             s.pins.sort_by(|a, b| {
                 natural_cmp(&a.number, &b.number)
                     .then(a.unit.cmp(&b.unit))

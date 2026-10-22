@@ -67,6 +67,7 @@ fn sample() -> Design {
         fields: vec![("Value".into(), "R".into())],
         hash: Some("1a2b".into()),
         jumper_pin_groups: vec![vec!["1".into(), "2".into()]],
+        unit_names: vec![(1, "A".into())],
         ..SymbolDef::default()
     });
     b.variants.push(Variant {

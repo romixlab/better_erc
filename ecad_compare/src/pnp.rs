@@ -41,10 +41,10 @@ mod tests {
     #[test]
     fn compare_positions_works() {
         let positions_a =
-            load_component_positions(Path::new("../ecad_file_format/test_input/pnp_allegro.csv"))
+            load_component_positions(Path::new("../erc_import/tests/fixtures/pnp_allegro.csv"))
                 .unwrap();
         let positions_b = load_component_positions(Path::new(
-            "../ecad_file_format/test_input/pnp_altium_no_units.csv",
+            "../erc_import/tests/fixtures/pnp_altium_no_units.csv",
         ))
         .unwrap();
         let change_list = compare_positions(&positions_a, &positions_b);

@@ -1,0 +1,30 @@
+[package]
+name = "erc_import"
+description = "better_erc importers behind one registry: KiCad (through erc_kicad), Altium EDIF and WireList, OrCAD pstxnet/pstxprt/pstchip, pick-and-place CSV"
+authors.workspace = true
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+include.workspace = true
+
+[features]
+default = ["kicad", "altium", "orcad", "pnp"]
+# Each importer can be left out of a build that does not need it (a wasm GUI, a KiCad-only tool)
+kicad = ["dep:erc_kicad"]
+altium = ["dep:pest", "dep:pest_derive", "text"]
+orcad = ["dep:pest", "dep:pest_derive", "text"]
+pnp = ["dep:csv", "text"]
+# Files in an unknown 8-bit encoding (Altium and OrCAD write the Windows code page)
+text = ["dep:chardetng", "dep:encoding_rs"]
+
+[dependencies]
+erc_model = { path = "../erc_model", default-features = false }
+erc_kicad = { path = "../erc_kicad", optional = true }
+pest = { version = "2.7", optional = true }
+pest_derive = { version = "2.7", features = ["grammar-extras"], optional = true }
+csv = { version = "1.3", optional = true }
+chardetng = { version = "0.1", optional = true }
+encoding_rs = { version = "0.8", optional = true }
+
+[dev-dependencies]
+erc_model = { path = "../erc_model" }

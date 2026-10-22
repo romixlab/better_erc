@@ -16,6 +16,8 @@ pub enum Provenance {
     Netlist { file: String },
     /// A board file (`.kicad_pcb`)
     Board { file: String },
+    /// A placement file exported from a board (pick-and-place CSV)
+    Placement { file: String },
     /// The KiCad project file (`.kicad_pro`)
     KicadProject { file: String },
     /// The better_erc project file, with the key the fact was read from
@@ -49,6 +51,7 @@ impl Provenance {
             Provenance::Schematic { .. }
             | Provenance::Netlist { .. }
             | Provenance::Board { .. }
+            | Provenance::Placement { .. }
             | Provenance::KicadProject { .. } => Rank::DESIGN,
             Provenance::Vendor { .. } => Rank::VENDOR,
             Provenance::Mx3 { .. } | Provenance::PartDb { .. } | Provenance::Datasheet { .. } => {
@@ -67,6 +70,7 @@ impl Provenance {
             Provenance::Schematic { .. } => "sch",
             Provenance::Netlist { .. } => "net",
             Provenance::Board { .. } => "pcb",
+            Provenance::Placement { .. } => "pos",
             Provenance::KicadProject { .. } => "pro",
             Provenance::ProjectFile { .. } => "project",
             Provenance::PartDb { .. } => "partdb",
@@ -87,6 +91,7 @@ impl Provenance {
             Provenance::Schematic { file }
             | Provenance::Netlist { file }
             | Provenance::Board { file }
+            | Provenance::Placement { file }
             | Provenance::KicadProject { file } => vec![file],
             Provenance::ProjectFile { file, key } => vec![file, key],
             Provenance::PartDb { file, entry } => vec![file, entry],
@@ -109,6 +114,7 @@ impl Provenance {
             "sch" if one => Provenance::Schematic { file: a(0)? },
             "net" if one => Provenance::Netlist { file: a(0)? },
             "pcb" if one => Provenance::Board { file: a(0)? },
+            "pos" if one => Provenance::Placement { file: a(0)? },
             "pro" if one => Provenance::KicadProject { file: a(0)? },
             "project" if two => Provenance::ProjectFile {
                 file: a(0)?,
@@ -433,6 +439,9 @@ mod tests {
     fn provenance_parts_round_trip() {
         for p in [
             sch(),
+            Provenance::Placement {
+                file: "board-pos.csv".into(),
+            },
             Provenance::ProjectFile {
                 file: "b.berc.toml".into(),
                 key: "nets.+5V.voltage".into(),

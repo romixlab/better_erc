@@ -488,6 +488,7 @@ fn assemble(
                 footprint_filters: l.footprint_filters.clone(),
                 power: l.power,
                 units: l.units,
+                unit_names: Vec::new(),
                 pins: pins
                     .iter()
                     .map(|p| PinDef {

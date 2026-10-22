@@ -65,7 +65,7 @@ mod tests {
     #[test]
     fn orcad_netlist_reaches_pcb_assembly() {
         let path = Path::new(env!("CARGO_MANIFEST_DIR"))
-            .join("../ecad_file_format/test_input/netlist_orcad_pstxnet.dat");
+            .join("../erc_import/tests/fixtures/netlist_orcad_pstxnet.dat");
         let netlist = ecad_file_format::load_orcad_netlist(&path).unwrap();
         let pcba = PcbAssembly::new(netlist);
         let c1 = &pcba.netlist.components[&Designator("C1".into())];

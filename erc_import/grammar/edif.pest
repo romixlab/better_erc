@@ -1,0 +1,38 @@
+file = { SOI ~ s ~ "edif" ~ board_name ~ item* ~ e ~ EOI }
+s = _{ "(" }
+e = _ { ")" }
+board_name = ${ (ASCII_ALPHANUMERIC | "_")+ }
+
+item = { edif_version | edif_level | keyword_map | status | library | design }
+edif_version = { s ~ "edifVersion" ~ number ~ number ~ number ~ e }
+edif_level = { s ~ "edifLevel" ~ number ~ e }
+keyword_map = { s ~ "keywordMap" ~ s ~ "keywordLevel" ~ number ~ e ~ e }
+status = { s ~ "status" ~ sexpr ~ e }
+
+library = { s ~ "library" ~ #name=symbol ~ edif_level ~ #technology=sexpr ~ cell* ~ e }
+cell = { s ~ "cell" ~ (symbol | rename) ~ cell_type ~ view ~ e }
+rename = { s ~ "rename" ~ symbol ~ string ~ e }
+cell_type = { s ~ "cellType" ~ symbol ~ e }
+view = { s ~ "view" ~ symbol ~ view_type ~ interface ~ contents? ~ e }
+view_type = { s ~ "viewType" ~ symbol ~ e }
+interface = { s ~ "interface" ~ port* ~ e}
+port = { s ~ "port" ~ (symbol | rename) ~ s ~ "direction" ~ symbol ~ e ~ e }
+contents = { s ~ "contents" ~ instance* ~ net* ~ e }
+instance = { s ~ "Instance" ~ #designator=symbol ~ view_ref ~ property* ~ e }
+view_ref = { s ~ "viewRef" ~ symbol ~ s ~ "cellRef" ~ #lib_part_name=symbol ~ s ~ "LibraryRef" ~ #lib_name=symbol ~ e ~ e ~ e }
+property = { s ~ "Property" ~ (symbol | rename) ~ s ~ #ty=symbol ~ #value=string ~ e ~ e }
+net = { s ~ "Net" ~ (symbol | rename) ~ joined ~ property* ~ e } // property can be diff pair and class name
+joined = { s ~ "Joined" ~ port_ref* ~ e }
+port_ref = { s ~ "PortRef" ~ symbol ~ s ~ "InstanceRef" ~ symbol ~ e ~ e }
+
+design = { s ~ "design" ~ symbol ~ sexpr ~ e }
+
+number = ${ ("+" | "-")? ~ ASCII_DIGIT+ }
+string = ${ "\"" ~ inner ~ "\"" }
+inner = @{ (!"\"" ~ ANY)* }
+symbol = @{ (ASCII_ALPHA | ASCII_DIGIT | "_" | "&")+ }
+
+sexpr = { "(" ~ expr* ~ ")" }
+expr = { number | symbol | string | sexpr }
+
+WHITESPACE = _{ " " | "\t" | "\n" | "\r" }

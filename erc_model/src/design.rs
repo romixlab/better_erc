@@ -173,6 +173,8 @@ pub struct SymbolDef {
     pub power: Option<PowerScope>,
     /// Number of units (1 for a single-unit symbol)
     pub units: u32,
+    /// Names of units that have one (OrCAD sections `A`, `B`; KiCad `unit_name`), by unit number
+    pub unit_names: Vec<(u32, String)>,
     pub pins: Vec<PinDef>,
     /// Other library fields (`Value`, `Footprint`, user fields), in file order
     pub fields: Vec<(String, String)>,

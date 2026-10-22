@@ -88,6 +88,7 @@ symbol Device:R keywords "R res"
 symbol Device:R pin 1 unit 0 body 0 name ~ type passive style line
 symbol Device:R pin 2 unit 0 body 0 alt "ALT \"two\"" type output style inverted
 symbol Device:R pin 2 unit 0 body 0 name ~ type passive style line
+symbol Device:R unit-name 1 A
 symbol Device:R units 1
 track F.Cu 1,1 2,1 width 0.25 net GND
 variant Plus description "with the extras"

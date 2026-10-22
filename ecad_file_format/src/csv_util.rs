@@ -93,7 +93,7 @@ mod tests {
         let header_row = find_header_row(
             MINIMUM_PNP_COLUMNS_REQUIRED,
             &POSSIBLE_PNP_COLUMN_NAMES,
-            Path::new("test_input/pnp_kicad.csv"),
+            Path::new("../erc_import/tests/fixtures/pnp_kicad.csv"),
         )
         .unwrap();
         assert_eq!(header_row.0, 0);
@@ -108,7 +108,7 @@ mod tests {
         let header_row = find_header_row(
             MINIMUM_PNP_COLUMNS_REQUIRED,
             &POSSIBLE_PNP_COLUMN_NAMES,
-            Path::new("test_input/pnp_altium_no_units.csv"),
+            Path::new("../erc_import/tests/fixtures/pnp_altium_no_units.csv"),
         )
         .unwrap();
         assert_eq!(header_row.0, 9);
@@ -119,7 +119,7 @@ mod tests {
         let header_row = find_header_row(
             MINIMUM_PNP_COLUMNS_REQUIRED,
             &POSSIBLE_PNP_COLUMN_NAMES,
-            Path::new("test_input/pnp_allegro.csv"),
+            Path::new("../erc_import/tests/fixtures/pnp_allegro.csv"),
         )
         .unwrap();
         assert_eq!(header_row.0, 6);

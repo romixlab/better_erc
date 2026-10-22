@@ -342,6 +342,9 @@ fn board_lines(b: &Board) -> Vec<String> {
         if let Some(h) = &s.hash {
             out.push(format!("symbol {n} hash {}", tok(h)));
         }
+        for (u, name) in &s.unit_names {
+            out.push(format!("symbol {n} unit-name {u} {}", tok(name)));
+        }
         for g in &s.jumper_pin_groups {
             let g: Vec<String> = g.iter().map(|x| tok(x)).collect();
             out.push(format!("symbol {n} jumper-group {}", g.join(" ")));
@@ -1599,6 +1602,11 @@ impl BoardReader {
                 s.fields.push((k, v));
             }
             "hash" => s.hash = Some(c.next()?.into()),
+            "unit-name" => {
+                let u: u32 = c.num()?;
+                let name = c.next()?.to_string();
+                s.unit_names.push((u, name));
+            }
             "jumper-group" => s.jumper_pin_groups.push(c.rest()),
             "pin" => {
                 let number = c.next()?.to_string();
