@@ -184,3 +184,39 @@ fn overrides_and_selection() {
         RunError::UnknownVariant("Lite".into())
     );
 }
+
+/// A board whose nets came from a PDF: read from the netlist its bookmarks carry, findings stay certain; traced
+/// from where things are drawn, every finding is an estimate, and the layout's absence is said for a PDF
+#[test]
+fn pdf_connectivity() {
+    let mut imported = import("bom-10_values");
+    let pdf = |confidence| erc_model::Provenance::Pdf {
+        file: "board.pdf".into(),
+        confidence,
+    };
+    let board = &mut imported.design.boards[0];
+    board.source.tool = "altium-pdf".into();
+    board.source.connectivity = Some(pdf(erc_model::PdfConfidence::Bookmarks));
+    let report = run_with(CHECKS, &imported.design, &RunOptions::default()).unwrap();
+    assert!(
+        report
+            .findings
+            .iter()
+            .all(|f| f.confidence == Confidence::Certain)
+    );
+    let lay = report.checks.iter().find(|c| c.id == "LAY-1").unwrap();
+    let Status::NotRun(n) = &lay.status else {
+        panic!("{lay:?}")
+    };
+    assert!(n.hint.contains("schematic PDF"), "{}", n.hint);
+
+    imported.design.boards[0].source.connectivity = Some(pdf(erc_model::PdfConfidence::Geometry));
+    let report = run_with(CHECKS, &imported.design, &RunOptions::default()).unwrap();
+    assert!(!report.findings.is_empty());
+    assert!(
+        report
+            .findings
+            .iter()
+            .all(|f| f.confidence == Confidence::Estimate)
+    );
+}

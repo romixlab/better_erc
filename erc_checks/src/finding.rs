@@ -12,7 +12,8 @@ use std::fmt;
 pub enum Confidence {
     /// Every fact it rests on comes from the design or a stated source
     Certain,
-    /// It rests on an assumed fact (a default, a designator prefix): the facts name the assumption
+    /// It rests on an assumed fact (a default, a designator prefix) or a reconstructed one (a PDF property bound to
+    /// its part by position, nets traced from a drawing): the facts name the assumption
     Estimate,
     /// Not a rule: a list for a human or an LLM to judge, never counted as an error
     Candidate,
@@ -177,14 +178,15 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
         self
     }
 
-    /// A fact the finding rests on; an assumed one makes the finding an estimate
+    /// A fact the finding rests on; an assumed or reconstructed one ([`Provenance::is_estimate`]) makes the finding
+    /// an estimate
     pub fn fact(
         mut self,
         name: impl Into<String>,
         value: impl fmt::Display,
         source: Provenance,
     ) -> Self {
-        if matches!(source, Provenance::Assumed { .. }) {
+        if source.is_estimate() {
             self.estimate = true;
         }
         self.facts.push(FindingFact {
@@ -235,7 +237,14 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
             severity: self.cx.severity(self.meta),
             confidence: if self.candidate {
                 Confidence::Candidate
-            } else if self.estimate {
+            } else if self.estimate
+                || board
+                    .source
+                    .connectivity
+                    .as_ref()
+                    .is_some_and(Provenance::is_estimate)
+            {
+                // A board whose nets were traced from a drawing: every finding on it is as sure as the tracing
                 Confidence::Estimate
             } else {
                 Confidence::Certain

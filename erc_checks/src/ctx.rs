@@ -99,6 +99,8 @@ impl Availability {
             Need::Layout => {
                 if board.layout.is_some() {
                     Availability::Available
+                } else if board.source.tool == "altium-pdf" {
+                    missing("no layout: a schematic PDF carries none (its PCB prints are drawings only)")
                 } else {
                     missing("no layout: import the project with its .kicad_pcb")
                 }
@@ -106,6 +108,10 @@ impl Availability {
             Need::Drawing => {
                 if Drawing::available(board) {
                     Availability::Available
+                } else if board.source.tool == "altium-pdf" {
+                    missing(
+                        "no schematic drawing: a Smart PDF gives net labels and ports but no wires or no-connect flags",
+                    )
                 } else {
                     missing(
                         "no schematic drawing (labels, no-connect flags): import the .kicad_sch, not a netlist",

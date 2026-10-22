@@ -74,6 +74,16 @@ impl Provenance {
         }
     }
 
+    /// Whether a finding resting on this fact is an estimate: an assumption, or a PDF fact reconstructed from where
+    /// things are drawn rather than read from the netlist the PDF carries
+    pub fn is_estimate(&self) -> bool {
+        match self {
+            Provenance::Assumed { .. } => true,
+            Provenance::Pdf { confidence, .. } => *confidence != PdfConfidence::Bookmarks,
+            _ => false,
+        }
+    }
+
     /// Short name of the kind of source, as the dump writes it
     pub fn kind(&self) -> &'static str {
         match self {
@@ -471,6 +481,19 @@ mod tests {
             "a source restating replaces its own fact"
         );
         assert_eq!(g.0.len(), 2);
+    }
+
+    #[test]
+    fn estimates() {
+        let pdf = |confidence| Provenance::Pdf {
+            file: "b.pdf".into(),
+            confidence,
+        };
+        assert!(!sch().is_estimate());
+        assert!(!pdf(PdfConfidence::Bookmarks).is_estimate());
+        assert!(pdf(PdfConfidence::Position).is_estimate());
+        assert!(pdf(PdfConfidence::Geometry).is_estimate());
+        assert!(Provenance::Assumed { rule: "x".into() }.is_estimate());
     }
 
     #[test]
