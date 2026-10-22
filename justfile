@@ -39,9 +39,12 @@ check-baseline:
 netlists:
     cargo run -p generate_netlists
 
+# --force: the app's binary `better_erc` was installed by the package `better_erc` before 0.4 (now the library), and
+# cargo refuses to take a binary over from another package without it.
+
 # Install the better_erc app and the berc command line tool to ~/.cargo/bin
 install:
-    cargo install --locked --path better_erc_app
+    cargo install --locked --force --path better_erc_app
     cargo install --locked --path berc
 
 # Refuses on local changes (names them, never discards them). No systemd units. better_erc has no --version,
