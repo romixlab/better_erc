@@ -458,6 +458,7 @@ fn assemble(
             parent: inst.parent.map(SheetId::from_index),
             uuid_path: inst.uuid_path.clone(),
             page: inst.page.clone(),
+            rev: sch[inst.file].rev.clone(),
         });
     }
     // Library symbols, the first copy of each name

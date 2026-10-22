@@ -11,6 +11,15 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- `erc_analysis::names`: the name grammar beyond power, for the NAME, WIRE and SHORT checks: active-low markers with
+  their style (`~{X}`, `~X`, `X_N`, `X_n`, `nX`/`NRST`, `X#`, `Xn`), differential halves (`_P`/`_N`, `+`/`-`,
+  `DP`/`DM`, `_H`/`_L`, glued `XP`/`XN` where both exist) and `pair_halves`, numbered families (`IO4`), the GPIO a pin
+  name gives (`PA5`, `GPIO17`, `P0.12`), UART TX/RX pins and net-name words, and `normalised` names (WIRE-2).
+- `erc_model::Sheet::rev`: the title block revision, read by the schematic and netlist importers and kept in the
+  canonical dump (`rev A`).
+
 ## [0.4.4] - 2026-10-22
 
 ### Added

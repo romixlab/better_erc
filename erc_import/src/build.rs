@@ -35,6 +35,7 @@ impl Builder {
             parent: None,
             uuid_path: String::new(),
             page: None,
+            rev: None,
         });
         Builder {
             b,
@@ -63,6 +64,7 @@ impl Builder {
             parent: Some(self.root()),
             uuid_path: String::new(),
             page,
+            rev: None,
         });
         self.sheets.insert(name.to_string(), id);
         id

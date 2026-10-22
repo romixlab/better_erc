@@ -64,8 +64,8 @@ pin U2 11 name RXD0/MODE0 unit 0 net /Eth/RXD0
 pin U2 11 type = bidirectional @ net netlist_kicad.net
 pin U2 28 name TXN unit 0 net /Eth/TD_N
 pin U2 28 type = bidirectional @ net netlist_kicad.net
-sheet / name "" file vb125_eth_fdcan_pro.kicad_sch uuid / page 1
-sheet /MCU_H7/ name MCU_H7 file p2_mcu_h7.kicad_sch uuid /c16e79c7-955f-4686-8fe9-acff02e57751 page 2
+sheet / name "" file vb125_eth_fdcan_pro.kicad_sch uuid / page 1 rev A
+sheet /MCU_H7/ name MCU_H7 file p2_mcu_h7.kicad_sch uuid /c16e79c7-955f-4686-8fe9-acff02e57751 page 2 rev A
 source file netlist_kicad.net
 source tool kicad-netlist
 source version 8.0.4

@@ -13,6 +13,8 @@ pub struct SchFile {
     pub version: Option<String>,
     pub generator_version: Option<String>,
     pub uuid: String,
+    /// The revision in the title block
+    pub rev: Option<String>,
     pub lib_symbols: HashMap<String, LibSymbol>,
     pub symbols: Vec<SchSymbol>,
     pub wires: Vec<(Pt, Pt)>,
@@ -268,9 +270,15 @@ pub fn read(root: &Sexp, lines: &Lines, notes: &mut Notes) -> SchFile {
                 f.bus_aliases.push((name, members));
             }
             // Drawing, text and bookkeeping that carry no connectivity
-            "generator" | "paper" | "title_block" | "text" | "text_box" | "polyline"
-            | "rectangle" | "circle" | "arc" | "bezier" | "image" | "table" | "sheet_instances"
-            | "symbol_instances" | "embedded_fonts" | "embedded_files" | "group" | "rule_area" => {}
+            "title_block" => {
+                f.rev = item
+                    .value("rev")
+                    .filter(|r| !r.is_empty())
+                    .map(String::from)
+            }
+            "generator" | "paper" | "text" | "text_box" | "polyline" | "rectangle" | "circle"
+            | "arc" | "bezier" | "image" | "table" | "sheet_instances" | "symbol_instances"
+            | "embedded_fonts" | "embedded_files" | "group" | "rule_area" => {}
             _ => notes.unknown("kicad_sch", item),
         }
     }

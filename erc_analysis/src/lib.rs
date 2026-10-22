@@ -9,6 +9,9 @@
 //! - [`pin_name`]: the debug, bus and control functions a pin name states (`PA13/JTMS-SWDIO`, `USART1_TX`).
 //! - [`power`]: rails and grounds by name grammar, power symbols and pins, ground groups, switching nodes.
 //! - [`supply`]: power-input pins on a net and the capacitors from it to a ground.
+//! - [`names`]: the name grammar beyond power: active-low markers, differential halves, numbered families, GPIO
+//!   numbers and UART lines of pin names, names normalised for comparison.
+//! - [`drawing`]: labels with their scopes, sheet pins, no-connect flags.
 //!
 //! Each analysis is computed once per board and run (the check engine keeps them in its context) and is plain
 //! data, serialisable for the views and the MCP server.
@@ -18,6 +21,7 @@ pub mod class;
 pub mod drawing;
 pub mod graph;
 pub mod i2c;
+pub mod names;
 pub mod pin_name;
 pub mod power;
 pub mod supply;

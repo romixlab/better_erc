@@ -164,6 +164,9 @@ pub struct Sheet {
     pub uuid_path: String,
     /// The page number shown in KiCad
     pub page: Option<String>,
+    /// The revision in the sheet's title block (`A`, `1.2`); NAME-5 asks whether a board is a first revision
+    #[serde(default)]
+    pub rev: Option<String>,
 }
 
 /// A symbol as stored in the schematic's library copy (`lib_symbols`)
