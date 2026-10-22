@@ -1,4 +1,4 @@
-i2c_non_standard_pull_ups.kicad_sch: symbol U301 in i2c_non_standard_pull_ups.kicad_sch: missing: no instance for sheet path /81d91faf-8966-4fb1-8fa8-6ef34d203834; the Reference field is used
-i2c_non_standard_pull_ups.kicad_sch: symbol R301 in i2c_non_standard_pull_ups.kicad_sch: missing: no instance for sheet path /81d91faf-8966-4fb1-8fa8-6ef34d203834; the Reference field is used
-i2c_non_standard_pull_ups.kicad_sch: symbol U302 in i2c_non_standard_pull_ups.kicad_sch: missing: no instance for sheet path /81d91faf-8966-4fb1-8fa8-6ef34d203834; the Reference field is used
-i2c_non_standard_pull_ups.kicad_sch: symbol R302 in i2c_non_standard_pull_ups.kicad_sch: missing: no instance for sheet path /81d91faf-8966-4fb1-8fa8-6ef34d203834; the Reference field is used
+i2c-9_non_standard_pull_ups.kicad_sch: symbol U301 in i2c-9_non_standard_pull_ups.kicad_sch: missing: no instance for sheet path /81d91faf-8966-4fb1-8fa8-6ef34d203834; the Reference field is used
+i2c-9_non_standard_pull_ups.kicad_sch: symbol R301 in i2c-9_non_standard_pull_ups.kicad_sch: missing: no instance for sheet path /81d91faf-8966-4fb1-8fa8-6ef34d203834; the Reference field is used
+i2c-9_non_standard_pull_ups.kicad_sch: symbol U302 in i2c-9_non_standard_pull_ups.kicad_sch: missing: no instance for sheet path /81d91faf-8966-4fb1-8fa8-6ef34d203834; the Reference field is used
+i2c-9_non_standard_pull_ups.kicad_sch: symbol R302 in i2c-9_non_standard_pull_ups.kicad_sch: missing: no instance for sheet path /81d91faf-8966-4fb1-8fa8-6ef34d203834; the Reference field is used

@@ -1,8 +1,9 @@
 # The board model and the KiCad importer
 
 better_erc is being rebuilt on a new core: a board model (`erc_model`) that every importer fills and every check reads,
-and a KiCad importer (`erc_kicad`) that reads the schematic, project file and board itself. The old crates
-(`ecad_file_format`, `erc_core`) still run the shipped checks next to it until the checks are ported.
+and a KiCad importer (`erc_kicad`) that reads the schematic, project file and board itself. The checks run on it
+through the check engine ([engine.md](engine.md)). The old crates (`ecad_file_format`, `erc_core`) still feed the
+desktop app until it moves onto the new core.
 
 ## erc_model
 

@@ -18,16 +18,18 @@ and the desktop app is a first prototype.
 - **Netlist import** (`ecad_file_format`): KiCad 8, 9 and 10 netlists, OrCAD Capture netlists (pstxnet, pstxprt,
   pstchip), Altium EDIF plus WireList, and pick-and-place CSV files from KiCad, Altium and Allegro, all into one
   netlist model.
-- **Checks** (`erc_core`), run on any imported netlist:
-  - I2C buses found from net names, including segments behind voltage translators; missing, redundant,
-    unequal or non-standard pull-ups, pull-ups through series resistors to nowhere, series resistors that are
-    too large (`I2C-1`, `I2C-2`, `I2C-3`, `I2C-7`)
-  - parts without a value, "calculate later" values like `?`, resistor values that don't parse or are written
-    in a non-standard way (`BOM-5`, `BOM-6`, `BOM-9`, `BOM-10`)
+- **Checks** (`erc_checks`), run on a KiCad project read by better_erc itself (`erc_kicad`), with one finding
+  type, a report of which checks ran and which could not run for lack of data, and the report as JSON or text
+  ([docs/engine.md](docs/engine.md)):
+  - I2C buses found from net names, including segments behind ties and voltage translators; missing, redundant,
+    unequal or out-of-range pull-ups, pull-ups through series resistors to nowhere, series resistors that are
+    too large (`I2C-1`, `I2C-2`, `I2C-3`, `I2C-7`, `I2C-9`, `I2C-10`)
+  - parts without a value, placeholder values like `?` or `TBD` (fitted or not), resistor values that don't read
+    or are written in a non-standard way (`BOM-5`, `BOM-6`, `BOM-9`, `BOM-10`)
   - MOSFET symbols whose pins aren't named G, S and D (`LIB-3`)
-  - power rails and grounds derived from net names
-- **The app** (`better_erc`, egui): tabs for nets, power rails, I2C buses, style findings and inputs. Its import
-  tab loads Altium netlists so far; KiCad and OrCAD import in the app are still to come.
+- **The app** (`better_erc`, egui): tabs for nets, power rails (rails and grounds derived from net names), I2C
+  buses, style findings and inputs, still on the first analysis code (`erc_core`). Its import tab loads Altium
+  netlists so far; KiCad and OrCAD import in the app are still to come.
 - **Tools**: a pick-and-place file comparison (`ecad_compare`).
 
 There is no command to run the checks from the shell yet; that is planned (`RPT-20` in FEATURES.md).
@@ -36,6 +38,9 @@ There is no command to run the checks from the shell yet; that is planned (`RPT-
 
 - [docs/checks.md](docs/checks.md): the check catalogue, everything better_erc should catch on a schematic or
   netlist, by ID (`PIN-1`, `I2C-3`) and severity.
+- [docs/engine.md](docs/engine.md): the check engine: checks and their data needs, findings, the report, the test
+  schematics with their expectations, how to add a check.
+- [docs/model.md](docs/model.md): the board model and the KiCad importer.
 - [docs/review-checklist.md](docs/review-checklist.md): a condensed schematic review checklist that groups those
   IDs for a review pass.
 - [FEATURES.md](FEATURES.md): what the code does today and what is planned, item by item.

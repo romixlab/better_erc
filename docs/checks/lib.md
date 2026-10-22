@@ -103,8 +103,8 @@ mapping between symbol and footprint (`LIB-11`), since SOT-23 MOSFETs do not all
 **Example.** A generic `Q_NMOS` symbol whose pins are `1`, `2`, `3`, used for a 2N7002 (SOT-23: 1 gate, 2 source, 3
 drain). The gate pull-down check of the load switch next to it cannot find the gate and reports nothing.
 
-**How to check.** Runs today: `erc_core/src/style.rs` flags MOSFETs whose pin names are not G/D/S (test schematic
-`style_values`).
+**How to check.** Parts classed as MOSFETs (by library or description) whose pins are not named G/GATE, D/DRAIN
+and S/SOURCE (`erc_checks/src/lib/lib_3.rs`, test schematic `lib-3_mosfet_pin_names`).
 
 **Fix.** Use a symbol with named pins whose order matches the package, or rename the pins in the library symbol.
 

@@ -1,0 +1,65 @@
+board lib-3_mosfet_pin_names
+net unconnected-(Q1-Pad1) class = Default @ sch lib-3_mosfet_pin_names.kicad_sch note "effective net class"
+net unconnected-(Q1-Pad1) kind unconnected
+net unconnected-(Q1-Pad2) class = Default @ sch lib-3_mosfet_pin_names.kicad_sch note "effective net class"
+net unconnected-(Q1-Pad2) kind unconnected
+net unconnected-(Q1-Pad3) class = Default @ sch lib-3_mosfet_pin_names.kicad_sch note "effective net class"
+net unconnected-(Q1-Pad3) kind unconnected
+net unconnected-(Q2-D-Pad3) class = Default @ sch lib-3_mosfet_pin_names.kicad_sch note "effective net class"
+net unconnected-(Q2-D-Pad3) kind unconnected
+net unconnected-(Q2-G-Pad1) class = Default @ sch lib-3_mosfet_pin_names.kicad_sch note "effective net class"
+net unconnected-(Q2-G-Pad1) kind unconnected
+net unconnected-(Q2-S-Pad2) class = Default @ sch lib-3_mosfet_pin_names.kicad_sch note "effective net class"
+net unconnected-(Q2-S-Pad2) kind unconnected
+part Q1 field Description = "N-Channel MOSFET" @ sch lib-3_mosfet_pin_names.kicad_sch
+part Q1 field Value = NMOS @ sch lib-3_mosfet_pin_names.kicad_sch
+part Q1 flag dnp = no @ sch lib-3_mosfet_pin_names.kicad_sch
+part Q1 flag exclude_from_sim = no @ sch lib-3_mosfet_pin_names.kicad_sch
+part Q1 flag in_bom = yes @ sch lib-3_mosfet_pin_names.kicad_sch
+part Q1 flag on_board = yes @ sch lib-3_mosfet_pin_names.kicad_sch
+part Q1 lib Fixture:NMOS sheet / symbol Fixture:NMOS
+part Q1 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000025 at 40,80 rot 0
+part Q1 value = text NMOS @ sch lib-3_mosfet_pin_names.kicad_sch note "from the Value field"
+part Q2 field Description = "N-Channel MOSFET" @ sch lib-3_mosfet_pin_names.kicad_sch
+part Q2 field Value = NMOS_GSD @ sch lib-3_mosfet_pin_names.kicad_sch
+part Q2 flag dnp = no @ sch lib-3_mosfet_pin_names.kicad_sch
+part Q2 flag exclude_from_sim = no @ sch lib-3_mosfet_pin_names.kicad_sch
+part Q2 flag in_bom = yes @ sch lib-3_mosfet_pin_names.kicad_sch
+part Q2 flag on_board = yes @ sch lib-3_mosfet_pin_names.kicad_sch
+part Q2 lib Fixture:NMOS_GSD sheet / symbol Fixture:NMOS_GSD
+part Q2 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000029 at 70,80 rot 0
+part Q2 value = text NMOS_GSD @ sch lib-3_mosfet_pin_names.kicad_sch note "from the Value field"
+pin Q1 1 name "" unit 1 net unconnected-(Q1-Pad1)
+pin Q1 1 type = passive @ sch lib-3_mosfet_pin_names.kicad_sch
+pin Q1 2 name "" unit 1 net unconnected-(Q1-Pad2)
+pin Q1 2 type = passive @ sch lib-3_mosfet_pin_names.kicad_sch
+pin Q1 3 name "" unit 1 net unconnected-(Q1-Pad3)
+pin Q1 3 type = passive @ sch lib-3_mosfet_pin_names.kicad_sch
+pin Q2 1 name G unit 1 net unconnected-(Q2-G-Pad1)
+pin Q2 1 type = passive @ sch lib-3_mosfet_pin_names.kicad_sch
+pin Q2 2 name S unit 1 net unconnected-(Q2-S-Pad2)
+pin Q2 2 type = passive @ sch lib-3_mosfet_pin_names.kicad_sch
+pin Q2 3 name D unit 1 net unconnected-(Q2-D-Pad3)
+pin Q2 3 type = passive @ sch lib-3_mosfet_pin_names.kicad_sch
+sheet / name "" file lib-3_mosfet_pin_names.kicad_sch uuid /
+source file lib-3_mosfet_pin_names.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:NMOS description "N-Channel MOSFET"
+symbol Fixture:NMOS field Description "N-Channel MOSFET"
+symbol Fixture:NMOS field Reference Q
+symbol Fixture:NMOS field Value NMOS
+symbol Fixture:NMOS hash 25eace0aea4c3bd2
+symbol Fixture:NMOS pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:NMOS pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:NMOS pin 3 unit 1 body 1 name "" type passive style line
+symbol Fixture:NMOS units 1
+symbol Fixture:NMOS_GSD description "N-Channel MOSFET"
+symbol Fixture:NMOS_GSD field Description "N-Channel MOSFET"
+symbol Fixture:NMOS_GSD field Reference Q
+symbol Fixture:NMOS_GSD field Value NMOS_GSD
+symbol Fixture:NMOS_GSD hash aa5a2c79da5a90a9
+symbol Fixture:NMOS_GSD pin 1 unit 1 body 1 name G type passive style line
+symbol Fixture:NMOS_GSD pin 2 unit 1 body 1 name S type passive style line
+symbol Fixture:NMOS_GSD pin 3 unit 1 body 1 name D type passive style line
+symbol Fixture:NMOS_GSD units 1

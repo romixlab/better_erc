@@ -560,12 +560,12 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="bom-2"></a>💡 `BOM-2` Capacitor voltage, size and dielectric report: find odd ones · impl: mid (`NET-5`, MPN decoding (no FEATURES id yet)) · [📖](checks/bom.md#bom-2) <!-- CHK-25 -->
 - <a id="bom-3"></a>💡 `BOM-3` Big and small connectors, big and small parts, SMT and THT mixed and similar · impl: easy (netlist) · [📖](checks/bom.md#bom-3) <!-- CHK-141 -->
 - <a id="bom-4"></a>💡 `BOM-4` Propose consolidating identical resistors into resistor networks · impl: easy (`IMP-6`) · [📖](checks/bom.md#bom-4) <!-- CHK-234 -->
-- <a id="bom-5"></a>🛑 `BOM-5` No TODOs or "calculate later" values left ≈ BOM-6 · impl: easy (`IMP-6` (runs today: `style.rs`)) · [📖](checks/bom.md#bom-5) <!-- CHK-230 -->
-- <a id="bom-6"></a>🛑 `BOM-6` "Calculate later" part mounted · impl: easy (`IMP-6` (runs today: `style.rs`, as part of `BOM-5`)) · [📖](checks/bom.md#bom-6) <!-- CHK-155 -->
+- <a id="bom-5"></a>🛑 `BOM-5` No TODOs or "calculate later" values left ≈ BOM-6 · impl: easy (IMP-6) · [📖](checks/bom.md#bom-5) <!-- CHK-230 -->
+- <a id="bom-6"></a>🛑 `BOM-6` "Calculate later" part mounted · impl: easy (IMP-6) · [📖](checks/bom.md#bom-6) <!-- CHK-155 -->
 - <a id="bom-7"></a>💡 `BOM-7` Depopulate spare and debug parts for release · impl: judgement (netlist (candidates: debug headers, bypass 0 Ω, test LEDs)) · [📖](checks/bom.md#bom-7) <!-- CHK-224 -->
 - <a id="bom-8"></a>🛑 `BOM-8` LED swapped (polarity) · impl: easy (`NET-5`) · [📖](checks/bom.md#bom-8) <!-- CHK-200 -->
-- <a id="bom-9"></a>🛑 `BOM-9` Part without a value · impl: easy (netlist (runs today: `style.rs`)) · [📖](checks/bom.md#bom-9) <!-- new 5 Oct 2026, found in code -->
-- <a id="bom-10"></a>⚠️ `BOM-10` Value that doesn't parse or isn't a standard series value · impl: easy (`IMP-6` (runs today for resistors: `style.rs`)) · [📖](checks/bom.md#bom-10) <!-- new 5 Oct 2026, found in code -->
+- <a id="bom-9"></a>🛑 `BOM-9` Part without a value · impl: easy (netlist) · [📖](checks/bom.md#bom-9) <!-- new 5 Oct 2026, found in code -->
+- <a id="bom-10"></a>⚠️ `BOM-10` Value that doesn't parse or isn't a standard series value · impl: easy (IMP-6) · [📖](checks/bom.md#bom-10) <!-- new 5 Oct 2026, found in code -->
 - <a id="bom-11"></a>💡 `BOM-11` Same value in two packages · impl: easy (netlist) · [📖](checks/bom.md#bom-11) <!-- from BOM-1 -->
 - <a id="bom-12"></a>🛑 `BOM-12` Value field vs the MPN's parameters: resistance, capacitance, voltage, tolerance or package decoded from the part number disagree with the value or footprint (B200A R201/R203 13k3 for 13k7, B153A R219/R222 13k3 for 3k3; B135B C405, C509 MPN errors) · impl: mid (MPN decoding (no FEATURES id yet), `IMP-6`) · [📖](checks/bom.md#bom-12) <!-- 21 Oct 2026; B153A, B200A, B135B -->
 - <a id="bom-13"></a>⚠️ `BOM-13` Variant: a part's DNP flag disagrees with its per-variant fields, or a variant BOM is built from the base DNP flags · impl: mid (`IMP-1` (variant data from the schematic), `IMP-8`) · [📖](checks/bom.md#bom-13) <!-- 21 Oct 2026; B153A -->

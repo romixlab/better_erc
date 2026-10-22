@@ -1,203 +1,177 @@
-board style_values
-net unconnected-(Q1-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
-net unconnected-(Q1-Pad1) kind unconnected
-net unconnected-(Q1-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
-net unconnected-(Q1-Pad2) kind unconnected
-net unconnected-(Q1-Pad3) class = Default @ sch style_values.kicad_sch note "effective net class"
-net unconnected-(Q1-Pad3) kind unconnected
-net unconnected-(Q2-D-Pad3) class = Default @ sch style_values.kicad_sch note "effective net class"
-net unconnected-(Q2-D-Pad3) kind unconnected
-net unconnected-(Q2-G-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
-net unconnected-(Q2-G-Pad1) kind unconnected
-net unconnected-(Q2-S-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
-net unconnected-(Q2-S-Pad2) kind unconnected
-net unconnected-(R1-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
+board bom-10_values
+net unconnected-(R1-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R1-Pad1) kind unconnected
-net unconnected-(R1-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R1-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R1-Pad2) kind unconnected
-net unconnected-(R2-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R2-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R2-Pad1) kind unconnected
-net unconnected-(R2-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R2-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R2-Pad2) kind unconnected
-net unconnected-(R3-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R3-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R3-Pad1) kind unconnected
-net unconnected-(R3-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R3-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R3-Pad2) kind unconnected
-net unconnected-(R4-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R4-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R4-Pad1) kind unconnected
-net unconnected-(R4-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R4-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R4-Pad2) kind unconnected
-net unconnected-(R5-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R5-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R5-Pad1) kind unconnected
-net unconnected-(R5-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R5-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R5-Pad2) kind unconnected
-net unconnected-(R6-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R6-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R6-Pad1) kind unconnected
-net unconnected-(R6-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R6-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R6-Pad2) kind unconnected
-net unconnected-(R7-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R7-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R7-Pad1) kind unconnected
-net unconnected-(R7-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R7-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R7-Pad2) kind unconnected
-net unconnected-(R8-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R8-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R8-Pad1) kind unconnected
-net unconnected-(R8-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
+net unconnected-(R8-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
 net unconnected-(R8-Pad2) kind unconnected
-part Q1 field Description = "N-Channel MOSFET" @ sch style_values.kicad_sch
-part Q1 field Value = NMOS @ sch style_values.kicad_sch
-part Q1 flag dnp = no @ sch style_values.kicad_sch
-part Q1 flag exclude_from_sim = no @ sch style_values.kicad_sch
-part Q1 flag in_bom = yes @ sch style_values.kicad_sch
-part Q1 flag on_board = yes @ sch style_values.kicad_sch
-part Q1 lib Fixture:NMOS sheet / symbol Fixture:NMOS
-part Q1 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000025 at 40,80 rot 0
-part Q1 value = text NMOS @ sch style_values.kicad_sch note "from the Value field"
-part Q2 field Description = "N-Channel MOSFET" @ sch style_values.kicad_sch
-part Q2 field Value = NMOS_GSD @ sch style_values.kicad_sch
-part Q2 flag dnp = no @ sch style_values.kicad_sch
-part Q2 flag exclude_from_sim = no @ sch style_values.kicad_sch
-part Q2 flag in_bom = yes @ sch style_values.kicad_sch
-part Q2 flag on_board = yes @ sch style_values.kicad_sch
-part Q2 lib Fixture:NMOS_GSD sheet / symbol Fixture:NMOS_GSD
-part Q2 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000029 at 70,80 rot 0
-part Q2 value = text NMOS_GSD @ sch style_values.kicad_sch note "from the Value field"
-part R1 field Description = Resistor @ sch style_values.kicad_sch
-part R1 field Value = 4k7 @ sch style_values.kicad_sch
-part R1 flag dnp = no @ sch style_values.kicad_sch
-part R1 flag exclude_from_sim = no @ sch style_values.kicad_sch
-part R1 flag in_bom = yes @ sch style_values.kicad_sch
-part R1 flag on_board = yes @ sch style_values.kicad_sch
+net unconnected-(R9-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(R9-Pad1) kind unconnected
+net unconnected-(R9-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(R9-Pad2) kind unconnected
+net unconnected-(R10-Pad1) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(R10-Pad1) kind unconnected
+net unconnected-(R10-Pad2) class = Default @ sch bom-10_values.kicad_sch note "effective net class"
+net unconnected-(R10-Pad2) kind unconnected
+part R1 field Description = Resistor @ sch bom-10_values.kicad_sch
+part R1 field Value = 4k7 @ sch bom-10_values.kicad_sch
+part R1 flag dnp = no @ sch bom-10_values.kicad_sch
+part R1 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part R1 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part R1 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R1 lib Fixture:R sheet / symbol Fixture:R
 part R1 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000001 at 30,50 rot 0
-part R1 value = text 4k7 @ sch style_values.kicad_sch note "from the Value field"
-part R2 field Description = Resistor @ sch style_values.kicad_sch
-part R2 flag dnp = no @ sch style_values.kicad_sch
-part R2 flag exclude_from_sim = no @ sch style_values.kicad_sch
-part R2 flag in_bom = yes @ sch style_values.kicad_sch
-part R2 flag on_board = yes @ sch style_values.kicad_sch
+part R1 value = text 4k7 @ sch bom-10_values.kicad_sch note "from the Value field"
+part R2 field Description = Resistor @ sch bom-10_values.kicad_sch
+part R2 flag dnp = no @ sch bom-10_values.kicad_sch
+part R2 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part R2 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part R2 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R2 lib Fixture:R sheet / symbol Fixture:R
 part R2 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000004 at 45,50 rot 0
-part R2 value = text "" @ sch style_values.kicad_sch note "from the Value field"
-part R3 field Description = Resistor @ sch style_values.kicad_sch
-part R3 field Value = ? @ sch style_values.kicad_sch
-part R3 flag dnp = no @ sch style_values.kicad_sch
-part R3 flag exclude_from_sim = no @ sch style_values.kicad_sch
-part R3 flag in_bom = yes @ sch style_values.kicad_sch
-part R3 flag on_board = yes @ sch style_values.kicad_sch
+part R2 value = text "" @ sch bom-10_values.kicad_sch note "from the Value field"
+part R3 field Description = Resistor @ sch bom-10_values.kicad_sch
+part R3 field Value = ? @ sch bom-10_values.kicad_sch
+part R3 flag dnp = no @ sch bom-10_values.kicad_sch
+part R3 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part R3 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part R3 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R3 lib Fixture:R sheet / symbol Fixture:R
 part R3 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000007 at 60,50 rot 0
-part R3 value = text ? @ sch style_values.kicad_sch note "from the Value field"
-part R4 field Description = Resistor @ sch style_values.kicad_sch
-part R4 field Value = 10x @ sch style_values.kicad_sch
-part R4 flag dnp = no @ sch style_values.kicad_sch
-part R4 flag exclude_from_sim = no @ sch style_values.kicad_sch
-part R4 flag in_bom = yes @ sch style_values.kicad_sch
-part R4 flag on_board = yes @ sch style_values.kicad_sch
+part R3 value = text ? @ sch bom-10_values.kicad_sch note "from the Value field"
+part R4 field Description = Resistor @ sch bom-10_values.kicad_sch
+part R4 field Value = 10x @ sch bom-10_values.kicad_sch
+part R4 flag dnp = no @ sch bom-10_values.kicad_sch
+part R4 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part R4 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part R4 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R4 lib Fixture:R sheet / symbol Fixture:R
 part R4 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000010 at 75,50 rot 0
-part R4 value = text 10x @ sch style_values.kicad_sch note "from the Value field"
-part R5 field Description = Resistor @ sch style_values.kicad_sch
-part R5 field Value = "4.7  k" @ sch style_values.kicad_sch
-part R5 flag dnp = no @ sch style_values.kicad_sch
-part R5 flag exclude_from_sim = no @ sch style_values.kicad_sch
-part R5 flag in_bom = yes @ sch style_values.kicad_sch
-part R5 flag on_board = yes @ sch style_values.kicad_sch
+part R4 value = text 10x @ sch bom-10_values.kicad_sch note "from the Value field"
+part R5 field Description = Resistor @ sch bom-10_values.kicad_sch
+part R5 field Value = "4.7  k" @ sch bom-10_values.kicad_sch
+part R5 flag dnp = no @ sch bom-10_values.kicad_sch
+part R5 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part R5 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part R5 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R5 lib Fixture:R sheet / symbol Fixture:R
 part R5 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000013 at 90,50 rot 0
-part R5 value = text "4.7  k" @ sch style_values.kicad_sch note "from the Value field"
-part R6 field Description = Resistor @ sch style_values.kicad_sch
-part R6 field Value = 4r7 @ sch style_values.kicad_sch
-part R6 flag dnp = no @ sch style_values.kicad_sch
-part R6 flag exclude_from_sim = no @ sch style_values.kicad_sch
-part R6 flag in_bom = yes @ sch style_values.kicad_sch
-part R6 flag on_board = yes @ sch style_values.kicad_sch
+part R5 value = text "4.7  k" @ sch bom-10_values.kicad_sch note "from the Value field"
+part R6 field Description = Resistor @ sch bom-10_values.kicad_sch
+part R6 field Value = 4r7 @ sch bom-10_values.kicad_sch
+part R6 flag dnp = no @ sch bom-10_values.kicad_sch
+part R6 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part R6 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part R6 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R6 lib Fixture:R sheet / symbol Fixture:R
 part R6 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000016 at 105,50 rot 0
-part R6 value = qty 4.7 ohm @ sch style_values.kicad_sch note "from the Value field"
-part R7 field Description = Resistor @ sch style_values.kicad_sch
-part R7 field Value = 10kR @ sch style_values.kicad_sch
-part R7 flag dnp = no @ sch style_values.kicad_sch
-part R7 flag exclude_from_sim = no @ sch style_values.kicad_sch
-part R7 flag in_bom = yes @ sch style_values.kicad_sch
-part R7 flag on_board = yes @ sch style_values.kicad_sch
+part R6 value = qty 4.7 ohm @ sch bom-10_values.kicad_sch note "from the Value field"
+part R7 field Description = Resistor @ sch bom-10_values.kicad_sch
+part R7 field Value = 10kR @ sch bom-10_values.kicad_sch
+part R7 flag dnp = no @ sch bom-10_values.kicad_sch
+part R7 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part R7 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part R7 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R7 lib Fixture:R sheet / symbol Fixture:R
 part R7 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000019 at 120,50 rot 0
-part R7 value = qty 10000 ohm @ sch style_values.kicad_sch note "from the Value field"
-part R8 field Description = Resistor @ sch style_values.kicad_sch
-part R8 field Value = DNP @ sch style_values.kicad_sch
-part R8 flag dnp = no @ sch style_values.kicad_sch
-part R8 flag exclude_from_sim = no @ sch style_values.kicad_sch
-part R8 flag in_bom = yes @ sch style_values.kicad_sch
-part R8 flag on_board = yes @ sch style_values.kicad_sch
+part R7 value = qty 10000 ohm @ sch bom-10_values.kicad_sch note "from the Value field"
+part R8 field Description = Resistor @ sch bom-10_values.kicad_sch
+part R8 field Value = DNP @ sch bom-10_values.kicad_sch
+part R8 flag dnp = no @ sch bom-10_values.kicad_sch
+part R8 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part R8 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part R8 flag on_board = yes @ sch bom-10_values.kicad_sch
 part R8 lib Fixture:R sheet / symbol Fixture:R
 part R8 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000022 at 135,50 rot 0
-part R8 value = text DNP @ sch style_values.kicad_sch note "from the Value field"
-pin Q1 1 name "" unit 1 net unconnected-(Q1-Pad1)
-pin Q1 1 type = passive @ sch style_values.kicad_sch
-pin Q1 2 name "" unit 1 net unconnected-(Q1-Pad2)
-pin Q1 2 type = passive @ sch style_values.kicad_sch
-pin Q1 3 name "" unit 1 net unconnected-(Q1-Pad3)
-pin Q1 3 type = passive @ sch style_values.kicad_sch
-pin Q2 1 name G unit 1 net unconnected-(Q2-G-Pad1)
-pin Q2 1 type = passive @ sch style_values.kicad_sch
-pin Q2 2 name S unit 1 net unconnected-(Q2-S-Pad2)
-pin Q2 2 type = passive @ sch style_values.kicad_sch
-pin Q2 3 name D unit 1 net unconnected-(Q2-D-Pad3)
-pin Q2 3 type = passive @ sch style_values.kicad_sch
+part R8 value = text DNP @ sch bom-10_values.kicad_sch note "from the Value field"
+part R9 field Description = Resistor @ sch bom-10_values.kicad_sch
+part R9 field Value = ? @ sch bom-10_values.kicad_sch
+part R9 flag dnp = yes @ sch bom-10_values.kicad_sch
+part R9 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part R9 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part R9 flag on_board = yes @ sch bom-10_values.kicad_sch
+part R9 lib Fixture:R sheet / symbol Fixture:R
+part R9 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000040 at 150,50 rot 0
+part R9 value = text ? @ sch bom-10_values.kicad_sch note "from the Value field"
+part R10 field Description = Resistor @ sch bom-10_values.kicad_sch
+part R10 field Value = TBD @ sch bom-10_values.kicad_sch
+part R10 flag dnp = no @ sch bom-10_values.kicad_sch
+part R10 flag exclude_from_sim = no @ sch bom-10_values.kicad_sch
+part R10 flag in_bom = yes @ sch bom-10_values.kicad_sch
+part R10 flag on_board = yes @ sch bom-10_values.kicad_sch
+part R10 lib Fixture:R sheet / symbol Fixture:R
+part R10 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000043 at 165,50 rot 0
+part R10 value = text TBD @ sch bom-10_values.kicad_sch note "from the Value field"
 pin R1 1 name "" unit 1 net unconnected-(R1-Pad1)
-pin R1 1 type = passive @ sch style_values.kicad_sch
+pin R1 1 type = passive @ sch bom-10_values.kicad_sch
 pin R1 2 name "" unit 1 net unconnected-(R1-Pad2)
-pin R1 2 type = passive @ sch style_values.kicad_sch
+pin R1 2 type = passive @ sch bom-10_values.kicad_sch
 pin R2 1 name "" unit 1 net unconnected-(R2-Pad1)
-pin R2 1 type = passive @ sch style_values.kicad_sch
+pin R2 1 type = passive @ sch bom-10_values.kicad_sch
 pin R2 2 name "" unit 1 net unconnected-(R2-Pad2)
-pin R2 2 type = passive @ sch style_values.kicad_sch
+pin R2 2 type = passive @ sch bom-10_values.kicad_sch
 pin R3 1 name "" unit 1 net unconnected-(R3-Pad1)
-pin R3 1 type = passive @ sch style_values.kicad_sch
+pin R3 1 type = passive @ sch bom-10_values.kicad_sch
 pin R3 2 name "" unit 1 net unconnected-(R3-Pad2)
-pin R3 2 type = passive @ sch style_values.kicad_sch
+pin R3 2 type = passive @ sch bom-10_values.kicad_sch
 pin R4 1 name "" unit 1 net unconnected-(R4-Pad1)
-pin R4 1 type = passive @ sch style_values.kicad_sch
+pin R4 1 type = passive @ sch bom-10_values.kicad_sch
 pin R4 2 name "" unit 1 net unconnected-(R4-Pad2)
-pin R4 2 type = passive @ sch style_values.kicad_sch
+pin R4 2 type = passive @ sch bom-10_values.kicad_sch
 pin R5 1 name "" unit 1 net unconnected-(R5-Pad1)
-pin R5 1 type = passive @ sch style_values.kicad_sch
+pin R5 1 type = passive @ sch bom-10_values.kicad_sch
 pin R5 2 name "" unit 1 net unconnected-(R5-Pad2)
-pin R5 2 type = passive @ sch style_values.kicad_sch
+pin R5 2 type = passive @ sch bom-10_values.kicad_sch
 pin R6 1 name "" unit 1 net unconnected-(R6-Pad1)
-pin R6 1 type = passive @ sch style_values.kicad_sch
+pin R6 1 type = passive @ sch bom-10_values.kicad_sch
 pin R6 2 name "" unit 1 net unconnected-(R6-Pad2)
-pin R6 2 type = passive @ sch style_values.kicad_sch
+pin R6 2 type = passive @ sch bom-10_values.kicad_sch
 pin R7 1 name "" unit 1 net unconnected-(R7-Pad1)
-pin R7 1 type = passive @ sch style_values.kicad_sch
+pin R7 1 type = passive @ sch bom-10_values.kicad_sch
 pin R7 2 name "" unit 1 net unconnected-(R7-Pad2)
-pin R7 2 type = passive @ sch style_values.kicad_sch
+pin R7 2 type = passive @ sch bom-10_values.kicad_sch
 pin R8 1 name "" unit 1 net unconnected-(R8-Pad1)
-pin R8 1 type = passive @ sch style_values.kicad_sch
+pin R8 1 type = passive @ sch bom-10_values.kicad_sch
 pin R8 2 name "" unit 1 net unconnected-(R8-Pad2)
-pin R8 2 type = passive @ sch style_values.kicad_sch
-sheet / name "" file style_values.kicad_sch uuid /
-source file style_values.kicad_sch
+pin R8 2 type = passive @ sch bom-10_values.kicad_sch
+pin R9 1 name "" unit 1 net unconnected-(R9-Pad1)
+pin R9 1 type = passive @ sch bom-10_values.kicad_sch
+pin R9 2 name "" unit 1 net unconnected-(R9-Pad2)
+pin R9 2 type = passive @ sch bom-10_values.kicad_sch
+pin R10 1 name "" unit 1 net unconnected-(R10-Pad1)
+pin R10 1 type = passive @ sch bom-10_values.kicad_sch
+pin R10 2 name "" unit 1 net unconnected-(R10-Pad2)
+pin R10 2 type = passive @ sch bom-10_values.kicad_sch
+sheet / name "" file bom-10_values.kicad_sch uuid /
+source file bom-10_values.kicad_sch
 source tool kicad
 source version 8.0
-symbol Fixture:NMOS description "N-Channel MOSFET"
-symbol Fixture:NMOS field Description "N-Channel MOSFET"
-symbol Fixture:NMOS field Reference Q
-symbol Fixture:NMOS field Value NMOS
-symbol Fixture:NMOS hash 25eace0aea4c3bd2
-symbol Fixture:NMOS pin 1 unit 1 body 1 name "" type passive style line
-symbol Fixture:NMOS pin 2 unit 1 body 1 name "" type passive style line
-symbol Fixture:NMOS pin 3 unit 1 body 1 name "" type passive style line
-symbol Fixture:NMOS units 1
-symbol Fixture:NMOS_GSD description "N-Channel MOSFET"
-symbol Fixture:NMOS_GSD field Description "N-Channel MOSFET"
-symbol Fixture:NMOS_GSD field Reference Q
-symbol Fixture:NMOS_GSD field Value NMOS_GSD
-symbol Fixture:NMOS_GSD hash aa5a2c79da5a90a9
-symbol Fixture:NMOS_GSD pin 1 unit 1 body 1 name G type passive style line
-symbol Fixture:NMOS_GSD pin 2 unit 1 body 1 name S type passive style line
-symbol Fixture:NMOS_GSD pin 3 unit 1 body 1 name D type passive style line
-symbol Fixture:NMOS_GSD units 1
 symbol Fixture:R description Resistor
 symbol Fixture:R field Description Resistor
 symbol Fixture:R field Reference R

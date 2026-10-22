@@ -1,4 +1,4 @@
-board i2c_non_standard_pull_ups
+board i2c-9_non_standard_pull_ups
 label / local SCL at 114.3,73.66 net /SCL
 label / local SCL at 127,76.2 net /SCL
 label / local SDA at 114.3,76.2 net /SDA
@@ -9,158 +9,158 @@ label / power VCC at 73.66,44.45 net VCC
 label / power VCC at 96.52,55.88 net VCC
 label / power VCC at 106.68,55.88 net VCC
 label / power VCC at 152.4,59.69 net VCC
-net /SCL class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net /SCL class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net /SCL kind named
-net /SDA class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net /SDA class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net /SDA kind named
-net GND class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net GND class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net GND kind power
-net VCC class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net VCC class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net VCC kind power
-net unconnected-(U301-BOOT0-Pad1) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-BOOT0-Pad1) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-BOOT0-Pad1) kind unconnected
-net unconnected-(U301-NRST-Pad4) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-NRST-Pad4) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-NRST-Pad4) kind unconnected
-net unconnected-(U301-PA0-Pad6) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-PA0-Pad6) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA0-Pad6) kind unconnected
-net unconnected-(U301-PA1-Pad7) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-PA1-Pad7) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA1-Pad7) kind unconnected
-net unconnected-(U301-PA2-Pad8) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-PA2-Pad8) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA2-Pad8) kind unconnected
-net unconnected-(U301-PA3-Pad9) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-PA3-Pad9) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA3-Pad9) kind unconnected
-net unconnected-(U301-PA4-Pad10) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-PA4-Pad10) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA4-Pad10) kind unconnected
-net unconnected-(U301-PA5-Pad11) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-PA5-Pad11) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA5-Pad11) kind unconnected
-net unconnected-(U301-PA6-Pad12) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-PA6-Pad12) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA6-Pad12) kind unconnected
-net unconnected-(U301-PA7-Pad13) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-PA7-Pad13) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA7-Pad13) kind unconnected
-net unconnected-(U301-PA13-Pad19) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-PA13-Pad19) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA13-Pad19) kind unconnected
-net unconnected-(U301-PA14-Pad20) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-PA14-Pad20) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA14-Pad20) kind unconnected
-net unconnected-(U301-PB1-Pad14) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-PB1-Pad14) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PB1-Pad14) kind unconnected
-net unconnected-(U301-PF0-Pad2) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-PF0-Pad2) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PF0-Pad2) kind unconnected
-net unconnected-(U301-PF1-Pad3) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U301-PF1-Pad3) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PF1-Pad3) kind unconnected
-net unconnected-(U302-IO0-Pad1) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U302-IO0-Pad1) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U302-IO0-Pad1) kind unconnected
-net unconnected-(U302-IO1-Pad2) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U302-IO1-Pad2) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U302-IO1-Pad2) kind unconnected
-net unconnected-(U302-IO2-Pad3) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U302-IO2-Pad3) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U302-IO2-Pad3) kind unconnected
-net unconnected-(U302-IO3-Pad5) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U302-IO3-Pad5) class = Default @ sch i2c-9_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U302-IO3-Pad5) kind unconnected
-part R301 field Description = Resistor @ sch i2c_non_standard_pull_ups.kicad_sch
-part R301 field Value = 1K @ sch i2c_non_standard_pull_ups.kicad_sch
-part R301 flag dnp = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part R301 flag exclude_from_sim = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part R301 flag in_bom = yes @ sch i2c_non_standard_pull_ups.kicad_sch
-part R301 flag on_board = yes @ sch i2c_non_standard_pull_ups.kicad_sch
+part R301 field Description = Resistor @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R301 field Value = 1K @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R301 flag dnp = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R301 flag exclude_from_sim = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R301 flag in_bom = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R301 flag on_board = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part R301 lib Device:R sheet / symbol Device:R
 part R301 unit 1 sheet / uuid 6a52dfd1-33a3-4b22-b1f1-6e9a4dc8120d at 96.52,62.23 rot 0
-part R301 value = text 1K @ sch i2c_non_standard_pull_ups.kicad_sch note "from the Value field"
-part R302 field Description = Resistor @ sch i2c_non_standard_pull_ups.kicad_sch
-part R302 field Value = 1K @ sch i2c_non_standard_pull_ups.kicad_sch
-part R302 flag dnp = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part R302 flag exclude_from_sim = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part R302 flag in_bom = yes @ sch i2c_non_standard_pull_ups.kicad_sch
-part R302 flag on_board = yes @ sch i2c_non_standard_pull_ups.kicad_sch
+part R301 value = text 1K @ sch i2c-9_non_standard_pull_ups.kicad_sch note "from the Value field"
+part R302 field Description = Resistor @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R302 field Value = 1K @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R302 flag dnp = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R302 flag exclude_from_sim = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R302 flag in_bom = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R302 flag on_board = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part R302 lib Device:R sheet / symbol Device:R
 part R302 unit 1 sheet / uuid 83017352-6d4a-4042-b8ec-ae67e7e8851d at 106.68,62.23 rot 0
-part R302 value = text 1K @ sch i2c_non_standard_pull_ups.kicad_sch note "from the Value field"
-part U301 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c_non_standard_pull_ups.kicad_sch
-part U301 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c_non_standard_pull_ups.kicad_sch
-part U301 field Footprint = Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm @ sch i2c_non_standard_pull_ups.kicad_sch
-part U301 field Value = STM32F030F4Px @ sch i2c_non_standard_pull_ups.kicad_sch
-part U301 flag dnp = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part U301 flag exclude_from_sim = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part U301 flag in_bom = yes @ sch i2c_non_standard_pull_ups.kicad_sch
-part U301 flag on_board = yes @ sch i2c_non_standard_pull_ups.kicad_sch
+part R302 value = text 1K @ sch i2c-9_non_standard_pull_ups.kicad_sch note "from the Value field"
+part U301 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U301 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U301 field Footprint = Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U301 field Value = STM32F030F4Px @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U301 flag dnp = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U301 flag exclude_from_sim = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U301 flag in_bom = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U301 flag on_board = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part U301 lib MCU_ST_STM32F0:STM32F030F4Px sheet / symbol MCU_ST_STM32F0:STM32F030F4Px
 part U301 unit 1 sheet / uuid 615cc49e-6000-4e1b-a64d-f5d4d7e4e883 at 73.66,68.58 rot 0
-part U301 value = text STM32F030F4Px @ sch i2c_non_standard_pull_ups.kicad_sch note "from the Value field"
-part U302 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_non_standard_pull_ups.kicad_sch
-part U302 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_non_standard_pull_ups.kicad_sch
-part U302 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_non_standard_pull_ups.kicad_sch
-part U302 field Value = PCA9536DP @ sch i2c_non_standard_pull_ups.kicad_sch
-part U302 flag dnp = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part U302 flag exclude_from_sim = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part U302 flag in_bom = yes @ sch i2c_non_standard_pull_ups.kicad_sch
-part U302 flag on_board = yes @ sch i2c_non_standard_pull_ups.kicad_sch
+part U301 value = text STM32F030F4Px @ sch i2c-9_non_standard_pull_ups.kicad_sch note "from the Value field"
+part U302 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U302 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U302 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U302 field Value = PCA9536DP @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U302 flag dnp = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U302 flag exclude_from_sim = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U302 flag in_bom = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U302 flag on_board = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part U302 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
 part U302 unit 1 sheet / uuid 6e20a273-bc94-41bf-a574-6f21e400bca6 at 152.4,71.12 rot 0
-part U302 value = text PCA9536DP @ sch i2c_non_standard_pull_ups.kicad_sch note "from the Value field"
+part U302 value = text PCA9536DP @ sch i2c-9_non_standard_pull_ups.kicad_sch note "from the Value field"
 pin R301 1 name "" unit 1 net VCC
-pin R301 1 type = passive @ sch i2c_non_standard_pull_ups.kicad_sch
+pin R301 1 type = passive @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin R301 2 name "" unit 1 net /SCL
-pin R301 2 type = passive @ sch i2c_non_standard_pull_ups.kicad_sch
+pin R301 2 type = passive @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin R302 1 name "" unit 1 net VCC
-pin R302 1 type = passive @ sch i2c_non_standard_pull_ups.kicad_sch
+pin R302 1 type = passive @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin R302 2 name "" unit 1 net /SDA
-pin R302 2 type = passive @ sch i2c_non_standard_pull_ups.kicad_sch
+pin R302 2 type = passive @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 1 name BOOT0 unit 1 net unconnected-(U301-BOOT0-Pad1)
-pin U301 1 type = input @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 1 type = input @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 2 name PF0 unit 1 net unconnected-(U301-PF0-Pad2)
-pin U301 2 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 2 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 3 name PF1 unit 1 net unconnected-(U301-PF1-Pad3)
-pin U301 3 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 3 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 4 name NRST unit 1 net unconnected-(U301-NRST-Pad4)
-pin U301 4 type = input @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 4 type = input @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 5 name VDDA unit 1 net VCC
-pin U301 5 type = power_in @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 5 type = power_in @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 6 name PA0 unit 1 net unconnected-(U301-PA0-Pad6)
-pin U301 6 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 6 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 7 name PA1 unit 1 net unconnected-(U301-PA1-Pad7)
-pin U301 7 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 7 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 8 name PA2 unit 1 net unconnected-(U301-PA2-Pad8)
-pin U301 8 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 8 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 9 name PA3 unit 1 net unconnected-(U301-PA3-Pad9)
-pin U301 9 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 9 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 10 name PA4 unit 1 net unconnected-(U301-PA4-Pad10)
-pin U301 10 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 10 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 11 name PA5 unit 1 net unconnected-(U301-PA5-Pad11)
-pin U301 11 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 11 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 12 name PA6 unit 1 net unconnected-(U301-PA6-Pad12)
-pin U301 12 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 12 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 13 name PA7 unit 1 net unconnected-(U301-PA7-Pad13)
-pin U301 13 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 13 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 14 name PB1 unit 1 net unconnected-(U301-PB1-Pad14)
-pin U301 14 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 14 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 15 name VSS unit 1 net GND
-pin U301 15 type = power_in @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 15 type = power_in @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 16 name VDD unit 1 net VCC
-pin U301 16 type = power_in @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 16 type = power_in @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 17 name PA9 unit 1 net /SCL
-pin U301 17 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 17 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 18 name PA10 unit 1 net /SDA
-pin U301 18 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 18 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 19 name PA13 unit 1 net unconnected-(U301-PA13-Pad19)
-pin U301 19 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 19 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 20 name PA14 unit 1 net unconnected-(U301-PA14-Pad20)
-pin U301 20 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 20 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 1 name IO0 unit 1 net unconnected-(U302-IO0-Pad1)
-pin U302 1 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 1 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 2 name IO1 unit 1 net unconnected-(U302-IO1-Pad2)
-pin U302 2 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 2 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 3 name IO2 unit 1 net unconnected-(U302-IO2-Pad3)
-pin U302 3 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 3 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 4 name VSS unit 1 net GND
-pin U302 4 type = power_in @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 4 type = power_in @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 5 name IO3 unit 1 net unconnected-(U302-IO3-Pad5)
-pin U302 5 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 5 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 6 name SCL unit 1 net /SCL
-pin U302 6 type = input @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 6 type = input @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 7 name SDA unit 1 net /SDA
-pin U302 7 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 7 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 8 name VDD unit 1 net VCC
-pin U302 8 type = power_in @ sch i2c_non_standard_pull_ups.kicad_sch
-sheet / name "" file i2c_non_standard_pull_ups.kicad_sch uuid /
-source file i2c_non_standard_pull_ups.kicad_sch
+pin U302 8 type = power_in @ sch i2c-9_non_standard_pull_ups.kicad_sch
+sheet / name "" file i2c-9_non_standard_pull_ups.kicad_sch uuid /
+source file i2c-9_non_standard_pull_ups.kicad_sch
 source tool kicad
 source version 8.0
 symbol Device:R description Resistor

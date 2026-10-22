@@ -11,6 +11,39 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- `erc_checks`, the check engine (`DIAG-1` to `DIAG-6`, `RPT-22`): one file per catalogue check with its id,
+  severity, tier, scope, declared data needs, overlaps and thresholds, registered statically; per board the engine
+  works out which needs are available, runs the checks that can run in parallel over one context whose analyses are
+  built on first use, and reports the others as not run with why and what would enable them. One `Finding` for every
+  check (severity with a project override, confidence, subjects with names, variant, facts with their sources,
+  fingerprint, detail page link, fix, locations); a finding of an overlapping check folds the other in (`also
+  BOM-5`). The `Report` (summary, every catalogue check ran / not run / planned, findings worst first by category,
+  candidates, notes, timing) as JSON with a versioned schema and as text. The catalogue and its detail pages are
+  embedded: `list()`, `explain(id)` and the not-run hints work offline. Described in [docs/engine.md](docs/engine.md).
+- The eleven shipped checks run on the new core: `I2C-1`, `I2C-2`, `I2C-3`, `I2C-7`, `I2C-9`, `I2C-10`, `BOM-5`,
+  `BOM-6`, `BOM-9`, `BOM-10`, `LIB-3`, each with its unit test. `I2C-9` and `I2C-10` are findings of their own now,
+  `BOM-5` is an error as the catalogue says, `BOM-6` reports a placeholder on a fitted part (in the variant checked)
+  apart from `BOM-5`, and `BOM-5` also catches `TBD` and `TODO`.
+- `erc_analysis` (`NET-4`, `NET-19`): part classes from the library symbol, the description, or the designator prefix
+  as an assumption (a finding resting on it is an estimate); values read in their class's unit per variant; graph
+  queries; the I2C bus recogniser ported from `erc_core` (buses, pull-up pairs and redundant pull-ups, ties, discrete
+  and IC translators, segments; parts in no known role become notes).
+- Test schematics as the spec: every `test_schematics/sources/<id>_<slug>.kicad_sch` has an `.expect.toml` of the
+  findings and not-run checks the engine must report on it, and one test compares them (`BLESS=1` rewrites them); a
+  test holds every registered check to its catalogue line.
+- `erc_model`: `Board::fitted` and `Board::field` per variant, `Board::is_component`; the value parser warns about more
+  than one space before the multiplier, a small `r` and an `R` after a multiplier.
+
+### Changed
+
+- The test schematics are named after their check (`i2c_segments` is `i2c-7_segments`, `style_values` is
+  `bom-10_values`); the MOSFETs moved to `lib-3_mosfet_pin_names`, and `bom-10_values` gained a placeholder on a DNP
+  part and a `TBD`.
+- The catalogue lines and detail pages of the ported checks say what the code checks now, without "runs today:
+  `style.rs`".
+
 ## [0.3.6] - 2026-10-22
 
 ### Added

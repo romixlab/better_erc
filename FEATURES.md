@@ -24,8 +24,12 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   provenance; the importer trait; the canonical dump ([docs/model.md](docs/model.md))
 - `erc_kicad`: KiCad 8, 9 and 10 read by us: s-expression reader, schematic hierarchy with KiCad's connectivity,
   project file, board, the KiCad netlist as the oracle
+- `erc_analysis`: analyses over the board model: part classes, values, graph queries, the I2C bus recogniser
+- `erc_checks`: the check engine and the checks, one file per catalogue id; findings, not-run reports, the report
+  as JSON and text, the embedded catalogue ([docs/engine.md](docs/engine.md))
 - `ecad_file_format`: netlist, BOM and PnP parsers, the common `Netlist` model, passive value parsing
-- `erc_core`: analysis (`PcbAssembly`, power structure, I2C buses) and the checks, `config.rs` for thresholds
+- `erc_core`: the first analysis and checks on the old `Netlist` (`PcbAssembly`, power structure, I2C buses), still
+  feeding the desktop app; the checks themselves run in `erc_checks`
 - `ecad_compare`: board file comparisons (PnP so far)
 - `better_erc`: egui/eframe desktop app (`egui_tiles` tabs)
 - `berc`: command line tools (`berc textconv` so far)
@@ -65,7 +69,9 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - ✅ `NET-1` Common `Netlist` model with typed `Designator`, `NetName`, `PinName`, `PinId` · `netlist.rs`
 - ✅ `NET-2` Graph queries: `find_chains`, `find_connected_parts`, `is_connected`, `are_parts_connected`, `connected_net`
 - ✅ `NET-3` `PcbAssembly`: collects analysis results, `find_part_chains` · `erc_core/src/pcba.rs`
-- ✅ `NET-4` I2C bus finder: direct and common segments, connected parts, voltage translators · `i2c.rs`
+- ✅ `NET-4` I2C bus finder: direct and common segments, connected parts, voltage translators · `erc_analysis/src/i2c.rs`
+  on the board model (ported from `erc_core/src/i2c.rs`, which still feeds the app). Buses are still found by net
+  names; pin roles come with `NET-7`
 - 🚧 `NET-5` Power structure: rails and grounds from net names only (strict mode needs `+xVy`); voltage parsed from
   the name. Missing: sources (LDO, DC-DC, connectors), 0R and shunt ties, power switches · `power.rs`
 - 🚧 `NET-6` Switching nodes finder · `power.rs`
@@ -84,7 +90,10 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   labels, variants, net classes, project settings and the layout; every attribute a `Fact` with provenance, rank, time
   and note (highest rank wins, newest on a tie, disagreements listed); typed `Value`; the `Importer` trait; the
   canonical dump (one sorted fact per line, read back losslessly) as the golden format of importer tests; `netcmp`.
-  Docs: [docs/model.md](docs/model.md). Missing: part classes, pin roles and the analyses on top (stage 1+)
+  Docs: [docs/model.md](docs/model.md). Missing: pin roles and the analyses on top (stage 1+)
+- 🚧 `NET-19` Part classes: resistor, capacitor, MOSFET, BJT, connector, translator, IC, ..., each a fact with the rule
+  that decided it (library symbol, description and keywords, designator prefix as an assumption) · `erc_analysis/src/class.rs`.
+  Missing: the part database and MPN as sources, the subclasses (diode kinds, regulator kinds) of the full model
 - ✅ `NET-18` Each net's effective net class as KiCad resolves it (directive labels, project patterns as anchored regex
   or wildcard, priority order, `Default` filling unset rules), equal to kicad-cli's netlist classes · `erc_kicad/src/netclass.rs`
 
@@ -135,30 +144,44 @@ the code lacks, `judgement` is not a rule. Counts on 22 Oct 2026:
 | `LAY` | · | 9 | 14 | 2 | 25 |
 | **all** | **139** | **291** | **64** | **19** | **513** |
 
-`BOM-5` is listed as an error in the catalogue while `style.rs` reports it as a warning: align when `DIAG-3` lands.
+The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per check under
+`erc_checks/src/<category>/`, each with its unit test and a test schematic with expectations
+(`test_schematics/sources/<id>_<slug>.kicad_sch` and `.expect.toml`).
 
-- ✅ `I2C-1` No pull-ups · `i2c.rs` `check_pull_ups`, test schematics `i2c_*_pull_ups`. The same function also
-  finds `I2C-9` (value outside 2.2k-10k, or one that doesn't parse) and `I2C-10` (SCL and SDA pull-ups differ);
-  the catalogue split them out of I2C-1 on 21 Oct 2026, the code still reports all three as one kind of finding
-  (give each its own variant with `DIAG-3`)
-- ✅ `I2C-2` Redundant pull-ups · `i2c.rs`
-- ✅ `I2C-3` Pull-up through series resistors to nowhere · `i2c.rs`
-- ✅ `I2C-7` Series tie resistor too high (`MAX_TIE_RESISTANCE` = 100 Ω) · `check_tie_resistance`
-- ✅ `BOM-5`, `BOM-6` "Calculate later" values · `style.rs`, test schematic `style_values` (as BOM-9, BOM-10, LIB-3)
-- ✅ `BOM-9` Part without a value · `style.rs`
-- ✅ `BOM-10` Value doesn't parse or isn't standard · `style.rs`
-- ✅ `LIB-3` MOSFET pins not named · `style.rs`
-- ⬜ `IO-1` Inputs without a drive source: collects input pins and prints them, no diagnostic yet · `general.rs`,
-  test schematic `io_inputs`
-- 📋 `DIAG-1` Unknown I2C node warning exists (`UnknownNode`) but should feed `DIAG-2` instead of being a check
-- 📋 `DIAG-2` Say which checks ran, and which didn't for lack of data (and what data would enable them)
-- 📋 `DIAG-3` One diagnostic type across checks (today `I2cDiagnostic` and `StyleDiagnostic`), with catalogue ID
-  and severity
-- 📋 `DIAG-4` Sort findings by importance, group by category
+- ✅ `I2C-1` No pull-ups on a direct bus segment · `i2c/i2c_1.rs`, schematic `i2c-1_no_pull_ups`
+- ✅ `I2C-2` Redundant pull-ups: besides the pair on one bus, and several pairs on one segment · `i2c/i2c_2.rs`,
+  `i2c-2_multiple_pull_ups`, `i2c-7_segments`
+- ✅ `I2C-3` Pull-up through series resistors to nowhere · `i2c/i2c_3.rs`, `i2c-1_no_pull_ups`
+- ✅ `I2C-7` Series tie resistor too high (`max_tie` = 100 Ω) · `i2c/i2c_7.rs`, `i2c-7_segments`
+- ✅ `I2C-9` Pull-up at or beyond the 2.2k-10k window, or not readable · `i2c/i2c_9.rs`, `i2c-9_non_standard_pull_ups`
+- ✅ `I2C-10` SCL and SDA pull-ups differ · `i2c/i2c_10.rs`, `i2c-10_non_equal_pull_ups`
+- ✅ `BOM-5` Placeholder values (`?`, `??k`, `TBD`, `TODO`) · `bom/bom_5.rs`, `bom-10_values`
+- ✅ `BOM-6` Placeholder value on a fitted part (folds `BOM-5` in) · `bom/bom_6.rs`, `bom-10_values`
+- ✅ `BOM-9` Part without a value · `bom/bom_9.rs`, `bom-10_values`
+- 🚧 `BOM-10` Resistor value that doesn't read or has odd notation · `bom/bom_10.rs`, `bom-10_values`. Missing: the
+  E-series test and capacitor values
+- ✅ `LIB-3` MOSFET pins not named G, D, S · `lib/lib_3.rs`, `lib-3_mosfet_pin_names`
+- ⬜ `IO-1` Inputs without a drive source: collects input pins and prints them, no diagnostic yet · `erc_core/src/general.rs`,
+  test schematic `io-1_inputs`
+- ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`
+- ✅ `DIAG-2` Every catalogue check reported as ran, not run (the missing need, why, and what would enable it) or
+  planned; each check declares its needs, availability is worked out per board before the run · `erc_checks/src/{meta,ctx,engine}.rs`
+- ✅ `DIAG-3` One `Finding` across checks: catalogue id, severity (project override), confidence (certain, estimate
+  when it rests on an assumed fact, candidate), subjects with names, variant, facts with their sources, fingerprint,
+  link to the detail page, fix, locations; overlapping checks fold into one finding (`also BOM-5`) · `erc_checks/src/finding.rs`
+- ✅ `DIAG-4` Findings sorted worst first and grouped by category in catalogue order · `erc_checks/src/engine.rs`, `report.rs`
+- ✅ `DIAG-5` The catalogue and its detail pages embedded in the library: `list()` (every check, implemented or
+  planned), `explain(id)`, the not-run hints; a test holds each registered check's id, category, severity and tier to
+  its catalogue line · `erc_checks/src/catalogue.rs`, `tests/catalogue.rs`
+- ✅ `DIAG-6` Test schematics as the spec: `<id>_<slug>.kicad_sch` with an `.expect.toml` of findings and not-run
+  checks; one test runs the engine on all of them, and fails on a schematic without expectations or a check no
+  schematic shows firing (`BLESS=1` rewrites the sidecars) · `erc_checks/tests/schematics.rs`
 
 ## Configuration and waivers (`CFG`)
 
-- 🚧 `CFG-1` Thresholds in code constants (`erc_core/src/config.rs`); move to a config file
+- 🚧 `CFG-1` Thresholds: in `erc_checks` each check declares its own with a default (`CheckMeta::params`), and
+  `Config` overrides them and severities per project; the project file that sets them is `CFG-2`. `erc_core/src/config.rs`
+  still holds the app's
 - 📋 `CFG-2` Project file: net voltage ranges, currents, power states, I2C address choices, unknown part mapping
   (type and pin mapping)
 - 📋 `CFG-3` Waivers: check, nets involved, user, comment, date; one-click waiver; voting (disagree first)
@@ -189,6 +212,8 @@ the code lacks, `judgement` is not a rule. Counts on 22 Oct 2026:
 - 📋 `RPT-19` Revision resistor calculator (table → alpha / numeric value)
 - 📋 `RPT-20` Batch mode: run checks, generate reports and pictures from the command line
 - 📋 `RPT-21` Mark findings as found by hand-written rules or by AI
+- ✅ `RPT-22` Report of a run: design summary, every check ran / not run / planned, findings, candidates, notes,
+  timing; JSON with a versioned schema (read back by `from_json`) and a text rendering · `erc_checks/src/report.rs`
 
 ## Views (`VIEW`)
 

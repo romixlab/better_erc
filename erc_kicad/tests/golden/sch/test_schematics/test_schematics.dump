@@ -471,1250 +471,1250 @@ netclass Default param track_width = 0.2 @ pro test_schematics.kicad_pro
 netclass Default param via_diameter = 0.6 @ pro test_schematics.kicad_pro
 netclass Default param via_drill = 0.3 @ pro test_schematics.kicad_pro
 netclass Default param wire_width = 6 @ pro test_schematics.kicad_pro
-part J401 field Description = "Generic connector, single row, 01x03, script generated" @ sch i2c_segments.kicad_sch
-part J401 field Value = Conn_01x03_Pin @ sch i2c_segments.kicad_sch
-part J401 flag dnp = no @ sch i2c_segments.kicad_sch
-part J401 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part J401 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part J401 flag on_board = yes @ sch i2c_segments.kicad_sch
+part J401 field Description = "Generic connector, single row, 01x03, script generated" @ sch i2c-7_segments.kicad_sch
+part J401 field Value = Conn_01x03_Pin @ sch i2c-7_segments.kicad_sch
+part J401 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part J401 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part J401 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part J401 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part J401 lib Connector:Conn_01x03_Pin sheet "/C22: I2C Segments/" symbol Connector:Conn_01x03_Pin
 part J401 unit 1 sheet "/C22: I2C Segments/" uuid 63102011-5c41-4316-b36a-b6b698e6ee43 at 121.92,120.65 rot 0
-part J401 value = text Conn_01x03_Pin @ sch i2c_segments.kicad_sch note "from the Value field"
-part Q401 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c_segments.kicad_sch
-part Q401 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c_segments.kicad_sch
-part Q401 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c_segments.kicad_sch
-part Q401 field Value = BSS138 @ sch i2c_segments.kicad_sch
-part Q401 flag dnp = no @ sch i2c_segments.kicad_sch
-part Q401 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part Q401 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part Q401 flag on_board = yes @ sch i2c_segments.kicad_sch
+part J401 value = text Conn_01x03_Pin @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part Q401 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c-7_segments.kicad_sch
+part Q401 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c-7_segments.kicad_sch
+part Q401 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c-7_segments.kicad_sch
+part Q401 field Value = BSS138 @ sch i2c-7_segments.kicad_sch
+part Q401 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part Q401 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part Q401 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part Q401 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part Q401 lib Transistor_FET:BSS138 sheet "/C22: I2C Segments/" symbol Transistor_FET:BSS138
 part Q401 unit 1 sheet "/C22: I2C Segments/" uuid 81a0f175-b57b-4355-aa28-e78fba1b353e at 210.82,154.94 rot 90 mirror x
-part Q401 value = text BSS138 @ sch i2c_segments.kicad_sch note "from the Value field"
-part Q402 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c_segments.kicad_sch
-part Q402 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c_segments.kicad_sch
-part Q402 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c_segments.kicad_sch
-part Q402 field Value = BSS138 @ sch i2c_segments.kicad_sch
-part Q402 flag dnp = no @ sch i2c_segments.kicad_sch
-part Q402 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part Q402 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part Q402 flag on_board = yes @ sch i2c_segments.kicad_sch
+part Q401 value = text BSS138 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part Q402 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c-7_segments.kicad_sch
+part Q402 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c-7_segments.kicad_sch
+part Q402 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c-7_segments.kicad_sch
+part Q402 field Value = BSS138 @ sch i2c-7_segments.kicad_sch
+part Q402 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part Q402 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part Q402 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part Q402 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part Q402 lib Transistor_FET:BSS138 sheet "/C22: I2C Segments/" symbol Transistor_FET:BSS138
 part Q402 unit 1 sheet "/C22: I2C Segments/" uuid e01b01aa-3cf9-4772-bbec-27ee29c5ae14 at 210.82,173.99 rot 90 mirror x
-part Q402 value = text BSS138 @ sch i2c_segments.kicad_sch note "from the Value field"
-part Q403 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c_segments.kicad_sch
-part Q403 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c_segments.kicad_sch
-part Q403 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c_segments.kicad_sch
-part Q403 field Value = BSS138 @ sch i2c_segments.kicad_sch
-part Q403 flag dnp = no @ sch i2c_segments.kicad_sch
-part Q403 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part Q403 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part Q403 flag on_board = yes @ sch i2c_segments.kicad_sch
+part Q402 value = text BSS138 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part Q403 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c-7_segments.kicad_sch
+part Q403 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c-7_segments.kicad_sch
+part Q403 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c-7_segments.kicad_sch
+part Q403 field Value = BSS138 @ sch i2c-7_segments.kicad_sch
+part Q403 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part Q403 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part Q403 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part Q403 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part Q403 lib Transistor_FET:BSS138 sheet "/C22: I2C Segments/" symbol Transistor_FET:BSS138
 part Q403 unit 1 sheet "/C22: I2C Segments/" uuid 8f793adc-560b-454a-a802-f1a3f56faab8 at 222.25,57.15 rot 90 mirror x
-part Q403 value = text BSS138 @ sch i2c_segments.kicad_sch note "from the Value field"
-part Q404 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c_segments.kicad_sch
-part Q404 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c_segments.kicad_sch
-part Q404 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c_segments.kicad_sch
-part Q404 field Value = BSS138 @ sch i2c_segments.kicad_sch
-part Q404 flag dnp = no @ sch i2c_segments.kicad_sch
-part Q404 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part Q404 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part Q404 flag on_board = yes @ sch i2c_segments.kicad_sch
+part Q403 value = text BSS138 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part Q404 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c-7_segments.kicad_sch
+part Q404 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c-7_segments.kicad_sch
+part Q404 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c-7_segments.kicad_sch
+part Q404 field Value = BSS138 @ sch i2c-7_segments.kicad_sch
+part Q404 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part Q404 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part Q404 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part Q404 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part Q404 lib Transistor_FET:BSS138 sheet "/C22: I2C Segments/" symbol Transistor_FET:BSS138
 part Q404 unit 1 sheet "/C22: I2C Segments/" uuid 344a4cd9-92bf-4b42-ae5a-d24959645732 at 222.25,76.2 rot 90 mirror x
-part Q404 value = text BSS138 @ sch i2c_segments.kicad_sch note "from the Value field"
-part Q503 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c_multiple_pull_ups.kicad_sch
-part Q503 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c_multiple_pull_ups.kicad_sch
-part Q503 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c_multiple_pull_ups.kicad_sch
-part Q503 field Value = BSS138 @ sch i2c_multiple_pull_ups.kicad_sch
-part Q503 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part Q503 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part Q503 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part Q503 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part Q404 value = text BSS138 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part Q503 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c-2_multiple_pull_ups.kicad_sch
+part Q503 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c-2_multiple_pull_ups.kicad_sch
+part Q503 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c-2_multiple_pull_ups.kicad_sch
+part Q503 field Value = BSS138 @ sch i2c-2_multiple_pull_ups.kicad_sch
+part Q503 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part Q503 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part Q503 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part Q503 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part Q503 lib Transistor_FET:BSS138 sheet "/C107: I2C multiple pull-ups/" symbol Transistor_FET:BSS138
 part Q503 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid 739b1668-d67f-4347-80d3-1fd864342266 at 182.88,44.45 rot 90 mirror x
-part Q503 value = text BSS138 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part Q504 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c_multiple_pull_ups.kicad_sch
-part Q504 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c_multiple_pull_ups.kicad_sch
-part Q504 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c_multiple_pull_ups.kicad_sch
-part Q504 field Value = BSS138 @ sch i2c_multiple_pull_ups.kicad_sch
-part Q504 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part Q504 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part Q504 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part Q504 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part Q503 value = text BSS138 @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part Q504 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c-2_multiple_pull_ups.kicad_sch
+part Q504 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c-2_multiple_pull_ups.kicad_sch
+part Q504 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c-2_multiple_pull_ups.kicad_sch
+part Q504 field Value = BSS138 @ sch i2c-2_multiple_pull_ups.kicad_sch
+part Q504 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part Q504 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part Q504 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part Q504 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part Q504 lib Transistor_FET:BSS138 sheet "/C107: I2C multiple pull-ups/" symbol Transistor_FET:BSS138
 part Q504 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid 08831d71-cc78-4436-8e7d-b98012f3827f at 182.88,63.5 rot 90 mirror x
-part Q504 value = text BSS138 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part R201 field Description = Resistor @ sch i2c_no_pull_ups.kicad_sch
-part R201 field Value = 3K3 @ sch i2c_no_pull_ups.kicad_sch
-part R201 flag dnp = no @ sch i2c_no_pull_ups.kicad_sch
-part R201 flag exclude_from_sim = no @ sch i2c_no_pull_ups.kicad_sch
-part R201 flag in_bom = yes @ sch i2c_no_pull_ups.kicad_sch
-part R201 flag on_board = yes @ sch i2c_no_pull_ups.kicad_sch
+part Q504 value = text BSS138 @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part R201 field Description = Resistor @ sch i2c-1_no_pull_ups.kicad_sch
+part R201 field Value = 3K3 @ sch i2c-1_no_pull_ups.kicad_sch
+part R201 flag dnp = no @ sch i2c-1_no_pull_ups.kicad_sch
+part R201 flag exclude_from_sim = no @ sch i2c-1_no_pull_ups.kicad_sch
+part R201 flag in_bom = yes @ sch i2c-1_no_pull_ups.kicad_sch
+part R201 flag on_board = yes @ sch i2c-1_no_pull_ups.kicad_sch
 part R201 lib Device:R sheet "/C20: I2C no pull-ups/" symbol Device:R
 part R201 unit 1 sheet "/C20: I2C no pull-ups/" uuid f0d47f01-575f-4a19-b8e4-cbacd2433b29 at 139.7,95.25 rot 0
-part R201 value = text 3K3 @ sch i2c_no_pull_ups.kicad_sch note "from the Value field"
-part R202 field Description = Resistor @ sch i2c_no_pull_ups.kicad_sch
-part R202 field Value = 3K3 @ sch i2c_no_pull_ups.kicad_sch
-part R202 flag dnp = no @ sch i2c_no_pull_ups.kicad_sch
-part R202 flag exclude_from_sim = no @ sch i2c_no_pull_ups.kicad_sch
-part R202 flag in_bom = yes @ sch i2c_no_pull_ups.kicad_sch
-part R202 flag on_board = yes @ sch i2c_no_pull_ups.kicad_sch
+part R201 value = text 3K3 @ sch i2c-1_no_pull_ups.kicad_sch note "from the Value field"
+part R202 field Description = Resistor @ sch i2c-1_no_pull_ups.kicad_sch
+part R202 field Value = 3K3 @ sch i2c-1_no_pull_ups.kicad_sch
+part R202 flag dnp = no @ sch i2c-1_no_pull_ups.kicad_sch
+part R202 flag exclude_from_sim = no @ sch i2c-1_no_pull_ups.kicad_sch
+part R202 flag in_bom = yes @ sch i2c-1_no_pull_ups.kicad_sch
+part R202 flag on_board = yes @ sch i2c-1_no_pull_ups.kicad_sch
 part R202 lib Device:R sheet "/C20: I2C no pull-ups/" symbol Device:R
 part R202 unit 1 sheet "/C20: I2C no pull-ups/" uuid 6806aed5-cac9-48df-a338-d6beeab4f891 at 149.86,95.25 rot 0
-part R202 value = text 3K3 @ sch i2c_no_pull_ups.kicad_sch note "from the Value field"
-part R203 field Description = Resistor @ sch i2c_no_pull_ups.kicad_sch
-part R203 field Value = 3K3 @ sch i2c_no_pull_ups.kicad_sch
-part R203 flag dnp = no @ sch i2c_no_pull_ups.kicad_sch
-part R203 flag exclude_from_sim = no @ sch i2c_no_pull_ups.kicad_sch
-part R203 flag in_bom = yes @ sch i2c_no_pull_ups.kicad_sch
-part R203 flag on_board = yes @ sch i2c_no_pull_ups.kicad_sch
+part R202 value = text 3K3 @ sch i2c-1_no_pull_ups.kicad_sch note "from the Value field"
+part R203 field Description = Resistor @ sch i2c-1_no_pull_ups.kicad_sch
+part R203 field Value = 3K3 @ sch i2c-1_no_pull_ups.kicad_sch
+part R203 flag dnp = no @ sch i2c-1_no_pull_ups.kicad_sch
+part R203 flag exclude_from_sim = no @ sch i2c-1_no_pull_ups.kicad_sch
+part R203 flag in_bom = yes @ sch i2c-1_no_pull_ups.kicad_sch
+part R203 flag on_board = yes @ sch i2c-1_no_pull_ups.kicad_sch
 part R203 lib Device:R sheet "/C20: I2C no pull-ups/" symbol Device:R
 part R203 unit 1 sheet "/C20: I2C no pull-ups/" uuid 9da62da5-c79e-4069-aec9-c182c1e91ad5 at 210.82,95.25 rot 0
-part R203 value = text 3K3 @ sch i2c_no_pull_ups.kicad_sch note "from the Value field"
-part R204 field Description = Resistor @ sch i2c_no_pull_ups.kicad_sch
-part R204 field Value = 3K3 @ sch i2c_no_pull_ups.kicad_sch
-part R204 flag dnp = no @ sch i2c_no_pull_ups.kicad_sch
-part R204 flag exclude_from_sim = no @ sch i2c_no_pull_ups.kicad_sch
-part R204 flag in_bom = yes @ sch i2c_no_pull_ups.kicad_sch
-part R204 flag on_board = yes @ sch i2c_no_pull_ups.kicad_sch
+part R203 value = text 3K3 @ sch i2c-1_no_pull_ups.kicad_sch note "from the Value field"
+part R204 field Description = Resistor @ sch i2c-1_no_pull_ups.kicad_sch
+part R204 field Value = 3K3 @ sch i2c-1_no_pull_ups.kicad_sch
+part R204 flag dnp = no @ sch i2c-1_no_pull_ups.kicad_sch
+part R204 flag exclude_from_sim = no @ sch i2c-1_no_pull_ups.kicad_sch
+part R204 flag in_bom = yes @ sch i2c-1_no_pull_ups.kicad_sch
+part R204 flag on_board = yes @ sch i2c-1_no_pull_ups.kicad_sch
 part R204 lib Device:R sheet "/C20: I2C no pull-ups/" symbol Device:R
 part R204 unit 1 sheet "/C20: I2C no pull-ups/" uuid c7f96eaa-0a9b-41e6-84a4-a9e1506d5aca at 220.98,95.25 rot 0
-part R204 value = text 3K3 @ sch i2c_no_pull_ups.kicad_sch note "from the Value field"
-part R205 field Description = Resistor @ sch i2c_no_pull_ups.kicad_sch
-part R205 field Value = 0R @ sch i2c_no_pull_ups.kicad_sch
-part R205 flag dnp = no @ sch i2c_no_pull_ups.kicad_sch
-part R205 flag exclude_from_sim = no @ sch i2c_no_pull_ups.kicad_sch
-part R205 flag in_bom = yes @ sch i2c_no_pull_ups.kicad_sch
-part R205 flag on_board = yes @ sch i2c_no_pull_ups.kicad_sch
+part R204 value = text 3K3 @ sch i2c-1_no_pull_ups.kicad_sch note "from the Value field"
+part R205 field Description = Resistor @ sch i2c-1_no_pull_ups.kicad_sch
+part R205 field Value = 0R @ sch i2c-1_no_pull_ups.kicad_sch
+part R205 flag dnp = no @ sch i2c-1_no_pull_ups.kicad_sch
+part R205 flag exclude_from_sim = no @ sch i2c-1_no_pull_ups.kicad_sch
+part R205 flag in_bom = yes @ sch i2c-1_no_pull_ups.kicad_sch
+part R205 flag on_board = yes @ sch i2c-1_no_pull_ups.kicad_sch
 part R205 lib Device:R sheet "/C20: I2C no pull-ups/" symbol Device:R
 part R205 unit 1 sheet "/C20: I2C no pull-ups/" uuid c3351810-703e-46ab-bbba-ba5cfe83473a at 210.82,82.55 rot 0
-part R205 value = qty 0 ohm @ sch i2c_no_pull_ups.kicad_sch note "from the Value field"
-part R301 field Description = Resistor @ sch i2c_non_standard_pull_ups.kicad_sch
-part R301 field Value = 1K @ sch i2c_non_standard_pull_ups.kicad_sch
-part R301 flag dnp = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part R301 flag exclude_from_sim = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part R301 flag in_bom = yes @ sch i2c_non_standard_pull_ups.kicad_sch
-part R301 flag on_board = yes @ sch i2c_non_standard_pull_ups.kicad_sch
+part R205 value = qty 0 ohm @ sch i2c-1_no_pull_ups.kicad_sch note "from the Value field"
+part R301 field Description = Resistor @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R301 field Value = 1K @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R301 flag dnp = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R301 flag exclude_from_sim = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R301 flag in_bom = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R301 flag on_board = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part R301 lib Device:R sheet "/C20: I2C non standard pull-ups/" symbol Device:R
 part R301 unit 1 sheet "/C20: I2C non standard pull-ups/" uuid 6a52dfd1-33a3-4b22-b1f1-6e9a4dc8120d at 96.52,62.23 rot 0
-part R301 value = text 1K @ sch i2c_non_standard_pull_ups.kicad_sch note "from the Value field"
-part R302 field Description = Resistor @ sch i2c_non_standard_pull_ups.kicad_sch
-part R302 field Value = 1K @ sch i2c_non_standard_pull_ups.kicad_sch
-part R302 flag dnp = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part R302 flag exclude_from_sim = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part R302 flag in_bom = yes @ sch i2c_non_standard_pull_ups.kicad_sch
-part R302 flag on_board = yes @ sch i2c_non_standard_pull_ups.kicad_sch
+part R301 value = text 1K @ sch i2c-9_non_standard_pull_ups.kicad_sch note "from the Value field"
+part R302 field Description = Resistor @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R302 field Value = 1K @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R302 flag dnp = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R302 flag exclude_from_sim = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R302 flag in_bom = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part R302 flag on_board = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part R302 lib Device:R sheet "/C20: I2C non standard pull-ups/" symbol Device:R
 part R302 unit 1 sheet "/C20: I2C non standard pull-ups/" uuid 83017352-6d4a-4042-b8ec-ae67e7e8851d at 106.68,62.23 rot 0
-part R302 value = text 1K @ sch i2c_non_standard_pull_ups.kicad_sch note "from the Value field"
-part R401 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R401 field Value = 10K @ sch i2c_segments.kicad_sch
-part R401 flag dnp = no @ sch i2c_segments.kicad_sch
-part R401 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R401 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R401 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R302 value = text 1K @ sch i2c-9_non_standard_pull_ups.kicad_sch note "from the Value field"
+part R401 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R401 field Value = 10K @ sch i2c-7_segments.kicad_sch
+part R401 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R401 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R401 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R401 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R401 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R401 unit 1 sheet "/C22: I2C Segments/" uuid db558b9b-d1c6-416f-b6e0-86752881e6c1 at 147.32,64.77 rot 0
-part R401 value = text 10K @ sch i2c_segments.kicad_sch note "from the Value field"
-part R402 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R402 field Value = 10K @ sch i2c_segments.kicad_sch
-part R402 flag dnp = no @ sch i2c_segments.kicad_sch
-part R402 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R402 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R402 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R401 value = text 10K @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R402 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R402 field Value = 10K @ sch i2c-7_segments.kicad_sch
+part R402 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R402 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R402 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R402 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R402 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R402 unit 1 sheet "/C22: I2C Segments/" uuid 4ad0e533-851d-4845-9c67-373be976022d at 147.32,100.33 rot 0
-part R402 value = text 10K @ sch i2c_segments.kicad_sch note "from the Value field"
-part R403 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R403 field Value = 10K @ sch i2c_segments.kicad_sch
-part R403 flag dnp = no @ sch i2c_segments.kicad_sch
-part R403 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R403 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R403 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R402 value = text 10K @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R403 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R403 field Value = 10K @ sch i2c-7_segments.kicad_sch
+part R403 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R403 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R403 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R403 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R403 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R403 unit 1 sheet "/C22: I2C Segments/" uuid 28213184-22b9-4c74-b9ef-167bf31565a4 at 157.48,64.77 rot 0
-part R403 value = text 10K @ sch i2c_segments.kicad_sch note "from the Value field"
-part R404 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R404 field Value = 10K @ sch i2c_segments.kicad_sch
-part R404 flag dnp = no @ sch i2c_segments.kicad_sch
-part R404 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R404 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R404 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R403 value = text 10K @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R404 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R404 field Value = 10K @ sch i2c-7_segments.kicad_sch
+part R404 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R404 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R404 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R404 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R404 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R404 unit 1 sheet "/C22: I2C Segments/" uuid cb48bcbd-7538-4527-b856-72d688cb58af at 157.48,100.33 rot 0
-part R404 value = text 10K @ sch i2c_segments.kicad_sch note "from the Value field"
-part R405 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R405 field Value = 0 @ sch i2c_segments.kicad_sch
-part R405 flag dnp = no @ sch i2c_segments.kicad_sch
-part R405 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R405 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R405 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R404 value = text 10K @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R405 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R405 field Value = 0 @ sch i2c-7_segments.kicad_sch
+part R405 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R405 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R405 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R405 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R405 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R405 unit 1 sheet "/C22: I2C Segments/" uuid b6a09870-a05a-4767-b39a-8f4a44d92e2b at 182.88,119.38 rot 90
-part R405 value = text 0 @ sch i2c_segments.kicad_sch note "from the Value field"
-part R406 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R406 field Value = 0 @ sch i2c_segments.kicad_sch
-part R406 flag dnp = no @ sch i2c_segments.kicad_sch
-part R406 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R406 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R406 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R405 value = text 0 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R406 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R406 field Value = 0 @ sch i2c-7_segments.kicad_sch
+part R406 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R406 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R406 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R406 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R406 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R406 unit 1 sheet "/C22: I2C Segments/" uuid a30c07f7-f111-49a0-9da3-3f38a26820bf at 182.88,121.92 rot 90
-part R406 value = text 0 @ sch i2c_segments.kicad_sch note "from the Value field"
-part R407 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R407 field Value = 2K2 @ sch i2c_segments.kicad_sch
-part R407 flag dnp = no @ sch i2c_segments.kicad_sch
-part R407 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R407 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R407 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R406 value = text 0 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R407 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R407 field Value = 2K2 @ sch i2c-7_segments.kicad_sch
+part R407 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R407 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R407 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R407 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R407 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R407 unit 1 sheet "/C22: I2C Segments/" uuid 24ac2411-1d53-47bd-a974-34538e802693 at 231.14,149.86 rot 0
-part R407 value = text 2K2 @ sch i2c_segments.kicad_sch note "from the Value field"
-part R408 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R408 field Value = 2K2 @ sch i2c_segments.kicad_sch
-part R408 flag dnp = no @ sch i2c_segments.kicad_sch
-part R408 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R408 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R408 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R407 value = text 2K2 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R408 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R408 field Value = 2K2 @ sch i2c-7_segments.kicad_sch
+part R408 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R408 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R408 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R408 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R408 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R408 unit 1 sheet "/C22: I2C Segments/" uuid 5dec4617-7942-48bc-a411-b01b77d452f3 at 241.3,149.86 rot 0
-part R408 value = text 2K2 @ sch i2c_segments.kicad_sch note "from the Value field"
-part R409 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R409 field Value = 3K3 @ sch i2c_segments.kicad_sch
-part R409 flag dnp = no @ sch i2c_segments.kicad_sch
-part R409 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R409 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R409 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R408 value = text 2K2 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R409 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R409 field Value = 3K3 @ sch i2c-7_segments.kicad_sch
+part R409 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R409 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R409 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R409 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R409 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R409 unit 1 sheet "/C22: I2C Segments/" uuid e609dd63-e306-40d2-9898-74fba7f5306f at 242.57,52.07 rot 0
-part R409 value = text 3K3 @ sch i2c_segments.kicad_sch note "from the Value field"
-part R410 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R410 field Value = 4K7 @ sch i2c_segments.kicad_sch
-part R410 flag dnp = no @ sch i2c_segments.kicad_sch
-part R410 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R410 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R410 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R409 value = text 3K3 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R410 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R410 field Value = 4K7 @ sch i2c-7_segments.kicad_sch
+part R410 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R410 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R410 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R410 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R410 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R410 unit 1 sheet "/C22: I2C Segments/" uuid 34b6c37a-719d-42a3-b20d-96287dab309a at 243.84,196.85 rot 0
-part R410 value = text 4K7 @ sch i2c_segments.kicad_sch note "from the Value field"
-part R411 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R411 field Value = 3K3 @ sch i2c_segments.kicad_sch
-part R411 flag dnp = no @ sch i2c_segments.kicad_sch
-part R411 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R411 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R411 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R410 value = text 4K7 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R411 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R411 field Value = 3K3 @ sch i2c-7_segments.kicad_sch
+part R411 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R411 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R411 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R411 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R411 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R411 unit 1 sheet "/C22: I2C Segments/" uuid 4aabdadc-16b2-4648-bc8f-efcd3676b0b9 at 252.73,52.07 rot 0
-part R411 value = text 3K3 @ sch i2c_segments.kicad_sch note "from the Value field"
-part R412 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R412 field Value = 4K7 @ sch i2c_segments.kicad_sch
-part R412 flag dnp = no @ sch i2c_segments.kicad_sch
-part R412 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R412 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R412 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R411 value = text 3K3 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R412 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R412 field Value = 4K7 @ sch i2c-7_segments.kicad_sch
+part R412 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R412 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R412 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R412 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R412 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R412 unit 1 sheet "/C22: I2C Segments/" uuid 2c00ddb7-743c-490f-a091-37a1f5eeece6 at 254,196.85 rot 0
-part R412 value = text 4K7 @ sch i2c_segments.kicad_sch note "from the Value field"
-part R413 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R413 field Value = 10R @ sch i2c_segments.kicad_sch
-part R413 flag dnp = no @ sch i2c_segments.kicad_sch
-part R413 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R413 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R413 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R412 value = text 4K7 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R413 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R413 field Value = 10R @ sch i2c-7_segments.kicad_sch
+part R413 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R413 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R413 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R413 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R413 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R413 unit 1 sheet "/C22: I2C Segments/" uuid ae0cf0d2-41d3-4c30-80ac-148af8fa4848 at 182.88,251.46 rot 90
-part R413 value = qty 10 ohm @ sch i2c_segments.kicad_sch note "from the Value field"
-part R414 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R414 field Value = 1K @ sch i2c_segments.kicad_sch
-part R414 flag dnp = no @ sch i2c_segments.kicad_sch
-part R414 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R414 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R414 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R413 value = qty 10 ohm @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R414 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R414 field Value = 1K @ sch i2c-7_segments.kicad_sch
+part R414 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R414 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R414 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R414 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R414 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R414 unit 1 sheet "/C22: I2C Segments/" uuid a4aa93f6-2b2a-4e4d-807b-67617fc02332 at 182.88,254 rot 90
-part R414 value = text 1K @ sch i2c_segments.kicad_sch note "from the Value field"
-part R415 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R415 field Value = 4K7 @ sch i2c_segments.kicad_sch
-part R415 flag dnp = no @ sch i2c_segments.kicad_sch
-part R415 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R415 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R415 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R414 value = text 1K @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R415 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R415 field Value = 4K7 @ sch i2c-7_segments.kicad_sch
+part R415 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R415 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R415 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R415 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R415 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R415 unit 1 sheet "/C22: I2C Segments/" uuid a4776743-b5c4-45f6-bcc1-a45c93867582 at 201.93,243.84 rot 0
-part R415 value = text 4K7 @ sch i2c_segments.kicad_sch note "from the Value field"
-part R416 field Description = Resistor @ sch i2c_segments.kicad_sch
-part R416 field Value = 4K7 @ sch i2c_segments.kicad_sch
-part R416 flag dnp = no @ sch i2c_segments.kicad_sch
-part R416 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part R416 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part R416 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R415 value = text 4K7 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R416 field Description = Resistor @ sch i2c-7_segments.kicad_sch
+part R416 field Value = 4K7 @ sch i2c-7_segments.kicad_sch
+part R416 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part R416 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part R416 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part R416 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R416 lib Device:R sheet "/C22: I2C Segments/" symbol Device:R
 part R416 unit 1 sheet "/C22: I2C Segments/" uuid 7ffb8bfd-c0da-4a18-83b8-32fa93e4f8ff at 212.09,243.84 rot 0
-part R416 value = text 4K7 @ sch i2c_segments.kicad_sch note "from the Value field"
-part R501 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
-part R501 field Value = 10K @ sch i2c_multiple_pull_ups.kicad_sch
-part R501 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R501 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R501 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part R501 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R416 value = text 4K7 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part R501 field Description = Resistor @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R501 field Value = 10K @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R501 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R501 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R501 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R501 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part R501 lib Device:R sheet "/C107: I2C multiple pull-ups/" symbol Device:R
 part R501 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid 42f93148-02c1-4f66-8354-6ea0a1f80af6 at 107.95,52.07 rot 0
-part R501 value = text 10K @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part R502 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
-part R502 field Value = 10K @ sch i2c_multiple_pull_ups.kicad_sch
-part R502 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R502 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R502 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part R502 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R501 value = text 10K @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part R502 field Description = Resistor @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R502 field Value = 10K @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R502 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R502 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R502 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R502 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part R502 lib Device:R sheet "/C107: I2C multiple pull-ups/" symbol Device:R
 part R502 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid 9b9a829e-e02d-42ce-a29f-62744f38b405 at 171.45,92.71 rot 0
-part R502 value = text 10K @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part R503 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
-part R503 field Value = 10K @ sch i2c_multiple_pull_ups.kicad_sch
-part R503 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R503 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R503 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part R503 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R502 value = text 10K @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part R503 field Description = Resistor @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R503 field Value = 10K @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R503 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R503 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R503 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R503 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part R503 lib Device:R sheet "/C107: I2C multiple pull-ups/" symbol Device:R
 part R503 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid 88ea254c-ac0b-46fb-9ca1-be6a654670e0 at 118.11,52.07 rot 0
-part R503 value = text 10K @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part R504 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
-part R504 field Value = 10K @ sch i2c_multiple_pull_ups.kicad_sch
-part R504 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R504 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R504 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part R504 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R503 value = text 10K @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part R504 field Description = Resistor @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R504 field Value = 10K @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R504 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R504 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R504 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R504 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part R504 lib Device:R sheet "/C107: I2C multiple pull-ups/" symbol Device:R
 part R504 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid 6c4ea1b0-f049-42d2-82cd-e66eeedcac48 at 181.61,92.71 rot 0
-part R504 value = text 10K @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part R505 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
-part R505 field Value = 0 @ sch i2c_multiple_pull_ups.kicad_sch
-part R505 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R505 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R505 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part R505 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R504 value = text 10K @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part R505 field Description = Resistor @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R505 field Value = 0 @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R505 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R505 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R505 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R505 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part R505 lib Device:R sheet "/C107: I2C multiple pull-ups/" symbol Device:R
 part R505 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid e900fb81-c3bd-4547-8d54-20b1b5c36c33 at 143.51,106.68 rot 90
-part R505 value = text 0 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part R506 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
-part R506 field Value = 0 @ sch i2c_multiple_pull_ups.kicad_sch
-part R506 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R506 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R506 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part R506 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R505 value = text 0 @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part R506 field Description = Resistor @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R506 field Value = 0 @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R506 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R506 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R506 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R506 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part R506 lib Device:R sheet "/C107: I2C multiple pull-ups/" symbol Device:R
 part R506 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid 24e204a1-0a75-44ad-a538-634fe9665adf at 143.51,109.22 rot 90
-part R506 value = text 0 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part R507 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
-part R507 field Value = 3K3 @ sch i2c_multiple_pull_ups.kicad_sch
-part R507 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R507 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R507 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part R507 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R506 value = text 0 @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part R507 field Description = Resistor @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R507 field Value = 3K3 @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R507 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R507 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R507 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R507 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part R507 lib Device:R sheet "/C107: I2C multiple pull-ups/" symbol Device:R
 part R507 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid 235203f8-fb11-4f76-8e72-df1b71e0af36 at 25.4,181.61 rot 0
-part R507 value = text 3K3 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part R508 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
-part R508 field Value = 3K3 @ sch i2c_multiple_pull_ups.kicad_sch
-part R508 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R508 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R508 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part R508 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R507 value = text 3K3 @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part R508 field Description = Resistor @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R508 field Value = 3K3 @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R508 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R508 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R508 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R508 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part R508 lib Device:R sheet "/C107: I2C multiple pull-ups/" symbol Device:R
 part R508 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid 676be2cb-ae71-42ee-8217-eb384fff05fe at 35.56,181.61 rot 0
-part R508 value = text 3K3 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part R509 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
-part R509 field Value = 3K3 @ sch i2c_multiple_pull_ups.kicad_sch
-part R509 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R509 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R509 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part R509 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R508 value = text 3K3 @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part R509 field Description = Resistor @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R509 field Value = 3K3 @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R509 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R509 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R509 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R509 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part R509 lib Device:R sheet "/C107: I2C multiple pull-ups/" symbol Device:R
 part R509 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid 3b66cd00-507f-4500-9598-30709e94ac17 at 203.2,39.37 rot 0
-part R509 value = text 3K3 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part R510 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
-part R510 field Value = 3K3 @ sch i2c_multiple_pull_ups.kicad_sch
-part R510 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R510 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R510 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part R510 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R509 value = text 3K3 @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part R510 field Description = Resistor @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R510 field Value = 3K3 @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R510 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R510 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R510 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R510 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part R510 lib Device:R sheet "/C107: I2C multiple pull-ups/" symbol Device:R
 part R510 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid 2099ca71-826e-476a-94e0-98f55a2b76f2 at 72.39,181.61 rot 0
-part R510 value = text 3K3 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part R511 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
-part R511 field Value = 3K3 @ sch i2c_multiple_pull_ups.kicad_sch
-part R511 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R511 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part R511 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part R511 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R510 value = text 3K3 @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part R511 field Description = Resistor @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R511 field Value = 3K3 @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R511 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R511 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R511 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part R511 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part R511 lib Device:R sheet "/C107: I2C multiple pull-ups/" symbol Device:R
 part R511 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid 6ed7aaa1-44f8-40c3-80e6-02beabe139d4 at 213.36,39.37 rot 0
-part R511 value = text 3K3 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part R601 field Description = Resistor @ sch i2c_non_equal_pull_ups.kicad_sch
-part R601 field Value = 3K0 @ sch i2c_non_equal_pull_ups.kicad_sch
-part R601 flag dnp = no @ sch i2c_non_equal_pull_ups.kicad_sch
-part R601 flag exclude_from_sim = no @ sch i2c_non_equal_pull_ups.kicad_sch
-part R601 flag in_bom = yes @ sch i2c_non_equal_pull_ups.kicad_sch
-part R601 flag on_board = yes @ sch i2c_non_equal_pull_ups.kicad_sch
+part R511 value = text 3K3 @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part R601 field Description = Resistor @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part R601 field Value = 3K0 @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part R601 flag dnp = no @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part R601 flag exclude_from_sim = no @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part R601 flag in_bom = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part R601 flag on_board = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part R601 lib Device:R sheet "/C20: I2C non equal pull-ups/" symbol Device:R
 part R601 unit 1 sheet "/C20: I2C non equal pull-ups/" uuid c4233c4b-e05a-4600-8cd9-d1e13b611099 at 91.44,57.15 rot 0
-part R601 value = text 3K0 @ sch i2c_non_equal_pull_ups.kicad_sch note "from the Value field"
-part R602 field Description = Resistor @ sch i2c_non_equal_pull_ups.kicad_sch
-part R602 field Value = 3K3 @ sch i2c_non_equal_pull_ups.kicad_sch
-part R602 flag dnp = no @ sch i2c_non_equal_pull_ups.kicad_sch
-part R602 flag exclude_from_sim = no @ sch i2c_non_equal_pull_ups.kicad_sch
-part R602 flag in_bom = yes @ sch i2c_non_equal_pull_ups.kicad_sch
-part R602 flag on_board = yes @ sch i2c_non_equal_pull_ups.kicad_sch
+part R601 value = text 3K0 @ sch i2c-10_non_equal_pull_ups.kicad_sch note "from the Value field"
+part R602 field Description = Resistor @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part R602 field Value = 3K3 @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part R602 flag dnp = no @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part R602 flag exclude_from_sim = no @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part R602 flag in_bom = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part R602 flag on_board = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part R602 lib Device:R sheet "/C20: I2C non equal pull-ups/" symbol Device:R
 part R602 unit 1 sheet "/C20: I2C non equal pull-ups/" uuid 0a3542b5-0f7c-4f7a-ae3a-f72a96081a32 at 101.6,57.15 rot 0
-part R602 value = text 3K3 @ sch i2c_non_equal_pull_ups.kicad_sch note "from the Value field"
-part U201 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c_no_pull_ups.kicad_sch
-part U201 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c_no_pull_ups.kicad_sch
-part U201 field Footprint = Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm @ sch i2c_no_pull_ups.kicad_sch
-part U201 field Value = STM32F030F4Px @ sch i2c_no_pull_ups.kicad_sch
-part U201 flag dnp = no @ sch i2c_no_pull_ups.kicad_sch
-part U201 flag exclude_from_sim = no @ sch i2c_no_pull_ups.kicad_sch
-part U201 flag in_bom = yes @ sch i2c_no_pull_ups.kicad_sch
-part U201 flag on_board = yes @ sch i2c_no_pull_ups.kicad_sch
+part R602 value = text 3K3 @ sch i2c-10_non_equal_pull_ups.kicad_sch note "from the Value field"
+part U201 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c-1_no_pull_ups.kicad_sch
+part U201 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c-1_no_pull_ups.kicad_sch
+part U201 field Footprint = Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm @ sch i2c-1_no_pull_ups.kicad_sch
+part U201 field Value = STM32F030F4Px @ sch i2c-1_no_pull_ups.kicad_sch
+part U201 flag dnp = no @ sch i2c-1_no_pull_ups.kicad_sch
+part U201 flag exclude_from_sim = no @ sch i2c-1_no_pull_ups.kicad_sch
+part U201 flag in_bom = yes @ sch i2c-1_no_pull_ups.kicad_sch
+part U201 flag on_board = yes @ sch i2c-1_no_pull_ups.kicad_sch
 part U201 lib MCU_ST_STM32F0:STM32F030F4Px sheet "/C20: I2C no pull-ups/" symbol MCU_ST_STM32F0:STM32F030F4Px
 part U201 unit 1 sheet "/C20: I2C no pull-ups/" uuid 5c5c541d-b756-47bf-864b-2d33ae644368 at 49.53,97.79 rot 0
-part U201 value = text STM32F030F4Px @ sch i2c_no_pull_ups.kicad_sch note "from the Value field"
-part U202 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_no_pull_ups.kicad_sch
-part U202 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_no_pull_ups.kicad_sch
-part U202 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_no_pull_ups.kicad_sch
-part U202 field Value = PCA9536DP @ sch i2c_no_pull_ups.kicad_sch
-part U202 flag dnp = no @ sch i2c_no_pull_ups.kicad_sch
-part U202 flag exclude_from_sim = no @ sch i2c_no_pull_ups.kicad_sch
-part U202 flag in_bom = yes @ sch i2c_no_pull_ups.kicad_sch
-part U202 flag on_board = yes @ sch i2c_no_pull_ups.kicad_sch
+part U201 value = text STM32F030F4Px @ sch i2c-1_no_pull_ups.kicad_sch note "from the Value field"
+part U202 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-1_no_pull_ups.kicad_sch
+part U202 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-1_no_pull_ups.kicad_sch
+part U202 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-1_no_pull_ups.kicad_sch
+part U202 field Value = PCA9536DP @ sch i2c-1_no_pull_ups.kicad_sch
+part U202 flag dnp = no @ sch i2c-1_no_pull_ups.kicad_sch
+part U202 flag exclude_from_sim = no @ sch i2c-1_no_pull_ups.kicad_sch
+part U202 flag in_bom = yes @ sch i2c-1_no_pull_ups.kicad_sch
+part U202 flag on_board = yes @ sch i2c-1_no_pull_ups.kicad_sch
 part U202 lib Interface_Expansion:PCA9536DP sheet "/C20: I2C no pull-ups/" symbol Interface_Expansion:PCA9536DP
 part U202 unit 1 sheet "/C20: I2C no pull-ups/" uuid 6026561b-017b-4281-885a-a624211691b2 at 107.95,100.33 rot 0
-part U202 value = text PCA9536DP @ sch i2c_no_pull_ups.kicad_sch note "from the Value field"
-part U203 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_no_pull_ups.kicad_sch
-part U203 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_no_pull_ups.kicad_sch
-part U203 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_no_pull_ups.kicad_sch
-part U203 field Value = PCA9536DP @ sch i2c_no_pull_ups.kicad_sch
-part U203 flag dnp = no @ sch i2c_no_pull_ups.kicad_sch
-part U203 flag exclude_from_sim = no @ sch i2c_no_pull_ups.kicad_sch
-part U203 flag in_bom = yes @ sch i2c_no_pull_ups.kicad_sch
-part U203 flag on_board = yes @ sch i2c_no_pull_ups.kicad_sch
+part U202 value = text PCA9536DP @ sch i2c-1_no_pull_ups.kicad_sch note "from the Value field"
+part U203 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-1_no_pull_ups.kicad_sch
+part U203 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-1_no_pull_ups.kicad_sch
+part U203 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-1_no_pull_ups.kicad_sch
+part U203 field Value = PCA9536DP @ sch i2c-1_no_pull_ups.kicad_sch
+part U203 flag dnp = no @ sch i2c-1_no_pull_ups.kicad_sch
+part U203 flag exclude_from_sim = no @ sch i2c-1_no_pull_ups.kicad_sch
+part U203 flag in_bom = yes @ sch i2c-1_no_pull_ups.kicad_sch
+part U203 flag on_board = yes @ sch i2c-1_no_pull_ups.kicad_sch
 part U203 lib Interface_Expansion:PCA9536DP sheet "/C20: I2C no pull-ups/" symbol Interface_Expansion:PCA9536DP
 part U203 unit 1 sheet "/C20: I2C no pull-ups/" uuid 602f73b8-878b-4bf3-95f1-8553fa9858db at 172.72,100.33 rot 0
-part U203 value = text PCA9536DP @ sch i2c_no_pull_ups.kicad_sch note "from the Value field"
-part U204 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_no_pull_ups.kicad_sch
-part U204 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_no_pull_ups.kicad_sch
-part U204 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_no_pull_ups.kicad_sch
-part U204 field Value = PCA9536DP @ sch i2c_no_pull_ups.kicad_sch
-part U204 flag dnp = no @ sch i2c_no_pull_ups.kicad_sch
-part U204 flag exclude_from_sim = no @ sch i2c_no_pull_ups.kicad_sch
-part U204 flag in_bom = yes @ sch i2c_no_pull_ups.kicad_sch
-part U204 flag on_board = yes @ sch i2c_no_pull_ups.kicad_sch
+part U203 value = text PCA9536DP @ sch i2c-1_no_pull_ups.kicad_sch note "from the Value field"
+part U204 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-1_no_pull_ups.kicad_sch
+part U204 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-1_no_pull_ups.kicad_sch
+part U204 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-1_no_pull_ups.kicad_sch
+part U204 field Value = PCA9536DP @ sch i2c-1_no_pull_ups.kicad_sch
+part U204 flag dnp = no @ sch i2c-1_no_pull_ups.kicad_sch
+part U204 flag exclude_from_sim = no @ sch i2c-1_no_pull_ups.kicad_sch
+part U204 flag in_bom = yes @ sch i2c-1_no_pull_ups.kicad_sch
+part U204 flag on_board = yes @ sch i2c-1_no_pull_ups.kicad_sch
 part U204 lib Interface_Expansion:PCA9536DP sheet "/C20: I2C no pull-ups/" symbol Interface_Expansion:PCA9536DP
 part U204 unit 1 sheet "/C20: I2C no pull-ups/" uuid 02b5ac9b-fb9f-4274-b2f7-3a37e4bbe010 at 243.84,100.33 rot 0
-part U204 value = text PCA9536DP @ sch i2c_no_pull_ups.kicad_sch note "from the Value field"
-part U301 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c_non_standard_pull_ups.kicad_sch
-part U301 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c_non_standard_pull_ups.kicad_sch
-part U301 field Footprint = Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm @ sch i2c_non_standard_pull_ups.kicad_sch
-part U301 field Value = STM32F030F4Px @ sch i2c_non_standard_pull_ups.kicad_sch
-part U301 flag dnp = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part U301 flag exclude_from_sim = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part U301 flag in_bom = yes @ sch i2c_non_standard_pull_ups.kicad_sch
-part U301 flag on_board = yes @ sch i2c_non_standard_pull_ups.kicad_sch
+part U204 value = text PCA9536DP @ sch i2c-1_no_pull_ups.kicad_sch note "from the Value field"
+part U301 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U301 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U301 field Footprint = Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U301 field Value = STM32F030F4Px @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U301 flag dnp = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U301 flag exclude_from_sim = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U301 flag in_bom = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U301 flag on_board = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part U301 lib MCU_ST_STM32F0:STM32F030F4Px sheet "/C20: I2C non standard pull-ups/" symbol MCU_ST_STM32F0:STM32F030F4Px
 part U301 unit 1 sheet "/C20: I2C non standard pull-ups/" uuid 615cc49e-6000-4e1b-a64d-f5d4d7e4e883 at 73.66,68.58 rot 0
-part U301 value = text STM32F030F4Px @ sch i2c_non_standard_pull_ups.kicad_sch note "from the Value field"
-part U302 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_non_standard_pull_ups.kicad_sch
-part U302 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_non_standard_pull_ups.kicad_sch
-part U302 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_non_standard_pull_ups.kicad_sch
-part U302 field Value = PCA9536DP @ sch i2c_non_standard_pull_ups.kicad_sch
-part U302 flag dnp = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part U302 flag exclude_from_sim = no @ sch i2c_non_standard_pull_ups.kicad_sch
-part U302 flag in_bom = yes @ sch i2c_non_standard_pull_ups.kicad_sch
-part U302 flag on_board = yes @ sch i2c_non_standard_pull_ups.kicad_sch
+part U301 value = text STM32F030F4Px @ sch i2c-9_non_standard_pull_ups.kicad_sch note "from the Value field"
+part U302 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U302 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U302 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U302 field Value = PCA9536DP @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U302 flag dnp = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U302 flag exclude_from_sim = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U302 flag in_bom = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
+part U302 flag on_board = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part U302 lib Interface_Expansion:PCA9536DP sheet "/C20: I2C non standard pull-ups/" symbol Interface_Expansion:PCA9536DP
 part U302 unit 1 sheet "/C20: I2C non standard pull-ups/" uuid 6e20a273-bc94-41bf-a574-6f21e400bca6 at 152.4,71.12 rot 0
-part U302 value = text PCA9536DP @ sch i2c_non_standard_pull_ups.kicad_sch note "from the Value field"
-part U401 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c_segments.kicad_sch
-part U401 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c_segments.kicad_sch
-part U401 field Footprint = Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm @ sch i2c_segments.kicad_sch
-part U401 field Value = STM32F030F4Px @ sch i2c_segments.kicad_sch
-part U401 flag dnp = no @ sch i2c_segments.kicad_sch
-part U401 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part U401 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part U401 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U302 value = text PCA9536DP @ sch i2c-9_non_standard_pull_ups.kicad_sch note "from the Value field"
+part U401 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c-7_segments.kicad_sch
+part U401 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c-7_segments.kicad_sch
+part U401 field Footprint = Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm @ sch i2c-7_segments.kicad_sch
+part U401 field Value = STM32F030F4Px @ sch i2c-7_segments.kicad_sch
+part U401 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part U401 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part U401 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part U401 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U401 lib MCU_ST_STM32F0:STM32F030F4Px sheet "/C22: I2C Segments/" symbol MCU_ST_STM32F0:STM32F030F4Px
 part U401 unit 1 sheet "/C22: I2C Segments/" uuid 8c3f90d4-3c39-4cf2-9498-1eda9c5ba221 at 87.63,73.66 rot 0
-part U401 value = text STM32F030F4Px @ sch i2c_segments.kicad_sch note "from the Value field"
-part U402 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_segments.kicad_sch
-part U402 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_segments.kicad_sch
-part U402 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_segments.kicad_sch
-part U402 field Value = PCA9536DP @ sch i2c_segments.kicad_sch
-part U402 flag dnp = no @ sch i2c_segments.kicad_sch
-part U402 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part U402 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part U402 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U401 value = text STM32F030F4Px @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part U402 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-7_segments.kicad_sch
+part U402 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-7_segments.kicad_sch
+part U402 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-7_segments.kicad_sch
+part U402 field Value = PCA9536DP @ sch i2c-7_segments.kicad_sch
+part U402 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part U402 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part U402 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part U402 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U402 lib Interface_Expansion:PCA9536DP sheet "/C22: I2C Segments/" symbol Interface_Expansion:PCA9536DP
 part U402 unit 1 sheet "/C22: I2C Segments/" uuid aa0e9c73-c302-4300-af36-47f3da10ae38 at 190.5,83.82 rot 0
-part U402 value = text PCA9536DP @ sch i2c_segments.kicad_sch note "from the Value field"
-part U403 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_segments.kicad_sch
-part U403 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_segments.kicad_sch
-part U403 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_segments.kicad_sch
-part U403 field Value = PCA9536DP @ sch i2c_segments.kicad_sch
-part U403 flag dnp = no @ sch i2c_segments.kicad_sch
-part U403 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part U403 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part U403 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U402 value = text PCA9536DP @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part U403 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-7_segments.kicad_sch
+part U403 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-7_segments.kicad_sch
+part U403 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-7_segments.kicad_sch
+part U403 field Value = PCA9536DP @ sch i2c-7_segments.kicad_sch
+part U403 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part U403 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part U403 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part U403 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U403 lib Interface_Expansion:PCA9536DP sheet "/C22: I2C Segments/" symbol Interface_Expansion:PCA9536DP
 part U403 unit 1 sheet "/C22: I2C Segments/" uuid 6b0e8400-2f4d-4874-8403-628486744bfd at 210.82,116.84 rot 0
-part U403 value = text PCA9536DP @ sch i2c_segments.kicad_sch note "from the Value field"
-part U404 field Datasheet = http://www.ti.com/lit/ds/symlink/pca9306.pdf @ sch i2c_segments.kicad_sch
-part U404 field Description = "Dual bidirectional I2C Bus and SMBus voltage level translator" @ sch i2c_segments.kicad_sch
-part U404 field Value = PCA9306 @ sch i2c_segments.kicad_sch
-part U404 flag dnp = no @ sch i2c_segments.kicad_sch
-part U404 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part U404 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part U404 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U403 value = text PCA9536DP @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part U404 field Datasheet = http://www.ti.com/lit/ds/symlink/pca9306.pdf @ sch i2c-7_segments.kicad_sch
+part U404 field Description = "Dual bidirectional I2C Bus and SMBus voltage level translator" @ sch i2c-7_segments.kicad_sch
+part U404 field Value = PCA9306 @ sch i2c-7_segments.kicad_sch
+part U404 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part U404 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part U404 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part U404 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U404 lib Interface:PCA9306 sheet "/C22: I2C Segments/" symbol Interface:PCA9306
 part U404 unit 1 sheet "/C22: I2C Segments/" uuid fb1ae9b3-78b1-4734-979d-8c59e3e214d6 at 210.82,204.47 rot 0
-part U404 value = text PCA9306 @ sch i2c_segments.kicad_sch note "from the Value field"
-part U405 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_segments.kicad_sch
-part U405 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_segments.kicad_sch
-part U405 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_segments.kicad_sch
-part U405 field Value = PCA9536DP @ sch i2c_segments.kicad_sch
-part U405 flag dnp = no @ sch i2c_segments.kicad_sch
-part U405 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part U405 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part U405 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U404 value = text PCA9306 @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part U405 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-7_segments.kicad_sch
+part U405 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-7_segments.kicad_sch
+part U405 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-7_segments.kicad_sch
+part U405 field Value = PCA9536DP @ sch i2c-7_segments.kicad_sch
+part U405 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part U405 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part U405 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part U405 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U405 lib Interface_Expansion:PCA9536DP sheet "/C22: I2C Segments/" symbol Interface_Expansion:PCA9536DP
 part U405 unit 1 sheet "/C22: I2C Segments/" uuid 1ab5acfc-041f-4aa5-9f9a-fbffe3d2903f at 276.86,154.94 rot 0
-part U405 value = text PCA9536DP @ sch i2c_segments.kicad_sch note "from the Value field"
-part U406 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_segments.kicad_sch
-part U406 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_segments.kicad_sch
-part U406 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_segments.kicad_sch
-part U406 field Value = PCA9536DP @ sch i2c_segments.kicad_sch
-part U406 flag dnp = no @ sch i2c_segments.kicad_sch
-part U406 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part U406 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part U406 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U405 value = text PCA9536DP @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part U406 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-7_segments.kicad_sch
+part U406 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-7_segments.kicad_sch
+part U406 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-7_segments.kicad_sch
+part U406 field Value = PCA9536DP @ sch i2c-7_segments.kicad_sch
+part U406 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part U406 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part U406 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part U406 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U406 lib Interface_Expansion:PCA9536DP sheet "/C22: I2C Segments/" symbol Interface_Expansion:PCA9536DP
 part U406 unit 1 sheet "/C22: I2C Segments/" uuid 7c4bb93f-14a9-46ba-8b20-d129dd1b1dc0 at 288.29,57.15 rot 0
-part U406 value = text PCA9536DP @ sch i2c_segments.kicad_sch note "from the Value field"
-part U407 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_segments.kicad_sch
-part U407 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_segments.kicad_sch
-part U407 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_segments.kicad_sch
-part U407 field Value = PCA9536DP @ sch i2c_segments.kicad_sch
-part U407 flag dnp = no @ sch i2c_segments.kicad_sch
-part U407 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part U407 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part U407 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U406 value = text PCA9536DP @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part U407 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-7_segments.kicad_sch
+part U407 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-7_segments.kicad_sch
+part U407 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-7_segments.kicad_sch
+part U407 field Value = PCA9536DP @ sch i2c-7_segments.kicad_sch
+part U407 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part U407 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part U407 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part U407 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U407 lib Interface_Expansion:PCA9536DP sheet "/C22: I2C Segments/" symbol Interface_Expansion:PCA9536DP
 part U407 unit 1 sheet "/C22: I2C Segments/" uuid 3c1c5e4e-e1b6-4c5e-a884-0c1c12ed1609 at 289.56,201.93 rot 0
-part U407 value = text PCA9536DP @ sch i2c_segments.kicad_sch note "from the Value field"
-part U408 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_segments.kicad_sch
-part U408 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_segments.kicad_sch
-part U408 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_segments.kicad_sch
-part U408 field Value = PCA9536DP @ sch i2c_segments.kicad_sch
-part U408 flag dnp = no @ sch i2c_segments.kicad_sch
-part U408 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
-part U408 flag in_bom = yes @ sch i2c_segments.kicad_sch
-part U408 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U407 value = text PCA9536DP @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part U408 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-7_segments.kicad_sch
+part U408 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-7_segments.kicad_sch
+part U408 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-7_segments.kicad_sch
+part U408 field Value = PCA9536DP @ sch i2c-7_segments.kicad_sch
+part U408 flag dnp = no @ sch i2c-7_segments.kicad_sch
+part U408 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
+part U408 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
+part U408 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U408 lib Interface_Expansion:PCA9536DP sheet "/C22: I2C Segments/" symbol Interface_Expansion:PCA9536DP
 part U408 unit 1 sheet "/C22: I2C Segments/" uuid 0aa8cbb2-6a1e-4cfa-bdd3-9568fbf29177 at 233.68,248.92 rot 0
-part U408 value = text PCA9536DP @ sch i2c_segments.kicad_sch note "from the Value field"
-part U501 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c_multiple_pull_ups.kicad_sch
-part U501 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c_multiple_pull_ups.kicad_sch
-part U501 field Footprint = Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm @ sch i2c_multiple_pull_ups.kicad_sch
-part U501 field Value = STM32F030F4Px @ sch i2c_multiple_pull_ups.kicad_sch
-part U501 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part U501 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part U501 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part U501 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part U408 value = text PCA9536DP @ sch i2c-7_segments.kicad_sch note "from the Value field"
+part U501 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U501 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U501 field Footprint = Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U501 field Value = STM32F030F4Px @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U501 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U501 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U501 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U501 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part U501 lib MCU_ST_STM32F0:STM32F030F4Px sheet "/C107: I2C multiple pull-ups/" symbol MCU_ST_STM32F0:STM32F030F4Px
 part U501 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid c9d7ad0a-9ae7-4257-91f4-63a3ed001b9e at 48.26,60.96 rot 0
-part U501 value = text STM32F030F4Px @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part U502 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_multiple_pull_ups.kicad_sch
-part U502 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_multiple_pull_ups.kicad_sch
-part U502 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_multiple_pull_ups.kicad_sch
-part U502 field Value = PCA9536DP @ sch i2c_multiple_pull_ups.kicad_sch
-part U502 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part U502 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part U502 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part U502 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part U501 value = text STM32F030F4Px @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part U502 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U502 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U502 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U502 field Value = PCA9536DP @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U502 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U502 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U502 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U502 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part U502 lib Interface_Expansion:PCA9536DP sheet "/C107: I2C multiple pull-ups/" symbol Interface_Expansion:PCA9536DP
 part U502 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid dfb02fb4-3bc8-4aea-8cf5-1d2b5fbcf837 at 151.13,71.12 rot 0
-part U502 value = text PCA9536DP @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part U503 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_multiple_pull_ups.kicad_sch
-part U503 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_multiple_pull_ups.kicad_sch
-part U503 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_multiple_pull_ups.kicad_sch
-part U503 field Value = PCA9536DP @ sch i2c_multiple_pull_ups.kicad_sch
-part U503 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part U503 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part U503 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part U503 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part U502 value = text PCA9536DP @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part U503 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U503 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U503 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U503 field Value = PCA9536DP @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U503 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U503 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U503 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U503 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part U503 lib Interface_Expansion:PCA9536DP sheet "/C107: I2C multiple pull-ups/" symbol Interface_Expansion:PCA9536DP
 part U503 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid 63428d09-5213-40aa-90a0-9f835cc9c32c at 204.47,104.14 rot 0
-part U503 value = text PCA9536DP @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part U506 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_multiple_pull_ups.kicad_sch
-part U506 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_multiple_pull_ups.kicad_sch
-part U506 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_multiple_pull_ups.kicad_sch
-part U506 field Value = PCA9536DP @ sch i2c_multiple_pull_ups.kicad_sch
-part U506 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
-part U506 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
-part U506 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
-part U506 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part U503 value = text PCA9536DP @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part U506 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U506 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U506 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U506 field Value = PCA9536DP @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U506 flag dnp = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U506 flag exclude_from_sim = no @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U506 flag in_bom = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
+part U506 flag on_board = yes @ sch i2c-2_multiple_pull_ups.kicad_sch
 part U506 lib Interface_Expansion:PCA9536DP sheet "/C107: I2C multiple pull-ups/" symbol Interface_Expansion:PCA9536DP
 part U506 unit 1 sheet "/C107: I2C multiple pull-ups/" uuid 8ce21e2e-cc55-4e1b-907e-709254d01945 at 248.92,44.45 rot 0
-part U506 value = text PCA9536DP @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
-part U601 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c_non_equal_pull_ups.kicad_sch
-part U601 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c_non_equal_pull_ups.kicad_sch
-part U601 field Footprint = Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm @ sch i2c_non_equal_pull_ups.kicad_sch
-part U601 field Value = STM32F030F4Px @ sch i2c_non_equal_pull_ups.kicad_sch
-part U601 flag dnp = no @ sch i2c_non_equal_pull_ups.kicad_sch
-part U601 flag exclude_from_sim = no @ sch i2c_non_equal_pull_ups.kicad_sch
-part U601 flag in_bom = yes @ sch i2c_non_equal_pull_ups.kicad_sch
-part U601 flag on_board = yes @ sch i2c_non_equal_pull_ups.kicad_sch
+part U506 value = text PCA9536DP @ sch i2c-2_multiple_pull_ups.kicad_sch note "from the Value field"
+part U601 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part U601 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part U601 field Footprint = Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part U601 field Value = STM32F030F4Px @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part U601 flag dnp = no @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part U601 flag exclude_from_sim = no @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part U601 flag in_bom = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part U601 flag on_board = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part U601 lib MCU_ST_STM32F0:STM32F030F4Px sheet "/C20: I2C non equal pull-ups/" symbol MCU_ST_STM32F0:STM32F030F4Px
 part U601 unit 1 sheet "/C20: I2C non equal pull-ups/" uuid d91f5e37-dde6-4071-8e3a-0dc3f1e3eecf at 68.58,63.5 rot 0
-part U601 value = text STM32F030F4Px @ sch i2c_non_equal_pull_ups.kicad_sch note "from the Value field"
-part U602 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_non_equal_pull_ups.kicad_sch
-part U602 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_non_equal_pull_ups.kicad_sch
-part U602 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_non_equal_pull_ups.kicad_sch
-part U602 field Value = PCA9536DP @ sch i2c_non_equal_pull_ups.kicad_sch
-part U602 flag dnp = no @ sch i2c_non_equal_pull_ups.kicad_sch
-part U602 flag exclude_from_sim = no @ sch i2c_non_equal_pull_ups.kicad_sch
-part U602 flag in_bom = yes @ sch i2c_non_equal_pull_ups.kicad_sch
-part U602 flag on_board = yes @ sch i2c_non_equal_pull_ups.kicad_sch
+part U601 value = text STM32F030F4Px @ sch i2c-10_non_equal_pull_ups.kicad_sch note "from the Value field"
+part U602 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part U602 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part U602 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part U602 field Value = PCA9536DP @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part U602 flag dnp = no @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part U602 flag exclude_from_sim = no @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part U602 flag in_bom = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
+part U602 flag on_board = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part U602 lib Interface_Expansion:PCA9536DP sheet "/C20: I2C non equal pull-ups/" symbol Interface_Expansion:PCA9536DP
 part U602 unit 1 sheet "/C20: I2C non equal pull-ups/" uuid 9768d9c0-314b-48e4-a4b9-a87a4beb443c at 147.32,66.04 rot 0
-part U602 value = text PCA9536DP @ sch i2c_non_equal_pull_ups.kicad_sch note "from the Value field"
+part U602 value = text PCA9536DP @ sch i2c-10_non_equal_pull_ups.kicad_sch note "from the Value field"
 pin J401 1 name Pin_1 unit 1 net "/C22: I2C Segments/SDA2_3V3"
-pin J401 1 type = passive @ sch i2c_segments.kicad_sch
+pin J401 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin J401 2 name Pin_2 unit 1 net "/C22: I2C Segments/SCL2_3V3"
-pin J401 2 type = passive @ sch i2c_segments.kicad_sch
+pin J401 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin J401 3 name Pin_3 unit 1 net GND
-pin J401 3 type = passive @ sch i2c_segments.kicad_sch
+pin J401 3 type = passive @ sch i2c-7_segments.kicad_sch
 pin Q401 1 name G unit 1 net VCC2_3V3
-pin Q401 1 type = input @ sch i2c_segments.kicad_sch
+pin Q401 1 type = input @ sch i2c-7_segments.kicad_sch
 pin Q401 2 name S unit 1 net "/C22: I2C Segments/SDA1_3V3_VCC2"
-pin Q401 2 type = passive @ sch i2c_segments.kicad_sch
+pin Q401 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin Q401 3 name D unit 1 net "/C22: I2C Segments/SDA1_3V3"
-pin Q401 3 type = passive @ sch i2c_segments.kicad_sch
+pin Q401 3 type = passive @ sch i2c-7_segments.kicad_sch
 pin Q402 1 name G unit 1 net VCC2_3V3
-pin Q402 1 type = input @ sch i2c_segments.kicad_sch
+pin Q402 1 type = input @ sch i2c-7_segments.kicad_sch
 pin Q402 2 name S unit 1 net "/C22: I2C Segments/SCL1_3V3_VCC2"
-pin Q402 2 type = passive @ sch i2c_segments.kicad_sch
+pin Q402 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin Q402 3 name D unit 1 net "/C22: I2C Segments/SCL1_3V3"
-pin Q402 3 type = passive @ sch i2c_segments.kicad_sch
+pin Q402 3 type = passive @ sch i2c-7_segments.kicad_sch
 pin Q403 1 name G unit 1 net VCC_1V8
-pin Q403 1 type = input @ sch i2c_segments.kicad_sch
+pin Q403 1 type = input @ sch i2c-7_segments.kicad_sch
 pin Q403 2 name S unit 1 net "/C22: I2C Segments/SDA1_1V8"
-pin Q403 2 type = passive @ sch i2c_segments.kicad_sch
+pin Q403 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin Q403 3 name D unit 1 net "/C22: I2C Segments/SDA1_3V3"
-pin Q403 3 type = passive @ sch i2c_segments.kicad_sch
+pin Q403 3 type = passive @ sch i2c-7_segments.kicad_sch
 pin Q404 1 name G unit 1 net VCC_1V8
-pin Q404 1 type = input @ sch i2c_segments.kicad_sch
+pin Q404 1 type = input @ sch i2c-7_segments.kicad_sch
 pin Q404 2 name S unit 1 net "/C22: I2C Segments/SCL1_1V8"
-pin Q404 2 type = passive @ sch i2c_segments.kicad_sch
+pin Q404 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin Q404 3 name D unit 1 net "/C22: I2C Segments/SCL1_3V3"
-pin Q404 3 type = passive @ sch i2c_segments.kicad_sch
+pin Q404 3 type = passive @ sch i2c-7_segments.kicad_sch
 pin Q503 1 name G unit 1 net VCC_1V8
-pin Q503 1 type = input @ sch i2c_multiple_pull_ups.kicad_sch
+pin Q503 1 type = input @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin Q503 2 name S unit 1 net "/C107: I2C multiple pull-ups/SDA1_1V8"
-pin Q503 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin Q503 2 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin Q503 3 name D unit 1 net "/C107: I2C multiple pull-ups/SDA1_3V3"
-pin Q503 3 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin Q503 3 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin Q504 1 name G unit 1 net VCC_1V8
-pin Q504 1 type = input @ sch i2c_multiple_pull_ups.kicad_sch
+pin Q504 1 type = input @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin Q504 2 name S unit 1 net "/C107: I2C multiple pull-ups/SCL1_1V8"
-pin Q504 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin Q504 2 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin Q504 3 name D unit 1 net "/C107: I2C multiple pull-ups/SCL1_3V3"
-pin Q504 3 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin Q504 3 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R201 1 name "" unit 1 net "/C20: I2C no pull-ups/I2C1_EN"
-pin R201 1 type = passive @ sch i2c_no_pull_ups.kicad_sch
+pin R201 1 type = passive @ sch i2c-1_no_pull_ups.kicad_sch
 pin R201 2 name "" unit 1 net "/C20: I2C no pull-ups/SDA2"
-pin R201 2 type = passive @ sch i2c_no_pull_ups.kicad_sch
+pin R201 2 type = passive @ sch i2c-1_no_pull_ups.kicad_sch
 pin R202 1 name "" unit 1 net "/C20: I2C no pull-ups/I2C1_EN"
-pin R202 1 type = passive @ sch i2c_no_pull_ups.kicad_sch
+pin R202 1 type = passive @ sch i2c-1_no_pull_ups.kicad_sch
 pin R202 2 name "" unit 1 net "/C20: I2C no pull-ups/SCL2"
-pin R202 2 type = passive @ sch i2c_no_pull_ups.kicad_sch
+pin R202 2 type = passive @ sch i2c-1_no_pull_ups.kicad_sch
 pin R203 1 name "" unit 1 net "/C20: I2C no pull-ups/I2C3_P"
-pin R203 1 type = passive @ sch i2c_no_pull_ups.kicad_sch
+pin R203 1 type = passive @ sch i2c-1_no_pull_ups.kicad_sch
 pin R203 2 name "" unit 1 net "/C20: I2C no pull-ups/SDA3"
-pin R203 2 type = passive @ sch i2c_no_pull_ups.kicad_sch
+pin R203 2 type = passive @ sch i2c-1_no_pull_ups.kicad_sch
 pin R204 1 name "" unit 1 net "/C20: I2C no pull-ups/I2C3_P"
-pin R204 1 type = passive @ sch i2c_no_pull_ups.kicad_sch
+pin R204 1 type = passive @ sch i2c-1_no_pull_ups.kicad_sch
 pin R204 2 name "" unit 1 net "/C20: I2C no pull-ups/SCL3"
-pin R204 2 type = passive @ sch i2c_no_pull_ups.kicad_sch
+pin R204 2 type = passive @ sch i2c-1_no_pull_ups.kicad_sch
 pin R205 1 name "" unit 1 net "/C20: I2C no pull-ups/I2C3_EN"
-pin R205 1 type = passive @ sch i2c_no_pull_ups.kicad_sch
+pin R205 1 type = passive @ sch i2c-1_no_pull_ups.kicad_sch
 pin R205 2 name "" unit 1 net "/C20: I2C no pull-ups/I2C3_P"
-pin R205 2 type = passive @ sch i2c_no_pull_ups.kicad_sch
+pin R205 2 type = passive @ sch i2c-1_no_pull_ups.kicad_sch
 pin R301 1 name "" unit 1 net VCC
-pin R301 1 type = passive @ sch i2c_non_standard_pull_ups.kicad_sch
+pin R301 1 type = passive @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin R301 2 name "" unit 1 net "/C20: I2C non standard pull-ups/SCL"
-pin R301 2 type = passive @ sch i2c_non_standard_pull_ups.kicad_sch
+pin R301 2 type = passive @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin R302 1 name "" unit 1 net VCC
-pin R302 1 type = passive @ sch i2c_non_standard_pull_ups.kicad_sch
+pin R302 1 type = passive @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin R302 2 name "" unit 1 net "/C20: I2C non standard pull-ups/SDA"
-pin R302 2 type = passive @ sch i2c_non_standard_pull_ups.kicad_sch
+pin R302 2 type = passive @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin R401 1 name "" unit 1 net VCC_3V3
-pin R401 1 type = passive @ sch i2c_segments.kicad_sch
+pin R401 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R401 2 name "" unit 1 net "/C22: I2C Segments/SCL1_3V3"
-pin R401 2 type = passive @ sch i2c_segments.kicad_sch
+pin R401 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R402 1 name "" unit 1 net "/C22: I2C Segments/SDA2_EN"
-pin R402 1 type = passive @ sch i2c_segments.kicad_sch
+pin R402 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R402 2 name "" unit 1 net "/C22: I2C Segments/SDA2_3V3"
-pin R402 2 type = passive @ sch i2c_segments.kicad_sch
+pin R402 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R403 1 name "" unit 1 net VCC_3V3
-pin R403 1 type = passive @ sch i2c_segments.kicad_sch
+pin R403 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R403 2 name "" unit 1 net "/C22: I2C Segments/SDA1_3V3"
-pin R403 2 type = passive @ sch i2c_segments.kicad_sch
+pin R403 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R404 1 name "" unit 1 net "/C22: I2C Segments/SDA2_EN"
-pin R404 1 type = passive @ sch i2c_segments.kicad_sch
+pin R404 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R404 2 name "" unit 1 net "/C22: I2C Segments/SCL2_3V3"
-pin R404 2 type = passive @ sch i2c_segments.kicad_sch
+pin R404 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R405 1 name "" unit 1 net "/C22: I2C Segments/SDA1_3V3"
-pin R405 1 type = passive @ sch i2c_segments.kicad_sch
+pin R405 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R405 2 name "" unit 1 net "/C22: I2C Segments/SDA_U7"
-pin R405 2 type = passive @ sch i2c_segments.kicad_sch
+pin R405 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R406 1 name "" unit 1 net "/C22: I2C Segments/SCL1_3V3"
-pin R406 1 type = passive @ sch i2c_segments.kicad_sch
+pin R406 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R406 2 name "" unit 1 net "/C22: I2C Segments/SCL_U7"
-pin R406 2 type = passive @ sch i2c_segments.kicad_sch
+pin R406 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R407 1 name "" unit 1 net VCC2_3V3
-pin R407 1 type = passive @ sch i2c_segments.kicad_sch
+pin R407 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R407 2 name "" unit 1 net "/C22: I2C Segments/SDA1_3V3_VCC2"
-pin R407 2 type = passive @ sch i2c_segments.kicad_sch
+pin R407 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R408 1 name "" unit 1 net VCC2_3V3
-pin R408 1 type = passive @ sch i2c_segments.kicad_sch
+pin R408 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R408 2 name "" unit 1 net "/C22: I2C Segments/SCL1_3V3_VCC2"
-pin R408 2 type = passive @ sch i2c_segments.kicad_sch
+pin R408 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R409 1 name "" unit 1 net VCC_1V8
-pin R409 1 type = passive @ sch i2c_segments.kicad_sch
+pin R409 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R409 2 name "" unit 1 net "/C22: I2C Segments/SDA1_1V8"
-pin R409 2 type = passive @ sch i2c_segments.kicad_sch
+pin R409 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R410 1 name "" unit 1 net VCC_1V2
-pin R410 1 type = passive @ sch i2c_segments.kicad_sch
+pin R410 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R410 2 name "" unit 1 net "/C22: I2C Segments/SDA1_1V2"
-pin R410 2 type = passive @ sch i2c_segments.kicad_sch
+pin R410 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R411 1 name "" unit 1 net VCC_1V8
-pin R411 1 type = passive @ sch i2c_segments.kicad_sch
+pin R411 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R411 2 name "" unit 1 net "/C22: I2C Segments/SCL1_1V8"
-pin R411 2 type = passive @ sch i2c_segments.kicad_sch
+pin R411 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R412 1 name "" unit 1 net VCC_1V2
-pin R412 1 type = passive @ sch i2c_segments.kicad_sch
+pin R412 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R412 2 name "" unit 1 net "/C22: I2C Segments/SCL1_1V2"
-pin R412 2 type = passive @ sch i2c_segments.kicad_sch
+pin R412 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R413 1 name "" unit 1 net "/C22: I2C Segments/SDA1_3V3"
-pin R413 1 type = passive @ sch i2c_segments.kicad_sch
+pin R413 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R413 2 name "" unit 1 net "/C22: I2C Segments/UNM1"
-pin R413 2 type = passive @ sch i2c_segments.kicad_sch
+pin R413 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R414 1 name "" unit 1 net "/C22: I2C Segments/SCL1_3V3"
-pin R414 1 type = passive @ sch i2c_segments.kicad_sch
+pin R414 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R414 2 name "" unit 1 net "/C22: I2C Segments/UNM2"
-pin R414 2 type = passive @ sch i2c_segments.kicad_sch
+pin R414 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R415 1 name "" unit 1 net VCC_3V3
-pin R415 1 type = passive @ sch i2c_segments.kicad_sch
+pin R415 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R415 2 name "" unit 1 net "/C22: I2C Segments/UNM1"
-pin R415 2 type = passive @ sch i2c_segments.kicad_sch
+pin R415 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R416 1 name "" unit 1 net VCC_3V3
-pin R416 1 type = passive @ sch i2c_segments.kicad_sch
+pin R416 1 type = passive @ sch i2c-7_segments.kicad_sch
 pin R416 2 name "" unit 1 net "/C22: I2C Segments/UNM2"
-pin R416 2 type = passive @ sch i2c_segments.kicad_sch
+pin R416 2 type = passive @ sch i2c-7_segments.kicad_sch
 pin R501 1 name "" unit 1 net VCC_3V3
-pin R501 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R501 1 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R501 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SCL1_3V3"
-pin R501 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R501 2 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R502 1 name "" unit 1 net VCC_3V3
-pin R502 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R502 1 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R502 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SDA_U7"
-pin R502 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R502 2 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R503 1 name "" unit 1 net VCC_3V3
-pin R503 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R503 1 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R503 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SDA1_3V3"
-pin R503 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R503 2 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R504 1 name "" unit 1 net VCC_3V3
-pin R504 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R504 1 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R504 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SCL_U7"
-pin R504 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R504 2 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R505 1 name "" unit 1 net "/C107: I2C multiple pull-ups/SDA1_3V3"
-pin R505 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R505 1 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R505 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SDA_U7"
-pin R505 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R505 2 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R506 1 name "" unit 1 net "/C107: I2C multiple pull-ups/SCL1_3V3"
-pin R506 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R506 1 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R506 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SCL_U7"
-pin R506 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R506 2 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R507 1 name "" unit 1 net VCC_1V8
-pin R507 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R507 1 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R507 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SCL1_1V8"
-pin R507 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R507 2 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R508 1 name "" unit 1 net VCC_1V8
-pin R508 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R508 1 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R508 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SDA1_1V8"
-pin R508 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R508 2 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R509 1 name "" unit 1 net VCC_1V8
-pin R509 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R509 1 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R509 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SDA1_1V8"
-pin R509 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R509 2 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R510 1 name "" unit 1 net VCC_1V8
-pin R510 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R510 1 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R510 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SDA1_1V8"
-pin R510 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R510 2 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R511 1 name "" unit 1 net VCC_1V8
-pin R511 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R511 1 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R511 2 name "" unit 1 net "/C107: I2C multiple pull-ups/SCL1_1V8"
-pin R511 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R511 2 type = passive @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin R601 1 name "" unit 1 net VCC
-pin R601 1 type = passive @ sch i2c_non_equal_pull_ups.kicad_sch
+pin R601 1 type = passive @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin R601 2 name "" unit 1 net "/C20: I2C non equal pull-ups/SCL"
-pin R601 2 type = passive @ sch i2c_non_equal_pull_ups.kicad_sch
+pin R601 2 type = passive @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin R602 1 name "" unit 1 net VCC
-pin R602 1 type = passive @ sch i2c_non_equal_pull_ups.kicad_sch
+pin R602 1 type = passive @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin R602 2 name "" unit 1 net "/C20: I2C non equal pull-ups/SDA"
-pin R602 2 type = passive @ sch i2c_non_equal_pull_ups.kicad_sch
+pin R602 2 type = passive @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U201 1 name BOOT0 unit 1 net unconnected-(U201-BOOT0-Pad1)
-pin U201 1 type = input @ sch i2c_no_pull_ups.kicad_sch
+pin U201 1 type = input @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 2 name PF0 unit 1 net unconnected-(U201-PF0-Pad2)
-pin U201 2 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 2 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 3 name PF1 unit 1 net unconnected-(U201-PF1-Pad3)
-pin U201 3 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 3 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 4 name NRST unit 1 net unconnected-(U201-NRST-Pad4)
-pin U201 4 type = input @ sch i2c_no_pull_ups.kicad_sch
+pin U201 4 type = input @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 5 name VDDA unit 1 net VCC
-pin U201 5 type = power_in @ sch i2c_no_pull_ups.kicad_sch
+pin U201 5 type = power_in @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 6 name PA0 unit 1 net "/C20: I2C no pull-ups/I2C4_EN"
-pin U201 6 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 6 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 7 name PA1 unit 1 net "/C20: I2C no pull-ups/I2C2_EN"
-pin U201 7 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 7 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 8 name PA2 unit 1 net unconnected-(U201-PA2-Pad8)
-pin U201 8 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 8 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 9 name PA3 unit 1 net unconnected-(U201-PA3-Pad9)
-pin U201 9 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 9 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 10 name PA4 unit 1 net unconnected-(U201-PA4-Pad10)
-pin U201 10 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 10 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 11 name PA5 unit 1 net unconnected-(U201-PA5-Pad11)
-pin U201 11 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 11 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 12 name PA6 unit 1 net unconnected-(U201-PA6-Pad12)
-pin U201 12 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 12 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 13 name PA7 unit 1 net unconnected-(U201-PA7-Pad13)
-pin U201 13 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 13 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 14 name PB1 unit 1 net unconnected-(U201-PB1-Pad14)
-pin U201 14 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 14 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 15 name VSS unit 1 net GND
-pin U201 15 type = power_in @ sch i2c_no_pull_ups.kicad_sch
+pin U201 15 type = power_in @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 16 name VDD unit 1 net VCC
-pin U201 16 type = power_in @ sch i2c_no_pull_ups.kicad_sch
+pin U201 16 type = power_in @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 17 name PA9 unit 1 net "/C20: I2C no pull-ups/SCL1"
-pin U201 17 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 17 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 18 name PA10 unit 1 net "/C20: I2C no pull-ups/SDA1"
-pin U201 18 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 18 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 19 name PA13 unit 1 net unconnected-(U201-PA13-Pad19)
-pin U201 19 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 19 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U201 20 name PA14 unit 1 net unconnected-(U201-PA14-Pad20)
-pin U201 20 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U201 20 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U202 1 name IO0 unit 1 net unconnected-(U202-IO0-Pad1)
-pin U202 1 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U202 1 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U202 2 name IO1 unit 1 net unconnected-(U202-IO1-Pad2)
-pin U202 2 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U202 2 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U202 3 name IO2 unit 1 net unconnected-(U202-IO2-Pad3)
-pin U202 3 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U202 3 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U202 4 name VSS unit 1 net GND
-pin U202 4 type = power_in @ sch i2c_no_pull_ups.kicad_sch
+pin U202 4 type = power_in @ sch i2c-1_no_pull_ups.kicad_sch
 pin U202 5 name IO3 unit 1 net unconnected-(U202-IO3-Pad5)
-pin U202 5 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U202 5 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U202 6 name SCL unit 1 net "/C20: I2C no pull-ups/SCL1"
-pin U202 6 type = input @ sch i2c_no_pull_ups.kicad_sch
+pin U202 6 type = input @ sch i2c-1_no_pull_ups.kicad_sch
 pin U202 7 name SDA unit 1 net "/C20: I2C no pull-ups/SDA1"
-pin U202 7 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U202 7 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U202 8 name VDD unit 1 net VCC
-pin U202 8 type = power_in @ sch i2c_no_pull_ups.kicad_sch
+pin U202 8 type = power_in @ sch i2c-1_no_pull_ups.kicad_sch
 pin U203 1 name IO0 unit 1 net unconnected-(U203-IO0-Pad1)
-pin U203 1 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U203 1 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U203 2 name IO1 unit 1 net unconnected-(U203-IO1-Pad2)
-pin U203 2 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U203 2 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U203 3 name IO2 unit 1 net unconnected-(U203-IO2-Pad3)
-pin U203 3 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U203 3 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U203 4 name VSS unit 1 net GND
-pin U203 4 type = power_in @ sch i2c_no_pull_ups.kicad_sch
+pin U203 4 type = power_in @ sch i2c-1_no_pull_ups.kicad_sch
 pin U203 5 name IO3 unit 1 net unconnected-(U203-IO3-Pad5)
-pin U203 5 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U203 5 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U203 6 name SCL unit 1 net "/C20: I2C no pull-ups/SCL2"
-pin U203 6 type = input @ sch i2c_no_pull_ups.kicad_sch
+pin U203 6 type = input @ sch i2c-1_no_pull_ups.kicad_sch
 pin U203 7 name SDA unit 1 net "/C20: I2C no pull-ups/SDA2"
-pin U203 7 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U203 7 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U203 8 name VDD unit 1 net VCC
-pin U203 8 type = power_in @ sch i2c_no_pull_ups.kicad_sch
+pin U203 8 type = power_in @ sch i2c-1_no_pull_ups.kicad_sch
 pin U204 1 name IO0 unit 1 net unconnected-(U204-IO0-Pad1)
-pin U204 1 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U204 1 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U204 2 name IO1 unit 1 net unconnected-(U204-IO1-Pad2)
-pin U204 2 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U204 2 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U204 3 name IO2 unit 1 net unconnected-(U204-IO2-Pad3)
-pin U204 3 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U204 3 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U204 4 name VSS unit 1 net GND
-pin U204 4 type = power_in @ sch i2c_no_pull_ups.kicad_sch
+pin U204 4 type = power_in @ sch i2c-1_no_pull_ups.kicad_sch
 pin U204 5 name IO3 unit 1 net unconnected-(U204-IO3-Pad5)
-pin U204 5 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U204 5 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U204 6 name SCL unit 1 net "/C20: I2C no pull-ups/SCL3"
-pin U204 6 type = input @ sch i2c_no_pull_ups.kicad_sch
+pin U204 6 type = input @ sch i2c-1_no_pull_ups.kicad_sch
 pin U204 7 name SDA unit 1 net "/C20: I2C no pull-ups/SDA3"
-pin U204 7 type = bidirectional @ sch i2c_no_pull_ups.kicad_sch
+pin U204 7 type = bidirectional @ sch i2c-1_no_pull_ups.kicad_sch
 pin U204 8 name VDD unit 1 net VCC
-pin U204 8 type = power_in @ sch i2c_no_pull_ups.kicad_sch
+pin U204 8 type = power_in @ sch i2c-1_no_pull_ups.kicad_sch
 pin U301 1 name BOOT0 unit 1 net unconnected-(U301-BOOT0-Pad1)
-pin U301 1 type = input @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 1 type = input @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 2 name PF0 unit 1 net unconnected-(U301-PF0-Pad2)
-pin U301 2 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 2 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 3 name PF1 unit 1 net unconnected-(U301-PF1-Pad3)
-pin U301 3 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 3 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 4 name NRST unit 1 net unconnected-(U301-NRST-Pad4)
-pin U301 4 type = input @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 4 type = input @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 5 name VDDA unit 1 net VCC
-pin U301 5 type = power_in @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 5 type = power_in @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 6 name PA0 unit 1 net unconnected-(U301-PA0-Pad6)
-pin U301 6 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 6 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 7 name PA1 unit 1 net unconnected-(U301-PA1-Pad7)
-pin U301 7 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 7 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 8 name PA2 unit 1 net unconnected-(U301-PA2-Pad8)
-pin U301 8 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 8 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 9 name PA3 unit 1 net unconnected-(U301-PA3-Pad9)
-pin U301 9 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 9 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 10 name PA4 unit 1 net unconnected-(U301-PA4-Pad10)
-pin U301 10 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 10 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 11 name PA5 unit 1 net unconnected-(U301-PA5-Pad11)
-pin U301 11 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 11 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 12 name PA6 unit 1 net unconnected-(U301-PA6-Pad12)
-pin U301 12 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 12 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 13 name PA7 unit 1 net unconnected-(U301-PA7-Pad13)
-pin U301 13 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 13 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 14 name PB1 unit 1 net unconnected-(U301-PB1-Pad14)
-pin U301 14 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 14 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 15 name VSS unit 1 net GND
-pin U301 15 type = power_in @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 15 type = power_in @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 16 name VDD unit 1 net VCC
-pin U301 16 type = power_in @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 16 type = power_in @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 17 name PA9 unit 1 net "/C20: I2C non standard pull-ups/SCL"
-pin U301 17 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 17 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 18 name PA10 unit 1 net "/C20: I2C non standard pull-ups/SDA"
-pin U301 18 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 18 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 19 name PA13 unit 1 net unconnected-(U301-PA13-Pad19)
-pin U301 19 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 19 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U301 20 name PA14 unit 1 net unconnected-(U301-PA14-Pad20)
-pin U301 20 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U301 20 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 1 name IO0 unit 1 net unconnected-(U302-IO0-Pad1)
-pin U302 1 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 1 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 2 name IO1 unit 1 net unconnected-(U302-IO1-Pad2)
-pin U302 2 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 2 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 3 name IO2 unit 1 net unconnected-(U302-IO2-Pad3)
-pin U302 3 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 3 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 4 name VSS unit 1 net GND
-pin U302 4 type = power_in @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 4 type = power_in @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 5 name IO3 unit 1 net unconnected-(U302-IO3-Pad5)
-pin U302 5 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 5 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 6 name SCL unit 1 net "/C20: I2C non standard pull-ups/SCL"
-pin U302 6 type = input @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 6 type = input @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 7 name SDA unit 1 net "/C20: I2C non standard pull-ups/SDA"
-pin U302 7 type = bidirectional @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 7 type = bidirectional @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U302 8 name VDD unit 1 net VCC
-pin U302 8 type = power_in @ sch i2c_non_standard_pull_ups.kicad_sch
+pin U302 8 type = power_in @ sch i2c-9_non_standard_pull_ups.kicad_sch
 pin U401 1 name BOOT0 unit 1 net unconnected-(U401-BOOT0-Pad1)
-pin U401 1 type = input @ sch i2c_segments.kicad_sch
+pin U401 1 type = input @ sch i2c-7_segments.kicad_sch
 pin U401 2 name PF0 unit 1 net unconnected-(U401-PF0-Pad2)
-pin U401 2 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 2 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U401 3 name PF1 unit 1 net unconnected-(U401-PF1-Pad3)
-pin U401 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 3 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U401 4 name NRST unit 1 net unconnected-(U401-NRST-Pad4)
-pin U401 4 type = input @ sch i2c_segments.kicad_sch
+pin U401 4 type = input @ sch i2c-7_segments.kicad_sch
 pin U401 5 name VDDA unit 1 net VCC_3V3
-pin U401 5 type = power_in @ sch i2c_segments.kicad_sch
+pin U401 5 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U401 6 name PA0 unit 1 net "/C22: I2C Segments/SCL_NOT_I2C"
-pin U401 6 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 6 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U401 7 name PA1 unit 1 net "/C22: I2C Segments/SDATA_SMTH_ELSE"
-pin U401 7 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 7 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U401 8 name PA2 unit 1 net unconnected-(U401-PA2-Pad8)
-pin U401 8 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 8 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U401 9 name PA3 unit 1 net unconnected-(U401-PA3-Pad9)
-pin U401 9 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 9 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U401 10 name PA4 unit 1 net unconnected-(U401-PA4-Pad10)
-pin U401 10 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 10 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U401 11 name PA5 unit 1 net unconnected-(U401-PA5-Pad11)
-pin U401 11 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 11 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U401 12 name PA6 unit 1 net "/C22: I2C Segments/SDA2_EN"
-pin U401 12 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 12 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U401 13 name PA7 unit 1 net unconnected-(U401-PA7-Pad13)
-pin U401 13 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 13 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U401 14 name PB1 unit 1 net unconnected-(U401-PB1-Pad14)
-pin U401 14 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 14 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U401 15 name VSS unit 1 net GND
-pin U401 15 type = power_in @ sch i2c_segments.kicad_sch
+pin U401 15 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U401 16 name VDD unit 1 net VCC_3V3
-pin U401 16 type = power_in @ sch i2c_segments.kicad_sch
+pin U401 16 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U401 17 name PA9 unit 1 net "/C22: I2C Segments/SCL1_3V3"
-pin U401 17 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 17 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U401 18 name PA10 unit 1 net "/C22: I2C Segments/SDA1_3V3"
-pin U401 18 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 18 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U401 19 name PA13 unit 1 net "/C22: I2C Segments/SCL2_3V3"
-pin U401 19 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 19 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U401 20 name PA14 unit 1 net "/C22: I2C Segments/SDA2_3V3"
-pin U401 20 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 20 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U402 1 name IO0 unit 1 net unconnected-(U402-IO0-Pad1)
-pin U402 1 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U402 1 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U402 2 name IO1 unit 1 net unconnected-(U402-IO1-Pad2)
-pin U402 2 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U402 2 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U402 3 name IO2 unit 1 net unconnected-(U402-IO2-Pad3)
-pin U402 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U402 3 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U402 4 name VSS unit 1 net GND
-pin U402 4 type = power_in @ sch i2c_segments.kicad_sch
+pin U402 4 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U402 5 name IO3 unit 1 net unconnected-(U402-IO3-Pad5)
-pin U402 5 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U402 5 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U402 6 name SCL unit 1 net "/C22: I2C Segments/SCL1_3V3"
-pin U402 6 type = input @ sch i2c_segments.kicad_sch
+pin U402 6 type = input @ sch i2c-7_segments.kicad_sch
 pin U402 7 name SDA unit 1 net "/C22: I2C Segments/SDA1_3V3"
-pin U402 7 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U402 7 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U402 8 name VDD unit 1 net VCC_3V3
-pin U402 8 type = power_in @ sch i2c_segments.kicad_sch
+pin U402 8 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U403 1 name IO0 unit 1 net unconnected-(U403-IO0-Pad1)
-pin U403 1 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U403 1 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U403 2 name IO1 unit 1 net unconnected-(U403-IO1-Pad2)
-pin U403 2 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U403 2 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U403 3 name IO2 unit 1 net unconnected-(U403-IO2-Pad3)
-pin U403 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U403 3 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U403 4 name VSS unit 1 net GND
-pin U403 4 type = power_in @ sch i2c_segments.kicad_sch
+pin U403 4 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U403 5 name IO3 unit 1 net unconnected-(U403-IO3-Pad5)
-pin U403 5 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U403 5 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U403 6 name SCL unit 1 net "/C22: I2C Segments/SCL_U7"
-pin U403 6 type = input @ sch i2c_segments.kicad_sch
+pin U403 6 type = input @ sch i2c-7_segments.kicad_sch
 pin U403 7 name SDA unit 1 net "/C22: I2C Segments/SDA_U7"
-pin U403 7 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U403 7 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U403 8 name VDD unit 1 net VCC_3V3
-pin U403 8 type = power_in @ sch i2c_segments.kicad_sch
+pin U403 8 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U404 1 name GND unit 1 net GND
-pin U404 1 type = power_in @ sch i2c_segments.kicad_sch
+pin U404 1 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U404 2 name VREF1 unit 1 net VCC_3V3
-pin U404 2 type = power_in @ sch i2c_segments.kicad_sch
+pin U404 2 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U404 3 name SCL1 unit 1 net "/C22: I2C Segments/SCL1_3V3"
-pin U404 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U404 3 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U404 4 name SDA1 unit 1 net "/C22: I2C Segments/SDA1_3V3"
-pin U404 4 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U404 4 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U404 5 name SDA2 unit 1 net "/C22: I2C Segments/SDA1_1V2"
-pin U404 5 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U404 5 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U404 6 name SCL2 unit 1 net "/C22: I2C Segments/SCL1_1V2"
-pin U404 6 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U404 6 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U404 7 name VREF2 unit 1 net VCC_1V2
-pin U404 7 type = power_in @ sch i2c_segments.kicad_sch
+pin U404 7 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U404 8 name EN unit 1 net unconnected-(U404-EN-Pad8)
-pin U404 8 type = input @ sch i2c_segments.kicad_sch
+pin U404 8 type = input @ sch i2c-7_segments.kicad_sch
 pin U405 1 name IO0 unit 1 net unconnected-(U405-IO0-Pad1)
-pin U405 1 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U405 1 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U405 2 name IO1 unit 1 net unconnected-(U405-IO1-Pad2)
-pin U405 2 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U405 2 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U405 3 name IO2 unit 1 net unconnected-(U405-IO2-Pad3)
-pin U405 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U405 3 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U405 4 name VSS unit 1 net GND
-pin U405 4 type = power_in @ sch i2c_segments.kicad_sch
+pin U405 4 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U405 5 name IO3 unit 1 net unconnected-(U405-IO3-Pad5)
-pin U405 5 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U405 5 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U405 6 name SCL unit 1 net "/C22: I2C Segments/SCL1_3V3_VCC2"
-pin U405 6 type = input @ sch i2c_segments.kicad_sch
+pin U405 6 type = input @ sch i2c-7_segments.kicad_sch
 pin U405 7 name SDA unit 1 net "/C22: I2C Segments/SDA1_3V3_VCC2"
-pin U405 7 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U405 7 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U405 8 name VDD unit 1 net VCC2_3V3
-pin U405 8 type = power_in @ sch i2c_segments.kicad_sch
+pin U405 8 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U406 1 name IO0 unit 1 net unconnected-(U406-IO0-Pad1)
-pin U406 1 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U406 1 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U406 2 name IO1 unit 1 net unconnected-(U406-IO1-Pad2)
-pin U406 2 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U406 2 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U406 3 name IO2 unit 1 net unconnected-(U406-IO2-Pad3)
-pin U406 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U406 3 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U406 4 name VSS unit 1 net GND
-pin U406 4 type = power_in @ sch i2c_segments.kicad_sch
+pin U406 4 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U406 5 name IO3 unit 1 net unconnected-(U406-IO3-Pad5)
-pin U406 5 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U406 5 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U406 6 name SCL unit 1 net "/C22: I2C Segments/SCL1_1V8"
-pin U406 6 type = input @ sch i2c_segments.kicad_sch
+pin U406 6 type = input @ sch i2c-7_segments.kicad_sch
 pin U406 7 name SDA unit 1 net "/C22: I2C Segments/SDA1_1V8"
-pin U406 7 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U406 7 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U406 8 name VDD unit 1 net VCC_1V8
-pin U406 8 type = power_in @ sch i2c_segments.kicad_sch
+pin U406 8 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U407 1 name IO0 unit 1 net unconnected-(U407-IO0-Pad1)
-pin U407 1 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U407 1 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U407 2 name IO1 unit 1 net unconnected-(U407-IO1-Pad2)
-pin U407 2 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U407 2 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U407 3 name IO2 unit 1 net unconnected-(U407-IO2-Pad3)
-pin U407 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U407 3 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U407 4 name VSS unit 1 net GND
-pin U407 4 type = power_in @ sch i2c_segments.kicad_sch
+pin U407 4 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U407 5 name IO3 unit 1 net unconnected-(U407-IO3-Pad5)
-pin U407 5 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U407 5 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U407 6 name SCL unit 1 net "/C22: I2C Segments/SCL1_1V2"
-pin U407 6 type = input @ sch i2c_segments.kicad_sch
+pin U407 6 type = input @ sch i2c-7_segments.kicad_sch
 pin U407 7 name SDA unit 1 net "/C22: I2C Segments/SDA1_1V2"
-pin U407 7 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U407 7 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U407 8 name VDD unit 1 net VCC_1V2
-pin U407 8 type = power_in @ sch i2c_segments.kicad_sch
+pin U407 8 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U408 1 name IO0 unit 1 net unconnected-(U408-IO0-Pad1)
-pin U408 1 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U408 1 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U408 2 name IO1 unit 1 net unconnected-(U408-IO1-Pad2)
-pin U408 2 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U408 2 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U408 3 name IO2 unit 1 net unconnected-(U408-IO2-Pad3)
-pin U408 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U408 3 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U408 4 name VSS unit 1 net GND
-pin U408 4 type = power_in @ sch i2c_segments.kicad_sch
+pin U408 4 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U408 5 name IO3 unit 1 net unconnected-(U408-IO3-Pad5)
-pin U408 5 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U408 5 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U408 6 name SCL unit 1 net "/C22: I2C Segments/UNM2"
-pin U408 6 type = input @ sch i2c_segments.kicad_sch
+pin U408 6 type = input @ sch i2c-7_segments.kicad_sch
 pin U408 7 name SDA unit 1 net "/C22: I2C Segments/UNM1"
-pin U408 7 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U408 7 type = bidirectional @ sch i2c-7_segments.kicad_sch
 pin U408 8 name VDD unit 1 net VCC_3V3
-pin U408 8 type = power_in @ sch i2c_segments.kicad_sch
+pin U408 8 type = power_in @ sch i2c-7_segments.kicad_sch
 pin U501 1 name BOOT0 unit 1 net unconnected-(U501-BOOT0-Pad1)
-pin U501 1 type = input @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 1 type = input @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 2 name PF0 unit 1 net unconnected-(U501-PF0-Pad2)
-pin U501 2 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 2 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 3 name PF1 unit 1 net unconnected-(U501-PF1-Pad3)
-pin U501 3 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 3 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 4 name NRST unit 1 net unconnected-(U501-NRST-Pad4)
-pin U501 4 type = input @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 4 type = input @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 5 name VDDA unit 1 net VCC_3V3
-pin U501 5 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 5 type = power_in @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 6 name PA0 unit 1 net unconnected-(U501-PA0-Pad6)
-pin U501 6 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 6 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 7 name PA1 unit 1 net unconnected-(U501-PA1-Pad7)
-pin U501 7 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 7 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 8 name PA2 unit 1 net unconnected-(U501-PA2-Pad8)
-pin U501 8 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 8 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 9 name PA3 unit 1 net unconnected-(U501-PA3-Pad9)
-pin U501 9 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 9 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 10 name PA4 unit 1 net unconnected-(U501-PA4-Pad10)
-pin U501 10 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 10 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 11 name PA5 unit 1 net unconnected-(U501-PA5-Pad11)
-pin U501 11 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 11 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 12 name PA6 unit 1 net unconnected-(U501-PA6-Pad12)
-pin U501 12 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 12 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 13 name PA7 unit 1 net unconnected-(U501-PA7-Pad13)
-pin U501 13 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 13 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 14 name PB1 unit 1 net unconnected-(U501-PB1-Pad14)
-pin U501 14 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 14 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 15 name VSS unit 1 net GND
-pin U501 15 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 15 type = power_in @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 16 name VDD unit 1 net VCC_3V3
-pin U501 16 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 16 type = power_in @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 17 name PA9 unit 1 net "/C107: I2C multiple pull-ups/SCL1_3V3"
-pin U501 17 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 17 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 18 name PA10 unit 1 net "/C107: I2C multiple pull-ups/SDA1_3V3"
-pin U501 18 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 18 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 19 name PA13 unit 1 net unconnected-(U501-PA13-Pad19)
-pin U501 19 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 19 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U501 20 name PA14 unit 1 net unconnected-(U501-PA14-Pad20)
-pin U501 20 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 20 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U502 1 name IO0 unit 1 net unconnected-(U502-IO0-Pad1)
-pin U502 1 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 1 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U502 2 name IO1 unit 1 net unconnected-(U502-IO1-Pad2)
-pin U502 2 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 2 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U502 3 name IO2 unit 1 net unconnected-(U502-IO2-Pad3)
-pin U502 3 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 3 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U502 4 name VSS unit 1 net GND
-pin U502 4 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 4 type = power_in @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U502 5 name IO3 unit 1 net unconnected-(U502-IO3-Pad5)
-pin U502 5 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 5 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U502 6 name SCL unit 1 net "/C107: I2C multiple pull-ups/SCL1_3V3"
-pin U502 6 type = input @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 6 type = input @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U502 7 name SDA unit 1 net "/C107: I2C multiple pull-ups/SDA1_3V3"
-pin U502 7 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 7 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U502 8 name VDD unit 1 net VCC_3V3
-pin U502 8 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 8 type = power_in @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U503 1 name IO0 unit 1 net unconnected-(U503-IO0-Pad1)
-pin U503 1 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 1 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U503 2 name IO1 unit 1 net unconnected-(U503-IO1-Pad2)
-pin U503 2 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 2 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U503 3 name IO2 unit 1 net unconnected-(U503-IO2-Pad3)
-pin U503 3 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 3 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U503 4 name VSS unit 1 net GND
-pin U503 4 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 4 type = power_in @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U503 5 name IO3 unit 1 net unconnected-(U503-IO3-Pad5)
-pin U503 5 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 5 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U503 6 name SCL unit 1 net "/C107: I2C multiple pull-ups/SCL_U7"
-pin U503 6 type = input @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 6 type = input @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U503 7 name SDA unit 1 net "/C107: I2C multiple pull-ups/SDA_U7"
-pin U503 7 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 7 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U503 8 name VDD unit 1 net VCC_3V3
-pin U503 8 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 8 type = power_in @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U506 1 name IO0 unit 1 net unconnected-(U506-IO0-Pad1)
-pin U506 1 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 1 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U506 2 name IO1 unit 1 net unconnected-(U506-IO1-Pad2)
-pin U506 2 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 2 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U506 3 name IO2 unit 1 net unconnected-(U506-IO2-Pad3)
-pin U506 3 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 3 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U506 4 name VSS unit 1 net GND
-pin U506 4 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 4 type = power_in @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U506 5 name IO3 unit 1 net unconnected-(U506-IO3-Pad5)
-pin U506 5 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 5 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U506 6 name SCL unit 1 net "/C107: I2C multiple pull-ups/SCL1_1V8"
-pin U506 6 type = input @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 6 type = input @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U506 7 name SDA unit 1 net "/C107: I2C multiple pull-ups/SDA1_1V8"
-pin U506 7 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 7 type = bidirectional @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U506 8 name VDD unit 1 net VCC_1V8
-pin U506 8 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 8 type = power_in @ sch i2c-2_multiple_pull_ups.kicad_sch
 pin U601 1 name BOOT0 unit 1 net unconnected-(U601-BOOT0-Pad1)
-pin U601 1 type = input @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 1 type = input @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 2 name PF0 unit 1 net unconnected-(U601-PF0-Pad2)
-pin U601 2 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 2 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 3 name PF1 unit 1 net unconnected-(U601-PF1-Pad3)
-pin U601 3 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 3 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 4 name NRST unit 1 net unconnected-(U601-NRST-Pad4)
-pin U601 4 type = input @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 4 type = input @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 5 name VDDA unit 1 net VCC
-pin U601 5 type = power_in @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 5 type = power_in @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 6 name PA0 unit 1 net unconnected-(U601-PA0-Pad6)
-pin U601 6 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 6 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 7 name PA1 unit 1 net unconnected-(U601-PA1-Pad7)
-pin U601 7 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 7 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 8 name PA2 unit 1 net unconnected-(U601-PA2-Pad8)
-pin U601 8 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 8 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 9 name PA3 unit 1 net unconnected-(U601-PA3-Pad9)
-pin U601 9 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 9 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 10 name PA4 unit 1 net unconnected-(U601-PA4-Pad10)
-pin U601 10 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 10 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 11 name PA5 unit 1 net unconnected-(U601-PA5-Pad11)
-pin U601 11 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 11 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 12 name PA6 unit 1 net unconnected-(U601-PA6-Pad12)
-pin U601 12 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 12 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 13 name PA7 unit 1 net unconnected-(U601-PA7-Pad13)
-pin U601 13 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 13 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 14 name PB1 unit 1 net unconnected-(U601-PB1-Pad14)
-pin U601 14 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 14 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 15 name VSS unit 1 net GND
-pin U601 15 type = power_in @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 15 type = power_in @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 16 name VDD unit 1 net VCC
-pin U601 16 type = power_in @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 16 type = power_in @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 17 name PA9 unit 1 net "/C20: I2C non equal pull-ups/SCL"
-pin U601 17 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 17 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 18 name PA10 unit 1 net "/C20: I2C non equal pull-ups/SDA"
-pin U601 18 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 18 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 19 name PA13 unit 1 net unconnected-(U601-PA13-Pad19)
-pin U601 19 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 19 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U601 20 name PA14 unit 1 net unconnected-(U601-PA14-Pad20)
-pin U601 20 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U601 20 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U602 1 name IO0 unit 1 net unconnected-(U602-IO0-Pad1)
-pin U602 1 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U602 1 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U602 2 name IO1 unit 1 net unconnected-(U602-IO1-Pad2)
-pin U602 2 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U602 2 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U602 3 name IO2 unit 1 net unconnected-(U602-IO2-Pad3)
-pin U602 3 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U602 3 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U602 4 name VSS unit 1 net GND
-pin U602 4 type = power_in @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U602 4 type = power_in @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U602 5 name IO3 unit 1 net unconnected-(U602-IO3-Pad5)
-pin U602 5 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U602 5 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U602 6 name SCL unit 1 net "/C20: I2C non equal pull-ups/SCL"
-pin U602 6 type = input @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U602 6 type = input @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U602 7 name SDA unit 1 net "/C20: I2C non equal pull-ups/SDA"
-pin U602 7 type = bidirectional @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U602 7 type = bidirectional @ sch i2c-10_non_equal_pull_ups.kicad_sch
 pin U602 8 name VDD unit 1 net VCC
-pin U602 8 type = power_in @ sch i2c_non_equal_pull_ups.kicad_sch
+pin U602 8 type = power_in @ sch i2c-10_non_equal_pull_ups.kicad_sch
 setting erc-severity bus_definition_conflict = error @ pro test_schematics.kicad_pro
 setting erc-severity bus_entry_needed = error @ pro test_schematics.kicad_pro
 setting erc-severity bus_to_bus_conflict = error @ pro test_schematics.kicad_pro
@@ -1748,17 +1748,17 @@ setting erc-severity unannotated = error @ pro test_schematics.kicad_pro
 setting erc-severity unit_value_mismatch = error @ pro test_schematics.kicad_pro
 setting erc-severity unresolved_variable = error @ pro test_schematics.kicad_pro
 setting erc-severity wire_dangling = error @ pro test_schematics.kicad_pro
-sheet "/C20: I2C no pull-ups/" name "C20: I2C no pull-ups" file i2c_no_pull_ups.kicad_sch uuid /29087d8a-217a-4d35-b399-b64f9dad2246 page 2
-sheet "/C20: I2C non equal pull-ups/" name "C20: I2C non equal pull-ups" file i2c_non_equal_pull_ups.kicad_sch uuid /4cfb0621-a35b-481b-a0c0-c81dca4e1433 page 6
-sheet "/C20: I2C non standard pull-ups/" name "C20: I2C non standard pull-ups" file i2c_non_standard_pull_ups.kicad_sch uuid /1284c5bc-3fac-4644-8578-1906a627e12f page 3
-sheet "/C22: I2C Segments/" name "C22: I2C Segments" file i2c_segments.kicad_sch uuid /e8f54ccd-b547-40b2-8596-7ab8e82f53b9 page 4
-sheet "/C107: I2C multiple pull-ups/" name "C107: I2C multiple pull-ups" file i2c_multiple_pull_ups.kicad_sch uuid /f839a5f6-8daf-4ea7-83ef-589c1acb7b49 page 5
+sheet "/C20: I2C no pull-ups/" name "C20: I2C no pull-ups" file i2c-1_no_pull_ups.kicad_sch uuid /29087d8a-217a-4d35-b399-b64f9dad2246 page 2
+sheet "/C20: I2C non equal pull-ups/" name "C20: I2C non equal pull-ups" file i2c-10_non_equal_pull_ups.kicad_sch uuid /4cfb0621-a35b-481b-a0c0-c81dca4e1433 page 6
+sheet "/C20: I2C non standard pull-ups/" name "C20: I2C non standard pull-ups" file i2c-9_non_standard_pull_ups.kicad_sch uuid /1284c5bc-3fac-4644-8578-1906a627e12f page 3
+sheet "/C22: I2C Segments/" name "C22: I2C Segments" file i2c-7_segments.kicad_sch uuid /e8f54ccd-b547-40b2-8596-7ab8e82f53b9 page 4
+sheet "/C107: I2C multiple pull-ups/" name "C107: I2C multiple pull-ups" file i2c-2_multiple_pull_ups.kicad_sch uuid /f839a5f6-8daf-4ea7-83ef-589c1acb7b49 page 5
 sheet / name "" file test_schematics.kicad_sch uuid /
-source file i2c_multiple_pull_ups.kicad_sch
-source file i2c_no_pull_ups.kicad_sch
-source file i2c_non_equal_pull_ups.kicad_sch
-source file i2c_non_standard_pull_ups.kicad_sch
-source file i2c_segments.kicad_sch
+source file i2c-1_no_pull_ups.kicad_sch
+source file i2c-2_multiple_pull_ups.kicad_sch
+source file i2c-7_segments.kicad_sch
+source file i2c-9_non_standard_pull_ups.kicad_sch
+source file i2c-10_non_equal_pull_ups.kicad_sch
 source file test_schematics.kicad_pcb
 source file test_schematics.kicad_pro
 source file test_schematics.kicad_sch

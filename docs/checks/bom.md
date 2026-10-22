@@ -130,7 +130,7 @@ matters.
 
 🛑 error · needs: the value field · [catalogue entry](../checks.md#bom-5)
 
-**Impl.** easy · depends on `IMP-6` (runs today: `style.rs`)
+**Impl.** easy · depends on `IMP-6`
 
 **What it catches.** Placeholder values in the schematic: `?`, `??k`, `TBD`, `TODO`, `calc`.
 
@@ -140,18 +140,18 @@ lost) or guesses (a board lost). The second form of the same mistake, the placeh
 **Example.** A feedback resistor marked `?k` "until the output voltage is decided": the BOM goes out with `?k`, the
 assembler fits the nearest reel.
 
-**How to check.** better_erc flags values that start or end with `?` today (as a warning, under its own
-`CalculateLaterValue` kind); `TBD`, `TODO` and similar words are still to add.
+**How to check.** Values that start or end with `?`, or contain `TBD` or `TODO` as a word, on any part, fitted
+or not (`erc_checks/src/bom/bom_5.rs`); a fitted one is reported once, as `BOM-6`.
 
 **Fix.** Decide the value; if it really stays open, mark the part DNP and say so on the sheet.
 
-**References.** FEATURES.md (`BOM-5`, `BOM-6` in `style.rs`); test schematic `style_values`.
+**References.** Test schematic `bom-10_values` (R3, R9, R10).
 
 ## `BOM-6` "Calculate later" part mounted <a id="bom-6"></a>
 
 🛑 error · needs: value field, DNP flag · [catalogue entry](../checks.md#bom-6)
 
-**Impl.** easy · depends on `IMP-6` (runs today: `style.rs`, as part of `BOM-5`)
+**Impl.** easy · depends on `IMP-6`
 
 **What it catches.** A part with a placeholder value that is not DNP: it will be placed.
 
@@ -218,7 +218,7 @@ anode toward ground is a finding. The footprint side needs `LIB-11`.
 
 🛑 error · needs: the value field · [catalogue entry](../checks.md#bom-9)
 
-**Impl.** easy · depends on netlist (runs today: `style.rs`)
+**Impl.** easy · depends on netlist
 
 **What it catches.** A component whose value field is empty.
 
@@ -227,17 +227,18 @@ it. With resistors and capacitors it also blinds every value-based check (`I2C-9
 
 **Example.** A capacitor placed from a generic `C` symbol, footprint set, value never typed.
 
-**How to check.** better_erc reports an empty value as an error today; `DNP` and `DNM` as values are accepted.
+**How to check.** A component (not a power symbol) whose Value field is empty in the variant checked
+(`erc_checks/src/bom/bom_9.rs`); `DNP` and `DNM` as values are accepted.
 
 **Fix.** Fill in the value (and the MPN, `BOM-14`).
 
-**References.** FEATURES.md (`BOM-9` in `style.rs`).
+**References.** Test schematic `bom-10_values` (R2).
 
 ## `BOM-10` Value that doesn't parse or isn't a standard series value <a id="bom-10"></a>
 
 ⚠️ warning · needs: parsed values (`IMP-6`) · [catalogue entry](../checks.md#bom-10)
 
-**Impl.** easy · depends on `IMP-6` (runs today for resistors: `style.rs`)
+**Impl.** easy · depends on `IMP-6`
 
 **What it catches.** A value written in a form the tools cannot read (`4,7 k`, `4k7 Ohm`, `4K7R`) or one that is not in
 any E series (`4.8k`).
@@ -248,9 +249,10 @@ which is often a typo.
 
 **Example.** `5k` written for 5.1 kΩ (5.00 kΩ is in no E series, E96 has 4.99 kΩ), `10K` vs `10k` mixed, `2.2 K` with a space.
 
-**How to check.** better_erc parses resistor values today and warns on notation (a redundant space, a small `r`, a big `R` in
-place of the ohm sign) and errors on values that do not parse; the E-series membership test and
-capacitor values are still to add.
+**How to check.** Resistor values are read as resistances (`erc_checks/src/bom/bom_10.rs`): a value that does not read
+is reported, and so is odd notation (more than one space before the multiplier, a small `r`, an `R` after a
+multiplier, a decimal comma, text after the value). The E-series membership test and capacitor values are still to
+add.
 
 **Fix.** One notation across the project (`4k7`, `100n`); values from the series the parts come from.
 

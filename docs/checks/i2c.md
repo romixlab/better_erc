@@ -178,7 +178,8 @@ low by a volt. It also slows the falling edge together with the far side's capac
 **Example.** A 1 kΩ "protection" resistor in SDA towards an off-board sensor: the far-side low sits at ~1.4 V
 with a 2.2 kΩ pull-up on 3.3 V, above the 0.3·VDD = 0.99 V threshold; the sensor never sees a low.
 
-**How to check.** Series resistors on the bus lines (`NET-10`) with a value over `MAX_TIE_RESISTANCE`.
+**How to check.** Series resistors on the bus lines (`NET-10`) with a value over the check's `max_tie` threshold
+(100 Ω by default).
 
 **Fix.** 0 Ω ties, or protection with a TVS instead of a resistor; if a resistor is needed keep it ≤ 100 Ω and
 recompute VOL.
@@ -227,6 +228,8 @@ sensitive to leakage and noise. 2.2-4.7 kΩ at 3.3 V covers most boards; 1.8 V b
 sensor's 3 mA sink, VOL rises above 0.3·VDD = 0.54 V.
 
 **How to check.** Compare the parallel pull-up value per line with the window for the bus voltage and mode.
+better_erc so far reports a pull-up at or beyond either end of a fixed 2.2 kΩ to 10 kΩ window (the check's
+`min_pull_up` and `max_pull_up`) and one whose value does not read.
 
 **Fix.** Pick within the window; SLVA689 gives the full calculation.
 

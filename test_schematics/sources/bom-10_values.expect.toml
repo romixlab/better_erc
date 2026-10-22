@@ -1,0 +1,35 @@
+# What better_erc finds on bom-10_values.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part R4"]
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part R5"]
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part R6"]
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part R7"]
+
+[[finding]]
+check = "BOM-5"
+subjects = ["part R9"]
+
+[[finding]]
+check = "BOM-6"
+subjects = ["part R10"]
+also = ["BOM-5"]
+
+[[finding]]
+check = "BOM-6"
+subjects = ["part R3"]
+also = ["BOM-5"]
+
+[[finding]]
+check = "BOM-9"
+subjects = ["part R2"]
