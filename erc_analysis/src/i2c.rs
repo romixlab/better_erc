@@ -14,7 +14,9 @@
 //! The analysis records what it finds; the I2C checks judge it.
 
 use crate::class::{PartClass, PartClasses};
-use crate::graph::{net_chains, net_degree, net_parts, part_nets, part_nets_except_pins, parts_connected};
+use crate::graph::{
+    net_chains, net_degree, net_parts, part_nets, part_nets_except_pins, parts_connected,
+};
 use erc_model::{Board, NetId, PartId};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
@@ -51,7 +53,10 @@ pub enum Node {
     Connector(PartId),
     TestPoint(PartId),
     /// A translator IC with another bus on its other side
-    Translator { part: PartId, other_side: BusIdx },
+    Translator {
+        part: PartId,
+        other_side: BusIdx,
+    },
     /// A FET per line to another bus
     DiscreteTranslator {
         scl_fet: PartId,
@@ -160,7 +165,11 @@ impl Recogniser<'_> {
                 continue;
             };
             let scl = NetId::from_index(i);
-            buses.push(self.bus(collapse_underscores(&format!("{prefix}I2C{suffix}")), scl, sda));
+            buses.push(self.bus(
+                collapse_underscores(&format!("{prefix}I2C{suffix}")),
+                scl,
+                sda,
+            ));
         }
         buses
     }
@@ -355,7 +364,9 @@ impl Recogniser<'_> {
                 let mut nets = part_nets(self.board, part);
                 nets.remove(&bus.scl);
                 nets.remove(&bus.sda);
-                let others: Vec<BusIdx> = (0..scls.len()).filter(|i| nets.contains(&scls[*i])).collect();
+                let others: Vec<BusIdx> = (0..scls.len())
+                    .filter(|i| nets.contains(&scls[*i]))
+                    .collect();
                 *node = match others[..] {
                     [other_side] => Node::Translator { part, other_side },
                     // A mux, or an MCU on several buses
@@ -397,7 +408,10 @@ pub fn rail_goes_nowhere(board: &Board, classes: &PartClasses, pu: &PullUp) -> b
             let mut parts = net_parts(board, &[pu.rail]);
             parts.remove(&pu.scl);
             parts.remove(&pu.sda);
-            let Some(third) = parts.into_iter().find(|p| classes.is(*p, PartClass::Resistor)) else {
+            let Some(third) = parts
+                .into_iter()
+                .find(|p| classes.is(*p, PartClass::Resistor))
+            else {
                 return false;
             };
             part_nets(board, third)
@@ -466,7 +480,11 @@ mod tests {
         let mut u = UnionFind::new(5);
         u.join(3, 1);
         u.join(4, 3);
-        let sets: Vec<Vec<usize>> = u.sets().into_iter().map(|s| s.into_iter().collect()).collect();
+        let sets: Vec<Vec<usize>> = u
+            .sets()
+            .into_iter()
+            .map(|s| s.into_iter().collect())
+            .collect();
         assert_eq!(sets, [vec![0], vec![1, 3, 4], vec![2]]);
     }
 }

@@ -1,4 +1,21 @@
 [package]
 name = "erc_checks"
-version.workspace = true
+description = "better_erc check engine: one file per catalogue check, declared data needs, findings with provenance, reports"
+authors.workspace = true
 edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+include.workspace = true
+build = "build.rs"
+
+[dependencies]
+erc_analysis = { path = "../erc_analysis" }
+erc_model = { path = "../erc_model" }
+inventory = "0.3"
+rayon = "1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+erc_kicad = { path = "../erc_kicad" }
+toml = "1"

@@ -173,7 +173,11 @@ fn by_library(lib: &str, name: &str) -> Option<PartClass> {
 fn by_description(text: &str) -> Option<PartClass> {
     let has = |w: &str| text.contains(w);
     Some(
-        if has("mosfet") || has("n-channel") || has("p-channel") || has("n channel") || has("p channel")
+        if has("mosfet")
+            || has("n-channel")
+            || has("p-channel")
+            || has("n channel")
+            || has("p channel")
         {
             PartClass::Mosfet
         } else if has("translator") || has("level shifter") || has("level-shifter") {
@@ -233,7 +237,10 @@ mod tests {
         assert_eq!(by_library("Device", "R_Small"), Some(PartClass::Resistor));
         assert_eq!(by_library("Fixture", "R"), Some(PartClass::Resistor));
         assert_eq!(by_library("Device", "C"), Some(PartClass::Capacitor));
-        assert_eq!(by_library("Transistor_FET", "BSS138"), Some(PartClass::Mosfet));
+        assert_eq!(
+            by_library("Transistor_FET", "BSS138"),
+            Some(PartClass::Mosfet)
+        );
         assert_eq!(by_library("Device", "Q_NMOS_GSD"), Some(PartClass::Mosfet));
         assert_eq!(by_library("Device", "Q_NPN_BEC"), Some(PartClass::Bjt));
         assert_eq!(
@@ -242,10 +249,7 @@ mod tests {
         );
         assert_eq!(by_library("Interface", "PCA9306"), None);
         assert_eq!(by_library("Fixture", "NMOS"), None);
-        assert_eq!(
-            by_description("n-channel mosfet"),
-            Some(PartClass::Mosfet)
-        );
+        assert_eq!(by_description("n-channel mosfet"), Some(PartClass::Mosfet));
         assert_eq!(
             by_description("dual bidirectional i2c-bus and smbus voltage-level translator"),
             Some(PartClass::Translator)

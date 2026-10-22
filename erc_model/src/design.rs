@@ -691,7 +691,10 @@ impl Board {
     /// Whether the part is fitted in `variant` (`None`: the base design): the variant's DNP flag when it sets
     /// one, else the part's own
     pub fn fitted(&self, id: PartId, variant: Option<VariantId>) -> bool {
-        match self.part_variant(id, variant).and_then(|pv| pv.flags.dnp.get()) {
+        match self
+            .part_variant(id, variant)
+            .and_then(|pv| pv.flags.dnp.get())
+        {
             Some(dnp) => !dnp,
             None => self.part(id).flags.fitted(),
         }
