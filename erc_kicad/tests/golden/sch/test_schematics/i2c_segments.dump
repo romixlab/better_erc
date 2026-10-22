@@ -1,0 +1,805 @@
+board i2c_segments
+label / local SCL1_1V2 at 262.89,207.01 net /SCL1_1V2
+label / local SCL1_1V8 at 261.62,62.23 net /SCL1_1V8
+label / local SCL1_3V3 at 119.38,78.74 net /SCL1_3V3
+label / local SCL1_3V3_VCC2 at 245.11,160.02 net /SCL1_3V3_VCC2
+label / local SCL2_3V3 at 119.38,83.82 net /SCL2_3V3
+label / local SCL_NOT_I2C at 119.38,58.42 net /SCL_NOT_I2C
+label / local SCL_U7 at 189.23,121.92 net /SCL_U7
+label / local SDA1_1V2 at 262.89,204.47 net /SDA1_1V2
+label / local SDA1_1V8 at 261.62,59.69 net /SDA1_1V8
+label / local SDA1_3V3 at 119.38,81.28 net /SDA1_3V3
+label / local SDA1_3V3_VCC2 at 245.11,157.48 net /SDA1_3V3_VCC2
+label / local SDA2_3V3 at 119.38,86.36 net /SDA2_3V3
+label / local SDA2_EN at 110.49,73.66 net /SDA2_EN
+label / local SDATA_SMTH_ELSE at 119.38,60.96 net /SDATA_SMTH_ELSE
+label / local SDA_U7 at 189.23,119.38 net /SDA_U7
+label / local UNM1 at 189.23,251.46 net /UNM1
+label / local UNM2 at 189.23,254 net /UNM2
+label / power GND at 87.63,97.79 net GND
+label / power GND at 129.54,125.73 net GND
+label / power GND at 190.5,97.79 net GND
+label / power GND at 210.82,130.81 net GND
+label / power GND at 210.82,222.25 net GND
+label / power GND at 233.68,262.89 net GND
+label / power GND at 276.86,168.91 net GND
+label / power GND at 288.29,71.12 net GND
+label / power GND at 289.56,215.9 net GND
+label / power VCC2_3V3 at 210.82,147.32 net VCC2_3V3
+label / power VCC2_3V3 at 210.82,166.37 net VCC2_3V3
+label / power VCC2_3V3 at 231.14,143.51 net VCC2_3V3
+label / power VCC2_3V3 at 241.3,143.51 net VCC2_3V3
+label / power VCC2_3V3 at 276.86,143.51 net VCC2_3V3
+label / power VCC_1V2 at 215.9,187.96 net VCC_1V2
+label / power VCC_1V2 at 243.84,190.5 net VCC_1V2
+label / power VCC_1V2 at 254,190.5 net VCC_1V2
+label / power VCC_1V2 at 289.56,190.5 net VCC_1V2
+label / power VCC_1V8 at 222.25,49.53 net VCC_1V8
+label / power VCC_1V8 at 222.25,68.58 net VCC_1V8
+label / power VCC_1V8 at 242.57,45.72 net VCC_1V8
+label / power VCC_1V8 at 252.73,45.72 net VCC_1V8
+label / power VCC_1V8 at 288.29,45.72 net VCC_1V8
+label / power VCC_3V3 at 87.63,49.53 net VCC_3V3
+label / power VCC_3V3 at 147.32,58.42 net VCC_3V3
+label / power VCC_3V3 at 157.48,58.42 net VCC_3V3
+label / power VCC_3V3 at 190.5,72.39 net VCC_3V3
+label / power VCC_3V3 at 201.93,237.49 net VCC_3V3
+label / power VCC_3V3 at 205.74,187.96 net VCC_3V3
+label / power VCC_3V3 at 210.82,105.41 net VCC_3V3
+label / power VCC_3V3 at 212.09,237.49 net VCC_3V3
+label / power VCC_3V3 at 233.68,237.49 net VCC_3V3
+net /SCL1_1V2 kind named
+net /SCL1_1V8 kind named
+net /SCL1_3V3 kind named
+net /SCL1_3V3_VCC2 kind named
+net /SCL2_3V3 kind named
+net /SCL_NOT_I2C kind named
+net /SCL_U7 kind named
+net /SDA1_1V2 kind named
+net /SDA1_1V8 kind named
+net /SDA1_3V3 kind named
+net /SDA1_3V3_VCC2 kind named
+net /SDA2_3V3 kind named
+net /SDA2_EN kind named
+net /SDATA_SMTH_ELSE kind named
+net /SDA_U7 kind named
+net /UNM1 kind named
+net /UNM2 kind named
+net GND kind power
+net VCC2_3V3 kind power
+net VCC_1V2 kind power
+net VCC_1V8 kind power
+net VCC_3V3 kind power
+net unconnected-(U401-BOOT0-Pad1) kind unconnected
+net unconnected-(U401-NRST-Pad4) kind unconnected
+net unconnected-(U401-PA2-Pad8) kind unconnected
+net unconnected-(U401-PA3-Pad9) kind unconnected
+net unconnected-(U401-PA4-Pad10) kind unconnected
+net unconnected-(U401-PA5-Pad11) kind unconnected
+net unconnected-(U401-PA7-Pad13) kind unconnected
+net unconnected-(U401-PB1-Pad14) kind unconnected
+net unconnected-(U401-PF0-Pad2) kind unconnected
+net unconnected-(U401-PF1-Pad3) kind unconnected
+net unconnected-(U402-IO0-Pad1) kind unconnected
+net unconnected-(U402-IO1-Pad2) kind unconnected
+net unconnected-(U402-IO2-Pad3) kind unconnected
+net unconnected-(U402-IO3-Pad5) kind unconnected
+net unconnected-(U403-IO0-Pad1) kind unconnected
+net unconnected-(U403-IO1-Pad2) kind unconnected
+net unconnected-(U403-IO2-Pad3) kind unconnected
+net unconnected-(U403-IO3-Pad5) kind unconnected
+net unconnected-(U404-EN-Pad8) kind unconnected
+net unconnected-(U405-IO0-Pad1) kind unconnected
+net unconnected-(U405-IO1-Pad2) kind unconnected
+net unconnected-(U405-IO2-Pad3) kind unconnected
+net unconnected-(U405-IO3-Pad5) kind unconnected
+net unconnected-(U406-IO0-Pad1) kind unconnected
+net unconnected-(U406-IO1-Pad2) kind unconnected
+net unconnected-(U406-IO2-Pad3) kind unconnected
+net unconnected-(U406-IO3-Pad5) kind unconnected
+net unconnected-(U407-IO0-Pad1) kind unconnected
+net unconnected-(U407-IO1-Pad2) kind unconnected
+net unconnected-(U407-IO2-Pad3) kind unconnected
+net unconnected-(U407-IO3-Pad5) kind unconnected
+net unconnected-(U408-IO0-Pad1) kind unconnected
+net unconnected-(U408-IO1-Pad2) kind unconnected
+net unconnected-(U408-IO2-Pad3) kind unconnected
+net unconnected-(U408-IO3-Pad5) kind unconnected
+part J401 field Description = "Generic connector, single row, 01x03, script generated" @ sch i2c_segments.kicad_sch
+part J401 field Value = Conn_01x03_Pin @ sch i2c_segments.kicad_sch
+part J401 flag dnp = no @ sch i2c_segments.kicad_sch
+part J401 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part J401 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part J401 flag on_board = yes @ sch i2c_segments.kicad_sch
+part J401 lib Connector:Conn_01x03_Pin sheet / symbol Connector:Conn_01x03_Pin
+part J401 unit 1 sheet / uuid 63102011-5c41-4316-b36a-b6b698e6ee43 at 121.92,120.65 rot 0
+part J401 value = text Conn_01x03_Pin @ sch i2c_segments.kicad_sch note "from the Value field"
+part Q401 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c_segments.kicad_sch
+part Q401 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c_segments.kicad_sch
+part Q401 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c_segments.kicad_sch
+part Q401 field Value = BSS138 @ sch i2c_segments.kicad_sch
+part Q401 flag dnp = no @ sch i2c_segments.kicad_sch
+part Q401 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part Q401 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part Q401 flag on_board = yes @ sch i2c_segments.kicad_sch
+part Q401 lib Transistor_FET:BSS138 sheet / symbol Transistor_FET:BSS138
+part Q401 unit 1 sheet / uuid 81a0f175-b57b-4355-aa28-e78fba1b353e at 210.82,154.94 rot 90 mirror x
+part Q401 value = text BSS138 @ sch i2c_segments.kicad_sch note "from the Value field"
+part Q402 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c_segments.kicad_sch
+part Q402 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c_segments.kicad_sch
+part Q402 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c_segments.kicad_sch
+part Q402 field Value = BSS138 @ sch i2c_segments.kicad_sch
+part Q402 flag dnp = no @ sch i2c_segments.kicad_sch
+part Q402 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part Q402 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part Q402 flag on_board = yes @ sch i2c_segments.kicad_sch
+part Q402 lib Transistor_FET:BSS138 sheet / symbol Transistor_FET:BSS138
+part Q402 unit 1 sheet / uuid e01b01aa-3cf9-4772-bbec-27ee29c5ae14 at 210.82,173.99 rot 90 mirror x
+part Q402 value = text BSS138 @ sch i2c_segments.kicad_sch note "from the Value field"
+part Q403 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c_segments.kicad_sch
+part Q403 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c_segments.kicad_sch
+part Q403 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c_segments.kicad_sch
+part Q403 field Value = BSS138 @ sch i2c_segments.kicad_sch
+part Q403 flag dnp = no @ sch i2c_segments.kicad_sch
+part Q403 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part Q403 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part Q403 flag on_board = yes @ sch i2c_segments.kicad_sch
+part Q403 lib Transistor_FET:BSS138 sheet / symbol Transistor_FET:BSS138
+part Q403 unit 1 sheet / uuid 8f793adc-560b-454a-a802-f1a3f56faab8 at 222.25,57.15 rot 90 mirror x
+part Q403 value = text BSS138 @ sch i2c_segments.kicad_sch note "from the Value field"
+part Q404 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c_segments.kicad_sch
+part Q404 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c_segments.kicad_sch
+part Q404 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c_segments.kicad_sch
+part Q404 field Value = BSS138 @ sch i2c_segments.kicad_sch
+part Q404 flag dnp = no @ sch i2c_segments.kicad_sch
+part Q404 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part Q404 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part Q404 flag on_board = yes @ sch i2c_segments.kicad_sch
+part Q404 lib Transistor_FET:BSS138 sheet / symbol Transistor_FET:BSS138
+part Q404 unit 1 sheet / uuid 344a4cd9-92bf-4b42-ae5a-d24959645732 at 222.25,76.2 rot 90 mirror x
+part Q404 value = text BSS138 @ sch i2c_segments.kicad_sch note "from the Value field"
+part R401 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R401 field Value = 10K @ sch i2c_segments.kicad_sch
+part R401 flag dnp = no @ sch i2c_segments.kicad_sch
+part R401 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R401 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R401 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R401 lib Device:R sheet / symbol Device:R
+part R401 unit 1 sheet / uuid db558b9b-d1c6-416f-b6e0-86752881e6c1 at 147.32,64.77 rot 0
+part R401 value = text 10K @ sch i2c_segments.kicad_sch note "from the Value field"
+part R402 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R402 field Value = 10K @ sch i2c_segments.kicad_sch
+part R402 flag dnp = no @ sch i2c_segments.kicad_sch
+part R402 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R402 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R402 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R402 lib Device:R sheet / symbol Device:R
+part R402 unit 1 sheet / uuid 4ad0e533-851d-4845-9c67-373be976022d at 147.32,100.33 rot 0
+part R402 value = text 10K @ sch i2c_segments.kicad_sch note "from the Value field"
+part R403 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R403 field Value = 10K @ sch i2c_segments.kicad_sch
+part R403 flag dnp = no @ sch i2c_segments.kicad_sch
+part R403 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R403 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R403 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R403 lib Device:R sheet / symbol Device:R
+part R403 unit 1 sheet / uuid 28213184-22b9-4c74-b9ef-167bf31565a4 at 157.48,64.77 rot 0
+part R403 value = text 10K @ sch i2c_segments.kicad_sch note "from the Value field"
+part R404 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R404 field Value = 10K @ sch i2c_segments.kicad_sch
+part R404 flag dnp = no @ sch i2c_segments.kicad_sch
+part R404 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R404 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R404 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R404 lib Device:R sheet / symbol Device:R
+part R404 unit 1 sheet / uuid cb48bcbd-7538-4527-b856-72d688cb58af at 157.48,100.33 rot 0
+part R404 value = text 10K @ sch i2c_segments.kicad_sch note "from the Value field"
+part R405 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R405 field Value = 0 @ sch i2c_segments.kicad_sch
+part R405 flag dnp = no @ sch i2c_segments.kicad_sch
+part R405 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R405 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R405 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R405 lib Device:R sheet / symbol Device:R
+part R405 unit 1 sheet / uuid b6a09870-a05a-4767-b39a-8f4a44d92e2b at 182.88,119.38 rot 90
+part R405 value = text 0 @ sch i2c_segments.kicad_sch note "from the Value field"
+part R406 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R406 field Value = 0 @ sch i2c_segments.kicad_sch
+part R406 flag dnp = no @ sch i2c_segments.kicad_sch
+part R406 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R406 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R406 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R406 lib Device:R sheet / symbol Device:R
+part R406 unit 1 sheet / uuid a30c07f7-f111-49a0-9da3-3f38a26820bf at 182.88,121.92 rot 90
+part R406 value = text 0 @ sch i2c_segments.kicad_sch note "from the Value field"
+part R407 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R407 field Value = 2K2 @ sch i2c_segments.kicad_sch
+part R407 flag dnp = no @ sch i2c_segments.kicad_sch
+part R407 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R407 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R407 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R407 lib Device:R sheet / symbol Device:R
+part R407 unit 1 sheet / uuid 24ac2411-1d53-47bd-a974-34538e802693 at 231.14,149.86 rot 0
+part R407 value = text 2K2 @ sch i2c_segments.kicad_sch note "from the Value field"
+part R408 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R408 field Value = 2K2 @ sch i2c_segments.kicad_sch
+part R408 flag dnp = no @ sch i2c_segments.kicad_sch
+part R408 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R408 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R408 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R408 lib Device:R sheet / symbol Device:R
+part R408 unit 1 sheet / uuid 5dec4617-7942-48bc-a411-b01b77d452f3 at 241.3,149.86 rot 0
+part R408 value = text 2K2 @ sch i2c_segments.kicad_sch note "from the Value field"
+part R409 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R409 field Value = 3K3 @ sch i2c_segments.kicad_sch
+part R409 flag dnp = no @ sch i2c_segments.kicad_sch
+part R409 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R409 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R409 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R409 lib Device:R sheet / symbol Device:R
+part R409 unit 1 sheet / uuid e609dd63-e306-40d2-9898-74fba7f5306f at 242.57,52.07 rot 0
+part R409 value = text 3K3 @ sch i2c_segments.kicad_sch note "from the Value field"
+part R410 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R410 field Value = 4K7 @ sch i2c_segments.kicad_sch
+part R410 flag dnp = no @ sch i2c_segments.kicad_sch
+part R410 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R410 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R410 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R410 lib Device:R sheet / symbol Device:R
+part R410 unit 1 sheet / uuid 34b6c37a-719d-42a3-b20d-96287dab309a at 243.84,196.85 rot 0
+part R410 value = text 4K7 @ sch i2c_segments.kicad_sch note "from the Value field"
+part R411 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R411 field Value = 3K3 @ sch i2c_segments.kicad_sch
+part R411 flag dnp = no @ sch i2c_segments.kicad_sch
+part R411 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R411 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R411 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R411 lib Device:R sheet / symbol Device:R
+part R411 unit 1 sheet / uuid 4aabdadc-16b2-4648-bc8f-efcd3676b0b9 at 252.73,52.07 rot 0
+part R411 value = text 3K3 @ sch i2c_segments.kicad_sch note "from the Value field"
+part R412 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R412 field Value = 4K7 @ sch i2c_segments.kicad_sch
+part R412 flag dnp = no @ sch i2c_segments.kicad_sch
+part R412 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R412 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R412 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R412 lib Device:R sheet / symbol Device:R
+part R412 unit 1 sheet / uuid 2c00ddb7-743c-490f-a091-37a1f5eeece6 at 254,196.85 rot 0
+part R412 value = text 4K7 @ sch i2c_segments.kicad_sch note "from the Value field"
+part R413 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R413 field Value = 10R @ sch i2c_segments.kicad_sch
+part R413 flag dnp = no @ sch i2c_segments.kicad_sch
+part R413 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R413 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R413 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R413 lib Device:R sheet / symbol Device:R
+part R413 unit 1 sheet / uuid ae0cf0d2-41d3-4c30-80ac-148af8fa4848 at 182.88,251.46 rot 90
+part R413 value = qty 10 ohm @ sch i2c_segments.kicad_sch note "from the Value field"
+part R414 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R414 field Value = 1K @ sch i2c_segments.kicad_sch
+part R414 flag dnp = no @ sch i2c_segments.kicad_sch
+part R414 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R414 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R414 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R414 lib Device:R sheet / symbol Device:R
+part R414 unit 1 sheet / uuid a4aa93f6-2b2a-4e4d-807b-67617fc02332 at 182.88,254 rot 90
+part R414 value = text 1K @ sch i2c_segments.kicad_sch note "from the Value field"
+part R415 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R415 field Value = 4K7 @ sch i2c_segments.kicad_sch
+part R415 flag dnp = no @ sch i2c_segments.kicad_sch
+part R415 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R415 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R415 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R415 lib Device:R sheet / symbol Device:R
+part R415 unit 1 sheet / uuid a4776743-b5c4-45f6-bcc1-a45c93867582 at 201.93,243.84 rot 0
+part R415 value = text 4K7 @ sch i2c_segments.kicad_sch note "from the Value field"
+part R416 field Description = Resistor @ sch i2c_segments.kicad_sch
+part R416 field Value = 4K7 @ sch i2c_segments.kicad_sch
+part R416 flag dnp = no @ sch i2c_segments.kicad_sch
+part R416 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part R416 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part R416 flag on_board = yes @ sch i2c_segments.kicad_sch
+part R416 lib Device:R sheet / symbol Device:R
+part R416 unit 1 sheet / uuid 7ffb8bfd-c0da-4a18-83b8-32fa93e4f8ff at 212.09,243.84 rot 0
+part R416 value = text 4K7 @ sch i2c_segments.kicad_sch note "from the Value field"
+part U401 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c_segments.kicad_sch
+part U401 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c_segments.kicad_sch
+part U401 field Footprint = Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm @ sch i2c_segments.kicad_sch
+part U401 field Value = STM32F030F4Px @ sch i2c_segments.kicad_sch
+part U401 flag dnp = no @ sch i2c_segments.kicad_sch
+part U401 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part U401 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part U401 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U401 lib MCU_ST_STM32F0:STM32F030F4Px sheet / symbol MCU_ST_STM32F0:STM32F030F4Px
+part U401 unit 1 sheet / uuid 8c3f90d4-3c39-4cf2-9498-1eda9c5ba221 at 87.63,73.66 rot 0
+part U401 value = text STM32F030F4Px @ sch i2c_segments.kicad_sch note "from the Value field"
+part U402 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_segments.kicad_sch
+part U402 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_segments.kicad_sch
+part U402 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_segments.kicad_sch
+part U402 field Value = PCA9536DP @ sch i2c_segments.kicad_sch
+part U402 flag dnp = no @ sch i2c_segments.kicad_sch
+part U402 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part U402 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part U402 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U402 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
+part U402 unit 1 sheet / uuid aa0e9c73-c302-4300-af36-47f3da10ae38 at 190.5,83.82 rot 0
+part U402 value = text PCA9536DP @ sch i2c_segments.kicad_sch note "from the Value field"
+part U403 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_segments.kicad_sch
+part U403 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_segments.kicad_sch
+part U403 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_segments.kicad_sch
+part U403 field Value = PCA9536DP @ sch i2c_segments.kicad_sch
+part U403 flag dnp = no @ sch i2c_segments.kicad_sch
+part U403 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part U403 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part U403 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U403 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
+part U403 unit 1 sheet / uuid 6b0e8400-2f4d-4874-8403-628486744bfd at 210.82,116.84 rot 0
+part U403 value = text PCA9536DP @ sch i2c_segments.kicad_sch note "from the Value field"
+part U404 field Datasheet = http://www.ti.com/lit/ds/symlink/pca9306.pdf @ sch i2c_segments.kicad_sch
+part U404 field Description = "Dual bidirectional I2C Bus and SMBus voltage level translator" @ sch i2c_segments.kicad_sch
+part U404 field Value = PCA9306 @ sch i2c_segments.kicad_sch
+part U404 flag dnp = no @ sch i2c_segments.kicad_sch
+part U404 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part U404 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part U404 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U404 lib Interface:PCA9306 sheet / symbol Interface:PCA9306
+part U404 unit 1 sheet / uuid fb1ae9b3-78b1-4734-979d-8c59e3e214d6 at 210.82,204.47 rot 0
+part U404 value = text PCA9306 @ sch i2c_segments.kicad_sch note "from the Value field"
+part U405 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_segments.kicad_sch
+part U405 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_segments.kicad_sch
+part U405 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_segments.kicad_sch
+part U405 field Value = PCA9536DP @ sch i2c_segments.kicad_sch
+part U405 flag dnp = no @ sch i2c_segments.kicad_sch
+part U405 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part U405 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part U405 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U405 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
+part U405 unit 1 sheet / uuid 1ab5acfc-041f-4aa5-9f9a-fbffe3d2903f at 276.86,154.94 rot 0
+part U405 value = text PCA9536DP @ sch i2c_segments.kicad_sch note "from the Value field"
+part U406 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_segments.kicad_sch
+part U406 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_segments.kicad_sch
+part U406 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_segments.kicad_sch
+part U406 field Value = PCA9536DP @ sch i2c_segments.kicad_sch
+part U406 flag dnp = no @ sch i2c_segments.kicad_sch
+part U406 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part U406 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part U406 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U406 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
+part U406 unit 1 sheet / uuid 7c4bb93f-14a9-46ba-8b20-d129dd1b1dc0 at 288.29,57.15 rot 0
+part U406 value = text PCA9536DP @ sch i2c_segments.kicad_sch note "from the Value field"
+part U407 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_segments.kicad_sch
+part U407 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_segments.kicad_sch
+part U407 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_segments.kicad_sch
+part U407 field Value = PCA9536DP @ sch i2c_segments.kicad_sch
+part U407 flag dnp = no @ sch i2c_segments.kicad_sch
+part U407 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part U407 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part U407 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U407 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
+part U407 unit 1 sheet / uuid 3c1c5e4e-e1b6-4c5e-a884-0c1c12ed1609 at 289.56,201.93 rot 0
+part U407 value = text PCA9536DP @ sch i2c_segments.kicad_sch note "from the Value field"
+part U408 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_segments.kicad_sch
+part U408 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_segments.kicad_sch
+part U408 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_segments.kicad_sch
+part U408 field Value = PCA9536DP @ sch i2c_segments.kicad_sch
+part U408 flag dnp = no @ sch i2c_segments.kicad_sch
+part U408 flag exclude_from_sim = no @ sch i2c_segments.kicad_sch
+part U408 flag in_bom = yes @ sch i2c_segments.kicad_sch
+part U408 flag on_board = yes @ sch i2c_segments.kicad_sch
+part U408 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
+part U408 unit 1 sheet / uuid 0aa8cbb2-6a1e-4cfa-bdd3-9568fbf29177 at 233.68,248.92 rot 0
+part U408 value = text PCA9536DP @ sch i2c_segments.kicad_sch note "from the Value field"
+pin J401 1 name Pin_1 unit 1 net /SDA2_3V3
+pin J401 1 type = passive @ sch i2c_segments.kicad_sch
+pin J401 2 name Pin_2 unit 1 net /SCL2_3V3
+pin J401 2 type = passive @ sch i2c_segments.kicad_sch
+pin J401 3 name Pin_3 unit 1 net GND
+pin J401 3 type = passive @ sch i2c_segments.kicad_sch
+pin Q401 1 name G unit 1 net VCC2_3V3
+pin Q401 1 type = input @ sch i2c_segments.kicad_sch
+pin Q401 2 name S unit 1 net /SDA1_3V3_VCC2
+pin Q401 2 type = passive @ sch i2c_segments.kicad_sch
+pin Q401 3 name D unit 1 net /SDA1_3V3
+pin Q401 3 type = passive @ sch i2c_segments.kicad_sch
+pin Q402 1 name G unit 1 net VCC2_3V3
+pin Q402 1 type = input @ sch i2c_segments.kicad_sch
+pin Q402 2 name S unit 1 net /SCL1_3V3_VCC2
+pin Q402 2 type = passive @ sch i2c_segments.kicad_sch
+pin Q402 3 name D unit 1 net /SCL1_3V3
+pin Q402 3 type = passive @ sch i2c_segments.kicad_sch
+pin Q403 1 name G unit 1 net VCC_1V8
+pin Q403 1 type = input @ sch i2c_segments.kicad_sch
+pin Q403 2 name S unit 1 net /SDA1_1V8
+pin Q403 2 type = passive @ sch i2c_segments.kicad_sch
+pin Q403 3 name D unit 1 net /SDA1_3V3
+pin Q403 3 type = passive @ sch i2c_segments.kicad_sch
+pin Q404 1 name G unit 1 net VCC_1V8
+pin Q404 1 type = input @ sch i2c_segments.kicad_sch
+pin Q404 2 name S unit 1 net /SCL1_1V8
+pin Q404 2 type = passive @ sch i2c_segments.kicad_sch
+pin Q404 3 name D unit 1 net /SCL1_3V3
+pin Q404 3 type = passive @ sch i2c_segments.kicad_sch
+pin R401 1 name ~ unit 1 net VCC_3V3
+pin R401 1 type = passive @ sch i2c_segments.kicad_sch
+pin R401 2 name ~ unit 1 net /SCL1_3V3
+pin R401 2 type = passive @ sch i2c_segments.kicad_sch
+pin R402 1 name ~ unit 1 net /SDA2_EN
+pin R402 1 type = passive @ sch i2c_segments.kicad_sch
+pin R402 2 name ~ unit 1 net /SDA2_3V3
+pin R402 2 type = passive @ sch i2c_segments.kicad_sch
+pin R403 1 name ~ unit 1 net VCC_3V3
+pin R403 1 type = passive @ sch i2c_segments.kicad_sch
+pin R403 2 name ~ unit 1 net /SDA1_3V3
+pin R403 2 type = passive @ sch i2c_segments.kicad_sch
+pin R404 1 name ~ unit 1 net /SDA2_EN
+pin R404 1 type = passive @ sch i2c_segments.kicad_sch
+pin R404 2 name ~ unit 1 net /SCL2_3V3
+pin R404 2 type = passive @ sch i2c_segments.kicad_sch
+pin R405 1 name ~ unit 1 net /SDA1_3V3
+pin R405 1 type = passive @ sch i2c_segments.kicad_sch
+pin R405 2 name ~ unit 1 net /SDA_U7
+pin R405 2 type = passive @ sch i2c_segments.kicad_sch
+pin R406 1 name ~ unit 1 net /SCL1_3V3
+pin R406 1 type = passive @ sch i2c_segments.kicad_sch
+pin R406 2 name ~ unit 1 net /SCL_U7
+pin R406 2 type = passive @ sch i2c_segments.kicad_sch
+pin R407 1 name ~ unit 1 net VCC2_3V3
+pin R407 1 type = passive @ sch i2c_segments.kicad_sch
+pin R407 2 name ~ unit 1 net /SDA1_3V3_VCC2
+pin R407 2 type = passive @ sch i2c_segments.kicad_sch
+pin R408 1 name ~ unit 1 net VCC2_3V3
+pin R408 1 type = passive @ sch i2c_segments.kicad_sch
+pin R408 2 name ~ unit 1 net /SCL1_3V3_VCC2
+pin R408 2 type = passive @ sch i2c_segments.kicad_sch
+pin R409 1 name ~ unit 1 net VCC_1V8
+pin R409 1 type = passive @ sch i2c_segments.kicad_sch
+pin R409 2 name ~ unit 1 net /SDA1_1V8
+pin R409 2 type = passive @ sch i2c_segments.kicad_sch
+pin R410 1 name ~ unit 1 net VCC_1V2
+pin R410 1 type = passive @ sch i2c_segments.kicad_sch
+pin R410 2 name ~ unit 1 net /SDA1_1V2
+pin R410 2 type = passive @ sch i2c_segments.kicad_sch
+pin R411 1 name ~ unit 1 net VCC_1V8
+pin R411 1 type = passive @ sch i2c_segments.kicad_sch
+pin R411 2 name ~ unit 1 net /SCL1_1V8
+pin R411 2 type = passive @ sch i2c_segments.kicad_sch
+pin R412 1 name ~ unit 1 net VCC_1V2
+pin R412 1 type = passive @ sch i2c_segments.kicad_sch
+pin R412 2 name ~ unit 1 net /SCL1_1V2
+pin R412 2 type = passive @ sch i2c_segments.kicad_sch
+pin R413 1 name ~ unit 1 net /SDA1_3V3
+pin R413 1 type = passive @ sch i2c_segments.kicad_sch
+pin R413 2 name ~ unit 1 net /UNM1
+pin R413 2 type = passive @ sch i2c_segments.kicad_sch
+pin R414 1 name ~ unit 1 net /SCL1_3V3
+pin R414 1 type = passive @ sch i2c_segments.kicad_sch
+pin R414 2 name ~ unit 1 net /UNM2
+pin R414 2 type = passive @ sch i2c_segments.kicad_sch
+pin R415 1 name ~ unit 1 net VCC_3V3
+pin R415 1 type = passive @ sch i2c_segments.kicad_sch
+pin R415 2 name ~ unit 1 net /UNM1
+pin R415 2 type = passive @ sch i2c_segments.kicad_sch
+pin R416 1 name ~ unit 1 net VCC_3V3
+pin R416 1 type = passive @ sch i2c_segments.kicad_sch
+pin R416 2 name ~ unit 1 net /UNM2
+pin R416 2 type = passive @ sch i2c_segments.kicad_sch
+pin U401 1 name BOOT0 unit 1 net unconnected-(U401-BOOT0-Pad1)
+pin U401 1 type = input @ sch i2c_segments.kicad_sch
+pin U401 2 name PF0 unit 1 net unconnected-(U401-PF0-Pad2)
+pin U401 2 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 3 name PF1 unit 1 net unconnected-(U401-PF1-Pad3)
+pin U401 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 4 name NRST unit 1 net unconnected-(U401-NRST-Pad4)
+pin U401 4 type = input @ sch i2c_segments.kicad_sch
+pin U401 5 name VDDA unit 1 net VCC_3V3
+pin U401 5 type = power_in @ sch i2c_segments.kicad_sch
+pin U401 6 name PA0 unit 1 net /SCL_NOT_I2C
+pin U401 6 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 7 name PA1 unit 1 net /SDATA_SMTH_ELSE
+pin U401 7 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 8 name PA2 unit 1 net unconnected-(U401-PA2-Pad8)
+pin U401 8 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 9 name PA3 unit 1 net unconnected-(U401-PA3-Pad9)
+pin U401 9 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 10 name PA4 unit 1 net unconnected-(U401-PA4-Pad10)
+pin U401 10 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 11 name PA5 unit 1 net unconnected-(U401-PA5-Pad11)
+pin U401 11 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 12 name PA6 unit 1 net /SDA2_EN
+pin U401 12 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 13 name PA7 unit 1 net unconnected-(U401-PA7-Pad13)
+pin U401 13 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 14 name PB1 unit 1 net unconnected-(U401-PB1-Pad14)
+pin U401 14 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 15 name VSS unit 1 net GND
+pin U401 15 type = power_in @ sch i2c_segments.kicad_sch
+pin U401 16 name VDD unit 1 net VCC_3V3
+pin U401 16 type = power_in @ sch i2c_segments.kicad_sch
+pin U401 17 name PA9 unit 1 net /SCL1_3V3
+pin U401 17 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 18 name PA10 unit 1 net /SDA1_3V3
+pin U401 18 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 19 name PA13 unit 1 net /SCL2_3V3
+pin U401 19 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U401 20 name PA14 unit 1 net /SDA2_3V3
+pin U401 20 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U402 1 name IO0 unit 1 net unconnected-(U402-IO0-Pad1)
+pin U402 1 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U402 2 name IO1 unit 1 net unconnected-(U402-IO1-Pad2)
+pin U402 2 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U402 3 name IO2 unit 1 net unconnected-(U402-IO2-Pad3)
+pin U402 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U402 4 name VSS unit 1 net GND
+pin U402 4 type = power_in @ sch i2c_segments.kicad_sch
+pin U402 5 name IO3 unit 1 net unconnected-(U402-IO3-Pad5)
+pin U402 5 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U402 6 name SCL unit 1 net /SCL1_3V3
+pin U402 6 type = input @ sch i2c_segments.kicad_sch
+pin U402 7 name SDA unit 1 net /SDA1_3V3
+pin U402 7 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U402 8 name VDD unit 1 net VCC_3V3
+pin U402 8 type = power_in @ sch i2c_segments.kicad_sch
+pin U403 1 name IO0 unit 1 net unconnected-(U403-IO0-Pad1)
+pin U403 1 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U403 2 name IO1 unit 1 net unconnected-(U403-IO1-Pad2)
+pin U403 2 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U403 3 name IO2 unit 1 net unconnected-(U403-IO2-Pad3)
+pin U403 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U403 4 name VSS unit 1 net GND
+pin U403 4 type = power_in @ sch i2c_segments.kicad_sch
+pin U403 5 name IO3 unit 1 net unconnected-(U403-IO3-Pad5)
+pin U403 5 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U403 6 name SCL unit 1 net /SCL_U7
+pin U403 6 type = input @ sch i2c_segments.kicad_sch
+pin U403 7 name SDA unit 1 net /SDA_U7
+pin U403 7 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U403 8 name VDD unit 1 net VCC_3V3
+pin U403 8 type = power_in @ sch i2c_segments.kicad_sch
+pin U404 1 name GND unit 1 net GND
+pin U404 1 type = power_in @ sch i2c_segments.kicad_sch
+pin U404 2 name VREF1 unit 1 net VCC_3V3
+pin U404 2 type = power_in @ sch i2c_segments.kicad_sch
+pin U404 3 name SCL1 unit 1 net /SCL1_3V3
+pin U404 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U404 4 name SDA1 unit 1 net /SDA1_3V3
+pin U404 4 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U404 5 name SDA2 unit 1 net /SDA1_1V2
+pin U404 5 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U404 6 name SCL2 unit 1 net /SCL1_1V2
+pin U404 6 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U404 7 name VREF2 unit 1 net VCC_1V2
+pin U404 7 type = power_in @ sch i2c_segments.kicad_sch
+pin U404 8 name EN unit 1 net unconnected-(U404-EN-Pad8)
+pin U404 8 type = input @ sch i2c_segments.kicad_sch
+pin U405 1 name IO0 unit 1 net unconnected-(U405-IO0-Pad1)
+pin U405 1 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U405 2 name IO1 unit 1 net unconnected-(U405-IO1-Pad2)
+pin U405 2 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U405 3 name IO2 unit 1 net unconnected-(U405-IO2-Pad3)
+pin U405 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U405 4 name VSS unit 1 net GND
+pin U405 4 type = power_in @ sch i2c_segments.kicad_sch
+pin U405 5 name IO3 unit 1 net unconnected-(U405-IO3-Pad5)
+pin U405 5 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U405 6 name SCL unit 1 net /SCL1_3V3_VCC2
+pin U405 6 type = input @ sch i2c_segments.kicad_sch
+pin U405 7 name SDA unit 1 net /SDA1_3V3_VCC2
+pin U405 7 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U405 8 name VDD unit 1 net VCC2_3V3
+pin U405 8 type = power_in @ sch i2c_segments.kicad_sch
+pin U406 1 name IO0 unit 1 net unconnected-(U406-IO0-Pad1)
+pin U406 1 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U406 2 name IO1 unit 1 net unconnected-(U406-IO1-Pad2)
+pin U406 2 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U406 3 name IO2 unit 1 net unconnected-(U406-IO2-Pad3)
+pin U406 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U406 4 name VSS unit 1 net GND
+pin U406 4 type = power_in @ sch i2c_segments.kicad_sch
+pin U406 5 name IO3 unit 1 net unconnected-(U406-IO3-Pad5)
+pin U406 5 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U406 6 name SCL unit 1 net /SCL1_1V8
+pin U406 6 type = input @ sch i2c_segments.kicad_sch
+pin U406 7 name SDA unit 1 net /SDA1_1V8
+pin U406 7 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U406 8 name VDD unit 1 net VCC_1V8
+pin U406 8 type = power_in @ sch i2c_segments.kicad_sch
+pin U407 1 name IO0 unit 1 net unconnected-(U407-IO0-Pad1)
+pin U407 1 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U407 2 name IO1 unit 1 net unconnected-(U407-IO1-Pad2)
+pin U407 2 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U407 3 name IO2 unit 1 net unconnected-(U407-IO2-Pad3)
+pin U407 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U407 4 name VSS unit 1 net GND
+pin U407 4 type = power_in @ sch i2c_segments.kicad_sch
+pin U407 5 name IO3 unit 1 net unconnected-(U407-IO3-Pad5)
+pin U407 5 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U407 6 name SCL unit 1 net /SCL1_1V2
+pin U407 6 type = input @ sch i2c_segments.kicad_sch
+pin U407 7 name SDA unit 1 net /SDA1_1V2
+pin U407 7 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U407 8 name VDD unit 1 net VCC_1V2
+pin U407 8 type = power_in @ sch i2c_segments.kicad_sch
+pin U408 1 name IO0 unit 1 net unconnected-(U408-IO0-Pad1)
+pin U408 1 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U408 2 name IO1 unit 1 net unconnected-(U408-IO1-Pad2)
+pin U408 2 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U408 3 name IO2 unit 1 net unconnected-(U408-IO2-Pad3)
+pin U408 3 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U408 4 name VSS unit 1 net GND
+pin U408 4 type = power_in @ sch i2c_segments.kicad_sch
+pin U408 5 name IO3 unit 1 net unconnected-(U408-IO3-Pad5)
+pin U408 5 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U408 6 name SCL unit 1 net /UNM2
+pin U408 6 type = input @ sch i2c_segments.kicad_sch
+pin U408 7 name SDA unit 1 net /UNM1
+pin U408 7 type = bidirectional @ sch i2c_segments.kicad_sch
+pin U408 8 name VDD unit 1 net VCC_3V3
+pin U408 8 type = power_in @ sch i2c_segments.kicad_sch
+sheet / name "" file i2c_segments.kicad_sch uuid /
+source file i2c_segments.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:Conn_01x03_Pin description "Generic connector, single row, 01x03, script generated"
+symbol Connector:Conn_01x03_Pin field Datasheet ~
+symbol Connector:Conn_01x03_Pin field Description "Generic connector, single row, 01x03, script generated"
+symbol Connector:Conn_01x03_Pin field Reference J
+symbol Connector:Conn_01x03_Pin field Value Conn_01x03_Pin
+symbol Connector:Conn_01x03_Pin fp-filter Connector*:*_1x??_*
+symbol Connector:Conn_01x03_Pin hash 2f5b1b54b0ed4842
+symbol Connector:Conn_01x03_Pin keywords connector
+symbol Connector:Conn_01x03_Pin pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector:Conn_01x03_Pin pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector:Conn_01x03_Pin pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector:Conn_01x03_Pin units 1
+symbol Device:R description Resistor
+symbol Device:R field Datasheet ~
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R fp-filter R_*
+symbol Device:R hash 87aa0c9880114c8e
+symbol Device:R keywords "R res resistor"
+symbol Device:R pin 1 unit 1 body 1 name ~ type passive style line
+symbol Device:R pin 2 unit 1 body 1 name ~ type passive style line
+symbol Device:R units 1
+symbol Interface:PCA9306 description "Dual bidirectional I2C Bus and SMBus voltage level translator"
+symbol Interface:PCA9306 field Datasheet http://www.ti.com/lit/ds/symlink/pca9306.pdf
+symbol Interface:PCA9306 field Description "Dual bidirectional I2C Bus and SMBus voltage level translator"
+symbol Interface:PCA9306 field Reference U
+symbol Interface:PCA9306 field Value PCA9306
+symbol Interface:PCA9306 fp-filter SSOP*2.95x2.8mm*P0.65mm*
+symbol Interface:PCA9306 fp-filter VSSOP*2.3x2mm*P0.5mm*
+symbol Interface:PCA9306 fp-filter X2SON*1.4x1mm*P0.35mm*
+symbol Interface:PCA9306 hash 92a0b19728ab7619
+symbol Interface:PCA9306 keywords "Dual bidirectional I2C Bus and SMBus voltage level translator"
+symbol Interface:PCA9306 pin 1 unit 1 body 1 name GND type power_in style line
+symbol Interface:PCA9306 pin 2 unit 1 body 1 name VREF1 type power_in style line
+symbol Interface:PCA9306 pin 3 unit 1 body 1 name SCL1 type bidirectional style line
+symbol Interface:PCA9306 pin 4 unit 1 body 1 name SDA1 type bidirectional style line
+symbol Interface:PCA9306 pin 5 unit 1 body 1 name SDA2 type bidirectional style line
+symbol Interface:PCA9306 pin 6 unit 1 body 1 name SCL2 type bidirectional style line
+symbol Interface:PCA9306 pin 7 unit 1 body 1 name VREF2 type power_in style line
+symbol Interface:PCA9306 pin 8 unit 1 body 1 name EN type input style line
+symbol Interface:PCA9306 units 1
+symbol Interface_Expansion:PCA9536DP description "4-bit I2C-bus and SMBus IO port, TSSOP-8"
+symbol Interface_Expansion:PCA9536DP field Datasheet http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf
+symbol Interface_Expansion:PCA9536DP field Description "4-bit I2C-bus and SMBus IO port, TSSOP-8"
+symbol Interface_Expansion:PCA9536DP field Footprint Package_SO:TSSOP-8_3x3mm_P0.65mm
+symbol Interface_Expansion:PCA9536DP field Reference U
+symbol Interface_Expansion:PCA9536DP field Value PCA9536DP
+symbol Interface_Expansion:PCA9536DP fp-filter TSSOP*3x3mm*P0.65mm*
+symbol Interface_Expansion:PCA9536DP hash 95f3010e788280d7
+symbol Interface_Expansion:PCA9536DP keywords "i2c io port"
+symbol Interface_Expansion:PCA9536DP pin 1 unit 1 body 1 name IO0 type bidirectional style line
+symbol Interface_Expansion:PCA9536DP pin 2 unit 1 body 1 name IO1 type bidirectional style line
+symbol Interface_Expansion:PCA9536DP pin 3 unit 1 body 1 name IO2 type bidirectional style line
+symbol Interface_Expansion:PCA9536DP pin 4 unit 1 body 1 name VSS type power_in style line
+symbol Interface_Expansion:PCA9536DP pin 5 unit 1 body 1 name IO3 type bidirectional style line
+symbol Interface_Expansion:PCA9536DP pin 6 unit 1 body 1 name SCL type input style line
+symbol Interface_Expansion:PCA9536DP pin 7 unit 1 body 1 name SDA type bidirectional style line
+symbol Interface_Expansion:PCA9536DP pin 8 unit 1 body 1 name VDD type power_in style line
+symbol Interface_Expansion:PCA9536DP units 1
+symbol MCU_ST_STM32F0:STM32F030F4Px description "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20"
+symbol MCU_ST_STM32F0:STM32F030F4Px field Datasheet https://www.st.com/resource/en/datasheet/stm32f030f4.pdf
+symbol MCU_ST_STM32F0:STM32F030F4Px field Description "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20"
+symbol MCU_ST_STM32F0:STM32F030F4Px field Footprint Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm
+symbol MCU_ST_STM32F0:STM32F030F4Px field Reference U
+symbol MCU_ST_STM32F0:STM32F030F4Px field Value STM32F030F4Px
+symbol MCU_ST_STM32F0:STM32F030F4Px fp-filter TSSOP*4.4x6.5mm*P0.65mm*
+symbol MCU_ST_STM32F0:STM32F030F4Px hash d26785c4d0152d59
+symbol MCU_ST_STM32F0:STM32F030F4Px keywords "Arm Cortex-M0 STM32F0 STM32F0x0 Value Line"
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 1 unit 1 body 1 name BOOT0 type input style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 2 unit 1 body 1 alt RCC_OSC_IN type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 2 unit 1 body 1 name PF0 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 3 unit 1 body 1 alt RCC_OSC_OUT type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 3 unit 1 body 1 name PF1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 4 unit 1 body 1 name NRST type input style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 5 unit 1 body 1 name VDDA type power_in style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 6 unit 1 body 1 alt ADC_IN0 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 6 unit 1 body 1 alt RTC_TAMP2 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 6 unit 1 body 1 alt SYS_WKUP1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 6 unit 1 body 1 alt USART1_CTS type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 6 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 7 unit 1 body 1 alt ADC_IN1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 7 unit 1 body 1 alt USART1_DE type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 7 unit 1 body 1 alt USART1_RTS type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 7 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 8 unit 1 body 1 alt ADC_IN2 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 8 unit 1 body 1 alt USART1_TX type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 8 unit 1 body 1 name PA2 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 9 unit 1 body 1 alt ADC_IN3 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 9 unit 1 body 1 alt USART1_RX type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 9 unit 1 body 1 name PA3 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 10 unit 1 body 1 alt ADC_IN4 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 10 unit 1 body 1 alt SPI1_NSS type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 10 unit 1 body 1 alt TIM14_CH1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 10 unit 1 body 1 alt USART1_CK type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 10 unit 1 body 1 name PA4 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 11 unit 1 body 1 alt ADC_IN5 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 11 unit 1 body 1 alt SPI1_SCK type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 11 unit 1 body 1 name PA5 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 12 unit 1 body 1 alt ADC_IN6 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 12 unit 1 body 1 alt SPI1_MISO type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 12 unit 1 body 1 alt TIM1_BKIN type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 12 unit 1 body 1 alt TIM3_CH1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 12 unit 1 body 1 alt TIM16_CH1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 12 unit 1 body 1 name PA6 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 13 unit 1 body 1 alt ADC_IN7 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 13 unit 1 body 1 alt SPI1_MOSI type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 13 unit 1 body 1 alt TIM1_CH1N type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 13 unit 1 body 1 alt TIM3_CH2 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 13 unit 1 body 1 alt TIM14_CH1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 13 unit 1 body 1 alt TIM17_CH1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 13 unit 1 body 1 name PA7 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 14 unit 1 body 1 alt ADC_IN9 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 14 unit 1 body 1 alt TIM1_CH3N type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 14 unit 1 body 1 alt TIM3_CH4 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 14 unit 1 body 1 alt TIM14_CH1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 14 unit 1 body 1 name PB1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 15 unit 1 body 1 name VSS type power_in style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 16 unit 1 body 1 name VDD type power_in style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 17 unit 1 body 1 alt I2C1_SCL type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 17 unit 1 body 1 alt TIM1_CH2 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 17 unit 1 body 1 alt USART1_TX type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 17 unit 1 body 1 name PA9 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 18 unit 1 body 1 alt I2C1_SDA type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 18 unit 1 body 1 alt TIM1_CH3 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 18 unit 1 body 1 alt TIM17_BKIN type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 18 unit 1 body 1 alt USART1_RX type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 18 unit 1 body 1 name PA10 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 19 unit 1 body 1 alt IR_OUT type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 19 unit 1 body 1 alt SYS_SWDIO type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 19 unit 1 body 1 name PA13 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 20 unit 1 body 1 alt SYS_SWCLK type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 20 unit 1 body 1 alt USART1_TX type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 20 unit 1 body 1 name PA14 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px units 1
+symbol Transistor_FET:BSS138 description "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23"
+symbol Transistor_FET:BSS138 field Datasheet https://www.onsemi.com/pub/Collateral/BSS138-D.PDF
+symbol Transistor_FET:BSS138 field Description "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23"
+symbol Transistor_FET:BSS138 field Footprint Package_TO_SOT_SMD:SOT-23
+symbol Transistor_FET:BSS138 field Reference Q
+symbol Transistor_FET:BSS138 field Value BSS138
+symbol Transistor_FET:BSS138 fp-filter SOT?23*
+symbol Transistor_FET:BSS138 hash f4d1cbc570be4161
+symbol Transistor_FET:BSS138 keywords "N-Channel MOSFET"
+symbol Transistor_FET:BSS138 pin 1 unit 1 body 1 name G type input style line
+symbol Transistor_FET:BSS138 pin 2 unit 1 body 1 name S type passive style line
+symbol Transistor_FET:BSS138 pin 3 unit 1 body 1 name D type passive style line
+symbol Transistor_FET:BSS138 units 1
+symbol power:GND description "Power symbol creates a global label with name \"GND\" , ground"
+symbol power:GND field Description "Power symbol creates a global label with name \"GND\" , ground"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash 161db5076481e95b
+symbol power:GND keywords "global power"
+symbol power:GND pin 1 unit 1 body 1 name ~ type power_in style line
+symbol power:GND units 1 power global
+symbol power:VCC description "Power symbol creates a global label with name \"VCC\""
+symbol power:VCC field Description "Power symbol creates a global label with name \"VCC\""
+symbol power:VCC field Reference "#PWR"
+symbol power:VCC field Value VCC
+symbol power:VCC hash 042cb09b0b5eeabc
+symbol power:VCC keywords "global power"
+symbol power:VCC pin 1 unit 1 body 1 name ~ type power_in style line
+symbol power:VCC units 1 power global

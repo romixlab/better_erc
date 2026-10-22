@@ -1,0 +1,511 @@
+board i2c_multiple_pull_ups
+label / local SCL1_1V8 at 50.8,190.5 net /SCL1_1V8
+label / local SCL1_1V8 at 222.25,49.53 net /SCL1_1V8
+label / local SCL1_3V3 at 80.01,66.04 net /SCL1_3V3
+label / local SCL_U7 at 149.86,109.22 net /SCL_U7
+label / local SDA1_1V8 at 50.8,187.96 net /SDA1_1V8
+label / local SDA1_1V8 at 87.63,187.96 net /SDA1_1V8
+label / local SDA1_1V8 at 222.25,46.99 net /SDA1_1V8
+label / local SDA1_3V3 at 80.01,68.58 net /SDA1_3V3
+label / local SDA_U7 at 149.86,106.68 net /SDA_U7
+label / power GND at 48.26,85.09 net GND
+label / power GND at 151.13,85.09 net GND
+label / power GND at 204.47,118.11 net GND
+label / power GND at 248.92,58.42 net GND
+label / power VCC_1V8 at 25.4,175.26 net VCC_1V8
+label / power VCC_1V8 at 35.56,175.26 net VCC_1V8
+label / power VCC_1V8 at 72.39,175.26 net VCC_1V8
+label / power VCC_1V8 at 182.88,36.83 net VCC_1V8
+label / power VCC_1V8 at 182.88,55.88 net VCC_1V8
+label / power VCC_1V8 at 203.2,33.02 net VCC_1V8
+label / power VCC_1V8 at 213.36,33.02 net VCC_1V8
+label / power VCC_1V8 at 248.92,33.02 net VCC_1V8
+label / power VCC_3V3 at 48.26,36.83 net VCC_3V3
+label / power VCC_3V3 at 107.95,45.72 net VCC_3V3
+label / power VCC_3V3 at 118.11,45.72 net VCC_3V3
+label / power VCC_3V3 at 151.13,59.69 net VCC_3V3
+label / power VCC_3V3 at 171.45,86.36 net VCC_3V3
+label / power VCC_3V3 at 181.61,86.36 net VCC_3V3
+label / power VCC_3V3 at 204.47,92.71 net VCC_3V3
+net /SCL1_1V8 kind named
+net /SCL1_3V3 kind named
+net /SCL_U7 kind named
+net /SDA1_1V8 kind named
+net /SDA1_3V3 kind named
+net /SDA_U7 kind named
+net GND kind power
+net VCC_1V8 kind power
+net VCC_3V3 kind power
+net unconnected-(U501-BOOT0-Pad1) kind unconnected
+net unconnected-(U501-NRST-Pad4) kind unconnected
+net unconnected-(U501-PA0-Pad6) kind unconnected
+net unconnected-(U501-PA1-Pad7) kind unconnected
+net unconnected-(U501-PA2-Pad8) kind unconnected
+net unconnected-(U501-PA3-Pad9) kind unconnected
+net unconnected-(U501-PA4-Pad10) kind unconnected
+net unconnected-(U501-PA5-Pad11) kind unconnected
+net unconnected-(U501-PA6-Pad12) kind unconnected
+net unconnected-(U501-PA7-Pad13) kind unconnected
+net unconnected-(U501-PA13-Pad19) kind unconnected
+net unconnected-(U501-PA14-Pad20) kind unconnected
+net unconnected-(U501-PB1-Pad14) kind unconnected
+net unconnected-(U501-PF0-Pad2) kind unconnected
+net unconnected-(U501-PF1-Pad3) kind unconnected
+net unconnected-(U502-IO0-Pad1) kind unconnected
+net unconnected-(U502-IO1-Pad2) kind unconnected
+net unconnected-(U502-IO2-Pad3) kind unconnected
+net unconnected-(U502-IO3-Pad5) kind unconnected
+net unconnected-(U503-IO0-Pad1) kind unconnected
+net unconnected-(U503-IO1-Pad2) kind unconnected
+net unconnected-(U503-IO2-Pad3) kind unconnected
+net unconnected-(U503-IO3-Pad5) kind unconnected
+net unconnected-(U506-IO0-Pad1) kind unconnected
+net unconnected-(U506-IO1-Pad2) kind unconnected
+net unconnected-(U506-IO2-Pad3) kind unconnected
+net unconnected-(U506-IO3-Pad5) kind unconnected
+part Q503 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c_multiple_pull_ups.kicad_sch
+part Q503 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c_multiple_pull_ups.kicad_sch
+part Q503 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c_multiple_pull_ups.kicad_sch
+part Q503 field Value = BSS138 @ sch i2c_multiple_pull_ups.kicad_sch
+part Q503 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part Q503 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part Q503 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part Q503 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part Q503 lib Transistor_FET:BSS138 sheet / symbol Transistor_FET:BSS138
+part Q503 unit 1 sheet / uuid 739b1668-d67f-4347-80d3-1fd864342266 at 182.88,44.45 rot 90 mirror x
+part Q503 value = text BSS138 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part Q504 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c_multiple_pull_ups.kicad_sch
+part Q504 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c_multiple_pull_ups.kicad_sch
+part Q504 field Footprint = Package_TO_SOT_SMD:SOT-23 @ sch i2c_multiple_pull_ups.kicad_sch
+part Q504 field Value = BSS138 @ sch i2c_multiple_pull_ups.kicad_sch
+part Q504 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part Q504 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part Q504 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part Q504 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part Q504 lib Transistor_FET:BSS138 sheet / symbol Transistor_FET:BSS138
+part Q504 unit 1 sheet / uuid 08831d71-cc78-4436-8e7d-b98012f3827f at 182.88,63.5 rot 90 mirror x
+part Q504 value = text BSS138 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part R501 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
+part R501 field Value = 10K @ sch i2c_multiple_pull_ups.kicad_sch
+part R501 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R501 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R501 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R501 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R501 lib Device:R sheet / symbol Device:R
+part R501 unit 1 sheet / uuid 42f93148-02c1-4f66-8354-6ea0a1f80af6 at 107.95,52.07 rot 0
+part R501 value = text 10K @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part R502 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
+part R502 field Value = 10K @ sch i2c_multiple_pull_ups.kicad_sch
+part R502 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R502 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R502 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R502 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R502 lib Device:R sheet / symbol Device:R
+part R502 unit 1 sheet / uuid 9b9a829e-e02d-42ce-a29f-62744f38b405 at 171.45,92.71 rot 0
+part R502 value = text 10K @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part R503 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
+part R503 field Value = 10K @ sch i2c_multiple_pull_ups.kicad_sch
+part R503 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R503 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R503 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R503 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R503 lib Device:R sheet / symbol Device:R
+part R503 unit 1 sheet / uuid 88ea254c-ac0b-46fb-9ca1-be6a654670e0 at 118.11,52.07 rot 0
+part R503 value = text 10K @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part R504 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
+part R504 field Value = 10K @ sch i2c_multiple_pull_ups.kicad_sch
+part R504 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R504 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R504 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R504 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R504 lib Device:R sheet / symbol Device:R
+part R504 unit 1 sheet / uuid 6c4ea1b0-f049-42d2-82cd-e66eeedcac48 at 181.61,92.71 rot 0
+part R504 value = text 10K @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part R505 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
+part R505 field Value = 0 @ sch i2c_multiple_pull_ups.kicad_sch
+part R505 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R505 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R505 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R505 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R505 lib Device:R sheet / symbol Device:R
+part R505 unit 1 sheet / uuid e900fb81-c3bd-4547-8d54-20b1b5c36c33 at 143.51,106.68 rot 90
+part R505 value = text 0 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part R506 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
+part R506 field Value = 0 @ sch i2c_multiple_pull_ups.kicad_sch
+part R506 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R506 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R506 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R506 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R506 lib Device:R sheet / symbol Device:R
+part R506 unit 1 sheet / uuid 24e204a1-0a75-44ad-a538-634fe9665adf at 143.51,109.22 rot 90
+part R506 value = text 0 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part R507 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
+part R507 field Value = 3K3 @ sch i2c_multiple_pull_ups.kicad_sch
+part R507 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R507 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R507 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R507 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R507 lib Device:R sheet / symbol Device:R
+part R507 unit 1 sheet / uuid 235203f8-fb11-4f76-8e72-df1b71e0af36 at 25.4,181.61 rot 0
+part R507 value = text 3K3 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part R508 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
+part R508 field Value = 3K3 @ sch i2c_multiple_pull_ups.kicad_sch
+part R508 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R508 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R508 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R508 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R508 lib Device:R sheet / symbol Device:R
+part R508 unit 1 sheet / uuid 676be2cb-ae71-42ee-8217-eb384fff05fe at 35.56,181.61 rot 0
+part R508 value = text 3K3 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part R509 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
+part R509 field Value = 3K3 @ sch i2c_multiple_pull_ups.kicad_sch
+part R509 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R509 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R509 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R509 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R509 lib Device:R sheet / symbol Device:R
+part R509 unit 1 sheet / uuid 3b66cd00-507f-4500-9598-30709e94ac17 at 203.2,39.37 rot 0
+part R509 value = text 3K3 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part R510 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
+part R510 field Value = 3K3 @ sch i2c_multiple_pull_ups.kicad_sch
+part R510 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R510 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R510 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R510 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R510 lib Device:R sheet / symbol Device:R
+part R510 unit 1 sheet / uuid 2099ca71-826e-476a-94e0-98f55a2b76f2 at 72.39,181.61 rot 0
+part R510 value = text 3K3 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part R511 field Description = Resistor @ sch i2c_multiple_pull_ups.kicad_sch
+part R511 field Value = 3K3 @ sch i2c_multiple_pull_ups.kicad_sch
+part R511 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R511 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part R511 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R511 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part R511 lib Device:R sheet / symbol Device:R
+part R511 unit 1 sheet / uuid 6ed7aaa1-44f8-40c3-80e6-02beabe139d4 at 213.36,39.37 rot 0
+part R511 value = text 3K3 @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part U501 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c_multiple_pull_ups.kicad_sch
+part U501 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c_multiple_pull_ups.kicad_sch
+part U501 field Footprint = Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm @ sch i2c_multiple_pull_ups.kicad_sch
+part U501 field Value = STM32F030F4Px @ sch i2c_multiple_pull_ups.kicad_sch
+part U501 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part U501 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part U501 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part U501 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part U501 lib MCU_ST_STM32F0:STM32F030F4Px sheet / symbol MCU_ST_STM32F0:STM32F030F4Px
+part U501 unit 1 sheet / uuid c9d7ad0a-9ae7-4257-91f4-63a3ed001b9e at 48.26,60.96 rot 0
+part U501 value = text STM32F030F4Px @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part U502 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_multiple_pull_ups.kicad_sch
+part U502 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_multiple_pull_ups.kicad_sch
+part U502 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_multiple_pull_ups.kicad_sch
+part U502 field Value = PCA9536DP @ sch i2c_multiple_pull_ups.kicad_sch
+part U502 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part U502 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part U502 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part U502 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part U502 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
+part U502 unit 1 sheet / uuid dfb02fb4-3bc8-4aea-8cf5-1d2b5fbcf837 at 151.13,71.12 rot 0
+part U502 value = text PCA9536DP @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part U503 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_multiple_pull_ups.kicad_sch
+part U503 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_multiple_pull_ups.kicad_sch
+part U503 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_multiple_pull_ups.kicad_sch
+part U503 field Value = PCA9536DP @ sch i2c_multiple_pull_ups.kicad_sch
+part U503 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part U503 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part U503 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part U503 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part U503 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
+part U503 unit 1 sheet / uuid 63428d09-5213-40aa-90a0-9f835cc9c32c at 204.47,104.14 rot 0
+part U503 value = text PCA9536DP @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+part U506 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c_multiple_pull_ups.kicad_sch
+part U506 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c_multiple_pull_ups.kicad_sch
+part U506 field Footprint = Package_SO:TSSOP-8_3x3mm_P0.65mm @ sch i2c_multiple_pull_ups.kicad_sch
+part U506 field Value = PCA9536DP @ sch i2c_multiple_pull_ups.kicad_sch
+part U506 flag dnp = no @ sch i2c_multiple_pull_ups.kicad_sch
+part U506 flag exclude_from_sim = no @ sch i2c_multiple_pull_ups.kicad_sch
+part U506 flag in_bom = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part U506 flag on_board = yes @ sch i2c_multiple_pull_ups.kicad_sch
+part U506 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
+part U506 unit 1 sheet / uuid 8ce21e2e-cc55-4e1b-907e-709254d01945 at 248.92,44.45 rot 0
+part U506 value = text PCA9536DP @ sch i2c_multiple_pull_ups.kicad_sch note "from the Value field"
+pin Q503 1 name G unit 1 net VCC_1V8
+pin Q503 1 type = input @ sch i2c_multiple_pull_ups.kicad_sch
+pin Q503 2 name S unit 1 net /SDA1_1V8
+pin Q503 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin Q503 3 name D unit 1 net /SDA1_3V3
+pin Q503 3 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin Q504 1 name G unit 1 net VCC_1V8
+pin Q504 1 type = input @ sch i2c_multiple_pull_ups.kicad_sch
+pin Q504 2 name S unit 1 net /SCL1_1V8
+pin Q504 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin Q504 3 name D unit 1 net /SCL1_3V3
+pin Q504 3 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R501 1 name ~ unit 1 net VCC_3V3
+pin R501 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R501 2 name ~ unit 1 net /SCL1_3V3
+pin R501 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R502 1 name ~ unit 1 net VCC_3V3
+pin R502 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R502 2 name ~ unit 1 net /SDA_U7
+pin R502 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R503 1 name ~ unit 1 net VCC_3V3
+pin R503 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R503 2 name ~ unit 1 net /SDA1_3V3
+pin R503 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R504 1 name ~ unit 1 net VCC_3V3
+pin R504 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R504 2 name ~ unit 1 net /SCL_U7
+pin R504 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R505 1 name ~ unit 1 net /SDA1_3V3
+pin R505 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R505 2 name ~ unit 1 net /SDA_U7
+pin R505 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R506 1 name ~ unit 1 net /SCL1_3V3
+pin R506 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R506 2 name ~ unit 1 net /SCL_U7
+pin R506 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R507 1 name ~ unit 1 net VCC_1V8
+pin R507 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R507 2 name ~ unit 1 net /SCL1_1V8
+pin R507 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R508 1 name ~ unit 1 net VCC_1V8
+pin R508 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R508 2 name ~ unit 1 net /SDA1_1V8
+pin R508 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R509 1 name ~ unit 1 net VCC_1V8
+pin R509 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R509 2 name ~ unit 1 net /SDA1_1V8
+pin R509 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R510 1 name ~ unit 1 net VCC_1V8
+pin R510 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R510 2 name ~ unit 1 net /SDA1_1V8
+pin R510 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R511 1 name ~ unit 1 net VCC_1V8
+pin R511 1 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin R511 2 name ~ unit 1 net /SCL1_1V8
+pin R511 2 type = passive @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 1 name BOOT0 unit 1 net unconnected-(U501-BOOT0-Pad1)
+pin U501 1 type = input @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 2 name PF0 unit 1 net unconnected-(U501-PF0-Pad2)
+pin U501 2 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 3 name PF1 unit 1 net unconnected-(U501-PF1-Pad3)
+pin U501 3 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 4 name NRST unit 1 net unconnected-(U501-NRST-Pad4)
+pin U501 4 type = input @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 5 name VDDA unit 1 net VCC_3V3
+pin U501 5 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 6 name PA0 unit 1 net unconnected-(U501-PA0-Pad6)
+pin U501 6 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 7 name PA1 unit 1 net unconnected-(U501-PA1-Pad7)
+pin U501 7 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 8 name PA2 unit 1 net unconnected-(U501-PA2-Pad8)
+pin U501 8 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 9 name PA3 unit 1 net unconnected-(U501-PA3-Pad9)
+pin U501 9 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 10 name PA4 unit 1 net unconnected-(U501-PA4-Pad10)
+pin U501 10 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 11 name PA5 unit 1 net unconnected-(U501-PA5-Pad11)
+pin U501 11 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 12 name PA6 unit 1 net unconnected-(U501-PA6-Pad12)
+pin U501 12 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 13 name PA7 unit 1 net unconnected-(U501-PA7-Pad13)
+pin U501 13 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 14 name PB1 unit 1 net unconnected-(U501-PB1-Pad14)
+pin U501 14 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 15 name VSS unit 1 net GND
+pin U501 15 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 16 name VDD unit 1 net VCC_3V3
+pin U501 16 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 17 name PA9 unit 1 net /SCL1_3V3
+pin U501 17 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 18 name PA10 unit 1 net /SDA1_3V3
+pin U501 18 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 19 name PA13 unit 1 net unconnected-(U501-PA13-Pad19)
+pin U501 19 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U501 20 name PA14 unit 1 net unconnected-(U501-PA14-Pad20)
+pin U501 20 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 1 name IO0 unit 1 net unconnected-(U502-IO0-Pad1)
+pin U502 1 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 2 name IO1 unit 1 net unconnected-(U502-IO1-Pad2)
+pin U502 2 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 3 name IO2 unit 1 net unconnected-(U502-IO2-Pad3)
+pin U502 3 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 4 name VSS unit 1 net GND
+pin U502 4 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 5 name IO3 unit 1 net unconnected-(U502-IO3-Pad5)
+pin U502 5 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 6 name SCL unit 1 net /SCL1_3V3
+pin U502 6 type = input @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 7 name SDA unit 1 net /SDA1_3V3
+pin U502 7 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U502 8 name VDD unit 1 net VCC_3V3
+pin U502 8 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 1 name IO0 unit 1 net unconnected-(U503-IO0-Pad1)
+pin U503 1 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 2 name IO1 unit 1 net unconnected-(U503-IO1-Pad2)
+pin U503 2 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 3 name IO2 unit 1 net unconnected-(U503-IO2-Pad3)
+pin U503 3 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 4 name VSS unit 1 net GND
+pin U503 4 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 5 name IO3 unit 1 net unconnected-(U503-IO3-Pad5)
+pin U503 5 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 6 name SCL unit 1 net /SCL_U7
+pin U503 6 type = input @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 7 name SDA unit 1 net /SDA_U7
+pin U503 7 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U503 8 name VDD unit 1 net VCC_3V3
+pin U503 8 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 1 name IO0 unit 1 net unconnected-(U506-IO0-Pad1)
+pin U506 1 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 2 name IO1 unit 1 net unconnected-(U506-IO1-Pad2)
+pin U506 2 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 3 name IO2 unit 1 net unconnected-(U506-IO2-Pad3)
+pin U506 3 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 4 name VSS unit 1 net GND
+pin U506 4 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 5 name IO3 unit 1 net unconnected-(U506-IO3-Pad5)
+pin U506 5 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 6 name SCL unit 1 net /SCL1_1V8
+pin U506 6 type = input @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 7 name SDA unit 1 net /SDA1_1V8
+pin U506 7 type = bidirectional @ sch i2c_multiple_pull_ups.kicad_sch
+pin U506 8 name VDD unit 1 net VCC_1V8
+pin U506 8 type = power_in @ sch i2c_multiple_pull_ups.kicad_sch
+sheet / name "" file i2c_multiple_pull_ups.kicad_sch uuid /
+source file i2c_multiple_pull_ups.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:R description Resistor
+symbol Device:R field Datasheet ~
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R fp-filter R_*
+symbol Device:R hash 87aa0c9880114c8e
+symbol Device:R keywords "R res resistor"
+symbol Device:R pin 1 unit 1 body 1 name ~ type passive style line
+symbol Device:R pin 2 unit 1 body 1 name ~ type passive style line
+symbol Device:R units 1
+symbol Interface_Expansion:PCA9536DP description "4-bit I2C-bus and SMBus IO port, TSSOP-8"
+symbol Interface_Expansion:PCA9536DP field Datasheet http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf
+symbol Interface_Expansion:PCA9536DP field Description "4-bit I2C-bus and SMBus IO port, TSSOP-8"
+symbol Interface_Expansion:PCA9536DP field Footprint Package_SO:TSSOP-8_3x3mm_P0.65mm
+symbol Interface_Expansion:PCA9536DP field Reference U
+symbol Interface_Expansion:PCA9536DP field Value PCA9536DP
+symbol Interface_Expansion:PCA9536DP fp-filter TSSOP*3x3mm*P0.65mm*
+symbol Interface_Expansion:PCA9536DP hash 95f3010e788280d7
+symbol Interface_Expansion:PCA9536DP keywords "i2c io port"
+symbol Interface_Expansion:PCA9536DP pin 1 unit 1 body 1 name IO0 type bidirectional style line
+symbol Interface_Expansion:PCA9536DP pin 2 unit 1 body 1 name IO1 type bidirectional style line
+symbol Interface_Expansion:PCA9536DP pin 3 unit 1 body 1 name IO2 type bidirectional style line
+symbol Interface_Expansion:PCA9536DP pin 4 unit 1 body 1 name VSS type power_in style line
+symbol Interface_Expansion:PCA9536DP pin 5 unit 1 body 1 name IO3 type bidirectional style line
+symbol Interface_Expansion:PCA9536DP pin 6 unit 1 body 1 name SCL type input style line
+symbol Interface_Expansion:PCA9536DP pin 7 unit 1 body 1 name SDA type bidirectional style line
+symbol Interface_Expansion:PCA9536DP pin 8 unit 1 body 1 name VDD type power_in style line
+symbol Interface_Expansion:PCA9536DP units 1
+symbol MCU_ST_STM32F0:STM32F030F4Px description "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20"
+symbol MCU_ST_STM32F0:STM32F030F4Px field Datasheet https://www.st.com/resource/en/datasheet/stm32f030f4.pdf
+symbol MCU_ST_STM32F0:STM32F030F4Px field Description "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20"
+symbol MCU_ST_STM32F0:STM32F030F4Px field Footprint Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm
+symbol MCU_ST_STM32F0:STM32F030F4Px field Reference U
+symbol MCU_ST_STM32F0:STM32F030F4Px field Value STM32F030F4Px
+symbol MCU_ST_STM32F0:STM32F030F4Px fp-filter TSSOP*4.4x6.5mm*P0.65mm*
+symbol MCU_ST_STM32F0:STM32F030F4Px hash d26785c4d0152d59
+symbol MCU_ST_STM32F0:STM32F030F4Px keywords "Arm Cortex-M0 STM32F0 STM32F0x0 Value Line"
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 1 unit 1 body 1 name BOOT0 type input style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 2 unit 1 body 1 alt RCC_OSC_IN type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 2 unit 1 body 1 name PF0 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 3 unit 1 body 1 alt RCC_OSC_OUT type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 3 unit 1 body 1 name PF1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 4 unit 1 body 1 name NRST type input style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 5 unit 1 body 1 name VDDA type power_in style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 6 unit 1 body 1 alt ADC_IN0 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 6 unit 1 body 1 alt RTC_TAMP2 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 6 unit 1 body 1 alt SYS_WKUP1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 6 unit 1 body 1 alt USART1_CTS type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 6 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 7 unit 1 body 1 alt ADC_IN1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 7 unit 1 body 1 alt USART1_DE type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 7 unit 1 body 1 alt USART1_RTS type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 7 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 8 unit 1 body 1 alt ADC_IN2 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 8 unit 1 body 1 alt USART1_TX type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 8 unit 1 body 1 name PA2 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 9 unit 1 body 1 alt ADC_IN3 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 9 unit 1 body 1 alt USART1_RX type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 9 unit 1 body 1 name PA3 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 10 unit 1 body 1 alt ADC_IN4 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 10 unit 1 body 1 alt SPI1_NSS type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 10 unit 1 body 1 alt TIM14_CH1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 10 unit 1 body 1 alt USART1_CK type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 10 unit 1 body 1 name PA4 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 11 unit 1 body 1 alt ADC_IN5 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 11 unit 1 body 1 alt SPI1_SCK type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 11 unit 1 body 1 name PA5 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 12 unit 1 body 1 alt ADC_IN6 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 12 unit 1 body 1 alt SPI1_MISO type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 12 unit 1 body 1 alt TIM1_BKIN type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 12 unit 1 body 1 alt TIM3_CH1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 12 unit 1 body 1 alt TIM16_CH1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 12 unit 1 body 1 name PA6 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 13 unit 1 body 1 alt ADC_IN7 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 13 unit 1 body 1 alt SPI1_MOSI type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 13 unit 1 body 1 alt TIM1_CH1N type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 13 unit 1 body 1 alt TIM3_CH2 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 13 unit 1 body 1 alt TIM14_CH1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 13 unit 1 body 1 alt TIM17_CH1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 13 unit 1 body 1 name PA7 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 14 unit 1 body 1 alt ADC_IN9 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 14 unit 1 body 1 alt TIM1_CH3N type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 14 unit 1 body 1 alt TIM3_CH4 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 14 unit 1 body 1 alt TIM14_CH1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 14 unit 1 body 1 name PB1 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 15 unit 1 body 1 name VSS type power_in style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 16 unit 1 body 1 name VDD type power_in style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 17 unit 1 body 1 alt I2C1_SCL type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 17 unit 1 body 1 alt TIM1_CH2 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 17 unit 1 body 1 alt USART1_TX type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 17 unit 1 body 1 name PA9 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 18 unit 1 body 1 alt I2C1_SDA type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 18 unit 1 body 1 alt TIM1_CH3 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 18 unit 1 body 1 alt TIM17_BKIN type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 18 unit 1 body 1 alt USART1_RX type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 18 unit 1 body 1 name PA10 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 19 unit 1 body 1 alt IR_OUT type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 19 unit 1 body 1 alt SYS_SWDIO type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 19 unit 1 body 1 name PA13 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 20 unit 1 body 1 alt SYS_SWCLK type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 20 unit 1 body 1 alt USART1_TX type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px pin 20 unit 1 body 1 name PA14 type bidirectional style line
+symbol MCU_ST_STM32F0:STM32F030F4Px units 1
+symbol Transistor_FET:BSS138 description "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23"
+symbol Transistor_FET:BSS138 field Datasheet https://www.onsemi.com/pub/Collateral/BSS138-D.PDF
+symbol Transistor_FET:BSS138 field Description "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23"
+symbol Transistor_FET:BSS138 field Footprint Package_TO_SOT_SMD:SOT-23
+symbol Transistor_FET:BSS138 field Reference Q
+symbol Transistor_FET:BSS138 field Value BSS138
+symbol Transistor_FET:BSS138 fp-filter SOT?23*
+symbol Transistor_FET:BSS138 hash f4d1cbc570be4161
+symbol Transistor_FET:BSS138 keywords "N-Channel MOSFET"
+symbol Transistor_FET:BSS138 pin 1 unit 1 body 1 name G type input style line
+symbol Transistor_FET:BSS138 pin 2 unit 1 body 1 name S type passive style line
+symbol Transistor_FET:BSS138 pin 3 unit 1 body 1 name D type passive style line
+symbol Transistor_FET:BSS138 units 1
+symbol power:GND description "Power symbol creates a global label with name \"GND\" , ground"
+symbol power:GND field Description "Power symbol creates a global label with name \"GND\" , ground"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash 161db5076481e95b
+symbol power:GND keywords "global power"
+symbol power:GND pin 1 unit 1 body 1 name ~ type power_in style line
+symbol power:GND units 1 power global
+symbol power:VCC description "Power symbol creates a global label with name \"VCC\""
+symbol power:VCC field Description "Power symbol creates a global label with name \"VCC\""
+symbol power:VCC field Reference "#PWR"
+symbol power:VCC field Value VCC
+symbol power:VCC hash 042cb09b0b5eeabc
+symbol power:VCC keywords "global power"
+symbol power:VCC pin 1 unit 1 body 1 name ~ type power_in style line
+symbol power:VCC units 1 power global

@@ -1,0 +1,310 @@
+board hierarchy
+label / global GLOB at 120,16.19 shape bidirectional net GLOB field Intersheetrefs ${INTERSHEET_REFS}
+label / local "CTL{EN RST}" at 45,40
+label / local CTL.EN at 52,52.54 net /CTL.EN
+label / local DATA2 at 30,47.54 net /DATA2
+label / local DATA[0..3] at 40,40
+label / local LOC at 130,16.19 net /LOC
+label / local MID at 50,25.08 net /MID
+label / local MID at 50,62.54 net /MID
+label / power +3V3 at 120,23.81 net +3V3
+label / sheet_pin "CTL{EN RST}" at 60,30.16 shape input child /A/
+label / sheet_pin "CTL{EN RST}" at 60,70.16 shape input child /B/
+label / sheet_pin D[0..3] at 60,27.62 shape bidirectional child /A/
+label / sheet_pin D[0..3] at 60,67.62 shape bidirectional child /B/
+label / sheet_pin IN at 60,22.54 shape input child /A/ net /A/IN
+label / sheet_pin IN at 60,62.54 shape input child /B/ net /MID
+label / sheet_pin OUT at 60,25.08 shape output child /A/ net /MID
+label / sheet_pin OUT at 60,65.08 shape output child /B/ net /B/OUT
+label /A/ global GLOB at 60,33.81 shape bidirectional net GLOB field Intersheetrefs ${INTERSHEET_REFS}
+label /A/ hierarchical "CTL{EN RST}" at 20,80 shape input
+label /A/ hierarchical D[0..3] at 20,60 shape bidirectional
+label /A/ hierarchical IN at 30,26.19 shape input net /A/IN
+label /A/ hierarchical OUT at 30,33.81 shape output net /MID
+label /A/ local CTL.EN at 32.54,70 net /CTL.EN
+label /A/ local D0 at 32.54,50 net /DATA0
+label /A/ local D2 at 42.54,50 net /DATA2
+label /A/ local LOC at 42.54,42.38 net /A/LOC
+label /A/ local LOC at 60,26.19 net /A/LOC
+label /A/ power +3V3 at 32.54,42.38 net +3V3
+label /A/ power GND at 32.54,62.38 net GND
+label /B/ global GLOB at 60,33.81 shape bidirectional net GLOB field Intersheetrefs ${INTERSHEET_REFS}
+label /B/ hierarchical "CTL{EN RST}" at 20,80 shape input
+label /B/ hierarchical D[0..3] at 20,60 shape bidirectional
+label /B/ hierarchical IN at 30,26.19 shape input net /MID
+label /B/ hierarchical OUT at 30,33.81 shape output net /B/OUT
+label /B/ local CTL.EN at 32.54,70 net /CTL.EN
+label /B/ local D0 at 32.54,50 net /DATA0
+label /B/ local D2 at 42.54,50 net /DATA2
+label /B/ local LOC at 42.54,42.38 net /B/LOC
+label /B/ local LOC at 60,26.19 net /B/LOC
+label /B/ power +3V3 at 32.54,42.38 net +3V3
+label /B/ power GND at 32.54,62.38 net GND
+net +3V3 kind power
+net /A/IN kind named
+net /A/LOC kind named
+net /B/LOC kind named
+net /B/OUT kind named
+net /CTL.EN kind named
+net /DATA0 kind named
+net /DATA2 kind named
+net /LOC kind named
+net /MID kind named
+net GLOB kind named
+net GND kind power
+net unconnected-(R1-Pad1) kind unconnected
+net unconnected-(R2-Pad2) kind unconnected
+net unconnected-(R3-Pad2) kind unconnected
+net unconnected-(R4-Pad2) kind unconnected
+net unconnected-(R6-Pad2) kind unconnected
+part R1 field Value = 10k @ sch hierarchy.kicad_sch
+part R1 flag dnp = no @ sch hierarchy.kicad_sch
+part R1 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
+part R1 flag in_bom = yes @ sch hierarchy.kicad_sch
+part R1 flag on_board = yes @ sch hierarchy.kicad_sch
+part R1 lib Fixture:R sheet / symbol Fixture:R
+part R1 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000009 at 20,20 rot 0
+part R1 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch hierarchy.kicad_sch
+part R2 flag dnp = no @ sch hierarchy.kicad_sch
+part R2 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
+part R2 flag in_bom = yes @ sch hierarchy.kicad_sch
+part R2 flag on_board = yes @ sch hierarchy.kicad_sch
+part R2 lib Fixture:R sheet / symbol Fixture:R
+part R2 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000016 at 20,80 rot 0
+part R2 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
+part R3 field Value = 10k @ sch hierarchy.kicad_sch
+part R3 flag dnp = no @ sch hierarchy.kicad_sch
+part R3 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
+part R3 flag in_bom = yes @ sch hierarchy.kicad_sch
+part R3 flag on_board = yes @ sch hierarchy.kicad_sch
+part R3 lib Fixture:R sheet / symbol Fixture:R
+part R3 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000026 at 30,51.35 rot 0
+part R3 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
+part R4 field Value = 10k @ sch hierarchy.kicad_sch
+part R4 flag dnp = no @ sch hierarchy.kicad_sch
+part R4 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
+part R4 flag in_bom = yes @ sch hierarchy.kicad_sch
+part R4 flag on_board = yes @ sch hierarchy.kicad_sch
+part R4 lib Fixture:R sheet / symbol Fixture:R
+part R4 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000034 at 52,56.35 rot 0
+part R4 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
+part R5 field Value = 10k @ sch hierarchy.kicad_sch
+part R5 flag dnp = no @ sch hierarchy.kicad_sch
+part R5 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
+part R5 flag in_bom = yes @ sch hierarchy.kicad_sch
+part R5 flag on_board = yes @ sch hierarchy.kicad_sch
+part R5 lib Fixture:R sheet / symbol Fixture:R
+part R5 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000035 at 120,20 rot 0
+part R5 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
+part R6 field Value = 10k @ sch hierarchy.kicad_sch
+part R6 flag dnp = no @ sch hierarchy.kicad_sch
+part R6 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
+part R6 flag in_bom = yes @ sch hierarchy.kicad_sch
+part R6 flag on_board = yes @ sch hierarchy.kicad_sch
+part R6 lib Fixture:R sheet / symbol Fixture:R
+part R6 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000038 at 130,20 rot 0
+part R6 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
+part R10 field Value = 10k @ sch child.kicad_sch
+part R10 flag dnp = no @ sch child.kicad_sch
+part R10 flag exclude_from_sim = no @ sch child.kicad_sch
+part R10 flag in_bom = yes @ sch child.kicad_sch
+part R10 flag on_board = yes @ sch child.kicad_sch
+part R10 lib Fixture:R sheet /A/ symbol Fixture:R
+part R10 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000001 at 30,30 rot 0
+part R10 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R11 field Value = 10k @ sch child.kicad_sch
+part R11 flag dnp = no @ sch child.kicad_sch
+part R11 flag exclude_from_sim = no @ sch child.kicad_sch
+part R11 flag in_bom = yes @ sch child.kicad_sch
+part R11 flag on_board = yes @ sch child.kicad_sch
+part R11 lib Fixture:R sheet /A/ symbol Fixture:R
+part R11 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000009 at 32.54,46.19 rot 0
+part R11 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R12 field Value = 10k @ sch child.kicad_sch
+part R12 flag dnp = no @ sch child.kicad_sch
+part R12 flag exclude_from_sim = no @ sch child.kicad_sch
+part R12 flag in_bom = yes @ sch child.kicad_sch
+part R12 flag on_board = yes @ sch child.kicad_sch
+part R12 lib Fixture:R sheet /A/ symbol Fixture:R
+part R12 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000014 at 42.54,46.19 rot 0
+part R12 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R13 field Value = 10k @ sch child.kicad_sch
+part R13 flag dnp = no @ sch child.kicad_sch
+part R13 flag exclude_from_sim = no @ sch child.kicad_sch
+part R13 flag in_bom = yes @ sch child.kicad_sch
+part R13 flag on_board = yes @ sch child.kicad_sch
+part R13 lib Fixture:R sheet /A/ symbol Fixture:R
+part R13 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000016 at 60,30 rot 0
+part R13 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R14 field Value = 10k @ sch child.kicad_sch
+part R14 flag dnp = no @ sch child.kicad_sch
+part R14 flag exclude_from_sim = no @ sch child.kicad_sch
+part R14 flag in_bom = yes @ sch child.kicad_sch
+part R14 flag on_board = yes @ sch child.kicad_sch
+part R14 lib Fixture:R sheet /A/ symbol Fixture:R
+part R14 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000024 at 32.54,66.19 rot 0
+part R14 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R20 field Value = 10k @ sch child.kicad_sch
+part R20 flag dnp = no @ sch child.kicad_sch
+part R20 flag exclude_from_sim = no @ sch child.kicad_sch
+part R20 flag in_bom = yes @ sch child.kicad_sch
+part R20 flag on_board = yes @ sch child.kicad_sch
+part R20 lib Fixture:R sheet /B/ symbol Fixture:R
+part R20 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000001 at 30,30 rot 0
+part R20 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R21 field Value = 10k @ sch child.kicad_sch
+part R21 flag dnp = no @ sch child.kicad_sch
+part R21 flag exclude_from_sim = no @ sch child.kicad_sch
+part R21 flag in_bom = yes @ sch child.kicad_sch
+part R21 flag on_board = yes @ sch child.kicad_sch
+part R21 lib Fixture:R sheet /B/ symbol Fixture:R
+part R21 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000009 at 32.54,46.19 rot 0
+part R21 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R22 field Value = 10k @ sch child.kicad_sch
+part R22 flag dnp = no @ sch child.kicad_sch
+part R22 flag exclude_from_sim = no @ sch child.kicad_sch
+part R22 flag in_bom = yes @ sch child.kicad_sch
+part R22 flag on_board = yes @ sch child.kicad_sch
+part R22 lib Fixture:R sheet /B/ symbol Fixture:R
+part R22 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000014 at 42.54,46.19 rot 0
+part R22 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R23 field Value = 10k @ sch child.kicad_sch
+part R23 flag dnp = no @ sch child.kicad_sch
+part R23 flag exclude_from_sim = no @ sch child.kicad_sch
+part R23 flag in_bom = yes @ sch child.kicad_sch
+part R23 flag on_board = yes @ sch child.kicad_sch
+part R23 lib Fixture:R sheet /B/ symbol Fixture:R
+part R23 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000016 at 60,30 rot 0
+part R23 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R24 field Value = 10k @ sch child.kicad_sch
+part R24 flag dnp = no @ sch child.kicad_sch
+part R24 flag exclude_from_sim = no @ sch child.kicad_sch
+part R24 flag in_bom = yes @ sch child.kicad_sch
+part R24 flag on_board = yes @ sch child.kicad_sch
+part R24 lib Fixture:R sheet /B/ symbol Fixture:R
+part R24 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000024 at 32.54,66.19 rot 0
+part R24 value = text 10k @ sch child.kicad_sch note "from the Value field"
+pin R1 1 name ~ unit 1 net unconnected-(R1-Pad1)
+pin R1 1 type = passive @ sch hierarchy.kicad_sch
+pin R1 2 name ~ unit 1 net /A/IN
+pin R1 2 type = passive @ sch hierarchy.kicad_sch
+pin R2 1 name ~ unit 1 net /B/OUT
+pin R2 1 type = passive @ sch hierarchy.kicad_sch
+pin R2 2 name ~ unit 1 net unconnected-(R2-Pad2)
+pin R2 2 type = passive @ sch hierarchy.kicad_sch
+pin R3 1 name ~ unit 1 net /DATA2
+pin R3 1 type = passive @ sch hierarchy.kicad_sch
+pin R3 2 name ~ unit 1 net unconnected-(R3-Pad2)
+pin R3 2 type = passive @ sch hierarchy.kicad_sch
+pin R4 1 name ~ unit 1 net /CTL.EN
+pin R4 1 type = passive @ sch hierarchy.kicad_sch
+pin R4 2 name ~ unit 1 net unconnected-(R4-Pad2)
+pin R4 2 type = passive @ sch hierarchy.kicad_sch
+pin R5 1 name ~ unit 1 net GLOB
+pin R5 1 type = passive @ sch hierarchy.kicad_sch
+pin R5 2 name ~ unit 1 net +3V3
+pin R5 2 type = passive @ sch hierarchy.kicad_sch
+pin R6 1 name ~ unit 1 net /LOC
+pin R6 1 type = passive @ sch hierarchy.kicad_sch
+pin R6 2 name ~ unit 1 net unconnected-(R6-Pad2)
+pin R6 2 type = passive @ sch hierarchy.kicad_sch
+pin R10 1 name ~ unit 1 net /A/IN
+pin R10 1 type = passive @ sch child.kicad_sch
+pin R10 2 name ~ unit 1 net /MID
+pin R10 2 type = passive @ sch child.kicad_sch
+pin R11 1 name ~ unit 1 net +3V3
+pin R11 1 type = passive @ sch child.kicad_sch
+pin R11 2 name ~ unit 1 net /DATA0
+pin R11 2 type = passive @ sch child.kicad_sch
+pin R12 1 name ~ unit 1 net /A/LOC
+pin R12 1 type = passive @ sch child.kicad_sch
+pin R12 2 name ~ unit 1 net /DATA2
+pin R12 2 type = passive @ sch child.kicad_sch
+pin R13 1 name ~ unit 1 net /A/LOC
+pin R13 1 type = passive @ sch child.kicad_sch
+pin R13 2 name ~ unit 1 net GLOB
+pin R13 2 type = passive @ sch child.kicad_sch
+pin R14 1 name ~ unit 1 net GND
+pin R14 1 type = passive @ sch child.kicad_sch
+pin R14 2 name ~ unit 1 net /CTL.EN
+pin R14 2 type = passive @ sch child.kicad_sch
+pin R20 1 name ~ unit 1 net /MID
+pin R20 1 type = passive @ sch child.kicad_sch
+pin R20 2 name ~ unit 1 net /B/OUT
+pin R20 2 type = passive @ sch child.kicad_sch
+pin R21 1 name ~ unit 1 net +3V3
+pin R21 1 type = passive @ sch child.kicad_sch
+pin R21 2 name ~ unit 1 net /DATA0
+pin R21 2 type = passive @ sch child.kicad_sch
+pin R22 1 name ~ unit 1 net /B/LOC
+pin R22 1 type = passive @ sch child.kicad_sch
+pin R22 2 name ~ unit 1 net /DATA2
+pin R22 2 type = passive @ sch child.kicad_sch
+pin R23 1 name ~ unit 1 net /B/LOC
+pin R23 1 type = passive @ sch child.kicad_sch
+pin R23 2 name ~ unit 1 net GLOB
+pin R23 2 type = passive @ sch child.kicad_sch
+pin R24 1 name ~ unit 1 net GND
+pin R24 1 type = passive @ sch child.kicad_sch
+pin R24 2 name ~ unit 1 net /CTL.EN
+pin R24 2 type = passive @ sch child.kicad_sch
+sheet / name "" file hierarchy.kicad_sch uuid /
+sheet /A/ name A file child.kicad_sch uuid /30000000-0000-4000-8000-0000000000a1 page 2
+sheet /B/ name B file child.kicad_sch uuid /30000000-0000-4000-8000-0000000000b1 page 3
+source file child.kicad_sch
+source file hierarchy.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:DualAmp description "Dual amplifier, two units"
+symbol Fixture:DualAmp field Description "Dual amplifier, two units"
+symbol Fixture:DualAmp field Reference U
+symbol Fixture:DualAmp field Value DualAmp
+symbol Fixture:DualAmp hash 1e39e4d8a19b568e
+symbol Fixture:DualAmp pin 1 unit 1 body 1 name OUTA type output style line
+symbol Fixture:DualAmp pin 2 unit 1 body 1 name -INA type input style line
+symbol Fixture:DualAmp pin 3 unit 1 body 1 name +INA type input style line
+symbol Fixture:DualAmp pin 5 unit 2 body 1 name +INB type input style line
+symbol Fixture:DualAmp pin 6 unit 2 body 1 name -INB type input style line
+symbol Fixture:DualAmp pin 7 unit 2 body 1 name OUTB type output style line
+symbol Fixture:DualAmp units 2
+symbol Fixture:IC field Reference U
+symbol Fixture:IC field Value IC
+symbol Fixture:IC hash 1197febd51e4469b
+symbol Fixture:IC pin 1 unit 1 body 1 name IN type input style line
+symbol Fixture:IC pin 2 unit 1 body 1 name OUT type output style line
+symbol Fixture:IC pin 3 unit 1 body 1 name VDD type power_in style line hidden
+symbol Fixture:IC pin 4 unit 1 body 1 name GND type power_in style line hidden
+symbol Fixture:IC pin 5 unit 1 body 1 alt SDA type open_collector style line
+symbol Fixture:IC pin 5 unit 1 body 1 alt TX type output style line
+symbol Fixture:IC pin 5 unit 1 body 1 name IO type bidirectional style line
+symbol Fixture:IC pin 6 unit 1 body 1 name NC type no_connect style line
+symbol Fixture:IC units 1
+symbol Fixture:R description Resistor
+symbol Fixture:R field Description Resistor
+symbol Fixture:R field Reference R
+symbol Fixture:R field Value R
+symbol Fixture:R hash 87069a6c18644b32
+symbol Fixture:R pin 1 unit 1 body 1 name ~ type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name ~ type passive style line
+symbol Fixture:R units 1
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 32f22f09c03fc124
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line hidden
+symbol power:+3V3 units 1 power global
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash cb6a747b7bfb0c44
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line hidden
+symbol power:GND units 1 power global
+symbol power:PWR_FLAG field Reference "#FLG"
+symbol power:PWR_FLAG field Value PWR_FLAG
+symbol power:PWR_FLAG hash 1747a8f6eb221e0e
+symbol power:PWR_FLAG pin 1 unit 0 body 0 name pwr type power_out style line
+symbol power:PWR_FLAG units 1 power global
+symbol power:VDD field Reference "#PWR"
+symbol power:VDD field Value VDD
+symbol power:VDD hash 5d35e1da63ab18c5
+symbol power:VDD pin 1 unit 1 body 1 name VDD type power_in style line hidden
+symbol power:VDD units 1 power global

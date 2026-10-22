@@ -14,6 +14,7 @@ just fmt               # cargo fmt --all
 just run               # start the better_erc app
 just netlists          # export test_schematics/sources to netlists and SVGs (cached by content hash)
 just netlist-fixtures  # re-export the per-KiCad-version netlist fixtures with kicad-cli 8, 9, 10 (podman)
+just kicad-fixtures    # re-export erc_kicad's differential-test fixtures with kicad-cli 8, 9, 10 (podman)
 just install           # cargo install the better_erc app and the berc CLI
 just deploy            # this PC up to main: pull --ff-only (refuses on local changes), install, check it is on PATH
 ```

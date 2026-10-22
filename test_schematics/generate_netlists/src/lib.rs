@@ -3,6 +3,8 @@
 //! kicad-cli. Tests call [`get_netlist_path`], which exports first, once per test process; `just netlists` runs
 //! the export on its own.
 
+pub mod project;
+
 use sha2::{Digest, Sha256};
 use std::path::{Path, PathBuf};
 use std::sync::Once;

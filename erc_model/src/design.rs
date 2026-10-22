@@ -189,7 +189,7 @@ pub struct SymbolDef {
 pub enum PowerScope {
     /// Everywhere (all KiCad versions)
     Global,
-    /// In its sheet only (KiCad 9 local power symbols)
+    /// In its sheet only (KiCad 10 local power symbols)
     Local,
 }
 
