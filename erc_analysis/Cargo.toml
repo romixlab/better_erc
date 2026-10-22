@@ -13,3 +13,5 @@ serde = { version = "1.0", features = ["derive"] }
 
 [dev-dependencies]
 erc_kicad = { path = "../erc_kicad" }
+erc_model = { path = "../erc_model", features = ["fs"] }
+toml = "1"

@@ -1,0 +1,112 @@
+# What the analyses find on power.kicad_sch (erc_analysis/tests/analyses.rs; BLESS=1 rewrites it)
+
+ground_groups = [
+    "/AGND GND Net-(U2-GND), tied by NT1 R7",
+    "/CHASSIS",
+    "/GND_ISO",
+]
+ground_links = [
+    "C5 Capacitor: /CHASSIS GND",
+    "NT1 NetTie: /AGND GND",
+    "R6 Resistor: /CHASSIS GND",
+    "R7 ZeroOhm: GND Net-(U2-GND)",
+    "U1 Part: /AGND GND",
+    "U3 Part: /GND_ISO GND",
+]
+switching_nodes = ["/SW"]
+labels = [
+    "/ local `+12V0`: sheet /, net /+12V0",
+    "/ local `+1V8`: sheet /, net /+1V8",
+    "/ local `+1V8`: sheet /, net /+1V8",
+    "/ local `+3V3A`: sheet /, net /+3V3A",
+    "/ local `-5V`: sheet /, net /-5V",
+    "/ local `5V0_NEG`: sheet /, net /5V0_NEG",
+    "/ local `AGND`: sheet /, net /AGND",
+    "/ local `AGND`: sheet /, net /AGND",
+    "/ local `CHASSIS`: sheet /, net /CHASSIS",
+    "/ local `CHASSIS`: sheet /, net /CHASSIS",
+    "/ local `FB_1V8`: sheet /, net /FB_1V8",
+    "/ local `GND_ISO`: sheet /, net /GND_ISO",
+    "/ local `ISO_5V`: sheet /, net /ISO_5V",
+    "/ local `SCL_3V3`: sheet /, net /SCL_3V3",
+    "/ local `SW`: sheet /, net /SW",
+    "/ local `SW`: sheet /, net /SW",
+    "/ local `VBAT`: sheet /, net /VBAT",
+    "/ local `VBUS`: sheet /, net /VBUS",
+    "/ local `VDD_1V8`: sheet /, net /VDD_1V8",
+    "/ local `VDD_EN`: sheet /, net /VDD_EN",
+    "/ power `+3V3`: global, net +3V3",
+    "/ power `+3V3`: global, net +3V3",
+    "/ power `+3V3`: global, net +3V3",
+    "/ power `GND`: global, net GND",
+    "/ power `GND`: global, net GND",
+    "/ power `GND`: global, net GND",
+    "/ power `GND`: global, net GND",
+    "/ power `GND`: global, net GND",
+    "/ power `GND`: global, net GND",
+    "/ power `GND`: global, net GND",
+    "/ power `GND`: global, net GND",
+    "/ power `GND`: global, net GND",
+    "/ power `GND`: global, net GND",
+    "/ power `GND`: global, net GND",
+    "/ power `GND`: global, net GND",
+    "/ power `GND`: global, net GND",
+    "/ power `GND`: global, net GND",
+    "/ power `PWR_FLAG`: global, net /VBUS",
+]
+
+[classes]
+BT1 = "battery (derived class from the library symbol)"
+C1 = "capacitor (derived class from the library symbol)"
+C2 = "capacitor (derived class from the library symbol)"
+C3 = "capacitor (derived class from the library symbol)"
+C4 = "capacitor (derived class from the library symbol)"
+C5 = "capacitor (derived class from the library symbol)"
+C6 = "capacitor (derived class from the library symbol)"
+J1 = "micro-USB connector (derived class from the library symbol)"
+L1 = "inductor (derived class from the library symbol)"
+NT1 = "net tie (derived class from the library symbol)"
+R6 = "resistor (derived class from the library symbol)"
+R7 = "resistor (derived class from the library symbol)"
+U1 = "MCU (derived class from the library symbol)"
+U2 = "IC (assumed class from the designator prefix)"
+U3 = "isolator (derived class from the library symbol)"
+U4 = "buck regulator (derived class from the library symbol)"
+
+[values]
+BT1 = "3V7 = 3.7 V"
+C1 = "100n = 100 nF E3"
+C2 = "100n = 100 nF E3"
+C3 = "100n = 100 nF E3"
+C4 = "100n = 100 nF E3"
+C5 = "4n7 = 4.7 nF E3"
+C6 = "22u = 22 µF E3"
+J1 = "USB_B_Micro (text)"
+L1 = "4u7 = 4.7 µH E3"
+NT1 = "NetTie_2 (text)"
+R6 = "1M = 1 MΩ E3"
+R7 = "0R = 0 Ω"
+U1 = "Chip (text)"
+U2 = "Sensor (text)"
+U3 = "Isolator (text)"
+U4 = "Buck (text)"
+
+[rails]
+"+3V3" = "3.3 V (derived voltage from the net name), Supply, by Name PowerSymbol PowerPin"
+"/+12V0" = "12 V (derived voltage from the net name), Supply, by Name PowerPin"
+"/+1V8" = "1.8 V (derived voltage from the net name), Supply, by Name"
+"/+3V3A" = "3.3 V (derived voltage from the net name), Analog, by Name PowerPin"
+"/-5V" = "-5 V (derived voltage from the net name), Supply, by Name"
+"/5V0_NEG" = "-5 V (derived voltage from the net name, negative by its NEG marker), Supply, by Name"
+"/ISO_5V" = "5 V (derived voltage from the net name), Supply, by Name PowerPin"
+"/VBAT" = "no voltage, Battery, by Name"
+"/VBUS" = "no voltage, Usb, by Name"
+"/VDD_1V8" = "1.8 V (derived voltage from the net name), Supply, by Name PowerPin"
+"Net-(U2-VCC)" = "no voltage, Supply, by PowerPin"
+
+[grounds]
+"/AGND" = "Analog, by Name GroundPin"
+"/CHASSIS" = "Chassis, by Name"
+"/GND_ISO" = "Isolated, by Name GroundPin"
+GND = "Signal, by Name PowerSymbol GroundPin"
+"Net-(U2-GND)" = "Signal, by GroundPin"

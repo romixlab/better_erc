@@ -239,7 +239,7 @@ fn split_rest(rest: &str) -> Vec<&str> {
             && k > 0
             && chars[k - 1].1.is_ascii_digit()
             && chars.get(k + 1).is_some_and(|(_, n)| n.is_ascii_digit());
-        if c.is_whitespace() || c == ',' || c == ';' || (c == '/' && !fraction_slash) {
+        if c.is_whitespace() || c == ',' || c == ';' || c == '@' || (c == '/' && !fraction_slash) {
             if start < i {
                 out.push(&rest[start..i]);
             }
@@ -269,7 +269,7 @@ fn parse_head(text: &str, default: Option<Unit>) -> Option<(Quantity, Vec<ValueW
     let mut warnings = Vec::new();
     let text = text.trim();
     // The first word is the value; the rest (`50V X7R`, `1%`) is read after it
-    let (head, rest) = match text.find(|c: char| c.is_whitespace() || c == '/') {
+    let (head, rest) = match text.find(|c: char| c.is_whitespace() || c == '/' || c == '@') {
         Some(i) => {
             // `4.7 kΩ`, `10 uF`: a lone number followed by a unit word belongs together, and so does a lone
             // multiplier when the unit is known (`4.7 k` for a resistor)
@@ -300,7 +300,10 @@ fn parse_head(text: &str, default: Option<Unit>) -> Option<(Quantity, Vec<ValueW
                         .to_string(),
                 )
             } else {
-                (h.to_string(), r.trim_start_matches('/').trim().to_string())
+                (
+                    h.to_string(),
+                    r.trim_start_matches(['/', '@']).trim().to_string(),
+                )
             }
         }
         None => (text.to_string(), String::new()),
@@ -687,6 +690,15 @@ mod tests {
         let r = Value::read("10uF/25V", Some(Unit::Farad));
         assert_eq!(r.value.quantity().map(|q| q.value), Some(1e-5));
         assert_eq!(r.ratings[0].unit, Unit::Volt);
+        let r = Value::read("600R@100MHz", Some(Unit::Ohm));
+        assert_eq!(r.value.quantity().map(|q| q.value), Some(600.0));
+        assert_eq!(
+            r.ratings,
+            [Quantity {
+                value: 1e8,
+                unit: Unit::Hertz
+            }]
+        );
         let r = Value::read("BSS138", None);
         assert_eq!(r.value, Value::Text("BSS138".into()));
         assert!(r.warnings.is_empty());

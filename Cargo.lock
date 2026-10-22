@@ -1236,6 +1236,7 @@ dependencies = [
  "erc_kicad",
  "erc_model",
  "serde",
+ "toml",
 ]
 
 [[package]]

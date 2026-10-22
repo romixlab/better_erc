@@ -3,7 +3,7 @@
 //! states, the E-series it is in, and the source of the field. A part whose class has no value unit (an IC, a
 //! connector) still reads a value that names its unit (`3V3`), else keeps its text.
 
-use crate::class::PartClasses;
+use crate::class::{PartClass, PartClasses};
 use erc_model::{
     Board, ESeries, Fact, PartId, Provenance, Quantity, Unit, Value, ValueWarning, VariantId, View,
 };
@@ -25,7 +25,10 @@ pub struct PartValue {
     pub ratings: Vec<Quantity>,
     /// A ceramic dielectric code (`X7R`)
     pub dielectric: Option<String>,
-    /// The smallest E-series the value is in (resistors, capacitors, inductors with a positive value)
+    /// Whether the part's value should be in an E-series: a resistor, capacitor or inductor (not a ferrite,
+    /// whose impedance is no series value)
+    pub series_expected: bool,
+    /// The smallest E-series the value is in (when expected, for a positive value)
     pub series: Option<ESeries>,
     pub warnings: Vec<ValueWarning>,
     /// Where the field came from
@@ -41,9 +44,11 @@ impl PartValue {
         })
     }
 
-    /// Whether the E-series question applies: a resistance, capacitance or inductance above zero
+    /// Whether the E-series question applies: a resistance, capacitance or inductance above zero on a part
+    /// whose value should be in a series
     pub fn series_applies(&self) -> bool {
-        matches!(self.unit, Some(Unit::Ohm | Unit::Farad | Unit::Henry))
+        self.series_expected
+            && matches!(self.unit, Some(Unit::Ohm | Unit::Farad | Unit::Henry))
             && self.expected == self.unit
             && self.value.is_some_and(|v| v > 0.0)
     }
@@ -59,7 +64,18 @@ impl Values {
         Values(
             (0..view.board.parts.len())
                 .map(PartId::from_index)
-                .map(|p| read(view, p, classes.get(p).value_unit()))
+                .map(|p| {
+                    let class = classes.get(p);
+                    let mut v = read(view, p, class.value_unit());
+                    if !(class.is_resistor()
+                        || class.is_capacitor()
+                        || class == PartClass::Inductor)
+                    {
+                        v.series_expected = false;
+                        v.series = None;
+                    }
+                    v
+                })
                 .collect(),
         )
     }
@@ -115,6 +131,7 @@ pub fn read(view: View, part: PartId, unit: Option<Unit>) -> PartValue {
         tolerance: r.tolerance,
         ratings: r.ratings,
         dielectric: r.dielectric,
+        series_expected: matches!(unit, Some(Unit::Ohm | Unit::Farad | Unit::Henry)),
         series: None,
         warnings: r.warnings,
         source: fact.map(|f| f.source.clone()),

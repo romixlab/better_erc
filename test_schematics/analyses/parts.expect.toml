@@ -1,0 +1,60 @@
+# What the analyses find on parts.kicad_sch (erc_analysis/tests/analyses.rs; BLESS=1 rewrites it)
+
+[classes]
+C1 = "polarized capacitor (derived class from the library symbol)"
+C2 = "capacitor (derived class from the library symbol)"
+D1 = "Schottky diode (derived class from the library symbol)"
+D2 = "Zener diode (derived class from the library symbol)"
+D3 = "LED (derived class from the library symbol)"
+F1 = "resettable fuse (derived class from the library symbol)"
+FB1 = "ferrite bead (derived class from the library symbol)"
+H1 = "mounting hole (derived class from the library symbol)"
+J1 = "USB-C connector (derived class from the library symbol)"
+K1 = "relay (derived class from the library symbol)"
+L1 = "inductor (derived class from the library symbol)"
+Q1 = "N-channel MOSFET (derived class from the library symbol)"
+Q2 = "P-channel MOSFET (derived class from the symbol's description and keywords)"
+Q3 = "transistor (assumed class from the designator prefix)"
+R1 = "resistor (derived class from the library symbol)"
+R2 = "resistor (derived class from the library symbol)"
+SW1 = "momentary switch (derived class from the library symbol)"
+TP1 = "test point (derived class from the library symbol)"
+U1 = "LDO regulator (derived class from the library symbol)"
+U2 = "auto-direction translator (derived class from the symbol's description and keywords)"
+U3 = "CAN transceiver (derived class from the symbol's description and keywords)"
+U4 = "74LVC logic (derived class from the library symbol)"
+Y1 = "crystal (derived class from the library symbol)"
+Z1 = "unknown (assumed class from the designator prefix)"
+
+[values]
+C1 = "100u 25V = 100 µF 25 V E3"
+C2 = "100n 50V X7R = 100 nF 50 V X7R E3"
+D1 = "BAT54W (text)"
+D2 = "3V3 = 3.3 V"
+D3 = "green (text)"
+F1 = "500mA = 500 mA"
+FB1 = "600R@100MHz = 600 Ω 100 MHz"
+H1 = "MountingHole (text)"
+J1 = "USB_C (text)"
+K1 = "G5V-1 (text)"
+L1 = "10u = 10 µH E3"
+Q1 = "BSS138 (text)"
+Q2 = "AO3401A (text)"
+Q3 = "MMBT3904 (text)"
+R1 = "4k7 1% = 4.7 kΩ ±1% E3"
+R2 = "5k = 5 kΩ in no E-series"
+SW1 = "SW_Push (text)"
+TP1 = "TestPoint (text)"
+U1 = "AMS1117-3.3 (text)"
+U2 = "TXB0104 (text)"
+U3 = "TCAN1042 (text)"
+U4 = "74LVC1G04 (text)"
+Y1 = "16MHz = 16 MHz"
+Z1 = "Gizmo (text)"
+
+[variants]
+Lite = [
+    "C2 not fitted",
+    "D3 not fitted",
+    "R1 value 10k (sch parts.kicad_sch)",
+]

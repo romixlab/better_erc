@@ -1,0 +1,56 @@
+# What the analyses find on drawing.kicad_sch (erc_analysis/tests/analyses.rs; BLESS=1 rewrites it)
+
+labels = [
+    "/ directive `Netclass=Power`: directive in /, net /LOC",
+    "/ global `GLOB`: global, net GLOB",
+    "/ global `GLOB`: global, net GLOB",
+    "/ local `FLOAT`: sheet /, net /FLOAT, dangling",
+    "/ local `LOC`: sheet /, net /LOC",
+    "/ local `LOC`: sheet /, net /LOC",
+    "/ local `LOC`: sheet /, net /LOC",
+    "/ local_power `VLOC`: sheet /, net /VLOC",
+    "/ sheet_pin `EXTRA`: sheet pin in / to /Sub/, net /EXTRA, dangling",
+    "/ sheet_pin `IN`: sheet pin in / to /Sub/, net /Sub/IN",
+    "/ sheet_pin `OUT`: sheet pin in / to /Sub/, net /Sub/OUT",
+    "/Sub/ global `GLOB`: global, net GLOB",
+    "/Sub/ hierarchical `IN`: hierarchical /Sub/ to /, net /Sub/IN",
+    "/Sub/ hierarchical `OUT`: hierarchical /Sub/ to /, net /Sub/OUT",
+    "/Sub/ hierarchical `SPARE`: hierarchical /Sub/ to /, net /Sub/SPARE",
+    "/Sub/ local `LOC`: sheet /Sub/, net /Sub/LOC",
+    "/Sub/ local_power `VLOC`: sheet /Sub/, net /Sub/VLOC",
+]
+sheet_pins = [
+    "/ pin `IN` matches /Sub/ `IN`",
+    "/ pin `OUT` matches /Sub/ `OUT`",
+    "/ pin `EXTRA` has no hierarchical label",
+    "/Sub/ hierarchical label `SPARE` has no sheet pin",
+]
+no_connects = [
+    "/ on R2.2",
+    "/ on R4.1, but the pin is connected",
+    "/ on no pin",
+]
+
+[classes]
+R1 = "resistor (derived class from the library symbol)"
+R11 = "resistor (derived class from the library symbol)"
+R12 = "resistor (derived class from the library symbol)"
+R13 = "resistor (derived class from the library symbol)"
+R2 = "resistor (derived class from the library symbol)"
+R3 = "resistor (derived class from the library symbol)"
+R4 = "resistor (derived class from the library symbol)"
+R5 = "resistor (derived class from the library symbol)"
+
+[values]
+R1 = "10k = 10 kΩ E3"
+R11 = "1k = 1 kΩ E3"
+R12 = "1k = 1 kΩ E3"
+R13 = "1k = 1 kΩ E3"
+R2 = "10k = 10 kΩ E3"
+R3 = "10k = 10 kΩ E3"
+R4 = "10k = 10 kΩ E3"
+R5 = "10k = 10 kΩ E3"
+
+[rails]
+"/Sub/VLOC" = "no voltage, Supply, by PowerSymbol"
+"/VLOC" = "no voltage, Supply, by PowerSymbol"
