@@ -1,0 +1,29 @@
+# What better_erc finds on dbg-11_uart_spi_resistors.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-11"
+subjects = ["net /GPS_TX", "pin U1.3", "pin U2.2"]
+
+[[finding]]
+check = "DBG-11"
+subjects = ["net /MISO", "pin U1.6", "pin U3.2"]
+
+[[finding]]
+check = "DBG-14"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-18"
+subjects = ["net /MISO", "net /MOSI", "net /MOSI_F", "net /SCK"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]

@@ -223,6 +223,27 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `dec-11_decade_apart`
 - ✅ `DEC-12` Polarized capacitor with `+` on the lower voltage (pins by name, else 1 = `+`) · `dec/dec_12.rs`,
   `dec-12_reversed_polarized`
+- ✅ `DBG-1` MCU, SoC or FPGA whose SWD (or JTAG) pins by name reach no connector or test point, directly or through a
+  series part, or no ground does · `dbg/dbg_1.rs`, `dbg-1_swd_not_connected`
+- ✅ `DBG-2` SWD/JTAG pins on the same net as a connector pin: no series resistor · `dbg/dbg_2.rs`,
+  `dbg-2_swd_series_resistors`
+- ✅ `DBG-3` A board with an MCU, SoC or FPGA and no LED · `dbg/dbg_3.rs`, `dbg-3_no_leds`
+- ✅ `DBG-4` Rail with no LED (and its resistor) to a ground · `dbg/dbg_4.rs`, `dbg-4_power_leds`
+- ✅ `DBG-7` Enable pin (`EN`, `ON`, `SHDN`) tied to a rail, driven from one place, or pulled one way only: no resistor
+  footprints to both levels · `dbg/dbg_7.rs`, `dbg-7_enable_pulls`
+- ✅ `DBG-8` Open-drain output (pin type, or `INT`, `ALERT`, `PG`, `FAULT` on an IC) with no pull-up footprint, fitted or
+  not · `dbg/dbg_8.rs`, `dbg-8_open_drain_pull_ups`
+- ✅ `DBG-10` Rail feeding more than `max_parts` = 5 parts directly · `dbg/dbg_10.rs`, `dbg-10_crowded_rail`
+- ✅ `DBG-11` UART (TX, RX, RTS, CTS) or SPI data line meeting another part or a connector with no series resistor ·
+  `dbg/dbg_11.rs`, `dbg-11_uart_spi_resistors`
+- ✅ `DBG-14` No UART TX/RX pair of an MCU, SoC or FPGA reaches a header or test points · `dbg/dbg_14.rs`,
+  `dbg-14_uart_console`
+- ✅ `DBG-16` LEDs on the board, none driven by an MCU pin (directly, through a resistor or through one transistor)
+  (≈ `DBG-3`) · `dbg/dbg_16.rs`, `dbg-16_heartbeat_led`
+- ✅ `DBG-17` Header (or test point set) with SWDIO and SWCLK but not the MCU's reset or SWO · `dbg/dbg_17.rs`,
+  `dbg-17_swd_without_reset`
+- ✅ `DBG-18` I2C bus (`NET-4`) or SPI bus (by pin names) with lines that reach no test point or header ·
+  `dbg/dbg_18.rs`, `dbg-18_bus_access`
 - ⬜ `IO-1` Inputs without a drive source: the input pins on a net are collected (`graph::input_pins`), no check yet ·
   `erc_analysis/src/graph.rs`, test schematic `io-1_inputs`
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`

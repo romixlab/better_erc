@@ -1,6 +1,18 @@
 # What better_erc finds on dec-4_ferrite_beads.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_A"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
 check = "DEC-4"
 subjects = ["net +3V3", "net +3V3_A", "part FB1"]
 confidence = "estimate"

@@ -1,0 +1,13 @@
+# What better_erc finds on dbg-8_open_drain_pull_ups.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-8"
+subjects = ["net /PMIC_IRQ", "pin U2.3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]

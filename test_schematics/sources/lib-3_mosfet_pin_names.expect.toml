@@ -5,6 +5,22 @@ check = "LIB-3"
 subjects = ["part Q1"]
 
 [[not_run]]
+check = "DBG-10"
+need = "rails"
+
+[[not_run]]
+check = "DBG-4"
+need = "rails"
+
+[[not_run]]
+check = "DBG-7"
+need = "rails"
+
+[[not_run]]
+check = "DBG-8"
+need = "rails"
+
+[[not_run]]
 check = "DEC-1"
 need = "rails"
 

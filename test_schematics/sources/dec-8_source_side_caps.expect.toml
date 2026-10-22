@@ -1,6 +1,18 @@
 # What better_erc finds on dec-8_source_side_caps.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_DCDC"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_PLL"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_VDDA"]
+
+[[finding]]
 check = "DEC-1"
 subjects = ["net +3V3_VDDA"]
 

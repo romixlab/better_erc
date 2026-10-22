@@ -1,0 +1,193 @@
+board dbg-2_swd_series_resistors
+label / local SWCLK at 22.38,30 net /SWCLK
+label / local SWCLK at 69.92,27.46 net /SWCLK
+label / local SWCLK2 at 157.38,30 net /SWCLK2
+label / local SWCLK2 at 255,26.19 net /SWCLK2
+label / local SWCLK2_H at 255,33.81 net /SWCLK2_H
+label / local SWCLK2_H at 294.92,27.46 net /SWCLK2_H
+label / local SWDIO at 22.38,27.46 net /SWDIO
+label / local SWDIO at 69.92,24.92 net /SWDIO
+label / local SWDIO2 at 157.38,27.46 net /SWDIO2
+label / local SWDIO2 at 210,26.19 net /SWDIO2
+label / local SWDIO2_H at 210,33.81 net /SWDIO2_H
+label / local SWDIO2_H at 294.92,24.92 net /SWDIO2_H
+label / power +3V3 at 22.38,22.38 net +3V3
+label / power +3V3 at 69.92,22.38 net +3V3
+label / power +3V3 at 114.92,22.38 net +3V3
+label / power +3V3 at 157.38,22.38 net +3V3
+label / power +3V3 at 294.92,22.38 net +3V3
+label / power GND at 22.38,24.92 net GND
+label / power GND at 69.92,30 net GND
+label / power GND at 114.92,24.92 net GND
+label / power GND at 157.38,24.92 net GND
+label / power GND at 294.92,30 net GND
+net +3V3 class = Default @ sch dbg-2_swd_series_resistors.kicad_sch note "effective net class"
+net +3V3 kind power
+net /SWCLK class = Default @ sch dbg-2_swd_series_resistors.kicad_sch note "effective net class"
+net /SWCLK kind named
+net /SWCLK2 class = Default @ sch dbg-2_swd_series_resistors.kicad_sch note "effective net class"
+net /SWCLK2 kind named
+net /SWCLK2_H class = Default @ sch dbg-2_swd_series_resistors.kicad_sch note "effective net class"
+net /SWCLK2_H kind named
+net /SWDIO class = Default @ sch dbg-2_swd_series_resistors.kicad_sch note "effective net class"
+net /SWDIO kind named
+net /SWDIO2 class = Default @ sch dbg-2_swd_series_resistors.kicad_sch note "effective net class"
+net /SWDIO2 kind named
+net /SWDIO2_H class = Default @ sch dbg-2_swd_series_resistors.kicad_sch note "effective net class"
+net /SWDIO2_H kind named
+net GND class = Default @ sch dbg-2_swd_series_resistors.kicad_sch note "effective net class"
+net GND kind power
+part J1 field Value = SWD @ sch dbg-2_swd_series_resistors.kicad_sch
+part J1 flag dnp = no @ sch dbg-2_swd_series_resistors.kicad_sch
+part J1 flag exclude_from_sim = no @ sch dbg-2_swd_series_resistors.kicad_sch
+part J1 flag in_bom = yes @ sch dbg-2_swd_series_resistors.kicad_sch
+part J1 flag on_board = yes @ sch dbg-2_swd_series_resistors.kicad_sch
+part J1 lib Connector_Generic:Conn_01x04 sheet / symbol Connector_Generic:Conn_01x04
+part J1 unit 1 sheet / uuid db900002-0000-4000-8000-000000000012 line 100 at 75,30 rot 0
+part J1 value = text SWD @ sch dbg-2_swd_series_resistors.kicad_sch note "from the Value field"
+part J2 field Value = PWR @ sch dbg-2_swd_series_resistors.kicad_sch
+part J2 flag dnp = no @ sch dbg-2_swd_series_resistors.kicad_sch
+part J2 flag exclude_from_sim = no @ sch dbg-2_swd_series_resistors.kicad_sch
+part J2 flag in_bom = yes @ sch dbg-2_swd_series_resistors.kicad_sch
+part J2 flag on_board = yes @ sch dbg-2_swd_series_resistors.kicad_sch
+part J2 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J2 unit 1 sheet / uuid db900002-0000-4000-8000-000000000023 line 126 at 120,30 rot 0
+part J2 value = text PWR @ sch dbg-2_swd_series_resistors.kicad_sch note "from the Value field"
+part J3 field Value = SWD @ sch dbg-2_swd_series_resistors.kicad_sch
+part J3 flag dnp = no @ sch dbg-2_swd_series_resistors.kicad_sch
+part J3 flag exclude_from_sim = no @ sch dbg-2_swd_series_resistors.kicad_sch
+part J3 flag in_bom = yes @ sch dbg-2_swd_series_resistors.kicad_sch
+part J3 flag on_board = yes @ sch dbg-2_swd_series_resistors.kicad_sch
+part J3 lib Connector_Generic:Conn_01x04 sheet / symbol Connector_Generic:Conn_01x04
+part J3 unit 1 sheet / uuid db900002-0000-4000-8000-000000000051 line 194 at 300,30 rot 0
+part J3 value = text SWD @ sch dbg-2_swd_series_resistors.kicad_sch note "from the Value field"
+part R1 field Value = 33R @ sch dbg-2_swd_series_resistors.kicad_sch
+part R1 flag dnp = no @ sch dbg-2_swd_series_resistors.kicad_sch
+part R1 flag exclude_from_sim = no @ sch dbg-2_swd_series_resistors.kicad_sch
+part R1 flag in_bom = yes @ sch dbg-2_swd_series_resistors.kicad_sch
+part R1 flag on_board = yes @ sch dbg-2_swd_series_resistors.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid db900002-0000-4000-8000-000000000041 line 174 at 210,30 rot 0
+part R1 value = qty 33 ohm @ sch dbg-2_swd_series_resistors.kicad_sch note "from the Value field"
+part R2 field Value = 33R @ sch dbg-2_swd_series_resistors.kicad_sch
+part R2 flag dnp = no @ sch dbg-2_swd_series_resistors.kicad_sch
+part R2 flag exclude_from_sim = no @ sch dbg-2_swd_series_resistors.kicad_sch
+part R2 flag in_bom = yes @ sch dbg-2_swd_series_resistors.kicad_sch
+part R2 flag on_board = yes @ sch dbg-2_swd_series_resistors.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid db900002-0000-4000-8000-000000000046 line 184 at 255,30 rot 0
+part R2 value = qty 33 ohm @ sch dbg-2_swd_series_resistors.kicad_sch note "from the Value field"
+part U1 field Value = MCU_SWD @ sch dbg-2_swd_series_resistors.kicad_sch
+part U1 flag dnp = no @ sch dbg-2_swd_series_resistors.kicad_sch
+part U1 flag exclude_from_sim = no @ sch dbg-2_swd_series_resistors.kicad_sch
+part U1 flag in_bom = yes @ sch dbg-2_swd_series_resistors.kicad_sch
+part U1 flag on_board = yes @ sch dbg-2_swd_series_resistors.kicad_sch
+part U1 lib MCU_Fixture:MCU_SWD sheet / symbol MCU_Fixture:MCU_SWD
+part U1 unit 1 sheet / uuid db900002-0000-4000-8000-000000000001 line 74 at 30,30 rot 0
+part U1 value = text MCU_SWD @ sch dbg-2_swd_series_resistors.kicad_sch note "from the Value field"
+part U2 field Value = MCU_SWD @ sch dbg-2_swd_series_resistors.kicad_sch
+part U2 flag dnp = no @ sch dbg-2_swd_series_resistors.kicad_sch
+part U2 flag exclude_from_sim = no @ sch dbg-2_swd_series_resistors.kicad_sch
+part U2 flag in_bom = yes @ sch dbg-2_swd_series_resistors.kicad_sch
+part U2 flag on_board = yes @ sch dbg-2_swd_series_resistors.kicad_sch
+part U2 lib MCU_Fixture:MCU_SWD sheet / symbol MCU_Fixture:MCU_SWD
+part U2 unit 1 sheet / uuid db900002-0000-4000-8000-000000000030 line 148 at 165,30 rot 0
+part U2 value = text MCU_SWD @ sch dbg-2_swd_series_resistors.kicad_sch note "from the Value field"
+pin J1 1 name Pin_1 unit 1 net +3V3
+pin J1 1 type = passive @ sch dbg-2_swd_series_resistors.kicad_sch
+pin J1 2 name Pin_2 unit 1 net /SWDIO
+pin J1 2 type = passive @ sch dbg-2_swd_series_resistors.kicad_sch
+pin J1 3 name Pin_3 unit 1 net /SWCLK
+pin J1 3 type = passive @ sch dbg-2_swd_series_resistors.kicad_sch
+pin J1 4 name Pin_4 unit 1 net GND
+pin J1 4 type = passive @ sch dbg-2_swd_series_resistors.kicad_sch
+pin J2 1 name Pin_1 unit 1 net +3V3
+pin J2 1 type = passive @ sch dbg-2_swd_series_resistors.kicad_sch
+pin J2 2 name Pin_2 unit 1 net GND
+pin J2 2 type = passive @ sch dbg-2_swd_series_resistors.kicad_sch
+pin J3 1 name Pin_1 unit 1 net +3V3
+pin J3 1 type = passive @ sch dbg-2_swd_series_resistors.kicad_sch
+pin J3 2 name Pin_2 unit 1 net /SWDIO2_H
+pin J3 2 type = passive @ sch dbg-2_swd_series_resistors.kicad_sch
+pin J3 3 name Pin_3 unit 1 net /SWCLK2_H
+pin J3 3 type = passive @ sch dbg-2_swd_series_resistors.kicad_sch
+pin J3 4 name Pin_4 unit 1 net GND
+pin J3 4 type = passive @ sch dbg-2_swd_series_resistors.kicad_sch
+pin R1 1 name "" unit 1 net /SWDIO2
+pin R1 1 type = passive @ sch dbg-2_swd_series_resistors.kicad_sch
+pin R1 2 name "" unit 1 net /SWDIO2_H
+pin R1 2 type = passive @ sch dbg-2_swd_series_resistors.kicad_sch
+pin R2 1 name "" unit 1 net /SWCLK2
+pin R2 1 type = passive @ sch dbg-2_swd_series_resistors.kicad_sch
+pin R2 2 name "" unit 1 net /SWCLK2_H
+pin R2 2 type = passive @ sch dbg-2_swd_series_resistors.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch dbg-2_swd_series_resistors.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch dbg-2_swd_series_resistors.kicad_sch
+pin U1 3 name PA13/SWDIO unit 1 net /SWDIO
+pin U1 3 type = bidirectional @ sch dbg-2_swd_series_resistors.kicad_sch
+pin U1 4 name PA14/SWCLK unit 1 net /SWCLK
+pin U1 4 type = bidirectional @ sch dbg-2_swd_series_resistors.kicad_sch
+pin U2 1 name VDD unit 1 net +3V3
+pin U2 1 type = power_in @ sch dbg-2_swd_series_resistors.kicad_sch
+pin U2 2 name VSS unit 1 net GND
+pin U2 2 type = power_in @ sch dbg-2_swd_series_resistors.kicad_sch
+pin U2 3 name PA13/SWDIO unit 1 net /SWDIO2
+pin U2 3 type = bidirectional @ sch dbg-2_swd_series_resistors.kicad_sch
+pin U2 4 name PA14/SWCLK unit 1 net /SWCLK2
+pin U2 4 type = bidirectional @ sch dbg-2_swd_series_resistors.kicad_sch
+sheet / name "" file dbg-2_swd_series_resistors.kicad_sch uuid /
+source file dbg-2_swd_series_resistors.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x02 description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 9d5a102eadbd54ad
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Connector_Generic:Conn_01x04 description "Generic connector"
+symbol Connector_Generic:Conn_01x04 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x04 field Reference J
+symbol Connector_Generic:Conn_01x04 field Value Conn_01x04
+symbol Connector_Generic:Conn_01x04 hash f337dda73c488fc4
+symbol Connector_Generic:Conn_01x04 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 4 unit 1 body 1 name Pin_4 type passive style line
+symbol Connector_Generic:Conn_01x04 units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Fixture:MCU_SWD description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_SWD field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_SWD field Reference U
+symbol MCU_Fixture:MCU_SWD field Value MCU_SWD
+symbol MCU_Fixture:MCU_SWD hash 1abb1914a77a154d
+symbol MCU_Fixture:MCU_SWD pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_SWD pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_SWD pin 3 unit 1 body 1 name PA13/SWDIO type bidirectional style line
+symbol MCU_Fixture:MCU_SWD pin 4 unit 1 body 1 name PA14/SWCLK type bidirectional style line
+symbol MCU_Fixture:MCU_SWD units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

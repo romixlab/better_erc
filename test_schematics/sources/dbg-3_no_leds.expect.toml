@@ -1,0 +1,9 @@
+# What better_erc finds on dbg-3_no_leds.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]

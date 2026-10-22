@@ -1,0 +1,49 @@
+# What better_erc finds on dbg-7_enable_pulls.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U5"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +1V2"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +2V5"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +2V8"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DBG-7"
+subjects = ["net +5V", "pin U1.4"]
+
+[[finding]]
+check = "DBG-7"
+subjects = ["net /EN_U2", "pin U2.4"]
+
+[[finding]]
+check = "DBG-7"
+subjects = ["net /EN_U3", "pin U3.4"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V"]

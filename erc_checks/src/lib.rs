@@ -25,12 +25,14 @@ pub mod project;
 pub mod report;
 
 mod bom;
+mod dbg;
 mod dec;
 mod i2c;
 #[path = "lib/mod.rs"]
 mod library;
 #[cfg(test)]
 mod testing;
+mod text;
 
 pub use catalogue::{
     CheckInfo, CheckState, Explanation, ListedCheck, RunState, explain, list, list_for,

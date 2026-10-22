@@ -1,0 +1,201 @@
+board dbg-11_uart_spi_resistors
+label / local GPS_RX at 112.38,30 net /GPS_RX
+label / local GPS_RX at 165,33.81 net /GPS_RX
+label / local GPS_RX_R at 67.38,30 net /GPS_RX_R
+label / local GPS_RX_R at 165,26.19 net /GPS_RX_R
+label / local GPS_TX at 67.38,27.46 net /GPS_TX
+label / local GPS_TX at 112.38,24.92 net /GPS_TX
+label / local MISO at 67.38,35.08 net /MISO
+label / local MISO at 202.38,24.92 net /MISO
+label / local MOSI at 67.38,32.54 net /MOSI
+label / local MOSI at 255,26.19 net /MOSI
+label / local MOSI_F at 202.38,27.46 net /MOSI_F
+label / local MOSI_F at 255,33.81 net /MOSI_F
+label / local SCK at 67.38,37.62 net /SCK
+label / local SCK at 202.38,30 net /SCK
+label / power +3V3 at 24.92,22.38 net +3V3
+label / power +3V3 at 67.38,22.38 net +3V3
+label / power +3V3 at 112.38,22.38 net +3V3
+label / power +3V3 at 202.38,22.38 net +3V3
+label / power GND at 24.92,24.92 net GND
+label / power GND at 67.38,24.92 net GND
+label / power GND at 112.38,27.46 net GND
+label / power GND at 202.38,32.54 net GND
+net +3V3 class = Default @ sch dbg-11_uart_spi_resistors.kicad_sch note "effective net class"
+net +3V3 kind power
+net /GPS_RX class = Default @ sch dbg-11_uart_spi_resistors.kicad_sch note "effective net class"
+net /GPS_RX kind named
+net /GPS_RX_R class = Default @ sch dbg-11_uart_spi_resistors.kicad_sch note "effective net class"
+net /GPS_RX_R kind named
+net /GPS_TX class = Default @ sch dbg-11_uart_spi_resistors.kicad_sch note "effective net class"
+net /GPS_TX kind named
+net /MISO class = Default @ sch dbg-11_uart_spi_resistors.kicad_sch note "effective net class"
+net /MISO kind named
+net /MOSI class = Default @ sch dbg-11_uart_spi_resistors.kicad_sch note "effective net class"
+net /MOSI kind named
+net /MOSI_F class = Default @ sch dbg-11_uart_spi_resistors.kicad_sch note "effective net class"
+net /MOSI_F kind named
+net /SCK class = Default @ sch dbg-11_uart_spi_resistors.kicad_sch note "effective net class"
+net /SCK kind named
+net GND class = Default @ sch dbg-11_uart_spi_resistors.kicad_sch note "effective net class"
+net GND kind power
+part J1 field Value = PWR @ sch dbg-11_uart_spi_resistors.kicad_sch
+part J1 flag dnp = no @ sch dbg-11_uart_spi_resistors.kicad_sch
+part J1 flag exclude_from_sim = no @ sch dbg-11_uart_spi_resistors.kicad_sch
+part J1 flag in_bom = yes @ sch dbg-11_uart_spi_resistors.kicad_sch
+part J1 flag on_board = yes @ sch dbg-11_uart_spi_resistors.kicad_sch
+part J1 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J1 unit 1 sheet / uuid db900011-0000-4000-8000-000000000001 line 91 at 30,30 rot 0
+part J1 value = text PWR @ sch dbg-11_uart_spi_resistors.kicad_sch note "from the Value field"
+part R1 field Value = 0R @ sch dbg-11_uart_spi_resistors.kicad_sch
+part R1 flag dnp = no @ sch dbg-11_uart_spi_resistors.kicad_sch
+part R1 flag exclude_from_sim = no @ sch dbg-11_uart_spi_resistors.kicad_sch
+part R1 flag in_bom = yes @ sch dbg-11_uart_spi_resistors.kicad_sch
+part R1 flag on_board = yes @ sch dbg-11_uart_spi_resistors.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid db900011-0000-4000-8000-000000000036 line 171 at 165,30 rot 0
+part R1 value = qty 0 ohm @ sch dbg-11_uart_spi_resistors.kicad_sch note "from the Value field"
+part R2 field Value = 33R @ sch dbg-11_uart_spi_resistors.kicad_sch
+part R2 flag dnp = no @ sch dbg-11_uart_spi_resistors.kicad_sch
+part R2 flag exclude_from_sim = no @ sch dbg-11_uart_spi_resistors.kicad_sch
+part R2 flag in_bom = yes @ sch dbg-11_uart_spi_resistors.kicad_sch
+part R2 flag on_board = yes @ sch dbg-11_uart_spi_resistors.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid db900011-0000-4000-8000-000000000054 line 209 at 255,30 rot 0
+part R2 value = qty 33 ohm @ sch dbg-11_uart_spi_resistors.kicad_sch note "from the Value field"
+part U1 field Value = MCU_UART_SPI @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U1 flag dnp = no @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U1 flag exclude_from_sim = no @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U1 flag in_bom = yes @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U1 flag on_board = yes @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U1 lib MCU_Fixture:MCU_UART_SPI sheet / symbol MCU_Fixture:MCU_UART_SPI
+part U1 unit 1 sheet / uuid db900011-0000-4000-8000-000000000008 line 113 at 75,30 rot 0
+part U1 value = text MCU_UART_SPI @ sch dbg-11_uart_spi_resistors.kicad_sch note "from the Value field"
+part U2 field Value = GPS @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U2 flag dnp = no @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U2 flag exclude_from_sim = no @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U2 flag in_bom = yes @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U2 flag on_board = yes @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U2 lib RF_GPS:GPS sheet / symbol RF_GPS:GPS
+part U2 unit 1 sheet / uuid db900011-0000-4000-8000-000000000025 line 145 at 120,30 rot 0
+part U2 value = text GPS @ sch dbg-11_uart_spi_resistors.kicad_sch note "from the Value field"
+part U3 field Value = Flash_SPI @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U3 flag dnp = no @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U3 flag exclude_from_sim = no @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U3 flag in_bom = yes @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U3 flag on_board = yes @ sch dbg-11_uart_spi_resistors.kicad_sch
+part U3 lib Memory_Flash:Flash_SPI sheet / symbol Memory_Flash:Flash_SPI
+part U3 unit 1 sheet / uuid db900011-0000-4000-8000-000000000041 line 181 at 210,30 rot 0
+part U3 value = text Flash_SPI @ sch dbg-11_uart_spi_resistors.kicad_sch note "from the Value field"
+pin J1 1 name Pin_1 unit 1 net +3V3
+pin J1 1 type = passive @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin J1 2 name Pin_2 unit 1 net GND
+pin J1 2 type = passive @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin R1 1 name "" unit 1 net /GPS_RX_R
+pin R1 1 type = passive @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin R1 2 name "" unit 1 net /GPS_RX
+pin R1 2 type = passive @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin R2 1 name "" unit 1 net /MOSI
+pin R2 1 type = passive @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin R2 2 name "" unit 1 net /MOSI_F
+pin R2 2 type = passive @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U1 3 name PA2/USART2_TX unit 1 net /GPS_TX
+pin U1 3 type = bidirectional @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U1 4 name PA3/USART2_RX unit 1 net /GPS_RX_R
+pin U1 4 type = bidirectional @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U1 5 name PA7/SPI1_MOSI unit 1 net /MOSI
+pin U1 5 type = bidirectional @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U1 6 name PA6/SPI1_MISO unit 1 net /MISO
+pin U1 6 type = bidirectional @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U1 7 name PA5/SPI1_SCK unit 1 net /SCK
+pin U1 7 type = bidirectional @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U2 1 name VCC unit 1 net +3V3
+pin U2 1 type = power_in @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U2 2 name TXD unit 1 net /GPS_TX
+pin U2 2 type = output @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U2 3 name GND unit 1 net GND
+pin U2 3 type = power_in @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U2 4 name RXD unit 1 net /GPS_RX
+pin U2 4 type = input @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U3 1 name VCC unit 1 net +3V3
+pin U3 1 type = power_in @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U3 2 name MISO unit 1 net /MISO
+pin U3 2 type = output @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U3 3 name MOSI unit 1 net /MOSI_F
+pin U3 3 type = input @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U3 4 name SCK unit 1 net /SCK
+pin U3 4 type = input @ sch dbg-11_uart_spi_resistors.kicad_sch
+pin U3 5 name GND unit 1 net GND
+pin U3 5 type = power_in @ sch dbg-11_uart_spi_resistors.kicad_sch
+sheet / name "" file dbg-11_uart_spi_resistors.kicad_sch uuid /
+source file dbg-11_uart_spi_resistors.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x02 description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 9d5a102eadbd54ad
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Fixture:MCU_UART_SPI description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_UART_SPI field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_UART_SPI field Reference U
+symbol MCU_Fixture:MCU_UART_SPI field Value MCU_UART_SPI
+symbol MCU_Fixture:MCU_UART_SPI hash 620f70cb8e04c336
+symbol MCU_Fixture:MCU_UART_SPI pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_UART_SPI pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_UART_SPI pin 3 unit 1 body 1 name PA2/USART2_TX type bidirectional style line
+symbol MCU_Fixture:MCU_UART_SPI pin 4 unit 1 body 1 name PA3/USART2_RX type bidirectional style line
+symbol MCU_Fixture:MCU_UART_SPI pin 5 unit 1 body 1 name PA7/SPI1_MOSI type bidirectional style line
+symbol MCU_Fixture:MCU_UART_SPI pin 6 unit 1 body 1 name PA6/SPI1_MISO type bidirectional style line
+symbol MCU_Fixture:MCU_UART_SPI pin 7 unit 1 body 1 name PA5/SPI1_SCK type bidirectional style line
+symbol MCU_Fixture:MCU_UART_SPI units 1
+symbol Memory_Flash:Flash_SPI description "SPI flash"
+symbol Memory_Flash:Flash_SPI field Description "SPI flash"
+symbol Memory_Flash:Flash_SPI field Reference U
+symbol Memory_Flash:Flash_SPI field Value Flash_SPI
+symbol Memory_Flash:Flash_SPI hash 388389aeeb2ecb4f
+symbol Memory_Flash:Flash_SPI pin 1 unit 1 body 1 name VCC type power_in style line
+symbol Memory_Flash:Flash_SPI pin 2 unit 1 body 1 name MISO type output style line
+symbol Memory_Flash:Flash_SPI pin 3 unit 1 body 1 name MOSI type input style line
+symbol Memory_Flash:Flash_SPI pin 4 unit 1 body 1 name SCK type input style line
+symbol Memory_Flash:Flash_SPI pin 5 unit 1 body 1 name GND type power_in style line
+symbol Memory_Flash:Flash_SPI units 1
+symbol RF_GPS:GPS description "GPS receiver module"
+symbol RF_GPS:GPS field Description "GPS receiver module"
+symbol RF_GPS:GPS field Reference U
+symbol RF_GPS:GPS field Value GPS
+symbol RF_GPS:GPS hash 4ffa8f8bea83cb70
+symbol RF_GPS:GPS pin 1 unit 1 body 1 name VCC type power_in style line
+symbol RF_GPS:GPS pin 2 unit 1 body 1 name TXD type output style line
+symbol RF_GPS:GPS pin 3 unit 1 body 1 name GND type power_in style line
+symbol RF_GPS:GPS pin 4 unit 1 body 1 name RXD type input style line
+symbol RF_GPS:GPS units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

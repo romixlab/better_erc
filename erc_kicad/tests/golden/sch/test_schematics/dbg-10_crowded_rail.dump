@@ -1,0 +1,298 @@
+board dbg-10_crowded_rail
+label / power +3V3 at 24.92,22.38 net +3V3
+label / power +3V3 at 30,76.19 net +3V3
+label / power +3V3 at 67.38,22.38 net +3V3
+label / power +3V3 at 67.38,72.38 net +3V3
+label / power +3V3 at 120,26.19 net +3V3
+label / power +3V3 at 120,76.19 net +3V3
+label / power +3V3 at 157.38,22.38 net +3V3
+label / power +3V3 at 157.38,72.38 net +3V3
+label / power +3V3 at 210,26.19 net +3V3
+label / power +3V3 at 210,76.19 net +3V3
+label / power +3V3 at 247.38,22.38 net +3V3
+label / power +3V3 at 300,26.19 net +3V3
+label / power +3V3 at 337.38,22.38 net +3V3
+label / power +3V3_B at 24.92,24.92 net +3V3_B
+label / power +3V3_B at 30,126.19 net +3V3_B
+label / power +3V3_B at 247.38,72.38 net +3V3_B
+label / power +3V3_B at 300,76.19 net +3V3_B
+label / power +3V3_B at 337.38,72.38 net +3V3_B
+label / power GND at 24.92,27.46 net GND
+label / power GND at 30,83.81 net GND
+label / power GND at 30,133.81 net GND
+label / power GND at 67.38,24.92 net GND
+label / power GND at 67.38,74.92 net GND
+label / power GND at 120,33.81 net GND
+label / power GND at 120,83.81 net GND
+label / power GND at 157.38,24.92 net GND
+label / power GND at 157.38,74.92 net GND
+label / power GND at 210,33.81 net GND
+label / power GND at 210,83.81 net GND
+label / power GND at 247.38,24.92 net GND
+label / power GND at 247.38,74.92 net GND
+label / power GND at 300,33.81 net GND
+label / power GND at 300,83.81 net GND
+label / power GND at 337.38,24.92 net GND
+label / power GND at 337.38,74.92 net GND
+net +3V3 class = Default @ sch dbg-10_crowded_rail.kicad_sch note "effective net class"
+net +3V3 kind power
+net +3V3_B class = Default @ sch dbg-10_crowded_rail.kicad_sch note "effective net class"
+net +3V3_B kind power
+net GND class = Default @ sch dbg-10_crowded_rail.kicad_sch note "effective net class"
+net GND kind power
+part C1 field Value = 100n @ sch dbg-10_crowded_rail.kicad_sch
+part C1 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part C1 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part C1 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C1 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid db900010-0000-4000-8000-000000000018 line 122 at 120,30 rot 0
+part C1 value = text 100n @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part C2 field Value = 100n @ sch dbg-10_crowded_rail.kicad_sch
+part C2 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part C2 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part C2 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C2 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid db900010-0000-4000-8000-000000000032 line 166 at 210,30 rot 0
+part C2 value = text 100n @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part C3 field Value = 100n @ sch dbg-10_crowded_rail.kicad_sch
+part C3 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part C3 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part C3 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C3 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C3 lib Device:C sheet / symbol Device:C
+part C3 unit 1 sheet / uuid db900010-0000-4000-8000-000000000046 line 210 at 300,30 rot 0
+part C3 value = text 100n @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part C4 field Value = 100n @ sch dbg-10_crowded_rail.kicad_sch
+part C4 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part C4 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part C4 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C4 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C4 lib Device:C sheet / symbol Device:C
+part C4 unit 1 sheet / uuid db900010-0000-4000-8000-000000000060 line 254 at 30,80 rot 0
+part C4 value = text 100n @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part C5 field Value = 100n @ sch dbg-10_crowded_rail.kicad_sch
+part C5 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part C5 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part C5 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C5 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C5 lib Device:C sheet / symbol Device:C
+part C5 unit 1 sheet / uuid db900010-0000-4000-8000-000000000074 line 298 at 120,80 rot 0
+part C5 value = text 100n @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part C6 field Value = 100n @ sch dbg-10_crowded_rail.kicad_sch
+part C6 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part C6 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part C6 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C6 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C6 lib Device:C sheet / symbol Device:C
+part C6 unit 1 sheet / uuid db900010-0000-4000-8000-000000000088 line 342 at 210,80 rot 0
+part C6 value = text 100n @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part C7 field Value = 100n @ sch dbg-10_crowded_rail.kicad_sch
+part C7 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part C7 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part C7 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C7 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C7 lib Device:C sheet / symbol Device:C
+part C7 unit 1 sheet / uuid db900010-0000-4000-8000-000000000102 line 386 at 300,80 rot 0
+part C7 value = text 100n @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part C8 field Value = 100n @ sch dbg-10_crowded_rail.kicad_sch
+part C8 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part C8 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part C8 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C8 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part C8 lib Device:C sheet / symbol Device:C
+part C8 unit 1 sheet / uuid db900010-0000-4000-8000-000000000116 line 430 at 30,130 rot 0
+part C8 value = text 100n @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch dbg-10_crowded_rail.kicad_sch
+part J1 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part J1 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part J1 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part J1 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part J1 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J1 unit 1 sheet / uuid db900010-0000-4000-8000-000000000001 line 70 at 30,30 rot 0
+part J1 value = text PWR @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part U1 field Value = Temp @ sch dbg-10_crowded_rail.kicad_sch
+part U1 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part U1 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part U1 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U1 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U1 lib Sensor_Fixture:Temp sheet / symbol Sensor_Fixture:Temp
+part U1 unit 1 sheet / uuid db900010-0000-4000-8000-000000000011 line 100 at 75,30 rot 0
+part U1 value = text Temp @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part U2 field Value = Temp @ sch dbg-10_crowded_rail.kicad_sch
+part U2 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part U2 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part U2 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U2 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U2 lib Sensor_Fixture:Temp sheet / symbol Sensor_Fixture:Temp
+part U2 unit 1 sheet / uuid db900010-0000-4000-8000-000000000025 line 144 at 165,30 rot 0
+part U2 value = text Temp @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part U3 field Value = Temp @ sch dbg-10_crowded_rail.kicad_sch
+part U3 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part U3 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part U3 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U3 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U3 lib Sensor_Fixture:Temp sheet / symbol Sensor_Fixture:Temp
+part U3 unit 1 sheet / uuid db900010-0000-4000-8000-000000000039 line 188 at 255,30 rot 0
+part U3 value = text Temp @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part U4 field Value = Temp @ sch dbg-10_crowded_rail.kicad_sch
+part U4 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part U4 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part U4 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U4 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U4 lib Sensor_Fixture:Temp sheet / symbol Sensor_Fixture:Temp
+part U4 unit 1 sheet / uuid db900010-0000-4000-8000-000000000053 line 232 at 345,30 rot 0
+part U4 value = text Temp @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part U5 field Value = Temp @ sch dbg-10_crowded_rail.kicad_sch
+part U5 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part U5 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part U5 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U5 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U5 lib Sensor_Fixture:Temp sheet / symbol Sensor_Fixture:Temp
+part U5 unit 1 sheet / uuid db900010-0000-4000-8000-000000000067 line 276 at 75,80 rot 0
+part U5 value = text Temp @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part U6 field Value = Temp @ sch dbg-10_crowded_rail.kicad_sch
+part U6 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part U6 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part U6 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U6 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U6 lib Sensor_Fixture:Temp sheet / symbol Sensor_Fixture:Temp
+part U6 unit 1 sheet / uuid db900010-0000-4000-8000-000000000081 line 320 at 165,80 rot 0
+part U6 value = text Temp @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part U7 field Value = Temp @ sch dbg-10_crowded_rail.kicad_sch
+part U7 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part U7 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part U7 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U7 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U7 lib Sensor_Fixture:Temp sheet / symbol Sensor_Fixture:Temp
+part U7 unit 1 sheet / uuid db900010-0000-4000-8000-000000000095 line 364 at 255,80 rot 0
+part U7 value = text Temp @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+part U8 field Value = Temp @ sch dbg-10_crowded_rail.kicad_sch
+part U8 flag dnp = no @ sch dbg-10_crowded_rail.kicad_sch
+part U8 flag exclude_from_sim = no @ sch dbg-10_crowded_rail.kicad_sch
+part U8 flag in_bom = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U8 flag on_board = yes @ sch dbg-10_crowded_rail.kicad_sch
+part U8 lib Sensor_Fixture:Temp sheet / symbol Sensor_Fixture:Temp
+part U8 unit 1 sheet / uuid db900010-0000-4000-8000-000000000109 line 408 at 345,80 rot 0
+part U8 value = text Temp @ sch dbg-10_crowded_rail.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +3V3
+pin C1 1 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C2 1 name "" unit 1 net +3V3
+pin C2 1 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C3 1 name "" unit 1 net +3V3
+pin C3 1 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C3 2 name "" unit 1 net GND
+pin C3 2 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C4 1 name "" unit 1 net +3V3
+pin C4 1 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C4 2 name "" unit 1 net GND
+pin C4 2 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C5 1 name "" unit 1 net +3V3
+pin C5 1 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C5 2 name "" unit 1 net GND
+pin C5 2 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C6 1 name "" unit 1 net +3V3
+pin C6 1 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C6 2 name "" unit 1 net GND
+pin C6 2 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C7 1 name "" unit 1 net +3V3_B
+pin C7 1 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C7 2 name "" unit 1 net GND
+pin C7 2 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C8 1 name "" unit 1 net +3V3_B
+pin C8 1 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin C8 2 name "" unit 1 net GND
+pin C8 2 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +3V3
+pin J1 1 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin J1 2 name Pin_2 unit 1 net +3V3_B
+pin J1 2 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin J1 3 name Pin_3 unit 1 net GND
+pin J1 3 type = passive @ sch dbg-10_crowded_rail.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U2 1 name VDD unit 1 net +3V3
+pin U2 1 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U3 1 name VDD unit 1 net +3V3
+pin U3 1 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U4 1 name VDD unit 1 net +3V3
+pin U4 1 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U4 2 name GND unit 1 net GND
+pin U4 2 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U5 1 name VDD unit 1 net +3V3
+pin U5 1 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U5 2 name GND unit 1 net GND
+pin U5 2 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U6 1 name VDD unit 1 net +3V3
+pin U6 1 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U6 2 name GND unit 1 net GND
+pin U6 2 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U7 1 name VDD unit 1 net +3V3_B
+pin U7 1 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U7 2 name GND unit 1 net GND
+pin U7 2 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U8 1 name VDD unit 1 net +3V3_B
+pin U8 1 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+pin U8 2 name GND unit 1 net GND
+pin U8 2 type = power_in @ sch dbg-10_crowded_rail.kicad_sch
+sheet / name "" file dbg-10_crowded_rail.kicad_sch uuid /
+source file dbg-10_crowded_rail.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x03 description "Generic connector"
+symbol Connector_Generic:Conn_01x03 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x03 field Reference J
+symbol Connector_Generic:Conn_01x03 field Value Conn_01x03
+symbol Connector_Generic:Conn_01x03 hash 9d4e8088cbdbe420
+symbol Connector_Generic:Conn_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x03 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Sensor_Fixture:Temp description "Temperature sensor"
+symbol Sensor_Fixture:Temp field Description "Temperature sensor"
+symbol Sensor_Fixture:Temp field Reference U
+symbol Sensor_Fixture:Temp field Value Temp
+symbol Sensor_Fixture:Temp hash f61b3c4e1b0963a9
+symbol Sensor_Fixture:Temp pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Sensor_Fixture:Temp pin 2 unit 1 body 1 name GND type power_in style line
+symbol Sensor_Fixture:Temp units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+3V3_B description "Power symbol +3V3_B"
+symbol power:+3V3_B field Description "Power symbol +3V3_B"
+symbol power:+3V3_B field Reference "#PWR"
+symbol power:+3V3_B field Value +3V3_B
+symbol power:+3V3_B hash 9c6019b51f184efc
+symbol power:+3V3_B pin 1 unit 1 body 1 name +3V3_B type power_in style line
+symbol power:+3V3_B units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

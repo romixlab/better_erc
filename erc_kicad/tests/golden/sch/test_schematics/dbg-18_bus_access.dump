@@ -1,0 +1,323 @@
+board dbg-18_bus_access
+label / local IMU_CS at 67.38,40.16 net /IMU_CS
+label / local IMU_CS at 112.38,35.08 net /IMU_CS
+label / local IMU_MISO at 67.38,37.62 net /IMU_MISO
+label / local IMU_MISO at 112.38,32.54 net /IMU_MISO
+label / local IMU_MOSI at 67.38,35.08 net /IMU_MOSI
+label / local IMU_MOSI at 112.38,30 net /IMU_MOSI
+label / local IMU_SCK at 67.38,32.54 net /IMU_SCK
+label / local IMU_SCK at 112.38,27.46 net /IMU_SCK
+label / local SCL at 67.38,27.46 net /SCL
+label / local SCL at 157.38,27.46 net /SCL
+label / local SCL at 210,33.81 net /SCL
+label / local SCL at 300,30 net /SCL
+label / local SCL2 at 30,83.81 net /SCL2
+label / local SCL2 at 67.38,42.7 net /SCL2
+label / local SCL2 at 120,80 net /SCL2
+label / local SCL2 at 337.38,27.46 net /SCL2
+label / local SDA at 67.38,30 net /SDA
+label / local SDA at 157.38,30 net /SDA
+label / local SDA at 255,33.81 net /SDA
+label / local SDA2 at 67.38,45.24 net /SDA2
+label / local SDA2 at 75,83.81 net /SDA2
+label / local SDA2 at 165,76.19 net /SDA2
+label / local SDA2 at 337.38,30 net /SDA2
+label / local TP_DATA2 at 165,83.81 net /TP_DATA2
+label / local TP_DATA2 at 210,80 net /TP_DATA2
+label / power +3V3 at 24.92,22.38 net +3V3
+label / power +3V3 at 30,76.19 net +3V3
+label / power +3V3 at 67.38,22.38 net +3V3
+label / power +3V3 at 75,76.19 net +3V3
+label / power +3V3 at 112.38,22.38 net +3V3
+label / power +3V3 at 157.38,22.38 net +3V3
+label / power +3V3 at 210,26.19 net +3V3
+label / power +3V3 at 255,26.19 net +3V3
+label / power +3V3 at 337.38,22.38 net +3V3
+label / power GND at 24.92,24.92 net GND
+label / power GND at 67.38,24.92 net GND
+label / power GND at 112.38,24.92 net GND
+label / power GND at 157.38,24.92 net GND
+label / power GND at 337.38,24.92 net GND
+net +3V3 class = Default @ sch dbg-18_bus_access.kicad_sch note "effective net class"
+net +3V3 kind power
+net /IMU_CS class = Default @ sch dbg-18_bus_access.kicad_sch note "effective net class"
+net /IMU_CS kind named
+net /IMU_MISO class = Default @ sch dbg-18_bus_access.kicad_sch note "effective net class"
+net /IMU_MISO kind named
+net /IMU_MOSI class = Default @ sch dbg-18_bus_access.kicad_sch note "effective net class"
+net /IMU_MOSI kind named
+net /IMU_SCK class = Default @ sch dbg-18_bus_access.kicad_sch note "effective net class"
+net /IMU_SCK kind named
+net /SCL class = Default @ sch dbg-18_bus_access.kicad_sch note "effective net class"
+net /SCL kind named
+net /SCL2 class = Default @ sch dbg-18_bus_access.kicad_sch note "effective net class"
+net /SCL2 kind named
+net /SDA class = Default @ sch dbg-18_bus_access.kicad_sch note "effective net class"
+net /SDA kind named
+net /SDA2 class = Default @ sch dbg-18_bus_access.kicad_sch note "effective net class"
+net /SDA2 kind named
+net /TP_DATA2 class = Default @ sch dbg-18_bus_access.kicad_sch note "effective net class"
+net /TP_DATA2 kind named
+net GND class = Default @ sch dbg-18_bus_access.kicad_sch note "effective net class"
+net GND kind power
+part J1 field Value = PWR @ sch dbg-18_bus_access.kicad_sch
+part J1 flag dnp = no @ sch dbg-18_bus_access.kicad_sch
+part J1 flag exclude_from_sim = no @ sch dbg-18_bus_access.kicad_sch
+part J1 flag in_bom = yes @ sch dbg-18_bus_access.kicad_sch
+part J1 flag on_board = yes @ sch dbg-18_bus_access.kicad_sch
+part J1 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J1 unit 1 sheet / uuid db900018-0000-4000-8000-000000000001 line 105 at 30,30 rot 0
+part J1 value = text PWR @ sch dbg-18_bus_access.kicad_sch note "from the Value field"
+part R1 field Value = 4k7 @ sch dbg-18_bus_access.kicad_sch
+part R1 flag dnp = no @ sch dbg-18_bus_access.kicad_sch
+part R1 flag exclude_from_sim = no @ sch dbg-18_bus_access.kicad_sch
+part R1 flag in_bom = yes @ sch dbg-18_bus_access.kicad_sch
+part R1 flag on_board = yes @ sch dbg-18_bus_access.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid db900018-0000-4000-8000-000000000057 line 221 at 210,30 rot 0
+part R1 value = text 4k7 @ sch dbg-18_bus_access.kicad_sch note "from the Value field"
+part R2 field Value = 4k7 @ sch dbg-18_bus_access.kicad_sch
+part R2 flag dnp = no @ sch dbg-18_bus_access.kicad_sch
+part R2 flag exclude_from_sim = no @ sch dbg-18_bus_access.kicad_sch
+part R2 flag in_bom = yes @ sch dbg-18_bus_access.kicad_sch
+part R2 flag on_board = yes @ sch dbg-18_bus_access.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid db900018-0000-4000-8000-000000000063 line 237 at 255,30 rot 0
+part R2 value = text 4k7 @ sch dbg-18_bus_access.kicad_sch note "from the Value field"
+part R3 field Value = 4k7 @ sch dbg-18_bus_access.kicad_sch
+part R3 flag dnp = no @ sch dbg-18_bus_access.kicad_sch
+part R3 flag exclude_from_sim = no @ sch dbg-18_bus_access.kicad_sch
+part R3 flag in_bom = yes @ sch dbg-18_bus_access.kicad_sch
+part R3 flag on_board = yes @ sch dbg-18_bus_access.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid db900018-0000-4000-8000-000000000083 line 287 at 30,80 rot 0
+part R3 value = text 4k7 @ sch dbg-18_bus_access.kicad_sch note "from the Value field"
+part R4 field Value = 4k7 @ sch dbg-18_bus_access.kicad_sch
+part R4 flag dnp = no @ sch dbg-18_bus_access.kicad_sch
+part R4 flag exclude_from_sim = no @ sch dbg-18_bus_access.kicad_sch
+part R4 flag in_bom = yes @ sch dbg-18_bus_access.kicad_sch
+part R4 flag on_board = yes @ sch dbg-18_bus_access.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid db900018-0000-4000-8000-000000000089 line 303 at 75,80 rot 0
+part R4 value = text 4k7 @ sch dbg-18_bus_access.kicad_sch note "from the Value field"
+part R5 field Value = 33R @ sch dbg-18_bus_access.kicad_sch
+part R5 flag dnp = no @ sch dbg-18_bus_access.kicad_sch
+part R5 flag exclude_from_sim = no @ sch dbg-18_bus_access.kicad_sch
+part R5 flag in_bom = yes @ sch dbg-18_bus_access.kicad_sch
+part R5 flag on_board = yes @ sch dbg-18_bus_access.kicad_sch
+part R5 lib Device:R sheet / symbol Device:R
+part R5 unit 1 sheet / uuid db900018-0000-4000-8000-000000000098 line 327 at 165,80 rot 0
+part R5 value = qty 33 ohm @ sch dbg-18_bus_access.kicad_sch note "from the Value field"
+part TP1 field Value = TestPoint @ sch dbg-18_bus_access.kicad_sch
+part TP1 flag dnp = no @ sch dbg-18_bus_access.kicad_sch
+part TP1 flag exclude_from_sim = no @ sch dbg-18_bus_access.kicad_sch
+part TP1 flag in_bom = yes @ sch dbg-18_bus_access.kicad_sch
+part TP1 flag on_board = yes @ sch dbg-18_bus_access.kicad_sch
+part TP1 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP1 unit 1 sheet / uuid db900018-0000-4000-8000-000000000069 line 253 at 300,30 rot 0
+part TP1 value = text TestPoint @ sch dbg-18_bus_access.kicad_sch note "from the Value field"
+part TP2 field Value = TestPoint @ sch dbg-18_bus_access.kicad_sch
+part TP2 flag dnp = no @ sch dbg-18_bus_access.kicad_sch
+part TP2 flag exclude_from_sim = no @ sch dbg-18_bus_access.kicad_sch
+part TP2 flag in_bom = yes @ sch dbg-18_bus_access.kicad_sch
+part TP2 flag on_board = yes @ sch dbg-18_bus_access.kicad_sch
+part TP2 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP2 unit 1 sheet / uuid db900018-0000-4000-8000-000000000095 line 319 at 120,80 rot 0
+part TP2 value = text TestPoint @ sch dbg-18_bus_access.kicad_sch note "from the Value field"
+part TP3 field Value = TestPoint @ sch dbg-18_bus_access.kicad_sch
+part TP3 flag dnp = no @ sch dbg-18_bus_access.kicad_sch
+part TP3 flag exclude_from_sim = no @ sch dbg-18_bus_access.kicad_sch
+part TP3 flag in_bom = yes @ sch dbg-18_bus_access.kicad_sch
+part TP3 flag on_board = yes @ sch dbg-18_bus_access.kicad_sch
+part TP3 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP3 unit 1 sheet / uuid db900018-0000-4000-8000-000000000103 line 337 at 210,80 rot 0
+part TP3 value = text TestPoint @ sch dbg-18_bus_access.kicad_sch note "from the Value field"
+part U1 field Value = MCU_BUS @ sch dbg-18_bus_access.kicad_sch
+part U1 flag dnp = no @ sch dbg-18_bus_access.kicad_sch
+part U1 flag exclude_from_sim = no @ sch dbg-18_bus_access.kicad_sch
+part U1 flag in_bom = yes @ sch dbg-18_bus_access.kicad_sch
+part U1 flag on_board = yes @ sch dbg-18_bus_access.kicad_sch
+part U1 lib MCU_Fixture:MCU_BUS sheet / symbol MCU_Fixture:MCU_BUS
+part U1 unit 1 sheet / uuid db900018-0000-4000-8000-000000000008 line 127 at 75,30 rot 0
+part U1 value = text MCU_BUS @ sch dbg-18_bus_access.kicad_sch note "from the Value field"
+part U2 field Value = IMU @ sch dbg-18_bus_access.kicad_sch
+part U2 flag dnp = no @ sch dbg-18_bus_access.kicad_sch
+part U2 flag exclude_from_sim = no @ sch dbg-18_bus_access.kicad_sch
+part U2 flag in_bom = yes @ sch dbg-18_bus_access.kicad_sch
+part U2 flag on_board = yes @ sch dbg-18_bus_access.kicad_sch
+part U2 lib Sensor_Fixture:IMU sheet / symbol Sensor_Fixture:IMU
+part U2 unit 1 sheet / uuid db900018-0000-4000-8000-000000000031 line 165 at 120,30 rot 0
+part U2 value = text IMU @ sch dbg-18_bus_access.kicad_sch note "from the Value field"
+part U3 field Value = I2CSensor @ sch dbg-18_bus_access.kicad_sch
+part U3 flag dnp = no @ sch dbg-18_bus_access.kicad_sch
+part U3 flag exclude_from_sim = no @ sch dbg-18_bus_access.kicad_sch
+part U3 flag in_bom = yes @ sch dbg-18_bus_access.kicad_sch
+part U3 flag on_board = yes @ sch dbg-18_bus_access.kicad_sch
+part U3 lib Sensor_Fixture:I2CSensor sheet / symbol Sensor_Fixture:I2CSensor
+part U3 unit 1 sheet / uuid db900018-0000-4000-8000-000000000046 line 195 at 165,30 rot 0
+part U3 value = text I2CSensor @ sch dbg-18_bus_access.kicad_sch note "from the Value field"
+part U4 field Value = I2CSensor @ sch dbg-18_bus_access.kicad_sch
+part U4 flag dnp = no @ sch dbg-18_bus_access.kicad_sch
+part U4 flag exclude_from_sim = no @ sch dbg-18_bus_access.kicad_sch
+part U4 flag in_bom = yes @ sch dbg-18_bus_access.kicad_sch
+part U4 flag on_board = yes @ sch dbg-18_bus_access.kicad_sch
+part U4 lib Sensor_Fixture:I2CSensor sheet / symbol Sensor_Fixture:I2CSensor
+part U4 unit 1 sheet / uuid db900018-0000-4000-8000-000000000072 line 261 at 345,30 rot 0
+part U4 value = text I2CSensor @ sch dbg-18_bus_access.kicad_sch note "from the Value field"
+pin J1 1 name Pin_1 unit 1 net +3V3
+pin J1 1 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin J1 2 name Pin_2 unit 1 net GND
+pin J1 2 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin R1 1 name "" unit 1 net +3V3
+pin R1 1 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin R1 2 name "" unit 1 net /SCL
+pin R1 2 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin R2 1 name "" unit 1 net +3V3
+pin R2 1 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin R2 2 name "" unit 1 net /SDA
+pin R2 2 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin R3 1 name "" unit 1 net +3V3
+pin R3 1 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin R3 2 name "" unit 1 net /SCL2
+pin R3 2 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin R4 1 name "" unit 1 net +3V3
+pin R4 1 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin R4 2 name "" unit 1 net /SDA2
+pin R4 2 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin R5 1 name "" unit 1 net /SDA2
+pin R5 1 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin R5 2 name "" unit 1 net /TP_DATA2
+pin R5 2 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin TP1 1 name 1 unit 1 net /SCL
+pin TP1 1 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin TP2 1 name 1 unit 1 net /SCL2
+pin TP2 1 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin TP3 1 name 1 unit 1 net /TP_DATA2
+pin TP3 1 type = passive @ sch dbg-18_bus_access.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch dbg-18_bus_access.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch dbg-18_bus_access.kicad_sch
+pin U1 3 name PB6/I2C1_SCL unit 1 net /SCL
+pin U1 3 type = bidirectional @ sch dbg-18_bus_access.kicad_sch
+pin U1 4 name PB7/I2C1_SDA unit 1 net /SDA
+pin U1 4 type = bidirectional @ sch dbg-18_bus_access.kicad_sch
+pin U1 5 name PA5/SPI1_SCK unit 1 net /IMU_SCK
+pin U1 5 type = bidirectional @ sch dbg-18_bus_access.kicad_sch
+pin U1 6 name PA7/SPI1_MOSI unit 1 net /IMU_MOSI
+pin U1 6 type = bidirectional @ sch dbg-18_bus_access.kicad_sch
+pin U1 7 name PA6/SPI1_MISO unit 1 net /IMU_MISO
+pin U1 7 type = bidirectional @ sch dbg-18_bus_access.kicad_sch
+pin U1 8 name PA4/SPI1_NSS unit 1 net /IMU_CS
+pin U1 8 type = bidirectional @ sch dbg-18_bus_access.kicad_sch
+pin U1 9 name PB10/I2C2_SCL unit 1 net /SCL2
+pin U1 9 type = bidirectional @ sch dbg-18_bus_access.kicad_sch
+pin U1 10 name PB11/I2C2_SDA unit 1 net /SDA2
+pin U1 10 type = bidirectional @ sch dbg-18_bus_access.kicad_sch
+pin U2 1 name VDD unit 1 net +3V3
+pin U2 1 type = power_in @ sch dbg-18_bus_access.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch dbg-18_bus_access.kicad_sch
+pin U2 3 name SCK unit 1 net /IMU_SCK
+pin U2 3 type = input @ sch dbg-18_bus_access.kicad_sch
+pin U2 4 name MOSI unit 1 net /IMU_MOSI
+pin U2 4 type = input @ sch dbg-18_bus_access.kicad_sch
+pin U2 5 name MISO unit 1 net /IMU_MISO
+pin U2 5 type = output @ sch dbg-18_bus_access.kicad_sch
+pin U2 6 name CS unit 1 net /IMU_CS
+pin U2 6 type = input @ sch dbg-18_bus_access.kicad_sch
+pin U3 1 name VDD unit 1 net +3V3
+pin U3 1 type = power_in @ sch dbg-18_bus_access.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch dbg-18_bus_access.kicad_sch
+pin U3 3 name SCL unit 1 net /SCL
+pin U3 3 type = input @ sch dbg-18_bus_access.kicad_sch
+pin U3 4 name SDA unit 1 net /SDA
+pin U3 4 type = bidirectional @ sch dbg-18_bus_access.kicad_sch
+pin U4 1 name VDD unit 1 net +3V3
+pin U4 1 type = power_in @ sch dbg-18_bus_access.kicad_sch
+pin U4 2 name GND unit 1 net GND
+pin U4 2 type = power_in @ sch dbg-18_bus_access.kicad_sch
+pin U4 3 name SCL unit 1 net /SCL2
+pin U4 3 type = input @ sch dbg-18_bus_access.kicad_sch
+pin U4 4 name SDA unit 1 net /SDA2
+pin U4 4 type = bidirectional @ sch dbg-18_bus_access.kicad_sch
+sheet / name "" file dbg-18_bus_access.kicad_sch uuid /
+source file dbg-18_bus_access.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:TestPoint description "test point"
+symbol Connector:TestPoint field Description "test point"
+symbol Connector:TestPoint field Reference TP
+symbol Connector:TestPoint field Value TestPoint
+symbol Connector:TestPoint hash 193777c0a1992431
+symbol Connector:TestPoint pin 1 unit 1 body 1 name 1 type passive style line
+symbol Connector:TestPoint units 1
+symbol Connector_Generic:Conn_01x02 description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 9d5a102eadbd54ad
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Fixture:MCU_BUS description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_BUS field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_BUS field Reference U
+symbol MCU_Fixture:MCU_BUS field Value MCU_BUS
+symbol MCU_Fixture:MCU_BUS hash e6a1e2818154ec84
+symbol MCU_Fixture:MCU_BUS pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_BUS pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_BUS pin 3 unit 1 body 1 name PB6/I2C1_SCL type bidirectional style line
+symbol MCU_Fixture:MCU_BUS pin 4 unit 1 body 1 name PB7/I2C1_SDA type bidirectional style line
+symbol MCU_Fixture:MCU_BUS pin 5 unit 1 body 1 name PA5/SPI1_SCK type bidirectional style line
+symbol MCU_Fixture:MCU_BUS pin 6 unit 1 body 1 name PA7/SPI1_MOSI type bidirectional style line
+symbol MCU_Fixture:MCU_BUS pin 7 unit 1 body 1 name PA6/SPI1_MISO type bidirectional style line
+symbol MCU_Fixture:MCU_BUS pin 8 unit 1 body 1 name PA4/SPI1_NSS type bidirectional style line
+symbol MCU_Fixture:MCU_BUS pin 9 unit 1 body 1 name PB10/I2C2_SCL type bidirectional style line
+symbol MCU_Fixture:MCU_BUS pin 10 unit 1 body 1 name PB11/I2C2_SDA type bidirectional style line
+symbol MCU_Fixture:MCU_BUS units 1
+symbol Sensor_Fixture:I2CSensor description "Temperature sensor"
+symbol Sensor_Fixture:I2CSensor field Description "Temperature sensor"
+symbol Sensor_Fixture:I2CSensor field Reference U
+symbol Sensor_Fixture:I2CSensor field Value I2CSensor
+symbol Sensor_Fixture:I2CSensor hash 41db99bfe198b90a
+symbol Sensor_Fixture:I2CSensor pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Sensor_Fixture:I2CSensor pin 2 unit 1 body 1 name GND type power_in style line
+symbol Sensor_Fixture:I2CSensor pin 3 unit 1 body 1 name SCL type input style line
+symbol Sensor_Fixture:I2CSensor pin 4 unit 1 body 1 name SDA type bidirectional style line
+symbol Sensor_Fixture:I2CSensor units 1
+symbol Sensor_Fixture:IMU description "Inertial measurement unit"
+symbol Sensor_Fixture:IMU field Description "Inertial measurement unit"
+symbol Sensor_Fixture:IMU field Reference U
+symbol Sensor_Fixture:IMU field Value IMU
+symbol Sensor_Fixture:IMU hash 50d6837b108e09ef
+symbol Sensor_Fixture:IMU pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Sensor_Fixture:IMU pin 2 unit 1 body 1 name GND type power_in style line
+symbol Sensor_Fixture:IMU pin 3 unit 1 body 1 name SCK type input style line
+symbol Sensor_Fixture:IMU pin 4 unit 1 body 1 name MOSI type input style line
+symbol Sensor_Fixture:IMU pin 5 unit 1 body 1 name MISO type output style line
+symbol Sensor_Fixture:IMU pin 6 unit 1 body 1 name CS type input style line
+symbol Sensor_Fixture:IMU units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

@@ -13,7 +13,7 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ### Added
 
-- Stage 1 easy checks, batch checks-dec: `DEC-1`, `DEC-4`, `DEC-7`, `DEC-8`, `DEC-10`, `DEC-11`, `DEC-12`, each with its test schematic and sidecar; `erc_analysis::{pin_name, access, supply}` (`NET-22`), `PartClass::is_programmable`.
+- Stage 1 easy checks, batch checks-dec: `DEC-1`, `DEC-4`, `DEC-7`, `DEC-8`, `DEC-10`, `DEC-11`, `DEC-12`, `DBG-1`, `DBG-2`, `DBG-3`, `DBG-4`, `DBG-7`, `DBG-8`, `DBG-10`, `DBG-11`, `DBG-14`, `DBG-16`, `DBG-17`, `DBG-18`, each with its test schematic and sidecar; `erc_analysis::{pin_name, access, supply}` (`NET-22`), `PartClass::is_programmable`.
 
 ## [0.4.3] - 2026-10-22
 

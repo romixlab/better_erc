@@ -1,0 +1,225 @@
+board dbg-8_open_drain_pull_ups
+label / local LED1_A at 300,33.81 net /LED1_A
+label / local LED1_A at 345,26.19 net /LED1_A
+label / local LED1_K at 257.54,24.92 net /LED1_K
+label / local LED1_K at 345,33.81 net /LED1_K
+label / local PMIC_IRQ at 67.38,27.46 net /PMIC_IRQ
+label / local PMIC_IRQ at 112.38,27.46 net /PMIC_IRQ
+label / local QGATE at 67.38,32.54 net /QGATE
+label / local QGATE at 249.92,30 net /QGATE
+label / local SENSOR_INT at 67.38,30 net /SENSOR_INT
+label / local SENSOR_INT at 157.38,27.46 net /SENSOR_INT
+label / local SENSOR_INT at 210,26.19 net /SENSOR_INT
+label / power +3V3 at 24.92,22.38 net +3V3
+label / power +3V3 at 67.38,22.38 net +3V3
+label / power +3V3 at 112.38,22.38 net +3V3
+label / power +3V3 at 157.38,22.38 net +3V3
+label / power +3V3 at 210,33.81 net +3V3
+label / power +3V3 at 300,26.19 net +3V3
+label / power GND at 24.92,24.92 net GND
+label / power GND at 67.38,24.92 net GND
+label / power GND at 112.38,24.92 net GND
+label / power GND at 157.38,24.92 net GND
+label / power GND at 257.54,35.08 net GND
+net +3V3 class = Default @ sch dbg-8_open_drain_pull_ups.kicad_sch note "effective net class"
+net +3V3 kind power
+net /LED1_A class = Default @ sch dbg-8_open_drain_pull_ups.kicad_sch note "effective net class"
+net /LED1_A kind named
+net /LED1_K class = Default @ sch dbg-8_open_drain_pull_ups.kicad_sch note "effective net class"
+net /LED1_K kind named
+net /PMIC_IRQ class = Default @ sch dbg-8_open_drain_pull_ups.kicad_sch note "effective net class"
+net /PMIC_IRQ kind named
+net /QGATE class = Default @ sch dbg-8_open_drain_pull_ups.kicad_sch note "effective net class"
+net /QGATE kind named
+net /SENSOR_INT class = Default @ sch dbg-8_open_drain_pull_ups.kicad_sch note "effective net class"
+net /SENSOR_INT kind named
+net GND class = Default @ sch dbg-8_open_drain_pull_ups.kicad_sch note "effective net class"
+net GND kind power
+part D1 field Value = LED @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part D1 flag dnp = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part D1 flag exclude_from_sim = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part D1 flag in_bom = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part D1 flag on_board = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part D1 lib Device:LED sheet / symbol Device:LED
+part D1 unit 1 sheet / uuid db900008-0000-4000-8000-000000000059 line 257 at 345,30 rot 0
+part D1 value = text LED @ sch dbg-8_open_drain_pull_ups.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part J1 flag dnp = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part J1 flag exclude_from_sim = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part J1 flag in_bom = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part J1 flag on_board = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part J1 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J1 unit 1 sheet / uuid db900008-0000-4000-8000-000000000001 line 109 at 30,30 rot 0
+part J1 value = text PWR @ sch dbg-8_open_drain_pull_ups.kicad_sch note "from the Value field"
+part Q1 field Value = 2N7002 @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part Q1 flag dnp = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part Q1 flag exclude_from_sim = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part Q1 flag in_bom = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part Q1 flag on_board = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part Q1 lib Transistor_FET:2N7002 sheet / symbol Transistor_FET:2N7002
+part Q1 unit 1 sheet / uuid db900008-0000-4000-8000-000000000045 line 223 at 255,30 rot 0
+part Q1 value = text 2N7002 @ sch dbg-8_open_drain_pull_ups.kicad_sch note "from the Value field"
+part R1 field Value = 10k @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part R1 flag dnp = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part R1 flag exclude_from_sim = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part R1 flag in_bom = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part R1 flag on_board = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid db900008-0000-4000-8000-000000000039 line 207 at 210,30 rot 0
+part R1 value = text 10k @ sch dbg-8_open_drain_pull_ups.kicad_sch note "from the Value field"
+part R2 field Value = 1k @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part R2 flag dnp = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part R2 flag exclude_from_sim = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part R2 flag in_bom = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part R2 flag on_board = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid db900008-0000-4000-8000-000000000053 line 241 at 300,30 rot 0
+part R2 value = text 1k @ sch dbg-8_open_drain_pull_ups.kicad_sch note "from the Value field"
+part U1 field Value = MCU_IO3 @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U1 flag dnp = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U1 flag exclude_from_sim = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U1 flag in_bom = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U1 flag on_board = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U1 lib MCU_Fixture:MCU_IO3 sheet / symbol MCU_Fixture:MCU_IO3
+part U1 unit 1 sheet / uuid db900008-0000-4000-8000-000000000008 line 131 at 75,30 rot 0
+part U1 value = text MCU_IO3 @ sch dbg-8_open_drain_pull_ups.kicad_sch note "from the Value field"
+part U2 field Value = PMIC @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U2 flag dnp = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U2 flag exclude_from_sim = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U2 flag in_bom = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U2 flag on_board = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U2 lib Regulator_Switching:PMIC sheet / symbol Regulator_Switching:PMIC
+part U2 unit 1 sheet / uuid db900008-0000-4000-8000-000000000021 line 159 at 120,30 rot 0
+part U2 value = text PMIC @ sch dbg-8_open_drain_pull_ups.kicad_sch note "from the Value field"
+part U3 field Value = Accel @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U3 flag dnp = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U3 flag exclude_from_sim = no @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U3 flag in_bom = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U3 flag on_board = yes @ sch dbg-8_open_drain_pull_ups.kicad_sch
+part U3 lib Sensor_Fixture:Accel sheet / symbol Sensor_Fixture:Accel
+part U3 unit 1 sheet / uuid db900008-0000-4000-8000-000000000030 line 183 at 165,30 rot 0
+part U3 value = text Accel @ sch dbg-8_open_drain_pull_ups.kicad_sch note "from the Value field"
+pin D1 1 name A unit 1 net /LED1_A
+pin D1 1 type = passive @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin D1 2 name K unit 1 net /LED1_K
+pin D1 2 type = passive @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +3V3
+pin J1 1 type = passive @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin J1 2 name Pin_2 unit 1 net GND
+pin J1 2 type = passive @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin Q1 1 name G unit 1 net /QGATE
+pin Q1 1 type = input @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin Q1 2 name S unit 1 net GND
+pin Q1 2 type = passive @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin Q1 3 name D unit 1 net /LED1_K
+pin Q1 3 type = passive @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin R1 1 name "" unit 1 net /SENSOR_INT
+pin R1 1 type = passive @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin R1 2 name "" unit 1 net +3V3
+pin R1 2 type = passive @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin R2 1 name "" unit 1 net +3V3
+pin R2 1 type = passive @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin R2 2 name "" unit 1 net /LED1_A
+pin R2 2 type = passive @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin U1 3 name PA0 unit 1 net /PMIC_IRQ
+pin U1 3 type = bidirectional @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin U1 4 name PA1 unit 1 net /SENSOR_INT
+pin U1 4 type = bidirectional @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin U1 5 name PA2 unit 1 net /QGATE
+pin U1 5 type = bidirectional @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin U2 1 name VIN unit 1 net +3V3
+pin U2 1 type = power_in @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin U2 3 name ~{IRQ} unit 1 net /PMIC_IRQ
+pin U2 3 type = output @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin U3 1 name VDD unit 1 net +3V3
+pin U3 1 type = power_in @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch dbg-8_open_drain_pull_ups.kicad_sch
+pin U3 3 name INT unit 1 net /SENSOR_INT
+pin U3 3 type = open_collector @ sch dbg-8_open_drain_pull_ups.kicad_sch
+sheet / name "" file dbg-8_open_drain_pull_ups.kicad_sch uuid /
+source file dbg-8_open_drain_pull_ups.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x02 description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 9d5a102eadbd54ad
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Device:LED description "Light emitting diode"
+symbol Device:LED field Description "Light emitting diode"
+symbol Device:LED field Reference D
+symbol Device:LED field Value LED
+symbol Device:LED hash 4f27c4b7e9002133
+symbol Device:LED pin 1 unit 1 body 1 name A type passive style line
+symbol Device:LED pin 2 unit 1 body 1 name K type passive style line
+symbol Device:LED units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Fixture:MCU_IO3 description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_IO3 field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_IO3 field Reference U
+symbol MCU_Fixture:MCU_IO3 field Value MCU_IO3
+symbol MCU_Fixture:MCU_IO3 hash baae4eea9f830e69
+symbol MCU_Fixture:MCU_IO3 pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_IO3 pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_IO3 pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Fixture:MCU_IO3 pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Fixture:MCU_IO3 pin 5 unit 1 body 1 name PA2 type bidirectional style line
+symbol MCU_Fixture:MCU_IO3 units 1
+symbol Regulator_Switching:PMIC description "Power management IC"
+symbol Regulator_Switching:PMIC field Description "Power management IC"
+symbol Regulator_Switching:PMIC field Reference U
+symbol Regulator_Switching:PMIC field Value PMIC
+symbol Regulator_Switching:PMIC hash 0e590da6a624b786
+symbol Regulator_Switching:PMIC pin 1 unit 1 body 1 name VIN type power_in style line
+symbol Regulator_Switching:PMIC pin 2 unit 1 body 1 name GND type power_in style line
+symbol Regulator_Switching:PMIC pin 3 unit 1 body 1 name ~{IRQ} type output style line
+symbol Regulator_Switching:PMIC units 1
+symbol Sensor_Fixture:Accel description Accelerometer
+symbol Sensor_Fixture:Accel field Description Accelerometer
+symbol Sensor_Fixture:Accel field Reference U
+symbol Sensor_Fixture:Accel field Value Accel
+symbol Sensor_Fixture:Accel hash 230cd809ef44bdcd
+symbol Sensor_Fixture:Accel pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Sensor_Fixture:Accel pin 2 unit 1 body 1 name GND type power_in style line
+symbol Sensor_Fixture:Accel pin 3 unit 1 body 1 name INT type open_collector style line
+symbol Sensor_Fixture:Accel units 1
+symbol Transistor_FET:2N7002 description "N-Channel MOSFET"
+symbol Transistor_FET:2N7002 field Description "N-Channel MOSFET"
+symbol Transistor_FET:2N7002 field Reference Q
+symbol Transistor_FET:2N7002 field Value 2N7002
+symbol Transistor_FET:2N7002 hash 30249cdd9253f9c6
+symbol Transistor_FET:2N7002 pin 1 unit 1 body 1 name G type input style line
+symbol Transistor_FET:2N7002 pin 2 unit 1 body 1 name S type passive style line
+symbol Transistor_FET:2N7002 pin 3 unit 1 body 1 name D type passive style line
+symbol Transistor_FET:2N7002 units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

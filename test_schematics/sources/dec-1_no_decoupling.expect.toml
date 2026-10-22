@@ -1,6 +1,14 @@
 # What better_erc finds on dec-1_no_decoupling.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_IO"]
+
+[[finding]]
 check = "DEC-1"
 subjects = ["net +3V3_IO"]
 

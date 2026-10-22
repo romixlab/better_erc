@@ -1,0 +1,264 @@
+board dbg-4_power_leds
+label / local LED1_A at 120,33.81 net /LED1_A
+label / local LED1_A at 165,26.19 net /LED1_A
+label / local LED2_A at 255,33.81 net /LED2_A
+label / local LED2_A at 300,26.19 net /LED2_A
+label / local LED2_K at 202.38,27.46 net /LED2_K
+label / local LED2_K at 300,33.81 net /LED2_K
+label / local LED3_A at 75,83.81 net /LED3_A
+label / local LED3_A at 120,76.19 net /LED3_A
+label / local LED3_K at 32.54,74.92 net /LED3_K
+label / local LED3_K at 120,83.81 net /LED3_K
+label / local QGATE at 202.38,30 net /QGATE
+label / local QGATE at 345,26.19 net /QGATE
+label / local QGATE_R at 24.92,80 net /QGATE_R
+label / local QGATE_R at 345,33.81 net /QGATE_R
+label / power +3V3 at 67.38,27.46 net +3V3
+label / power +3V3 at 75,76.19 net +3V3
+label / power +3V3 at 120,26.19 net +3V3
+label / power +3V3 at 202.38,22.38 net +3V3
+label / power +3V3 at 255,26.19 net +3V3
+label / power +5V at 24.92,22.38 net +5V
+label / power +5V at 67.38,22.38 net +5V
+label / power GND at 24.92,24.92 net GND
+label / power GND at 32.54,85.08 net GND
+label / power GND at 67.38,24.92 net GND
+label / power GND at 165,33.81 net GND
+label / power GND at 202.38,24.92 net GND
+net +3V3 class = Default @ sch dbg-4_power_leds.kicad_sch note "effective net class"
+net +3V3 kind power
+net +5V class = Default @ sch dbg-4_power_leds.kicad_sch note "effective net class"
+net +5V kind power
+net /LED1_A class = Default @ sch dbg-4_power_leds.kicad_sch note "effective net class"
+net /LED1_A kind named
+net /LED2_A class = Default @ sch dbg-4_power_leds.kicad_sch note "effective net class"
+net /LED2_A kind named
+net /LED2_K class = Default @ sch dbg-4_power_leds.kicad_sch note "effective net class"
+net /LED2_K kind named
+net /LED3_A class = Default @ sch dbg-4_power_leds.kicad_sch note "effective net class"
+net /LED3_A kind named
+net /LED3_K class = Default @ sch dbg-4_power_leds.kicad_sch note "effective net class"
+net /LED3_K kind named
+net /QGATE class = Default @ sch dbg-4_power_leds.kicad_sch note "effective net class"
+net /QGATE kind named
+net /QGATE_R class = Default @ sch dbg-4_power_leds.kicad_sch note "effective net class"
+net /QGATE_R kind named
+net GND class = Default @ sch dbg-4_power_leds.kicad_sch note "effective net class"
+net GND kind power
+part D1 field Value = LED @ sch dbg-4_power_leds.kicad_sch
+part D1 flag dnp = no @ sch dbg-4_power_leds.kicad_sch
+part D1 flag exclude_from_sim = no @ sch dbg-4_power_leds.kicad_sch
+part D1 flag in_bom = yes @ sch dbg-4_power_leds.kicad_sch
+part D1 flag on_board = yes @ sch dbg-4_power_leds.kicad_sch
+part D1 lib Device:LED sheet / symbol Device:LED
+part D1 unit 1 sheet / uuid db900004-0000-4000-8000-000000000024 line 174 at 165,30 rot 0
+part D1 value = text LED @ sch dbg-4_power_leds.kicad_sch note "from the Value field"
+part D2 field Value = LED @ sch dbg-4_power_leds.kicad_sch
+part D2 flag dnp = no @ sch dbg-4_power_leds.kicad_sch
+part D2 flag exclude_from_sim = no @ sch dbg-4_power_leds.kicad_sch
+part D2 flag in_bom = yes @ sch dbg-4_power_leds.kicad_sch
+part D2 flag on_board = yes @ sch dbg-4_power_leds.kicad_sch
+part D2 lib Device:LED sheet / symbol Device:LED
+part D2 unit 1 sheet / uuid db900004-0000-4000-8000-000000000047 line 232 at 300,30 rot 0
+part D2 value = text LED @ sch dbg-4_power_leds.kicad_sch note "from the Value field"
+part D3 field Value = LED @ sch dbg-4_power_leds.kicad_sch
+part D3 flag dnp = no @ sch dbg-4_power_leds.kicad_sch
+part D3 flag exclude_from_sim = no @ sch dbg-4_power_leds.kicad_sch
+part D3 flag in_bom = yes @ sch dbg-4_power_leds.kicad_sch
+part D3 flag on_board = yes @ sch dbg-4_power_leds.kicad_sch
+part D3 lib Device:LED sheet / symbol Device:LED
+part D3 unit 1 sheet / uuid db900004-0000-4000-8000-000000000071 line 286 at 120,80 rot 0
+part D3 value = text LED @ sch dbg-4_power_leds.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch dbg-4_power_leds.kicad_sch
+part J1 flag dnp = no @ sch dbg-4_power_leds.kicad_sch
+part J1 flag exclude_from_sim = no @ sch dbg-4_power_leds.kicad_sch
+part J1 flag in_bom = yes @ sch dbg-4_power_leds.kicad_sch
+part J1 flag on_board = yes @ sch dbg-4_power_leds.kicad_sch
+part J1 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J1 unit 1 sheet / uuid db900004-0000-4000-8000-000000000001 line 106 at 30,30 rot 0
+part J1 value = text PWR @ sch dbg-4_power_leds.kicad_sch note "from the Value field"
+part Q1 field Value = 2N7002 @ sch dbg-4_power_leds.kicad_sch
+part Q1 flag dnp = no @ sch dbg-4_power_leds.kicad_sch
+part Q1 flag exclude_from_sim = no @ sch dbg-4_power_leds.kicad_sch
+part Q1 flag in_bom = yes @ sch dbg-4_power_leds.kicad_sch
+part Q1 flag on_board = yes @ sch dbg-4_power_leds.kicad_sch
+part Q1 lib Transistor_FET:2N7002 sheet / symbol Transistor_FET:2N7002
+part Q1 unit 1 sheet / uuid db900004-0000-4000-8000-000000000057 line 252 at 30,80 rot 0
+part Q1 value = text 2N7002 @ sch dbg-4_power_leds.kicad_sch note "from the Value field"
+part R1 field Value = 1k @ sch dbg-4_power_leds.kicad_sch
+part R1 flag dnp = no @ sch dbg-4_power_leds.kicad_sch
+part R1 flag exclude_from_sim = no @ sch dbg-4_power_leds.kicad_sch
+part R1 flag in_bom = yes @ sch dbg-4_power_leds.kicad_sch
+part R1 flag on_board = yes @ sch dbg-4_power_leds.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid db900004-0000-4000-8000-000000000018 line 158 at 120,30 rot 0
+part R1 value = text 1k @ sch dbg-4_power_leds.kicad_sch note "from the Value field"
+part R2 field Value = 1k @ sch dbg-4_power_leds.kicad_sch
+part R2 flag dnp = no @ sch dbg-4_power_leds.kicad_sch
+part R2 flag exclude_from_sim = no @ sch dbg-4_power_leds.kicad_sch
+part R2 flag in_bom = yes @ sch dbg-4_power_leds.kicad_sch
+part R2 flag on_board = yes @ sch dbg-4_power_leds.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid db900004-0000-4000-8000-000000000041 line 216 at 255,30 rot 0
+part R2 value = text 1k @ sch dbg-4_power_leds.kicad_sch note "from the Value field"
+part R3 field Value = 1k @ sch dbg-4_power_leds.kicad_sch
+part R3 flag dnp = no @ sch dbg-4_power_leds.kicad_sch
+part R3 flag exclude_from_sim = no @ sch dbg-4_power_leds.kicad_sch
+part R3 flag in_bom = yes @ sch dbg-4_power_leds.kicad_sch
+part R3 flag on_board = yes @ sch dbg-4_power_leds.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid db900004-0000-4000-8000-000000000052 line 242 at 345,30 rot 0
+part R3 value = text 1k @ sch dbg-4_power_leds.kicad_sch note "from the Value field"
+part R4 field Value = 1k @ sch dbg-4_power_leds.kicad_sch
+part R4 flag dnp = no @ sch dbg-4_power_leds.kicad_sch
+part R4 flag exclude_from_sim = no @ sch dbg-4_power_leds.kicad_sch
+part R4 flag in_bom = yes @ sch dbg-4_power_leds.kicad_sch
+part R4 flag on_board = yes @ sch dbg-4_power_leds.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid db900004-0000-4000-8000-000000000065 line 270 at 75,80 rot 0
+part R4 value = text 1k @ sch dbg-4_power_leds.kicad_sch note "from the Value field"
+part U1 field Value = LDO @ sch dbg-4_power_leds.kicad_sch
+part U1 flag dnp = no @ sch dbg-4_power_leds.kicad_sch
+part U1 flag exclude_from_sim = no @ sch dbg-4_power_leds.kicad_sch
+part U1 flag in_bom = yes @ sch dbg-4_power_leds.kicad_sch
+part U1 flag on_board = yes @ sch dbg-4_power_leds.kicad_sch
+part U1 lib Regulator_Linear:LDO sheet / symbol Regulator_Linear:LDO
+part U1 unit 1 sheet / uuid db900004-0000-4000-8000-000000000008 line 128 at 75,30 rot 0
+part U1 value = text LDO @ sch dbg-4_power_leds.kicad_sch note "from the Value field"
+part U2 field Value = MCU_IO @ sch dbg-4_power_leds.kicad_sch
+part U2 flag dnp = no @ sch dbg-4_power_leds.kicad_sch
+part U2 flag exclude_from_sim = no @ sch dbg-4_power_leds.kicad_sch
+part U2 flag in_bom = yes @ sch dbg-4_power_leds.kicad_sch
+part U2 flag on_board = yes @ sch dbg-4_power_leds.kicad_sch
+part U2 lib MCU_Fixture:MCU_IO sheet / symbol MCU_Fixture:MCU_IO
+part U2 unit 1 sheet / uuid db900004-0000-4000-8000-000000000030 line 190 at 210,30 rot 0
+part U2 value = text MCU_IO @ sch dbg-4_power_leds.kicad_sch note "from the Value field"
+pin D1 1 name A unit 1 net /LED1_A
+pin D1 1 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin D1 2 name K unit 1 net GND
+pin D1 2 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin D2 1 name A unit 1 net /LED2_A
+pin D2 1 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin D2 2 name K unit 1 net /LED2_K
+pin D2 2 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin D3 1 name A unit 1 net /LED3_A
+pin D3 1 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin D3 2 name K unit 1 net /LED3_K
+pin D3 2 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +5V
+pin J1 1 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin J1 2 name Pin_2 unit 1 net GND
+pin J1 2 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin Q1 1 name G unit 1 net /QGATE_R
+pin Q1 1 type = input @ sch dbg-4_power_leds.kicad_sch
+pin Q1 2 name S unit 1 net GND
+pin Q1 2 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin Q1 3 name D unit 1 net /LED3_K
+pin Q1 3 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin R1 1 name "" unit 1 net +3V3
+pin R1 1 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin R1 2 name "" unit 1 net /LED1_A
+pin R1 2 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin R2 1 name "" unit 1 net +3V3
+pin R2 1 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin R2 2 name "" unit 1 net /LED2_A
+pin R2 2 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin R3 1 name "" unit 1 net /QGATE
+pin R3 1 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin R3 2 name "" unit 1 net /QGATE_R
+pin R3 2 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin R4 1 name "" unit 1 net +3V3
+pin R4 1 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin R4 2 name "" unit 1 net /LED3_A
+pin R4 2 type = passive @ sch dbg-4_power_leds.kicad_sch
+pin U1 1 name VI unit 1 net +5V
+pin U1 1 type = power_in @ sch dbg-4_power_leds.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch dbg-4_power_leds.kicad_sch
+pin U1 3 name VO unit 1 net +3V3
+pin U1 3 type = power_out @ sch dbg-4_power_leds.kicad_sch
+pin U2 1 name VDD unit 1 net +3V3
+pin U2 1 type = power_in @ sch dbg-4_power_leds.kicad_sch
+pin U2 2 name VSS unit 1 net GND
+pin U2 2 type = power_in @ sch dbg-4_power_leds.kicad_sch
+pin U2 3 name PA0 unit 1 net /LED2_K
+pin U2 3 type = bidirectional @ sch dbg-4_power_leds.kicad_sch
+pin U2 4 name PA1 unit 1 net /QGATE
+pin U2 4 type = bidirectional @ sch dbg-4_power_leds.kicad_sch
+sheet / name "" file dbg-4_power_leds.kicad_sch uuid /
+source file dbg-4_power_leds.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x02 description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 9d5a102eadbd54ad
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Device:LED description "Light emitting diode"
+symbol Device:LED field Description "Light emitting diode"
+symbol Device:LED field Reference D
+symbol Device:LED field Value LED
+symbol Device:LED hash 4f27c4b7e9002133
+symbol Device:LED pin 1 unit 1 body 1 name A type passive style line
+symbol Device:LED pin 2 unit 1 body 1 name K type passive style line
+symbol Device:LED units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Fixture:MCU_IO description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_IO field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_IO field Reference U
+symbol MCU_Fixture:MCU_IO field Value MCU_IO
+symbol MCU_Fixture:MCU_IO hash 9ee09c8327612571
+symbol MCU_Fixture:MCU_IO pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_IO pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_IO pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Fixture:MCU_IO pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Fixture:MCU_IO units 1
+symbol Regulator_Linear:LDO description "Low dropout regulator"
+symbol Regulator_Linear:LDO field Description "Low dropout regulator"
+symbol Regulator_Linear:LDO field Reference U
+symbol Regulator_Linear:LDO field Value LDO
+symbol Regulator_Linear:LDO hash 689b53487341f293
+symbol Regulator_Linear:LDO pin 1 unit 1 body 1 name VI type power_in style line
+symbol Regulator_Linear:LDO pin 2 unit 1 body 1 name GND type power_in style line
+symbol Regulator_Linear:LDO pin 3 unit 1 body 1 name VO type power_out style line
+symbol Regulator_Linear:LDO units 1
+symbol Transistor_FET:2N7002 description "N-Channel MOSFET"
+symbol Transistor_FET:2N7002 field Description "N-Channel MOSFET"
+symbol Transistor_FET:2N7002 field Reference Q
+symbol Transistor_FET:2N7002 field Value 2N7002
+symbol Transistor_FET:2N7002 hash 30249cdd9253f9c6
+symbol Transistor_FET:2N7002 pin 1 unit 1 body 1 name G type input style line
+symbol Transistor_FET:2N7002 pin 2 unit 1 body 1 name S type passive style line
+symbol Transistor_FET:2N7002 pin 3 unit 1 body 1 name D type passive style line
+symbol Transistor_FET:2N7002 units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

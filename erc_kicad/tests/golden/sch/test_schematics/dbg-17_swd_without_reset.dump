@@ -1,0 +1,215 @@
+board dbg-17_swd_without_reset
+label / local NRST at 67.38,32.54 net /NRST
+label / local NRST at 165,33.81 net /NRST
+label / local NRST2 at 202.38,32.54 net /NRST2
+label / local NRST2 at 249.92,32.54 net /NRST2
+label / local SWCLK at 67.38,30 net /SWCLK
+label / local SWCLK at 114.92,27.46 net /SWCLK
+label / local SWCLK2 at 202.38,30 net /SWCLK2
+label / local SWCLK2 at 249.92,27.46 net /SWCLK2
+label / local SWDIO at 67.38,27.46 net /SWDIO
+label / local SWDIO at 114.92,24.92 net /SWDIO
+label / local SWDIO2 at 202.38,27.46 net /SWDIO2
+label / local SWDIO2 at 249.92,24.92 net /SWDIO2
+label / local SWO at 67.38,35.08 net /SWO
+label / local SWO2 at 202.38,35.08 net /SWO2
+label / local SWO2 at 249.92,30 net /SWO2
+label / power +3V3 at 24.92,22.38 net +3V3
+label / power +3V3 at 67.38,22.38 net +3V3
+label / power +3V3 at 114.92,22.38 net +3V3
+label / power +3V3 at 165,26.19 net +3V3
+label / power +3V3 at 202.38,22.38 net +3V3
+label / power +3V3 at 249.92,22.38 net +3V3
+label / power GND at 24.92,24.92 net GND
+label / power GND at 67.38,24.92 net GND
+label / power GND at 114.92,30 net GND
+label / power GND at 202.38,24.92 net GND
+label / power GND at 249.92,35.08 net GND
+net +3V3 class = Default @ sch dbg-17_swd_without_reset.kicad_sch note "effective net class"
+net +3V3 kind power
+net /NRST class = Default @ sch dbg-17_swd_without_reset.kicad_sch note "effective net class"
+net /NRST kind named
+net /NRST2 class = Default @ sch dbg-17_swd_without_reset.kicad_sch note "effective net class"
+net /NRST2 kind named
+net /SWCLK class = Default @ sch dbg-17_swd_without_reset.kicad_sch note "effective net class"
+net /SWCLK kind named
+net /SWCLK2 class = Default @ sch dbg-17_swd_without_reset.kicad_sch note "effective net class"
+net /SWCLK2 kind named
+net /SWDIO class = Default @ sch dbg-17_swd_without_reset.kicad_sch note "effective net class"
+net /SWDIO kind named
+net /SWDIO2 class = Default @ sch dbg-17_swd_without_reset.kicad_sch note "effective net class"
+net /SWDIO2 kind named
+net /SWO class = Default @ sch dbg-17_swd_without_reset.kicad_sch note "effective net class"
+net /SWO kind named
+net /SWO2 class = Default @ sch dbg-17_swd_without_reset.kicad_sch note "effective net class"
+net /SWO2 kind named
+net GND class = Default @ sch dbg-17_swd_without_reset.kicad_sch note "effective net class"
+net GND kind power
+part J1 field Value = SWD @ sch dbg-17_swd_without_reset.kicad_sch
+part J1 flag dnp = no @ sch dbg-17_swd_without_reset.kicad_sch
+part J1 flag exclude_from_sim = no @ sch dbg-17_swd_without_reset.kicad_sch
+part J1 flag in_bom = yes @ sch dbg-17_swd_without_reset.kicad_sch
+part J1 flag on_board = yes @ sch dbg-17_swd_without_reset.kicad_sch
+part J1 lib Connector_Generic:Conn_01x04 sheet / symbol Connector_Generic:Conn_01x04
+part J1 unit 1 sheet / uuid db900017-0000-4000-8000-000000000023 line 143 at 120,30 rot 0
+part J1 value = text SWD @ sch dbg-17_swd_without_reset.kicad_sch note "from the Value field"
+part J2 field Value = SWD @ sch dbg-17_swd_without_reset.kicad_sch
+part J2 flag dnp = no @ sch dbg-17_swd_without_reset.kicad_sch
+part J2 flag exclude_from_sim = no @ sch dbg-17_swd_without_reset.kicad_sch
+part J2 flag in_bom = yes @ sch dbg-17_swd_without_reset.kicad_sch
+part J2 flag on_board = yes @ sch dbg-17_swd_without_reset.kicad_sch
+part J2 lib Connector_Generic:Conn_01x06 sheet / symbol Connector_Generic:Conn_01x06
+part J2 unit 1 sheet / uuid db900017-0000-4000-8000-000000000055 line 215 at 255,30 rot 0
+part J2 value = text SWD @ sch dbg-17_swd_without_reset.kicad_sch note "from the Value field"
+part J3 field Value = PWR @ sch dbg-17_swd_without_reset.kicad_sch
+part J3 flag dnp = no @ sch dbg-17_swd_without_reset.kicad_sch
+part J3 flag exclude_from_sim = no @ sch dbg-17_swd_without_reset.kicad_sch
+part J3 flag in_bom = yes @ sch dbg-17_swd_without_reset.kicad_sch
+part J3 flag on_board = yes @ sch dbg-17_swd_without_reset.kicad_sch
+part J3 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J3 unit 1 sheet / uuid db900017-0000-4000-8000-000000000001 line 91 at 30,30 rot 0
+part J3 value = text PWR @ sch dbg-17_swd_without_reset.kicad_sch note "from the Value field"
+part R1 field Value = 10k @ sch dbg-17_swd_without_reset.kicad_sch
+part R1 flag dnp = no @ sch dbg-17_swd_without_reset.kicad_sch
+part R1 flag exclude_from_sim = no @ sch dbg-17_swd_without_reset.kicad_sch
+part R1 flag in_bom = yes @ sch dbg-17_swd_without_reset.kicad_sch
+part R1 flag on_board = yes @ sch dbg-17_swd_without_reset.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid db900017-0000-4000-8000-000000000034 line 169 at 165,30 rot 0
+part R1 value = text 10k @ sch dbg-17_swd_without_reset.kicad_sch note "from the Value field"
+part U1 field Value = MCU_SWD_RST @ sch dbg-17_swd_without_reset.kicad_sch
+part U1 flag dnp = no @ sch dbg-17_swd_without_reset.kicad_sch
+part U1 flag exclude_from_sim = no @ sch dbg-17_swd_without_reset.kicad_sch
+part U1 flag in_bom = yes @ sch dbg-17_swd_without_reset.kicad_sch
+part U1 flag on_board = yes @ sch dbg-17_swd_without_reset.kicad_sch
+part U1 lib MCU_Fixture:MCU_SWD_RST sheet / symbol MCU_Fixture:MCU_SWD_RST
+part U1 unit 1 sheet / uuid db900017-0000-4000-8000-000000000008 line 113 at 75,30 rot 0
+part U1 value = text MCU_SWD_RST @ sch dbg-17_swd_without_reset.kicad_sch note "from the Value field"
+part U2 field Value = MCU_SWD_RST @ sch dbg-17_swd_without_reset.kicad_sch
+part U2 flag dnp = no @ sch dbg-17_swd_without_reset.kicad_sch
+part U2 flag exclude_from_sim = no @ sch dbg-17_swd_without_reset.kicad_sch
+part U2 flag in_bom = yes @ sch dbg-17_swd_without_reset.kicad_sch
+part U2 flag on_board = yes @ sch dbg-17_swd_without_reset.kicad_sch
+part U2 lib MCU_Fixture:MCU_SWD_RST sheet / symbol MCU_Fixture:MCU_SWD_RST
+part U2 unit 1 sheet / uuid db900017-0000-4000-8000-000000000040 line 185 at 210,30 rot 0
+part U2 value = text MCU_SWD_RST @ sch dbg-17_swd_without_reset.kicad_sch note "from the Value field"
+pin J1 1 name Pin_1 unit 1 net +3V3
+pin J1 1 type = passive @ sch dbg-17_swd_without_reset.kicad_sch
+pin J1 2 name Pin_2 unit 1 net /SWDIO
+pin J1 2 type = passive @ sch dbg-17_swd_without_reset.kicad_sch
+pin J1 3 name Pin_3 unit 1 net /SWCLK
+pin J1 3 type = passive @ sch dbg-17_swd_without_reset.kicad_sch
+pin J1 4 name Pin_4 unit 1 net GND
+pin J1 4 type = passive @ sch dbg-17_swd_without_reset.kicad_sch
+pin J2 1 name Pin_1 unit 1 net +3V3
+pin J2 1 type = passive @ sch dbg-17_swd_without_reset.kicad_sch
+pin J2 2 name Pin_2 unit 1 net /SWDIO2
+pin J2 2 type = passive @ sch dbg-17_swd_without_reset.kicad_sch
+pin J2 3 name Pin_3 unit 1 net /SWCLK2
+pin J2 3 type = passive @ sch dbg-17_swd_without_reset.kicad_sch
+pin J2 4 name Pin_4 unit 1 net /SWO2
+pin J2 4 type = passive @ sch dbg-17_swd_without_reset.kicad_sch
+pin J2 5 name Pin_5 unit 1 net /NRST2
+pin J2 5 type = passive @ sch dbg-17_swd_without_reset.kicad_sch
+pin J2 6 name Pin_6 unit 1 net GND
+pin J2 6 type = passive @ sch dbg-17_swd_without_reset.kicad_sch
+pin J3 1 name Pin_1 unit 1 net +3V3
+pin J3 1 type = passive @ sch dbg-17_swd_without_reset.kicad_sch
+pin J3 2 name Pin_2 unit 1 net GND
+pin J3 2 type = passive @ sch dbg-17_swd_without_reset.kicad_sch
+pin R1 1 name "" unit 1 net +3V3
+pin R1 1 type = passive @ sch dbg-17_swd_without_reset.kicad_sch
+pin R1 2 name "" unit 1 net /NRST
+pin R1 2 type = passive @ sch dbg-17_swd_without_reset.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch dbg-17_swd_without_reset.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch dbg-17_swd_without_reset.kicad_sch
+pin U1 3 name PA13/SWDIO unit 1 net /SWDIO
+pin U1 3 type = bidirectional @ sch dbg-17_swd_without_reset.kicad_sch
+pin U1 4 name PA14/SWCLK unit 1 net /SWCLK
+pin U1 4 type = bidirectional @ sch dbg-17_swd_without_reset.kicad_sch
+pin U1 5 name NRST unit 1 net /NRST
+pin U1 5 type = bidirectional @ sch dbg-17_swd_without_reset.kicad_sch
+pin U1 6 name PB3/SWO unit 1 net /SWO
+pin U1 6 type = bidirectional @ sch dbg-17_swd_without_reset.kicad_sch
+pin U2 1 name VDD unit 1 net +3V3
+pin U2 1 type = power_in @ sch dbg-17_swd_without_reset.kicad_sch
+pin U2 2 name VSS unit 1 net GND
+pin U2 2 type = power_in @ sch dbg-17_swd_without_reset.kicad_sch
+pin U2 3 name PA13/SWDIO unit 1 net /SWDIO2
+pin U2 3 type = bidirectional @ sch dbg-17_swd_without_reset.kicad_sch
+pin U2 4 name PA14/SWCLK unit 1 net /SWCLK2
+pin U2 4 type = bidirectional @ sch dbg-17_swd_without_reset.kicad_sch
+pin U2 5 name NRST unit 1 net /NRST2
+pin U2 5 type = bidirectional @ sch dbg-17_swd_without_reset.kicad_sch
+pin U2 6 name PB3/SWO unit 1 net /SWO2
+pin U2 6 type = bidirectional @ sch dbg-17_swd_without_reset.kicad_sch
+sheet / name "" file dbg-17_swd_without_reset.kicad_sch uuid /
+source file dbg-17_swd_without_reset.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x02 description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 9d5a102eadbd54ad
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Connector_Generic:Conn_01x04 description "Generic connector"
+symbol Connector_Generic:Conn_01x04 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x04 field Reference J
+symbol Connector_Generic:Conn_01x04 field Value Conn_01x04
+symbol Connector_Generic:Conn_01x04 hash f337dda73c488fc4
+symbol Connector_Generic:Conn_01x04 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 4 unit 1 body 1 name Pin_4 type passive style line
+symbol Connector_Generic:Conn_01x04 units 1
+symbol Connector_Generic:Conn_01x06 description "Generic connector"
+symbol Connector_Generic:Conn_01x06 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x06 field Reference J
+symbol Connector_Generic:Conn_01x06 field Value Conn_01x06
+symbol Connector_Generic:Conn_01x06 hash 98118e52742e74a4
+symbol Connector_Generic:Conn_01x06 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x06 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x06 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x06 pin 4 unit 1 body 1 name Pin_4 type passive style line
+symbol Connector_Generic:Conn_01x06 pin 5 unit 1 body 1 name Pin_5 type passive style line
+symbol Connector_Generic:Conn_01x06 pin 6 unit 1 body 1 name Pin_6 type passive style line
+symbol Connector_Generic:Conn_01x06 units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Fixture:MCU_SWD_RST description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_SWD_RST field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_SWD_RST field Reference U
+symbol MCU_Fixture:MCU_SWD_RST field Value MCU_SWD_RST
+symbol MCU_Fixture:MCU_SWD_RST hash c662d851c2a025ee
+symbol MCU_Fixture:MCU_SWD_RST pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_SWD_RST pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_SWD_RST pin 3 unit 1 body 1 name PA13/SWDIO type bidirectional style line
+symbol MCU_Fixture:MCU_SWD_RST pin 4 unit 1 body 1 name PA14/SWCLK type bidirectional style line
+symbol MCU_Fixture:MCU_SWD_RST pin 5 unit 1 body 1 name NRST type bidirectional style line
+symbol MCU_Fixture:MCU_SWD_RST pin 6 unit 1 body 1 name PB3/SWO type bidirectional style line
+symbol MCU_Fixture:MCU_SWD_RST units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global
