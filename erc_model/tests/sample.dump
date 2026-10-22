@@ -16,6 +16,7 @@ net "/Power supply/VIN" class = Power @ sch root.kicad_sch
 net "/Power supply/VIN" kind named
 net GND kind power
 netclass Power
+netclass Power assign /VBUS_IN
 netclass Power param track_width = 0.5 @ pro s.kicad_pro
 netclass Power pattern +*
 pad R1 1 kind smd shape roundrect at 99.2,50 rot 180 size 0.8,0.95 layers B.Cu,B.Paste,B.Mask net "/Power supply/VIN" prop pad_prop_testpoint ptype passive paste -0.05
