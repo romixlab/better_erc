@@ -1,0 +1,427 @@
+board pin-3_unprotected_outputs
+label / local EN_EXT at 236.22,91.44 net /EN_EXT
+label / local SW1 at 187.96,53.34 net /SW1
+label / local SW1 at 243.84,46.99 net /SW1
+label / power +3V3 at 99.06,82.55 net +3V3
+label / power +3V3 at 187.96,55.88 net +3V3
+label / power +3V3 at 195.58,82.55 net +3V3
+label / power +3V3 at 236.22,83.82 net +3V3
+label / power +3V3 at 243.84,54.61 net +3V3
+label / power +3V3 at 292.1,46.99 net +3V3
+label / power +3V3 at 332.74,48.26 net +3V3
+label / power +3V3_AUX at 50.8,118.11 net +3V3_AUX
+label / power +3V3_AUX at 99.06,118.11 net +3V3_AUX
+label / power +3V3_AUX at 332.74,88.9 net +3V3_AUX
+label / power +3V3_EXT at 236.22,88.9 net +3V3_EXT
+label / power +3V3_EXT at 292.1,82.55 net +3V3_EXT
+label / power +3V3_OUT at 43.18,83.82 net +3V3_OUT
+label / power +3V3_OUT at 99.06,90.17 net +3V3_OUT
+label / power +5V0 at 99.06,54.61 net +5V0
+label / power +5V0 at 147.32,46.99 net +5V0
+label / power +5V0 at 147.32,82.55 net +5V0
+label / power +5V0 at 187.96,48.26 net +5V0
+label / power +5V0 at 332.74,83.82 net +5V0
+label / power +5V0_OUT at 43.18,86.36 net +5V0_OUT
+label / power +5V0_OUT at 147.32,90.17 net +5V0_OUT
+label / power +5V0_USB at 50.8,46.99 net +5V0_USB
+label / power +5V0_USB at 99.06,46.99 net +5V0_USB
+label / power GND at 43.18,88.9 net GND
+label / power GND at 50.8,54.61 net GND
+label / power GND at 50.8,125.73 net GND
+label / power GND at 99.06,125.73 net GND
+label / power GND at 147.32,54.61 net GND
+label / power GND at 187.96,50.8 net GND
+label / power GND at 195.58,90.17 net GND
+label / power GND at 236.22,86.36 net GND
+label / power GND at 292.1,54.61 net GND
+label / power GND at 292.1,90.17 net GND
+label / power GND at 332.74,50.8 net GND
+label / power GND at 332.74,86.36 net GND
+net +3V3 class = Default @ sch pin-3_unprotected_outputs.kicad_sch note "effective net class"
+net +3V3 kind power
+net +3V3_AUX class = Default @ sch pin-3_unprotected_outputs.kicad_sch note "effective net class"
+net +3V3_AUX kind power
+net +3V3_EXT class = Default @ sch pin-3_unprotected_outputs.kicad_sch note "effective net class"
+net +3V3_EXT kind power
+net +3V3_OUT class = Default @ sch pin-3_unprotected_outputs.kicad_sch note "effective net class"
+net +3V3_OUT kind power
+net +5V0 class = Default @ sch pin-3_unprotected_outputs.kicad_sch note "effective net class"
+net +5V0 kind power
+net +5V0_OUT class = Default @ sch pin-3_unprotected_outputs.kicad_sch note "effective net class"
+net +5V0_OUT kind power
+net +5V0_USB class = Default @ sch pin-3_unprotected_outputs.kicad_sch note "effective net class"
+net +5V0_USB kind power
+net /EN_EXT class = Default @ sch pin-3_unprotected_outputs.kicad_sch note "effective net class"
+net /EN_EXT kind named
+net /SW1 class = Default @ sch pin-3_unprotected_outputs.kicad_sch note "effective net class"
+net /SW1 kind named
+net GND class = Default @ sch pin-3_unprotected_outputs.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U2-PA0-Pad3) class = Default @ sch pin-3_unprotected_outputs.kicad_sch note "effective net class"
+net unconnected-(U2-PA0-Pad3) kind unconnected
+net unconnected-(U2-PA1-Pad4) class = Default @ sch pin-3_unprotected_outputs.kicad_sch note "effective net class"
+net unconnected-(U2-PA1-Pad4) kind unconnected
+part C1 field Value = 10u @ sch pin-3_unprotected_outputs.kicad_sch
+part C1 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part C1 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part C1 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part C1 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000015 line 259 at 147.32,50.8 rot 0
+part C1 value = text 10u @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part C2 field Value = 10u @ sch pin-3_unprotected_outputs.kicad_sch
+part C2 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part C2 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part C2 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part C2 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000040 line 329 at 292.1,50.8 rot 0
+part C2 value = text 10u @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part C3 field Value = 1u @ sch pin-3_unprotected_outputs.kicad_sch
+part C3 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part C3 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part C3 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part C3 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part C3 lib Device:C sheet / symbol Device:C
+part C3 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000116 line 555 at 50.8,121.92 rot 0
+part C3 value = text 1u @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part F1 field Value = 1A @ sch pin-3_unprotected_outputs.kicad_sch
+part F1 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part F1 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part F1 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part F1 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part F1 lib Device:Fuse sheet / symbol Device:Fuse
+part F1 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000008 line 237 at 99.06,50.8 rot 0
+part F1 value = qty 1 A @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part F2 field Value = 100mA @ sch pin-3_unprotected_outputs.kicad_sch
+part F2 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part F2 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part F2 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part F2 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part F2 lib Device:Polyfuse sheet / symbol Device:Polyfuse
+part F2 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000066 line 405 at 99.06,86.36 rot 0
+part F2 value = qty 0.1 A @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part F3 field Value = 100mA @ sch pin-3_unprotected_outputs.kicad_sch
+part F3 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part F3 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part F3 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part F3 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part F3 lib Device:Polyfuse sheet / symbol Device:Polyfuse
+part F3 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000073 line 427 at 147.32,86.36 rot 0
+part F3 value = qty 0.1 A @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part J1 field Value = USB_C @ sch pin-3_unprotected_outputs.kicad_sch
+part J1 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part J1 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part J1 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part J1 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part J1 lib Connector:USB_C_Receptacle_PowerOnly_6P sheet / symbol Connector:USB_C_Receptacle_PowerOnly_6P
+part J1 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000001 line 215 at 50.8,50.8 rot 0
+part J1 value = text USB_C @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part J2 field Value = EXP @ sch pin-3_unprotected_outputs.kicad_sch
+part J2 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part J2 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part J2 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part J2 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part J2 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J2 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000056 line 375 at 50.8,86.36 rot 0
+part J2 value = text EXP @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part J3 field Value = SENSOR @ sch pin-3_unprotected_outputs.kicad_sch
+part J3 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part J3 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part J3 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part J3 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part J3 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J3 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000080 line 449 at 195.58,86.36 rot 0
+part J3 value = text SENSOR @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part J4 field Value = EXT @ sch pin-3_unprotected_outputs.kicad_sch
+part J4 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part J4 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part J4 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part J4 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part J4 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J4 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000099 line 503 at 292.1,86.36 rot 0
+part J4 value = text EXT @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part J5 field Value = AUX @ sch pin-3_unprotected_outputs.kicad_sch
+part J5 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part J5 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part J5 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part J5 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part J5 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J5 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000123 line 577 at 99.06,121.92 rot 0
+part J5 value = text AUX @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part L1 field Value = 2.2u @ sch pin-3_unprotected_outputs.kicad_sch
+part L1 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part L1 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part L1 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part L1 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part L1 lib Device:L sheet / symbol Device:L
+part L1 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000034 line 313 at 243.84,50.8 rot 0
+part L1 value = text 2.2u @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part U1 field Value = TPS62A01 @ sch pin-3_unprotected_outputs.kicad_sch
+part U1 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part U1 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part U1 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part U1 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part U1 lib Regulator_Switching:Buck_Test sheet / symbol Regulator_Switching:Buck_Test
+part U1 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000022 line 281 at 195.58,50.8 rot 0
+part U1 value = text TPS62A01 @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part U2 field Value = RP2350 @ sch pin-3_unprotected_outputs.kicad_sch
+part U2 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part U2 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part U2 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part U2 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part U2 lib MCU_Test:MCU_Generic sheet / symbol MCU_Test:MCU_Generic
+part U2 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000047 line 351 at 340.36,50.8 rot 0
+part U2 value = text RP2350 @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part U3 field Value = TPS2553 @ sch pin-3_unprotected_outputs.kicad_sch
+part U3 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part U3 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part U3 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part U3 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part U3 lib Power_Management:TPS2553 sheet / symbol Power_Management:TPS2553
+part U3 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000087 line 471 at 243.84,86.36 rot 0
+part U3 value = text TPS2553 @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+part U4 field Value = TLV75533 @ sch pin-3_unprotected_outputs.kicad_sch
+part U4 flag dnp = no @ sch pin-3_unprotected_outputs.kicad_sch
+part U4 flag exclude_from_sim = no @ sch pin-3_unprotected_outputs.kicad_sch
+part U4 flag in_bom = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part U4 flag on_board = yes @ sch pin-3_unprotected_outputs.kicad_sch
+part U4 lib Regulator_Linear:LDO_Test sheet / symbol Regulator_Linear:LDO_Test
+part U4 unit 1 sheet / uuid 91030001-0000-4000-8000-000000000106 line 525 at 340.36,86.36 rot 0
+part U4 value = text TLV75533 @ sch pin-3_unprotected_outputs.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +5V0
+pin C1 1 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin C2 1 name "" unit 1 net +3V3
+pin C2 1 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin C3 1 name "" unit 1 net +3V3_AUX
+pin C3 1 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin C3 2 name "" unit 1 net GND
+pin C3 2 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin F1 1 name "" unit 1 net +5V0_USB
+pin F1 1 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin F1 2 name "" unit 1 net +5V0
+pin F1 2 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin F2 1 name "" unit 1 net +3V3
+pin F2 1 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin F2 2 name "" unit 1 net +3V3_OUT
+pin F2 2 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin F3 1 name "" unit 1 net +5V0
+pin F3 1 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin F3 2 name "" unit 1 net +5V0_OUT
+pin F3 2 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin J1 A9 name VBUS unit 1 net +5V0_USB
+pin J1 A9 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin J1 A12 name GND unit 1 net GND
+pin J1 A12 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin J2 1 name Pin_1 unit 1 net +3V3_OUT
+pin J2 1 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin J2 2 name Pin_2 unit 1 net +5V0_OUT
+pin J2 2 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin J2 3 name Pin_3 unit 1 net GND
+pin J2 3 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin J3 1 name Pin_1 unit 1 net +3V3
+pin J3 1 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin J3 2 name Pin_2 unit 1 net GND
+pin J3 2 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin J4 1 name Pin_1 unit 1 net +3V3_EXT
+pin J4 1 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin J4 2 name Pin_2 unit 1 net GND
+pin J4 2 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin J5 1 name Pin_1 unit 1 net +3V3_AUX
+pin J5 1 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin J5 2 name Pin_2 unit 1 net GND
+pin J5 2 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin L1 1 name "" unit 1 net /SW1
+pin L1 1 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin L1 2 name "" unit 1 net +3V3
+pin L1 2 type = passive @ sch pin-3_unprotected_outputs.kicad_sch
+pin U1 1 name VIN unit 1 net +5V0
+pin U1 1 type = power_in @ sch pin-3_unprotected_outputs.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch pin-3_unprotected_outputs.kicad_sch
+pin U1 3 name SW unit 1 net /SW1
+pin U1 3 type = output @ sch pin-3_unprotected_outputs.kicad_sch
+pin U1 4 name FB unit 1 net +3V3
+pin U1 4 type = input @ sch pin-3_unprotected_outputs.kicad_sch
+pin U2 1 name VDD unit 1 net +3V3
+pin U2 1 type = power_in @ sch pin-3_unprotected_outputs.kicad_sch
+pin U2 2 name VSS unit 1 net GND
+pin U2 2 type = power_in @ sch pin-3_unprotected_outputs.kicad_sch
+pin U2 3 name PA0 unit 1 net unconnected-(U2-PA0-Pad3)
+pin U2 3 type = bidirectional @ sch pin-3_unprotected_outputs.kicad_sch
+pin U2 4 name PA1 unit 1 net unconnected-(U2-PA1-Pad4)
+pin U2 4 type = bidirectional @ sch pin-3_unprotected_outputs.kicad_sch
+pin U3 1 name IN unit 1 net +3V3
+pin U3 1 type = power_in @ sch pin-3_unprotected_outputs.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch pin-3_unprotected_outputs.kicad_sch
+pin U3 3 name OUT unit 1 net +3V3_EXT
+pin U3 3 type = power_out @ sch pin-3_unprotected_outputs.kicad_sch
+pin U3 4 name EN unit 1 net /EN_EXT
+pin U3 4 type = input @ sch pin-3_unprotected_outputs.kicad_sch
+pin U4 1 name VIN unit 1 net +5V0
+pin U4 1 type = power_in @ sch pin-3_unprotected_outputs.kicad_sch
+pin U4 2 name GND unit 1 net GND
+pin U4 2 type = power_in @ sch pin-3_unprotected_outputs.kicad_sch
+pin U4 3 name VOUT unit 1 net +3V3_AUX
+pin U4 3 type = power_out @ sch pin-3_unprotected_outputs.kicad_sch
+sheet / name "" file pin-3_unprotected_outputs.kicad_sch uuid /
+source file pin-3_unprotected_outputs.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:USB_C_Receptacle_PowerOnly_6P description "USB Power-Only 6P Type-C Receptacle"
+symbol Connector:USB_C_Receptacle_PowerOnly_6P field Description "USB Power-Only 6P Type-C Receptacle"
+symbol Connector:USB_C_Receptacle_PowerOnly_6P field Reference J
+symbol Connector:USB_C_Receptacle_PowerOnly_6P field Value USB_C_Receptacle_PowerOnly_6P
+symbol Connector:USB_C_Receptacle_PowerOnly_6P hash 318c6685b350c403
+symbol Connector:USB_C_Receptacle_PowerOnly_6P pin A9 unit 1 body 1 name VBUS type passive style line
+symbol Connector:USB_C_Receptacle_PowerOnly_6P pin A12 unit 1 body 1 name GND type passive style line
+symbol Connector:USB_C_Receptacle_PowerOnly_6P units 1
+symbol Connector_Generic:Conn_01x02 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 5d37b768c270626e
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Connector_Generic:Conn_01x03 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x03 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x03 field Reference J
+symbol Connector_Generic:Conn_01x03 field Value Conn_01x03
+symbol Connector_Generic:Conn_01x03 hash a7ec9647f5161425
+symbol Connector_Generic:Conn_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x03 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:Fuse description Fuse
+symbol Device:Fuse field Description Fuse
+symbol Device:Fuse field Reference F
+symbol Device:Fuse field Value Fuse
+symbol Device:Fuse hash 4c2032b7121ecab6
+symbol Device:Fuse pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:Fuse pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:Fuse units 1
+symbol Device:L description Inductor
+symbol Device:L field Description Inductor
+symbol Device:L field Reference L
+symbol Device:L field Value L
+symbol Device:L hash c56a8cbe187fa0ce
+symbol Device:L pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:L pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:L units 1
+symbol Device:Polyfuse description "Resettable fuse, polymeric positive temperature coefficient"
+symbol Device:Polyfuse field Description "Resettable fuse, polymeric positive temperature coefficient"
+symbol Device:Polyfuse field Reference F
+symbol Device:Polyfuse field Value Polyfuse
+symbol Device:Polyfuse hash 854c42882ab8dea5
+symbol Device:Polyfuse pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:Polyfuse pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:Polyfuse units 1
+symbol MCU_Test:MCU_Generic description "Microcontroller, test symbol"
+symbol MCU_Test:MCU_Generic field Description "Microcontroller, test symbol"
+symbol MCU_Test:MCU_Generic field Reference U
+symbol MCU_Test:MCU_Generic field Value MCU_Generic
+symbol MCU_Test:MCU_Generic hash ed1d61db643f6872
+symbol MCU_Test:MCU_Generic pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Test:MCU_Generic pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Test:MCU_Generic pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Test:MCU_Generic pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Test:MCU_Generic units 1
+symbol Power_Management:TPS2553 description "Current-limited power distribution switch"
+symbol Power_Management:TPS2553 field Description "Current-limited power distribution switch"
+symbol Power_Management:TPS2553 field Reference U
+symbol Power_Management:TPS2553 field Value TPS2553
+symbol Power_Management:TPS2553 hash 8bb96f2c1f321d19
+symbol Power_Management:TPS2553 pin 1 unit 1 body 1 name IN type power_in style line
+symbol Power_Management:TPS2553 pin 2 unit 1 body 1 name GND type power_in style line
+symbol Power_Management:TPS2553 pin 3 unit 1 body 1 name OUT type power_out style line
+symbol Power_Management:TPS2553 pin 4 unit 1 body 1 name EN type input style line
+symbol Power_Management:TPS2553 units 1
+symbol Regulator_Linear:LDO_Test description "Low dropout regulator, test symbol"
+symbol Regulator_Linear:LDO_Test field Description "Low dropout regulator, test symbol"
+symbol Regulator_Linear:LDO_Test field Reference U
+symbol Regulator_Linear:LDO_Test field Value LDO_Test
+symbol Regulator_Linear:LDO_Test hash 21c208fd1fffd030
+symbol Regulator_Linear:LDO_Test pin 1 unit 1 body 1 name VIN type power_in style line
+symbol Regulator_Linear:LDO_Test pin 2 unit 1 body 1 name GND type power_in style line
+symbol Regulator_Linear:LDO_Test pin 3 unit 1 body 1 name VOUT type power_out style line
+symbol Regulator_Linear:LDO_Test units 1
+symbol Regulator_Switching:Buck_Test description "Step-down converter, test symbol"
+symbol Regulator_Switching:Buck_Test field Description "Step-down converter, test symbol"
+symbol Regulator_Switching:Buck_Test field Reference U
+symbol Regulator_Switching:Buck_Test field Value Buck_Test
+symbol Regulator_Switching:Buck_Test hash 81db0e3e9f35e782
+symbol Regulator_Switching:Buck_Test pin 1 unit 1 body 1 name VIN type power_in style line
+symbol Regulator_Switching:Buck_Test pin 2 unit 1 body 1 name GND type power_in style line
+symbol Regulator_Switching:Buck_Test pin 3 unit 1 body 1 name SW type output style line
+symbol Regulator_Switching:Buck_Test pin 4 unit 1 body 1 name FB type input style line
+symbol Regulator_Switching:Buck_Test units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+3V3_AUX description "Power symbol +3V3_AUX"
+symbol power:+3V3_AUX field Description "Power symbol +3V3_AUX"
+symbol power:+3V3_AUX field Reference "#PWR"
+symbol power:+3V3_AUX field Value +3V3_AUX
+symbol power:+3V3_AUX hash 50f8f90d29168e0c
+symbol power:+3V3_AUX pin 1 unit 1 body 1 name +3V3_AUX type power_in style line
+symbol power:+3V3_AUX units 1 power global
+symbol power:+3V3_EXT description "Power symbol +3V3_EXT"
+symbol power:+3V3_EXT field Description "Power symbol +3V3_EXT"
+symbol power:+3V3_EXT field Reference "#PWR"
+symbol power:+3V3_EXT field Value +3V3_EXT
+symbol power:+3V3_EXT hash f7f4914ca9dcaff7
+symbol power:+3V3_EXT pin 1 unit 1 body 1 name +3V3_EXT type power_in style line
+symbol power:+3V3_EXT units 1 power global
+symbol power:+3V3_OUT description "Power symbol +3V3_OUT"
+symbol power:+3V3_OUT field Description "Power symbol +3V3_OUT"
+symbol power:+3V3_OUT field Reference "#PWR"
+symbol power:+3V3_OUT field Value +3V3_OUT
+symbol power:+3V3_OUT hash fce1508861474842
+symbol power:+3V3_OUT pin 1 unit 1 body 1 name +3V3_OUT type power_in style line
+symbol power:+3V3_OUT units 1 power global
+symbol power:+5V0 description "Power symbol +5V0"
+symbol power:+5V0 field Description "Power symbol +5V0"
+symbol power:+5V0 field Reference "#PWR"
+symbol power:+5V0 field Value +5V0
+symbol power:+5V0 hash 30528b43094af6c6
+symbol power:+5V0 pin 1 unit 1 body 1 name +5V0 type power_in style line
+symbol power:+5V0 units 1 power global
+symbol power:+5V0_OUT description "Power symbol +5V0_OUT"
+symbol power:+5V0_OUT field Description "Power symbol +5V0_OUT"
+symbol power:+5V0_OUT field Reference "#PWR"
+symbol power:+5V0_OUT field Value +5V0_OUT
+symbol power:+5V0_OUT hash f2f4b9efb4692c33
+symbol power:+5V0_OUT pin 1 unit 1 body 1 name +5V0_OUT type power_in style line
+symbol power:+5V0_OUT units 1 power global
+symbol power:+5V0_USB description "Power symbol +5V0_USB"
+symbol power:+5V0_USB field Description "Power symbol +5V0_USB"
+symbol power:+5V0_USB field Reference "#PWR"
+symbol power:+5V0_USB field Value +5V0_USB
+symbol power:+5V0_USB hash a89577816cd58e35
+symbol power:+5V0_USB pin 1 unit 1 body 1 name +5V0_USB type power_in style line
+symbol power:+5V0_USB units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

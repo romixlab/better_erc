@@ -42,6 +42,10 @@ subjects = ["net +3V3", "net +3V3_FLT", "part FB1"]
 confidence = "estimate"
 
 [[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
 check = "RAIL-1"
 subjects = ["net +3V3_OPA", "part U4"]
 

@@ -1,0 +1,162 @@
+# What better_erc finds on pin-6_unfiltered_inputs.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +12V_IN"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_A"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_B"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_E"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V_C"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V_D"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V_F"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V_IN"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V_USB"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V_USB2"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +9V"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +9V_IN"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V_IN"]
+
+[[finding]]
+check = "DEC-4"
+subjects = ["net +5V_F", "net +5V_USB2", "part FB1"]
+confidence = "estimate"
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +12V_IN", "part U3"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +5V_F", "part U2"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +5V_USB", "part U1"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +9V", "part U4"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +12V_IN", "part J3"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +5V_IN", "part J5"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +5V_USB", "part J1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +5V_USB2", "part J2"]
+
+[[finding]]
+check = "PIN-6"
+subjects = ["net +5V_USB", "part J1", "part U1"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +12V_IN"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_A"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_B"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_E"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V_C"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V_D"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V_F"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V_IN"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V_USB"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V_USB2"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +9V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +9V_IN"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-13"
+subjects = ["net /SW1", "pin U1.3"]
+
+[[finding]]
+check = "WIRE-13"
+subjects = ["net /SW2", "pin U2.3"]
+
+[[finding]]
+check = "WIRE-13"
+subjects = ["net /SW3", "pin U3.3"]
+
+[[finding]]
+check = "WIRE-13"
+subjects = ["net /SW4", "pin U4.3"]

@@ -319,6 +319,17 @@ impl<'a> Ctx<'a> {
             .unwrap_or(meta.severity)
     }
 
+    /// The severity of one finding: the project's override, else `chosen` (a finding the check rates differently),
+    /// else the catalogue's
+    pub fn severity_or(&self, meta: &CheckMeta, chosen: Option<Severity>) -> Severity {
+        self.config
+            .severity
+            .get(meta.id)
+            .copied()
+            .or(chosen)
+            .unwrap_or(meta.severity)
+    }
+
     /// Starts a finding of the check `meta` on this board
     pub fn finding(&self, meta: &'static CheckMeta) -> FindingBuilder<'_, 'a> {
         FindingBuilder::new(self, meta)

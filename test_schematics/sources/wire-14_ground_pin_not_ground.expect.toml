@@ -21,6 +21,10 @@ check = "NAME-7"
 subjects = ["board wire-14_ground_pin_not_ground"]
 
 [[finding]]
+check = "PIN-3"
+subjects = ["net +5V", "part J1"]
+
+[[finding]]
 check = "TEST-4"
 subjects = ["net +12V"]
 

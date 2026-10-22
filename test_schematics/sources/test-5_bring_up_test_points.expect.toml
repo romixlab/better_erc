@@ -53,6 +53,10 @@ check = "NAME-4"
 subjects = ["net /UART_TX", "pin U1.3"]
 
 [[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.4", "pin U1.8"]
 

@@ -309,6 +309,14 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - 🚧 `NAME-11` Negative rail with its sign from a marker only or none; negative supply pins on a rail read positive ·
   `name/name_11.rs`, `name-11_negative_rail_names`. Missing: rails a negative regulator feeds (power sources, `NET-5`)
 - ✅ `NAME-12` Unannotated designators, one designator placed twice for one unit · `name/name_12.rs`, `name-12_designators`
+- ✅ `PIN-3` Connector pin handing out a regulated rail (or a USB, barrel or battery input passed on to a header) that
+  reaches on-board power pins through passive links only, no load switch or eFuse; through a fuse on every way a
+  suggestion · `pin/pin_3.rs`, `pin-3_unprotected_outputs`
+- ✅ `PIN-4` Connector or battery pin bringing power in that reaches a part's power pins with no fuse on the way (a
+  load switch or eFuse counts as the protection) · `pin/pin_4.rs`, `pin-4_unfused_inputs`. Missing: exempting
+  self-limiting sources (a USB host port) by the project file (`CFG-2`)
+- ✅ `PIN-6` Power input reaching a switching regulator with no ferrite, inductor, bulk (polarized) capacitor or
+  capacitor of its own before the regulator's input net · `pin/pin_6.rs`, `pin-6_unfiltered_inputs`
 - ✅ `RAIL-1` Power-input pins on a net that joins nothing else (an unconnected pin, a label alone), on a signal net,
   or on a rail no source reaches (folded into `RAIL-5`) · `rail/rail_1.rs`, `rail-1_unpowered_pins`. Missing: the pins of
   a power unit never placed (the importer keeps only placed units' pins)

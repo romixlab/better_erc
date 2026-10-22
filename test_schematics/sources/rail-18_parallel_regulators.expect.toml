@@ -37,6 +37,14 @@ check = "DEC-1"
 subjects = ["net +5V"]
 
 [[finding]]
+check = "PIN-4"
+subjects = ["net +5V", "part J1"]
+
+[[finding]]
+check = "PIN-6"
+subjects = ["net +5V", "part J1", "part U3", "part U4"]
+
+[[finding]]
 check = "RAIL-18"
 subjects = ["net +1V8", "part U3", "part U4"]
 

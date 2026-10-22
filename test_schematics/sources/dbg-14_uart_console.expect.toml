@@ -37,6 +37,10 @@ check = "NAME-4"
 subjects = ["net /MODEM_TX", "pin U1.4", "pin U2.4"]
 
 [[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
 check = "TEST-4"
 subjects = ["net +3V3"]
 

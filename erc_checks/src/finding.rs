@@ -127,6 +127,7 @@ pub struct FindingBuilder<'c, 'a> {
     fix: Option<String>,
     candidate: bool,
     estimate: bool,
+    severity: Option<Severity>,
 }
 
 impl<'c, 'a> FindingBuilder<'c, 'a> {
@@ -140,6 +141,7 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
             fix: None,
             candidate: false,
             estimate: false,
+            severity: None,
         }
     }
 
@@ -206,6 +208,13 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
         self
     }
 
+    /// A severity other than the catalogue's for this finding, where the detail page says so (`PIN-3`: a
+    /// polyfuse-only output one level lower); the project's override still wins
+    pub fn severity(mut self, s: Severity) -> Self {
+        self.severity = Some(s);
+        self
+    }
+
     /// A candidate for a human or an LLM to judge, not a rule's verdict
     pub fn candidate(mut self) -> Self {
         self.candidate = true;
@@ -238,7 +247,7 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
         locations.dedup();
         Finding {
             check: self.meta.id.to_string(),
-            severity: self.cx.severity(self.meta),
+            severity: self.cx.severity_or(self.meta, self.severity),
             confidence: if self.candidate {
                 Confidence::Candidate
             } else if self.estimate

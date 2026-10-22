@@ -13,8 +13,9 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ### Added
 
-- Power checks with test schematics (`<id>_<slug>`): RAIL-1, RAIL-5, RAIL-18, RAIL-19. `erc_analysis::feed`: the
-  source pins of each net and the two-terminal links that carry power (`Ctx::feeds`).
+- Power checks with test schematics (`<id>_<slug>`): RAIL-1, RAIL-5, RAIL-18, RAIL-19; PIN-3, PIN-4, PIN-6. `erc_analysis::feed`: the
+  source pins of each net and the two-terminal links that carry power (`Ctx::feeds`). A finding can carry its own
+  severity (`FindingBuilder::severity`, PIN-3's fused outputs one level lower); the project's override still wins.
 
 ## [0.4.6] - 2026-10-22
 

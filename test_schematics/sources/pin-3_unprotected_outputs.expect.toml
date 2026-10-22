@@ -1,0 +1,117 @@
+# What better_erc finds on pin-3_unprotected_outputs.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U2"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_AUX"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_EXT"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_OUT"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V0"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V0_OUT"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V0_USB"]
+
+[[finding]]
+check = "DBG-7"
+subjects = ["net /EN_EXT", "pin U3.4"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U2"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U3"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +5V0", "part U1"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +5V0", "part U4"]
+
+[[finding]]
+check = "PIN-3"
+subjects = ["net +3V3", "part J3"]
+
+[[finding]]
+check = "PIN-3"
+subjects = ["net +3V3_OUT", "part J2"]
+
+[[finding]]
+check = "PIN-3"
+subjects = ["net +5V0_OUT", "part J2"]
+
+[[finding]]
+check = "PIN-6"
+subjects = ["net +5V0_USB", "part J1", "part U1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.3", "pin U2.4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U3", "pin U3.4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_AUX"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_EXT"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_OUT"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V0"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V0_OUT"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V0_USB"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /EN_EXT", "pin U3.4"]
+
+[[finding]]
+check = "WIRE-13"
+subjects = ["net /SW1", "pin U1.3"]

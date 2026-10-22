@@ -13,6 +13,10 @@ check = "DEC-7"
 subjects = ["net +3V3", "part U2"]
 
 [[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U2", "pin U2.4", "pin U2.5", "pin U2.6"]
 

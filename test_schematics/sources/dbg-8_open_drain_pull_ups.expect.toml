@@ -33,6 +33,10 @@ check = "NAME-10"
 subjects = ["net /PMIC_IRQ", "pin U2.3"]
 
 [[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
 check = "TEST-4"
 subjects = ["net +3V3"]
 

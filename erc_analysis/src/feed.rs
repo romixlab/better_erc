@@ -176,6 +176,25 @@ impl Feeds {
         from: impl IntoIterator<Item = NetId>,
         pass: &dyn Fn(&Link) -> bool,
     ) -> BTreeMap<NetId, Vec<PartId>> {
+        self.walk(from, pass, true)
+    }
+
+    /// [`Feeds::reach`] through diodes both ways: the nets joined to `from` whichever way power flows (what a
+    /// short on one of them pulls down)
+    pub fn region(
+        &self,
+        from: impl IntoIterator<Item = NetId>,
+        pass: &dyn Fn(&Link) -> bool,
+    ) -> BTreeMap<NetId, Vec<PartId>> {
+        self.walk(from, pass, false)
+    }
+
+    fn walk(
+        &self,
+        from: impl IntoIterator<Item = NetId>,
+        pass: &dyn Fn(&Link) -> bool,
+        forward_only: bool,
+    ) -> BTreeMap<NetId, Vec<PartId>> {
         let mut seen: BTreeMap<NetId, Vec<PartId>> = BTreeMap::new();
         let mut queue = VecDeque::new();
         for n in from {
@@ -188,7 +207,14 @@ impl Feeds {
                 if !pass(l) {
                     continue;
                 }
-                let Some(next) = l.other(n) else { continue };
+                let next = if forward_only {
+                    l.other(n)
+                } else if l.a == n {
+                    Some(l.b)
+                } else {
+                    Some(l.a)
+                };
+                let Some(next) = next else { continue };
                 if seen.contains_key(&next) {
                     continue;
                 }

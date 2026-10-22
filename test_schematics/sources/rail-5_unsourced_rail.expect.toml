@@ -54,6 +54,10 @@ check = "DEC-8"
 subjects = ["net +5V0_USBIN", "part FB1"]
 
 [[finding]]
+check = "PIN-4"
+subjects = ["net +5V0_USBIN", "part J1"]
+
+[[finding]]
 check = "RAIL-5"
 subjects = ["net +3V3_WEAK"]
 also = ["RAIL-1"]

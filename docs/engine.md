@@ -429,6 +429,9 @@ of the threshold it used.
 | `ANA-16` | gain network resistors outside `min_resistance`..`max_resistance` (1 kΩ-1 MΩ), feedback capacitors below `min_capacitance` (1 pF) | `ana-16_gain_resistor_range` |
 | `ANA-21` | an op-amp input whose DC path reaches no rail, ground, connector or driver while a capacitor (or a transformer, estimate) sits on it | `ana-21_dc_return` |
 | `ANA-22` | a rail-to-ground divider feeding an op-amp input with no capacitor to ground | `ana-22_bias_divider_caps` |
+| `PIN-3` | a connector pin handing a regulated rail out that reaches on-board power pins through passive links only (through a fuse: a suggestion) | `pin-3_unprotected_outputs` |
+| `PIN-4` | a power input reaching a part's power pins with no fuse or eFuse | `pin-4_unfused_inputs` |
+| `PIN-6` | a power input reaching a switching regulator with no ferrite, inductor or capacitor of its own | `pin-6_unfiltered_inputs` |
 | `RAIL-1` | power-input pins on a net joining nothing else, on a signal net, or on a rail no source reaches (folded into `RAIL-5`) | `rail-1_unpowered_pins` |
 | `RAIL-5` | a rail with power-input pins and no source on it or behind a feed link (`max_feed` 100 Ω for resistors) | `rail-5_unsourced_rail` |
 | `RAIL-18` | a rail driven by two or more regulators | `rail-18_parallel_regulators` |
