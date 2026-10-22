@@ -1,0 +1,33 @@
+# What better_erc finds on name-2_diff_pair_styles.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "NAME-2"
+subjects = ["net /CAN+", "net /CAN-"]
+
+[[finding]]
+check = "NAME-2"
+subjects = ["net /USB_D-", "net /USB_DP"]
+
+[[not_run]]
+check = "NAME-11"
+need = "rails"
+
+[[not_run]]
+check = "NAME-7"
+need = "rails"
+
+[[not_run]]
+check = "SHORT-4"
+need = "rails"
+
+[[not_run]]
+check = "SHORT-5"
+need = "rails"
+
+[[not_run]]
+check = "SHORT-6"
+need = "rails"
+
+[[not_run]]
+check = "WIRE-14"
+need = "rails"

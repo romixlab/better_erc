@@ -1,0 +1,91 @@
+board name-7_no_strict_power_names
+label / power +3.3V at 111.76,26.67 net +3.3V
+label / power +5V at 30.48,26.67 net +5V
+label / power GND at 30.48,34.29 net GND
+label / power GND at 71.12,34.29 net GND
+label / power GND at 111.76,34.29 net GND
+label / power VDD_1V8 at 71.12,26.67 net VDD_1V8
+net +3.3V class = Default @ sch name-7_no_strict_power_names.kicad_sch note "effective net class"
+net +3.3V kind power
+net +5V class = Default @ sch name-7_no_strict_power_names.kicad_sch note "effective net class"
+net +5V kind power
+net GND class = Default @ sch name-7_no_strict_power_names.kicad_sch note "effective net class"
+net GND kind power
+net VDD_1V8 class = Default @ sch name-7_no_strict_power_names.kicad_sch note "effective net class"
+net VDD_1V8 kind power
+part C1 field Value = 100n @ sch name-7_no_strict_power_names.kicad_sch
+part C1 flag dnp = no @ sch name-7_no_strict_power_names.kicad_sch
+part C1 flag exclude_from_sim = no @ sch name-7_no_strict_power_names.kicad_sch
+part C1 flag in_bom = yes @ sch name-7_no_strict_power_names.kicad_sch
+part C1 flag on_board = yes @ sch name-7_no_strict_power_names.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 9a000700-0000-4000-8000-000000000001 line 57 at 30.48,30.48 rot 0
+part C1 value = text 100n @ sch name-7_no_strict_power_names.kicad_sch note "from the Value field"
+part C2 field Value = 100n @ sch name-7_no_strict_power_names.kicad_sch
+part C2 flag dnp = no @ sch name-7_no_strict_power_names.kicad_sch
+part C2 flag exclude_from_sim = no @ sch name-7_no_strict_power_names.kicad_sch
+part C2 flag in_bom = yes @ sch name-7_no_strict_power_names.kicad_sch
+part C2 flag on_board = yes @ sch name-7_no_strict_power_names.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid 9a000700-0000-4000-8000-000000000008 line 79 at 71.12,30.48 rot 0
+part C2 value = text 100n @ sch name-7_no_strict_power_names.kicad_sch note "from the Value field"
+part C3 field Value = 100n @ sch name-7_no_strict_power_names.kicad_sch
+part C3 flag dnp = no @ sch name-7_no_strict_power_names.kicad_sch
+part C3 flag exclude_from_sim = no @ sch name-7_no_strict_power_names.kicad_sch
+part C3 flag in_bom = yes @ sch name-7_no_strict_power_names.kicad_sch
+part C3 flag on_board = yes @ sch name-7_no_strict_power_names.kicad_sch
+part C3 lib Device:C sheet / symbol Device:C
+part C3 unit 1 sheet / uuid 9a000700-0000-4000-8000-00000000000f line 101 at 111.76,30.48 rot 0
+part C3 value = text 100n @ sch name-7_no_strict_power_names.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +5V
+pin C1 1 type = passive @ sch name-7_no_strict_power_names.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch name-7_no_strict_power_names.kicad_sch
+pin C2 1 name "" unit 1 net VDD_1V8
+pin C2 1 type = passive @ sch name-7_no_strict_power_names.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch name-7_no_strict_power_names.kicad_sch
+pin C3 1 name "" unit 1 net +3.3V
+pin C3 1 type = passive @ sch name-7_no_strict_power_names.kicad_sch
+pin C3 2 name "" unit 1 net GND
+pin C3 2 type = passive @ sch name-7_no_strict_power_names.kicad_sch
+sheet / name "" file name-7_no_strict_power_names.kicad_sch uuid /
+source file name-7_no_strict_power_names.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 4f61469a234b07ab
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol power:+3.3V description "Power symbol +3.3V"
+symbol power:+3.3V field Description "Power symbol +3.3V"
+symbol power:+3.3V field Reference "#PWR"
+symbol power:+3.3V field Value +3.3V
+symbol power:+3.3V hash 05bddfec3a439783
+symbol power:+3.3V pin 1 unit 1 body 1 name +3.3V type power_in style line
+symbol power:+3.3V units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global
+symbol power:VDD_1V8 description "Power symbol VDD_1V8"
+symbol power:VDD_1V8 field Description "Power symbol VDD_1V8"
+symbol power:VDD_1V8 field Reference "#PWR"
+symbol power:VDD_1V8 field Value VDD_1V8
+symbol power:VDD_1V8 hash 5535b995e5fa2af8
+symbol power:VDD_1V8 pin 1 unit 1 body 1 name VDD_1V8 type power_in style line
+symbol power:VDD_1V8 units 1 power global

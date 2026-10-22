@@ -1,0 +1,9 @@
+# What better_erc finds on name-6_per_sheet_designators.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "NAME-5"
+subjects = ["part R202", "part R214"]
+
+[[finding]]
+check = "NAME-6"
+subjects = ["part R214", "sheet /Power/"]

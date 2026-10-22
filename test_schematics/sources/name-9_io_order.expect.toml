@@ -1,0 +1,29 @@
+# What better_erc finds on name-9_io_order.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "NAME-9"
+subjects = ["net /IO4", "net /IO5", "part U1"]
+
+[[not_run]]
+check = "NAME-11"
+need = "rails"
+
+[[not_run]]
+check = "NAME-7"
+need = "rails"
+
+[[not_run]]
+check = "SHORT-4"
+need = "rails"
+
+[[not_run]]
+check = "SHORT-5"
+need = "rails"
+
+[[not_run]]
+check = "SHORT-6"
+need = "rails"
+
+[[not_run]]
+check = "WIRE-14"
+need = "rails"

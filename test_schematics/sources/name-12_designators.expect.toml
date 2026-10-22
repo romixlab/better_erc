@@ -1,0 +1,13 @@
+# What better_erc finds on name-12_designators.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "NAME-12"
+subjects = ["part C5"]
+
+[[finding]]
+check = "NAME-12"
+subjects = ["part R?"]
+
+[[finding]]
+check = "NAME-5"
+subjects = ["part C1", "part C5"]

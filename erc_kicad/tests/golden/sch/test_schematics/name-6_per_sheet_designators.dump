@@ -1,0 +1,119 @@
+board name-6_per_sheet_designators
+label / power +3V3 at 30.48,26.67 net +3V3
+label / power +3V3 at 71.12,26.67 net +3V3
+label / power GND at 30.48,34.29 net GND
+label / power GND at 71.12,34.29 net GND
+label /MCU/ power +3V3 at 30.48,26.67 net +3V3
+label /MCU/ power +3V3 at 71.12,26.67 net +3V3
+label /MCU/ power GND at 30.48,34.29 net GND
+label /MCU/ power GND at 71.12,34.29 net GND
+label /Power/ power +3V3 at 30.48,26.67 net +3V3
+label /Power/ power +3V3 at 71.12,26.67 net +3V3
+label /Power/ power GND at 30.48,34.29 net GND
+label /Power/ power GND at 71.12,34.29 net GND
+net +3V3 class = Default @ sch name-6_per_sheet_designators.kicad_sch note "effective net class"
+net +3V3 kind power
+net GND class = Default @ sch name-6_per_sheet_designators.kicad_sch note "effective net class"
+net GND kind power
+part R101 field Value = 10k @ sch name-6_per_sheet_designators.kicad_sch
+part R101 flag dnp = no @ sch name-6_per_sheet_designators.kicad_sch
+part R101 flag exclude_from_sim = no @ sch name-6_per_sheet_designators.kicad_sch
+part R101 flag in_bom = yes @ sch name-6_per_sheet_designators.kicad_sch
+part R101 flag on_board = yes @ sch name-6_per_sheet_designators.kicad_sch
+part R101 lib Device:R sheet / symbol Device:R
+part R101 unit 1 sheet / uuid 9a000600-0000-4000-8000-000000000001 line 37 at 30.48,30.48 rot 0
+part R101 value = text 10k @ sch name-6_per_sheet_designators.kicad_sch note "from the Value field"
+part R102 field Value = 10k @ sch name-6_per_sheet_designators.kicad_sch
+part R102 flag dnp = no @ sch name-6_per_sheet_designators.kicad_sch
+part R102 flag exclude_from_sim = no @ sch name-6_per_sheet_designators.kicad_sch
+part R102 flag in_bom = yes @ sch name-6_per_sheet_designators.kicad_sch
+part R102 flag on_board = yes @ sch name-6_per_sheet_designators.kicad_sch
+part R102 lib Device:R sheet / symbol Device:R
+part R102 unit 1 sheet / uuid 9a000600-0000-4000-8000-000000000008 line 59 at 71.12,30.48 rot 0
+part R102 value = text 10k @ sch name-6_per_sheet_designators.kicad_sch note "from the Value field"
+part R201 field Value = 10k @ sch name-6_child_mcu.kicad_sch
+part R201 flag dnp = no @ sch name-6_child_mcu.kicad_sch
+part R201 flag exclude_from_sim = no @ sch name-6_child_mcu.kicad_sch
+part R201 flag in_bom = yes @ sch name-6_child_mcu.kicad_sch
+part R201 flag on_board = yes @ sch name-6_child_mcu.kicad_sch
+part R201 lib Device:R sheet /MCU/ symbol Device:R
+part R201 unit 1 sheet /MCU/ uuid 9a000610-0000-4000-8000-000000000001 line 37 at 30.48,30.48 rot 0
+part R201 value = text 10k @ sch name-6_child_mcu.kicad_sch note "from the Value field"
+part R202 field Value = 10k @ sch name-6_child_mcu.kicad_sch
+part R202 flag dnp = no @ sch name-6_child_mcu.kicad_sch
+part R202 flag exclude_from_sim = no @ sch name-6_child_mcu.kicad_sch
+part R202 flag in_bom = yes @ sch name-6_child_mcu.kicad_sch
+part R202 flag on_board = yes @ sch name-6_child_mcu.kicad_sch
+part R202 lib Device:R sheet /MCU/ symbol Device:R
+part R202 unit 1 sheet /MCU/ uuid 9a000610-0000-4000-8000-000000000008 line 59 at 71.12,30.48 rot 0
+part R202 value = text 10k @ sch name-6_child_mcu.kicad_sch note "from the Value field"
+part R214 field Value = 10k @ sch name-6_child_power.kicad_sch
+part R214 flag dnp = no @ sch name-6_child_power.kicad_sch
+part R214 flag exclude_from_sim = no @ sch name-6_child_power.kicad_sch
+part R214 flag in_bom = yes @ sch name-6_child_power.kicad_sch
+part R214 flag on_board = yes @ sch name-6_child_power.kicad_sch
+part R214 lib Device:R sheet /Power/ symbol Device:R
+part R214 unit 1 sheet /Power/ uuid 9a000620-0000-4000-8000-000000000008 line 59 at 71.12,30.48 rot 0
+part R214 value = text 10k @ sch name-6_child_power.kicad_sch note "from the Value field"
+part R301 field Value = 10k @ sch name-6_child_power.kicad_sch
+part R301 flag dnp = no @ sch name-6_child_power.kicad_sch
+part R301 flag exclude_from_sim = no @ sch name-6_child_power.kicad_sch
+part R301 flag in_bom = yes @ sch name-6_child_power.kicad_sch
+part R301 flag on_board = yes @ sch name-6_child_power.kicad_sch
+part R301 lib Device:R sheet /Power/ symbol Device:R
+part R301 unit 1 sheet /Power/ uuid 9a000620-0000-4000-8000-000000000001 line 37 at 30.48,30.48 rot 0
+part R301 value = text 10k @ sch name-6_child_power.kicad_sch note "from the Value field"
+pin R101 1 name "" unit 1 net +3V3
+pin R101 1 type = passive @ sch name-6_per_sheet_designators.kicad_sch
+pin R101 2 name "" unit 1 net GND
+pin R101 2 type = passive @ sch name-6_per_sheet_designators.kicad_sch
+pin R102 1 name "" unit 1 net +3V3
+pin R102 1 type = passive @ sch name-6_per_sheet_designators.kicad_sch
+pin R102 2 name "" unit 1 net GND
+pin R102 2 type = passive @ sch name-6_per_sheet_designators.kicad_sch
+pin R201 1 name "" unit 1 net +3V3
+pin R201 1 type = passive @ sch name-6_child_mcu.kicad_sch
+pin R201 2 name "" unit 1 net GND
+pin R201 2 type = passive @ sch name-6_child_mcu.kicad_sch
+pin R202 1 name "" unit 1 net +3V3
+pin R202 1 type = passive @ sch name-6_child_mcu.kicad_sch
+pin R202 2 name "" unit 1 net GND
+pin R202 2 type = passive @ sch name-6_child_mcu.kicad_sch
+pin R214 1 name "" unit 1 net +3V3
+pin R214 1 type = passive @ sch name-6_child_power.kicad_sch
+pin R214 2 name "" unit 1 net GND
+pin R214 2 type = passive @ sch name-6_child_power.kicad_sch
+pin R301 1 name "" unit 1 net +3V3
+pin R301 1 type = passive @ sch name-6_child_power.kicad_sch
+pin R301 2 name "" unit 1 net GND
+pin R301 2 type = passive @ sch name-6_child_power.kicad_sch
+sheet / name "" file name-6_per_sheet_designators.kicad_sch uuid /
+sheet /MCU/ name MCU file name-6_child_mcu.kicad_sch uuid /9a000600-0000-4000-8000-100000000000 page 2
+sheet /Power/ name Power file name-6_child_power.kicad_sch uuid /9a000600-0000-4000-8000-100000000001 page 3
+source file name-6_child_mcu.kicad_sch
+source file name-6_child_power.kicad_sch
+source file name-6_per_sheet_designators.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 7be2b59127b371a9
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

@@ -1,0 +1,121 @@
+board name-4_uart_names
+label / local DBG_TX_MCU_RX at 20.32,43.18 net /DBG_TX_MCU_RX
+label / local DBG_TX_MCU_RX at 142.24,33.02 net /DBG_TX_MCU_RX
+label / local GPS_RX at 20.32,33.02 net /GPS_RX
+label / local GPS_RX at 60.96,30.48 net /GPS_RX
+label / local GPS_TX at 20.32,30.48 net /GPS_TX
+label / local GPS_TX at 60.96,33.02 net /GPS_TX
+label / local MCU_TX_DBG_RX at 20.32,40.64 net /MCU_TX_DBG_RX
+label / local MCU_TX_DBG_RX at 142.24,30.48 net /MCU_TX_DBG_RX
+label / local MCU_TX_MDM_RX at 20.32,35.56 net /MCU_TX_MDM_RX
+label / local MCU_TX_MDM_RX at 101.6,33.02 net /MCU_TX_MDM_RX
+label / local MDM_TX_MCU_RX at 20.32,38.1 net /MDM_TX_MCU_RX
+label / local MDM_TX_MCU_RX at 101.6,30.48 net /MDM_TX_MCU_RX
+net /DBG_TX_MCU_RX class = Default @ sch name-4_uart_names.kicad_sch note "effective net class"
+net /DBG_TX_MCU_RX kind named
+net /GPS_RX class = Default @ sch name-4_uart_names.kicad_sch note "effective net class"
+net /GPS_RX kind named
+net /GPS_TX class = Default @ sch name-4_uart_names.kicad_sch note "effective net class"
+net /GPS_TX kind named
+net /MCU_TX_DBG_RX class = Default @ sch name-4_uart_names.kicad_sch note "effective net class"
+net /MCU_TX_DBG_RX kind named
+net /MCU_TX_MDM_RX class = Default @ sch name-4_uart_names.kicad_sch note "effective net class"
+net /MCU_TX_MDM_RX kind named
+net /MDM_TX_MCU_RX class = Default @ sch name-4_uart_names.kicad_sch note "effective net class"
+net /MDM_TX_MCU_RX kind named
+part U1 field Value = MCU @ sch name-4_uart_names.kicad_sch
+part U1 flag dnp = no @ sch name-4_uart_names.kicad_sch
+part U1 flag exclude_from_sim = no @ sch name-4_uart_names.kicad_sch
+part U1 flag in_bom = yes @ sch name-4_uart_names.kicad_sch
+part U1 flag on_board = yes @ sch name-4_uart_names.kicad_sch
+part U1 lib MCU_Fixture:MCU sheet / symbol MCU_Fixture:MCU
+part U1 unit 1 sheet / uuid 9a000400-0000-4000-8000-000000000001 line 54 at 30.48,30.48 rot 0
+part U1 value = text MCU @ sch name-4_uart_names.kicad_sch note "from the Value field"
+part U2 field Value = GPS @ sch name-4_uart_names.kicad_sch
+part U2 flag dnp = no @ sch name-4_uart_names.kicad_sch
+part U2 flag exclude_from_sim = no @ sch name-4_uart_names.kicad_sch
+part U2 flag in_bom = yes @ sch name-4_uart_names.kicad_sch
+part U2 flag on_board = yes @ sch name-4_uart_names.kicad_sch
+part U2 lib Fixture:GPS sheet / symbol Fixture:GPS
+part U2 unit 1 sheet / uuid 9a000400-0000-4000-8000-000000000008 line 66 at 71.12,30.48 rot 0
+part U2 value = text GPS @ sch name-4_uart_names.kicad_sch note "from the Value field"
+part U3 field Value = MODEM @ sch name-4_uart_names.kicad_sch
+part U3 flag dnp = no @ sch name-4_uart_names.kicad_sch
+part U3 flag exclude_from_sim = no @ sch name-4_uart_names.kicad_sch
+part U3 flag in_bom = yes @ sch name-4_uart_names.kicad_sch
+part U3 flag on_board = yes @ sch name-4_uart_names.kicad_sch
+part U3 lib Fixture:MODEM sheet / symbol Fixture:MODEM
+part U3 unit 1 sheet / uuid 9a000400-0000-4000-8000-00000000000b line 74 at 111.76,30.48 rot 0
+part U3 value = text MODEM @ sch name-4_uart_names.kicad_sch note "from the Value field"
+part U4 field Value = DBG @ sch name-4_uart_names.kicad_sch
+part U4 flag dnp = no @ sch name-4_uart_names.kicad_sch
+part U4 flag exclude_from_sim = no @ sch name-4_uart_names.kicad_sch
+part U4 flag in_bom = yes @ sch name-4_uart_names.kicad_sch
+part U4 flag on_board = yes @ sch name-4_uart_names.kicad_sch
+part U4 lib Fixture:DBG sheet / symbol Fixture:DBG
+part U4 unit 1 sheet / uuid 9a000400-0000-4000-8000-00000000000e line 82 at 152.4,30.48 rot 0
+part U4 value = text DBG @ sch name-4_uart_names.kicad_sch note "from the Value field"
+pin U1 1 name UART1_TX unit 1 net /GPS_TX
+pin U1 1 type = output @ sch name-4_uart_names.kicad_sch
+pin U1 2 name UART1_RX unit 1 net /GPS_RX
+pin U1 2 type = input @ sch name-4_uart_names.kicad_sch
+pin U1 3 name UART2_TX unit 1 net /MCU_TX_MDM_RX
+pin U1 3 type = output @ sch name-4_uart_names.kicad_sch
+pin U1 4 name UART2_RX unit 1 net /MDM_TX_MCU_RX
+pin U1 4 type = input @ sch name-4_uart_names.kicad_sch
+pin U1 5 name UART3_TX unit 1 net /MCU_TX_DBG_RX
+pin U1 5 type = output @ sch name-4_uart_names.kicad_sch
+pin U1 6 name UART3_RX unit 1 net /DBG_TX_MCU_RX
+pin U1 6 type = input @ sch name-4_uart_names.kicad_sch
+pin U2 1 name TXD unit 1 net /GPS_RX
+pin U2 1 type = output @ sch name-4_uart_names.kicad_sch
+pin U2 2 name RXD unit 1 net /GPS_TX
+pin U2 2 type = input @ sch name-4_uart_names.kicad_sch
+pin U3 1 name TXD unit 1 net /MDM_TX_MCU_RX
+pin U3 1 type = output @ sch name-4_uart_names.kicad_sch
+pin U3 2 name RXD unit 1 net /MCU_TX_MDM_RX
+pin U3 2 type = input @ sch name-4_uart_names.kicad_sch
+pin U4 1 name TXD unit 1 net /MCU_TX_DBG_RX
+pin U4 1 type = output @ sch name-4_uart_names.kicad_sch
+pin U4 2 name RXD unit 1 net /DBG_TX_MCU_RX
+pin U4 2 type = input @ sch name-4_uart_names.kicad_sch
+sheet / name "" file name-4_uart_names.kicad_sch uuid /
+source file name-4_uart_names.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:DBG description "UART device"
+symbol Fixture:DBG field Description "UART device"
+symbol Fixture:DBG field Reference U
+symbol Fixture:DBG field Value DBG
+symbol Fixture:DBG hash d11c83bf2cc14021
+symbol Fixture:DBG pin 1 unit 1 body 1 name TXD type output style line
+symbol Fixture:DBG pin 2 unit 1 body 1 name RXD type input style line
+symbol Fixture:DBG units 1
+symbol Fixture:GPS description "UART device"
+symbol Fixture:GPS field Description "UART device"
+symbol Fixture:GPS field Reference U
+symbol Fixture:GPS field Value GPS
+symbol Fixture:GPS hash 9a1770049e8060dc
+symbol Fixture:GPS pin 1 unit 1 body 1 name TXD type output style line
+symbol Fixture:GPS pin 2 unit 1 body 1 name RXD type input style line
+symbol Fixture:GPS units 1
+symbol Fixture:MODEM description "UART device"
+symbol Fixture:MODEM field Description "UART device"
+symbol Fixture:MODEM field Reference U
+symbol Fixture:MODEM field Value MODEM
+symbol Fixture:MODEM hash ff2e95da1220e69e
+symbol Fixture:MODEM pin 1 unit 1 body 1 name TXD type output style line
+symbol Fixture:MODEM pin 2 unit 1 body 1 name RXD type input style line
+symbol Fixture:MODEM units 1
+symbol MCU_Fixture:MCU description Microcontroller
+symbol MCU_Fixture:MCU field Description Microcontroller
+symbol MCU_Fixture:MCU field Reference U
+symbol MCU_Fixture:MCU field Value MCU
+symbol MCU_Fixture:MCU hash 0dddbe81db50ea19
+symbol MCU_Fixture:MCU pin 1 unit 1 body 1 name UART1_TX type output style line
+symbol MCU_Fixture:MCU pin 2 unit 1 body 1 name UART1_RX type input style line
+symbol MCU_Fixture:MCU pin 3 unit 1 body 1 name UART2_TX type output style line
+symbol MCU_Fixture:MCU pin 4 unit 1 body 1 name UART2_RX type input style line
+symbol MCU_Fixture:MCU pin 5 unit 1 body 1 name UART3_TX type output style line
+symbol MCU_Fixture:MCU pin 6 unit 1 body 1 name UART3_RX type input style line
+symbol MCU_Fixture:MCU units 1

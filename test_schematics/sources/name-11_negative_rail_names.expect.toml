@@ -1,0 +1,9 @@
+# What better_erc finds on name-11_negative_rail_names.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "NAME-11"
+subjects = ["net 5V0_NEG", "pin U1.4"]
+
+[[finding]]
+check = "NAME-11"
+subjects = ["net VAUX", "pin U2.4"]

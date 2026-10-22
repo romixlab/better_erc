@@ -1,0 +1,37 @@
+# What better_erc finds on name-10_active_low_unmarked.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "NAME-10"
+subjects = ["net /EXP_OE", "pin U3.1"]
+
+[[finding]]
+check = "NAME-10"
+subjects = ["net /FLASH_CS", "pin U2.1"]
+
+[[finding]]
+check = "NAME-10"
+subjects = ["net /HUB_RESET", "pin U1.1"]
+
+[[not_run]]
+check = "NAME-11"
+need = "rails"
+
+[[not_run]]
+check = "NAME-7"
+need = "rails"
+
+[[not_run]]
+check = "SHORT-4"
+need = "rails"
+
+[[not_run]]
+check = "SHORT-5"
+need = "rails"
+
+[[not_run]]
+check = "SHORT-6"
+need = "rails"
+
+[[not_run]]
+check = "WIRE-14"
+need = "rails"

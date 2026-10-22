@@ -1,0 +1,5 @@
+# What better_erc finds on name-7_no_strict_power_names.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board name-7_no_strict_power_names"]

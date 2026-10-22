@@ -1,0 +1,156 @@
+board name-1_inverted_signal_styles
+label / local FLASH_WP_N at 20.32,35.56 net /FLASH_WP_N
+label / local FLASH_WP_N at 152.4,26.67 net /FLASH_WP_N
+label / local SPI_CS_N at 20.32,33.02 net /SPI_CS_N
+label / local SPI_CS_N at 111.76,26.67 net /SPI_CS_N
+label / local USB_D_N at 20.32,43.18 net /USB_D_N
+label / local USB_D_N at 274.32,26.67 net /USB_D_N
+label / local USB_D_P at 20.32,40.64 net /USB_D_P
+label / local USB_D_P at 233.68,26.67 net /USB_D_P
+label / local nPWR_FAULT at 20.32,38.1 net /nPWR_FAULT
+label / local nPWR_FAULT at 193.04,26.67 net /nPWR_FAULT
+label / local ~{HUB_RESET} at 20.32,30.48 net /~{HUB_RESET}
+label / local ~{HUB_RESET} at 71.12,26.67 net /~{HUB_RESET}
+label / power +3V3 at 71.12,34.29 net +3V3
+label / power +3V3 at 111.76,34.29 net +3V3
+label / power +3V3 at 152.4,34.29 net +3V3
+label / power +3V3 at 193.04,34.29 net +3V3
+label / power +3V3 at 233.68,34.29 net +3V3
+label / power +3V3 at 274.32,34.29 net +3V3
+net +3V3 class = Default @ sch name-1_inverted_signal_styles.kicad_sch note "effective net class"
+net +3V3 kind power
+net /FLASH_WP_N class = Default @ sch name-1_inverted_signal_styles.kicad_sch note "effective net class"
+net /FLASH_WP_N kind named
+net /SPI_CS_N class = Default @ sch name-1_inverted_signal_styles.kicad_sch note "effective net class"
+net /SPI_CS_N kind named
+net /USB_D_N class = Default @ sch name-1_inverted_signal_styles.kicad_sch note "effective net class"
+net /USB_D_N kind named
+net /USB_D_P class = Default @ sch name-1_inverted_signal_styles.kicad_sch note "effective net class"
+net /USB_D_P kind named
+net /nPWR_FAULT class = Default @ sch name-1_inverted_signal_styles.kicad_sch note "effective net class"
+net /nPWR_FAULT kind named
+net /~{HUB_RESET} class = Default @ sch name-1_inverted_signal_styles.kicad_sch note "effective net class"
+net /~{HUB_RESET} kind named
+part R1 field Value = 10k @ sch name-1_inverted_signal_styles.kicad_sch
+part R1 flag dnp = no @ sch name-1_inverted_signal_styles.kicad_sch
+part R1 flag exclude_from_sim = no @ sch name-1_inverted_signal_styles.kicad_sch
+part R1 flag in_bom = yes @ sch name-1_inverted_signal_styles.kicad_sch
+part R1 flag on_board = yes @ sch name-1_inverted_signal_styles.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 9a000100-0000-4000-8000-000000000009 line 55 at 71.12,30.48 rot 0
+part R1 value = text 10k @ sch name-1_inverted_signal_styles.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch name-1_inverted_signal_styles.kicad_sch
+part R2 flag dnp = no @ sch name-1_inverted_signal_styles.kicad_sch
+part R2 flag exclude_from_sim = no @ sch name-1_inverted_signal_styles.kicad_sch
+part R2 flag in_bom = yes @ sch name-1_inverted_signal_styles.kicad_sch
+part R2 flag on_board = yes @ sch name-1_inverted_signal_styles.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 9a000100-0000-4000-8000-000000000010 line 72 at 111.76,30.48 rot 0
+part R2 value = text 10k @ sch name-1_inverted_signal_styles.kicad_sch note "from the Value field"
+part R3 field Value = 10k @ sch name-1_inverted_signal_styles.kicad_sch
+part R3 flag dnp = no @ sch name-1_inverted_signal_styles.kicad_sch
+part R3 flag exclude_from_sim = no @ sch name-1_inverted_signal_styles.kicad_sch
+part R3 flag in_bom = yes @ sch name-1_inverted_signal_styles.kicad_sch
+part R3 flag on_board = yes @ sch name-1_inverted_signal_styles.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid 9a000100-0000-4000-8000-000000000017 line 89 at 152.4,30.48 rot 0
+part R3 value = text 10k @ sch name-1_inverted_signal_styles.kicad_sch note "from the Value field"
+part R4 field Value = 10k @ sch name-1_inverted_signal_styles.kicad_sch
+part R4 flag dnp = no @ sch name-1_inverted_signal_styles.kicad_sch
+part R4 flag exclude_from_sim = no @ sch name-1_inverted_signal_styles.kicad_sch
+part R4 flag in_bom = yes @ sch name-1_inverted_signal_styles.kicad_sch
+part R4 flag on_board = yes @ sch name-1_inverted_signal_styles.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid 9a000100-0000-4000-8000-00000000001e line 106 at 193.04,30.48 rot 0
+part R4 value = text 10k @ sch name-1_inverted_signal_styles.kicad_sch note "from the Value field"
+part R5 field Value = 10k @ sch name-1_inverted_signal_styles.kicad_sch
+part R5 flag dnp = no @ sch name-1_inverted_signal_styles.kicad_sch
+part R5 flag exclude_from_sim = no @ sch name-1_inverted_signal_styles.kicad_sch
+part R5 flag in_bom = yes @ sch name-1_inverted_signal_styles.kicad_sch
+part R5 flag on_board = yes @ sch name-1_inverted_signal_styles.kicad_sch
+part R5 lib Device:R sheet / symbol Device:R
+part R5 unit 1 sheet / uuid 9a000100-0000-4000-8000-000000000025 line 123 at 233.68,30.48 rot 0
+part R5 value = text 10k @ sch name-1_inverted_signal_styles.kicad_sch note "from the Value field"
+part R6 field Value = 10k @ sch name-1_inverted_signal_styles.kicad_sch
+part R6 flag dnp = no @ sch name-1_inverted_signal_styles.kicad_sch
+part R6 flag exclude_from_sim = no @ sch name-1_inverted_signal_styles.kicad_sch
+part R6 flag in_bom = yes @ sch name-1_inverted_signal_styles.kicad_sch
+part R6 flag on_board = yes @ sch name-1_inverted_signal_styles.kicad_sch
+part R6 lib Device:R sheet / symbol Device:R
+part R6 unit 1 sheet / uuid 9a000100-0000-4000-8000-00000000002c line 140 at 274.32,30.48 rot 0
+part R6 value = text 10k @ sch name-1_inverted_signal_styles.kicad_sch note "from the Value field"
+part U1 field Value = CTRL @ sch name-1_inverted_signal_styles.kicad_sch
+part U1 flag dnp = no @ sch name-1_inverted_signal_styles.kicad_sch
+part U1 flag exclude_from_sim = no @ sch name-1_inverted_signal_styles.kicad_sch
+part U1 flag in_bom = yes @ sch name-1_inverted_signal_styles.kicad_sch
+part U1 flag on_board = yes @ sch name-1_inverted_signal_styles.kicad_sch
+part U1 lib Fixture:CTRL sheet / symbol Fixture:CTRL
+part U1 unit 1 sheet / uuid 9a000100-0000-4000-8000-000000000001 line 42 at 30.48,30.48 rot 0
+part U1 value = text CTRL @ sch name-1_inverted_signal_styles.kicad_sch note "from the Value field"
+pin R1 1 name "" unit 1 net /~{HUB_RESET}
+pin R1 1 type = passive @ sch name-1_inverted_signal_styles.kicad_sch
+pin R1 2 name "" unit 1 net +3V3
+pin R1 2 type = passive @ sch name-1_inverted_signal_styles.kicad_sch
+pin R2 1 name "" unit 1 net /SPI_CS_N
+pin R2 1 type = passive @ sch name-1_inverted_signal_styles.kicad_sch
+pin R2 2 name "" unit 1 net +3V3
+pin R2 2 type = passive @ sch name-1_inverted_signal_styles.kicad_sch
+pin R3 1 name "" unit 1 net /FLASH_WP_N
+pin R3 1 type = passive @ sch name-1_inverted_signal_styles.kicad_sch
+pin R3 2 name "" unit 1 net +3V3
+pin R3 2 type = passive @ sch name-1_inverted_signal_styles.kicad_sch
+pin R4 1 name "" unit 1 net /nPWR_FAULT
+pin R4 1 type = passive @ sch name-1_inverted_signal_styles.kicad_sch
+pin R4 2 name "" unit 1 net +3V3
+pin R4 2 type = passive @ sch name-1_inverted_signal_styles.kicad_sch
+pin R5 1 name "" unit 1 net /USB_D_P
+pin R5 1 type = passive @ sch name-1_inverted_signal_styles.kicad_sch
+pin R5 2 name "" unit 1 net +3V3
+pin R5 2 type = passive @ sch name-1_inverted_signal_styles.kicad_sch
+pin R6 1 name "" unit 1 net /USB_D_N
+pin R6 1 type = passive @ sch name-1_inverted_signal_styles.kicad_sch
+pin R6 2 name "" unit 1 net +3V3
+pin R6 2 type = passive @ sch name-1_inverted_signal_styles.kicad_sch
+pin U1 1 name ~{HUB_RST} unit 1 net /~{HUB_RESET}
+pin U1 1 type = input @ sch name-1_inverted_signal_styles.kicad_sch
+pin U1 2 name ~{CS} unit 1 net /SPI_CS_N
+pin U1 2 type = input @ sch name-1_inverted_signal_styles.kicad_sch
+pin U1 3 name ~{WP} unit 1 net /FLASH_WP_N
+pin U1 3 type = input @ sch name-1_inverted_signal_styles.kicad_sch
+pin U1 4 name ~{FAULT} unit 1 net /nPWR_FAULT
+pin U1 4 type = input @ sch name-1_inverted_signal_styles.kicad_sch
+pin U1 5 name D+ unit 1 net /USB_D_P
+pin U1 5 type = bidirectional @ sch name-1_inverted_signal_styles.kicad_sch
+pin U1 6 name D- unit 1 net /USB_D_N
+pin U1 6 type = bidirectional @ sch name-1_inverted_signal_styles.kicad_sch
+sheet / name "" file name-1_inverted_signal_styles.kicad_sch uuid /
+source file name-1_inverted_signal_styles.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 7be2b59127b371a9
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Fixture:CTRL description Controller
+symbol Fixture:CTRL field Description Controller
+symbol Fixture:CTRL field Reference U
+symbol Fixture:CTRL field Value CTRL
+symbol Fixture:CTRL hash e069a9d65d4efba2
+symbol Fixture:CTRL pin 1 unit 1 body 1 name ~{HUB_RST} type input style line
+symbol Fixture:CTRL pin 2 unit 1 body 1 name ~{CS} type input style line
+symbol Fixture:CTRL pin 3 unit 1 body 1 name ~{WP} type input style line
+symbol Fixture:CTRL pin 4 unit 1 body 1 name ~{FAULT} type input style line
+symbol Fixture:CTRL pin 5 unit 1 body 1 name D+ type bidirectional style line
+symbol Fixture:CTRL pin 6 unit 1 body 1 name D- type bidirectional style line
+symbol Fixture:CTRL units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global

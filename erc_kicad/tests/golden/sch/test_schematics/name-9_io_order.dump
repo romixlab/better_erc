@@ -1,0 +1,143 @@
+board name-9_io_order
+label / local IO0 at 20.32,30.48 net /IO0
+label / local IO0 at 60.96,30.48 net /IO0
+label / local IO1 at 20.32,33.02 net /IO1
+label / local IO1 at 60.96,33.02 net /IO1
+label / local IO2 at 20.32,35.56 net /IO2
+label / local IO2 at 60.96,35.56 net /IO2
+label / local IO3 at 20.32,38.1 net /IO3
+label / local IO3 at 60.96,38.1 net /IO3
+label / local IO4 at 20.32,43.18 net /IO4
+label / local IO4 at 60.96,43.18 net /IO4
+label / local IO5 at 20.32,40.64 net /IO5
+label / local IO5 at 60.96,40.64 net /IO5
+label / local IO6 at 20.32,45.72 net /IO6
+label / local IO6 at 60.96,45.72 net /IO6
+label / local IO7 at 20.32,48.26 net /IO7
+label / local IO7 at 60.96,48.26 net /IO7
+label / local LED1 at 20.32,50.8 net /LED1
+label / local LED1 at 60.96,50.8 net /LED1
+label / local LED2 at 20.32,53.34 net /LED2
+label / local LED2 at 60.96,53.34 net /LED2
+label / local LED3 at 20.32,55.88 net /LED3
+label / local LED3 at 60.96,55.88 net /LED3
+net /IO0 class = Default @ sch name-9_io_order.kicad_sch note "effective net class"
+net /IO0 kind named
+net /IO1 class = Default @ sch name-9_io_order.kicad_sch note "effective net class"
+net /IO1 kind named
+net /IO2 class = Default @ sch name-9_io_order.kicad_sch note "effective net class"
+net /IO2 kind named
+net /IO3 class = Default @ sch name-9_io_order.kicad_sch note "effective net class"
+net /IO3 kind named
+net /IO4 class = Default @ sch name-9_io_order.kicad_sch note "effective net class"
+net /IO4 kind named
+net /IO5 class = Default @ sch name-9_io_order.kicad_sch note "effective net class"
+net /IO5 kind named
+net /IO6 class = Default @ sch name-9_io_order.kicad_sch note "effective net class"
+net /IO6 kind named
+net /IO7 class = Default @ sch name-9_io_order.kicad_sch note "effective net class"
+net /IO7 kind named
+net /LED1 class = Default @ sch name-9_io_order.kicad_sch note "effective net class"
+net /LED1 kind named
+net /LED2 class = Default @ sch name-9_io_order.kicad_sch note "effective net class"
+net /LED2 kind named
+net /LED3 class = Default @ sch name-9_io_order.kicad_sch note "effective net class"
+net /LED3 kind named
+part J1 field Value = Conn @ sch name-9_io_order.kicad_sch
+part J1 flag dnp = no @ sch name-9_io_order.kicad_sch
+part J1 flag exclude_from_sim = no @ sch name-9_io_order.kicad_sch
+part J1 flag in_bom = yes @ sch name-9_io_order.kicad_sch
+part J1 flag on_board = yes @ sch name-9_io_order.kicad_sch
+part J1 lib Connector_Generic:Conn_01x11 sheet / symbol Connector_Generic:Conn_01x11
+part J1 unit 1 sheet / uuid 9a000900-0000-4000-8000-00000000000d line 63 at 71.12,30.48 rot 0
+part J1 value = text Conn @ sch name-9_io_order.kicad_sch note "from the Value field"
+part U1 field Value = RP2040 @ sch name-9_io_order.kicad_sch
+part U1 flag dnp = no @ sch name-9_io_order.kicad_sch
+part U1 flag exclude_from_sim = no @ sch name-9_io_order.kicad_sch
+part U1 flag in_bom = yes @ sch name-9_io_order.kicad_sch
+part U1 flag on_board = yes @ sch name-9_io_order.kicad_sch
+part U1 lib MCU_Fixture:RP2040 sheet / symbol MCU_Fixture:RP2040
+part U1 unit 1 sheet / uuid 9a000900-0000-4000-8000-000000000001 line 46 at 30.48,30.48 rot 0
+part U1 value = text RP2040 @ sch name-9_io_order.kicad_sch note "from the Value field"
+pin J1 1 name Pin_1 unit 1 net /IO0
+pin J1 1 type = passive @ sch name-9_io_order.kicad_sch
+pin J1 2 name Pin_2 unit 1 net /IO1
+pin J1 2 type = passive @ sch name-9_io_order.kicad_sch
+pin J1 3 name Pin_3 unit 1 net /IO2
+pin J1 3 type = passive @ sch name-9_io_order.kicad_sch
+pin J1 4 name Pin_4 unit 1 net /IO3
+pin J1 4 type = passive @ sch name-9_io_order.kicad_sch
+pin J1 5 name Pin_5 unit 1 net /IO5
+pin J1 5 type = passive @ sch name-9_io_order.kicad_sch
+pin J1 6 name Pin_6 unit 1 net /IO4
+pin J1 6 type = passive @ sch name-9_io_order.kicad_sch
+pin J1 7 name Pin_7 unit 1 net /IO6
+pin J1 7 type = passive @ sch name-9_io_order.kicad_sch
+pin J1 8 name Pin_8 unit 1 net /IO7
+pin J1 8 type = passive @ sch name-9_io_order.kicad_sch
+pin J1 9 name Pin_9 unit 1 net /LED1
+pin J1 9 type = passive @ sch name-9_io_order.kicad_sch
+pin J1 10 name Pin_10 unit 1 net /LED2
+pin J1 10 type = passive @ sch name-9_io_order.kicad_sch
+pin J1 11 name Pin_11 unit 1 net /LED3
+pin J1 11 type = passive @ sch name-9_io_order.kicad_sch
+pin U1 1 name GPIO12 unit 1 net /IO0
+pin U1 1 type = bidirectional @ sch name-9_io_order.kicad_sch
+pin U1 2 name GPIO13 unit 1 net /IO1
+pin U1 2 type = bidirectional @ sch name-9_io_order.kicad_sch
+pin U1 3 name GPIO14 unit 1 net /IO2
+pin U1 3 type = bidirectional @ sch name-9_io_order.kicad_sch
+pin U1 4 name GPIO15 unit 1 net /IO3
+pin U1 4 type = bidirectional @ sch name-9_io_order.kicad_sch
+pin U1 5 name GPIO16 unit 1 net /IO5
+pin U1 5 type = bidirectional @ sch name-9_io_order.kicad_sch
+pin U1 6 name GPIO17 unit 1 net /IO4
+pin U1 6 type = bidirectional @ sch name-9_io_order.kicad_sch
+pin U1 7 name GPIO18 unit 1 net /IO6
+pin U1 7 type = bidirectional @ sch name-9_io_order.kicad_sch
+pin U1 8 name GPIO19 unit 1 net /IO7
+pin U1 8 type = bidirectional @ sch name-9_io_order.kicad_sch
+pin U1 9 name GPIO20 unit 1 net /LED1
+pin U1 9 type = bidirectional @ sch name-9_io_order.kicad_sch
+pin U1 10 name GPIO21 unit 1 net /LED2
+pin U1 10 type = bidirectional @ sch name-9_io_order.kicad_sch
+pin U1 11 name GPIO22 unit 1 net /LED3
+pin U1 11 type = bidirectional @ sch name-9_io_order.kicad_sch
+sheet / name "" file name-9_io_order.kicad_sch uuid /
+source file name-9_io_order.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x11 description "Generic connector"
+symbol Connector_Generic:Conn_01x11 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x11 field Reference J
+symbol Connector_Generic:Conn_01x11 field Value Conn_01x11
+symbol Connector_Generic:Conn_01x11 hash 921431d324e3e88e
+symbol Connector_Generic:Conn_01x11 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x11 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x11 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x11 pin 4 unit 1 body 1 name Pin_4 type passive style line
+symbol Connector_Generic:Conn_01x11 pin 5 unit 1 body 1 name Pin_5 type passive style line
+symbol Connector_Generic:Conn_01x11 pin 6 unit 1 body 1 name Pin_6 type passive style line
+symbol Connector_Generic:Conn_01x11 pin 7 unit 1 body 1 name Pin_7 type passive style line
+symbol Connector_Generic:Conn_01x11 pin 8 unit 1 body 1 name Pin_8 type passive style line
+symbol Connector_Generic:Conn_01x11 pin 9 unit 1 body 1 name Pin_9 type passive style line
+symbol Connector_Generic:Conn_01x11 pin 10 unit 1 body 1 name Pin_10 type passive style line
+symbol Connector_Generic:Conn_01x11 pin 11 unit 1 body 1 name Pin_11 type passive style line
+symbol Connector_Generic:Conn_01x11 units 1
+symbol MCU_Fixture:RP2040 description Microcontroller
+symbol MCU_Fixture:RP2040 field Description Microcontroller
+symbol MCU_Fixture:RP2040 field Reference U
+symbol MCU_Fixture:RP2040 field Value RP2040
+symbol MCU_Fixture:RP2040 hash 390449aef4dd6d6b
+symbol MCU_Fixture:RP2040 pin 1 unit 1 body 1 name GPIO12 type bidirectional style line
+symbol MCU_Fixture:RP2040 pin 2 unit 1 body 1 name GPIO13 type bidirectional style line
+symbol MCU_Fixture:RP2040 pin 3 unit 1 body 1 name GPIO14 type bidirectional style line
+symbol MCU_Fixture:RP2040 pin 4 unit 1 body 1 name GPIO15 type bidirectional style line
+symbol MCU_Fixture:RP2040 pin 5 unit 1 body 1 name GPIO16 type bidirectional style line
+symbol MCU_Fixture:RP2040 pin 6 unit 1 body 1 name GPIO17 type bidirectional style line
+symbol MCU_Fixture:RP2040 pin 7 unit 1 body 1 name GPIO18 type bidirectional style line
+symbol MCU_Fixture:RP2040 pin 8 unit 1 body 1 name GPIO19 type bidirectional style line
+symbol MCU_Fixture:RP2040 pin 9 unit 1 body 1 name GPIO20 type bidirectional style line
+symbol MCU_Fixture:RP2040 pin 10 unit 1 body 1 name GPIO21 type bidirectional style line
+symbol MCU_Fixture:RP2040 pin 11 unit 1 body 1 name GPIO22 type bidirectional style line
+symbol MCU_Fixture:RP2040 units 1

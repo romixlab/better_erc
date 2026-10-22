@@ -1,0 +1,135 @@
+board name-10_active_low_unmarked
+label / local EXP_OE at 101.6,30.48 net /EXP_OE
+label / local EXP_OE at 182.88,38.1 net /EXP_OE
+label / local FLASH_CS at 60.96,30.48 net /FLASH_CS
+label / local FLASH_CS at 182.88,33.02 net /FLASH_CS
+label / local FLASH_WP_N at 60.96,33.02 net /FLASH_WP_N
+label / local FLASH_WP_N at 182.88,35.56 net /FLASH_WP_N
+label / local HUB_RESET at 20.32,30.48 net /HUB_RESET
+label / local HUB_RESET at 182.88,30.48 net /HUB_RESET
+label / local LINE_A at 142.24,30.48 net /LINE_A
+label / local LINE_A at 182.88,40.64 net /LINE_A
+label / local LINE_B at 142.24,33.02 net /LINE_B
+label / local LINE_B at 182.88,43.18 net /LINE_B
+net /EXP_OE class = Default @ sch name-10_active_low_unmarked.kicad_sch note "effective net class"
+net /EXP_OE kind named
+net /FLASH_CS class = Default @ sch name-10_active_low_unmarked.kicad_sch note "effective net class"
+net /FLASH_CS kind named
+net /FLASH_WP_N class = Default @ sch name-10_active_low_unmarked.kicad_sch note "effective net class"
+net /FLASH_WP_N kind named
+net /HUB_RESET class = Default @ sch name-10_active_low_unmarked.kicad_sch note "effective net class"
+net /HUB_RESET kind named
+net /LINE_A class = Default @ sch name-10_active_low_unmarked.kicad_sch note "effective net class"
+net /LINE_A kind named
+net /LINE_B class = Default @ sch name-10_active_low_unmarked.kicad_sch note "effective net class"
+net /LINE_B kind named
+part U1 field Value = HUB @ sch name-10_active_low_unmarked.kicad_sch
+part U1 flag dnp = no @ sch name-10_active_low_unmarked.kicad_sch
+part U1 flag exclude_from_sim = no @ sch name-10_active_low_unmarked.kicad_sch
+part U1 flag in_bom = yes @ sch name-10_active_low_unmarked.kicad_sch
+part U1 flag on_board = yes @ sch name-10_active_low_unmarked.kicad_sch
+part U1 lib Fixture:HUB sheet / symbol Fixture:HUB
+part U1 unit 1 sheet / uuid 9a001000-0000-4000-8000-000000000001 line 63 at 30.48,30.48 rot 0
+part U1 value = text HUB @ sch name-10_active_low_unmarked.kicad_sch note "from the Value field"
+part U2 field Value = FLASH @ sch name-10_active_low_unmarked.kicad_sch
+part U2 flag dnp = no @ sch name-10_active_low_unmarked.kicad_sch
+part U2 flag exclude_from_sim = no @ sch name-10_active_low_unmarked.kicad_sch
+part U2 flag in_bom = yes @ sch name-10_active_low_unmarked.kicad_sch
+part U2 flag on_board = yes @ sch name-10_active_low_unmarked.kicad_sch
+part U2 lib Fixture:FLASH sheet / symbol Fixture:FLASH
+part U2 unit 1 sheet / uuid 9a001000-0000-4000-8000-000000000004 line 71 at 71.12,30.48 rot 0
+part U2 value = text FLASH @ sch name-10_active_low_unmarked.kicad_sch note "from the Value field"
+part U3 field Value = EXP @ sch name-10_active_low_unmarked.kicad_sch
+part U3 flag dnp = no @ sch name-10_active_low_unmarked.kicad_sch
+part U3 flag exclude_from_sim = no @ sch name-10_active_low_unmarked.kicad_sch
+part U3 flag in_bom = yes @ sch name-10_active_low_unmarked.kicad_sch
+part U3 flag on_board = yes @ sch name-10_active_low_unmarked.kicad_sch
+part U3 lib Fixture:EXP sheet / symbol Fixture:EXP
+part U3 unit 1 sheet / uuid 9a001000-0000-4000-8000-000000000009 line 81 at 111.76,30.48 rot 0
+part U3 value = text EXP @ sch name-10_active_low_unmarked.kicad_sch note "from the Value field"
+part U4 field Value = PHY @ sch name-10_active_low_unmarked.kicad_sch
+part U4 flag dnp = no @ sch name-10_active_low_unmarked.kicad_sch
+part U4 flag exclude_from_sim = no @ sch name-10_active_low_unmarked.kicad_sch
+part U4 flag in_bom = yes @ sch name-10_active_low_unmarked.kicad_sch
+part U4 flag on_board = yes @ sch name-10_active_low_unmarked.kicad_sch
+part U4 lib Fixture:PHY sheet / symbol Fixture:PHY
+part U4 unit 1 sheet / uuid 9a001000-0000-4000-8000-00000000000c line 89 at 152.4,30.48 rot 0
+part U4 value = text PHY @ sch name-10_active_low_unmarked.kicad_sch note "from the Value field"
+part U5 field Value = MCU @ sch name-10_active_low_unmarked.kicad_sch
+part U5 flag dnp = no @ sch name-10_active_low_unmarked.kicad_sch
+part U5 flag exclude_from_sim = no @ sch name-10_active_low_unmarked.kicad_sch
+part U5 flag in_bom = yes @ sch name-10_active_low_unmarked.kicad_sch
+part U5 flag on_board = yes @ sch name-10_active_low_unmarked.kicad_sch
+part U5 lib MCU_Fixture:MCU sheet / symbol MCU_Fixture:MCU
+part U5 unit 1 sheet / uuid 9a001000-0000-4000-8000-000000000011 line 99 at 193.04,30.48 rot 0
+part U5 value = text MCU @ sch name-10_active_low_unmarked.kicad_sch note "from the Value field"
+pin U1 1 name ~{RESET} unit 1 net /HUB_RESET
+pin U1 1 type = input @ sch name-10_active_low_unmarked.kicad_sch
+pin U2 1 name ~{CS} unit 1 net /FLASH_CS
+pin U2 1 type = input @ sch name-10_active_low_unmarked.kicad_sch
+pin U2 2 name ~{WP} unit 1 net /FLASH_WP_N
+pin U2 2 type = input @ sch name-10_active_low_unmarked.kicad_sch
+pin U3 1 name OE unit 1 net /EXP_OE
+pin U3 1 type = input @ sch name-10_active_low_unmarked.kicad_sch
+pin U4 1 name TX_P unit 1 net /LINE_A
+pin U4 1 type = output @ sch name-10_active_low_unmarked.kicad_sch
+pin U4 2 name TX_N unit 1 net /LINE_B
+pin U4 2 type = output @ sch name-10_active_low_unmarked.kicad_sch
+pin U5 1 name PA0 unit 1 net /HUB_RESET
+pin U5 1 type = output @ sch name-10_active_low_unmarked.kicad_sch
+pin U5 2 name PA1 unit 1 net /FLASH_CS
+pin U5 2 type = output @ sch name-10_active_low_unmarked.kicad_sch
+pin U5 3 name PA2 unit 1 net /FLASH_WP_N
+pin U5 3 type = output @ sch name-10_active_low_unmarked.kicad_sch
+pin U5 4 name PA3 unit 1 net /EXP_OE
+pin U5 4 type = output @ sch name-10_active_low_unmarked.kicad_sch
+pin U5 5 name PA4 unit 1 net /LINE_A
+pin U5 5 type = input @ sch name-10_active_low_unmarked.kicad_sch
+pin U5 6 name PA5 unit 1 net /LINE_B
+pin U5 6 type = input @ sch name-10_active_low_unmarked.kicad_sch
+sheet / name "" file name-10_active_low_unmarked.kicad_sch uuid /
+source file name-10_active_low_unmarked.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:EXP description "Shift register"
+symbol Fixture:EXP field Description "Shift register"
+symbol Fixture:EXP field Reference U
+symbol Fixture:EXP field Value EXP
+symbol Fixture:EXP hash c477659c52bd74b8
+symbol Fixture:EXP pin 1 unit 1 body 1 name OE type input style inverted
+symbol Fixture:EXP units 1
+symbol Fixture:FLASH description "SPI flash"
+symbol Fixture:FLASH field Description "SPI flash"
+symbol Fixture:FLASH field Reference U
+symbol Fixture:FLASH field Value FLASH
+symbol Fixture:FLASH hash 79a23ea61d4f75f6
+symbol Fixture:FLASH pin 1 unit 1 body 1 name ~{CS} type input style line
+symbol Fixture:FLASH pin 2 unit 1 body 1 name ~{WP} type input style line
+symbol Fixture:FLASH units 1
+symbol Fixture:HUB description "USB hub"
+symbol Fixture:HUB field Description "USB hub"
+symbol Fixture:HUB field Reference U
+symbol Fixture:HUB field Value HUB
+symbol Fixture:HUB hash 4c64fc1f84401676
+symbol Fixture:HUB pin 1 unit 1 body 1 name ~{RESET} type input style line
+symbol Fixture:HUB units 1
+symbol Fixture:PHY description "Line driver"
+symbol Fixture:PHY field Description "Line driver"
+symbol Fixture:PHY field Reference U
+symbol Fixture:PHY field Value PHY
+symbol Fixture:PHY hash b2b5b757ea6fc9be
+symbol Fixture:PHY pin 1 unit 1 body 1 name TX_P type output style line
+symbol Fixture:PHY pin 2 unit 1 body 1 name TX_N type output style line
+symbol Fixture:PHY units 1
+symbol MCU_Fixture:MCU description Microcontroller
+symbol MCU_Fixture:MCU field Description Microcontroller
+symbol MCU_Fixture:MCU field Reference U
+symbol MCU_Fixture:MCU field Value MCU
+symbol MCU_Fixture:MCU hash ad52283b64ace339
+symbol MCU_Fixture:MCU pin 1 unit 1 body 1 name PA0 type output style line
+symbol MCU_Fixture:MCU pin 2 unit 1 body 1 name PA1 type output style line
+symbol MCU_Fixture:MCU pin 3 unit 1 body 1 name PA2 type output style line
+symbol MCU_Fixture:MCU pin 4 unit 1 body 1 name PA3 type output style line
+symbol MCU_Fixture:MCU pin 5 unit 1 body 1 name PA4 type input style line
+symbol MCU_Fixture:MCU pin 6 unit 1 body 1 name PA5 type input style line
+symbol MCU_Fixture:MCU units 1

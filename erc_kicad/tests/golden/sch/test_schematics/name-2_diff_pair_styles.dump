@@ -1,0 +1,113 @@
+board name-2_diff_pair_styles
+label / local CAN+ at 20.32,40.64 net /CAN+
+label / local CAN+ at 60.96,40.64 net /CAN+
+label / local CAN- at 20.32,43.18 net /CAN-
+label / local CAN- at 60.96,43.18 net /CAN-
+label / local ETH_RX_N at 20.32,38.1 net /ETH_RX_N
+label / local ETH_RX_N at 60.96,38.1 net /ETH_RX_N
+label / local ETH_RX_P at 20.32,35.56 net /ETH_RX_P
+label / local ETH_RX_P at 60.96,35.56 net /ETH_RX_P
+label / local ETH_TX_N at 20.32,33.02 net /ETH_TX_N
+label / local ETH_TX_N at 60.96,33.02 net /ETH_TX_N
+label / local ETH_TX_P at 20.32,30.48 net /ETH_TX_P
+label / local ETH_TX_P at 60.96,30.48 net /ETH_TX_P
+label / local USB_D- at 20.32,48.26 net /USB_D-
+label / local USB_D- at 60.96,48.26 net /USB_D-
+label / local USB_DP at 20.32,45.72 net /USB_DP
+label / local USB_DP at 60.96,45.72 net /USB_DP
+net /CAN+ class = Default @ sch name-2_diff_pair_styles.kicad_sch note "effective net class"
+net /CAN+ kind named
+net /CAN- class = Default @ sch name-2_diff_pair_styles.kicad_sch note "effective net class"
+net /CAN- kind named
+net /ETH_RX_N class = Default @ sch name-2_diff_pair_styles.kicad_sch note "effective net class"
+net /ETH_RX_N kind named
+net /ETH_RX_P class = Default @ sch name-2_diff_pair_styles.kicad_sch note "effective net class"
+net /ETH_RX_P kind named
+net /ETH_TX_N class = Default @ sch name-2_diff_pair_styles.kicad_sch note "effective net class"
+net /ETH_TX_N kind named
+net /ETH_TX_P class = Default @ sch name-2_diff_pair_styles.kicad_sch note "effective net class"
+net /ETH_TX_P kind named
+net /USB_D- class = Default @ sch name-2_diff_pair_styles.kicad_sch note "effective net class"
+net /USB_D- kind named
+net /USB_DP class = Default @ sch name-2_diff_pair_styles.kicad_sch note "effective net class"
+net /USB_DP kind named
+part J1 field Value = Conn @ sch name-2_diff_pair_styles.kicad_sch
+part J1 flag dnp = no @ sch name-2_diff_pair_styles.kicad_sch
+part J1 flag exclude_from_sim = no @ sch name-2_diff_pair_styles.kicad_sch
+part J1 flag in_bom = yes @ sch name-2_diff_pair_styles.kicad_sch
+part J1 flag on_board = yes @ sch name-2_diff_pair_styles.kicad_sch
+part J1 lib Connector_Generic:Conn_01x08 sheet / symbol Connector_Generic:Conn_01x08
+part J1 unit 1 sheet / uuid 9a000200-0000-4000-8000-00000000000a line 54 at 71.12,30.48 rot 0
+part J1 value = text Conn @ sch name-2_diff_pair_styles.kicad_sch note "from the Value field"
+part U1 field Value = PHY @ sch name-2_diff_pair_styles.kicad_sch
+part U1 flag dnp = no @ sch name-2_diff_pair_styles.kicad_sch
+part U1 flag exclude_from_sim = no @ sch name-2_diff_pair_styles.kicad_sch
+part U1 flag in_bom = yes @ sch name-2_diff_pair_styles.kicad_sch
+part U1 flag on_board = yes @ sch name-2_diff_pair_styles.kicad_sch
+part U1 lib Fixture:PHY sheet / symbol Fixture:PHY
+part U1 unit 1 sheet / uuid 9a000200-0000-4000-8000-000000000001 line 40 at 30.48,30.48 rot 0
+part U1 value = text PHY @ sch name-2_diff_pair_styles.kicad_sch note "from the Value field"
+pin J1 1 name Pin_1 unit 1 net /ETH_TX_P
+pin J1 1 type = passive @ sch name-2_diff_pair_styles.kicad_sch
+pin J1 2 name Pin_2 unit 1 net /ETH_TX_N
+pin J1 2 type = passive @ sch name-2_diff_pair_styles.kicad_sch
+pin J1 3 name Pin_3 unit 1 net /ETH_RX_P
+pin J1 3 type = passive @ sch name-2_diff_pair_styles.kicad_sch
+pin J1 4 name Pin_4 unit 1 net /ETH_RX_N
+pin J1 4 type = passive @ sch name-2_diff_pair_styles.kicad_sch
+pin J1 5 name Pin_5 unit 1 net /CAN+
+pin J1 5 type = passive @ sch name-2_diff_pair_styles.kicad_sch
+pin J1 6 name Pin_6 unit 1 net /CAN-
+pin J1 6 type = passive @ sch name-2_diff_pair_styles.kicad_sch
+pin J1 7 name Pin_7 unit 1 net /USB_DP
+pin J1 7 type = passive @ sch name-2_diff_pair_styles.kicad_sch
+pin J1 8 name Pin_8 unit 1 net /USB_D-
+pin J1 8 type = passive @ sch name-2_diff_pair_styles.kicad_sch
+pin U1 1 name TXP unit 1 net /ETH_TX_P
+pin U1 1 type = output @ sch name-2_diff_pair_styles.kicad_sch
+pin U1 2 name TXN unit 1 net /ETH_TX_N
+pin U1 2 type = output @ sch name-2_diff_pair_styles.kicad_sch
+pin U1 3 name RXP unit 1 net /ETH_RX_P
+pin U1 3 type = input @ sch name-2_diff_pair_styles.kicad_sch
+pin U1 4 name RXN unit 1 net /ETH_RX_N
+pin U1 4 type = input @ sch name-2_diff_pair_styles.kicad_sch
+pin U1 5 name CANH unit 1 net /CAN+
+pin U1 5 type = bidirectional @ sch name-2_diff_pair_styles.kicad_sch
+pin U1 6 name CANL unit 1 net /CAN-
+pin U1 6 type = bidirectional @ sch name-2_diff_pair_styles.kicad_sch
+pin U1 7 name DP unit 1 net /USB_DP
+pin U1 7 type = bidirectional @ sch name-2_diff_pair_styles.kicad_sch
+pin U1 8 name DM unit 1 net /USB_D-
+pin U1 8 type = bidirectional @ sch name-2_diff_pair_styles.kicad_sch
+sheet / name "" file name-2_diff_pair_styles.kicad_sch uuid /
+source file name-2_diff_pair_styles.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x08 description "Generic connector"
+symbol Connector_Generic:Conn_01x08 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x08 field Reference J
+symbol Connector_Generic:Conn_01x08 field Value Conn_01x08
+symbol Connector_Generic:Conn_01x08 hash 80511efb083e55ca
+symbol Connector_Generic:Conn_01x08 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x08 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x08 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x08 pin 4 unit 1 body 1 name Pin_4 type passive style line
+symbol Connector_Generic:Conn_01x08 pin 5 unit 1 body 1 name Pin_5 type passive style line
+symbol Connector_Generic:Conn_01x08 pin 6 unit 1 body 1 name Pin_6 type passive style line
+symbol Connector_Generic:Conn_01x08 pin 7 unit 1 body 1 name Pin_7 type passive style line
+symbol Connector_Generic:Conn_01x08 pin 8 unit 1 body 1 name Pin_8 type passive style line
+symbol Connector_Generic:Conn_01x08 units 1
+symbol Fixture:PHY description PHY
+symbol Fixture:PHY field Description PHY
+symbol Fixture:PHY field Reference U
+symbol Fixture:PHY field Value PHY
+symbol Fixture:PHY hash 58267d18ee8bd28c
+symbol Fixture:PHY pin 1 unit 1 body 1 name TXP type output style line
+symbol Fixture:PHY pin 2 unit 1 body 1 name TXN type output style line
+symbol Fixture:PHY pin 3 unit 1 body 1 name RXP type input style line
+symbol Fixture:PHY pin 4 unit 1 body 1 name RXN type input style line
+symbol Fixture:PHY pin 5 unit 1 body 1 name CANH type bidirectional style line
+symbol Fixture:PHY pin 6 unit 1 body 1 name CANL type bidirectional style line
+symbol Fixture:PHY pin 7 unit 1 body 1 name DP type bidirectional style line
+symbol Fixture:PHY pin 8 unit 1 body 1 name DM type bidirectional style line
+symbol Fixture:PHY units 1
