@@ -7,12 +7,19 @@ label / local MID at 100,53.81 net /MID
 label / local MID at 160,53.81 net /MID
 label / local OUTA at 100,46.19 net /OUTA
 label / local OUTA at 135.08,50 net /OUTA
+net /INA class = Default @ sch fixture.kicad_sch note "effective net class"
 net /INA kind named
+net /INB class = Default @ sch fixture.kicad_sch note "effective net class"
 net /INB kind named
+net /MID class = Default @ sch fixture.kicad_sch note "effective net class"
 net /MID kind named
+net /OUTA class = Default @ sch fixture.kicad_sch note "effective net class"
 net /OUTA kind named
+net unconnected-(U1A-+INA-Pad3) class = Default @ sch fixture.kicad_sch note "effective net class"
 net unconnected-(U1A-+INA-Pad3) kind unconnected
+net unconnected-(U1B-+INB-Pad5) class = Default @ sch fixture.kicad_sch note "effective net class"
 net unconnected-(U1B-+INB-Pad5) kind unconnected
+net unconnected-(U1B-OUTB-Pad7) class = Default @ sch fixture.kicad_sch note "effective net class"
 net unconnected-(U1B-OUTB-Pad7) kind unconnected
 part JP1 field "Component Class" = Jumpers @ sch fixture.kicad_sch
 part JP1 field Description = "Three-pad solder jumper" @ sch fixture.kicad_sch

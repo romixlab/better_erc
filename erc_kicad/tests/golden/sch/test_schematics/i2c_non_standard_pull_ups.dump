@@ -9,28 +9,51 @@ label / power VCC at 73.66,44.45 net VCC
 label / power VCC at 96.52,55.88 net VCC
 label / power VCC at 106.68,55.88 net VCC
 label / power VCC at 152.4,59.69 net VCC
+net /SCL class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net /SCL kind named
+net /SDA class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net /SDA kind named
+net GND class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net GND kind power
+net VCC class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net VCC kind power
+net unconnected-(U301-BOOT0-Pad1) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-BOOT0-Pad1) kind unconnected
+net unconnected-(U301-NRST-Pad4) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-NRST-Pad4) kind unconnected
+net unconnected-(U301-PA0-Pad6) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA0-Pad6) kind unconnected
+net unconnected-(U301-PA1-Pad7) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA1-Pad7) kind unconnected
+net unconnected-(U301-PA2-Pad8) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA2-Pad8) kind unconnected
+net unconnected-(U301-PA3-Pad9) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA3-Pad9) kind unconnected
+net unconnected-(U301-PA4-Pad10) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA4-Pad10) kind unconnected
+net unconnected-(U301-PA5-Pad11) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA5-Pad11) kind unconnected
+net unconnected-(U301-PA6-Pad12) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA6-Pad12) kind unconnected
+net unconnected-(U301-PA7-Pad13) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA7-Pad13) kind unconnected
+net unconnected-(U301-PA13-Pad19) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA13-Pad19) kind unconnected
+net unconnected-(U301-PA14-Pad20) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PA14-Pad20) kind unconnected
+net unconnected-(U301-PB1-Pad14) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PB1-Pad14) kind unconnected
+net unconnected-(U301-PF0-Pad2) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PF0-Pad2) kind unconnected
+net unconnected-(U301-PF1-Pad3) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U301-PF1-Pad3) kind unconnected
+net unconnected-(U302-IO0-Pad1) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U302-IO0-Pad1) kind unconnected
+net unconnected-(U302-IO1-Pad2) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U302-IO1-Pad2) kind unconnected
+net unconnected-(U302-IO2-Pad3) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U302-IO2-Pad3) kind unconnected
+net unconnected-(U302-IO3-Pad5) class = Default @ sch i2c_non_standard_pull_ups.kicad_sch note "effective net class"
 net unconnected-(U302-IO3-Pad5) kind unconnected
 part R301 field Description = Resistor @ sch i2c_non_standard_pull_ups.kicad_sch
 part R301 field Value = 1K @ sch i2c_non_standard_pull_ups.kicad_sch

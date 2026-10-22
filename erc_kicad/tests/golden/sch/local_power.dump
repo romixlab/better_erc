@@ -7,10 +7,15 @@ label /Sub/ local LOWER at 30,16.19 net /Sub/LOWER
 label /Sub/ power GND at 20,23.81 net GND
 label /Sub/ power VLOC at 20,16.19 net /Sub/VLOC
 label /Sub/ power VLOC at 30,23.81 net /Sub/VLOC
+net /LOWER class = Default @ sch local_power.kicad_sch note "effective net class"
 net /LOWER kind named
+net /Sub/LOWER class = Default @ sch local_power.kicad_sch note "effective net class"
 net /Sub/LOWER kind named
+net /Sub/VLOC class = Default @ sch local_power.kicad_sch note "effective net class"
 net /Sub/VLOC kind power
+net /VLOC class = Default @ sch local_power.kicad_sch note "effective net class"
 net /VLOC kind power
+net GND class = Default @ sch local_power.kicad_sch note "effective net class"
 net GND kind power
 part R1 field Value = 10k @ sch local_power.kicad_sch
 part R1 flag dnp = no @ sch local_power.kicad_sch

@@ -1,25 +1,47 @@
 board style_values
+net unconnected-(Q1-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(Q1-Pad1) kind unconnected
+net unconnected-(Q1-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(Q1-Pad2) kind unconnected
+net unconnected-(Q1-Pad3) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(Q1-Pad3) kind unconnected
+net unconnected-(Q2-D-Pad3) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(Q2-D-Pad3) kind unconnected
+net unconnected-(Q2-G-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(Q2-G-Pad1) kind unconnected
+net unconnected-(Q2-S-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(Q2-S-Pad2) kind unconnected
+net unconnected-(R1-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R1-Pad1) kind unconnected
+net unconnected-(R1-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R1-Pad2) kind unconnected
+net unconnected-(R2-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R2-Pad1) kind unconnected
+net unconnected-(R2-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R2-Pad2) kind unconnected
+net unconnected-(R3-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R3-Pad1) kind unconnected
+net unconnected-(R3-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R3-Pad2) kind unconnected
+net unconnected-(R4-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R4-Pad1) kind unconnected
+net unconnected-(R4-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R4-Pad2) kind unconnected
+net unconnected-(R5-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R5-Pad1) kind unconnected
+net unconnected-(R5-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R5-Pad2) kind unconnected
+net unconnected-(R6-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R6-Pad1) kind unconnected
+net unconnected-(R6-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R6-Pad2) kind unconnected
+net unconnected-(R7-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R7-Pad1) kind unconnected
+net unconnected-(R7-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R7-Pad2) kind unconnected
+net unconnected-(R8-Pad1) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R8-Pad1) kind unconnected
+net unconnected-(R8-Pad2) class = Default @ sch style_values.kicad_sch note "effective net class"
 net unconnected-(R8-Pad2) kind unconnected
 part Q1 field Description = "N-Channel MOSFET" @ sch style_values.kicad_sch
 part Q1 field Value = NMOS @ sch style_values.kicad_sch

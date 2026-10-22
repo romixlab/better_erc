@@ -117,174 +117,343 @@ label "/C107: I2C multiple pull-ups/" power VCC_3V3 at 151.13,59.69 net VCC_3V3
 label "/C107: I2C multiple pull-ups/" power VCC_3V3 at 171.45,86.36 net VCC_3V3
 label "/C107: I2C multiple pull-ups/" power VCC_3V3 at 181.61,86.36 net VCC_3V3
 label "/C107: I2C multiple pull-ups/" power VCC_3V3 at 204.47,92.71 net VCC_3V3
+net "/C20: I2C no pull-ups/I2C1_EN" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C no pull-ups/I2C1_EN" kind named
+net "/C20: I2C no pull-ups/I2C2_EN" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C no pull-ups/I2C2_EN" kind named
+net "/C20: I2C no pull-ups/I2C3_EN" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C no pull-ups/I2C3_EN" kind named
+net "/C20: I2C no pull-ups/I2C3_P" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C no pull-ups/I2C3_P" kind named
+net "/C20: I2C no pull-ups/I2C4_EN" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C no pull-ups/I2C4_EN" kind named
+net "/C20: I2C no pull-ups/SCL1" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C no pull-ups/SCL1" kind named
+net "/C20: I2C no pull-ups/SCL2" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C no pull-ups/SCL2" kind named
+net "/C20: I2C no pull-ups/SCL3" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C no pull-ups/SCL3" kind named
+net "/C20: I2C no pull-ups/SDA1" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C no pull-ups/SDA1" kind named
+net "/C20: I2C no pull-ups/SDA2" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C no pull-ups/SDA2" kind named
+net "/C20: I2C no pull-ups/SDA3" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C no pull-ups/SDA3" kind named
+net "/C20: I2C non equal pull-ups/SCL" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C non equal pull-ups/SCL" kind named
+net "/C20: I2C non equal pull-ups/SDA" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C non equal pull-ups/SDA" kind named
+net "/C20: I2C non standard pull-ups/SCL" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C non standard pull-ups/SCL" kind named
+net "/C20: I2C non standard pull-ups/SDA" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C non standard pull-ups/SDA" kind named
+net "/C22: I2C Segments/SCL1_1V2" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SCL1_1V2" kind named
+net "/C22: I2C Segments/SCL1_1V8" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SCL1_1V8" kind named
+net "/C22: I2C Segments/SCL1_3V3" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SCL1_3V3" kind named
+net "/C22: I2C Segments/SCL1_3V3_VCC2" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SCL1_3V3_VCC2" kind named
+net "/C22: I2C Segments/SCL2_3V3" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SCL2_3V3" kind named
+net "/C22: I2C Segments/SCL_NOT_I2C" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SCL_NOT_I2C" kind named
+net "/C22: I2C Segments/SCL_U7" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SCL_U7" kind named
+net "/C22: I2C Segments/SDA1_1V2" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SDA1_1V2" kind named
+net "/C22: I2C Segments/SDA1_1V8" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SDA1_1V8" kind named
+net "/C22: I2C Segments/SDA1_3V3" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SDA1_3V3" kind named
+net "/C22: I2C Segments/SDA1_3V3_VCC2" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SDA1_3V3_VCC2" kind named
+net "/C22: I2C Segments/SDA2_3V3" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SDA2_3V3" kind named
+net "/C22: I2C Segments/SDA2_EN" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SDA2_EN" kind named
+net "/C22: I2C Segments/SDATA_SMTH_ELSE" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SDATA_SMTH_ELSE" kind named
+net "/C22: I2C Segments/SDA_U7" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/SDA_U7" kind named
+net "/C22: I2C Segments/UNM1" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/UNM1" kind named
+net "/C22: I2C Segments/UNM2" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C22: I2C Segments/UNM2" kind named
+net "/C107: I2C multiple pull-ups/SCL1_1V8" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C107: I2C multiple pull-ups/SCL1_1V8" kind named
+net "/C107: I2C multiple pull-ups/SCL1_3V3" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C107: I2C multiple pull-ups/SCL1_3V3" kind named
+net "/C107: I2C multiple pull-ups/SCL_U7" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C107: I2C multiple pull-ups/SCL_U7" kind named
+net "/C107: I2C multiple pull-ups/SDA1_1V8" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C107: I2C multiple pull-ups/SDA1_1V8" kind named
+net "/C107: I2C multiple pull-ups/SDA1_3V3" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C107: I2C multiple pull-ups/SDA1_3V3" kind named
+net "/C107: I2C multiple pull-ups/SDA_U7" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C107: I2C multiple pull-ups/SDA_U7" kind named
+net GND class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net GND kind power
+net VCC class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net VCC kind power
+net VCC2_3V3 class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net VCC2_3V3 kind power
+net VCC_1V2 class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net VCC_1V2 kind power
+net VCC_1V8 class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net VCC_1V8 kind power
+net VCC_3V3 class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net VCC_3V3 kind power
+net unconnected-(U201-BOOT0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U201-BOOT0-Pad1) kind unconnected
+net unconnected-(U201-NRST-Pad4) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U201-NRST-Pad4) kind unconnected
+net unconnected-(U201-PA2-Pad8) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U201-PA2-Pad8) kind unconnected
+net unconnected-(U201-PA3-Pad9) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U201-PA3-Pad9) kind unconnected
+net unconnected-(U201-PA4-Pad10) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U201-PA4-Pad10) kind unconnected
+net unconnected-(U201-PA5-Pad11) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U201-PA5-Pad11) kind unconnected
+net unconnected-(U201-PA6-Pad12) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U201-PA6-Pad12) kind unconnected
+net unconnected-(U201-PA7-Pad13) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U201-PA7-Pad13) kind unconnected
+net unconnected-(U201-PA13-Pad19) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U201-PA13-Pad19) kind unconnected
+net unconnected-(U201-PA14-Pad20) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U201-PA14-Pad20) kind unconnected
+net unconnected-(U201-PB1-Pad14) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U201-PB1-Pad14) kind unconnected
+net unconnected-(U201-PF0-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U201-PF0-Pad2) kind unconnected
+net unconnected-(U201-PF1-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U201-PF1-Pad3) kind unconnected
+net unconnected-(U202-IO0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U202-IO0-Pad1) kind unconnected
+net unconnected-(U202-IO1-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U202-IO1-Pad2) kind unconnected
+net unconnected-(U202-IO2-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U202-IO2-Pad3) kind unconnected
+net unconnected-(U202-IO3-Pad5) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U202-IO3-Pad5) kind unconnected
+net unconnected-(U203-IO0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U203-IO0-Pad1) kind unconnected
+net unconnected-(U203-IO1-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U203-IO1-Pad2) kind unconnected
+net unconnected-(U203-IO2-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U203-IO2-Pad3) kind unconnected
+net unconnected-(U203-IO3-Pad5) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U203-IO3-Pad5) kind unconnected
+net unconnected-(U204-IO0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U204-IO0-Pad1) kind unconnected
+net unconnected-(U204-IO1-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U204-IO1-Pad2) kind unconnected
+net unconnected-(U204-IO2-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U204-IO2-Pad3) kind unconnected
+net unconnected-(U204-IO3-Pad5) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U204-IO3-Pad5) kind unconnected
+net unconnected-(U301-BOOT0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-BOOT0-Pad1) kind unconnected
+net unconnected-(U301-NRST-Pad4) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-NRST-Pad4) kind unconnected
+net unconnected-(U301-PA0-Pad6) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-PA0-Pad6) kind unconnected
+net unconnected-(U301-PA1-Pad7) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-PA1-Pad7) kind unconnected
+net unconnected-(U301-PA2-Pad8) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-PA2-Pad8) kind unconnected
+net unconnected-(U301-PA3-Pad9) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-PA3-Pad9) kind unconnected
+net unconnected-(U301-PA4-Pad10) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-PA4-Pad10) kind unconnected
+net unconnected-(U301-PA5-Pad11) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-PA5-Pad11) kind unconnected
+net unconnected-(U301-PA6-Pad12) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-PA6-Pad12) kind unconnected
+net unconnected-(U301-PA7-Pad13) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-PA7-Pad13) kind unconnected
+net unconnected-(U301-PA13-Pad19) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-PA13-Pad19) kind unconnected
+net unconnected-(U301-PA14-Pad20) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-PA14-Pad20) kind unconnected
+net unconnected-(U301-PB1-Pad14) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-PB1-Pad14) kind unconnected
+net unconnected-(U301-PF0-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-PF0-Pad2) kind unconnected
+net unconnected-(U301-PF1-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U301-PF1-Pad3) kind unconnected
+net unconnected-(U302-IO0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U302-IO0-Pad1) kind unconnected
+net unconnected-(U302-IO1-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U302-IO1-Pad2) kind unconnected
+net unconnected-(U302-IO2-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U302-IO2-Pad3) kind unconnected
+net unconnected-(U302-IO3-Pad5) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U302-IO3-Pad5) kind unconnected
+net unconnected-(U401-BOOT0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U401-BOOT0-Pad1) kind unconnected
+net unconnected-(U401-NRST-Pad4) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U401-NRST-Pad4) kind unconnected
+net unconnected-(U401-PA2-Pad8) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U401-PA2-Pad8) kind unconnected
+net unconnected-(U401-PA3-Pad9) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U401-PA3-Pad9) kind unconnected
+net unconnected-(U401-PA4-Pad10) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U401-PA4-Pad10) kind unconnected
+net unconnected-(U401-PA5-Pad11) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U401-PA5-Pad11) kind unconnected
+net unconnected-(U401-PA7-Pad13) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U401-PA7-Pad13) kind unconnected
+net unconnected-(U401-PB1-Pad14) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U401-PB1-Pad14) kind unconnected
+net unconnected-(U401-PF0-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U401-PF0-Pad2) kind unconnected
+net unconnected-(U401-PF1-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U401-PF1-Pad3) kind unconnected
+net unconnected-(U402-IO0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U402-IO0-Pad1) kind unconnected
+net unconnected-(U402-IO1-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U402-IO1-Pad2) kind unconnected
+net unconnected-(U402-IO2-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U402-IO2-Pad3) kind unconnected
+net unconnected-(U402-IO3-Pad5) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U402-IO3-Pad5) kind unconnected
+net unconnected-(U403-IO0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U403-IO0-Pad1) kind unconnected
+net unconnected-(U403-IO1-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U403-IO1-Pad2) kind unconnected
+net unconnected-(U403-IO2-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U403-IO2-Pad3) kind unconnected
+net unconnected-(U403-IO3-Pad5) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U403-IO3-Pad5) kind unconnected
+net unconnected-(U404-EN-Pad8) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U404-EN-Pad8) kind unconnected
+net unconnected-(U405-IO0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U405-IO0-Pad1) kind unconnected
+net unconnected-(U405-IO1-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U405-IO1-Pad2) kind unconnected
+net unconnected-(U405-IO2-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U405-IO2-Pad3) kind unconnected
+net unconnected-(U405-IO3-Pad5) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U405-IO3-Pad5) kind unconnected
+net unconnected-(U406-IO0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U406-IO0-Pad1) kind unconnected
+net unconnected-(U406-IO1-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U406-IO1-Pad2) kind unconnected
+net unconnected-(U406-IO2-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U406-IO2-Pad3) kind unconnected
+net unconnected-(U406-IO3-Pad5) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U406-IO3-Pad5) kind unconnected
+net unconnected-(U407-IO0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U407-IO0-Pad1) kind unconnected
+net unconnected-(U407-IO1-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U407-IO1-Pad2) kind unconnected
+net unconnected-(U407-IO2-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U407-IO2-Pad3) kind unconnected
+net unconnected-(U407-IO3-Pad5) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U407-IO3-Pad5) kind unconnected
+net unconnected-(U408-IO0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U408-IO0-Pad1) kind unconnected
+net unconnected-(U408-IO1-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U408-IO1-Pad2) kind unconnected
+net unconnected-(U408-IO2-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U408-IO2-Pad3) kind unconnected
+net unconnected-(U408-IO3-Pad5) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U408-IO3-Pad5) kind unconnected
+net unconnected-(U501-BOOT0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-BOOT0-Pad1) kind unconnected
+net unconnected-(U501-NRST-Pad4) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-NRST-Pad4) kind unconnected
+net unconnected-(U501-PA0-Pad6) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-PA0-Pad6) kind unconnected
+net unconnected-(U501-PA1-Pad7) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-PA1-Pad7) kind unconnected
+net unconnected-(U501-PA2-Pad8) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-PA2-Pad8) kind unconnected
+net unconnected-(U501-PA3-Pad9) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-PA3-Pad9) kind unconnected
+net unconnected-(U501-PA4-Pad10) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-PA4-Pad10) kind unconnected
+net unconnected-(U501-PA5-Pad11) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-PA5-Pad11) kind unconnected
+net unconnected-(U501-PA6-Pad12) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-PA6-Pad12) kind unconnected
+net unconnected-(U501-PA7-Pad13) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-PA7-Pad13) kind unconnected
+net unconnected-(U501-PA13-Pad19) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-PA13-Pad19) kind unconnected
+net unconnected-(U501-PA14-Pad20) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-PA14-Pad20) kind unconnected
+net unconnected-(U501-PB1-Pad14) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-PB1-Pad14) kind unconnected
+net unconnected-(U501-PF0-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-PF0-Pad2) kind unconnected
+net unconnected-(U501-PF1-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U501-PF1-Pad3) kind unconnected
+net unconnected-(U502-IO0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U502-IO0-Pad1) kind unconnected
+net unconnected-(U502-IO1-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U502-IO1-Pad2) kind unconnected
+net unconnected-(U502-IO2-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U502-IO2-Pad3) kind unconnected
+net unconnected-(U502-IO3-Pad5) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U502-IO3-Pad5) kind unconnected
+net unconnected-(U503-IO0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U503-IO0-Pad1) kind unconnected
+net unconnected-(U503-IO1-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U503-IO1-Pad2) kind unconnected
+net unconnected-(U503-IO2-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U503-IO2-Pad3) kind unconnected
+net unconnected-(U503-IO3-Pad5) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U503-IO3-Pad5) kind unconnected
+net unconnected-(U506-IO0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U506-IO0-Pad1) kind unconnected
+net unconnected-(U506-IO1-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U506-IO1-Pad2) kind unconnected
+net unconnected-(U506-IO2-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U506-IO2-Pad3) kind unconnected
+net unconnected-(U506-IO3-Pad5) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U506-IO3-Pad5) kind unconnected
+net unconnected-(U601-BOOT0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-BOOT0-Pad1) kind unconnected
+net unconnected-(U601-NRST-Pad4) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-NRST-Pad4) kind unconnected
+net unconnected-(U601-PA0-Pad6) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-PA0-Pad6) kind unconnected
+net unconnected-(U601-PA1-Pad7) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-PA1-Pad7) kind unconnected
+net unconnected-(U601-PA2-Pad8) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-PA2-Pad8) kind unconnected
+net unconnected-(U601-PA3-Pad9) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-PA3-Pad9) kind unconnected
+net unconnected-(U601-PA4-Pad10) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-PA4-Pad10) kind unconnected
+net unconnected-(U601-PA5-Pad11) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-PA5-Pad11) kind unconnected
+net unconnected-(U601-PA6-Pad12) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-PA6-Pad12) kind unconnected
+net unconnected-(U601-PA7-Pad13) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-PA7-Pad13) kind unconnected
+net unconnected-(U601-PA13-Pad19) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-PA13-Pad19) kind unconnected
+net unconnected-(U601-PA14-Pad20) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-PA14-Pad20) kind unconnected
+net unconnected-(U601-PB1-Pad14) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-PB1-Pad14) kind unconnected
+net unconnected-(U601-PF0-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-PF0-Pad2) kind unconnected
+net unconnected-(U601-PF1-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U601-PF1-Pad3) kind unconnected
+net unconnected-(U602-IO0-Pad1) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U602-IO0-Pad1) kind unconnected
+net unconnected-(U602-IO1-Pad2) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U602-IO1-Pad2) kind unconnected
+net unconnected-(U602-IO2-Pad3) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U602-IO2-Pad3) kind unconnected
+net unconnected-(U602-IO3-Pad5) class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net unconnected-(U602-IO3-Pad5) kind unconnected
 netclass Default
 netclass Default param bus_width = 12 @ pro test_schematics.kicad_pro

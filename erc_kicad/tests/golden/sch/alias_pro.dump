@@ -10,14 +10,67 @@ label /Sub/ hierarchical {USB} at 20,40 shape bidirectional
 label /Sub/ local DM at 42.54,30 net /DM
 label /Sub/ local DP at 32.54,30 net /DP
 label /Sub/ local X.DP at 32.54,50 net /X.DP
+net /DM class = Ctl,Wide @ pro alias_pro.kicad_pro note "effective net class"
 net /DM kind named
+net /DP class = Ctl,Wide @ pro alias_pro.kicad_pro note "effective net class"
 net /DP kind named
+net /X.DP class = Usb,Wide,Default @ pro alias_pro.kicad_pro note "effective net class"
 net /X.DP kind named
+net unconnected-(R1-~-Pad1) class = Default @ pro alias_pro.kicad_pro note "effective net class"
 net unconnected-(R1-~-Pad1) kind unconnected
+net unconnected-(R2-~-Pad2) class = Default @ pro alias_pro.kicad_pro note "effective net class"
 net unconnected-(R2-~-Pad2) kind unconnected
+net unconnected-(R10-~-Pad1) class = Default @ pro alias_pro.kicad_pro note "effective net class"
 net unconnected-(R10-~-Pad1) kind unconnected
+net unconnected-(R11-~-Pad1) class = Default @ pro alias_pro.kicad_pro note "effective net class"
 net unconnected-(R11-~-Pad1) kind unconnected
+net unconnected-(R12-~-Pad1) class = Default @ pro alias_pro.kicad_pro note "effective net class"
 net unconnected-(R12-~-Pad1) kind unconnected
+netclass Ctl
+netclass Ctl param bus_width = 12 @ pro alias_pro.kicad_pro
+netclass Ctl param clearance = 0.2 @ pro alias_pro.kicad_pro
+netclass Ctl param diff_pair_gap = 0.25 @ pro alias_pro.kicad_pro
+netclass Ctl param diff_pair_via_gap = 0.25 @ pro alias_pro.kicad_pro
+netclass Ctl param diff_pair_width = 0.2 @ pro alias_pro.kicad_pro
+netclass Ctl param line_style = 0 @ pro alias_pro.kicad_pro
+netclass Ctl param microvia_diameter = 0.3 @ pro alias_pro.kicad_pro
+netclass Ctl param microvia_drill = 0.1 @ pro alias_pro.kicad_pro
+netclass Ctl param pcb_color = "rgba(0, 0, 0, 0.000)" @ pro alias_pro.kicad_pro
+netclass Ctl param priority = 0 @ pro alias_pro.kicad_pro
+netclass Ctl param schematic_color = "rgba(0, 0, 0, 0.000)" @ pro alias_pro.kicad_pro
+netclass Ctl param track_width = 0.2 @ pro alias_pro.kicad_pro
+netclass Ctl param tuning_profile = "" @ pro alias_pro.kicad_pro
+netclass Ctl param via_diameter = 0.6 @ pro alias_pro.kicad_pro
+netclass Ctl param via_drill = 0.3 @ pro alias_pro.kicad_pro
+netclass Ctl param wire_width = 6 @ pro alias_pro.kicad_pro
+netclass Ctl pattern /D[MP]
+netclass Default
+netclass Default param bus_width = 12 @ pro alias_pro.kicad_pro
+netclass Default param clearance = 0.2 @ pro alias_pro.kicad_pro
+netclass Default param diff_pair_gap = 0.25 @ pro alias_pro.kicad_pro
+netclass Default param diff_pair_via_gap = 0.25 @ pro alias_pro.kicad_pro
+netclass Default param diff_pair_width = 0.2 @ pro alias_pro.kicad_pro
+netclass Default param line_style = 0 @ pro alias_pro.kicad_pro
+netclass Default param microvia_diameter = 0.3 @ pro alias_pro.kicad_pro
+netclass Default param microvia_drill = 0.1 @ pro alias_pro.kicad_pro
+netclass Default param pcb_color = "rgba(0, 0, 0, 0.000)" @ pro alias_pro.kicad_pro
+netclass Default param priority = 2147483647 @ pro alias_pro.kicad_pro
+netclass Default param schematic_color = "rgba(0, 0, 0, 0.000)" @ pro alias_pro.kicad_pro
+netclass Default param track_width = 0.2 @ pro alias_pro.kicad_pro
+netclass Default param tuning_profile = "" @ pro alias_pro.kicad_pro
+netclass Default param via_diameter = 0.6 @ pro alias_pro.kicad_pro
+netclass Default param via_drill = 0.3 @ pro alias_pro.kicad_pro
+netclass Default param wire_width = 6 @ pro alias_pro.kicad_pro
+netclass Usb
+netclass Usb param priority = 1 @ pro alias_pro.kicad_pro
+netclass Usb param track_width = 0.3 @ pro alias_pro.kicad_pro
+netclass Usb pattern */X.*
+netclass Usb pattern /Sub/DM
+netclass Wide
+netclass Wide param clearance = 0.5 @ pro alias_pro.kicad_pro
+netclass Wide param priority = 1 @ pro alias_pro.kicad_pro
+netclass Wide pattern /D?
+netclass Wide pattern /X.??
 part R1 field Value = 10k @ sch alias_pro.kicad_sch
 part R1 flag dnp = no @ sch alias_pro.kicad_sch
 part R1 flag exclude_from_sim = no @ sch alias_pro.kicad_sch

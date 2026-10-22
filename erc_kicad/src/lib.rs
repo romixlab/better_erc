@@ -8,6 +8,7 @@
 //!
 //! Every element a reader does not know becomes an [`erc_model::ImportNote`], never a panic.
 
+pub mod netclass;
 pub mod netlist;
 mod notes;
 pub mod pro;

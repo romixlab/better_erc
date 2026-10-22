@@ -20,10 +20,12 @@ pub struct NetDiff {
     pub renamed: Vec<(String, String)>,
     /// Nets with the same pins and the same name
     pub same: usize,
+    /// Nets with the same pins whose resolved net classes differ, both stated: (name in a, class in a, class in b)
+    pub classes: Vec<(String, String, String)>,
 }
 
 impl NetDiff {
-    /// Same connectivity (names may differ)
+    /// Same connectivity (names and classes may differ)
     pub fn same_connectivity(&self) -> bool {
         self.only_a.is_empty() && self.only_b.is_empty()
     }
@@ -61,6 +63,12 @@ pub fn compare(a: &Board, b: &Board) -> NetDiff {
     for (n, s) in &sb {
         by_set.entry(s).or_default().push(n);
     }
+    let class = |board: &Board, name: &str| {
+        board
+            .net_by_name(name)
+            .and_then(|i| board.net(i).class.get().cloned())
+            .unwrap_or_default()
+    };
     let mut d = NetDiff::default();
     let mut matched: HashMap<&PinSet, usize> = HashMap::new();
     for (n, s) in &sa {
@@ -68,8 +76,18 @@ pub fn compare(a: &Board, b: &Board) -> NetDiff {
             Some(names) => {
                 let used = matched.entry(s).or_default();
                 match names.get(*used) {
-                    Some(other) if *other == n => d.same += 1,
-                    Some(other) => d.renamed.push((n.clone(), other.to_string())),
+                    Some(other) => {
+                        if *other == n {
+                            d.same += 1;
+                        } else {
+                            d.renamed.push((n.clone(), other.to_string()));
+                        }
+                        let (ca, cb) = (class(a, n), class(b, other));
+                        // A side that states no class (KiCad 8's netlist) is no disagreement
+                        if ca != cb && !ca.is_empty() && !cb.is_empty() {
+                            d.classes.push((n.clone(), ca, cb));
+                        }
+                    }
                     None => d.only_a.push((n.clone(), s.clone())),
                 }
                 *used += 1;

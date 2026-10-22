@@ -1,7 +1,7 @@
 //! A KiCad project as one [`Importer`]: the project file when there is one, the schematic hierarchy (with the
 //! project's bus aliases), and the board file when there is one, joined into one [`Board`].
 
-use crate::{pro, sch};
+use crate::{netclass, pro, sch};
 use erc_model::*;
 
 /// The KiCad project (`.kicad_pro`) or a schematic (`.kicad_sch`) with the project around it as an [`Importer`]
@@ -40,10 +40,15 @@ pub fn read(files: &dyn Files, main: &str, opts: &ImportOptions) -> Result<Impor
     let aliases = project.as_ref().map_or(&[][..], |p| &p.bus_aliases[..]);
     let (mut board, n) = sch::read(files, &root, opts, aliases)?;
     notes.extend(n);
-    if let Some(p) = project {
-        board.source.files.insert(0, pro_file);
-        p.apply(&mut board);
-    }
+    let class_source = match project {
+        Some(p) => {
+            board.source.files.insert(0, pro_file.clone());
+            p.apply(&mut board);
+            Provenance::KicadProject { file: pro_file }
+        }
+        None => Provenance::Schematic { file: root },
+    };
+    netclass::resolve(&mut board, &class_source);
     board.finish();
     Ok(Imported {
         design: Design::single(board),

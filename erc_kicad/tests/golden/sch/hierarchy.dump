@@ -40,22 +40,39 @@ label /B/ local LOC at 42.54,42.38 net /B/LOC
 label /B/ local LOC at 60,26.19 net /B/LOC
 label /B/ power +3V3 at 32.54,42.38 net +3V3
 label /B/ power GND at 32.54,62.38 net GND
+net +3V3 class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net +3V3 kind power
+net /A/IN class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net /A/IN kind named
+net /A/LOC class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net /A/LOC kind named
+net /B/LOC class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net /B/LOC kind named
+net /B/OUT class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net /B/OUT kind named
+net /CTL.EN class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net /CTL.EN kind named
+net /DATA0 class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net /DATA0 kind named
+net /DATA2 class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net /DATA2 kind named
+net /LOC class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net /LOC kind named
+net /MID class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net /MID kind named
+net GLOB class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net GLOB kind named
+net GND class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net GND kind power
+net unconnected-(R1-Pad1) class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net unconnected-(R1-Pad1) kind unconnected
+net unconnected-(R2-Pad2) class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net unconnected-(R2-Pad2) kind unconnected
+net unconnected-(R3-Pad2) class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net unconnected-(R3-Pad2) kind unconnected
+net unconnected-(R4-Pad2) class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net unconnected-(R4-Pad2) kind unconnected
+net unconnected-(R6-Pad2) class = Default @ sch hierarchy.kicad_sch note "effective net class"
 net unconnected-(R6-Pad2) kind unconnected
 part R1 field Value = 10k @ sch hierarchy.kicad_sch
 part R1 flag dnp = no @ sch hierarchy.kicad_sch

@@ -3,8 +3,11 @@ label / local SIG_DRIVEN at 124.92,52.54 net /SIG_DRIVEN
 label / local SIG_DRIVEN at 135.08,50 net /SIG_DRIVEN
 label / local SIG_FLOATING at 100,46.19 net /SIG_FLOATING
 label / local SIG_FLOATING at 124.92,47.46 net /SIG_FLOATING
+net /SIG_DRIVEN class = Default @ sch io_inputs.kicad_sch note "effective net class"
 net /SIG_DRIVEN kind named
+net /SIG_FLOATING class = Default @ sch io_inputs.kicad_sch note "effective net class"
 net /SIG_FLOATING kind named
+net unconnected-(R1-Pad2) class = Default @ sch io_inputs.kicad_sch note "effective net class"
 net unconnected-(R1-Pad2) kind unconnected
 part R1 field Description = Resistor @ sch io_inputs.kicad_sch
 part R1 field Value = 10k @ sch io_inputs.kicad_sch

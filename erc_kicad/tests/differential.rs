@@ -104,6 +104,9 @@ fn render(d: &netcmp::NetDiff) -> String {
     for (a, b) in &d.renamed {
         out += &format!("renamed ours {a} kicad {b}\n");
     }
+    for (n, a, b) in &d.classes {
+        out += &format!("class {n} ours {a} kicad {b}\n");
+    }
     for (who, list) in [("ours ", &d.only_a), ("kicad", &d.only_b)] {
         for (n, set) in list {
             let pins: Vec<&str> = set.iter().map(String::as_str).collect();

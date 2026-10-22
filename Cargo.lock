@@ -1227,6 +1227,7 @@ version = "0.3.5"
 dependencies = [
  "erc_model",
  "generate_netlists",
+ "regex",
  "serde_json",
 ]
 

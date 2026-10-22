@@ -10,13 +10,21 @@ label /Sub/ hierarchical {USB} at 20,40 shape bidirectional
 label /Sub/ local DM at 42.54,30 net /DM
 label /Sub/ local DP at 32.54,30 net /DP
 label /Sub/ local X.DP at 32.54,50 net /X.DP
+net /DM class = Default @ sch alias.kicad_sch note "effective net class"
 net /DM kind named
+net /DP class = Default @ sch alias.kicad_sch note "effective net class"
 net /DP kind named
+net /X.DP class = Default @ sch alias.kicad_sch note "effective net class"
 net /X.DP kind named
+net unconnected-(R1-Pad1) class = Default @ sch alias.kicad_sch note "effective net class"
 net unconnected-(R1-Pad1) kind unconnected
+net unconnected-(R2-Pad2) class = Default @ sch alias.kicad_sch note "effective net class"
 net unconnected-(R2-Pad2) kind unconnected
+net unconnected-(R10-Pad1) class = Default @ sch alias.kicad_sch note "effective net class"
 net unconnected-(R10-Pad1) kind unconnected
+net unconnected-(R11-Pad1) class = Default @ sch alias.kicad_sch note "effective net class"
 net unconnected-(R11-Pad1) kind unconnected
+net unconnected-(R12-Pad1) class = Default @ sch alias.kicad_sch note "effective net class"
 net unconnected-(R12-Pad1) kind unconnected
 part R1 field Value = 10k @ sch alias.kicad_sch
 part R1 flag dnp = no @ sch alias.kicad_sch

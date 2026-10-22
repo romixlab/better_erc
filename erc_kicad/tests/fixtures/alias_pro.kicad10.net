@@ -2,7 +2,7 @@
 	(version "E")
 	(design
 		(source "/home/roman/git/.wt/core-model/better_erc/erc_kicad/tests/fixtures/alias_pro.kicad_sch")
-		(date "2026-10-22T10:44:32")
+		(date "2026-10-22T10:53:57")
 		(tool "Eeschema 10.0.6")
 		(sheet
 			(number "1")
@@ -373,7 +373,7 @@
 		(net
 			(code "3")
 			(name "/DM")
-			(class "Default")
+			(class "Ctl,Wide")
 			(node
 				(ref "R1")
 				(pin "2")
@@ -390,7 +390,7 @@
 		(net
 			(code "4")
 			(name "/DP")
-			(class "Default")
+			(class "Ctl,Wide")
 			(node
 				(ref "R10")
 				(pin "2")
@@ -401,7 +401,7 @@
 		(net
 			(code "5")
 			(name "/X.DP")
-			(class "Default")
+			(class "Usb,Wide,Default")
 			(node
 				(ref "R12")
 				(pin "2")

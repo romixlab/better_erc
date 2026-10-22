@@ -48,62 +48,119 @@ label / power VCC_3V3 at 205.74,187.96 net VCC_3V3
 label / power VCC_3V3 at 210.82,105.41 net VCC_3V3
 label / power VCC_3V3 at 212.09,237.49 net VCC_3V3
 label / power VCC_3V3 at 233.68,237.49 net VCC_3V3
+net /SCL1_1V2 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SCL1_1V2 kind named
+net /SCL1_1V8 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SCL1_1V8 kind named
+net /SCL1_3V3 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SCL1_3V3 kind named
+net /SCL1_3V3_VCC2 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SCL1_3V3_VCC2 kind named
+net /SCL2_3V3 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SCL2_3V3 kind named
+net /SCL_NOT_I2C class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SCL_NOT_I2C kind named
+net /SCL_U7 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SCL_U7 kind named
+net /SDA1_1V2 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SDA1_1V2 kind named
+net /SDA1_1V8 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SDA1_1V8 kind named
+net /SDA1_3V3 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SDA1_3V3 kind named
+net /SDA1_3V3_VCC2 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SDA1_3V3_VCC2 kind named
+net /SDA2_3V3 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SDA2_3V3 kind named
+net /SDA2_EN class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SDA2_EN kind named
+net /SDATA_SMTH_ELSE class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SDATA_SMTH_ELSE kind named
+net /SDA_U7 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /SDA_U7 kind named
+net /UNM1 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /UNM1 kind named
+net /UNM2 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net /UNM2 kind named
+net GND class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net GND kind power
+net VCC2_3V3 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net VCC2_3V3 kind power
+net VCC_1V2 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net VCC_1V2 kind power
+net VCC_1V8 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net VCC_1V8 kind power
+net VCC_3V3 class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net VCC_3V3 kind power
+net unconnected-(U401-BOOT0-Pad1) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U401-BOOT0-Pad1) kind unconnected
+net unconnected-(U401-NRST-Pad4) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U401-NRST-Pad4) kind unconnected
+net unconnected-(U401-PA2-Pad8) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U401-PA2-Pad8) kind unconnected
+net unconnected-(U401-PA3-Pad9) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U401-PA3-Pad9) kind unconnected
+net unconnected-(U401-PA4-Pad10) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U401-PA4-Pad10) kind unconnected
+net unconnected-(U401-PA5-Pad11) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U401-PA5-Pad11) kind unconnected
+net unconnected-(U401-PA7-Pad13) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U401-PA7-Pad13) kind unconnected
+net unconnected-(U401-PB1-Pad14) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U401-PB1-Pad14) kind unconnected
+net unconnected-(U401-PF0-Pad2) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U401-PF0-Pad2) kind unconnected
+net unconnected-(U401-PF1-Pad3) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U401-PF1-Pad3) kind unconnected
+net unconnected-(U402-IO0-Pad1) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U402-IO0-Pad1) kind unconnected
+net unconnected-(U402-IO1-Pad2) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U402-IO1-Pad2) kind unconnected
+net unconnected-(U402-IO2-Pad3) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U402-IO2-Pad3) kind unconnected
+net unconnected-(U402-IO3-Pad5) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U402-IO3-Pad5) kind unconnected
+net unconnected-(U403-IO0-Pad1) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U403-IO0-Pad1) kind unconnected
+net unconnected-(U403-IO1-Pad2) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U403-IO1-Pad2) kind unconnected
+net unconnected-(U403-IO2-Pad3) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U403-IO2-Pad3) kind unconnected
+net unconnected-(U403-IO3-Pad5) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U403-IO3-Pad5) kind unconnected
+net unconnected-(U404-EN-Pad8) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U404-EN-Pad8) kind unconnected
+net unconnected-(U405-IO0-Pad1) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U405-IO0-Pad1) kind unconnected
+net unconnected-(U405-IO1-Pad2) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U405-IO1-Pad2) kind unconnected
+net unconnected-(U405-IO2-Pad3) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U405-IO2-Pad3) kind unconnected
+net unconnected-(U405-IO3-Pad5) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U405-IO3-Pad5) kind unconnected
+net unconnected-(U406-IO0-Pad1) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U406-IO0-Pad1) kind unconnected
+net unconnected-(U406-IO1-Pad2) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U406-IO1-Pad2) kind unconnected
+net unconnected-(U406-IO2-Pad3) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U406-IO2-Pad3) kind unconnected
+net unconnected-(U406-IO3-Pad5) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U406-IO3-Pad5) kind unconnected
+net unconnected-(U407-IO0-Pad1) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U407-IO0-Pad1) kind unconnected
+net unconnected-(U407-IO1-Pad2) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U407-IO1-Pad2) kind unconnected
+net unconnected-(U407-IO2-Pad3) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U407-IO2-Pad3) kind unconnected
+net unconnected-(U407-IO3-Pad5) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U407-IO3-Pad5) kind unconnected
+net unconnected-(U408-IO0-Pad1) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U408-IO0-Pad1) kind unconnected
+net unconnected-(U408-IO1-Pad2) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U408-IO1-Pad2) kind unconnected
+net unconnected-(U408-IO2-Pad3) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U408-IO2-Pad3) kind unconnected
+net unconnected-(U408-IO3-Pad5) class = Default @ sch i2c_segments.kicad_sch note "effective net class"
 net unconnected-(U408-IO3-Pad5) kind unconnected
 part J401 field Description = "Generic connector, single row, 01x03, script generated" @ sch i2c_segments.kicad_sch
 part J401 field Value = Conn_01x03_Pin @ sch i2c_segments.kicad_sch

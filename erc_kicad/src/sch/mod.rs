@@ -738,17 +738,6 @@ fn assemble(
                 SchLabelKind::Directive => LabelKind::Directive,
             };
             let net = nets.item_net.get(&item).map(|&n| NetId::from_index(n));
-            if l.kind == SchLabelKind::Directive
-                && let Some(n) = net
-            {
-                for (k, v) in &l.fields {
-                    if k == "Netclass" && !v.is_empty() {
-                        b.nets[n.index()]
-                            .class
-                            .set(Fact::new(v.clone(), src.clone()).with_note("directive label"));
-                    }
-                }
-            }
             let text = if l.kind == SchLabelKind::Directive && l.text.is_empty() {
                 l.fields
                     .iter()
