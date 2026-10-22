@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-10-22
+
 ### Added
 
 - The schematic PDF importer (`IMP-16`, stage 1), cargo feature `pdf` of `erc_import`: an Altium Smart PDF read into
