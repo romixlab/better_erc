@@ -73,7 +73,7 @@ pin R? 2 type = passive @ sch power.kicad_sch
 setting textvar REV = A @ pro s.kicad_pro
 setup pad_to_mask_clearance 0
 sheet "/Power supply/" name "Power supply" file power.kicad_sch uuid /aaaa/bbbb page 2
-sheet / name "" file root.kicad_sch uuid /aaaa page 1
+sheet / name "" file root.kicad_sch uuid /aaaa page 1 rev A
 source file power.kicad_sch
 source file root.kicad_sch
 source tool kicad
