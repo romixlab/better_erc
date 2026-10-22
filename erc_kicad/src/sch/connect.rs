@@ -2,7 +2,7 @@
 //!
 //! 1. Geometry, per sheet instance: items touch at their connection points (wire and bus ends, pins, labels,
 //!    sheet pins, junctions, no-connect flags, bus entry ends). A label also connects to a wire or bus running
-//!    through its anchor, a junction (KiCad 9 and later) to every wire through its position; a pin or a wire
+//!    through its anchor (KiCad 8: the first one only), a junction (KiCad 9 and later) to every wire through its position; a pin or a wire
 //!    end on the middle of another wire does not connect. Wires and buses never join; a bus entry joins a
 //!    wire, not the bus it ends on. The connected groups are KiCad's subgraphs.
 //! 2. Drivers: each subgraph is named by its strongest driver: global label, global power pin, local power
@@ -650,6 +650,10 @@ fn geometry(
         for &(si, a, b, _) in &segs {
             if on_segment(at, a, b) {
                 dsu.union(i, si);
+                // KiCad 8 gives a label on a crossing of wires to one of them only: the first in the file
+                if kicad < 9 && matches!(it, Item::Label(_)) {
+                    break;
+                }
             }
         }
     }
