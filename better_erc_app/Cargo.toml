@@ -1,10 +1,15 @@
 [package]
-name = "better_erc"
+name = "better_erc_app"
+description = "The better_erc GUI (egui); the binary is `better_erc`"
 authors.workspace = true
 edition.workspace = true
 version.workspace = true
 rust-version.workspace = true
 include.workspace = true
+
+[[bin]]
+name = "better_erc"
+path = "src/main.rs"
 
 [package.metadata.docs.rs]
 all-features = true

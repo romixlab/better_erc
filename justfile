@@ -19,7 +19,7 @@ fmt:
 
 # Start the better_erc app from this checkout
 run:
-    cargo run --release -p better_erc
+    cargo run --release -p better_erc_app
 
 # The test schematics have findings on purpose: only a finding that is not in the committed baseline fails.
 
@@ -41,7 +41,7 @@ netlists:
 
 # Install the better_erc app and the berc command line tool to ~/.cargo/bin
 install:
-    cargo install --locked --path better_erc
+    cargo install --locked --path better_erc_app
     cargo install --locked --path berc
 
 # Refuses on local changes (names them, never discards them). No systemd units. better_erc has no --version,

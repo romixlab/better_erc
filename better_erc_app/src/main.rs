@@ -20,7 +20,7 @@ fn main() -> eframe::Result {
     eframe::run_native(
         "Better ERC",
         native_options,
-        Box::new(|cc| Ok(Box::new(better_erc::BetterErcApp::new(cc)))),
+        Box::new(|cc| Ok(Box::new(better_erc_app::BetterErcApp::new(cc)))),
     )
 }
 
@@ -50,7 +50,7 @@ fn main() {
             .start(
                 canvas,
                 web_options,
-                Box::new(|cc| Ok(Box::new(better_erc::BetterErcApp::new(cc)))),
+                Box::new(|cc| Ok(Box::new(better_erc_app::BetterErcApp::new(cc)))),
             )
             .await;
 
