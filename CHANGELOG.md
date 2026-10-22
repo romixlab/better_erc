@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.4.5] - 2026-10-22
+
 ### Added
 
 - `erc_analysis::names`: the name grammar beyond power, for the NAME, WIRE and SHORT checks: active-low markers with
