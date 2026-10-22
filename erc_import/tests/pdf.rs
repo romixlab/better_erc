@@ -379,3 +379,33 @@ fn internal_smart_pdfs() {
         );
     }
 }
+
+/// The synthetic fixture encrypted by qpdf: with an owner password only (AES-256 and RC4, what "no printing"
+/// PDFs carry) it reads as the plain file; with a user password it is a clean error. Made once, in
+/// `tests/fixtures`: `qpdf --encrypt '' owner 256 --print=none --modify=none -- smart_pdf.pdf smart_pdf_owner_only.pdf`,
+/// `qpdf --allow-weak-crypto --encrypt '' owner 128 --use-aes=n -- smart_pdf.pdf smart_pdf_owner_rc4.pdf`,
+/// `qpdf --encrypt secret owner 256 -- smart_pdf.pdf smart_pdf_user_password.pdf`
+#[test]
+fn encrypted() {
+    let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures");
+    let read = |name: &str| std::fs::read(dir.join(name)).unwrap();
+    let plain = import("smart_pdf.pdf", read("smart_pdf.pdf"));
+    for name in ["smart_pdf_owner_only.pdf", "smart_pdf_owner_rc4.pdf"] {
+        let b = &import(name, read(name)).design.boards[0];
+        let p = &plain.design.boards[0];
+        assert_eq!(nets(b), nets(p), "{name}");
+        assert_eq!(b.parts.len(), p.parts.len(), "{name}");
+        let value = |b: &Board| {
+            b.part(b.part_by_designator("C1").unwrap())
+                .field("Value")
+                .map(String::from)
+        };
+        assert_eq!(value(b), value(p), "{name}: properties from the encrypted scripts");
+    }
+    let name = "smart_pdf_user_password.pdf";
+    let files = MemFiles::default().with(name, read(name));
+    let err = Registry::default()
+        .import(&Source::new(name, &files), &ImportOptions::default())
+        .unwrap_err();
+    assert!(err.to_string().contains("encrypted with a password"), "{err}");
+}

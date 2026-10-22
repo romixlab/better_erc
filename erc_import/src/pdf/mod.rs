@@ -9,6 +9,8 @@
 mod doc;
 mod js;
 mod smart;
+#[cfg(test)]
+mod hostile;
 
 use crate::notes::Notes;
 use doc::{Doc, Limits, OpenError};

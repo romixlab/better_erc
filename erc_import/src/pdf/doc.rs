@@ -13,7 +13,7 @@ use hayro_syntax::page::Resources;
 use std::collections::{HashMap, HashSet};
 
 /// What the reader walks at most. The defaults are far above any schematic seen (the largest Smart PDF here has
-/// 14 000 bookmarks and 300 000 content operations) and far below what would exhaust a PC.
+/// 14 000 bookmarks, 300 000 content operations and 18 form drawings) and far below what would exhaust a PC.
 #[derive(Clone, Debug)]
 pub(crate) struct Limits {
     /// File size
@@ -32,6 +32,8 @@ pub(crate) struct Limits {
     pub operations: usize,
     /// Form XObjects nested in a page
     pub form_depth: usize,
+    /// Form XObjects drawn over all pages (each nested draw counts)
+    pub forms: usize,
     /// Words over all pages
     pub words: usize,
 }
@@ -45,8 +47,9 @@ impl Default for Limits {
             links: 1_000_000,
             next_actions: 64,
             script_chars: 1 << 20,
-            operations: 50_000_000,
+            operations: 20_000_000,
             form_depth: 8,
+            forms: 100_000,
             words: 5_000_000,
         }
     }
@@ -468,6 +471,8 @@ impl Doc {
             words: Vec::new(),
             gaps: TextGaps::default(),
             ops: 0,
+            forms: 0,
+            decoded: HashMap::new(),
         };
         for (page, p) in self.pdf.pages().iter().enumerate() {
             let Some(content) = p.page_stream() else {
@@ -563,6 +568,9 @@ struct TextWalk<'d> {
     words: Vec<Word>,
     gaps: TextGaps,
     ops: usize,
+    forms: usize,
+    /// Form contents, decoded once: a form drawn many times is not inflated again each time
+    decoded: HashMap<ObjectIdentifier, std::rc::Rc<[u8]>>,
 }
 
 impl TextWalk<'_> {
@@ -737,8 +745,24 @@ impl TextWalk<'_> {
         if path.contains(&id) || path.len() >= self.doc.limits.form_depth {
             return true;
         }
-        let Ok(content) = stream.decoded() else {
-            return true;
+        self.forms += 1;
+        if self.forms > self.doc.limits.forms {
+            self.gaps.truncated.get_or_insert(format!(
+                "only the first {} form drawings read",
+                self.doc.limits.forms
+            ));
+            return false;
+        }
+        let content = match self.decoded.get(&id) {
+            Some(c) => c.clone(),
+            None => {
+                let Ok(c) = stream.decoded() else {
+                    return true;
+                };
+                let c: std::rc::Rc<[u8]> = c.into_owned().into();
+                self.decoded.insert(id, c.clone());
+                c
+            }
         };
         let m: Matrix = dict
             .get::<Array<'_>>("Matrix")
