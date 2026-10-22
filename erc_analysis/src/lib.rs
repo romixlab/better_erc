@@ -2,6 +2,7 @@
 //!
 //! - [`analog`]: op-amp and comparator channels, current-sense inputs and analog input names, by pin name.
 //! - [`access`]: where a probe reaches a net (test points, connector pins, one series part away), 0 Ω groups.
+//! - [`connector`]: shell and mounting pins, Type-C contacts by number or name, plugs.
 //! - [`class`]: part classes (resistor, P-channel MOSFET, buck regulator) with the rule that decided each.
 //! - [`value`]: each part's Value field read in its class's unit, as a variant mounts it, with tolerance,
 //!   ratings and E-series.
@@ -9,6 +10,8 @@
 //!   batteries) and the two-terminal parts that carry power between nets.
 //! - [`graph`]: connectivity queries (parts on nets, nets of parts, chains of parts between two nets).
 //! - [`i2c`]: the I2C bus recogniser: buses, pull-ups, ties, translators, segments.
+//! - [`interface`]: interface pins and nets by name: USB data, MDIO, CAN lines, SD and eMMC pins, DDR ZQ, reset
+//!   and CKE, MIPI and multi-gigabit lanes.
 //! - [`pin_name`]: the debug, bus and control functions a pin name states (`PA13/JTMS-SWDIO`, `USART1_TX`).
 //! - [`pull`]: the fitted pull-up and pull-down resistors on a net.
 //! - [`power`]: rails and grounds by name grammar, power symbols and pins, ground groups, switching nodes.
@@ -24,10 +27,12 @@
 pub mod access;
 pub mod analog;
 pub mod class;
+pub mod connector;
 pub mod drawing;
 pub mod feed;
 pub mod graph;
 pub mod i2c;
+pub mod interface;
 pub mod names;
 pub mod package;
 pub mod pin_name;

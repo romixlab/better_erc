@@ -1,0 +1,37 @@
+# What better_erc finds on usb-11_one_orientation.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1", "part U2", "part U4", "part U5"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net VBUS"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VBUS"]
+
+[[finding]]
+check = "USB-11"
+subjects = ["net /USB4_DM", "net /USB4_DM_B", "part J4", "pin J4.A7", "pin J4.B7"]
+
+[[finding]]
+check = "USB-11"
+subjects = ["net /USB_DP", "part J1", "pin J1.A6", "pin J1.B6"]

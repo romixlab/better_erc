@@ -49,5 +49,9 @@ check = "TEST-4"
 subjects = ["net GND"]
 
 [[finding]]
+check = "USB-4"
+subjects = ["net /SHIELD", "part C1", "part J1", "part R5"]
+
+[[finding]]
 check = "WIRE-14"
 subjects = ["net /SW", "part U1", "pin U1.2"]

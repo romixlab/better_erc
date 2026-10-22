@@ -48,6 +48,7 @@ mod test;
 #[cfg(test)]
 mod testing;
 mod text;
+mod usb;
 mod wire;
 
 pub use catalogue::{

@@ -1,0 +1,73 @@
+# What better_erc finds on usb-16_vbus_gnd_pins.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net /VBUS_B"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net VBUS"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.1", "pin U1.3", "pin U1.4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /VBUS_B"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VBUS"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net unconnected-(J1-GND-PadB12)"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net unconnected-(J3-GND-PadA12)"]
+
+[[finding]]
+check = "USB-16"
+subjects = ["net /VBUS_B", "net VBUS", "part J3"]
+
+[[finding]]
+check = "USB-16"
+subjects = ["part J1", "pin J1.B12"]
+
+[[finding]]
+check = "USB-16"
+subjects = ["part J1", "pin J1.B4", "pin J1.B9"]
+
+[[finding]]
+check = "USB-16"
+subjects = ["part J3", "pin J3.A12"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /USB_DM", "pin U1.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /USB_DP", "pin U1.4"]

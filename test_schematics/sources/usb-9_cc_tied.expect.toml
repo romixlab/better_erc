@@ -1,0 +1,53 @@
+# What better_erc finds on usb-9_cc_tied.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net VBUS"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.1", "pin U1.3", "pin U1.4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VBUS"]
+
+[[finding]]
+check = "USB-1"
+subjects = ["net /CC2_J2", "part J2", "pin J2.B5"]
+
+[[finding]]
+check = "USB-9"
+subjects = ["net /CC1_J2", "net /CC2_J2", "part J2", "part R2", "pin J2.A5", "pin J2.B5"]
+
+[[finding]]
+check = "USB-9"
+subjects = ["net /CC_J1", "part J1", "pin J1.A5", "pin J1.B5"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /USB_DM", "pin U1.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /USB_DP", "pin U1.4"]

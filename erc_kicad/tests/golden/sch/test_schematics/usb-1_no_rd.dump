@@ -1,0 +1,497 @@
+board usb-1_no_rd
+label / local CC1_J1 at 70.38,27.46 net /CC1_J1
+label / local CC1_J1 at 118.38,22.38 net /CC1_J1
+label / local CC1_J2 at 214.38,27.46 net /CC1_J2
+label / local CC1_J2 at 270,26.19 net /CC1_J2
+label / local CC1_J3 at 22.38,98.26 net /CC1_J3
+label / local CC1_J3 at 358.38,27.46 net /CC1_J3
+label / local CC1_J4 at 70.38,98.26 net /CC1_J4
+label / local CC1_J4 at 126,96.99 net /CC1_J4
+label / local CC2_J1 at 70.38,47.78 net /CC2_J1
+label / local CC2_J1 at 174,26.19 net /CC2_J1
+label / local CC2_J2 at 214.38,47.78 net /CC2_J2
+label / local CC2_J2 at 318,26.19 net /CC2_J2
+label / local CC2_J3 at 22.38,100.8 net /CC2_J3
+label / local CC2_J3 at 358.38,47.78 net /CC2_J3
+label / local CC2_J4 at 70.38,118.58 net /CC2_J4
+label / local CC2_J4 at 174,96.99 net /CC2_J4
+label / local USB_DM at 22.38,27.46 net /USB_DM
+label / local USB_DM at 70.38,32.54 net /USB_DM
+label / local USB_DM at 70.38,52.86 net /USB_DM
+label / local USB_DP at 22.38,30 net /USB_DP
+label / local USB_DP at 70.38,30 net /USB_DP
+label / local USB_DP at 70.38,50.32 net /USB_DP
+label / power +3V3 at 22.38,22.38 net +3V3
+label / power +3V3 at 22.38,93.18 net +3V3
+label / power +5V at 70.38,95.72 net +5V
+label / power +5V at 70.38,108.42 net +5V
+label / power +5V at 70.38,116.04 net +5V
+label / power +5V at 70.38,128.74 net +5V
+label / power +5V at 126,104.61 net +5V
+label / power +5V at 174,104.61 net +5V
+label / power GND at 22.38,24.92 net GND
+label / power GND at 22.38,95.72 net GND
+label / power GND at 70.38,22.38 net GND
+label / power GND at 70.38,40.16 net GND
+label / power GND at 70.38,42.7 net GND
+label / power GND at 70.38,60.48 net GND
+label / power GND at 70.38,63.02 net GND
+label / power GND at 70.38,93.18 net GND
+label / power GND at 70.38,110.96 net GND
+label / power GND at 70.38,113.5 net GND
+label / power GND at 70.38,131.28 net GND
+label / power GND at 70.38,133.82 net GND
+label / power GND at 174,33.81 net GND
+label / power GND at 214.38,22.38 net GND
+label / power GND at 214.38,40.16 net GND
+label / power GND at 214.38,42.7 net GND
+label / power GND at 214.38,60.48 net GND
+label / power GND at 214.38,63.02 net GND
+label / power GND at 270,33.81 net GND
+label / power GND at 318,33.81 net GND
+label / power GND at 358.38,22.38 net GND
+label / power GND at 358.38,40.16 net GND
+label / power GND at 358.38,42.7 net GND
+label / power GND at 358.38,60.48 net GND
+label / power GND at 358.38,63.02 net GND
+label / power VBUS at 70.38,24.92 net VBUS
+label / power VBUS at 70.38,37.62 net VBUS
+label / power VBUS at 70.38,45.24 net VBUS
+label / power VBUS at 70.38,57.94 net VBUS
+label / power VBUS at 214.38,24.92 net VBUS
+label / power VBUS at 214.38,37.62 net VBUS
+label / power VBUS at 214.38,45.24 net VBUS
+label / power VBUS at 214.38,57.94 net VBUS
+label / power VBUS at 358.38,24.92 net VBUS
+label / power VBUS at 358.38,37.62 net VBUS
+label / power VBUS at 358.38,45.24 net VBUS
+label / power VBUS at 358.38,57.94 net VBUS
+net +3V3 class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net +3V3 kind power
+net +5V class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net +5V kind power
+net /CC1_J1 class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net /CC1_J1 kind named
+net /CC1_J2 class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net /CC1_J2 kind named
+net /CC1_J3 class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net /CC1_J3 kind named
+net /CC1_J4 class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net /CC1_J4 kind named
+net /CC2_J1 class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net /CC2_J1 kind named
+net /CC2_J2 class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net /CC2_J2 kind named
+net /CC2_J3 class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net /CC2_J3 kind named
+net /CC2_J4 class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net /CC2_J4 kind named
+net /USB_DM class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net /USB_DM kind named
+net /USB_DP class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net /USB_DP kind named
+net GND class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net GND kind power
+net VBUS class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net VBUS kind power
+net unconnected-(J1-SBU1-PadA8) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J1-SBU1-PadA8) kind unconnected
+net unconnected-(J1-SBU2-PadB8) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J1-SBU2-PadB8) kind unconnected
+net unconnected-(J2-D+-PadA6) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J2-D+-PadA6) kind unconnected
+net unconnected-(J2-D+-PadB6) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J2-D+-PadB6) kind unconnected
+net unconnected-(J2-D--PadA7) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J2-D--PadA7) kind unconnected
+net unconnected-(J2-D--PadB7) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J2-D--PadB7) kind unconnected
+net unconnected-(J2-SBU1-PadA8) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J2-SBU1-PadA8) kind unconnected
+net unconnected-(J2-SBU2-PadB8) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J2-SBU2-PadB8) kind unconnected
+net unconnected-(J3-D+-PadA6) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J3-D+-PadA6) kind unconnected
+net unconnected-(J3-D+-PadB6) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J3-D+-PadB6) kind unconnected
+net unconnected-(J3-D--PadA7) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J3-D--PadA7) kind unconnected
+net unconnected-(J3-D--PadB7) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J3-D--PadB7) kind unconnected
+net unconnected-(J3-SBU1-PadA8) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J3-SBU1-PadA8) kind unconnected
+net unconnected-(J3-SBU2-PadB8) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J3-SBU2-PadB8) kind unconnected
+net unconnected-(J4-D+-PadA6) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J4-D+-PadA6) kind unconnected
+net unconnected-(J4-D+-PadB6) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J4-D+-PadB6) kind unconnected
+net unconnected-(J4-D--PadA7) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J4-D--PadA7) kind unconnected
+net unconnected-(J4-D--PadB7) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J4-D--PadB7) kind unconnected
+net unconnected-(J4-SBU1-PadA8) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J4-SBU1-PadA8) kind unconnected
+net unconnected-(J4-SBU2-PadB8) class = Default @ sch usb-1_no_rd.kicad_sch note "effective net class"
+net unconnected-(J4-SBU2-PadB8) kind unconnected
+part J1 field Value = USB_C_Receptacle @ sch usb-1_no_rd.kicad_sch
+part J1 flag dnp = no @ sch usb-1_no_rd.kicad_sch
+part J1 flag exclude_from_sim = no @ sch usb-1_no_rd.kicad_sch
+part J1 flag in_bom = yes @ sch usb-1_no_rd.kicad_sch
+part J1 flag on_board = yes @ sch usb-1_no_rd.kicad_sch
+part J1 lib Connector:USB_C_Receptacle_USB2.0_16P sheet / symbol Connector:USB_C_Receptacle_USB2.0_16P
+part J1 unit 1 sheet / uuid 164c91f1-0000-4000-8000-000000000011 line 146 at 78,30 rot 0
+part J1 value = text USB_C_Receptacle @ sch usb-1_no_rd.kicad_sch note "from the Value field"
+part J2 field Value = USB_C_Receptacle @ sch usb-1_no_rd.kicad_sch
+part J2 flag dnp = no @ sch usb-1_no_rd.kicad_sch
+part J2 flag exclude_from_sim = no @ sch usb-1_no_rd.kicad_sch
+part J2 flag in_bom = yes @ sch usb-1_no_rd.kicad_sch
+part J2 flag on_board = yes @ sch usb-1_no_rd.kicad_sch
+part J2 lib Connector:USB_C_Receptacle_USB2.0_16P sheet / symbol Connector:USB_C_Receptacle_USB2.0_16P
+part J2 unit 1 sheet / uuid 164c91f1-0000-4000-8000-000000000062 line 262 at 222,30 rot 0
+part J2 value = text USB_C_Receptacle @ sch usb-1_no_rd.kicad_sch note "from the Value field"
+part J3 field Value = USB_C_Receptacle @ sch usb-1_no_rd.kicad_sch
+part J3 flag dnp = no @ sch usb-1_no_rd.kicad_sch
+part J3 flag exclude_from_sim = no @ sch usb-1_no_rd.kicad_sch
+part J3 flag in_bom = yes @ sch usb-1_no_rd.kicad_sch
+part J3 flag on_board = yes @ sch usb-1_no_rd.kicad_sch
+part J3 lib Connector:USB_C_Receptacle_USB2.0_16P sheet / symbol Connector:USB_C_Receptacle_USB2.0_16P
+part J3 unit 1 sheet / uuid 164c91f1-0000-4000-8000-000000000112 line 382 at 366,30 rot 0
+part J3 value = text USB_C_Receptacle @ sch usb-1_no_rd.kicad_sch note "from the Value field"
+part J4 field Value = USB_C_Receptacle @ sch usb-1_no_rd.kicad_sch
+part J4 flag dnp = no @ sch usb-1_no_rd.kicad_sch
+part J4 flag exclude_from_sim = no @ sch usb-1_no_rd.kicad_sch
+part J4 flag in_bom = yes @ sch usb-1_no_rd.kicad_sch
+part J4 flag on_board = yes @ sch usb-1_no_rd.kicad_sch
+part J4 lib Connector:USB_C_Receptacle_USB2.0_16P sheet / symbol Connector:USB_C_Receptacle_USB2.0_16P
+part J4 unit 1 sheet / uuid 164c91f1-0000-4000-8000-000000000161 line 496 at 78,100.8 rot 0
+part J4 value = text USB_C_Receptacle @ sch usb-1_no_rd.kicad_sch note "from the Value field"
+part R1 field Value = 10k @ sch usb-1_no_rd.kicad_sch
+part R1 flag dnp = no @ sch usb-1_no_rd.kicad_sch
+part R1 flag exclude_from_sim = no @ sch usb-1_no_rd.kicad_sch
+part R1 flag in_bom = yes @ sch usb-1_no_rd.kicad_sch
+part R1 flag on_board = yes @ sch usb-1_no_rd.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 164c91f1-0000-4000-8000-000000000056 line 246 at 174,30 rot 0
+part R1 value = text 10k @ sch usb-1_no_rd.kicad_sch note "from the Value field"
+part R2 field Value = 5k1 @ sch usb-1_no_rd.kicad_sch
+part R2 flag dnp = no @ sch usb-1_no_rd.kicad_sch
+part R2 flag exclude_from_sim = no @ sch usb-1_no_rd.kicad_sch
+part R2 flag in_bom = yes @ sch usb-1_no_rd.kicad_sch
+part R2 flag on_board = yes @ sch usb-1_no_rd.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 164c91f1-0000-4000-8000-000000000100 line 350 at 270,30 rot 0
+part R2 value = text 5k1 @ sch usb-1_no_rd.kicad_sch note "from the Value field"
+part R3 field Value = 5.1k @ sch usb-1_no_rd.kicad_sch
+part R3 flag dnp = no @ sch usb-1_no_rd.kicad_sch
+part R3 flag exclude_from_sim = no @ sch usb-1_no_rd.kicad_sch
+part R3 flag in_bom = yes @ sch usb-1_no_rd.kicad_sch
+part R3 flag on_board = yes @ sch usb-1_no_rd.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid 164c91f1-0000-4000-8000-000000000106 line 366 at 318,30 rot 0
+part R3 value = text 5.1k @ sch usb-1_no_rd.kicad_sch note "from the Value field"
+part R4 field Value = 56k @ sch usb-1_no_rd.kicad_sch
+part R4 flag dnp = no @ sch usb-1_no_rd.kicad_sch
+part R4 flag exclude_from_sim = no @ sch usb-1_no_rd.kicad_sch
+part R4 flag in_bom = yes @ sch usb-1_no_rd.kicad_sch
+part R4 flag on_board = yes @ sch usb-1_no_rd.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid 164c91f1-0000-4000-8000-000000000199 line 584 at 126,100.8 rot 0
+part R4 value = text 56k @ sch usb-1_no_rd.kicad_sch note "from the Value field"
+part R5 field Value = 56k @ sch usb-1_no_rd.kicad_sch
+part R5 flag dnp = no @ sch usb-1_no_rd.kicad_sch
+part R5 flag exclude_from_sim = no @ sch usb-1_no_rd.kicad_sch
+part R5 flag in_bom = yes @ sch usb-1_no_rd.kicad_sch
+part R5 flag on_board = yes @ sch usb-1_no_rd.kicad_sch
+part R5 lib Device:R sheet / symbol Device:R
+part R5 unit 1 sheet / uuid 164c91f1-0000-4000-8000-000000000205 line 600 at 174,100.8 rot 0
+part R5 value = text 56k @ sch usb-1_no_rd.kicad_sch note "from the Value field"
+part TP1 field Value = TestPoint @ sch usb-1_no_rd.kicad_sch
+part TP1 flag dnp = no @ sch usb-1_no_rd.kicad_sch
+part TP1 flag exclude_from_sim = no @ sch usb-1_no_rd.kicad_sch
+part TP1 flag in_bom = yes @ sch usb-1_no_rd.kicad_sch
+part TP1 flag on_board = yes @ sch usb-1_no_rd.kicad_sch
+part TP1 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP1 unit 1 sheet / uuid 164c91f1-0000-4000-8000-000000000053 line 238 at 126,30 rot 0
+part TP1 value = text TestPoint @ sch usb-1_no_rd.kicad_sch note "from the Value field"
+part U1 field Value = MCU_USB @ sch usb-1_no_rd.kicad_sch
+part U1 flag dnp = no @ sch usb-1_no_rd.kicad_sch
+part U1 flag exclude_from_sim = no @ sch usb-1_no_rd.kicad_sch
+part U1 flag in_bom = yes @ sch usb-1_no_rd.kicad_sch
+part U1 flag on_board = yes @ sch usb-1_no_rd.kicad_sch
+part U1 lib MCU_Fixture:MCU_USB sheet / symbol MCU_Fixture:MCU_USB
+part U1 unit 1 sheet / uuid 164c91f1-0000-4000-8000-000000000000 line 120 at 30,30 rot 0
+part U1 value = text MCU_USB @ sch usb-1_no_rd.kicad_sch note "from the Value field"
+part U2 field Value = FUSB302B @ sch usb-1_no_rd.kicad_sch
+part U2 flag dnp = no @ sch usb-1_no_rd.kicad_sch
+part U2 flag exclude_from_sim = no @ sch usb-1_no_rd.kicad_sch
+part U2 flag in_bom = yes @ sch usb-1_no_rd.kicad_sch
+part U2 flag on_board = yes @ sch usb-1_no_rd.kicad_sch
+part U2 lib Interface_USB:FUSB302B sheet / symbol Interface_USB:FUSB302B
+part U2 unit 1 sheet / uuid 164c91f1-0000-4000-8000-000000000150 line 470 at 30,100.8 rot 0
+part U2 value = text FUSB302B @ sch usb-1_no_rd.kicad_sch note "from the Value field"
+pin J1 A1 name GND unit 1 net GND
+pin J1 A1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J1 A4 name VBUS unit 1 net VBUS
+pin J1 A4 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J1 A5 name CC1 unit 1 net /CC1_J1
+pin J1 A5 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J1 A6 name D+ unit 1 net /USB_DP
+pin J1 A6 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J1 A7 name D- unit 1 net /USB_DM
+pin J1 A7 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J1 A8 name SBU1 unit 1 net unconnected-(J1-SBU1-PadA8)
+pin J1 A8 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J1 A9 name VBUS unit 1 net VBUS
+pin J1 A9 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J1 A12 name GND unit 1 net GND
+pin J1 A12 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J1 B1 name GND unit 1 net GND
+pin J1 B1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J1 B4 name VBUS unit 1 net VBUS
+pin J1 B4 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J1 B5 name CC2 unit 1 net /CC2_J1
+pin J1 B5 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J1 B6 name D+ unit 1 net /USB_DP
+pin J1 B6 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J1 B7 name D- unit 1 net /USB_DM
+pin J1 B7 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J1 B8 name SBU2 unit 1 net unconnected-(J1-SBU2-PadB8)
+pin J1 B8 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J1 B9 name VBUS unit 1 net VBUS
+pin J1 B9 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J1 B12 name GND unit 1 net GND
+pin J1 B12 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J1 S1 name SHIELD unit 1 net GND
+pin J1 S1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J2 A1 name GND unit 1 net GND
+pin J2 A1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J2 A4 name VBUS unit 1 net VBUS
+pin J2 A4 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J2 A5 name CC1 unit 1 net /CC1_J2
+pin J2 A5 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J2 A6 name D+ unit 1 net unconnected-(J2-D+-PadA6)
+pin J2 A6 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J2 A7 name D- unit 1 net unconnected-(J2-D--PadA7)
+pin J2 A7 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J2 A8 name SBU1 unit 1 net unconnected-(J2-SBU1-PadA8)
+pin J2 A8 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J2 A9 name VBUS unit 1 net VBUS
+pin J2 A9 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J2 A12 name GND unit 1 net GND
+pin J2 A12 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J2 B1 name GND unit 1 net GND
+pin J2 B1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J2 B4 name VBUS unit 1 net VBUS
+pin J2 B4 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J2 B5 name CC2 unit 1 net /CC2_J2
+pin J2 B5 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J2 B6 name D+ unit 1 net unconnected-(J2-D+-PadB6)
+pin J2 B6 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J2 B7 name D- unit 1 net unconnected-(J2-D--PadB7)
+pin J2 B7 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J2 B8 name SBU2 unit 1 net unconnected-(J2-SBU2-PadB8)
+pin J2 B8 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J2 B9 name VBUS unit 1 net VBUS
+pin J2 B9 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J2 B12 name GND unit 1 net GND
+pin J2 B12 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J2 S1 name SHIELD unit 1 net GND
+pin J2 S1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J3 A1 name GND unit 1 net GND
+pin J3 A1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J3 A4 name VBUS unit 1 net VBUS
+pin J3 A4 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J3 A5 name CC1 unit 1 net /CC1_J3
+pin J3 A5 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J3 A6 name D+ unit 1 net unconnected-(J3-D+-PadA6)
+pin J3 A6 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J3 A7 name D- unit 1 net unconnected-(J3-D--PadA7)
+pin J3 A7 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J3 A8 name SBU1 unit 1 net unconnected-(J3-SBU1-PadA8)
+pin J3 A8 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J3 A9 name VBUS unit 1 net VBUS
+pin J3 A9 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J3 A12 name GND unit 1 net GND
+pin J3 A12 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J3 B1 name GND unit 1 net GND
+pin J3 B1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J3 B4 name VBUS unit 1 net VBUS
+pin J3 B4 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J3 B5 name CC2 unit 1 net /CC2_J3
+pin J3 B5 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J3 B6 name D+ unit 1 net unconnected-(J3-D+-PadB6)
+pin J3 B6 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J3 B7 name D- unit 1 net unconnected-(J3-D--PadB7)
+pin J3 B7 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J3 B8 name SBU2 unit 1 net unconnected-(J3-SBU2-PadB8)
+pin J3 B8 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J3 B9 name VBUS unit 1 net VBUS
+pin J3 B9 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J3 B12 name GND unit 1 net GND
+pin J3 B12 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J3 S1 name SHIELD unit 1 net GND
+pin J3 S1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J4 A1 name GND unit 1 net GND
+pin J4 A1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J4 A4 name VBUS unit 1 net +5V
+pin J4 A4 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J4 A5 name CC1 unit 1 net /CC1_J4
+pin J4 A5 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J4 A6 name D+ unit 1 net unconnected-(J4-D+-PadA6)
+pin J4 A6 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J4 A7 name D- unit 1 net unconnected-(J4-D--PadA7)
+pin J4 A7 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J4 A8 name SBU1 unit 1 net unconnected-(J4-SBU1-PadA8)
+pin J4 A8 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J4 A9 name VBUS unit 1 net +5V
+pin J4 A9 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J4 A12 name GND unit 1 net GND
+pin J4 A12 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J4 B1 name GND unit 1 net GND
+pin J4 B1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J4 B4 name VBUS unit 1 net +5V
+pin J4 B4 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J4 B5 name CC2 unit 1 net /CC2_J4
+pin J4 B5 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J4 B6 name D+ unit 1 net unconnected-(J4-D+-PadB6)
+pin J4 B6 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J4 B7 name D- unit 1 net unconnected-(J4-D--PadB7)
+pin J4 B7 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J4 B8 name SBU2 unit 1 net unconnected-(J4-SBU2-PadB8)
+pin J4 B8 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin J4 B9 name VBUS unit 1 net +5V
+pin J4 B9 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J4 B12 name GND unit 1 net GND
+pin J4 B12 type = passive @ sch usb-1_no_rd.kicad_sch
+pin J4 S1 name SHIELD unit 1 net GND
+pin J4 S1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin R1 1 name "" unit 1 net /CC2_J1
+pin R1 1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin R1 2 name "" unit 1 net GND
+pin R1 2 type = passive @ sch usb-1_no_rd.kicad_sch
+pin R2 1 name "" unit 1 net /CC1_J2
+pin R2 1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin R2 2 name "" unit 1 net GND
+pin R2 2 type = passive @ sch usb-1_no_rd.kicad_sch
+pin R3 1 name "" unit 1 net /CC2_J2
+pin R3 1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin R3 2 name "" unit 1 net GND
+pin R3 2 type = passive @ sch usb-1_no_rd.kicad_sch
+pin R4 1 name "" unit 1 net /CC1_J4
+pin R4 1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin R4 2 name "" unit 1 net +5V
+pin R4 2 type = passive @ sch usb-1_no_rd.kicad_sch
+pin R5 1 name "" unit 1 net /CC2_J4
+pin R5 1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin R5 2 name "" unit 1 net +5V
+pin R5 2 type = passive @ sch usb-1_no_rd.kicad_sch
+pin TP1 1 name 1 unit 1 net /CC1_J1
+pin TP1 1 type = passive @ sch usb-1_no_rd.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch usb-1_no_rd.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch usb-1_no_rd.kicad_sch
+pin U1 3 name PA11/USB_DM unit 1 net /USB_DM
+pin U1 3 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin U1 4 name PA12/USB_DP unit 1 net /USB_DP
+pin U1 4 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin U2 1 name VDD unit 1 net +3V3
+pin U2 1 type = power_in @ sch usb-1_no_rd.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch usb-1_no_rd.kicad_sch
+pin U2 3 name CC1 unit 1 net /CC1_J3
+pin U2 3 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+pin U2 4 name CC2 unit 1 net /CC2_J3
+pin U2 4 type = bidirectional @ sch usb-1_no_rd.kicad_sch
+sheet / name "" file usb-1_no_rd.kicad_sch uuid /
+source file usb-1_no_rd.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:TestPoint description "test point"
+symbol Connector:TestPoint field Description "test point"
+symbol Connector:TestPoint field Reference TP
+symbol Connector:TestPoint field Value TestPoint
+symbol Connector:TestPoint hash c5f1d64ae086cd7d
+symbol Connector:TestPoint pin 1 unit 1 body 1 name 1 type passive style line
+symbol Connector:TestPoint units 1
+symbol Connector:USB_C_Receptacle_USB2.0_16P description "USB 2.0-only 16P Type-C Receptacle connector"
+symbol Connector:USB_C_Receptacle_USB2.0_16P field Description "USB 2.0-only 16P Type-C Receptacle connector"
+symbol Connector:USB_C_Receptacle_USB2.0_16P field Reference J
+symbol Connector:USB_C_Receptacle_USB2.0_16P field Value USB_C_Receptacle_USB2.0_16P
+symbol Connector:USB_C_Receptacle_USB2.0_16P hash 5ee85ea8d244de10
+symbol Connector:USB_C_Receptacle_USB2.0_16P keywords "usb universal serial bus type-C USB2.0"
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin A1 unit 1 body 1 name GND type passive style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin A4 unit 1 body 1 name VBUS type passive style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin A5 unit 1 body 1 name CC1 type bidirectional style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin A6 unit 1 body 1 name D+ type bidirectional style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin A7 unit 1 body 1 name D- type bidirectional style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin A8 unit 1 body 1 name SBU1 type bidirectional style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin A9 unit 1 body 1 name VBUS type passive style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin A12 unit 1 body 1 name GND type passive style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin B1 unit 1 body 1 name GND type passive style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin B4 unit 1 body 1 name VBUS type passive style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin B5 unit 1 body 1 name CC2 type bidirectional style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin B6 unit 1 body 1 name D+ type bidirectional style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin B7 unit 1 body 1 name D- type bidirectional style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin B8 unit 1 body 1 name SBU2 type bidirectional style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin B9 unit 1 body 1 name VBUS type passive style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin B12 unit 1 body 1 name GND type passive style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P pin S1 unit 1 body 1 name SHIELD type passive style line
+symbol Connector:USB_C_Receptacle_USB2.0_16P units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Interface_USB:FUSB302B description "USB Type-C controller with PD"
+symbol Interface_USB:FUSB302B field Description "USB Type-C controller with PD"
+symbol Interface_USB:FUSB302B field Reference U
+symbol Interface_USB:FUSB302B field Value FUSB302B
+symbol Interface_USB:FUSB302B hash 9946ded46c71410f
+symbol Interface_USB:FUSB302B pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Interface_USB:FUSB302B pin 2 unit 1 body 1 name GND type power_in style line
+symbol Interface_USB:FUSB302B pin 3 unit 1 body 1 name CC1 type bidirectional style line
+symbol Interface_USB:FUSB302B pin 4 unit 1 body 1 name CC2 type bidirectional style line
+symbol Interface_USB:FUSB302B units 1
+symbol MCU_Fixture:MCU_USB description "Microcontroller with USB"
+symbol MCU_Fixture:MCU_USB field Description "Microcontroller with USB"
+symbol MCU_Fixture:MCU_USB field Reference U
+symbol MCU_Fixture:MCU_USB field Value MCU_USB
+symbol MCU_Fixture:MCU_USB hash 3b63f92b5b209916
+symbol MCU_Fixture:MCU_USB pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_USB pin 2 unit 1 body 1 name GND type power_in style line
+symbol MCU_Fixture:MCU_USB pin 3 unit 1 body 1 name PA11/USB_DM type bidirectional style line
+symbol MCU_Fixture:MCU_USB pin 4 unit 1 body 1 name PA12/USB_DP type bidirectional style line
+symbol MCU_Fixture:MCU_USB units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global
+symbol power:VBUS description "Power symbol VBUS"
+symbol power:VBUS field Description "Power symbol VBUS"
+symbol power:VBUS field Reference "#PWR"
+symbol power:VBUS field Value VBUS
+symbol power:VBUS hash 296adfea007b1a14
+symbol power:VBUS pin 1 unit 1 body 1 name VBUS type power_in style line
+symbol power:VBUS units 1 power global

@@ -425,6 +425,19 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   say push-pull), on a net with no pull-up and no push-pull driver · `io/io_15.rs`, `io-15_open_drain_flags`
 - ✅ `IO-16` Signal net with fitted pull-up and pull-down, with the divided voltage; nets reaching an analog input by
   name, an amplifier, regulator or load switch are dividers on purpose · `io/io_16.rs`, `io-16_pull_up_and_down`
+- ✅ `USB-1` Type-C receptacle CC pin (by contact number or name) with no resistor of 5.1 kΩ ± 20 % (`rd`,
+  `tolerance`) to a ground and no CC pin of an IC on its net; a CC pin with a pull-up (a source's Rp) left to `USB-8` ·
+  `usb/usb_1.rs`, `usb-1_no_rd`
+- ✅ `USB-4` USB connector shell pins connected to nothing, on a net reaching the signal ground only through an
+  inductor, ferrite, resistor or capacitor, or reaching no ground; a shell on a ground of its own (chassis) is a bond ·
+  `usb/usb_4.rs`, `usb-4_shield`
+- ✅ `USB-9` Type-C receptacle with CC1 and CC2 on one net or joined by 0 Ω links · `usb/usb_9.rs`, `usb-9_cc_tied`
+- ✅ `USB-10` Type-C plug (symbol says plug) with resistors to ground on both CC (A5) and VCONN (B5) ·
+  `usb/usb_10.rs`, `usb-10_plug_rd`
+- ✅ `USB-11` Type-C receptacle with A6/B6 or A7/B7 not on one net (0 Ω links and an IC both rows reach, a mux,
+  count as joined) · `usb/usb_11.rs`, `usb-11_one_orientation`
+- ✅ `USB-16` Type-C receptacle with VBUS or GND contacts connected to nothing, on several nets, or GND on no ground ·
+  `usb/usb_16.rs`, `usb-16_vbus_gnd_pins`
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`
 - ✅ `DIAG-2` Every catalogue check reported as ran, not run (the missing need, why, and what would enable it) or
   planned; each check declares its needs, availability is worked out per board before the run from the analyses
