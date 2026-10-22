@@ -167,7 +167,14 @@ impl Reader {
                         .and_then(|t| t.value("source"))
                         .map(String::from);
                     let page = item.value("number").map(String::from);
-                    self.sheet(name, tstamps, file, page);
+                    let id = self.sheet(name, tstamps, file, page);
+                    if let Some(rev) = item
+                        .child("title_block")
+                        .and_then(|t| t.value("rev"))
+                        .filter(|r| !r.is_empty())
+                    {
+                        self.b.sheets[id.index()].rev = Some(rev.into());
+                    }
                 }
                 Some("textvar") => {
                     let key = item.value("name").or(item.arg(0)).unwrap_or("").to_string();
@@ -223,6 +230,7 @@ impl Reader {
             parent,
             uuid_path: normalize_uuid_path(tstamps),
             page,
+            rev: None,
         });
         self.sheets.insert(path, id);
         id

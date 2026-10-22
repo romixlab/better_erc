@@ -6,6 +6,9 @@
 //! - [`graph`]: connectivity queries (parts on nets, nets of parts, chains of parts between two nets).
 //! - [`i2c`]: the I2C bus recogniser: buses, pull-ups, ties, translators, segments.
 //! - [`power`]: rails and grounds by name grammar, power symbols and pins, ground groups, switching nodes.
+//! - [`names`]: the name grammar beyond power: active-low markers, differential halves, numbered families, GPIO
+//!   numbers and UART lines of pin names, names normalised for comparison.
+//! - [`drawing`]: labels with their scopes, sheet pins, no-connect flags.
 //!
 //! Each analysis is computed once per board and run (the check engine keeps them in its context) and is plain
 //! data, serialisable for the views and the MCP server.
@@ -14,6 +17,7 @@ pub mod class;
 pub mod drawing;
 pub mod graph;
 pub mod i2c;
+pub mod names;
 pub mod power;
 pub mod value;
 

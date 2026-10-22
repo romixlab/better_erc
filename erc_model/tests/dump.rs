@@ -24,6 +24,7 @@ fn sample() -> Design {
         parent: None,
         uuid_path: "/aaaa".into(),
         page: Some("1".into()),
+        rev: Some("A".into()),
     });
     b.sheets.push(Sheet {
         name: "Power supply".into(),
@@ -31,6 +32,7 @@ fn sample() -> Design {
         parent: Some(SheetId(0)),
         uuid_path: "/aaaa/bbbb".into(),
         page: Some("2".into()),
+        rev: None,
     });
     b.symbols.push(SymbolDef {
         name: "Device:R".into(),

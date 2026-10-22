@@ -312,6 +312,9 @@ fn board_lines(b: &Board) -> Vec<String> {
         if let Some(p) = &s.page {
             line += &format!(" page {}", tok(p));
         }
+        if let Some(r) = &s.rev {
+            line += &format!(" rev {}", tok(r));
+        }
         out.push(line);
     }
 
@@ -1260,6 +1263,11 @@ impl BoardReader {
                 } else {
                     None
                 };
+                let rev = if c.opt("rev") {
+                    Some(c.next()?.to_string())
+                } else {
+                    None
+                };
                 let parent = if path == "/" {
                     None
                 } else {
@@ -1274,6 +1282,7 @@ impl BoardReader {
                     parent,
                     uuid_path,
                     page,
+                    rev,
                 });
                 self.sheets.insert(path, id);
             }
