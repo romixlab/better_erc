@@ -48,7 +48,7 @@ netlists:
 # Build the better_erc app and the berc command line tool and install them on this PC
 install:
     cargo build --profile deploy --locked -p better_erc_app -p berc
-    # our PCs: the kept-releases stack, one copy on PATH; anywhere else: plain cargo install
+    # With tpm on PATH: tpm install (kept-releases stack, one copy on PATH); otherwise: cargo install
     if command -v tpm >/dev/null; then tpm install target/deploy/better_erc target/deploy/berc; else cargo install --locked --force --path better_erc_app && cargo install --locked --path berc; fi
 
 # Refuses on local changes (names them, never discards them). No systemd units.
