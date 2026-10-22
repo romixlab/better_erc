@@ -39,3 +39,35 @@ subjects = ["net +5V"]
 [[finding]]
 check = "I2C-1"
 subjects = ["net /SCL_1V8", "net /SDA_1V8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SCL_1V8"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SCL_3V3"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA_1V8"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA_3V3"]

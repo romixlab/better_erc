@@ -1,0 +1,53 @@
+# What better_erc finds on test-5_bring_up_test_points.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-1"
+subjects = ["part U1", "pin U1.8"]
+
+[[finding]]
+check = "DBG-11"
+subjects = ["net /CON_RX", "pin J2.2", "pin U1.6"]
+
+[[finding]]
+check = "DBG-11"
+subjects = ["net /CON_TX", "pin J2.1", "pin U1.5"]
+
+[[finding]]
+check = "DBG-18"
+subjects = ["net /SDA"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.4", "pin U1.8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SWCLK"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /UART_RX"]

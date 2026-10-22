@@ -74,5 +74,8 @@ mod tests {
     fn no_console() {
         let found = crate::testing::fingerprints(&super::Dbg14, "dbg-14_uart_console");
         assert_eq!(found, ["DBG-14:part U1"], "{found:?}");
+        // USART1 half on a test point, USART2 on a header: the console is there
+        let found = crate::testing::fingerprints(&super::Dbg14, "test-5_bring_up_test_points");
+        assert!(found.is_empty(), "{found:?}");
     }
 }

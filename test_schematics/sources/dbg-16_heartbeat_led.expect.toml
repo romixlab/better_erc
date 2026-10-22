@@ -7,3 +7,19 @@ subjects = ["part D1", "part D2"]
 [[finding]]
 check = "DEC-1"
 subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.3", "pin U1.4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

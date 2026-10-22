@@ -103,3 +103,47 @@ pub(crate) fn led_ends(cx: &Ctx, led: PartId) -> Vec<BTreeSet<NetId>> {
         .map(|n| with_resistor_ends(cx, n))
         .collect()
 }
+
+/// The I2C and SPI buses: (kind, name, line nets)
+pub(crate) fn buses(cx: &Ctx) -> Vec<(&'static str, String, Vec<NetId>)> {
+    let b = cx.board();
+    let mut out: Vec<(&'static str, String, Vec<NetId>)> = cx
+        .i2c()
+        .buses
+        .iter()
+        .map(|bus| ("I2C", bus.name.clone(), vec![bus.scl, bus.sda]))
+        .collect();
+    // SPI: every net with an SCK pin is a clock; the bus is it and the data and select nets of the parts on it
+    let mut clocks: BTreeSet<NetId> = BTreeSet::new();
+    for part in cx.view().fitted_components() {
+        for (pin, f) in named_pins(cx, part) {
+            if f.function == PinFunction::SpiSck
+                && let Some(net) = b.pin(pin).net
+                && !cx.power().is_power_net(net)
+            {
+                clocks.insert(net);
+            }
+        }
+    }
+    for clock in clocks {
+        let mut lines = vec![clock];
+        let parts: BTreeSet<_> = net_pins(b, clock).map(|p| b.pin(p).part).collect();
+        for part in parts {
+            for (pin, f) in named_pins(cx, part) {
+                if matches!(
+                    f.function,
+                    PinFunction::SpiMosi | PinFunction::SpiMiso | PinFunction::SpiCs
+                ) && let Some(net) = b.pin(pin).net
+                    && !lines.contains(&net)
+                    && !cx.power().is_power_net(net)
+                {
+                    lines.push(net);
+                }
+            }
+        }
+        if lines.len() > 1 {
+            out.push(("SPI", b.net(clock).name.clone(), lines));
+        }
+    }
+    out
+}

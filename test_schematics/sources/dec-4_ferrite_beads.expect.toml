@@ -16,3 +16,27 @@ subjects = ["net +5V"]
 check = "DEC-4"
 subjects = ["net +3V3", "net +3V3_A", "part FB1"]
 confidence = "estimate"
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_A"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GNDA"]

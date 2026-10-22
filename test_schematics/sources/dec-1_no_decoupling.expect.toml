@@ -15,3 +15,23 @@ subjects = ["net +3V3_IO"]
 [[finding]]
 check = "DEC-8"
 subjects = ["net +3V3_IO", "part R1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_IO"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

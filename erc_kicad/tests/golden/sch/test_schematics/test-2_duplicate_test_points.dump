@@ -1,0 +1,217 @@
+board test-2_duplicate_test_points
+label / power +1V8 at 24.92,22.38 net +1V8
+label / power +1V8 at 75,30 net +1V8
+label / power +1V8 at 120,30 net +1V8
+label / power +3V3 at 24.92,24.92 net +3V3
+label / power +3V3 at 210,26.19 net +3V3
+label / power +3V3 at 255,30 net +3V3
+label / power +3V3_S at 210,33.81 net +3V3_S
+label / power +3V3_S at 300,30 net +3V3_S
+label / power +5V at 24.92,27.46 net +5V
+label / power +5V at 30,80 net +5V
+label / power +5V at 345,26.19 net +5V
+label / power +5V_F at 75,80 net +5V_F
+label / power +5V_F at 345,33.81 net +5V_F
+label / power GND at 24.92,30 net GND
+label / power GND at 165,30 net GND
+net +1V8 class = Default @ sch test-2_duplicate_test_points.kicad_sch note "effective net class"
+net +1V8 kind power
+net +3V3 class = Default @ sch test-2_duplicate_test_points.kicad_sch note "effective net class"
+net +3V3 kind power
+net +3V3_S class = Default @ sch test-2_duplicate_test_points.kicad_sch note "effective net class"
+net +3V3_S kind power
+net +5V class = Default @ sch test-2_duplicate_test_points.kicad_sch note "effective net class"
+net +5V kind power
+net +5V_F class = Default @ sch test-2_duplicate_test_points.kicad_sch note "effective net class"
+net +5V_F kind power
+net GND class = Default @ sch test-2_duplicate_test_points.kicad_sch note "effective net class"
+net GND kind power
+part FB1 field Value = 600R @ sch test-2_duplicate_test_points.kicad_sch
+part FB1 flag dnp = no @ sch test-2_duplicate_test_points.kicad_sch
+part FB1 flag exclude_from_sim = no @ sch test-2_duplicate_test_points.kicad_sch
+part FB1 flag in_bom = yes @ sch test-2_duplicate_test_points.kicad_sch
+part FB1 flag on_board = yes @ sch test-2_duplicate_test_points.kicad_sch
+part FB1 lib Device:FerriteBead sheet / symbol Device:FerriteBead
+part FB1 unit 1 sheet / uuid 7e570002-0000-4000-8000-000000000041 line 241 at 345,30 rot 0
+part FB1 value = qty 600 ohm @ sch test-2_duplicate_test_points.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch test-2_duplicate_test_points.kicad_sch
+part J1 flag dnp = no @ sch test-2_duplicate_test_points.kicad_sch
+part J1 flag exclude_from_sim = no @ sch test-2_duplicate_test_points.kicad_sch
+part J1 flag in_bom = yes @ sch test-2_duplicate_test_points.kicad_sch
+part J1 flag on_board = yes @ sch test-2_duplicate_test_points.kicad_sch
+part J1 lib Connector_Generic:Conn_01x04 sheet / symbol Connector_Generic:Conn_01x04
+part J1 unit 1 sheet / uuid 7e570002-0000-4000-8000-000000000001 line 111 at 30,30 rot 0
+part J1 value = text PWR @ sch test-2_duplicate_test_points.kicad_sch note "from the Value field"
+part R1 field Value = 0R @ sch test-2_duplicate_test_points.kicad_sch
+part R1 flag dnp = no @ sch test-2_duplicate_test_points.kicad_sch
+part R1 flag exclude_from_sim = no @ sch test-2_duplicate_test_points.kicad_sch
+part R1 flag in_bom = yes @ sch test-2_duplicate_test_points.kicad_sch
+part R1 flag on_board = yes @ sch test-2_duplicate_test_points.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 7e570002-0000-4000-8000-000000000026 line 191 at 210,30 rot 0
+part R1 value = qty 0 ohm @ sch test-2_duplicate_test_points.kicad_sch note "from the Value field"
+part TP1 field Value = TestPoint @ sch test-2_duplicate_test_points.kicad_sch
+part TP1 flag dnp = no @ sch test-2_duplicate_test_points.kicad_sch
+part TP1 flag exclude_from_sim = no @ sch test-2_duplicate_test_points.kicad_sch
+part TP1 flag in_bom = yes @ sch test-2_duplicate_test_points.kicad_sch
+part TP1 flag on_board = yes @ sch test-2_duplicate_test_points.kicad_sch
+part TP1 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP1 unit 1 sheet / uuid 7e570002-0000-4000-8000-000000000014 line 149 at 75,30 rot 0
+part TP1 value = text TestPoint @ sch test-2_duplicate_test_points.kicad_sch note "from the Value field"
+part TP2 field Value = TestPoint @ sch test-2_duplicate_test_points.kicad_sch
+part TP2 flag dnp = no @ sch test-2_duplicate_test_points.kicad_sch
+part TP2 flag exclude_from_sim = no @ sch test-2_duplicate_test_points.kicad_sch
+part TP2 flag in_bom = yes @ sch test-2_duplicate_test_points.kicad_sch
+part TP2 flag on_board = yes @ sch test-2_duplicate_test_points.kicad_sch
+part TP2 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP2 unit 1 sheet / uuid 7e570002-0000-4000-8000-000000000018 line 163 at 120,30 rot 0
+part TP2 value = text TestPoint @ sch test-2_duplicate_test_points.kicad_sch note "from the Value field"
+part TP3 field Value = TestPoint @ sch test-2_duplicate_test_points.kicad_sch
+part TP3 flag dnp = no @ sch test-2_duplicate_test_points.kicad_sch
+part TP3 flag exclude_from_sim = no @ sch test-2_duplicate_test_points.kicad_sch
+part TP3 flag in_bom = yes @ sch test-2_duplicate_test_points.kicad_sch
+part TP3 flag on_board = yes @ sch test-2_duplicate_test_points.kicad_sch
+part TP3 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP3 unit 1 sheet / uuid 7e570002-0000-4000-8000-000000000022 line 177 at 165,30 rot 0
+part TP3 value = text TestPoint @ sch test-2_duplicate_test_points.kicad_sch note "from the Value field"
+part TP4 field Value = TestPoint @ sch test-2_duplicate_test_points.kicad_sch
+part TP4 flag dnp = no @ sch test-2_duplicate_test_points.kicad_sch
+part TP4 flag exclude_from_sim = no @ sch test-2_duplicate_test_points.kicad_sch
+part TP4 flag in_bom = yes @ sch test-2_duplicate_test_points.kicad_sch
+part TP4 flag on_board = yes @ sch test-2_duplicate_test_points.kicad_sch
+part TP4 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP4 unit 1 sheet / uuid 7e570002-0000-4000-8000-000000000033 line 213 at 255,30 rot 0
+part TP4 value = text TestPoint @ sch test-2_duplicate_test_points.kicad_sch note "from the Value field"
+part TP5 field Value = TestPoint @ sch test-2_duplicate_test_points.kicad_sch
+part TP5 flag dnp = no @ sch test-2_duplicate_test_points.kicad_sch
+part TP5 flag exclude_from_sim = no @ sch test-2_duplicate_test_points.kicad_sch
+part TP5 flag in_bom = yes @ sch test-2_duplicate_test_points.kicad_sch
+part TP5 flag on_board = yes @ sch test-2_duplicate_test_points.kicad_sch
+part TP5 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP5 unit 1 sheet / uuid 7e570002-0000-4000-8000-000000000037 line 227 at 300,30 rot 0
+part TP5 value = text TestPoint @ sch test-2_duplicate_test_points.kicad_sch note "from the Value field"
+part TP6 field Value = TestPoint @ sch test-2_duplicate_test_points.kicad_sch
+part TP6 flag dnp = no @ sch test-2_duplicate_test_points.kicad_sch
+part TP6 flag exclude_from_sim = no @ sch test-2_duplicate_test_points.kicad_sch
+part TP6 flag in_bom = yes @ sch test-2_duplicate_test_points.kicad_sch
+part TP6 flag on_board = yes @ sch test-2_duplicate_test_points.kicad_sch
+part TP6 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP6 unit 1 sheet / uuid 7e570002-0000-4000-8000-000000000048 line 263 at 30,80 rot 0
+part TP6 value = text TestPoint @ sch test-2_duplicate_test_points.kicad_sch note "from the Value field"
+part TP7 field Value = TestPoint @ sch test-2_duplicate_test_points.kicad_sch
+part TP7 flag dnp = no @ sch test-2_duplicate_test_points.kicad_sch
+part TP7 flag exclude_from_sim = no @ sch test-2_duplicate_test_points.kicad_sch
+part TP7 flag in_bom = yes @ sch test-2_duplicate_test_points.kicad_sch
+part TP7 flag on_board = yes @ sch test-2_duplicate_test_points.kicad_sch
+part TP7 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP7 unit 1 sheet / uuid 7e570002-0000-4000-8000-000000000052 line 277 at 75,80 rot 0
+part TP7 value = text TestPoint @ sch test-2_duplicate_test_points.kicad_sch note "from the Value field"
+pin FB1 1 name "" unit 1 net +5V
+pin FB1 1 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+pin FB1 2 name "" unit 1 net +5V_F
+pin FB1 2 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +1V8
+pin J1 1 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+pin J1 2 name Pin_2 unit 1 net +3V3
+pin J1 2 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+pin J1 3 name Pin_3 unit 1 net +5V
+pin J1 3 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+pin J1 4 name Pin_4 unit 1 net GND
+pin J1 4 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+pin R1 1 name "" unit 1 net +3V3
+pin R1 1 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+pin R1 2 name "" unit 1 net +3V3_S
+pin R1 2 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+pin TP1 1 name 1 unit 1 net +1V8
+pin TP1 1 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+pin TP2 1 name 1 unit 1 net +1V8
+pin TP2 1 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+pin TP3 1 name 1 unit 1 net GND
+pin TP3 1 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+pin TP4 1 name 1 unit 1 net +3V3
+pin TP4 1 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+pin TP5 1 name 1 unit 1 net +3V3_S
+pin TP5 1 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+pin TP6 1 name 1 unit 1 net +5V
+pin TP6 1 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+pin TP7 1 name 1 unit 1 net +5V_F
+pin TP7 1 type = passive @ sch test-2_duplicate_test_points.kicad_sch
+sheet / name "" file test-2_duplicate_test_points.kicad_sch uuid /
+source file test-2_duplicate_test_points.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:TestPoint description "test point"
+symbol Connector:TestPoint field Description "test point"
+symbol Connector:TestPoint field Reference TP
+symbol Connector:TestPoint field Value TestPoint
+symbol Connector:TestPoint hash 193777c0a1992431
+symbol Connector:TestPoint pin 1 unit 1 body 1 name 1 type passive style line
+symbol Connector:TestPoint units 1
+symbol Connector_Generic:Conn_01x04 description "Generic connector"
+symbol Connector_Generic:Conn_01x04 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x04 field Reference J
+symbol Connector_Generic:Conn_01x04 field Value Conn_01x04
+symbol Connector_Generic:Conn_01x04 hash f337dda73c488fc4
+symbol Connector_Generic:Conn_01x04 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x04 pin 4 unit 1 body 1 name Pin_4 type passive style line
+symbol Connector_Generic:Conn_01x04 units 1
+symbol Device:FerriteBead description "Ferrite bead"
+symbol Device:FerriteBead field Description "Ferrite bead"
+symbol Device:FerriteBead field Reference FB
+symbol Device:FerriteBead field Value FerriteBead
+symbol Device:FerriteBead hash 80acd11562c9b610
+symbol Device:FerriteBead pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:FerriteBead pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:FerriteBead units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol power:+1V8 description "Power symbol +1V8"
+symbol power:+1V8 field Description "Power symbol +1V8"
+symbol power:+1V8 field Reference "#PWR"
+symbol power:+1V8 field Value +1V8
+symbol power:+1V8 hash a241c49db20b5bea
+symbol power:+1V8 pin 1 unit 1 body 1 name +1V8 type power_in style line
+symbol power:+1V8 units 1 power global
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+3V3_S description "Power symbol +3V3_S"
+symbol power:+3V3_S field Description "Power symbol +3V3_S"
+symbol power:+3V3_S field Reference "#PWR"
+symbol power:+3V3_S field Value +3V3_S
+symbol power:+3V3_S hash e0567df519cd298d
+symbol power:+3V3_S pin 1 unit 1 body 1 name +3V3_S type power_in style line
+symbol power:+3V3_S units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:+5V_F description "Power symbol +5V_F"
+symbol power:+5V_F field Description "Power symbol +5V_F"
+symbol power:+5V_F field Reference "#PWR"
+symbol power:+5V_F field Value +5V_F
+symbol power:+5V_F hash 48cc45243d6f77a5
+symbol power:+5V_F pin 1 unit 1 body 1 name +5V_F type power_in style line
+symbol power:+5V_F units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

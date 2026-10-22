@@ -1,0 +1,35 @@
+# What better_erc finds on test-2_duplicate_test_points.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_S"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V_F"]
+
+[[finding]]
+check = "DEC-4"
+subjects = ["net +5V", "net +5V_F", "part FB1"]
+
+[[finding]]
+check = "TEST-2"
+subjects = ["net +1V8", "part TP1", "part TP2"]
+confidence = "estimate"
+
+[[finding]]
+check = "TEST-2"
+subjects = ["net +3V3", "net +3V3_S", "part TP4", "part TP5"]
+confidence = "estimate"

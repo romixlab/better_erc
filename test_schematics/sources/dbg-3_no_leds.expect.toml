@@ -7,3 +7,11 @@ subjects = ["part U1"]
 [[finding]]
 check = "DBG-4"
 subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

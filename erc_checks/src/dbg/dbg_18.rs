@@ -1,13 +1,10 @@
 //! `DBG-18` I2C or SPI buses not reachable at a header or test points for a bus analyser
 
-use super::named_pins;
+use super::buses;
 use crate::meta::*;
 use crate::{Ctx, Finding};
 use erc_analysis::access::reach;
-use erc_analysis::graph::net_pins;
-use erc_analysis::pin_name::PinFunction;
 use erc_model::NetId;
-use std::collections::BTreeSet;
 
 pub struct Dbg18;
 
@@ -56,50 +53,6 @@ impl Check for Dbg18 {
         }
         out
     }
-}
-
-/// The I2C and SPI buses: (kind, name, line nets)
-pub(crate) fn buses(cx: &Ctx) -> Vec<(&'static str, String, Vec<NetId>)> {
-    let b = cx.board();
-    let mut out: Vec<(&'static str, String, Vec<NetId>)> = cx
-        .i2c()
-        .buses
-        .iter()
-        .map(|bus| ("I2C", bus.name.clone(), vec![bus.scl, bus.sda]))
-        .collect();
-    // SPI: every net with an SCK pin is a clock; the bus is it and the data and select nets of the parts on it
-    let mut clocks: BTreeSet<NetId> = BTreeSet::new();
-    for part in cx.view().fitted_components() {
-        for (pin, f) in named_pins(cx, part) {
-            if f.function == PinFunction::SpiSck
-                && let Some(net) = b.pin(pin).net
-                && !cx.power().is_power_net(net)
-            {
-                clocks.insert(net);
-            }
-        }
-    }
-    for clock in clocks {
-        let mut lines = vec![clock];
-        let parts: BTreeSet<_> = net_pins(b, clock).map(|p| b.pin(p).part).collect();
-        for part in parts {
-            for (pin, f) in named_pins(cx, part) {
-                if matches!(
-                    f.function,
-                    PinFunction::SpiMosi | PinFunction::SpiMiso | PinFunction::SpiCs
-                ) && let Some(net) = b.pin(pin).net
-                    && !lines.contains(&net)
-                    && !cx.power().is_power_net(net)
-                {
-                    lines.push(net);
-                }
-            }
-        }
-        if lines.len() > 1 {
-            out.push(("SPI", b.net(clock).name.clone(), lines));
-        }
-    }
-    out
 }
 
 inventory::submit!(Registered(&Dbg18));

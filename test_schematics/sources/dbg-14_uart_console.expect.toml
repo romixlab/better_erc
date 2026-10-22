@@ -23,3 +23,19 @@ subjects = ["net +3V3"]
 [[finding]]
 check = "DEC-1"
 subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /MODEM_RX"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /MODEM_TX"]

@@ -244,6 +244,14 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `dbg-17_swd_without_reset`
 - ✅ `DBG-18` I2C bus (`NET-4`) or SPI bus (by pin names) with lines that reach no test point or header ·
   `dbg/dbg_18.rs`, `dbg-18_bus_access`
+- ✅ `TEST-1` Report table per IC of the pins that connect to nothing (no net, a net of their own, a no-connect flag),
+  outputs first · `test/test_1.rs`, `test-1_unconnected_pins`
+- ✅ `TEST-2` Two or more test points on one net, nets joined by 0 Ω, net ties and jumpers counted as one, per board side
+  from the layout (without one: an estimate) · `test/test_2.rs`, `test-2_duplicate_test_points`
+- ✅ `TEST-4` Rail or ground with no test point on it or on a net joined to it by 0 Ω · `test/test_4.rs`,
+  `test-4_rail_test_points`
+- ✅ `TEST-5` Bring-up line (UART TX/RX and SWD of an MCU by name, I2C, SPI) with no test point or header pin ·
+  `test/test_5.rs`, `test-5_bring_up_test_points`
 - ⬜ `IO-1` Inputs without a drive source: the input pins on a net are collected (`graph::input_pins`), no check yet ·
   `erc_analysis/src/graph.rs`, test schematic `io-1_inputs`
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`

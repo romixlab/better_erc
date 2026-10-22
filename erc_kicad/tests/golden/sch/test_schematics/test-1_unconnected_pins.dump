@@ -1,0 +1,161 @@
+board test-1_unconnected_pins
+label / local LONELY at 157.38,35.08 net /LONELY
+label / local SENSE at 67.38,27.46 net /SENSE
+label / local SENSE at 120,30 net /SENSE
+label / local SENSE at 157.38,27.46 net /SENSE
+label / power +3V3 at 24.92,22.38 net +3V3
+label / power +3V3 at 67.38,22.38 net +3V3
+label / power +3V3 at 157.38,22.38 net +3V3
+label / power +3V3 at 210,26.19 net +3V3
+label / power GND at 24.92,24.92 net GND
+label / power GND at 67.38,24.92 net GND
+label / power GND at 157.38,24.92 net GND
+label / power GND at 210,33.81 net GND
+nc / at 157.38,32.54 pin U2 5
+net +3V3 class = Default @ sch test-1_unconnected_pins.kicad_sch note "effective net class"
+net +3V3 kind power
+net /LONELY class = Default @ sch test-1_unconnected_pins.kicad_sch note "effective net class"
+net /LONELY kind named
+net /SENSE class = Default @ sch test-1_unconnected_pins.kicad_sch note "effective net class"
+net /SENSE kind named
+net GND class = Default @ sch test-1_unconnected_pins.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U2-NC-Pad7) class = Default @ sch test-1_unconnected_pins.kicad_sch note "effective net class"
+net unconnected-(U2-NC-Pad7) kind unconnected
+net unconnected-(U2-QH-Pad4) class = Default @ sch test-1_unconnected_pins.kicad_sch note "effective net class"
+net unconnected-(U2-QH-Pad4) kind unconnected
+net unconnected-(U2-SPARE-Pad5) class = Default @ sch test-1_unconnected_pins.kicad_sch note "effective net class"
+net unconnected-(U2-SPARE-Pad5) kind unconnected
+part C1 field Value = 100n @ sch test-1_unconnected_pins.kicad_sch
+part C1 flag dnp = no @ sch test-1_unconnected_pins.kicad_sch
+part C1 flag exclude_from_sim = no @ sch test-1_unconnected_pins.kicad_sch
+part C1 flag in_bom = yes @ sch test-1_unconnected_pins.kicad_sch
+part C1 flag on_board = yes @ sch test-1_unconnected_pins.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 7e570001-0000-4000-8000-000000000035 line 170 at 210,30 rot 0
+part C1 value = text 100n @ sch test-1_unconnected_pins.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch test-1_unconnected_pins.kicad_sch
+part J1 flag dnp = no @ sch test-1_unconnected_pins.kicad_sch
+part J1 flag exclude_from_sim = no @ sch test-1_unconnected_pins.kicad_sch
+part J1 flag in_bom = yes @ sch test-1_unconnected_pins.kicad_sch
+part J1 flag on_board = yes @ sch test-1_unconnected_pins.kicad_sch
+part J1 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J1 unit 1 sheet / uuid 7e570001-0000-4000-8000-000000000001 line 86 at 30,30 rot 0
+part J1 value = text PWR @ sch test-1_unconnected_pins.kicad_sch note "from the Value field"
+part TP1 field Value = TestPoint @ sch test-1_unconnected_pins.kicad_sch
+part TP1 flag dnp = no @ sch test-1_unconnected_pins.kicad_sch
+part TP1 flag exclude_from_sim = no @ sch test-1_unconnected_pins.kicad_sch
+part TP1 flag in_bom = yes @ sch test-1_unconnected_pins.kicad_sch
+part TP1 flag on_board = yes @ sch test-1_unconnected_pins.kicad_sch
+part TP1 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP1 unit 1 sheet / uuid 7e570001-0000-4000-8000-000000000017 line 132 at 120,30 rot 0
+part TP1 value = text TestPoint @ sch test-1_unconnected_pins.kicad_sch note "from the Value field"
+part U1 field Value = Light @ sch test-1_unconnected_pins.kicad_sch
+part U1 flag dnp = no @ sch test-1_unconnected_pins.kicad_sch
+part U1 flag exclude_from_sim = no @ sch test-1_unconnected_pins.kicad_sch
+part U1 flag in_bom = yes @ sch test-1_unconnected_pins.kicad_sch
+part U1 flag on_board = yes @ sch test-1_unconnected_pins.kicad_sch
+part U1 lib Sensor_Fixture:Light sheet / symbol Sensor_Fixture:Light
+part U1 unit 1 sheet / uuid 7e570001-0000-4000-8000-000000000008 line 108 at 75,30 rot 0
+part U1 value = text Light @ sch test-1_unconnected_pins.kicad_sch note "from the Value field"
+part U2 field Value = Counter @ sch test-1_unconnected_pins.kicad_sch
+part U2 flag dnp = no @ sch test-1_unconnected_pins.kicad_sch
+part U2 flag exclude_from_sim = no @ sch test-1_unconnected_pins.kicad_sch
+part U2 flag in_bom = yes @ sch test-1_unconnected_pins.kicad_sch
+part U2 flag on_board = yes @ sch test-1_unconnected_pins.kicad_sch
+part U2 lib Logic_Fixture:Counter sheet / symbol Logic_Fixture:Counter
+part U2 unit 1 sheet / uuid 7e570001-0000-4000-8000-000000000020 line 140 at 165,30 rot 0
+part U2 value = text Counter @ sch test-1_unconnected_pins.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +3V3
+pin C1 1 type = passive @ sch test-1_unconnected_pins.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch test-1_unconnected_pins.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +3V3
+pin J1 1 type = passive @ sch test-1_unconnected_pins.kicad_sch
+pin J1 2 name Pin_2 unit 1 net GND
+pin J1 2 type = passive @ sch test-1_unconnected_pins.kicad_sch
+pin TP1 1 name 1 unit 1 net /SENSE
+pin TP1 1 type = passive @ sch test-1_unconnected_pins.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch test-1_unconnected_pins.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch test-1_unconnected_pins.kicad_sch
+pin U1 3 name OUT unit 1 net /SENSE
+pin U1 3 type = output @ sch test-1_unconnected_pins.kicad_sch
+pin U2 1 name VCC unit 1 net +3V3
+pin U2 1 type = power_in @ sch test-1_unconnected_pins.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch test-1_unconnected_pins.kicad_sch
+pin U2 3 name CLK unit 1 net /SENSE
+pin U2 3 type = input @ sch test-1_unconnected_pins.kicad_sch
+pin U2 4 name QH unit 1 net unconnected-(U2-QH-Pad4)
+pin U2 4 type = output @ sch test-1_unconnected_pins.kicad_sch
+pin U2 5 name SPARE unit 1 nc net unconnected-(U2-SPARE-Pad5)
+pin U2 5 type = input @ sch test-1_unconnected_pins.kicad_sch
+pin U2 6 name IO unit 1 net /LONELY
+pin U2 6 type = bidirectional @ sch test-1_unconnected_pins.kicad_sch
+pin U2 7 name NC unit 1 nc net unconnected-(U2-NC-Pad7)
+pin U2 7 type = no_connect @ sch test-1_unconnected_pins.kicad_sch
+sheet / name "" file test-1_unconnected_pins.kicad_sch uuid /
+source file test-1_unconnected_pins.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:TestPoint description "test point"
+symbol Connector:TestPoint field Description "test point"
+symbol Connector:TestPoint field Reference TP
+symbol Connector:TestPoint field Value TestPoint
+symbol Connector:TestPoint hash 193777c0a1992431
+symbol Connector:TestPoint pin 1 unit 1 body 1 name 1 type passive style line
+symbol Connector:TestPoint units 1
+symbol Connector_Generic:Conn_01x02 description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 9d5a102eadbd54ad
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Logic_Fixture:Counter description "Binary counter"
+symbol Logic_Fixture:Counter field Description "Binary counter"
+symbol Logic_Fixture:Counter field Reference U
+symbol Logic_Fixture:Counter field Value Counter
+symbol Logic_Fixture:Counter hash 40b6aab4a5285a51
+symbol Logic_Fixture:Counter pin 1 unit 1 body 1 name VCC type power_in style line
+symbol Logic_Fixture:Counter pin 2 unit 1 body 1 name GND type power_in style line
+symbol Logic_Fixture:Counter pin 3 unit 1 body 1 name CLK type input style line
+symbol Logic_Fixture:Counter pin 4 unit 1 body 1 name QH type output style line
+symbol Logic_Fixture:Counter pin 5 unit 1 body 1 name SPARE type input style line
+symbol Logic_Fixture:Counter pin 6 unit 1 body 1 name IO type bidirectional style line
+symbol Logic_Fixture:Counter pin 7 unit 1 body 1 name NC type no_connect style line
+symbol Logic_Fixture:Counter units 1
+symbol Sensor_Fixture:Light description "Light sensor"
+symbol Sensor_Fixture:Light field Description "Light sensor"
+symbol Sensor_Fixture:Light field Reference U
+symbol Sensor_Fixture:Light field Value Light
+symbol Sensor_Fixture:Light hash 319b49d391ee012c
+symbol Sensor_Fixture:Light pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Sensor_Fixture:Light pin 2 unit 1 body 1 name GND type power_in style line
+symbol Sensor_Fixture:Light pin 3 unit 1 body 1 name OUT type output style line
+symbol Sensor_Fixture:Light units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

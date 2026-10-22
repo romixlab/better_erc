@@ -19,3 +19,15 @@ subjects = ["net +1V2_CORE", "part C1", "part C2"]
 [[finding]]
 check = "DEC-11"
 subjects = ["net +1V2_CORE", "part C2", "part C3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +1V2_CORE"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

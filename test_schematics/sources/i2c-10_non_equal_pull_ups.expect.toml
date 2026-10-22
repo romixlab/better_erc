@@ -20,6 +20,30 @@ subjects = ["net VCC"]
 check = "I2C-10"
 subjects = ["net /SCL", "net /SDA", "part R601", "part R602"]
 
+[[finding]]
+check = "TEST-1"
+subjects = ["part U601", "pin U601.1", "pin U601.10", "pin U601.11", "pin U601.12", "pin U601.13", "pin U601.14", "pin U601.19", "pin U601.2", "pin U601.20", "pin U601.3", "pin U601.4", "pin U601.6", "pin U601.7", "pin U601.8", "pin U601.9"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U602", "pin U602.1", "pin U602.2", "pin U602.3", "pin U602.5"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VCC"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SCL"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA"]
+
 [[not_run]]
 check = "DEC-12"
 need = "rail voltages"

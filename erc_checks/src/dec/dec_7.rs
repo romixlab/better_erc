@@ -60,23 +60,30 @@ impl Check for Dec7 {
                 let got = pool.min(pins.len());
                 pool -= got;
                 if got < pins.len() {
-                    let others = if served.is_empty() {
-                        String::new()
+                    let small_caps =
+                        format!("capacitors of at most {}", format_si(max, Unit::Farad));
+                    let left = if small.is_empty() {
+                        format!("there are no {small_caps} on it")
+                    } else if served.is_empty() {
+                        format!("{got} of the {} {small_caps} serve it", small.len())
                     } else {
-                        format!(" after {} took theirs", designators(cx, served.clone()))
+                        format!(
+                            "{got} of the {} {small_caps} are left for it after {}",
+                            small.len(),
+                            designators(cx, served.clone())
+                        )
                     };
                     out.push(
                         cx.finding(&META)
                             .part(*part)
                             .net(*net)
                             .message(format!(
-                                "{} has {} power pins on {} ({}) and {got} of the {} capacitors of at most {} there are left for it{others}",
+                                "{} has {} power pin{} on {} ({}) and {left}",
                                 b.part(*part).designator,
                                 pins.len(),
+                                if pins.len() == 1 { "" } else { "s" },
                                 b.net(*net).name,
                                 pin_list(cx, pins),
-                                small.len(),
-                                format_si(max, Unit::Farad),
                             ))
                             .fact(
                                 "max_decoupling",

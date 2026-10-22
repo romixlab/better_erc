@@ -27,3 +27,31 @@ subjects = ["net +3V3"]
 [[finding]]
 check = "DEC-1"
 subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /IMU_CS"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /IMU_MISO"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /IMU_MOSI"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /IMU_SCK"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA"]

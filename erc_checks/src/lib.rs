@@ -30,6 +30,7 @@ mod dec;
 mod i2c;
 #[path = "lib/mod.rs"]
 mod library;
+mod test;
 #[cfg(test)]
 mod testing;
 mod text;

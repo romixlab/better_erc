@@ -71,3 +71,103 @@ subjects = ["net /SCL1_3V3", "net /SDA1_3V3", "net /UNM1", "net /UNM2", "part R4
 [[finding]]
 check = "I2C-7"
 subjects = ["net /SCL1_3V3", "net /SDA1_3V3", "net /UNM1", "net /UNM2", "part R413", "part R414"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U401", "pin U401.1", "pin U401.10", "pin U401.11", "pin U401.13", "pin U401.14", "pin U401.2", "pin U401.3", "pin U401.4", "pin U401.6", "pin U401.7", "pin U401.8", "pin U401.9"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U402", "pin U402.1", "pin U402.2", "pin U402.3", "pin U402.5"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U403", "pin U403.1", "pin U403.2", "pin U403.3", "pin U403.5"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U404", "pin U404.8"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U405", "pin U405.1", "pin U405.2", "pin U405.3", "pin U405.5"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U406", "pin U406.1", "pin U406.2", "pin U406.3", "pin U406.5"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U407", "pin U407.1", "pin U407.2", "pin U407.3", "pin U407.5"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U408", "pin U408.1", "pin U408.2", "pin U408.3", "pin U408.5"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VCC2_3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VCC_1V2"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VCC_1V8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VCC_3V3"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SCL1_1V2"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SCL1_1V8"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SCL1_3V3"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SCL1_3V3_VCC2"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SCL_U7"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA1_1V2"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA1_1V8"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA1_3V3"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA1_3V3_VCC2"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA_U7"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /UNM1"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /UNM2"]

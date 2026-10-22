@@ -47,3 +47,7 @@ need = "rails"
 [[not_run]]
 check = "DEC-8"
 need = "rails"
+
+[[not_run]]
+check = "TEST-4"
+need = "rails"
