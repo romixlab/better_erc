@@ -1,6 +1,10 @@
 # What better_erc finds on short-11_output_conflict.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board short-11_output_conflict"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 

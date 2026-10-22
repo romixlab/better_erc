@@ -1,6 +1,18 @@
 # What better_erc finds on io-16_pull_up_and_down.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-1"
+subjects = ["part R1", "part R2", "part R3", "part R6"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board io-16_pull_up_and_down"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R1", "part R3"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 

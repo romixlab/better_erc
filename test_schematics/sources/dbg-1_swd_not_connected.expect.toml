@@ -1,6 +1,10 @@
 # What better_erc finds on dbg-1_swd_not_connected.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board dbg-1_swd_not_connected"]
+
+[[finding]]
 check = "DBG-1"
 subjects = ["part U1", "pin U1.3", "pin U1.4"]
 

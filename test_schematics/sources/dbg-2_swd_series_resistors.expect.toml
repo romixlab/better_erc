@@ -1,6 +1,14 @@
 # What better_erc finds on dbg-2_swd_series_resistors.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board dbg-2_swd_series_resistors"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["part R1", "part R2"]
+
+[[finding]]
 check = "DBG-2"
 subjects = ["part J1", "part U1", "pin U1.3", "pin U1.4"]
 

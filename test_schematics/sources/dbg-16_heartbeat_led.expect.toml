@@ -1,6 +1,14 @@
 # What better_erc finds on dbg-16_heartbeat_led.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-1"
+subjects = ["part R1", "part R2"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board dbg-16_heartbeat_led"]
+
+[[finding]]
 check = "DBG-16"
 subjects = ["part D1", "part D2"]
 

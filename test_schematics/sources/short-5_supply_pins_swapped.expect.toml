@@ -1,6 +1,10 @@
 # What better_erc finds on short-5_supply_pins_swapped.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board short-5_supply_pins_swapped"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +3V3"]
 

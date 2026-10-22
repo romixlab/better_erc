@@ -5,5 +5,93 @@ check = "BOM-14"
 subjects = ["board lib-15_no_power_pins"]
 
 [[finding]]
+check = "DBG-4"
+subjects = ["net VCC"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net unconnected-(U2-VCC-Pad5)"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net VCC"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net unconnected-(U2-VCC-Pad5)"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U1-A-Pad1)", "pin U1.1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U1-B-Pad2)", "pin U1.2"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U2-A-Pad1)", "pin U2.1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U2-B-Pad2)", "pin U2.2"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U3-A-Pad1)", "pin U3.1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U3-B-Pad2)", "pin U3.2"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U4-A-Pad1)", "pin U4.1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U4-B-Pad2)", "pin U4.2"]
+
+[[finding]]
 check = "LIB-15"
 subjects = ["part U1"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board lib-15_no_power_pins"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.1", "pin U1.2", "pin U1.4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.1", "pin U2.2", "pin U2.3", "pin U2.4", "pin U2.5"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U3", "pin U3.1", "pin U3.2", "pin U3.3", "pin U3.4", "pin U3.5"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U4", "pin U4.1", "pin U4.2", "pin U4.3", "pin U4.4", "pin U4.5"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VCC"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net unconnected-(U2-GND-Pad3)"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net unconnected-(U2-VCC-Pad5)"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net unconnected-(U3-GND-Pad3)"]

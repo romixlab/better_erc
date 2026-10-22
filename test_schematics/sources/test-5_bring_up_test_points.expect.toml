@@ -1,6 +1,14 @@
 # What better_erc finds on test-5_bring_up_test_points.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board test-5_bring_up_test_points"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R1", "part R2"]
+
+[[finding]]
 check = "DBG-1"
 subjects = ["part U1", "pin U1.8"]
 

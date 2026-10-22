@@ -1,6 +1,10 @@
 # What better_erc finds on dbg-10_crowded_rail.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board dbg-10_crowded_rail"]
+
+[[finding]]
 check = "DBG-10"
 subjects = ["net +3V3"]
 

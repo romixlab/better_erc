@@ -1,6 +1,10 @@
 # What better_erc finds on dbg-4_power_leds.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board dbg-4_power_leds"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +5V"]
 

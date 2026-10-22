@@ -1,6 +1,10 @@
 # What better_erc finds on short-12_pair_halves_tied.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board short-12_pair_halves_tied"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1", "part U3"]
 
@@ -25,6 +29,14 @@ also = ["IO-6"]
 check = "IO-6"
 subjects = ["net /ETH_RX_SPARE", "pin U2.4"]
 also = ["IO-1"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U2"]
+
+[[finding]]
+check = "MUX-1"
+subjects = ["net /USB_D_P", "part U1"]
 
 [[finding]]
 check = "SHORT-12"

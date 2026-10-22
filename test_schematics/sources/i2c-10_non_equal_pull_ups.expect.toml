@@ -1,6 +1,14 @@
 # What better_erc finds on i2c-10_non_equal_pull_ups.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-1"
+subjects = ["part R601", "part R602"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board i2c-10_non_equal_pull_ups"]
+
+[[finding]]
 check = "CLK-5"
 subjects = ["net unconnected-(U601-NRST-Pad4)", "pin U601.4"]
 

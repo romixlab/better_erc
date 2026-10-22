@@ -1,6 +1,10 @@
 # What better_erc finds on name-10_active_low_unmarked.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board name-10_active_low_unmarked"]
+
+[[finding]]
 check = "DBG-11"
 subjects = ["net /LINE_A", "pin U4.1", "pin U5.5"]
 
@@ -11,6 +15,37 @@ subjects = ["net /LINE_B", "pin U4.2", "pin U5.6"]
 [[finding]]
 check = "DBG-3"
 subjects = ["part U5"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U1"]
+confidence = "estimate"
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U2"]
+confidence = "estimate"
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U3"]
+confidence = "estimate"
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U4"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U5"]
+
+[[finding]]
+check = "LOGIC-8"
+subjects = ["net /FLASH_CS", "part U2"]
+
+[[finding]]
+check = "LOGIC-8"
+subjects = ["net /HUB_RESET", "part U1"]
 
 [[finding]]
 check = "NAME-10"

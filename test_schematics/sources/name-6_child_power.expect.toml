@@ -1,6 +1,10 @@
 # What better_erc finds on name-6_child_power.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board name-6_child_power"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +3V3"]
 

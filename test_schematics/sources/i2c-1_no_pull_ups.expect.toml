@@ -1,6 +1,18 @@
 # What better_erc finds on i2c-1_no_pull_ups.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board i2c-1_no_pull_ups"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net /I2C1_EN", "part R201", "part R202"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net /I2C3_P", "part R203", "part R204"]
+
+[[finding]]
 check = "CLK-5"
 subjects = ["net unconnected-(U201-NRST-Pad4)", "pin U201.4"]
 

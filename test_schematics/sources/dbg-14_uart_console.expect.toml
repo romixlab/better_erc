@@ -1,6 +1,10 @@
 # What better_erc finds on dbg-14_uart_console.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board dbg-14_uart_console"]
+
+[[finding]]
 check = "DBG-11"
 subjects = ["net /MODEM_RX", "pin U1.3", "pin U2.3"]
 

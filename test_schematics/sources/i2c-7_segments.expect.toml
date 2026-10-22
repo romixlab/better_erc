@@ -1,6 +1,54 @@
 # What better_erc finds on i2c-7_segments.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-1"
+subjects = ["part R401", "part R402", "part R403", "part R404", "part R410", "part R412", "part R415", "part R416"]
+
+[[finding]]
+check = "BOM-1"
+subjects = ["part R407", "part R408", "part R409", "part R411"]
+
+[[finding]]
+check = "BOM-1"
+subjects = ["part R407", "part R408", "part R410", "part R412", "part R415", "part R416"]
+
+[[finding]]
+check = "BOM-1"
+subjects = ["part R407", "part R408", "part R414"]
+
+[[finding]]
+check = "BOM-1"
+subjects = ["part R409", "part R410", "part R411", "part R412", "part R415", "part R416"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board i2c-7_segments"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net /SDA2_EN", "part R402", "part R404"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net VCC2_3V3", "part R407", "part R408"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net VCC_1V2", "part R410", "part R412"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net VCC_1V8", "part R409", "part R411"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net VCC_3V3", "part R401", "part R403"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net VCC_3V3", "part R415", "part R416"]
+
+[[finding]]
 check = "CLK-5"
 subjects = ["net unconnected-(U401-NRST-Pad4)", "pin U401.4"]
 

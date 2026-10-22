@@ -1,6 +1,14 @@
 # What better_erc finds on clk-7_reset_capacitors.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board clk-7_reset_capacitors"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R2", "part R3"]
+
+[[finding]]
 check = "CLK-7"
 subjects = ["net /NRST", "pin U1.3"]
 
@@ -19,6 +27,10 @@ subjects = ["net +3V3"]
 [[finding]]
 check = "DEC-1"
 subjects = ["net +3V3"]
+
+[[finding]]
+check = "LOGIC-8"
+subjects = ["net /PHY_RST", "part U2"]
 
 [[finding]]
 check = "NAME-10"

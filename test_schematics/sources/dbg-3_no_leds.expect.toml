@@ -1,6 +1,10 @@
 # What better_erc finds on dbg-3_no_leds.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board dbg-3_no_leds"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 

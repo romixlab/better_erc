@@ -1,6 +1,10 @@
 # What better_erc finds on clk-6_reset_buttons.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board clk-6_reset_buttons"]
+
+[[finding]]
 check = "CLK-6"
 subjects = ["net /PHY_RESET", "pin U3.3"]
 

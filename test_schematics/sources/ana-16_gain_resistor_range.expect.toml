@@ -17,8 +17,16 @@ check = "ANA-16"
 subjects = ["part R5", "part U2"]
 
 [[finding]]
+check = "BOM-1"
+subjects = ["part R1", "part R9"]
+
+[[finding]]
 check = "BOM-10"
 subjects = ["part C1"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board ana-16_gain_resistor_range"]
 
 [[finding]]
 check = "DBG-4"

@@ -5,6 +5,14 @@ check = "ANA-12"
 subjects = ["part U1", "pin U1.1", "pin U1.3"]
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board ana-12_comparator_hysteresis"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R1", "part R2"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U2"]
 

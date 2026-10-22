@@ -1,6 +1,14 @@
 # What better_erc finds on io-7_button_pulls.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board io-7_button_pulls"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R2", "part R3"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 

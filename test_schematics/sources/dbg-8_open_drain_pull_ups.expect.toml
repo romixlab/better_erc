@@ -1,6 +1,10 @@
 # What better_erc finds on dbg-8_open_drain_pull_ups.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board dbg-8_open_drain_pull_ups"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +3V3"]
 
@@ -19,6 +23,10 @@ subjects = ["net /QGATE", "part Q1"]
 [[finding]]
 check = "IO-15"
 subjects = ["net /SENSOR_INT", "pin U3.3"]
+
+[[finding]]
+check = "LOGIC-7"
+subjects = ["net /SENSOR_INT", "part U3"]
 
 [[finding]]
 check = "NAME-10"

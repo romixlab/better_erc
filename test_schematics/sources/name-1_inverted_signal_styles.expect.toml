@@ -1,12 +1,25 @@
 # What better_erc finds on name-1_inverted_signal_styles.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board name-1_inverted_signal_styles"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R1", "part R2", "part R3", "part R4", "part R5", "part R6"]
+
+[[finding]]
 check = "CLK-7"
 subjects = ["net /~{HUB_RESET}", "pin U1.1"]
 
 [[finding]]
 check = "DBG-4"
 subjects = ["net +3V3"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U1"]
+confidence = "estimate"
 
 [[finding]]
 check = "NAME-1"

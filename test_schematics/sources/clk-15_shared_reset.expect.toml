@@ -1,6 +1,14 @@
 # What better_erc finds on clk-15_shared_reset.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board clk-15_shared_reset"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R2", "part R3"]
+
+[[finding]]
 check = "CLK-15"
 subjects = ["net /NRST", "pin U1.3", "pin U2.3"]
 
@@ -15,6 +23,10 @@ subjects = ["net +3V3"]
 [[finding]]
 check = "DEC-1"
 subjects = ["net +3V3"]
+
+[[finding]]
+check = "LOGIC-8"
+subjects = ["net /PHY_RST", "part U4"]
 
 [[finding]]
 check = "NAME-10"

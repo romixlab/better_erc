@@ -5,6 +5,38 @@ check = "BOM-14"
 subjects = ["board logic-8_polarity"]
 
 [[finding]]
+check = "DBG-10"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U9"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "DBG-7"
+subjects = ["net /PG_A", "pin U2.3"]
+
+[[finding]]
+check = "DBG-7"
+subjects = ["net /PG_B", "pin U3.3"]
+
+[[finding]]
+check = "DBG-8"
+subjects = ["net /PG_A", "pin U1.3"]
+
+[[finding]]
+check = "DBG-8"
+subjects = ["net /PG_B", "pin U1.4"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net /+3V3"]
+
+[[finding]]
 check = "LOGIC-8"
 subjects = ["net /HUB_RESET_N", "part U6"]
 
@@ -15,3 +47,27 @@ subjects = ["net /PG_A", "part U1", "part U2"]
 [[finding]]
 check = "LOGIC-8"
 subjects = ["net /RST_B", "part U4", "part U5"]
+
+[[finding]]
+check = "NAME-10"
+subjects = ["net /INT", "pin U7.3", "pin U8.3"]
+
+[[finding]]
+check = "NAME-10"
+subjects = ["net /PG_A", "pin U2.3"]
+
+[[finding]]
+check = "NAME-10"
+subjects = ["net /PG_B", "pin U3.3"]
+
+[[finding]]
+check = "NAME-10"
+subjects = ["net /RST_B", "pin U4.3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /GND"]

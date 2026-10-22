@@ -1,6 +1,14 @@
 # What better_erc finds on short-6_io_tied_to_rail.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board short-6_io_tied_to_rail"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["part R1", "part R2"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 

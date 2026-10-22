@@ -7,11 +7,3 @@ subjects = ["board lib-3_mosfet_pin_names"]
 [[finding]]
 check = "LIB-3"
 subjects = ["part Q1"]
-
-[[not_run]]
-check = "BOM-8"
-need = "rails"
-
-[[not_run]]
-check = "LOGIC-7"
-need = "rails"

@@ -1,6 +1,10 @@
 # What better_erc finds on dbg-7_enable_pulls.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board dbg-7_enable_pulls"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U5"]
 

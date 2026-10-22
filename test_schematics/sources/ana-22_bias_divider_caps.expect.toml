@@ -5,6 +5,10 @@ check = "ANA-22"
 subjects = ["net /BIAS", "part R1", "part R2"]
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board ana-22_bias_divider_caps"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +3V3"]
 

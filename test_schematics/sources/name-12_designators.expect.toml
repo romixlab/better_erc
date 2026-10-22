@@ -1,6 +1,10 @@
 # What better_erc finds on name-12_designators.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board name-12_designators"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +3V3"]
 

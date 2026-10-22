@@ -14,6 +14,10 @@ check = "ANA-11"
 subjects = ["part U3", "pin U3.5", "pin U3.6"]
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board ana-11_unused_channels"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +5V"]
 

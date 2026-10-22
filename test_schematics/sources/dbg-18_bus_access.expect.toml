@@ -1,6 +1,14 @@
 # What better_erc finds on dbg-18_bus_access.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board dbg-18_bus_access"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R1", "part R2", "part R3", "part R4"]
+
+[[finding]]
 check = "DBG-11"
 subjects = ["net /IMU_MISO", "pin U1.7", "pin U2.5"]
 

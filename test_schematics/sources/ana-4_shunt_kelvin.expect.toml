@@ -5,6 +5,10 @@ check = "ANA-4"
 subjects = ["net GND", "part R1"]
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board ana-4_shunt_kelvin"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U3"]
 

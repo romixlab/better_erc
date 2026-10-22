@@ -35,9 +35,9 @@ mod io;
 mod library;
 mod name;
 mod short;
-mod test;
 mod logic;
 mod mux;
+mod test;
 #[cfg(test)]
 mod testing;
 mod text;

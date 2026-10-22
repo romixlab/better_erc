@@ -5,9 +5,77 @@ check = "BOM-14"
 subjects = ["board logic-3_fan_out"]
 
 [[finding]]
+check = "CLK-18"
+subjects = ["net /LATCH_CLK", "pin U1.3"]
+
+[[finding]]
+check = "DBG-10"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "DBG-7"
+subjects = ["net /EN", "pin U1.5"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U6-CP-Pad3)", "pin U6.3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U7-CP-Pad3)", "pin U7.3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U8-CP-Pad3)", "pin U8.3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U9-CP-Pad3)", "pin U9.3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U9-OE-Pad5)", "pin U9.5"]
+
+[[finding]]
 check = "LOGIC-3"
 subjects = ["net /LATCH_CLK", "part U1"]
 
 [[finding]]
 check = "LOGIC-3"
 subjects = ["net /RESET", "part U1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U6", "pin U6.3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U7", "pin U7.3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U8", "pin U8.3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U9", "pin U9.3", "pin U9.5"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /GND"]

@@ -1,6 +1,10 @@
 # What better_erc finds on clk-3_crystal_case_pads.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board clk-3_crystal_case_pads"]
+
+[[finding]]
 check = "CLK-3"
 subjects = ["part Y1", "pin Y1.2", "pin Y1.4"]
 

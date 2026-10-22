@@ -1,6 +1,10 @@
 # What better_erc finds on dec-7_caps_per_pin.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board dec-7_caps_per_pin"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 

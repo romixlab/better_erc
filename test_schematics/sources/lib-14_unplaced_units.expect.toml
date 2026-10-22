@@ -1,9 +1,121 @@
 # What better_erc finds on lib-14_unplaced_units.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "ANA-11"
+subjects = ["part U1", "pin U1.2", "pin U1.3"]
+
+[[finding]]
+check = "ANA-11"
+subjects = ["part U2", "pin U2.2", "pin U2.3"]
+
+[[finding]]
+check = "ANA-11"
+subjects = ["part U2", "pin U2.5", "pin U2.6"]
+
+[[finding]]
 check = "BOM-14"
 subjects = ["board lib-14_unplaced_units"]
 
 [[finding]]
+check = "DBG-4"
+subjects = ["net unconnected-(U1C-V+-Pad8)"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net unconnected-(U1C-V--Pad4)"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net unconnected-(U2C-V+-Pad8)"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net unconnected-(U2C-V--Pad4)"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net unconnected-(U3C-V+-Pad8)"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net unconnected-(U3C-V--Pad4)"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net unconnected-(U1C-V+-Pad8)"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net unconnected-(U1C-V--Pad4)"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net unconnected-(U2C-V+-Pad8)"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net unconnected-(U2C-V--Pad4)"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U1A-+INA-Pad3)", "pin U1.3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U1A--INA-Pad2)", "pin U1.2"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U2A-+INA-Pad3)", "pin U2.3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U2A--INA-Pad2)", "pin U2.2"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U2B-+INB-Pad5)", "pin U2.5"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U2B--INB-Pad6)", "pin U2.6"]
+
+[[finding]]
 check = "LIB-14"
 subjects = ["part U1"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board lib-14_unplaced_units"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.1", "pin U1.2", "pin U1.3", "pin U1.4", "pin U1.8"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.1", "pin U2.2", "pin U2.3", "pin U2.4", "pin U2.5", "pin U2.6", "pin U2.7", "pin U2.8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net unconnected-(U1C-V+-Pad8)"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net unconnected-(U1C-V--Pad4)"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net unconnected-(U2C-V+-Pad8)"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net unconnected-(U2C-V--Pad4)"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net unconnected-(U3C-V+-Pad8)"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net unconnected-(U3C-V--Pad4)"]

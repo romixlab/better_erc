@@ -5,6 +5,10 @@ check = "ANA-21"
 subjects = ["part U1", "pin U1.3"]
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board ana-21_dc_return"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +5V"]
 

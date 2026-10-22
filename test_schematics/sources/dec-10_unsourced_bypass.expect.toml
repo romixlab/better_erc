@@ -13,6 +13,10 @@ check = "ANA-11"
 subjects = ["part U3", "pin U3.3"]
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board dec-10_unsourced_bypass"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +5V0_FLT"]
 

@@ -1,6 +1,10 @@
 # What better_erc finds on dec-8_source_side_caps.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board dec-8_source_side_caps"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +3V3_DCDC"]
 

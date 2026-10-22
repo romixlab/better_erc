@@ -1,6 +1,10 @@
 # What better_erc finds on clk-5_reset_pull_ups.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board clk-5_reset_pull_ups"]
+
+[[finding]]
 check = "CLK-5"
 subjects = ["net /ESP_EN", "pin U3.3"]
 

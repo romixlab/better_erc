@@ -61,11 +61,3 @@ also = ["BOM-5"]
 [[finding]]
 check = "BOM-9"
 subjects = ["part R2"]
-
-[[not_run]]
-check = "BOM-8"
-need = "rails"
-
-[[not_run]]
-check = "LOGIC-7"
-need = "rails"

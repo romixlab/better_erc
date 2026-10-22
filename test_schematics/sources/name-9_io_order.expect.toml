@@ -1,7 +1,15 @@
 # What better_erc finds on name-9_io_order.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board name-9_io_order"]
+
+[[finding]]
 check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "LIB-15"
 subjects = ["part U1"]
 
 [[finding]]

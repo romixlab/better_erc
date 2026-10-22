@@ -13,6 +13,14 @@ check = "ANA-22"
 subjects = ["net /THRESH_B", "part R4", "part R5"]
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board ana-10_opamp_feedback"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["part R2", "part R3", "part R4"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +5V"]
 

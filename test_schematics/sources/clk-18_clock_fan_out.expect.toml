@@ -1,6 +1,10 @@
 # What better_erc finds on clk-18_clock_fan_out.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board clk-18_clock_fan_out"]
+
+[[finding]]
 check = "CLK-18"
 subjects = ["net /CLK25", "pin X1.3"]
 

@@ -1,6 +1,15 @@
 # What better_erc finds on name-2_diff_pair_styles.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board name-2_diff_pair_styles"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U1"]
+confidence = "estimate"
+
+[[finding]]
 check = "NAME-2"
 subjects = ["net /CAN+", "net /CAN-"]
 

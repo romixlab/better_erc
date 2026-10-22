@@ -1,6 +1,10 @@
 # What better_erc finds on name-4_uart_names.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board name-4_uart_names"]
+
+[[finding]]
 check = "DBG-11"
 subjects = ["net /DBG_TX_MCU_RX", "pin U1.6", "pin U4.2"]
 
@@ -31,6 +35,33 @@ subjects = ["part U1"]
 [[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U1"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U2"]
+confidence = "estimate"
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U3"]
+confidence = "estimate"
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U4"]
+confidence = "estimate"
+
+[[finding]]
+check = "MUX-1"
+subjects = ["net /DBG_TX_MCU_RX", "part U1", "part U4"]
+
+[[finding]]
+check = "MUX-1"
+subjects = ["net /MCU_TX_DBG_RX", "part U1", "part U4"]
 
 [[finding]]
 check = "NAME-4"

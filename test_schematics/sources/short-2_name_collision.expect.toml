@@ -1,6 +1,14 @@
 # What better_erc finds on short-2_name_collision.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board short-2_name_collision"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net +3V3", "part R4", "part R5"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +1V8"]
 

@@ -11,11 +11,3 @@ subjects = ["part J4"]
 [[finding]]
 check = "BOM-3"
 subjects = ["part R7"]
-
-[[not_run]]
-check = "BOM-8"
-need = "rails"
-
-[[not_run]]
-check = "LOGIC-7"
-need = "rails"

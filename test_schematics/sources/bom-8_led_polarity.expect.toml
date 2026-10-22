@@ -11,3 +11,23 @@ subjects = ["net /+3V3", "part D3"]
 [[finding]]
 check = "BOM-8"
 subjects = ["net /GND", "part D2"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /+5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /+5V", "pin D4.2"]

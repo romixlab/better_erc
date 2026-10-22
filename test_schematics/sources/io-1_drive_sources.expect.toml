@@ -1,6 +1,10 @@
 # What better_erc finds on io-1_drive_sources.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board io-1_drive_sources"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 

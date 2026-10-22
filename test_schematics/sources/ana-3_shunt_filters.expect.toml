@@ -5,6 +5,14 @@ check = "ANA-3"
 subjects = ["part R1", "part U1"]
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board ana-3_shunt_filters"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["part R3", "part R4"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U4"]
 

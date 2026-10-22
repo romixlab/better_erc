@@ -5,5 +5,45 @@ check = "BOM-14"
 subjects = ["board logic-7_open_drain"]
 
 [[finding]]
+check = "DBG-16"
+subjects = ["part D1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "DBG-8"
+subjects = ["net /CMP1", "pin U1.3"]
+
+[[finding]]
+check = "DBG-8"
+subjects = ["net /CMP3", "pin U4.3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "IO-8"
+subjects = ["net /CMP1", "pin U1.3"]
+
+[[finding]]
 check = "LOGIC-7"
 subjects = ["net /CMP1", "part U1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U5", "pin U5.3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /CMP4", "pin U5.3"]

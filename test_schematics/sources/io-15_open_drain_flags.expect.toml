@@ -1,6 +1,10 @@
 # What better_erc finds on io-15_open_drain_flags.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board io-15_open_drain_flags"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 
@@ -39,6 +43,10 @@ subjects = ["net /PMIC_INT", "pin U2.3"]
 [[finding]]
 check = "IO-15"
 subjects = ["net /TEMP_ALERT", "pin U4.3"]
+
+[[finding]]
+check = "LOGIC-7"
+subjects = ["net /PMIC_INT", "part U2"]
 
 [[finding]]
 check = "NAME-10"
