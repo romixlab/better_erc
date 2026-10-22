@@ -1,0 +1,9 @@
+# What better_erc finds on dec-12_reversed_polarized.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DEC-12"
+subjects = ["net +12V", "net GND", "part C3"]
+
+[[finding]]
+check = "DEC-12"
+subjects = ["net -5V", "net GND", "part C2"]

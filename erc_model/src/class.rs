@@ -455,6 +455,12 @@ impl PartClass {
         )
     }
 
+    /// A part that runs firmware or a bitstream: an MCU, SoC or FPGA (what debug ports, consoles and heartbeat
+    /// LEDs are for)
+    pub fn is_programmable(self) -> bool {
+        matches!(self, PartClass::Mcu | PartClass::Soc | PartClass::Fpga)
+    }
+
     /// A part that is not in the electrical circuit (fiducials, mounting holes)
     pub fn is_mechanical(self) -> bool {
         matches!(self, PartClass::Fiducial | PartClass::MountingHole)

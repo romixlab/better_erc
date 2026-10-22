@@ -25,6 +25,7 @@ pub mod project;
 pub mod report;
 
 mod bom;
+mod dec;
 mod i2c;
 #[path = "lib/mod.rs"]
 mod library;

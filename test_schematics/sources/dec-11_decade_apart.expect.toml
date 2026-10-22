@@ -1,0 +1,9 @@
+# What better_erc finds on dec-11_decade_apart.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DEC-11"
+subjects = ["net +1V2_CORE", "part C1", "part C2"]
+
+[[finding]]
+check = "DEC-11"
+subjects = ["net +1V2_CORE", "part C2", "part C3"]

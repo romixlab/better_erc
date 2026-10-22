@@ -1,0 +1,204 @@
+board dec-8_source_side_caps
+label / local SENSE2_IN at 337.38,27.46 net /SENSE2_IN
+label / local SENSE_IN at 202.38,27.46 net /SENSE_IN
+label / power +3V3_DCDC at 24.92,22.38 net +3V3_DCDC
+label / power +3V3_DCDC at 75,26.19 net +3V3_DCDC
+label / power +3V3_DCDC at 120,26.19 net +3V3_DCDC
+label / power +3V3_DCDC at 165,26.19 net +3V3_DCDC
+label / power +3V3_DCDC at 255,26.19 net +3V3_DCDC
+label / power +3V3_PLL at 255,33.81 net +3V3_PLL
+label / power +3V3_PLL at 300,26.19 net +3V3_PLL
+label / power +3V3_PLL at 337.38,22.38 net +3V3_PLL
+label / power +3V3_VDDA at 165,33.81 net +3V3_VDDA
+label / power +3V3_VDDA at 202.38,22.38 net +3V3_VDDA
+label / power GND at 24.92,24.92 net GND
+label / power GND at 75,33.81 net GND
+label / power GND at 120,33.81 net GND
+label / power GND at 202.38,24.92 net GND
+label / power GND at 300,33.81 net GND
+label / power GND at 337.38,24.92 net GND
+net +3V3_DCDC class = Default @ sch dec-8_source_side_caps.kicad_sch note "effective net class"
+net +3V3_DCDC kind power
+net +3V3_PLL class = Default @ sch dec-8_source_side_caps.kicad_sch note "effective net class"
+net +3V3_PLL kind power
+net +3V3_VDDA class = Default @ sch dec-8_source_side_caps.kicad_sch note "effective net class"
+net +3V3_VDDA kind power
+net /SENSE2_IN class = Default @ sch dec-8_source_side_caps.kicad_sch note "effective net class"
+net /SENSE2_IN kind named
+net /SENSE_IN class = Default @ sch dec-8_source_side_caps.kicad_sch note "effective net class"
+net /SENSE_IN kind named
+net GND class = Default @ sch dec-8_source_side_caps.kicad_sch note "effective net class"
+net GND kind power
+part C1 field Value = 470n @ sch dec-8_source_side_caps.kicad_sch
+part C1 flag dnp = no @ sch dec-8_source_side_caps.kicad_sch
+part C1 flag exclude_from_sim = no @ sch dec-8_source_side_caps.kicad_sch
+part C1 flag in_bom = yes @ sch dec-8_source_side_caps.kicad_sch
+part C1 flag on_board = yes @ sch dec-8_source_side_caps.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid dec00008-0000-4000-8000-000000000008 line 124 at 75,30 rot 0
+part C1 value = text 470n @ sch dec-8_source_side_caps.kicad_sch note "from the Value field"
+part C2 field Value = 100n @ sch dec-8_source_side_caps.kicad_sch
+part C2 flag dnp = no @ sch dec-8_source_side_caps.kicad_sch
+part C2 flag exclude_from_sim = no @ sch dec-8_source_side_caps.kicad_sch
+part C2 flag in_bom = yes @ sch dec-8_source_side_caps.kicad_sch
+part C2 flag on_board = yes @ sch dec-8_source_side_caps.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid dec00008-0000-4000-8000-000000000015 line 146 at 120,30 rot 0
+part C2 value = text 100n @ sch dec-8_source_side_caps.kicad_sch note "from the Value field"
+part C3 field Value = 100n @ sch dec-8_source_side_caps.kicad_sch
+part C3 flag dnp = no @ sch dec-8_source_side_caps.kicad_sch
+part C3 flag exclude_from_sim = no @ sch dec-8_source_side_caps.kicad_sch
+part C3 flag in_bom = yes @ sch dec-8_source_side_caps.kicad_sch
+part C3 flag on_board = yes @ sch dec-8_source_side_caps.kicad_sch
+part C3 lib Device:C sheet / symbol Device:C
+part C3 unit 1 sheet / uuid dec00008-0000-4000-8000-000000000045 line 236 at 300,30 rot 0
+part C3 value = text 100n @ sch dec-8_source_side_caps.kicad_sch note "from the Value field"
+part FB1 field Value = 600R @ sch dec-8_source_side_caps.kicad_sch
+part FB1 flag dnp = no @ sch dec-8_source_side_caps.kicad_sch
+part FB1 flag exclude_from_sim = no @ sch dec-8_source_side_caps.kicad_sch
+part FB1 flag in_bom = yes @ sch dec-8_source_side_caps.kicad_sch
+part FB1 flag on_board = yes @ sch dec-8_source_side_caps.kicad_sch
+part FB1 lib Device:FerriteBead sheet / symbol Device:FerriteBead
+part FB1 unit 1 sheet / uuid dec00008-0000-4000-8000-000000000038 line 214 at 255,30 rot 0
+part FB1 value = qty 600 ohm @ sch dec-8_source_side_caps.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch dec-8_source_side_caps.kicad_sch
+part J1 flag dnp = no @ sch dec-8_source_side_caps.kicad_sch
+part J1 flag exclude_from_sim = no @ sch dec-8_source_side_caps.kicad_sch
+part J1 flag in_bom = yes @ sch dec-8_source_side_caps.kicad_sch
+part J1 flag on_board = yes @ sch dec-8_source_side_caps.kicad_sch
+part J1 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J1 unit 1 sheet / uuid dec00008-0000-4000-8000-000000000001 line 102 at 30,30 rot 0
+part J1 value = text PWR @ sch dec-8_source_side_caps.kicad_sch note "from the Value field"
+part R1 field Value = 0R @ sch dec-8_source_side_caps.kicad_sch
+part R1 flag dnp = no @ sch dec-8_source_side_caps.kicad_sch
+part R1 flag exclude_from_sim = no @ sch dec-8_source_side_caps.kicad_sch
+part R1 flag in_bom = yes @ sch dec-8_source_side_caps.kicad_sch
+part R1 flag on_board = yes @ sch dec-8_source_side_caps.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid dec00008-0000-4000-8000-000000000022 line 168 at 165,30 rot 0
+part R1 value = qty 0 ohm @ sch dec-8_source_side_caps.kicad_sch note "from the Value field"
+part U1 field Value = ADC @ sch dec-8_source_side_caps.kicad_sch
+part U1 flag dnp = no @ sch dec-8_source_side_caps.kicad_sch
+part U1 flag exclude_from_sim = no @ sch dec-8_source_side_caps.kicad_sch
+part U1 flag in_bom = yes @ sch dec-8_source_side_caps.kicad_sch
+part U1 flag on_board = yes @ sch dec-8_source_side_caps.kicad_sch
+part U1 lib Analog_Fixture:ADC sheet / symbol Analog_Fixture:ADC
+part U1 unit 1 sheet / uuid dec00008-0000-4000-8000-000000000029 line 190 at 210,30 rot 0
+part U1 value = text ADC @ sch dec-8_source_side_caps.kicad_sch note "from the Value field"
+part U2 field Value = ADC @ sch dec-8_source_side_caps.kicad_sch
+part U2 flag dnp = no @ sch dec-8_source_side_caps.kicad_sch
+part U2 flag exclude_from_sim = no @ sch dec-8_source_side_caps.kicad_sch
+part U2 flag in_bom = yes @ sch dec-8_source_side_caps.kicad_sch
+part U2 flag on_board = yes @ sch dec-8_source_side_caps.kicad_sch
+part U2 lib Analog_Fixture:ADC sheet / symbol Analog_Fixture:ADC
+part U2 unit 1 sheet / uuid dec00008-0000-4000-8000-000000000052 line 258 at 345,30 rot 0
+part U2 value = text ADC @ sch dec-8_source_side_caps.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +3V3_DCDC
+pin C1 1 type = passive @ sch dec-8_source_side_caps.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch dec-8_source_side_caps.kicad_sch
+pin C2 1 name "" unit 1 net +3V3_DCDC
+pin C2 1 type = passive @ sch dec-8_source_side_caps.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch dec-8_source_side_caps.kicad_sch
+pin C3 1 name "" unit 1 net +3V3_PLL
+pin C3 1 type = passive @ sch dec-8_source_side_caps.kicad_sch
+pin C3 2 name "" unit 1 net GND
+pin C3 2 type = passive @ sch dec-8_source_side_caps.kicad_sch
+pin FB1 1 name "" unit 1 net +3V3_DCDC
+pin FB1 1 type = passive @ sch dec-8_source_side_caps.kicad_sch
+pin FB1 2 name "" unit 1 net +3V3_PLL
+pin FB1 2 type = passive @ sch dec-8_source_side_caps.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +3V3_DCDC
+pin J1 1 type = passive @ sch dec-8_source_side_caps.kicad_sch
+pin J1 2 name Pin_2 unit 1 net GND
+pin J1 2 type = passive @ sch dec-8_source_side_caps.kicad_sch
+pin R1 1 name "" unit 1 net +3V3_DCDC
+pin R1 1 type = passive @ sch dec-8_source_side_caps.kicad_sch
+pin R1 2 name "" unit 1 net +3V3_VDDA
+pin R1 2 type = passive @ sch dec-8_source_side_caps.kicad_sch
+pin U1 1 name AVDD unit 1 net +3V3_VDDA
+pin U1 1 type = power_in @ sch dec-8_source_side_caps.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch dec-8_source_side_caps.kicad_sch
+pin U1 3 name AIN unit 1 net /SENSE_IN
+pin U1 3 type = input @ sch dec-8_source_side_caps.kicad_sch
+pin U2 1 name AVDD unit 1 net +3V3_PLL
+pin U2 1 type = power_in @ sch dec-8_source_side_caps.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch dec-8_source_side_caps.kicad_sch
+pin U2 3 name AIN unit 1 net /SENSE2_IN
+pin U2 3 type = input @ sch dec-8_source_side_caps.kicad_sch
+sheet / name "" file dec-8_source_side_caps.kicad_sch uuid /
+source file dec-8_source_side_caps.kicad_sch
+source tool kicad
+source version 8.0
+symbol Analog_Fixture:ADC description "analog to digital converter"
+symbol Analog_Fixture:ADC field Description "analog to digital converter"
+symbol Analog_Fixture:ADC field Reference U
+symbol Analog_Fixture:ADC field Value ADC
+symbol Analog_Fixture:ADC hash 6f0ba6a23e52ab5f
+symbol Analog_Fixture:ADC pin 1 unit 1 body 1 name AVDD type power_in style line
+symbol Analog_Fixture:ADC pin 2 unit 1 body 1 name GND type power_in style line
+symbol Analog_Fixture:ADC pin 3 unit 1 body 1 name AIN type input style line
+symbol Analog_Fixture:ADC units 1
+symbol Connector_Generic:Conn_01x02 description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 9d5a102eadbd54ad
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:FerriteBead description "Ferrite bead"
+symbol Device:FerriteBead field Description "Ferrite bead"
+symbol Device:FerriteBead field Reference FB
+symbol Device:FerriteBead field Value FerriteBead
+symbol Device:FerriteBead hash 80acd11562c9b610
+symbol Device:FerriteBead pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:FerriteBead pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:FerriteBead units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol power:+3V3_DCDC description "Power symbol +3V3_DCDC"
+symbol power:+3V3_DCDC field Description "Power symbol +3V3_DCDC"
+symbol power:+3V3_DCDC field Reference "#PWR"
+symbol power:+3V3_DCDC field Value +3V3_DCDC
+symbol power:+3V3_DCDC hash 90bf174f91e3f42e
+symbol power:+3V3_DCDC pin 1 unit 1 body 1 name +3V3_DCDC type power_in style line
+symbol power:+3V3_DCDC units 1 power global
+symbol power:+3V3_PLL description "Power symbol +3V3_PLL"
+symbol power:+3V3_PLL field Description "Power symbol +3V3_PLL"
+symbol power:+3V3_PLL field Reference "#PWR"
+symbol power:+3V3_PLL field Value +3V3_PLL
+symbol power:+3V3_PLL hash cbd41cb854b4352e
+symbol power:+3V3_PLL pin 1 unit 1 body 1 name +3V3_PLL type power_in style line
+symbol power:+3V3_PLL units 1 power global
+symbol power:+3V3_VDDA description "Power symbol +3V3_VDDA"
+symbol power:+3V3_VDDA field Description "Power symbol +3V3_VDDA"
+symbol power:+3V3_VDDA field Reference "#PWR"
+symbol power:+3V3_VDDA field Value +3V3_VDDA
+symbol power:+3V3_VDDA hash a3f7d14044ea6bed
+symbol power:+3V3_VDDA pin 1 unit 1 body 1 name +3V3_VDDA type power_in style line
+symbol power:+3V3_VDDA units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

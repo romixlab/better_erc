@@ -138,6 +138,11 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - ✅ `NET-21` Drawing facts: labels with their scope (local, global, hierarchical, power, local power, directive), sheet
   pins matched to hierarchical labels, no-connect flags, dangling labels, flags on connected pins, as queryable facts
   for the WIRE, NAME and SHORT checks; `Need::Drawing` · `erc_analysis/src/drawing.rs`, `test_schematics/analyses/drawing`
+- 🚧 `NET-22` Pin functions by name and probe access: what a pin name states (`SWDIO`, `PA13/JTMS-SWDIO`, `~{RESET}`,
+  `USART1_TX`, `SPI2_MISO`, `EN`, `nINT`, `PGOOD`, with the peripheral instance), the name layer of pin roles (`NET-7`);
+  test points and connector pins on a net or one series resistor, ferrite, tie or jumper away, nets joined by 0 Ω;
+  power-input pins on a net and capacitors from it to a ground · `erc_analysis/src/{pin_name,access,supply}.rs`.
+  Missing: pins named by their port only (`PA13`) need alternate functions (`NET-12`)
 - ✅ `NET-18` Each net's effective net class as KiCad resolves it (directive labels, project patterns as anchored regex
   or wildcard, priority order, `Default` filling unset rules), equal to kicad-cli's netlist classes · `erc_kicad/src/netclass.rs`
 
@@ -205,6 +210,19 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `BOM-10` Resistor, capacitor or inductor value that doesn't read, has odd notation or is in no E series (with the
   nearest E24 and E96 values) · `bom/bom_10.rs`, `bom-10_values`
 - ✅ `LIB-3` MOSFET pins not named G, D, S · `lib/lib_3.rs`, `lib-3_mosfet_pin_names`
+- ✅ `DEC-1` Rail feeding power pins with no capacitor to a ground · `dec/dec_1.rs`, `dec-1_no_decoupling`
+- ✅ `DEC-4` Ferrite in series between two rails, with the LC resonance against the capacitance behind it (bead
+  inductance `bead_inductance` = 1 µH assumed until part data, so an estimate) · `dec/dec_4.rs`, `dec-4_ferrite_beads`
+- ✅ `DEC-7` Fewer capacitors of ≤ 1 µF (`max_decoupling`) than power pins: a rail's small capacitors handed out per
+  pin, parts with the fewest pins first · `dec/dec_7.rs`, `dec-7_caps_per_pin`
+- ✅ `DEC-8` Capacitors only on the source side of a series ferrite, inductor or resistor between two rails ·
+  `dec/dec_8.rs`, `dec-8_source_side_caps`
+- ✅ `DEC-10` A net of power pins and capacitors to ground only: nothing brings power in · `dec/dec_10.rs`,
+  `dec-10_unsourced_bypass`
+- ✅ `DEC-11` Ceramics on one rail ≥ 10× apart (`max_ratio`) with no value in between · `dec/dec_11.rs`,
+  `dec-11_decade_apart`
+- ✅ `DEC-12` Polarized capacitor with `+` on the lower voltage (pins by name, else 1 = `+`) · `dec/dec_12.rs`,
+  `dec-12_reversed_polarized`
 - ⬜ `IO-1` Inputs without a drive source: the input pins on a net are collected (`graph::input_pins`), no check yet ·
   `erc_analysis/src/graph.rs`, test schematic `io-1_inputs`
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`

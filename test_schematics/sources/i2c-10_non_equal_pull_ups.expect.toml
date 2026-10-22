@@ -1,5 +1,13 @@
 # What better_erc finds on i2c-10_non_equal_pull_ups.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DEC-1"
+subjects = ["net VCC"]
+
+[[finding]]
 check = "I2C-10"
 subjects = ["net /SCL", "net /SDA", "part R601", "part R602"]
+
+[[not_run]]
+check = "DEC-12"
+need = "rail voltages"

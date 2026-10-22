@@ -1,0 +1,254 @@
+board dec-7_caps_per_pin
+label / power +1V8 at 22.38,72.38 net +1V8
+label / power +1V8 at 22.38,74.92 net +1V8
+label / power +1V8 at 24.92,24.92 net +1V8
+label / power +1V8 at 75,76.19 net +1V8
+label / power +1V8 at 120,76.19 net +1V8
+label / power +3V3 at 24.92,22.38 net +3V3
+label / power +3V3 at 67.38,22.38 net +3V3
+label / power +3V3 at 67.38,24.92 net +3V3
+label / power +3V3 at 67.38,27.46 net +3V3
+label / power +3V3 at 67.38,30 net +3V3
+label / power +3V3 at 112.38,22.38 net +3V3
+label / power +3V3 at 157.38,22.38 net +3V3
+label / power +3V3 at 210,26.19 net +3V3
+label / power +3V3 at 255,26.19 net +3V3
+label / power +3V3 at 300,26.19 net +3V3
+label / power +3V3 at 345,26.19 net +3V3
+label / power GND at 22.38,77.46 net GND
+label / power GND at 24.92,27.46 net GND
+label / power GND at 67.38,32.54 net GND
+label / power GND at 75,83.81 net GND
+label / power GND at 112.38,24.92 net GND
+label / power GND at 120,83.81 net GND
+label / power GND at 157.38,24.92 net GND
+label / power GND at 210,33.81 net GND
+label / power GND at 255,33.81 net GND
+label / power GND at 300,33.81 net GND
+label / power GND at 345,33.81 net GND
+net +1V8 class = Default @ sch dec-7_caps_per_pin.kicad_sch note "effective net class"
+net +1V8 kind power
+net +3V3 class = Default @ sch dec-7_caps_per_pin.kicad_sch note "effective net class"
+net +3V3 kind power
+net GND class = Default @ sch dec-7_caps_per_pin.kicad_sch note "effective net class"
+net GND kind power
+part C1 field Value = 100n @ sch dec-7_caps_per_pin.kicad_sch
+part C1 flag dnp = no @ sch dec-7_caps_per_pin.kicad_sch
+part C1 flag exclude_from_sim = no @ sch dec-7_caps_per_pin.kicad_sch
+part C1 flag in_bom = yes @ sch dec-7_caps_per_pin.kicad_sch
+part C1 flag on_board = yes @ sch dec-7_caps_per_pin.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid dec00007-0000-4000-8000-000000000041 line 227 at 210,30 rot 0
+part C1 value = text 100n @ sch dec-7_caps_per_pin.kicad_sch note "from the Value field"
+part C2 field Value = 100n @ sch dec-7_caps_per_pin.kicad_sch
+part C2 flag dnp = no @ sch dec-7_caps_per_pin.kicad_sch
+part C2 flag exclude_from_sim = no @ sch dec-7_caps_per_pin.kicad_sch
+part C2 flag in_bom = yes @ sch dec-7_caps_per_pin.kicad_sch
+part C2 flag on_board = yes @ sch dec-7_caps_per_pin.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid dec00007-0000-4000-8000-000000000048 line 249 at 255,30 rot 0
+part C2 value = text 100n @ sch dec-7_caps_per_pin.kicad_sch note "from the Value field"
+part C3 field Value = 100n @ sch dec-7_caps_per_pin.kicad_sch
+part C3 flag dnp = no @ sch dec-7_caps_per_pin.kicad_sch
+part C3 flag exclude_from_sim = no @ sch dec-7_caps_per_pin.kicad_sch
+part C3 flag in_bom = yes @ sch dec-7_caps_per_pin.kicad_sch
+part C3 flag on_board = yes @ sch dec-7_caps_per_pin.kicad_sch
+part C3 lib Device:C sheet / symbol Device:C
+part C3 unit 1 sheet / uuid dec00007-0000-4000-8000-000000000055 line 271 at 300,30 rot 0
+part C3 value = text 100n @ sch dec-7_caps_per_pin.kicad_sch note "from the Value field"
+part C4 field Value = 100n @ sch dec-7_caps_per_pin.kicad_sch
+part C4 flag dnp = no @ sch dec-7_caps_per_pin.kicad_sch
+part C4 flag exclude_from_sim = no @ sch dec-7_caps_per_pin.kicad_sch
+part C4 flag in_bom = yes @ sch dec-7_caps_per_pin.kicad_sch
+part C4 flag on_board = yes @ sch dec-7_caps_per_pin.kicad_sch
+part C4 lib Device:C sheet / symbol Device:C
+part C4 unit 1 sheet / uuid dec00007-0000-4000-8000-000000000062 line 293 at 345,30 rot 0
+part C4 value = text 100n @ sch dec-7_caps_per_pin.kicad_sch note "from the Value field"
+part C5 field Value = 100n @ sch dec-7_caps_per_pin.kicad_sch
+part C5 flag dnp = no @ sch dec-7_caps_per_pin.kicad_sch
+part C5 flag exclude_from_sim = no @ sch dec-7_caps_per_pin.kicad_sch
+part C5 flag in_bom = yes @ sch dec-7_caps_per_pin.kicad_sch
+part C5 flag on_board = yes @ sch dec-7_caps_per_pin.kicad_sch
+part C5 lib Device:C sheet / symbol Device:C
+part C5 unit 1 sheet / uuid dec00007-0000-4000-8000-000000000079 line 345 at 75,80 rot 0
+part C5 value = text 100n @ sch dec-7_caps_per_pin.kicad_sch note "from the Value field"
+part C6 field Value = 100n @ sch dec-7_caps_per_pin.kicad_sch
+part C6 flag dnp = no @ sch dec-7_caps_per_pin.kicad_sch
+part C6 flag exclude_from_sim = no @ sch dec-7_caps_per_pin.kicad_sch
+part C6 flag in_bom = yes @ sch dec-7_caps_per_pin.kicad_sch
+part C6 flag on_board = yes @ sch dec-7_caps_per_pin.kicad_sch
+part C6 lib Device:C sheet / symbol Device:C
+part C6 unit 1 sheet / uuid dec00007-0000-4000-8000-000000000086 line 367 at 120,80 rot 0
+part C6 value = text 100n @ sch dec-7_caps_per_pin.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch dec-7_caps_per_pin.kicad_sch
+part J1 flag dnp = no @ sch dec-7_caps_per_pin.kicad_sch
+part J1 flag exclude_from_sim = no @ sch dec-7_caps_per_pin.kicad_sch
+part J1 flag in_bom = yes @ sch dec-7_caps_per_pin.kicad_sch
+part J1 flag on_board = yes @ sch dec-7_caps_per_pin.kicad_sch
+part J1 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J1 unit 1 sheet / uuid dec00007-0000-4000-8000-000000000001 line 107 at 30,30 rot 0
+part J1 value = text PWR @ sch dec-7_caps_per_pin.kicad_sch note "from the Value field"
+part U1 field Value = MCU4 @ sch dec-7_caps_per_pin.kicad_sch
+part U1 flag dnp = no @ sch dec-7_caps_per_pin.kicad_sch
+part U1 flag exclude_from_sim = no @ sch dec-7_caps_per_pin.kicad_sch
+part U1 flag in_bom = yes @ sch dec-7_caps_per_pin.kicad_sch
+part U1 flag on_board = yes @ sch dec-7_caps_per_pin.kicad_sch
+part U1 lib MCU_Fixture:MCU4 sheet / symbol MCU_Fixture:MCU4
+part U1 unit 1 sheet / uuid dec00007-0000-4000-8000-000000000011 line 137 at 75,30 rot 0
+part U1 value = text MCU4 @ sch dec-7_caps_per_pin.kicad_sch note "from the Value field"
+part U2 field Value = Flash @ sch dec-7_caps_per_pin.kicad_sch
+part U2 flag dnp = no @ sch dec-7_caps_per_pin.kicad_sch
+part U2 flag exclude_from_sim = no @ sch dec-7_caps_per_pin.kicad_sch
+part U2 flag in_bom = yes @ sch dec-7_caps_per_pin.kicad_sch
+part U2 flag on_board = yes @ sch dec-7_caps_per_pin.kicad_sch
+part U2 lib Memory_Flash:Flash sheet / symbol Memory_Flash:Flash
+part U2 unit 1 sheet / uuid dec00007-0000-4000-8000-000000000027 line 183 at 120,30 rot 0
+part U2 value = text Flash @ sch dec-7_caps_per_pin.kicad_sch note "from the Value field"
+part U3 field Value = CANXCVR @ sch dec-7_caps_per_pin.kicad_sch
+part U3 flag dnp = no @ sch dec-7_caps_per_pin.kicad_sch
+part U3 flag exclude_from_sim = no @ sch dec-7_caps_per_pin.kicad_sch
+part U3 flag in_bom = yes @ sch dec-7_caps_per_pin.kicad_sch
+part U3 flag on_board = yes @ sch dec-7_caps_per_pin.kicad_sch
+part U3 lib Interface_CAN_LIN:CANXCVR sheet / symbol Interface_CAN_LIN:CANXCVR
+part U3 unit 1 sheet / uuid dec00007-0000-4000-8000-000000000034 line 205 at 165,30 rot 0
+part U3 value = text CANXCVR @ sch dec-7_caps_per_pin.kicad_sch note "from the Value field"
+part U4 field Value = Sensor2 @ sch dec-7_caps_per_pin.kicad_sch
+part U4 flag dnp = no @ sch dec-7_caps_per_pin.kicad_sch
+part U4 flag exclude_from_sim = no @ sch dec-7_caps_per_pin.kicad_sch
+part U4 flag in_bom = yes @ sch dec-7_caps_per_pin.kicad_sch
+part U4 flag on_board = yes @ sch dec-7_caps_per_pin.kicad_sch
+part U4 lib Fixture:Sensor2 sheet / symbol Fixture:Sensor2
+part U4 unit 1 sheet / uuid dec00007-0000-4000-8000-000000000069 line 315 at 30,80 rot 0
+part U4 value = text Sensor2 @ sch dec-7_caps_per_pin.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +3V3
+pin C1 1 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin C2 1 name "" unit 1 net +3V3
+pin C2 1 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin C3 1 name "" unit 1 net +3V3
+pin C3 1 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin C3 2 name "" unit 1 net GND
+pin C3 2 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin C4 1 name "" unit 1 net +3V3
+pin C4 1 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin C4 2 name "" unit 1 net GND
+pin C4 2 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin C5 1 name "" unit 1 net +1V8
+pin C5 1 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin C5 2 name "" unit 1 net GND
+pin C5 2 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin C6 1 name "" unit 1 net +1V8
+pin C6 1 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin C6 2 name "" unit 1 net GND
+pin C6 2 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +3V3
+pin J1 1 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin J1 2 name Pin_2 unit 1 net +1V8
+pin J1 2 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin J1 3 name Pin_3 unit 1 net GND
+pin J1 3 type = passive @ sch dec-7_caps_per_pin.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch dec-7_caps_per_pin.kicad_sch
+pin U1 2 name VDD unit 1 net +3V3
+pin U1 2 type = power_in @ sch dec-7_caps_per_pin.kicad_sch
+pin U1 3 name VDD unit 1 net +3V3
+pin U1 3 type = power_in @ sch dec-7_caps_per_pin.kicad_sch
+pin U1 4 name VDD unit 1 net +3V3
+pin U1 4 type = power_in @ sch dec-7_caps_per_pin.kicad_sch
+pin U1 5 name VSS unit 1 net GND
+pin U1 5 type = power_in @ sch dec-7_caps_per_pin.kicad_sch
+pin U2 1 name VCC unit 1 net +3V3
+pin U2 1 type = power_in @ sch dec-7_caps_per_pin.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch dec-7_caps_per_pin.kicad_sch
+pin U3 1 name VCC unit 1 net +3V3
+pin U3 1 type = power_in @ sch dec-7_caps_per_pin.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch dec-7_caps_per_pin.kicad_sch
+pin U4 1 name VDD unit 1 net +1V8
+pin U4 1 type = power_in @ sch dec-7_caps_per_pin.kicad_sch
+pin U4 2 name VDD unit 1 net +1V8
+pin U4 2 type = power_in @ sch dec-7_caps_per_pin.kicad_sch
+pin U4 3 name GND unit 1 net GND
+pin U4 3 type = power_in @ sch dec-7_caps_per_pin.kicad_sch
+sheet / name "" file dec-7_caps_per_pin.kicad_sch uuid /
+source file dec-7_caps_per_pin.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x03 description "Generic connector"
+symbol Connector_Generic:Conn_01x03 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x03 field Reference J
+symbol Connector_Generic:Conn_01x03 field Value Conn_01x03
+symbol Connector_Generic:Conn_01x03 hash 9d4e8088cbdbe420
+symbol Connector_Generic:Conn_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x03 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Fixture:Sensor2 description "Temperature sensor"
+symbol Fixture:Sensor2 field Description "Temperature sensor"
+symbol Fixture:Sensor2 field Reference U
+symbol Fixture:Sensor2 field Value Sensor2
+symbol Fixture:Sensor2 hash 359e6db7ab4075bd
+symbol Fixture:Sensor2 pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:Sensor2 pin 2 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:Sensor2 pin 3 unit 1 body 1 name GND type power_in style line
+symbol Fixture:Sensor2 units 1
+symbol Interface_CAN_LIN:CANXCVR description "CAN transceiver"
+symbol Interface_CAN_LIN:CANXCVR field Description "CAN transceiver"
+symbol Interface_CAN_LIN:CANXCVR field Reference U
+symbol Interface_CAN_LIN:CANXCVR field Value CANXCVR
+symbol Interface_CAN_LIN:CANXCVR hash 5fa52637187bcad2
+symbol Interface_CAN_LIN:CANXCVR pin 1 unit 1 body 1 name VCC type power_in style line
+symbol Interface_CAN_LIN:CANXCVR pin 2 unit 1 body 1 name GND type power_in style line
+symbol Interface_CAN_LIN:CANXCVR units 1
+symbol MCU_Fixture:MCU4 description "Fixture microcontroller"
+symbol MCU_Fixture:MCU4 field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU4 field Reference U
+symbol MCU_Fixture:MCU4 field Value MCU4
+symbol MCU_Fixture:MCU4 hash 6a58f124d75e7497
+symbol MCU_Fixture:MCU4 pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU4 pin 2 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU4 pin 3 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU4 pin 4 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU4 pin 5 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU4 units 1
+symbol Memory_Flash:Flash description "SPI flash"
+symbol Memory_Flash:Flash field Description "SPI flash"
+symbol Memory_Flash:Flash field Reference U
+symbol Memory_Flash:Flash field Value Flash
+symbol Memory_Flash:Flash hash d708d352e8ef0f69
+symbol Memory_Flash:Flash pin 1 unit 1 body 1 name VCC type power_in style line
+symbol Memory_Flash:Flash pin 2 unit 1 body 1 name GND type power_in style line
+symbol Memory_Flash:Flash units 1
+symbol power:+1V8 description "Power symbol +1V8"
+symbol power:+1V8 field Description "Power symbol +1V8"
+symbol power:+1V8 field Reference "#PWR"
+symbol power:+1V8 field Value +1V8
+symbol power:+1V8 hash a241c49db20b5bea
+symbol power:+1V8 pin 1 unit 1 body 1 name +1V8 type power_in style line
+symbol power:+1V8 units 1 power global
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

@@ -1,0 +1,130 @@
+board dec-12_reversed_polarized
+label / power +12V at 24.92,22.38 net +12V
+label / power +12V at 75,26.19 net +12V
+label / power +12V at 165,26.19 net +12V
+label / power -5V at 24.92,24.92 net -5V
+label / power -5V at 120,26.19 net -5V
+label / power -5V at 210,33.81 net -5V
+label / power GND at 24.92,27.46 net GND
+label / power GND at 75,33.81 net GND
+label / power GND at 120,33.81 net GND
+label / power GND at 165,33.81 net GND
+label / power GND at 210,26.19 net GND
+net +12V class = Default @ sch dec-12_reversed_polarized.kicad_sch note "effective net class"
+net +12V kind power
+net -5V class = Default @ sch dec-12_reversed_polarized.kicad_sch note "effective net class"
+net -5V kind power
+net GND class = Default @ sch dec-12_reversed_polarized.kicad_sch note "effective net class"
+net GND kind power
+part C1 field Value = 47u @ sch dec-12_reversed_polarized.kicad_sch
+part C1 flag dnp = no @ sch dec-12_reversed_polarized.kicad_sch
+part C1 flag exclude_from_sim = no @ sch dec-12_reversed_polarized.kicad_sch
+part C1 flag in_bom = yes @ sch dec-12_reversed_polarized.kicad_sch
+part C1 flag on_board = yes @ sch dec-12_reversed_polarized.kicad_sch
+part C1 lib Device:C_Polarized sheet / symbol Device:C_Polarized
+part C1 unit 1 sheet / uuid dec00012-0000-4000-8000-000000000011 line 100 at 75,30 rot 0
+part C1 value = text 47u @ sch dec-12_reversed_polarized.kicad_sch note "from the Value field"
+part C2 field Value = 47u @ sch dec-12_reversed_polarized.kicad_sch
+part C2 flag dnp = no @ sch dec-12_reversed_polarized.kicad_sch
+part C2 flag exclude_from_sim = no @ sch dec-12_reversed_polarized.kicad_sch
+part C2 flag in_bom = yes @ sch dec-12_reversed_polarized.kicad_sch
+part C2 flag on_board = yes @ sch dec-12_reversed_polarized.kicad_sch
+part C2 lib Device:C_Polarized sheet / symbol Device:C_Polarized
+part C2 unit 1 sheet / uuid dec00012-0000-4000-8000-000000000018 line 122 at 120,30 rot 0
+part C2 value = text 47u @ sch dec-12_reversed_polarized.kicad_sch note "from the Value field"
+part C3 field Value = 47u @ sch dec-12_reversed_polarized.kicad_sch
+part C3 flag dnp = no @ sch dec-12_reversed_polarized.kicad_sch
+part C3 flag exclude_from_sim = no @ sch dec-12_reversed_polarized.kicad_sch
+part C3 flag in_bom = yes @ sch dec-12_reversed_polarized.kicad_sch
+part C3 flag on_board = yes @ sch dec-12_reversed_polarized.kicad_sch
+part C3 lib Device:CP sheet / symbol Device:CP
+part C3 unit 1 sheet / uuid dec00012-0000-4000-8000-000000000025 line 144 at 165,30 rot 0
+part C3 value = text 47u @ sch dec-12_reversed_polarized.kicad_sch note "from the Value field"
+part C4 field Value = 47u @ sch dec-12_reversed_polarized.kicad_sch
+part C4 flag dnp = no @ sch dec-12_reversed_polarized.kicad_sch
+part C4 flag exclude_from_sim = no @ sch dec-12_reversed_polarized.kicad_sch
+part C4 flag in_bom = yes @ sch dec-12_reversed_polarized.kicad_sch
+part C4 flag on_board = yes @ sch dec-12_reversed_polarized.kicad_sch
+part C4 lib Device:C_Polarized sheet / symbol Device:C_Polarized
+part C4 unit 1 sheet / uuid dec00012-0000-4000-8000-000000000032 line 166 at 210,30 rot 0
+part C4 value = text 47u @ sch dec-12_reversed_polarized.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch dec-12_reversed_polarized.kicad_sch
+part J1 flag dnp = no @ sch dec-12_reversed_polarized.kicad_sch
+part J1 flag exclude_from_sim = no @ sch dec-12_reversed_polarized.kicad_sch
+part J1 flag in_bom = yes @ sch dec-12_reversed_polarized.kicad_sch
+part J1 flag on_board = yes @ sch dec-12_reversed_polarized.kicad_sch
+part J1 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J1 unit 1 sheet / uuid dec00012-0000-4000-8000-000000000001 line 70 at 30,30 rot 0
+part J1 value = text PWR @ sch dec-12_reversed_polarized.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +12V
+pin C1 1 type = passive @ sch dec-12_reversed_polarized.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch dec-12_reversed_polarized.kicad_sch
+pin C2 1 name "" unit 1 net -5V
+pin C2 1 type = passive @ sch dec-12_reversed_polarized.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch dec-12_reversed_polarized.kicad_sch
+pin C3 1 name - unit 1 net +12V
+pin C3 1 type = passive @ sch dec-12_reversed_polarized.kicad_sch
+pin C3 2 name + unit 1 net GND
+pin C3 2 type = passive @ sch dec-12_reversed_polarized.kicad_sch
+pin C4 1 name "" unit 1 net GND
+pin C4 1 type = passive @ sch dec-12_reversed_polarized.kicad_sch
+pin C4 2 name "" unit 1 net -5V
+pin C4 2 type = passive @ sch dec-12_reversed_polarized.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +12V
+pin J1 1 type = passive @ sch dec-12_reversed_polarized.kicad_sch
+pin J1 2 name Pin_2 unit 1 net -5V
+pin J1 2 type = passive @ sch dec-12_reversed_polarized.kicad_sch
+pin J1 3 name Pin_3 unit 1 net GND
+pin J1 3 type = passive @ sch dec-12_reversed_polarized.kicad_sch
+sheet / name "" file dec-12_reversed_polarized.kicad_sch uuid /
+source file dec-12_reversed_polarized.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x03 description "Generic connector"
+symbol Connector_Generic:Conn_01x03 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x03 field Reference J
+symbol Connector_Generic:Conn_01x03 field Value Conn_01x03
+symbol Connector_Generic:Conn_01x03 hash 9d4e8088cbdbe420
+symbol Connector_Generic:Conn_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x03 units 1
+symbol Device:CP description "Polarized capacitor"
+symbol Device:CP field Description "Polarized capacitor"
+symbol Device:CP field Reference C
+symbol Device:CP field Value CP
+symbol Device:CP hash b7c5a16ef48bbcb4
+symbol Device:CP pin 1 unit 1 body 1 name - type passive style line
+symbol Device:CP pin 2 unit 1 body 1 name + type passive style line
+symbol Device:CP units 1
+symbol Device:C_Polarized description "Polarized capacitor"
+symbol Device:C_Polarized field Description "Polarized capacitor"
+symbol Device:C_Polarized field Reference C
+symbol Device:C_Polarized field Value C_Polarized
+symbol Device:C_Polarized hash 4715d104940be009
+symbol Device:C_Polarized pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C_Polarized pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C_Polarized units 1
+symbol power:+12V description "Power symbol +12V"
+symbol power:+12V field Description "Power symbol +12V"
+symbol power:+12V field Reference "#PWR"
+symbol power:+12V field Value +12V
+symbol power:+12V hash d7b0720d7961ef78
+symbol power:+12V pin 1 unit 1 body 1 name +12V type power_in style line
+symbol power:+12V units 1 power global
+symbol power:-5V description "Power symbol -5V"
+symbol power:-5V field Description "Power symbol -5V"
+symbol power:-5V field Reference "#PWR"
+symbol power:-5V field Value -5V
+symbol power:-5V hash 712a4c7e80841b04
+symbol power:-5V pin 1 unit 1 body 1 name -5V type power_in style line
+symbol power:-5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

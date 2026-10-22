@@ -1,1 +1,29 @@
 # What better_erc finds on io-1_inputs.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[not_run]]
+check = "DEC-1"
+need = "rails"
+
+[[not_run]]
+check = "DEC-10"
+need = "rails"
+
+[[not_run]]
+check = "DEC-11"
+need = "rails"
+
+[[not_run]]
+check = "DEC-12"
+need = "rails"
+
+[[not_run]]
+check = "DEC-4"
+need = "rails"
+
+[[not_run]]
+check = "DEC-7"
+need = "rails"
+
+[[not_run]]
+check = "DEC-8"
+need = "rails"

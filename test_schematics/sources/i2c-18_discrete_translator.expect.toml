@@ -1,5 +1,17 @@
 # What better_erc finds on i2c-18_discrete_translator.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DEC-1"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V"]
+
+[[finding]]
 check = "I2C-1"
 subjects = ["net /SCL_1V8", "net /SDA_1V8"]

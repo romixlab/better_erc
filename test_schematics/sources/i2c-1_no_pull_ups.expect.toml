@@ -1,6 +1,10 @@
 # What better_erc finds on i2c-1_no_pull_ups.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "DEC-1"
+subjects = ["net VCC"]
+
+[[finding]]
 check = "I2C-1"
 subjects = ["net /SCL1", "net /SDA1"]
 
@@ -11,3 +15,7 @@ subjects = ["net /I2C1_EN", "net /SCL2", "net /SDA2", "part R201", "part R202"]
 [[finding]]
 check = "I2C-3"
 subjects = ["net /I2C3_P", "net /SCL3", "net /SDA3", "part R203", "part R204"]
+
+[[not_run]]
+check = "DEC-12"
+need = "rail voltages"

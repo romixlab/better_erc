@@ -1,0 +1,186 @@
+board dec-10_unsourced_bypass
+label / local AIN1 at 67.38,27.46 net /AIN1
+label / local AIN2 at 112.38,27.46 net /AIN2
+label / local AIN3 at 247.38,27.46 net /AIN3
+label / local AOUT1 at 67.38,30 net /AOUT1
+label / local AOUT2 at 112.38,30 net /AOUT2
+label / local AOUT3 at 247.38,30 net /AOUT3
+label / power +5V0_FLT at 67.38,22.38 net +5V0_FLT
+label / power +5V0_FLT at 112.38,22.38 net +5V0_FLT
+label / power +5V0_FLT at 165,26.19 net +5V0_FLT
+label / power +5V0_FLT at 210,26.19 net +5V0_FLT
+label / power +5V0_USBIN at 24.92,22.38 net +5V0_USBIN
+label / power +5V0_USBIN at 247.38,22.38 net +5V0_USBIN
+label / power +5V0_USBIN at 300,26.19 net +5V0_USBIN
+label / power GND at 24.92,24.92 net GND
+label / power GND at 67.38,24.92 net GND
+label / power GND at 112.38,24.92 net GND
+label / power GND at 165,33.81 net GND
+label / power GND at 210,33.81 net GND
+label / power GND at 247.38,24.92 net GND
+label / power GND at 300,33.81 net GND
+net +5V0_FLT class = Default @ sch dec-10_unsourced_bypass.kicad_sch note "effective net class"
+net +5V0_FLT kind power
+net +5V0_USBIN class = Default @ sch dec-10_unsourced_bypass.kicad_sch note "effective net class"
+net +5V0_USBIN kind power
+net /AIN1 class = Default @ sch dec-10_unsourced_bypass.kicad_sch note "effective net class"
+net /AIN1 kind named
+net /AIN2 class = Default @ sch dec-10_unsourced_bypass.kicad_sch note "effective net class"
+net /AIN2 kind named
+net /AIN3 class = Default @ sch dec-10_unsourced_bypass.kicad_sch note "effective net class"
+net /AIN3 kind named
+net /AOUT1 class = Default @ sch dec-10_unsourced_bypass.kicad_sch note "effective net class"
+net /AOUT1 kind named
+net /AOUT2 class = Default @ sch dec-10_unsourced_bypass.kicad_sch note "effective net class"
+net /AOUT2 kind named
+net /AOUT3 class = Default @ sch dec-10_unsourced_bypass.kicad_sch note "effective net class"
+net /AOUT3 kind named
+net GND class = Default @ sch dec-10_unsourced_bypass.kicad_sch note "effective net class"
+net GND kind power
+part C1 field Value = 100n @ sch dec-10_unsourced_bypass.kicad_sch
+part C1 flag dnp = no @ sch dec-10_unsourced_bypass.kicad_sch
+part C1 flag exclude_from_sim = no @ sch dec-10_unsourced_bypass.kicad_sch
+part C1 flag in_bom = yes @ sch dec-10_unsourced_bypass.kicad_sch
+part C1 flag on_board = yes @ sch dec-10_unsourced_bypass.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid dec00010-0000-4000-8000-000000000030 line 145 at 165,30 rot 0
+part C1 value = text 100n @ sch dec-10_unsourced_bypass.kicad_sch note "from the Value field"
+part C2 field Value = 100n @ sch dec-10_unsourced_bypass.kicad_sch
+part C2 flag dnp = no @ sch dec-10_unsourced_bypass.kicad_sch
+part C2 flag exclude_from_sim = no @ sch dec-10_unsourced_bypass.kicad_sch
+part C2 flag in_bom = yes @ sch dec-10_unsourced_bypass.kicad_sch
+part C2 flag on_board = yes @ sch dec-10_unsourced_bypass.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid dec00010-0000-4000-8000-000000000037 line 167 at 210,30 rot 0
+part C2 value = text 100n @ sch dec-10_unsourced_bypass.kicad_sch note "from the Value field"
+part C3 field Value = 100n @ sch dec-10_unsourced_bypass.kicad_sch
+part C3 flag dnp = no @ sch dec-10_unsourced_bypass.kicad_sch
+part C3 flag exclude_from_sim = no @ sch dec-10_unsourced_bypass.kicad_sch
+part C3 flag in_bom = yes @ sch dec-10_unsourced_bypass.kicad_sch
+part C3 flag on_board = yes @ sch dec-10_unsourced_bypass.kicad_sch
+part C3 lib Device:C sheet / symbol Device:C
+part C3 unit 1 sheet / uuid dec00010-0000-4000-8000-000000000055 line 215 at 300,30 rot 0
+part C3 value = text 100n @ sch dec-10_unsourced_bypass.kicad_sch note "from the Value field"
+part J1 field Value = USB @ sch dec-10_unsourced_bypass.kicad_sch
+part J1 flag dnp = no @ sch dec-10_unsourced_bypass.kicad_sch
+part J1 flag exclude_from_sim = no @ sch dec-10_unsourced_bypass.kicad_sch
+part J1 flag in_bom = yes @ sch dec-10_unsourced_bypass.kicad_sch
+part J1 flag on_board = yes @ sch dec-10_unsourced_bypass.kicad_sch
+part J1 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J1 unit 1 sheet / uuid dec00010-0000-4000-8000-000000000001 line 71 at 30,30 rot 0
+part J1 value = text USB @ sch dec-10_unsourced_bypass.kicad_sch note "from the Value field"
+part U1 field Value = OPA @ sch dec-10_unsourced_bypass.kicad_sch
+part U1 flag dnp = no @ sch dec-10_unsourced_bypass.kicad_sch
+part U1 flag exclude_from_sim = no @ sch dec-10_unsourced_bypass.kicad_sch
+part U1 flag in_bom = yes @ sch dec-10_unsourced_bypass.kicad_sch
+part U1 flag on_board = yes @ sch dec-10_unsourced_bypass.kicad_sch
+part U1 lib Amplifier_Operational:OPA sheet / symbol Amplifier_Operational:OPA
+part U1 unit 1 sheet / uuid dec00010-0000-4000-8000-000000000008 line 93 at 75,30 rot 0
+part U1 value = text OPA @ sch dec-10_unsourced_bypass.kicad_sch note "from the Value field"
+part U2 field Value = OPA @ sch dec-10_unsourced_bypass.kicad_sch
+part U2 flag dnp = no @ sch dec-10_unsourced_bypass.kicad_sch
+part U2 flag exclude_from_sim = no @ sch dec-10_unsourced_bypass.kicad_sch
+part U2 flag in_bom = yes @ sch dec-10_unsourced_bypass.kicad_sch
+part U2 flag on_board = yes @ sch dec-10_unsourced_bypass.kicad_sch
+part U2 lib Amplifier_Operational:OPA sheet / symbol Amplifier_Operational:OPA
+part U2 unit 1 sheet / uuid dec00010-0000-4000-8000-000000000019 line 119 at 120,30 rot 0
+part U2 value = text OPA @ sch dec-10_unsourced_bypass.kicad_sch note "from the Value field"
+part U3 field Value = OPA @ sch dec-10_unsourced_bypass.kicad_sch
+part U3 flag dnp = no @ sch dec-10_unsourced_bypass.kicad_sch
+part U3 flag exclude_from_sim = no @ sch dec-10_unsourced_bypass.kicad_sch
+part U3 flag in_bom = yes @ sch dec-10_unsourced_bypass.kicad_sch
+part U3 flag on_board = yes @ sch dec-10_unsourced_bypass.kicad_sch
+part U3 lib Amplifier_Operational:OPA sheet / symbol Amplifier_Operational:OPA
+part U3 unit 1 sheet / uuid dec00010-0000-4000-8000-000000000044 line 189 at 255,30 rot 0
+part U3 value = text OPA @ sch dec-10_unsourced_bypass.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +5V0_FLT
+pin C1 1 type = passive @ sch dec-10_unsourced_bypass.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch dec-10_unsourced_bypass.kicad_sch
+pin C2 1 name "" unit 1 net +5V0_FLT
+pin C2 1 type = passive @ sch dec-10_unsourced_bypass.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch dec-10_unsourced_bypass.kicad_sch
+pin C3 1 name "" unit 1 net +5V0_USBIN
+pin C3 1 type = passive @ sch dec-10_unsourced_bypass.kicad_sch
+pin C3 2 name "" unit 1 net GND
+pin C3 2 type = passive @ sch dec-10_unsourced_bypass.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +5V0_USBIN
+pin J1 1 type = passive @ sch dec-10_unsourced_bypass.kicad_sch
+pin J1 2 name Pin_2 unit 1 net GND
+pin J1 2 type = passive @ sch dec-10_unsourced_bypass.kicad_sch
+pin U1 1 name V+ unit 1 net +5V0_FLT
+pin U1 1 type = power_in @ sch dec-10_unsourced_bypass.kicad_sch
+pin U1 2 name V- unit 1 net GND
+pin U1 2 type = power_in @ sch dec-10_unsourced_bypass.kicad_sch
+pin U1 3 name + unit 1 net /AIN1
+pin U1 3 type = input @ sch dec-10_unsourced_bypass.kicad_sch
+pin U1 4 name OUT unit 1 net /AOUT1
+pin U1 4 type = output @ sch dec-10_unsourced_bypass.kicad_sch
+pin U2 1 name V+ unit 1 net +5V0_FLT
+pin U2 1 type = power_in @ sch dec-10_unsourced_bypass.kicad_sch
+pin U2 2 name V- unit 1 net GND
+pin U2 2 type = power_in @ sch dec-10_unsourced_bypass.kicad_sch
+pin U2 3 name + unit 1 net /AIN2
+pin U2 3 type = input @ sch dec-10_unsourced_bypass.kicad_sch
+pin U2 4 name OUT unit 1 net /AOUT2
+pin U2 4 type = output @ sch dec-10_unsourced_bypass.kicad_sch
+pin U3 1 name V+ unit 1 net +5V0_USBIN
+pin U3 1 type = power_in @ sch dec-10_unsourced_bypass.kicad_sch
+pin U3 2 name V- unit 1 net GND
+pin U3 2 type = power_in @ sch dec-10_unsourced_bypass.kicad_sch
+pin U3 3 name + unit 1 net /AIN3
+pin U3 3 type = input @ sch dec-10_unsourced_bypass.kicad_sch
+pin U3 4 name OUT unit 1 net /AOUT3
+pin U3 4 type = output @ sch dec-10_unsourced_bypass.kicad_sch
+sheet / name "" file dec-10_unsourced_bypass.kicad_sch uuid /
+source file dec-10_unsourced_bypass.kicad_sch
+source tool kicad
+source version 8.0
+symbol Amplifier_Operational:OPA description "Operational amplifier"
+symbol Amplifier_Operational:OPA field Description "Operational amplifier"
+symbol Amplifier_Operational:OPA field Reference U
+symbol Amplifier_Operational:OPA field Value OPA
+symbol Amplifier_Operational:OPA hash 12eabd2cb5174bed
+symbol Amplifier_Operational:OPA pin 1 unit 1 body 1 name V+ type power_in style line
+symbol Amplifier_Operational:OPA pin 2 unit 1 body 1 name V- type power_in style line
+symbol Amplifier_Operational:OPA pin 3 unit 1 body 1 name + type input style line
+symbol Amplifier_Operational:OPA pin 4 unit 1 body 1 name OUT type output style line
+symbol Amplifier_Operational:OPA units 1
+symbol Connector_Generic:Conn_01x02 description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 9d5a102eadbd54ad
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol power:+5V0_FLT description "Power symbol +5V0_FLT"
+symbol power:+5V0_FLT field Description "Power symbol +5V0_FLT"
+symbol power:+5V0_FLT field Reference "#PWR"
+symbol power:+5V0_FLT field Value +5V0_FLT
+symbol power:+5V0_FLT hash d75fb4dd87a1e275
+symbol power:+5V0_FLT pin 1 unit 1 body 1 name +5V0_FLT type power_in style line
+symbol power:+5V0_FLT units 1 power global
+symbol power:+5V0_USBIN description "Power symbol +5V0_USBIN"
+symbol power:+5V0_USBIN field Description "Power symbol +5V0_USBIN"
+symbol power:+5V0_USBIN field Reference "#PWR"
+symbol power:+5V0_USBIN field Value +5V0_USBIN
+symbol power:+5V0_USBIN hash 91db933420ce9d88
+symbol power:+5V0_USBIN pin 1 unit 1 body 1 name +5V0_USBIN type power_in style line
+symbol power:+5V0_USBIN units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

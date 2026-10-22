@@ -1,0 +1,230 @@
+board dec-4_ferrite_beads
+label / local CLK_IN at 345,26.19 net /CLK_IN
+label / local CLK_OUT at 345,33.81 net /CLK_OUT
+label / local SENSE_IN at 292.38,27.46 net /SENSE_IN
+label / power +3V3 at 67.38,27.46 net +3V3
+label / power +3V3 at 165,26.19 net +3V3
+label / power +3V3 at 210,26.19 net +3V3
+label / power +3V3_A at 210,33.81 net +3V3_A
+label / power +3V3_A at 255,26.19 net +3V3_A
+label / power +3V3_A at 292.38,22.38 net +3V3_A
+label / power +5V at 24.92,22.38 net +5V
+label / power +5V at 67.38,22.38 net +5V
+label / power +5V at 120,26.19 net +5V
+label / power GND at 24.92,24.92 net GND
+label / power GND at 30,76.19 net GND
+label / power GND at 67.38,24.92 net GND
+label / power GND at 120,33.81 net GND
+label / power GND at 165,33.81 net GND
+label / power GND at 255,33.81 net GND
+label / power GND at 292.38,24.92 net GND
+label / power GNDA at 30,83.81 net GNDA
+net +3V3 class = Default @ sch dec-4_ferrite_beads.kicad_sch note "effective net class"
+net +3V3 kind power
+net +3V3_A class = Default @ sch dec-4_ferrite_beads.kicad_sch note "effective net class"
+net +3V3_A kind power
+net +5V class = Default @ sch dec-4_ferrite_beads.kicad_sch note "effective net class"
+net +5V kind power
+net /CLK_IN class = Default @ sch dec-4_ferrite_beads.kicad_sch note "effective net class"
+net /CLK_IN kind named
+net /CLK_OUT class = Default @ sch dec-4_ferrite_beads.kicad_sch note "effective net class"
+net /CLK_OUT kind named
+net /SENSE_IN class = Default @ sch dec-4_ferrite_beads.kicad_sch note "effective net class"
+net /SENSE_IN kind named
+net GND class = Default @ sch dec-4_ferrite_beads.kicad_sch note "effective net class"
+net GND kind power
+net GNDA class = Default @ sch dec-4_ferrite_beads.kicad_sch note "effective net class"
+net GNDA kind power
+part C1 field Value = 1u @ sch dec-4_ferrite_beads.kicad_sch
+part C1 flag dnp = no @ sch dec-4_ferrite_beads.kicad_sch
+part C1 flag exclude_from_sim = no @ sch dec-4_ferrite_beads.kicad_sch
+part C1 flag in_bom = yes @ sch dec-4_ferrite_beads.kicad_sch
+part C1 flag on_board = yes @ sch dec-4_ferrite_beads.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid dec00004-0000-4000-8000-000000000018 line 165 at 120,30 rot 0
+part C1 value = text 1u @ sch dec-4_ferrite_beads.kicad_sch note "from the Value field"
+part C2 field Value = 1u @ sch dec-4_ferrite_beads.kicad_sch
+part C2 flag dnp = no @ sch dec-4_ferrite_beads.kicad_sch
+part C2 flag exclude_from_sim = no @ sch dec-4_ferrite_beads.kicad_sch
+part C2 flag in_bom = yes @ sch dec-4_ferrite_beads.kicad_sch
+part C2 flag on_board = yes @ sch dec-4_ferrite_beads.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid dec00004-0000-4000-8000-000000000025 line 187 at 165,30 rot 0
+part C2 value = text 1u @ sch dec-4_ferrite_beads.kicad_sch note "from the Value field"
+part C3 field Value = 1u @ sch dec-4_ferrite_beads.kicad_sch
+part C3 flag dnp = no @ sch dec-4_ferrite_beads.kicad_sch
+part C3 flag exclude_from_sim = no @ sch dec-4_ferrite_beads.kicad_sch
+part C3 flag in_bom = yes @ sch dec-4_ferrite_beads.kicad_sch
+part C3 flag on_board = yes @ sch dec-4_ferrite_beads.kicad_sch
+part C3 lib Device:C sheet / symbol Device:C
+part C3 unit 1 sheet / uuid dec00004-0000-4000-8000-000000000039 line 231 at 255,30 rot 0
+part C3 value = text 1u @ sch dec-4_ferrite_beads.kicad_sch note "from the Value field"
+part FB1 field Value = 600R @ sch dec-4_ferrite_beads.kicad_sch
+part FB1 flag dnp = no @ sch dec-4_ferrite_beads.kicad_sch
+part FB1 flag exclude_from_sim = no @ sch dec-4_ferrite_beads.kicad_sch
+part FB1 flag in_bom = yes @ sch dec-4_ferrite_beads.kicad_sch
+part FB1 flag on_board = yes @ sch dec-4_ferrite_beads.kicad_sch
+part FB1 lib Device:FerriteBead sheet / symbol Device:FerriteBead
+part FB1 unit 1 sheet / uuid dec00004-0000-4000-8000-000000000032 line 209 at 210,30 rot 0
+part FB1 value = qty 600 ohm @ sch dec-4_ferrite_beads.kicad_sch note "from the Value field"
+part FB2 field Value = 600R @ sch dec-4_ferrite_beads.kicad_sch
+part FB2 flag dnp = no @ sch dec-4_ferrite_beads.kicad_sch
+part FB2 flag exclude_from_sim = no @ sch dec-4_ferrite_beads.kicad_sch
+part FB2 flag in_bom = yes @ sch dec-4_ferrite_beads.kicad_sch
+part FB2 flag on_board = yes @ sch dec-4_ferrite_beads.kicad_sch
+part FB2 lib Device:FerriteBead sheet / symbol Device:FerriteBead
+part FB2 unit 1 sheet / uuid dec00004-0000-4000-8000-000000000055 line 277 at 345,30 rot 0
+part FB2 value = qty 600 ohm @ sch dec-4_ferrite_beads.kicad_sch note "from the Value field"
+part FB3 field Value = 600R @ sch dec-4_ferrite_beads.kicad_sch
+part FB3 flag dnp = no @ sch dec-4_ferrite_beads.kicad_sch
+part FB3 flag exclude_from_sim = no @ sch dec-4_ferrite_beads.kicad_sch
+part FB3 flag in_bom = yes @ sch dec-4_ferrite_beads.kicad_sch
+part FB3 flag on_board = yes @ sch dec-4_ferrite_beads.kicad_sch
+part FB3 lib Device:FerriteBead sheet / symbol Device:FerriteBead
+part FB3 unit 1 sheet / uuid dec00004-0000-4000-8000-000000000060 line 287 at 30,80 rot 0
+part FB3 value = qty 600 ohm @ sch dec-4_ferrite_beads.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch dec-4_ferrite_beads.kicad_sch
+part J1 flag dnp = no @ sch dec-4_ferrite_beads.kicad_sch
+part J1 flag exclude_from_sim = no @ sch dec-4_ferrite_beads.kicad_sch
+part J1 flag in_bom = yes @ sch dec-4_ferrite_beads.kicad_sch
+part J1 flag on_board = yes @ sch dec-4_ferrite_beads.kicad_sch
+part J1 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J1 unit 1 sheet / uuid dec00004-0000-4000-8000-000000000001 line 113 at 30,30 rot 0
+part J1 value = text PWR @ sch dec-4_ferrite_beads.kicad_sch note "from the Value field"
+part U1 field Value = LDO @ sch dec-4_ferrite_beads.kicad_sch
+part U1 flag dnp = no @ sch dec-4_ferrite_beads.kicad_sch
+part U1 flag exclude_from_sim = no @ sch dec-4_ferrite_beads.kicad_sch
+part U1 flag in_bom = yes @ sch dec-4_ferrite_beads.kicad_sch
+part U1 flag on_board = yes @ sch dec-4_ferrite_beads.kicad_sch
+part U1 lib Regulator_Linear:LDO sheet / symbol Regulator_Linear:LDO
+part U1 unit 1 sheet / uuid dec00004-0000-4000-8000-000000000008 line 135 at 75,30 rot 0
+part U1 value = text LDO @ sch dec-4_ferrite_beads.kicad_sch note "from the Value field"
+part U2 field Value = ADC @ sch dec-4_ferrite_beads.kicad_sch
+part U2 flag dnp = no @ sch dec-4_ferrite_beads.kicad_sch
+part U2 flag exclude_from_sim = no @ sch dec-4_ferrite_beads.kicad_sch
+part U2 flag in_bom = yes @ sch dec-4_ferrite_beads.kicad_sch
+part U2 flag on_board = yes @ sch dec-4_ferrite_beads.kicad_sch
+part U2 lib Analog_Fixture:ADC sheet / symbol Analog_Fixture:ADC
+part U2 unit 1 sheet / uuid dec00004-0000-4000-8000-000000000046 line 253 at 300,30 rot 0
+part U2 value = text ADC @ sch dec-4_ferrite_beads.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +5V
+pin C1 1 type = passive @ sch dec-4_ferrite_beads.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch dec-4_ferrite_beads.kicad_sch
+pin C2 1 name "" unit 1 net +3V3
+pin C2 1 type = passive @ sch dec-4_ferrite_beads.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch dec-4_ferrite_beads.kicad_sch
+pin C3 1 name "" unit 1 net +3V3_A
+pin C3 1 type = passive @ sch dec-4_ferrite_beads.kicad_sch
+pin C3 2 name "" unit 1 net GND
+pin C3 2 type = passive @ sch dec-4_ferrite_beads.kicad_sch
+pin FB1 1 name "" unit 1 net +3V3
+pin FB1 1 type = passive @ sch dec-4_ferrite_beads.kicad_sch
+pin FB1 2 name "" unit 1 net +3V3_A
+pin FB1 2 type = passive @ sch dec-4_ferrite_beads.kicad_sch
+pin FB2 1 name "" unit 1 net /CLK_IN
+pin FB2 1 type = passive @ sch dec-4_ferrite_beads.kicad_sch
+pin FB2 2 name "" unit 1 net /CLK_OUT
+pin FB2 2 type = passive @ sch dec-4_ferrite_beads.kicad_sch
+pin FB3 1 name "" unit 1 net GND
+pin FB3 1 type = passive @ sch dec-4_ferrite_beads.kicad_sch
+pin FB3 2 name "" unit 1 net GNDA
+pin FB3 2 type = passive @ sch dec-4_ferrite_beads.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +5V
+pin J1 1 type = passive @ sch dec-4_ferrite_beads.kicad_sch
+pin J1 2 name Pin_2 unit 1 net GND
+pin J1 2 type = passive @ sch dec-4_ferrite_beads.kicad_sch
+pin U1 1 name VI unit 1 net +5V
+pin U1 1 type = power_in @ sch dec-4_ferrite_beads.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch dec-4_ferrite_beads.kicad_sch
+pin U1 3 name VO unit 1 net +3V3
+pin U1 3 type = power_out @ sch dec-4_ferrite_beads.kicad_sch
+pin U2 1 name AVDD unit 1 net +3V3_A
+pin U2 1 type = power_in @ sch dec-4_ferrite_beads.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch dec-4_ferrite_beads.kicad_sch
+pin U2 3 name AIN unit 1 net /SENSE_IN
+pin U2 3 type = input @ sch dec-4_ferrite_beads.kicad_sch
+sheet / name "" file dec-4_ferrite_beads.kicad_sch uuid /
+source file dec-4_ferrite_beads.kicad_sch
+source tool kicad
+source version 8.0
+symbol Analog_Fixture:ADC description "analog to digital converter"
+symbol Analog_Fixture:ADC field Description "analog to digital converter"
+symbol Analog_Fixture:ADC field Reference U
+symbol Analog_Fixture:ADC field Value ADC
+symbol Analog_Fixture:ADC hash 6f0ba6a23e52ab5f
+symbol Analog_Fixture:ADC pin 1 unit 1 body 1 name AVDD type power_in style line
+symbol Analog_Fixture:ADC pin 2 unit 1 body 1 name GND type power_in style line
+symbol Analog_Fixture:ADC pin 3 unit 1 body 1 name AIN type input style line
+symbol Analog_Fixture:ADC units 1
+symbol Connector_Generic:Conn_01x02 description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 9d5a102eadbd54ad
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:FerriteBead description "Ferrite bead"
+symbol Device:FerriteBead field Description "Ferrite bead"
+symbol Device:FerriteBead field Reference FB
+symbol Device:FerriteBead field Value FerriteBead
+symbol Device:FerriteBead hash 80acd11562c9b610
+symbol Device:FerriteBead pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:FerriteBead pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:FerriteBead units 1
+symbol Regulator_Linear:LDO description "Low dropout regulator"
+symbol Regulator_Linear:LDO field Description "Low dropout regulator"
+symbol Regulator_Linear:LDO field Reference U
+symbol Regulator_Linear:LDO field Value LDO
+symbol Regulator_Linear:LDO hash 689b53487341f293
+symbol Regulator_Linear:LDO pin 1 unit 1 body 1 name VI type power_in style line
+symbol Regulator_Linear:LDO pin 2 unit 1 body 1 name GND type power_in style line
+symbol Regulator_Linear:LDO pin 3 unit 1 body 1 name VO type power_out style line
+symbol Regulator_Linear:LDO units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+3V3_A description "Power symbol +3V3_A"
+symbol power:+3V3_A field Description "Power symbol +3V3_A"
+symbol power:+3V3_A field Reference "#PWR"
+symbol power:+3V3_A field Value +3V3_A
+symbol power:+3V3_A hash cac8e9b52d0bdb07
+symbol power:+3V3_A pin 1 unit 1 body 1 name +3V3_A type power_in style line
+symbol power:+3V3_A units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global
+symbol power:GNDA description "Power symbol GNDA"
+symbol power:GNDA field Description "Power symbol GNDA"
+symbol power:GNDA field Reference "#PWR"
+symbol power:GNDA field Value GNDA
+symbol power:GNDA hash 90c656514ba6d976
+symbol power:GNDA pin 1 unit 1 body 1 name GNDA type power_in style line
+symbol power:GNDA units 1 power global
