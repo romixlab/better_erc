@@ -1,0 +1,311 @@
+board leak-1_rail_dividers
+label / local DIV_EN at 284.48,83.82 net /DIV_EN
+label / local FB_NET at 99.06,90.17 net /FB_NET
+label / local FB_NET at 147.32,82.55 net /FB_NET
+label / local FB_NET at 332.74,55.88 net /FB_NET
+label / local ISENSE at 187.96,55.88 net /ISENSE
+label / local REF_MID at 99.06,54.61 net /REF_MID
+label / local REF_MID at 147.32,46.99 net /REF_MID
+label / local REF_MID at 187.96,53.34 net /REF_MID
+label / local SW1 at 50.8,82.55 net /SW1
+label / local SW1 at 332.74,53.34 net /SW1
+label / local SW_LOW at 243.84,90.17 net /SW_LOW
+label / local SW_LOW at 284.48,88.9 net /SW_LOW
+label / local SW_MID at 195.58,90.17 net /SW_MID
+label / local SW_MID at 243.84,82.55 net /SW_MID
+label / local VSENSE at 243.84,54.61 net /VSENSE
+label / local VSENSE at 292.1,46.99 net /VSENSE
+label / power +1V8 at 50.8,90.17 net +1V8
+label / power +1V8 at 99.06,82.55 net +1V8
+label / power +3V3 at 43.18,50.8 net +3V3
+label / power +3V3 at 99.06,46.99 net +3V3
+label / power +3V3 at 187.96,48.26 net +3V3
+label / power +3V3 at 195.58,82.55 net +3V3
+label / power +3V3 at 243.84,46.99 net +3V3
+label / power +5V at 43.18,48.26 net +5V
+label / power +5V at 332.74,48.26 net +5V
+label / power GND at 43.18,53.34 net GND
+label / power GND at 147.32,54.61 net GND
+label / power GND at 147.32,90.17 net GND
+label / power GND at 187.96,50.8 net GND
+label / power GND at 284.48,86.36 net GND
+label / power GND at 292.1,54.61 net GND
+label / power GND at 332.74,50.8 net GND
+net +1V8 class = Default @ sch leak-1_rail_dividers.kicad_sch note "effective net class"
+net +1V8 kind power
+net +3V3 class = Default @ sch leak-1_rail_dividers.kicad_sch note "effective net class"
+net +3V3 kind power
+net +5V class = Default @ sch leak-1_rail_dividers.kicad_sch note "effective net class"
+net +5V kind power
+net /DIV_EN class = Default @ sch leak-1_rail_dividers.kicad_sch note "effective net class"
+net /DIV_EN kind named
+net /FB_NET class = Default @ sch leak-1_rail_dividers.kicad_sch note "effective net class"
+net /FB_NET kind named
+net /ISENSE class = Default @ sch leak-1_rail_dividers.kicad_sch note "effective net class"
+net /ISENSE kind named
+net /REF_MID class = Default @ sch leak-1_rail_dividers.kicad_sch note "effective net class"
+net /REF_MID kind named
+net /SW1 class = Default @ sch leak-1_rail_dividers.kicad_sch note "effective net class"
+net /SW1 kind named
+net /SW_LOW class = Default @ sch leak-1_rail_dividers.kicad_sch note "effective net class"
+net /SW_LOW kind named
+net /SW_MID class = Default @ sch leak-1_rail_dividers.kicad_sch note "effective net class"
+net /SW_MID kind named
+net /VSENSE class = Default @ sch leak-1_rail_dividers.kicad_sch note "effective net class"
+net /VSENSE kind named
+net GND class = Default @ sch leak-1_rail_dividers.kicad_sch note "effective net class"
+net GND kind power
+part J1 field Value = PWR @ sch leak-1_rail_dividers.kicad_sch
+part J1 flag dnp = no @ sch leak-1_rail_dividers.kicad_sch
+part J1 flag exclude_from_sim = no @ sch leak-1_rail_dividers.kicad_sch
+part J1 flag in_bom = yes @ sch leak-1_rail_dividers.kicad_sch
+part J1 flag on_board = yes @ sch leak-1_rail_dividers.kicad_sch
+part J1 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J1 unit 1 sheet / uuid 1ea10001-0000-4000-8000-000000000001 line 118 at 50.8,50.8 rot 0
+part J1 value = text PWR @ sch leak-1_rail_dividers.kicad_sch note "from the Value field"
+part L1 field Value = 2.2u @ sch leak-1_rail_dividers.kicad_sch
+part L1 flag dnp = no @ sch leak-1_rail_dividers.kicad_sch
+part L1 flag exclude_from_sim = no @ sch leak-1_rail_dividers.kicad_sch
+part L1 flag in_bom = yes @ sch leak-1_rail_dividers.kicad_sch
+part L1 flag on_board = yes @ sch leak-1_rail_dividers.kicad_sch
+part L1 lib Device:L sheet / symbol Device:L
+part L1 unit 1 sheet / uuid 1ea10001-0000-4000-8000-000000000057 line 264 at 50.8,86.36 rot 0
+part L1 value = text 2.2u @ sch leak-1_rail_dividers.kicad_sch note "from the Value field"
+part Q1 field Value = 2N7002 @ sch leak-1_rail_dividers.kicad_sch
+part Q1 flag dnp = no @ sch leak-1_rail_dividers.kicad_sch
+part Q1 flag exclude_from_sim = no @ sch leak-1_rail_dividers.kicad_sch
+part Q1 flag in_bom = yes @ sch leak-1_rail_dividers.kicad_sch
+part Q1 flag on_board = yes @ sch leak-1_rail_dividers.kicad_sch
+part Q1 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q1 unit 1 sheet / uuid 1ea10001-0000-4000-8000-000000000086 line 338 at 292.1,86.36 rot 0
+part Q1 value = text 2N7002 @ sch leak-1_rail_dividers.kicad_sch note "from the Value field"
+part R1 field Value = 1k @ sch leak-1_rail_dividers.kicad_sch
+part R1 flag dnp = no @ sch leak-1_rail_dividers.kicad_sch
+part R1 flag exclude_from_sim = no @ sch leak-1_rail_dividers.kicad_sch
+part R1 flag in_bom = yes @ sch leak-1_rail_dividers.kicad_sch
+part R1 flag on_board = yes @ sch leak-1_rail_dividers.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 1ea10001-0000-4000-8000-000000000011 line 148 at 99.06,50.8 rot 0
+part R1 value = text 1k @ sch leak-1_rail_dividers.kicad_sch note "from the Value field"
+part R2 field Value = 1k @ sch leak-1_rail_dividers.kicad_sch
+part R2 flag dnp = no @ sch leak-1_rail_dividers.kicad_sch
+part R2 flag exclude_from_sim = no @ sch leak-1_rail_dividers.kicad_sch
+part R2 flag in_bom = yes @ sch leak-1_rail_dividers.kicad_sch
+part R2 flag on_board = yes @ sch leak-1_rail_dividers.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 1ea10001-0000-4000-8000-000000000017 line 164 at 147.32,50.8 rot 0
+part R2 value = text 1k @ sch leak-1_rail_dividers.kicad_sch note "from the Value field"
+part R3 field Value = 1M @ sch leak-1_rail_dividers.kicad_sch
+part R3 flag dnp = no @ sch leak-1_rail_dividers.kicad_sch
+part R3 flag exclude_from_sim = no @ sch leak-1_rail_dividers.kicad_sch
+part R3 flag in_bom = yes @ sch leak-1_rail_dividers.kicad_sch
+part R3 flag on_board = yes @ sch leak-1_rail_dividers.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid 1ea10001-0000-4000-8000-000000000034 line 206 at 243.84,50.8 rot 0
+part R3 value = text 1M @ sch leak-1_rail_dividers.kicad_sch note "from the Value field"
+part R4 field Value = 1M @ sch leak-1_rail_dividers.kicad_sch
+part R4 flag dnp = no @ sch leak-1_rail_dividers.kicad_sch
+part R4 flag exclude_from_sim = no @ sch leak-1_rail_dividers.kicad_sch
+part R4 flag in_bom = yes @ sch leak-1_rail_dividers.kicad_sch
+part R4 flag on_board = yes @ sch leak-1_rail_dividers.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid 1ea10001-0000-4000-8000-000000000040 line 222 at 292.1,50.8 rot 0
+part R4 value = text 1M @ sch leak-1_rail_dividers.kicad_sch note "from the Value field"
+part R5 field Value = 10k @ sch leak-1_rail_dividers.kicad_sch
+part R5 flag dnp = no @ sch leak-1_rail_dividers.kicad_sch
+part R5 flag exclude_from_sim = no @ sch leak-1_rail_dividers.kicad_sch
+part R5 flag in_bom = yes @ sch leak-1_rail_dividers.kicad_sch
+part R5 flag on_board = yes @ sch leak-1_rail_dividers.kicad_sch
+part R5 lib Device:R sheet / symbol Device:R
+part R5 unit 1 sheet / uuid 1ea10001-0000-4000-8000-000000000063 line 280 at 99.06,86.36 rot 0
+part R5 value = text 10k @ sch leak-1_rail_dividers.kicad_sch note "from the Value field"
+part R6 field Value = 10k @ sch leak-1_rail_dividers.kicad_sch
+part R6 flag dnp = no @ sch leak-1_rail_dividers.kicad_sch
+part R6 flag exclude_from_sim = no @ sch leak-1_rail_dividers.kicad_sch
+part R6 flag in_bom = yes @ sch leak-1_rail_dividers.kicad_sch
+part R6 flag on_board = yes @ sch leak-1_rail_dividers.kicad_sch
+part R6 lib Device:R sheet / symbol Device:R
+part R6 unit 1 sheet / uuid 1ea10001-0000-4000-8000-000000000069 line 296 at 147.32,86.36 rot 0
+part R6 value = text 10k @ sch leak-1_rail_dividers.kicad_sch note "from the Value field"
+part R7 field Value = 1k @ sch leak-1_rail_dividers.kicad_sch
+part R7 flag dnp = no @ sch leak-1_rail_dividers.kicad_sch
+part R7 flag exclude_from_sim = no @ sch leak-1_rail_dividers.kicad_sch
+part R7 flag in_bom = yes @ sch leak-1_rail_dividers.kicad_sch
+part R7 flag on_board = yes @ sch leak-1_rail_dividers.kicad_sch
+part R7 lib Device:R sheet / symbol Device:R
+part R7 unit 1 sheet / uuid 1ea10001-0000-4000-8000-000000000075 line 312 at 195.58,86.36 rot 0
+part R7 value = text 1k @ sch leak-1_rail_dividers.kicad_sch note "from the Value field"
+part R8 field Value = 1k @ sch leak-1_rail_dividers.kicad_sch
+part R8 flag dnp = no @ sch leak-1_rail_dividers.kicad_sch
+part R8 flag exclude_from_sim = no @ sch leak-1_rail_dividers.kicad_sch
+part R8 flag in_bom = yes @ sch leak-1_rail_dividers.kicad_sch
+part R8 flag on_board = yes @ sch leak-1_rail_dividers.kicad_sch
+part R8 lib Device:R sheet / symbol Device:R
+part R8 unit 1 sheet / uuid 1ea10001-0000-4000-8000-000000000081 line 328 at 243.84,86.36 rot 0
+part R8 value = text 1k @ sch leak-1_rail_dividers.kicad_sch note "from the Value field"
+part U1 field Value = INA181 @ sch leak-1_rail_dividers.kicad_sch
+part U1 flag dnp = no @ sch leak-1_rail_dividers.kicad_sch
+part U1 flag exclude_from_sim = no @ sch leak-1_rail_dividers.kicad_sch
+part U1 flag in_bom = yes @ sch leak-1_rail_dividers.kicad_sch
+part U1 flag on_board = yes @ sch leak-1_rail_dividers.kicad_sch
+part U1 lib Amplifier_Current:INA181_Test sheet / symbol Amplifier_Current:INA181_Test
+part U1 unit 1 sheet / uuid 1ea10001-0000-4000-8000-000000000023 line 180 at 195.58,50.8 rot 0
+part U1 value = text INA181 @ sch leak-1_rail_dividers.kicad_sch note "from the Value field"
+part U2 field Value = TPS62A01 @ sch leak-1_rail_dividers.kicad_sch
+part U2 flag dnp = no @ sch leak-1_rail_dividers.kicad_sch
+part U2 flag exclude_from_sim = no @ sch leak-1_rail_dividers.kicad_sch
+part U2 flag in_bom = yes @ sch leak-1_rail_dividers.kicad_sch
+part U2 flag on_board = yes @ sch leak-1_rail_dividers.kicad_sch
+part U2 lib Regulator_Switching:Buck_Test sheet / symbol Regulator_Switching:Buck_Test
+part U2 unit 1 sheet / uuid 1ea10001-0000-4000-8000-000000000046 line 238 at 340.36,50.8 rot 0
+part U2 value = text TPS62A01 @ sch leak-1_rail_dividers.kicad_sch note "from the Value field"
+pin J1 1 name Pin_1 unit 1 net +5V
+pin J1 1 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin J1 2 name Pin_2 unit 1 net +3V3
+pin J1 2 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin J1 3 name Pin_3 unit 1 net GND
+pin J1 3 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin L1 1 name "" unit 1 net /SW1
+pin L1 1 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin L1 2 name "" unit 1 net +1V8
+pin L1 2 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin Q1 1 name G unit 1 net /DIV_EN
+pin Q1 1 type = input @ sch leak-1_rail_dividers.kicad_sch
+pin Q1 2 name S unit 1 net GND
+pin Q1 2 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin Q1 3 name D unit 1 net /SW_LOW
+pin Q1 3 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R1 1 name "" unit 1 net +3V3
+pin R1 1 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R1 2 name "" unit 1 net /REF_MID
+pin R1 2 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R2 1 name "" unit 1 net /REF_MID
+pin R2 1 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R2 2 name "" unit 1 net GND
+pin R2 2 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R3 1 name "" unit 1 net +3V3
+pin R3 1 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R3 2 name "" unit 1 net /VSENSE
+pin R3 2 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R4 1 name "" unit 1 net /VSENSE
+pin R4 1 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R4 2 name "" unit 1 net GND
+pin R4 2 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R5 1 name "" unit 1 net +1V8
+pin R5 1 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R5 2 name "" unit 1 net /FB_NET
+pin R5 2 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R6 1 name "" unit 1 net /FB_NET
+pin R6 1 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R6 2 name "" unit 1 net GND
+pin R6 2 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R7 1 name "" unit 1 net +3V3
+pin R7 1 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R7 2 name "" unit 1 net /SW_MID
+pin R7 2 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R8 1 name "" unit 1 net /SW_MID
+pin R8 1 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin R8 2 name "" unit 1 net /SW_LOW
+pin R8 2 type = passive @ sch leak-1_rail_dividers.kicad_sch
+pin U1 1 name VS unit 1 net +3V3
+pin U1 1 type = power_in @ sch leak-1_rail_dividers.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch leak-1_rail_dividers.kicad_sch
+pin U1 3 name REF unit 1 net /REF_MID
+pin U1 3 type = input @ sch leak-1_rail_dividers.kicad_sch
+pin U1 4 name OUT unit 1 net /ISENSE
+pin U1 4 type = output @ sch leak-1_rail_dividers.kicad_sch
+pin U2 1 name VIN unit 1 net +5V
+pin U2 1 type = power_in @ sch leak-1_rail_dividers.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch leak-1_rail_dividers.kicad_sch
+pin U2 3 name SW unit 1 net /SW1
+pin U2 3 type = output @ sch leak-1_rail_dividers.kicad_sch
+pin U2 4 name FB unit 1 net /FB_NET
+pin U2 4 type = input @ sch leak-1_rail_dividers.kicad_sch
+sheet / name "" file leak-1_rail_dividers.kicad_sch uuid /
+source file leak-1_rail_dividers.kicad_sch
+source tool kicad
+source version 8.0
+symbol Amplifier_Current:INA181_Test description "Current sense amplifier, test symbol"
+symbol Amplifier_Current:INA181_Test field Description "Current sense amplifier, test symbol"
+symbol Amplifier_Current:INA181_Test field Reference U
+symbol Amplifier_Current:INA181_Test field Value INA181_Test
+symbol Amplifier_Current:INA181_Test hash 6f50aa0770493c96
+symbol Amplifier_Current:INA181_Test pin 1 unit 1 body 1 name VS type power_in style line
+symbol Amplifier_Current:INA181_Test pin 2 unit 1 body 1 name GND type power_in style line
+symbol Amplifier_Current:INA181_Test pin 3 unit 1 body 1 name REF type input style line
+symbol Amplifier_Current:INA181_Test pin 4 unit 1 body 1 name OUT type output style line
+symbol Amplifier_Current:INA181_Test units 1
+symbol Connector_Generic:Conn_01x03 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x03 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x03 field Reference J
+symbol Connector_Generic:Conn_01x03 field Value Conn_01x03
+symbol Connector_Generic:Conn_01x03 hash a7ec9647f5161425
+symbol Connector_Generic:Conn_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x03 units 1
+symbol Device:L description Inductor
+symbol Device:L field Description Inductor
+symbol Device:L field Reference L
+symbol Device:L field Value L
+symbol Device:L hash c56a8cbe187fa0ce
+symbol Device:L pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:L pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:L units 1
+symbol Device:Q_NMOS_GSD description "N-MOSFET transistor, gate/source/drain"
+symbol Device:Q_NMOS_GSD field Description "N-MOSFET transistor, gate/source/drain"
+symbol Device:Q_NMOS_GSD field Reference Q
+symbol Device:Q_NMOS_GSD field Value Q_NMOS_GSD
+symbol Device:Q_NMOS_GSD hash 06dd853b5ca1d89f
+symbol Device:Q_NMOS_GSD pin 1 unit 1 body 1 name G type input style line
+symbol Device:Q_NMOS_GSD pin 2 unit 1 body 1 name S type passive style line
+symbol Device:Q_NMOS_GSD pin 3 unit 1 body 1 name D type passive style line
+symbol Device:Q_NMOS_GSD units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Regulator_Switching:Buck_Test description "Step-down converter, test symbol"
+symbol Regulator_Switching:Buck_Test field Description "Step-down converter, test symbol"
+symbol Regulator_Switching:Buck_Test field Reference U
+symbol Regulator_Switching:Buck_Test field Value Buck_Test
+symbol Regulator_Switching:Buck_Test hash 81db0e3e9f35e782
+symbol Regulator_Switching:Buck_Test pin 1 unit 1 body 1 name VIN type power_in style line
+symbol Regulator_Switching:Buck_Test pin 2 unit 1 body 1 name GND type power_in style line
+symbol Regulator_Switching:Buck_Test pin 3 unit 1 body 1 name SW type output style line
+symbol Regulator_Switching:Buck_Test pin 4 unit 1 body 1 name FB type input style line
+symbol Regulator_Switching:Buck_Test units 1
+symbol power:+1V8 description "Power symbol +1V8"
+symbol power:+1V8 field Description "Power symbol +1V8"
+symbol power:+1V8 field Reference "#PWR"
+symbol power:+1V8 field Value +1V8
+symbol power:+1V8 hash a241c49db20b5bea
+symbol power:+1V8 pin 1 unit 1 body 1 name +1V8 type power_in style line
+symbol power:+1V8 units 1 power global
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

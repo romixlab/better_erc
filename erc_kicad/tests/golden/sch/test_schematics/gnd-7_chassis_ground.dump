@@ -1,0 +1,194 @@
+board gnd-7_chassis_ground
+label / local ETH_TX_N at 284.48,50.8 net /ETH_TX_N
+label / local ETH_TX_P at 284.48,48.26 net /ETH_TX_P
+label / local SHIELD_ETH at 284.48,53.34 net /SHIELD_ETH
+label / power Chassis at 50.8,83.82 net Chassis
+label / power Chassis at 139.7,53.34 net Chassis
+label / power Chassis at 195.58,46.99 net Chassis
+label / power Chassis at 243.84,46.99 net Chassis
+label / power GND at 43.18,50.8 net GND
+label / power GND at 43.18,53.34 net GND
+label / power GND at 99.06,54.61 net GND
+label / power GND at 139.7,50.8 net GND
+label / power GND at 195.58,54.61 net GND
+label / power GND at 243.84,54.61 net GND
+label / power GND at 340.36,48.26 net GND
+label / power VBUS at 43.18,48.26 net VBUS
+label / power VBUS at 99.06,46.99 net VBUS
+label / power VBUS at 139.7,48.26 net VBUS
+net /ETH_TX_N class = Default @ sch gnd-7_chassis_ground.kicad_sch note "effective net class"
+net /ETH_TX_N kind named
+net /ETH_TX_P class = Default @ sch gnd-7_chassis_ground.kicad_sch note "effective net class"
+net /ETH_TX_P kind named
+net /SHIELD_ETH class = Default @ sch gnd-7_chassis_ground.kicad_sch note "effective net class"
+net /SHIELD_ETH kind named
+net Chassis class = Default @ sch gnd-7_chassis_ground.kicad_sch note "effective net class"
+net Chassis kind power
+net GND class = Default @ sch gnd-7_chassis_ground.kicad_sch note "effective net class"
+net GND kind power
+net VBUS class = Default @ sch gnd-7_chassis_ground.kicad_sch note "effective net class"
+net VBUS kind power
+part C1 field Value = 10u @ sch gnd-7_chassis_ground.kicad_sch
+part C1 flag dnp = no @ sch gnd-7_chassis_ground.kicad_sch
+part C1 flag exclude_from_sim = no @ sch gnd-7_chassis_ground.kicad_sch
+part C1 flag in_bom = yes @ sch gnd-7_chassis_ground.kicad_sch
+part C1 flag on_board = yes @ sch gnd-7_chassis_ground.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 63d70001-0000-4000-8000-000000000011 line 122 at 99.06,50.8 rot 0
+part C1 value = text 10u @ sch gnd-7_chassis_ground.kicad_sch note "from the Value field"
+part C2 field Value = 4.7n @ sch gnd-7_chassis_ground.kicad_sch
+part C2 flag dnp = no @ sch gnd-7_chassis_ground.kicad_sch
+part C2 flag exclude_from_sim = no @ sch gnd-7_chassis_ground.kicad_sch
+part C2 flag in_bom = yes @ sch gnd-7_chassis_ground.kicad_sch
+part C2 flag on_board = yes @ sch gnd-7_chassis_ground.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid 63d70001-0000-4000-8000-000000000035 line 196 at 243.84,50.8 rot 0
+part C2 value = text 4.7n @ sch gnd-7_chassis_ground.kicad_sch note "from the Value field"
+part H1 field Value = MountingHole @ sch gnd-7_chassis_ground.kicad_sch
+part H1 flag dnp = no @ sch gnd-7_chassis_ground.kicad_sch
+part H1 flag exclude_from_sim = no @ sch gnd-7_chassis_ground.kicad_sch
+part H1 flag in_bom = yes @ sch gnd-7_chassis_ground.kicad_sch
+part H1 flag on_board = yes @ sch gnd-7_chassis_ground.kicad_sch
+part H1 lib Mechanical:MountingHole_Pad sheet / symbol Mechanical:MountingHole_Pad
+part H1 unit 1 sheet / uuid 63d70001-0000-4000-8000-000000000049 line 230 at 340.36,50.8 rot 0
+part H1 value = text MountingHole @ sch gnd-7_chassis_ground.kicad_sch note "from the Value field"
+part H2 field Value = MountingHole @ sch gnd-7_chassis_ground.kicad_sch
+part H2 flag dnp = no @ sch gnd-7_chassis_ground.kicad_sch
+part H2 flag exclude_from_sim = no @ sch gnd-7_chassis_ground.kicad_sch
+part H2 flag in_bom = yes @ sch gnd-7_chassis_ground.kicad_sch
+part H2 flag on_board = yes @ sch gnd-7_chassis_ground.kicad_sch
+part H2 lib Mechanical:MountingHole_Pad sheet / symbol Mechanical:MountingHole_Pad
+part H2 unit 1 sheet / uuid 63d70001-0000-4000-8000-000000000053 line 244 at 50.8,86.36 rot 0
+part H2 value = text MountingHole @ sch gnd-7_chassis_ground.kicad_sch note "from the Value field"
+part J1 field Value = USB_C @ sch gnd-7_chassis_ground.kicad_sch
+part J1 flag dnp = no @ sch gnd-7_chassis_ground.kicad_sch
+part J1 flag exclude_from_sim = no @ sch gnd-7_chassis_ground.kicad_sch
+part J1 flag in_bom = yes @ sch gnd-7_chassis_ground.kicad_sch
+part J1 flag on_board = yes @ sch gnd-7_chassis_ground.kicad_sch
+part J1 lib Connector:USB_C_Receptacle_Test sheet / symbol Connector:USB_C_Receptacle_Test
+part J1 unit 1 sheet / uuid 63d70001-0000-4000-8000-000000000001 line 92 at 50.8,50.8 rot 0
+part J1 value = text USB_C @ sch gnd-7_chassis_ground.kicad_sch note "from the Value field"
+part J2 field Value = USB_C @ sch gnd-7_chassis_ground.kicad_sch
+part J2 flag dnp = no @ sch gnd-7_chassis_ground.kicad_sch
+part J2 flag exclude_from_sim = no @ sch gnd-7_chassis_ground.kicad_sch
+part J2 flag in_bom = yes @ sch gnd-7_chassis_ground.kicad_sch
+part J2 flag on_board = yes @ sch gnd-7_chassis_ground.kicad_sch
+part J2 lib Connector:USB_C_Receptacle_Test sheet / symbol Connector:USB_C_Receptacle_Test
+part J2 unit 1 sheet / uuid 63d70001-0000-4000-8000-000000000018 line 144 at 147.32,50.8 rot 0
+part J2 value = text USB_C @ sch gnd-7_chassis_ground.kicad_sch note "from the Value field"
+part J3 field Value = RJ45 @ sch gnd-7_chassis_ground.kicad_sch
+part J3 flag dnp = no @ sch gnd-7_chassis_ground.kicad_sch
+part J3 flag exclude_from_sim = no @ sch gnd-7_chassis_ground.kicad_sch
+part J3 flag in_bom = yes @ sch gnd-7_chassis_ground.kicad_sch
+part J3 flag on_board = yes @ sch gnd-7_chassis_ground.kicad_sch
+part J3 lib Connector:RJ45_Shielded_Test sheet / symbol Connector:RJ45_Shielded_Test
+part J3 unit 1 sheet / uuid 63d70001-0000-4000-8000-000000000042 line 218 at 292.1,50.8 rot 0
+part J3 value = text RJ45 @ sch gnd-7_chassis_ground.kicad_sch note "from the Value field"
+part R1 field Value = 1M @ sch gnd-7_chassis_ground.kicad_sch
+part R1 flag dnp = no @ sch gnd-7_chassis_ground.kicad_sch
+part R1 flag exclude_from_sim = no @ sch gnd-7_chassis_ground.kicad_sch
+part R1 flag in_bom = yes @ sch gnd-7_chassis_ground.kicad_sch
+part R1 flag on_board = yes @ sch gnd-7_chassis_ground.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 63d70001-0000-4000-8000-000000000028 line 174 at 195.58,50.8 rot 0
+part R1 value = text 1M @ sch gnd-7_chassis_ground.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net VBUS
+pin C1 1 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin C2 1 name "" unit 1 net Chassis
+pin C2 1 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin H1 1 name 1 unit 1 net GND
+pin H1 1 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin H2 1 name 1 unit 1 net Chassis
+pin H2 1 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin J1 A9 name VBUS unit 1 net VBUS
+pin J1 A9 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin J1 A12 name GND unit 1 net GND
+pin J1 A12 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin J1 S1 name SHIELD unit 1 net GND
+pin J1 S1 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin J2 A9 name VBUS unit 1 net VBUS
+pin J2 A9 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin J2 A12 name GND unit 1 net GND
+pin J2 A12 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin J2 S1 name SHIELD unit 1 net Chassis
+pin J2 S1 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin J3 1 name TD+ unit 1 net /ETH_TX_P
+pin J3 1 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin J3 2 name TD- unit 1 net /ETH_TX_N
+pin J3 2 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin J3 SH name SHIELD unit 1 net /SHIELD_ETH
+pin J3 SH type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin R1 1 name "" unit 1 net Chassis
+pin R1 1 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+pin R1 2 name "" unit 1 net GND
+pin R1 2 type = passive @ sch gnd-7_chassis_ground.kicad_sch
+sheet / name "" file gnd-7_chassis_ground.kicad_sch uuid /
+source file gnd-7_chassis_ground.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:RJ45_Shielded_Test description "RJ45 connector, shielded, test symbol"
+symbol Connector:RJ45_Shielded_Test field Description "RJ45 connector, shielded, test symbol"
+symbol Connector:RJ45_Shielded_Test field Reference J
+symbol Connector:RJ45_Shielded_Test field Value RJ45_Shielded_Test
+symbol Connector:RJ45_Shielded_Test hash a17fe6018f3bfafe
+symbol Connector:RJ45_Shielded_Test pin 1 unit 1 body 1 name TD+ type passive style line
+symbol Connector:RJ45_Shielded_Test pin 2 unit 1 body 1 name TD- type passive style line
+symbol Connector:RJ45_Shielded_Test pin SH unit 1 body 1 name SHIELD type passive style line
+symbol Connector:RJ45_Shielded_Test units 1
+symbol Connector:USB_C_Receptacle_Test description "USB 2.0 Type-C receptacle, test symbol"
+symbol Connector:USB_C_Receptacle_Test field Description "USB 2.0 Type-C receptacle, test symbol"
+symbol Connector:USB_C_Receptacle_Test field Reference J
+symbol Connector:USB_C_Receptacle_Test field Value USB_C_Receptacle_Test
+symbol Connector:USB_C_Receptacle_Test hash 87097f8f7dd21378
+symbol Connector:USB_C_Receptacle_Test pin A9 unit 1 body 1 name VBUS type passive style line
+symbol Connector:USB_C_Receptacle_Test pin A12 unit 1 body 1 name GND type passive style line
+symbol Connector:USB_C_Receptacle_Test pin S1 unit 1 body 1 name SHIELD type passive style line
+symbol Connector:USB_C_Receptacle_Test units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Mechanical:MountingHole_Pad description "Mounting Hole with connection"
+symbol Mechanical:MountingHole_Pad field Description "Mounting Hole with connection"
+symbol Mechanical:MountingHole_Pad field Reference H
+symbol Mechanical:MountingHole_Pad field Value MountingHole_Pad
+symbol Mechanical:MountingHole_Pad hash 28c87fbef09ad164
+symbol Mechanical:MountingHole_Pad pin 1 unit 1 body 1 name 1 type passive style line
+symbol Mechanical:MountingHole_Pad units 1
+symbol power:Chassis description "Power symbol Chassis"
+symbol power:Chassis field Description "Power symbol Chassis"
+symbol power:Chassis field Reference "#PWR"
+symbol power:Chassis field Value Chassis
+symbol power:Chassis hash 0ea3f27befa8e798
+symbol power:Chassis pin 1 unit 1 body 1 name Chassis type power_in style line
+symbol power:Chassis units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global
+symbol power:VBUS description "Power symbol VBUS"
+symbol power:VBUS field Description "Power symbol VBUS"
+symbol power:VBUS field Reference "#PWR"
+symbol power:VBUS field Value VBUS
+symbol power:VBUS hash 296adfea007b1a14
+symbol power:VBUS pin 1 unit 1 body 1 name VBUS type power_in style line
+symbol power:VBUS units 1 power global

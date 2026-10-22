@@ -30,8 +30,10 @@ mod clk;
 mod dbg;
 mod dec;
 mod drv;
+mod gnd;
 mod i2c;
 mod io;
+mod leak;
 #[path = "lib/mod.rs"]
 mod library;
 mod logic;
@@ -39,6 +41,7 @@ mod mux;
 mod name;
 mod pin;
 mod rail;
+mod seq;
 mod short;
 mod test;
 #[cfg(test)]

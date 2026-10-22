@@ -436,6 +436,10 @@ of the threshold it used.
 | `DRV-12` | a BJT switch with its base on an IC output's net, not pre-biased | `drv-12_base_resistor` |
 | `DRV-14` | a motor, solenoid or transformer switched by a transistor with no freewheel path | `drv-14_inductive_loads` |
 | `DRV-17` | an LED (string) with both ends on stiff nodes, no resistor or LED driver | `drv-17_led_resistor` |
+| `GND-3` | an analog ground joined to the other grounds at no point or at two or more | `gnd-3_split_ground_joints` |
+| `GND-7` | a floating chassis or earth net; a connector shell or mounting hole straight on signal ground | `gnd-7_chassis_ground` |
+| `SEQ-5` | a rail above `min_voltage` (50 V) with capacitors and no bleeder resistor | `seq-5_bleeder` |
+| `LEAK-1` | an always-on resistor divider from a rail to ground drawing over `max_current` (100 µA) | `leak-1_rail_dividers` |
 | `PIN-3` | a connector pin handing a regulated rail out that reaches on-board power pins through passive links only (through a fuse: a suggestion) | `pin-3_unprotected_outputs` |
 | `PIN-4` | a power input reaching a part's power pins with no fuse or eFuse | `pin-4_unfused_inputs` |
 | `PIN-6` | a power input reaching a switching regulator with no ferrite, inductor or capacitor of its own | `pin-6_unfiltered_inputs` |

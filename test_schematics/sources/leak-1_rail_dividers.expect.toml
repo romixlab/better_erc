@@ -1,0 +1,73 @@
+# What better_erc finds on leak-1_rail_dividers.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DRV-7"
+subjects = ["net /SW1", "part U2"]
+
+[[finding]]
+check = "LEAK-1"
+subjects = ["net +3V3", "part R1", "part R2"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +5V", "part J1"]
+
+[[finding]]
+check = "PIN-6"
+subjects = ["net +5V", "part J1", "part U2"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /DIV_EN", "pin Q1.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /ISENSE", "pin U1.4"]
+
+[[finding]]
+check = "WIRE-13"
+subjects = ["net /SW1", "pin U2.3"]

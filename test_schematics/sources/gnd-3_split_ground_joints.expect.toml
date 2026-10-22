@@ -1,0 +1,81 @@
+# What better_erc finds on gnd-3_split_ground_joints.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net AGND_ADC"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net AGND_ADC"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U3"]
+
+[[finding]]
+check = "GND-3"
+subjects = ["net AGND", "net GND", "part FB1", "part NT1", "part U1"]
+
+[[finding]]
+check = "GND-3"
+subjects = ["net GND", "net GNDA"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
+check = "RAIL-19"
+subjects = ["net +3V3", "part U1", "part U3"]
+
+[[finding]]
+check = "SHORT-3"
+subjects = ["net AGND", "net GND", "part FB1", "part NT1"]
+
+[[finding]]
+check = "SHORT-5"
+subjects = ["net AGND_ADC", "part U3", "pin U3.2"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.5"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U3", "pin U3.5"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net AGND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net AGND_ADC"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GNDA"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /AIN0", "pin U1.5"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /AIN2", "pin U3.5"]
+
+[[finding]]
+check = "WIRE-14"
+subjects = ["net AGND_ADC", "part U3", "pin U3.2"]

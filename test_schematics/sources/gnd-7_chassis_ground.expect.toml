@@ -1,0 +1,49 @@
+# What better_erc finds on gnd-7_chassis_ground.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net VBUS"]
+
+[[finding]]
+check = "GND-7"
+subjects = ["net /SHIELD_ETH"]
+
+[[finding]]
+check = "GND-7"
+subjects = ["net GND", "part H1"]
+
+[[finding]]
+check = "GND-7"
+subjects = ["net GND", "part J1"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board gnd-7_chassis_ground"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /SHIELD_ETH"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net Chassis"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net VBUS"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /ETH_TX_N", "pin J3.2"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /ETH_TX_P", "pin J3.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SHIELD_ETH", "pin J3.SH"]

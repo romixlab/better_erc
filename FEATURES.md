@@ -325,6 +325,15 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   or the switch · `drv/drv_14.rs`, `drv-14_inductive_loads`. Missing: loads behind connectors (the project file, `CFG-2`)
 - ✅ `DRV-17` LED or LED string with both ends straight on a rail, ground, IC pin or transistor: no resistor or current
   limit · `drv/drv_17.rs`, `drv-17_led_resistor`. Missing: LEDs of more than two pins (RGB, addressable)
+- ✅ `GND-3` Analog ground joined to the digital, signal or power grounds by zero or by two or more parts (net tie,
+  jumper, 0 Ω, ferrite, inductor, an IC with pins on both) · `gnd/gnd_3.rs`, `gnd-3_split_ground_joints`. Missing: a
+  project saying the grounds are one plane by naming only (`CFG-2`)
+- ✅ `GND-7` Chassis or earth net joined to no signal ground (floating); connector shell pins or mounting-hole pads
+  straight on a signal ground · `gnd/gnd_7.rs`, `gnd-7_chassis_ground`
+- ✅ `SEQ-5` Rail above `min_voltage` (50 V) with capacitors to ground and no resistor chain (an LED with its resistor
+  counts) to discharge them; the capacitance and stored energy in the message · `seq/seq_5.rs`, `seq-5_bleeder`
+- ✅ `LEAK-1` Two or more resistors in series from a rail to a ground (no switch, no regulator feedback tap) drawing
+  more than `max_current` (100 µA) · `leak/leak_1.rs`, `leak-1_rail_dividers`
 - ✅ `PIN-3` Connector pin handing out a regulated rail (or a USB, barrel or battery input passed on to a header) that
   reaches on-board power pins through passive links only, no load switch or eFuse; through a fuse on every way a
   suggestion · `pin/pin_3.rs`, `pin-3_unprotected_outputs`
