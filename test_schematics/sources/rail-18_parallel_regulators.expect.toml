@@ -1,0 +1,85 @@
+# What better_erc finds on rail-18_parallel_regulators.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-10"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +2V5"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_A"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_B"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_OR"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "RAIL-18"
+subjects = ["net +1V8", "part U3", "part U4"]
+
+[[finding]]
+check = "RAIL-18"
+subjects = ["net +3V3", "part U1", "part U2"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +2V5"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_A"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_B"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_OR"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-13"
+subjects = ["net /SW1", "pin U3.3"]
+
+[[finding]]
+check = "WIRE-13"
+subjects = ["net /SW2", "pin U4.3"]

@@ -36,6 +36,7 @@ mod library;
 mod logic;
 mod mux;
 mod name;
+mod rail;
 mod short;
 mod test;
 #[cfg(test)]

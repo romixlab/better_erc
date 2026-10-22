@@ -5,6 +5,8 @@
 //! - [`class`]: part classes (resistor, P-channel MOSFET, buck regulator) with the rule that decided each.
 //! - [`value`]: each part's Value field read in its class's unit, as a variant mounts it, with tolerance,
 //!   ratings and E-series.
+//! - [`feed`]: power feeds: the source pins of each net (regulator and load-switch outputs, connectors,
+//!   batteries) and the two-terminal parts that carry power between nets.
 //! - [`graph`]: connectivity queries (parts on nets, nets of parts, chains of parts between two nets).
 //! - [`i2c`]: the I2C bus recogniser: buses, pull-ups, ties, translators, segments.
 //! - [`pin_name`]: the debug, bus and control functions a pin name states (`PA13/JTMS-SWDIO`, `USART1_TX`).
@@ -23,6 +25,7 @@ pub mod access;
 pub mod analog;
 pub mod class;
 pub mod drawing;
+pub mod feed;
 pub mod graph;
 pub mod i2c;
 pub mod names;
@@ -34,6 +37,7 @@ pub mod supply;
 pub mod value;
 
 pub use class::{ClassCoverage, ClassSource, PartClass, PartClasses};
+pub use feed::Feeds;
 pub use i2c::I2cBuses;
 pub use power::{Ground, GroundGroup, GroundKind, Power, PowerOptions, Rail, RailKind};
 pub use value::{PartValue, Values};

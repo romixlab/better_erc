@@ -1,0 +1,122 @@
+# What better_erc finds on rail-19_unfiltered_analog_supply.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1", "part U2", "part U4"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +2V5_REF"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_A"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_AN"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_VDDA"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-4"
+subjects = ["net +3V3", "net +3V3_A", "part FB1"]
+confidence = "estimate"
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U1"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U2"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U4"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3_AN", "part U5"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3_VDDA", "part U2"]
+
+[[finding]]
+check = "RAIL-19"
+subjects = ["net +3V3", "net +3V3_VDDA", "part R1", "part U2"]
+
+[[finding]]
+check = "RAIL-19"
+subjects = ["net +3V3", "part U1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U4", "pin U4.4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U5", "pin U5.3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U7", "pin U7.3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +2V5_REF"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_A"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_AN"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_VDDA"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /AIN0", "pin U5.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /AIN1", "pin U7.3"]

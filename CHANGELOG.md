@@ -11,6 +11,11 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- Power checks with test schematics (`<id>_<slug>`): RAIL-1, RAIL-5, RAIL-18, RAIL-19. `erc_analysis::feed`: the
+  source pins of each net and the two-terminal links that carry power (`Ctx::feeds`).
+
 ## [0.4.6] - 2026-10-22
 
 ### Added

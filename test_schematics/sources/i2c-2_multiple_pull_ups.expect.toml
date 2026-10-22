@@ -81,6 +81,20 @@ check = "NAME-7"
 subjects = ["board i2c-2_multiple_pull_ups"]
 
 [[finding]]
+check = "RAIL-19"
+subjects = ["net VCC_3V3", "part U501"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net VCC_1V8"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net VCC_3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U501", "pin U501.1", "pin U501.10", "pin U501.11", "pin U501.12", "pin U501.13", "pin U501.14", "pin U501.19", "pin U501.2", "pin U501.20", "pin U501.3", "pin U501.4", "pin U501.6", "pin U501.7", "pin U501.8", "pin U501.9"]
 

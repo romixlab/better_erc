@@ -1,0 +1,95 @@
+# What better_erc finds on rail-1_unpowered_pins.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_FLT"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_OPA"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V_ISO"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net unconnected-(U2-VCC-Pad1)"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3_OPA"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V_ISO"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net unconnected-(U2-VCC-Pad1)"]
+
+[[finding]]
+check = "DEC-4"
+subjects = ["net +3V3", "net +3V3_FLT", "part FB1"]
+confidence = "estimate"
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net +3V3_OPA", "part U4"]
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net /VDD_EN", "part U3"]
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net unconnected-(U2-VCC-Pad1)", "part U2"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +5V_ISO"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "SHORT-11"
+subjects = ["net /SENSE", "part U2", "part U3", "part U4", "part U5", "part U6", "part U7", "pin U2.3", "pin U3.3", "pin U4.4", "pin U5.3", "pin U6.3", "pin U7.3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U4", "pin U4.1"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_FLT"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_OPA"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V_ISO"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net unconnected-(U2-VCC-Pad1)"]

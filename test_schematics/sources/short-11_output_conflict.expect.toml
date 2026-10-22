@@ -21,6 +21,11 @@ check = "DEC-1"
 subjects = ["net +3V3"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "SHORT-11"
 subjects = ["net /REF_CLK", "part U1", "part X1", "pin U1.1", "pin X1.3"]
 

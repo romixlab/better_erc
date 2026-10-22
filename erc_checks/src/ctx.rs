@@ -5,7 +5,7 @@
 use crate::finding::FindingBuilder;
 use crate::meta::{CheckMeta, Need, Severity};
 use erc_analysis::drawing::Drawing;
-use erc_analysis::{I2cBuses, PartClasses, Power, Values};
+use erc_analysis::{Feeds, I2cBuses, PartClasses, Power, Values};
 use erc_model::{Board, BoardId, Design, PartId, Provenance, VariantId, View};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
@@ -193,6 +193,7 @@ pub struct Ctx<'a> {
     classes: OnceLock<PartClasses>,
     values: OnceLock<Values>,
     power: OnceLock<Power>,
+    feeds: OnceLock<Feeds>,
     i2c: OnceLock<I2cBuses>,
     drawing: OnceLock<Drawing>,
 }
@@ -212,6 +213,7 @@ impl<'a> Ctx<'a> {
             classes: OnceLock::new(),
             values: OnceLock::new(),
             power: OnceLock::new(),
+            feeds: OnceLock::new(),
             i2c: OnceLock::new(),
             drawing: OnceLock::new(),
         }
@@ -247,6 +249,13 @@ impl<'a> Ctx<'a> {
     pub fn power(&self) -> &Power {
         self.power
             .get_or_init(|| Power::of(self.view(), self.classes(), self.values()))
+    }
+
+    /// The source pins of each net and the parts that carry power between nets, in the variant checked
+    /// (Need::Rails)
+    pub fn feeds(&self) -> &Feeds {
+        self.feeds
+            .get_or_init(|| Feeds::of(self.view(), self.classes(), self.values(), self.power()))
     }
 
     /// The I2C buses of the parts fitted in the variant checked (Need::Graph, Need::PartClasses)

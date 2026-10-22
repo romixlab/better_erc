@@ -68,6 +68,27 @@ check = "NAME-11"
 subjects = ["net VAUX", "pin U2.4"]
 
 [[finding]]
+check = "RAIL-1"
+subjects = ["net +5V0", "part U1"]
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net -12V", "part U3"]
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net 5V0_NEG", "part U1"]
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net VAUX", "part U2"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +12V"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.4", "pin U1.8"]
 

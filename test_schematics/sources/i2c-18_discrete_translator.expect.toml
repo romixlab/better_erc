@@ -53,6 +53,16 @@ check = "I2C-1"
 subjects = ["net /SCL_1V8", "net /SDA_1V8"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net +1V8"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-4"
 subjects = ["net +1V8"]
 

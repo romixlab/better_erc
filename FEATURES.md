@@ -108,7 +108,11 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   signal, the project file as the third (`NetSource` hook); rail kinds (supply, USB, battery, analog, reference);
   voltage from the name as a derived fact with its rule (sign from a `NEG` marker); ground groups joined through net
   ties, 0 Ω and ferrites, and the links between them · `erc_analysis/src/power.rs`, `test_schematics/analyses/power`.
-  Missing: sources (LDO, DC-DC, connectors), the power tree, power switches, power states (`NET-8`)
+  Feeds (`erc_analysis/src/feed.rs`): the source pins of each net (regulator and load-switch outputs by pin type or
+  `OUT`/`VOUT` name, a regulator's switching node, power-output pins, connector and battery pins) and the two-terminal
+  links that carry power (ferrite, inductor, fuse, resistor with its value, diode anode to cathode only, switch, jumper,
+  net tie, a transistor's D-S or C-E), with `reach` and `fed_by` over them (RAIL, PIN checks).
+  Missing: enables and the power tree with voltages per source, power states (`NET-8`)
 - 🚧 `NET-6` Switching nodes finder: the net between an IC and an inductor that is no ground or rail, by part class;
   switching nodes are no rails · `erc_analysis/src/power.rs`. Missing: the regulator's SW pin by pin role (`NET-7`)
 - 📋 `NET-7` Pin model: digital/analog/power in, out, bidir, open drain; pulls; thresholds vs bank voltage; source
@@ -305,6 +309,15 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - 🚧 `NAME-11` Negative rail with its sign from a marker only or none; negative supply pins on a rail read positive ·
   `name/name_11.rs`, `name-11_negative_rail_names`. Missing: rails a negative regulator feeds (power sources, `NET-5`)
 - ✅ `NAME-12` Unannotated designators, one designator placed twice for one unit · `name/name_12.rs`, `name-12_designators`
+- ✅ `RAIL-1` Power-input pins on a net that joins nothing else (an unconnected pin, a label alone), on a signal net,
+  or on a rail no source reaches (folded into `RAIL-5`) · `rail/rail_1.rs`, `rail-1_unpowered_pins`. Missing: the pins of
+  a power unit never placed (the importer keeps only placed units' pins)
+- ✅ `RAIL-5` Rail with power-input pins and no source: none on it and none behind a ferrite, inductor, fuse, diode,
+  switch, jumper, net tie, transistor or resistor ≤ `max_feed` (100 Ω) · `rail/rail_5.rs`, `rail-5_unsourced_rail`
+- ✅ `RAIL-18` Rail driven by two or more regulators (output pins, or a buck's inductor from its switching node) ·
+  `rail/rail_18.rs`, `rail-18_parallel_regulators`. Missing: parts made for paralleling (LT3080) need part data (`CFG-5`)
+- ✅ `RAIL-19` Analog supply pin (`VDDA`, `AVDD`, `VREF+`) on the net of digital supply pins, or behind 0 Ω, jumpers or
+  net ties only · `rail/rail_19.rs`, `rail-19_unfiltered_analog_supply`
 - ✅ `LIB-14` Unit of a multi-unit symbol not placed, with its floating pins · `lib/lib_14.rs`, `lib-14_unplaced_units`
   (schematics only: the netlist importer keeps no unit per library pin yet)
 - ✅ `LIB-15` IC symbol without power pins (by type or name, hidden ones count) · `lib/lib_15.rs`, `lib-15_no_power_pins`

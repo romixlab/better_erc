@@ -1,0 +1,383 @@
+board rail-18_parallel_regulators
+label / local SW1 at 236.22,53.34 net /SW1
+label / local SW1 at 292.1,46.99 net /SW1
+label / local SW2 at 50.8,82.55 net /SW2
+label / local SW2 at 332.74,53.34 net /SW2
+label / power +1V8 at 50.8,90.17 net +1V8
+label / power +1V8 at 99.06,82.55 net +1V8
+label / power +1V8 at 236.22,55.88 net +1V8
+label / power +1V8 at 292.1,54.61 net +1V8
+label / power +1V8 at 332.74,55.88 net +1V8
+label / power +2V5 at 139.7,88.9 net +2V5
+label / power +2V5 at 195.58,82.55 net +2V5
+label / power +3V3 at 91.44,53.34 net +3V3
+label / power +3V3 at 139.7,53.34 net +3V3
+label / power +3V3 at 195.58,46.99 net +3V3
+label / power +3V3_A at 236.22,88.9 net +3V3_A
+label / power +3V3_A at 340.36,90.17 net +3V3_A
+label / power +3V3_B at 50.8,125.73 net +3V3_B
+label / power +3V3_B at 284.48,88.9 net +3V3_B
+label / power +3V3_OR at 50.8,118.11 net +3V3_OR
+label / power +3V3_OR at 99.06,118.11 net +3V3_OR
+label / power +3V3_OR at 340.36,82.55 net +3V3_OR
+label / power +5V at 50.8,46.99 net +5V
+label / power +5V at 91.44,48.26 net +5V
+label / power +5V at 139.7,48.26 net +5V
+label / power +5V at 139.7,83.82 net +5V
+label / power +5V at 236.22,48.26 net +5V
+label / power +5V at 236.22,83.82 net +5V
+label / power +5V at 284.48,83.82 net +5V
+label / power +5V at 332.74,48.26 net +5V
+label / power GND at 50.8,54.61 net GND
+label / power GND at 91.44,50.8 net GND
+label / power GND at 99.06,90.17 net GND
+label / power GND at 99.06,125.73 net GND
+label / power GND at 139.7,50.8 net GND
+label / power GND at 139.7,86.36 net GND
+label / power GND at 195.58,54.61 net GND
+label / power GND at 195.58,90.17 net GND
+label / power GND at 236.22,50.8 net GND
+label / power GND at 236.22,86.36 net GND
+label / power GND at 284.48,86.36 net GND
+label / power GND at 332.74,50.8 net GND
+net +1V8 class = Default @ sch rail-18_parallel_regulators.kicad_sch note "effective net class"
+net +1V8 kind power
+net +2V5 class = Default @ sch rail-18_parallel_regulators.kicad_sch note "effective net class"
+net +2V5 kind power
+net +3V3 class = Default @ sch rail-18_parallel_regulators.kicad_sch note "effective net class"
+net +3V3 kind power
+net +3V3_A class = Default @ sch rail-18_parallel_regulators.kicad_sch note "effective net class"
+net +3V3_A kind power
+net +3V3_B class = Default @ sch rail-18_parallel_regulators.kicad_sch note "effective net class"
+net +3V3_B kind power
+net +3V3_OR class = Default @ sch rail-18_parallel_regulators.kicad_sch note "effective net class"
+net +3V3_OR kind power
+net +5V class = Default @ sch rail-18_parallel_regulators.kicad_sch note "effective net class"
+net +5V kind power
+net /SW1 class = Default @ sch rail-18_parallel_regulators.kicad_sch note "effective net class"
+net /SW1 kind named
+net /SW2 class = Default @ sch rail-18_parallel_regulators.kicad_sch note "effective net class"
+net /SW2 kind named
+net GND class = Default @ sch rail-18_parallel_regulators.kicad_sch note "effective net class"
+net GND kind power
+part C1 field Value = 1u @ sch rail-18_parallel_regulators.kicad_sch
+part C1 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part C1 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part C1 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part C1 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000028 line 237 at 195.58,50.8 rot 0
+part C1 value = text 1u @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part C2 field Value = 10u @ sch rail-18_parallel_regulators.kicad_sch
+part C2 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part C2 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part C2 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part C2 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000071 line 355 at 99.06,86.36 rot 0
+part C2 value = text 10u @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part C3 field Value = 1u @ sch rail-18_parallel_regulators.kicad_sch
+part C3 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part C3 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part C3 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part C3 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part C3 lib Device:C sheet / symbol Device:C
+part C3 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000088 line 407 at 195.58,86.36 rot 0
+part C3 value = text 1u @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part C4 field Value = 1u @ sch rail-18_parallel_regulators.kicad_sch
+part C4 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part C4 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part C4 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part C4 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part C4 lib Device:C sheet / symbol Device:C
+part C4 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000129 line 533 at 99.06,121.92 rot 0
+part C4 value = text 1u @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part D1 field Value = BAT54 @ sch rail-18_parallel_regulators.kicad_sch
+part D1 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part D1 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part D1 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part D1 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part D1 lib Device:D_Schottky sheet / symbol Device:D_Schottky
+part D1 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000115 line 489 at 340.36,86.36 rot 0
+part D1 value = text BAT54 @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part D2 field Value = BAT54 @ sch rail-18_parallel_regulators.kicad_sch
+part D2 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part D2 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part D2 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part D2 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part D2 lib Device:D_Schottky sheet / symbol Device:D_Schottky
+part D2 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000122 line 511 at 50.8,121.92 rot 0
+part D2 value = text BAT54 @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch rail-18_parallel_regulators.kicad_sch
+part J1 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part J1 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part J1 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part J1 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part J1 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J1 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000001 line 155 at 50.8,50.8 rot 0
+part J1 value = text PWR @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part L1 field Value = 2.2u @ sch rail-18_parallel_regulators.kicad_sch
+part L1 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part L1 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part L1 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part L1 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part L1 lib Device:L sheet / symbol Device:L
+part L1 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000047 line 291 at 292.1,50.8 rot 0
+part L1 value = text 2.2u @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part L2 field Value = 2.2u @ sch rail-18_parallel_regulators.kicad_sch
+part L2 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part L2 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part L2 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part L2 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part L2 lib Device:L sheet / symbol Device:L
+part L2 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000065 line 339 at 50.8,86.36 rot 0
+part L2 value = text 2.2u @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part U1 field Value = TLV70233 @ sch rail-18_parallel_regulators.kicad_sch
+part U1 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part U1 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part U1 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part U1 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part U1 lib Regulator_Linear:LDO_Test sheet / symbol Regulator_Linear:LDO_Test
+part U1 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000008 line 177 at 99.06,50.8 rot 0
+part U1 value = text TLV70233 @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part U2 field Value = TLV70233 @ sch rail-18_parallel_regulators.kicad_sch
+part U2 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part U2 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part U2 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part U2 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part U2 lib Regulator_Linear:LDO_Test sheet / symbol Regulator_Linear:LDO_Test
+part U2 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000018 line 207 at 147.32,50.8 rot 0
+part U2 value = text TLV70233 @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part U3 field Value = TPS62A01 @ sch rail-18_parallel_regulators.kicad_sch
+part U3 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part U3 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part U3 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part U3 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part U3 lib Regulator_Switching:Buck_Test sheet / symbol Regulator_Switching:Buck_Test
+part U3 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000035 line 259 at 243.84,50.8 rot 0
+part U3 value = text TPS62A01 @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part U4 field Value = TPS62A01 @ sch rail-18_parallel_regulators.kicad_sch
+part U4 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part U4 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part U4 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part U4 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part U4 lib Regulator_Switching:Buck_Test sheet / symbol Regulator_Switching:Buck_Test
+part U4 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000053 line 307 at 340.36,50.8 rot 0
+part U4 value = text TPS62A01 @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part U5 field Value = TLV70225 @ sch rail-18_parallel_regulators.kicad_sch
+part U5 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part U5 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part U5 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part U5 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part U5 lib Regulator_Linear:LDO_Test sheet / symbol Regulator_Linear:LDO_Test
+part U5 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000078 line 377 at 147.32,86.36 rot 0
+part U5 value = text TLV70225 @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part U6 field Value = TLV70233 @ sch rail-18_parallel_regulators.kicad_sch
+part U6 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part U6 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part U6 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part U6 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part U6 lib Regulator_Linear:LDO_Test sheet / symbol Regulator_Linear:LDO_Test
+part U6 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000095 line 429 at 243.84,86.36 rot 0
+part U6 value = text TLV70233 @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+part U7 field Value = TLV70233 @ sch rail-18_parallel_regulators.kicad_sch
+part U7 flag dnp = no @ sch rail-18_parallel_regulators.kicad_sch
+part U7 flag exclude_from_sim = no @ sch rail-18_parallel_regulators.kicad_sch
+part U7 flag in_bom = yes @ sch rail-18_parallel_regulators.kicad_sch
+part U7 flag on_board = yes @ sch rail-18_parallel_regulators.kicad_sch
+part U7 lib Regulator_Linear:LDO_Test sheet / symbol Regulator_Linear:LDO_Test
+part U7 unit 1 sheet / uuid 7a180001-0000-4000-8000-000000000105 line 459 at 292.1,86.36 rot 0
+part U7 value = text TLV70233 @ sch rail-18_parallel_regulators.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +3V3
+pin C1 1 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin C2 1 name "" unit 1 net +1V8
+pin C2 1 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin C3 1 name "" unit 1 net +2V5
+pin C3 1 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin C3 2 name "" unit 1 net GND
+pin C3 2 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin C4 1 name "" unit 1 net +3V3_OR
+pin C4 1 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin C4 2 name "" unit 1 net GND
+pin C4 2 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin D1 1 name K unit 1 net +3V3_OR
+pin D1 1 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin D1 2 name A unit 1 net +3V3_A
+pin D1 2 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin D2 1 name K unit 1 net +3V3_OR
+pin D2 1 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin D2 2 name A unit 1 net +3V3_B
+pin D2 2 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +5V
+pin J1 1 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin J1 2 name Pin_2 unit 1 net GND
+pin J1 2 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin L1 1 name "" unit 1 net /SW1
+pin L1 1 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin L1 2 name "" unit 1 net +1V8
+pin L1 2 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin L2 1 name "" unit 1 net /SW2
+pin L2 1 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin L2 2 name "" unit 1 net +1V8
+pin L2 2 type = passive @ sch rail-18_parallel_regulators.kicad_sch
+pin U1 1 name VIN unit 1 net +5V
+pin U1 1 type = power_in @ sch rail-18_parallel_regulators.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch rail-18_parallel_regulators.kicad_sch
+pin U1 3 name VOUT unit 1 net +3V3
+pin U1 3 type = power_out @ sch rail-18_parallel_regulators.kicad_sch
+pin U2 1 name VIN unit 1 net +5V
+pin U2 1 type = power_in @ sch rail-18_parallel_regulators.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch rail-18_parallel_regulators.kicad_sch
+pin U2 3 name VOUT unit 1 net +3V3
+pin U2 3 type = power_out @ sch rail-18_parallel_regulators.kicad_sch
+pin U3 1 name VIN unit 1 net +5V
+pin U3 1 type = power_in @ sch rail-18_parallel_regulators.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch rail-18_parallel_regulators.kicad_sch
+pin U3 3 name SW unit 1 net /SW1
+pin U3 3 type = output @ sch rail-18_parallel_regulators.kicad_sch
+pin U3 4 name FB unit 1 net +1V8
+pin U3 4 type = input @ sch rail-18_parallel_regulators.kicad_sch
+pin U4 1 name VIN unit 1 net +5V
+pin U4 1 type = power_in @ sch rail-18_parallel_regulators.kicad_sch
+pin U4 2 name GND unit 1 net GND
+pin U4 2 type = power_in @ sch rail-18_parallel_regulators.kicad_sch
+pin U4 3 name SW unit 1 net /SW2
+pin U4 3 type = output @ sch rail-18_parallel_regulators.kicad_sch
+pin U4 4 name FB unit 1 net +1V8
+pin U4 4 type = input @ sch rail-18_parallel_regulators.kicad_sch
+pin U5 1 name VIN unit 1 net +5V
+pin U5 1 type = power_in @ sch rail-18_parallel_regulators.kicad_sch
+pin U5 2 name GND unit 1 net GND
+pin U5 2 type = power_in @ sch rail-18_parallel_regulators.kicad_sch
+pin U5 3 name VOUT unit 1 net +2V5
+pin U5 3 type = power_out @ sch rail-18_parallel_regulators.kicad_sch
+pin U6 1 name VIN unit 1 net +5V
+pin U6 1 type = power_in @ sch rail-18_parallel_regulators.kicad_sch
+pin U6 2 name GND unit 1 net GND
+pin U6 2 type = power_in @ sch rail-18_parallel_regulators.kicad_sch
+pin U6 3 name VOUT unit 1 net +3V3_A
+pin U6 3 type = power_out @ sch rail-18_parallel_regulators.kicad_sch
+pin U7 1 name VIN unit 1 net +5V
+pin U7 1 type = power_in @ sch rail-18_parallel_regulators.kicad_sch
+pin U7 2 name GND unit 1 net GND
+pin U7 2 type = power_in @ sch rail-18_parallel_regulators.kicad_sch
+pin U7 3 name VOUT unit 1 net +3V3_B
+pin U7 3 type = power_out @ sch rail-18_parallel_regulators.kicad_sch
+sheet / name "" file rail-18_parallel_regulators.kicad_sch uuid /
+source file rail-18_parallel_regulators.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x02 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 5d37b768c270626e
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:D_Schottky description "Schottky diode"
+symbol Device:D_Schottky field Description "Schottky diode"
+symbol Device:D_Schottky field Reference D
+symbol Device:D_Schottky field Value D_Schottky
+symbol Device:D_Schottky hash 6555ff281469d822
+symbol Device:D_Schottky pin 1 unit 1 body 1 name K type passive style line
+symbol Device:D_Schottky pin 2 unit 1 body 1 name A type passive style line
+symbol Device:D_Schottky units 1
+symbol Device:L description Inductor
+symbol Device:L field Description Inductor
+symbol Device:L field Reference L
+symbol Device:L field Value L
+symbol Device:L hash c56a8cbe187fa0ce
+symbol Device:L pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:L pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:L units 1
+symbol Regulator_Linear:LDO_Test description "Low dropout regulator, test symbol"
+symbol Regulator_Linear:LDO_Test field Description "Low dropout regulator, test symbol"
+symbol Regulator_Linear:LDO_Test field Reference U
+symbol Regulator_Linear:LDO_Test field Value LDO_Test
+symbol Regulator_Linear:LDO_Test hash 21c208fd1fffd030
+symbol Regulator_Linear:LDO_Test pin 1 unit 1 body 1 name VIN type power_in style line
+symbol Regulator_Linear:LDO_Test pin 2 unit 1 body 1 name GND type power_in style line
+symbol Regulator_Linear:LDO_Test pin 3 unit 1 body 1 name VOUT type power_out style line
+symbol Regulator_Linear:LDO_Test units 1
+symbol Regulator_Switching:Buck_Test description "Step-down converter, test symbol"
+symbol Regulator_Switching:Buck_Test field Description "Step-down converter, test symbol"
+symbol Regulator_Switching:Buck_Test field Reference U
+symbol Regulator_Switching:Buck_Test field Value Buck_Test
+symbol Regulator_Switching:Buck_Test hash 81db0e3e9f35e782
+symbol Regulator_Switching:Buck_Test pin 1 unit 1 body 1 name VIN type power_in style line
+symbol Regulator_Switching:Buck_Test pin 2 unit 1 body 1 name GND type power_in style line
+symbol Regulator_Switching:Buck_Test pin 3 unit 1 body 1 name SW type output style line
+symbol Regulator_Switching:Buck_Test pin 4 unit 1 body 1 name FB type input style line
+symbol Regulator_Switching:Buck_Test units 1
+symbol power:+1V8 description "Power symbol +1V8"
+symbol power:+1V8 field Description "Power symbol +1V8"
+symbol power:+1V8 field Reference "#PWR"
+symbol power:+1V8 field Value +1V8
+symbol power:+1V8 hash a241c49db20b5bea
+symbol power:+1V8 pin 1 unit 1 body 1 name +1V8 type power_in style line
+symbol power:+1V8 units 1 power global
+symbol power:+2V5 description "Power symbol +2V5"
+symbol power:+2V5 field Description "Power symbol +2V5"
+symbol power:+2V5 field Reference "#PWR"
+symbol power:+2V5 field Value +2V5
+symbol power:+2V5 hash 403ea52283798fd8
+symbol power:+2V5 pin 1 unit 1 body 1 name +2V5 type power_in style line
+symbol power:+2V5 units 1 power global
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+3V3_A description "Power symbol +3V3_A"
+symbol power:+3V3_A field Description "Power symbol +3V3_A"
+symbol power:+3V3_A field Reference "#PWR"
+symbol power:+3V3_A field Value +3V3_A
+symbol power:+3V3_A hash cac8e9b52d0bdb07
+symbol power:+3V3_A pin 1 unit 1 body 1 name +3V3_A type power_in style line
+symbol power:+3V3_A units 1 power global
+symbol power:+3V3_B description "Power symbol +3V3_B"
+symbol power:+3V3_B field Description "Power symbol +3V3_B"
+symbol power:+3V3_B field Reference "#PWR"
+symbol power:+3V3_B field Value +3V3_B
+symbol power:+3V3_B hash 9c6019b51f184efc
+symbol power:+3V3_B pin 1 unit 1 body 1 name +3V3_B type power_in style line
+symbol power:+3V3_B units 1 power global
+symbol power:+3V3_OR description "Power symbol +3V3_OR"
+symbol power:+3V3_OR field Description "Power symbol +3V3_OR"
+symbol power:+3V3_OR field Reference "#PWR"
+symbol power:+3V3_OR field Value +3V3_OR
+symbol power:+3V3_OR hash b5dfedf51539188d
+symbol power:+3V3_OR pin 1 unit 1 body 1 name +3V3_OR type power_in style line
+symbol power:+3V3_OR units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

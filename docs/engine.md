@@ -171,6 +171,7 @@ is a `Fact` with `Provenance::Derived { rule }` (or `Assumed` for a guess), so a
 | `package::Package::of(board, part)` | `package::Package` | a part's package from its footprint: the chip case size (`0402`), SMD or through-hole (the board file's attribute when read, else the name), the board side | `Graph` |
 | `cx.drawing()` | `drawing::Drawing` | every label's scope (sheet, global, hierarchical, sheet pin, directive), labels by text, sheet pins matched with hierarchical labels and the unmatched ones, no-connect flags with their pin, `dangling`, `flagged_but_connected` | `Drawing` |
 | `access::reach(view, classes, power, net)` | `access` | where a probe reaches a net: test point and connector pins on it or one series resistor, ferrite, net tie or jumper away (a far side on a rail or ground is a pull, not a path); `zero_ohm_groups`, the nets joined by 0 Ω resistors, net ties and jumpers | `Graph`, `PartClasses` |
+| `cx.feeds()` | `feed::Feeds` | the source pins of each net (regulator and load-switch outputs, a regulator's switching node, power-output pins, connector and battery pins) and the links that carry power between nets (ferrite, inductor, fuse, resistor with its value, diode forward only, switch, jumper, net tie, transistor D-S or C-E); `reach` and `fed_by` walk them | `Rails` |
 | `supply::power_in_pins(view, net)`, `caps_to_ground` | `supply` | the power-input pins of the fitted parts on a net, by part; the fitted capacitors from a net to a ground | `Rails` |
 | `pin_name::functions(name)` | `pin_name` | what a pin name states: SWD, JTAG, SWO, reset, UART TX/RX/RTS/CTS, SPI SCK/MOSI/MISO/CS, I2C, enable, interrupt, power good, fault, with the peripheral instance (`USART1` in `PA9/USART1_TX`) | `Graph` |
 | `pull::pulls(view, classes, values, power, net)` | `pull` | the fitted two-pin resistors from a net to a rail (pull-ups) and to a ground (pull-downs), 0 Ω ties left out | `Rails`, `Values` |
@@ -428,6 +429,10 @@ of the threshold it used.
 | `ANA-16` | gain network resistors outside `min_resistance`..`max_resistance` (1 kΩ-1 MΩ), feedback capacitors below `min_capacitance` (1 pF) | `ana-16_gain_resistor_range` |
 | `ANA-21` | an op-amp input whose DC path reaches no rail, ground, connector or driver while a capacitor (or a transformer, estimate) sits on it | `ana-21_dc_return` |
 | `ANA-22` | a rail-to-ground divider feeding an op-amp input with no capacitor to ground | `ana-22_bias_divider_caps` |
+| `RAIL-1` | power-input pins on a net joining nothing else, on a signal net, or on a rail no source reaches (folded into `RAIL-5`) | `rail-1_unpowered_pins` |
+| `RAIL-5` | a rail with power-input pins and no source on it or behind a feed link (`max_feed` 100 Ω for resistors) | `rail-5_unsourced_rail` |
+| `RAIL-18` | a rail driven by two or more regulators | `rail-18_parallel_regulators` |
+| `RAIL-19` | an analog supply pin on the digital supply's net, or behind 0 Ω, jumpers or net ties only | `rail-19_unfiltered_analog_supply` |
 
 The I2C buses come from `erc_analysis::i2c` ([The analyses](#the-analyses)), ported from the first analysis code (the
 removed `erc_core`). Pin roles will replace the names as the way to find a bus (NET-4, NET-7).

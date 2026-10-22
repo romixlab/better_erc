@@ -1,0 +1,289 @@
+board rail-1_unpowered_pins
+label / local SENSE at 43.18,88.9 net /SENSE
+label / local SENSE at 139.7,55.88 net /SENSE
+label / local SENSE at 139.7,88.9 net /SENSE
+label / local SENSE at 187.96,53.34 net /SENSE
+label / local SENSE at 236.22,53.34 net /SENSE
+label / local SENSE at 284.48,53.34 net /SENSE
+label / local SENSE at 284.48,55.88 net /SENSE
+label / local SENSE at 332.74,53.34 net /SENSE
+label / local VDD_EN at 139.7,53.34 net /VDD_EN
+label / local VDD_EN at 236.22,48.26 net /VDD_EN
+label / power +3V3 at 50.8,46.99 net +3V3
+label / power +3V3 at 99.06,46.99 net +3V3
+label / power +3V3 at 99.06,82.55 net +3V3
+label / power +3V3 at 139.7,48.26 net +3V3
+label / power +3V3_FLT at 99.06,90.17 net +3V3_FLT
+label / power +3V3_FLT at 139.7,83.82 net +3V3_FLT
+label / power +3V3_FLT at 195.58,82.55 net +3V3_FLT
+label / power +3V3_OPA at 284.48,48.26 net +3V3_OPA
+label / power +5V_ISO at 43.18,83.82 net +5V_ISO
+label / power +5V_ISO at 332.74,48.26 net +5V_ISO
+label / power GND at 43.18,86.36 net GND
+label / power GND at 50.8,54.61 net GND
+label / power GND at 99.06,54.61 net GND
+label / power GND at 139.7,50.8 net GND
+label / power GND at 139.7,86.36 net GND
+label / power GND at 187.96,50.8 net GND
+label / power GND at 195.58,90.17 net GND
+label / power GND at 236.22,50.8 net GND
+label / power GND at 284.48,50.8 net GND
+label / power GND at 332.74,50.8 net GND
+net +3V3 class = Default @ sch rail-1_unpowered_pins.kicad_sch note "effective net class"
+net +3V3 kind power
+net +3V3_FLT class = Default @ sch rail-1_unpowered_pins.kicad_sch note "effective net class"
+net +3V3_FLT kind power
+net +3V3_OPA class = Default @ sch rail-1_unpowered_pins.kicad_sch note "effective net class"
+net +3V3_OPA kind power
+net +5V_ISO class = Default @ sch rail-1_unpowered_pins.kicad_sch note "effective net class"
+net +5V_ISO kind power
+net /SENSE class = Default @ sch rail-1_unpowered_pins.kicad_sch note "effective net class"
+net /SENSE kind named
+net /VDD_EN class = Default @ sch rail-1_unpowered_pins.kicad_sch note "effective net class"
+net /VDD_EN kind named
+net GND class = Default @ sch rail-1_unpowered_pins.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U2-VCC-Pad1) class = Default @ sch rail-1_unpowered_pins.kicad_sch note "effective net class"
+net unconnected-(U2-VCC-Pad1) kind unconnected
+part C1 field Value = 100n @ sch rail-1_unpowered_pins.kicad_sch
+part C1 flag dnp = no @ sch rail-1_unpowered_pins.kicad_sch
+part C1 flag exclude_from_sim = no @ sch rail-1_unpowered_pins.kicad_sch
+part C1 flag in_bom = yes @ sch rail-1_unpowered_pins.kicad_sch
+part C1 flag on_board = yes @ sch rail-1_unpowered_pins.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 7a110001-0000-4000-8000-000000000008 line 149 at 99.06,50.8 rot 0
+part C1 value = text 100n @ sch rail-1_unpowered_pins.kicad_sch note "from the Value field"
+part C2 field Value = 100n @ sch rail-1_unpowered_pins.kicad_sch
+part C2 flag dnp = no @ sch rail-1_unpowered_pins.kicad_sch
+part C2 flag exclude_from_sim = no @ sch rail-1_unpowered_pins.kicad_sch
+part C2 flag in_bom = yes @ sch rail-1_unpowered_pins.kicad_sch
+part C2 flag on_board = yes @ sch rail-1_unpowered_pins.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid 7a110001-0000-4000-8000-000000000086 line 352 at 195.58,86.36 rot 0
+part C2 value = text 100n @ sch rail-1_unpowered_pins.kicad_sch note "from the Value field"
+part FB1 field Value = 600R @ sch rail-1_unpowered_pins.kicad_sch
+part FB1 flag dnp = no @ sch rail-1_unpowered_pins.kicad_sch
+part FB1 flag exclude_from_sim = no @ sch rail-1_unpowered_pins.kicad_sch
+part FB1 flag in_bom = yes @ sch rail-1_unpowered_pins.kicad_sch
+part FB1 flag on_board = yes @ sch rail-1_unpowered_pins.kicad_sch
+part FB1 lib Device:FerriteBead sheet / symbol Device:FerriteBead
+part FB1 unit 1 sheet / uuid 7a110001-0000-4000-8000-000000000070 line 306 at 99.06,86.36 rot 0
+part FB1 value = qty 600 ohm @ sch rail-1_unpowered_pins.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch rail-1_unpowered_pins.kicad_sch
+part J1 flag dnp = no @ sch rail-1_unpowered_pins.kicad_sch
+part J1 flag exclude_from_sim = no @ sch rail-1_unpowered_pins.kicad_sch
+part J1 flag in_bom = yes @ sch rail-1_unpowered_pins.kicad_sch
+part J1 flag on_board = yes @ sch rail-1_unpowered_pins.kicad_sch
+part J1 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J1 unit 1 sheet / uuid 7a110001-0000-4000-8000-000000000001 line 127 at 50.8,50.8 rot 0
+part J1 value = text PWR @ sch rail-1_unpowered_pins.kicad_sch note "from the Value field"
+part U1 field Value = MCU @ sch rail-1_unpowered_pins.kicad_sch
+part U1 flag dnp = no @ sch rail-1_unpowered_pins.kicad_sch
+part U1 flag exclude_from_sim = no @ sch rail-1_unpowered_pins.kicad_sch
+part U1 flag in_bom = yes @ sch rail-1_unpowered_pins.kicad_sch
+part U1 flag on_board = yes @ sch rail-1_unpowered_pins.kicad_sch
+part U1 lib MCU_Test:MCU_Generic sheet / symbol MCU_Test:MCU_Generic
+part U1 unit 1 sheet / uuid 7a110001-0000-4000-8000-000000000015 line 171 at 147.32,50.8 rot 0
+part U1 value = text MCU @ sch rail-1_unpowered_pins.kicad_sch note "from the Value field"
+part U2 field Value = TMP @ sch rail-1_unpowered_pins.kicad_sch
+part U2 flag dnp = no @ sch rail-1_unpowered_pins.kicad_sch
+part U2 flag exclude_from_sim = no @ sch rail-1_unpowered_pins.kicad_sch
+part U2 flag in_bom = yes @ sch rail-1_unpowered_pins.kicad_sch
+part U2 flag on_board = yes @ sch rail-1_unpowered_pins.kicad_sch
+part U2 lib Interface:Sensor sheet / symbol Interface:Sensor
+part U2 unit 1 sheet / uuid 7a110001-0000-4000-8000-000000000026 line 197 at 195.58,50.8 rot 0
+part U2 value = text TMP @ sch rail-1_unpowered_pins.kicad_sch note "from the Value field"
+part U3 field Value = TMP @ sch rail-1_unpowered_pins.kicad_sch
+part U3 flag dnp = no @ sch rail-1_unpowered_pins.kicad_sch
+part U3 flag exclude_from_sim = no @ sch rail-1_unpowered_pins.kicad_sch
+part U3 flag in_bom = yes @ sch rail-1_unpowered_pins.kicad_sch
+part U3 flag on_board = yes @ sch rail-1_unpowered_pins.kicad_sch
+part U3 lib Interface:Sensor sheet / symbol Interface:Sensor
+part U3 unit 1 sheet / uuid 7a110001-0000-4000-8000-000000000033 line 214 at 243.84,50.8 rot 0
+part U3 value = text TMP @ sch rail-1_unpowered_pins.kicad_sch note "from the Value field"
+part U4 field Value = OPA @ sch rail-1_unpowered_pins.kicad_sch
+part U4 flag dnp = no @ sch rail-1_unpowered_pins.kicad_sch
+part U4 flag exclude_from_sim = no @ sch rail-1_unpowered_pins.kicad_sch
+part U4 flag in_bom = yes @ sch rail-1_unpowered_pins.kicad_sch
+part U4 flag on_board = yes @ sch rail-1_unpowered_pins.kicad_sch
+part U4 lib Amplifier_Operational:OPA_Test sheet / symbol Amplifier_Operational:OPA_Test
+part U4 unit 1 sheet / uuid 7a110001-0000-4000-8000-000000000041 line 232 at 292.1,50.8 rot 0
+part U4 value = text OPA @ sch rail-1_unpowered_pins.kicad_sch note "from the Value field"
+part U5 field Value = TMP @ sch rail-1_unpowered_pins.kicad_sch
+part U5 flag dnp = no @ sch rail-1_unpowered_pins.kicad_sch
+part U5 flag exclude_from_sim = no @ sch rail-1_unpowered_pins.kicad_sch
+part U5 flag in_bom = yes @ sch rail-1_unpowered_pins.kicad_sch
+part U5 flag on_board = yes @ sch rail-1_unpowered_pins.kicad_sch
+part U5 lib Interface:Sensor sheet / symbol Interface:Sensor
+part U5 unit 1 sheet / uuid 7a110001-0000-4000-8000-000000000052 line 258 at 340.36,50.8 rot 0
+part U5 value = text TMP @ sch rail-1_unpowered_pins.kicad_sch note "from the Value field"
+part U6 field Value = TMP @ sch rail-1_unpowered_pins.kicad_sch
+part U6 flag dnp = no @ sch rail-1_unpowered_pins.kicad_sch
+part U6 flag exclude_from_sim = no @ sch rail-1_unpowered_pins.kicad_sch
+part U6 flag in_bom = yes @ sch rail-1_unpowered_pins.kicad_sch
+part U6 flag on_board = yes @ sch rail-1_unpowered_pins.kicad_sch
+part U6 lib Interface:Sensor sheet / symbol Interface:Sensor
+part U6 unit 1 sheet / uuid 7a110001-0000-4000-8000-000000000061 line 282 at 50.8,86.36 rot 0
+part U6 value = text TMP @ sch rail-1_unpowered_pins.kicad_sch note "from the Value field"
+part U7 field Value = TMP @ sch rail-1_unpowered_pins.kicad_sch
+part U7 flag dnp = no @ sch rail-1_unpowered_pins.kicad_sch
+part U7 flag exclude_from_sim = no @ sch rail-1_unpowered_pins.kicad_sch
+part U7 flag in_bom = yes @ sch rail-1_unpowered_pins.kicad_sch
+part U7 flag on_board = yes @ sch rail-1_unpowered_pins.kicad_sch
+part U7 lib Interface:Sensor sheet / symbol Interface:Sensor
+part U7 unit 1 sheet / uuid 7a110001-0000-4000-8000-000000000077 line 328 at 147.32,86.36 rot 0
+part U7 value = text TMP @ sch rail-1_unpowered_pins.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +3V3
+pin C1 1 type = passive @ sch rail-1_unpowered_pins.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch rail-1_unpowered_pins.kicad_sch
+pin C2 1 name "" unit 1 net +3V3_FLT
+pin C2 1 type = passive @ sch rail-1_unpowered_pins.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch rail-1_unpowered_pins.kicad_sch
+pin FB1 1 name "" unit 1 net +3V3
+pin FB1 1 type = passive @ sch rail-1_unpowered_pins.kicad_sch
+pin FB1 2 name "" unit 1 net +3V3_FLT
+pin FB1 2 type = passive @ sch rail-1_unpowered_pins.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +3V3
+pin J1 1 type = passive @ sch rail-1_unpowered_pins.kicad_sch
+pin J1 2 name Pin_2 unit 1 net GND
+pin J1 2 type = passive @ sch rail-1_unpowered_pins.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch rail-1_unpowered_pins.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch rail-1_unpowered_pins.kicad_sch
+pin U1 3 name PA0 unit 1 net /VDD_EN
+pin U1 3 type = bidirectional @ sch rail-1_unpowered_pins.kicad_sch
+pin U1 4 name PA1 unit 1 net /SENSE
+pin U1 4 type = bidirectional @ sch rail-1_unpowered_pins.kicad_sch
+pin U2 1 name VCC unit 1 net unconnected-(U2-VCC-Pad1)
+pin U2 1 type = power_in @ sch rail-1_unpowered_pins.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch rail-1_unpowered_pins.kicad_sch
+pin U2 3 name OUT unit 1 net /SENSE
+pin U2 3 type = output @ sch rail-1_unpowered_pins.kicad_sch
+pin U3 1 name VCC unit 1 net /VDD_EN
+pin U3 1 type = power_in @ sch rail-1_unpowered_pins.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch rail-1_unpowered_pins.kicad_sch
+pin U3 3 name OUT unit 1 net /SENSE
+pin U3 3 type = output @ sch rail-1_unpowered_pins.kicad_sch
+pin U4 1 name V+ unit 1 net +3V3_OPA
+pin U4 1 type = power_in @ sch rail-1_unpowered_pins.kicad_sch
+pin U4 2 name V- unit 1 net GND
+pin U4 2 type = power_in @ sch rail-1_unpowered_pins.kicad_sch
+pin U4 3 name IN+ unit 1 net /SENSE
+pin U4 3 type = input @ sch rail-1_unpowered_pins.kicad_sch
+pin U4 4 name OUT unit 1 net /SENSE
+pin U4 4 type = output @ sch rail-1_unpowered_pins.kicad_sch
+pin U5 1 name VCC unit 1 net +5V_ISO
+pin U5 1 type = power_in @ sch rail-1_unpowered_pins.kicad_sch
+pin U5 2 name GND unit 1 net GND
+pin U5 2 type = power_in @ sch rail-1_unpowered_pins.kicad_sch
+pin U5 3 name OUT unit 1 net /SENSE
+pin U5 3 type = output @ sch rail-1_unpowered_pins.kicad_sch
+pin U6 1 name VCC unit 1 net +5V_ISO
+pin U6 1 type = power_in @ sch rail-1_unpowered_pins.kicad_sch
+pin U6 2 name GND unit 1 net GND
+pin U6 2 type = power_in @ sch rail-1_unpowered_pins.kicad_sch
+pin U6 3 name OUT unit 1 net /SENSE
+pin U6 3 type = output @ sch rail-1_unpowered_pins.kicad_sch
+pin U7 1 name VCC unit 1 net +3V3_FLT
+pin U7 1 type = power_in @ sch rail-1_unpowered_pins.kicad_sch
+pin U7 2 name GND unit 1 net GND
+pin U7 2 type = power_in @ sch rail-1_unpowered_pins.kicad_sch
+pin U7 3 name OUT unit 1 net /SENSE
+pin U7 3 type = output @ sch rail-1_unpowered_pins.kicad_sch
+sheet / name "" file rail-1_unpowered_pins.kicad_sch uuid /
+source file rail-1_unpowered_pins.kicad_sch
+source tool kicad
+source version 8.0
+symbol Amplifier_Operational:OPA_Test description "Operational amplifier, test symbol"
+symbol Amplifier_Operational:OPA_Test field Description "Operational amplifier, test symbol"
+symbol Amplifier_Operational:OPA_Test field Reference U
+symbol Amplifier_Operational:OPA_Test field Value OPA_Test
+symbol Amplifier_Operational:OPA_Test hash c0330025655c9379
+symbol Amplifier_Operational:OPA_Test pin 1 unit 1 body 1 name V+ type power_in style line
+symbol Amplifier_Operational:OPA_Test pin 2 unit 1 body 1 name V- type power_in style line
+symbol Amplifier_Operational:OPA_Test pin 3 unit 1 body 1 name IN+ type input style line
+symbol Amplifier_Operational:OPA_Test pin 4 unit 1 body 1 name OUT type output style line
+symbol Amplifier_Operational:OPA_Test units 1
+symbol Connector_Generic:Conn_01x02 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 5d37b768c270626e
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:FerriteBead description "Ferrite bead"
+symbol Device:FerriteBead field Description "Ferrite bead"
+symbol Device:FerriteBead field Reference FB
+symbol Device:FerriteBead field Value FerriteBead
+symbol Device:FerriteBead hash 80acd11562c9b610
+symbol Device:FerriteBead pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:FerriteBead pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:FerriteBead units 1
+symbol Interface:Sensor description "Temperature sensor, test symbol"
+symbol Interface:Sensor field Description "Temperature sensor, test symbol"
+symbol Interface:Sensor field Reference U
+symbol Interface:Sensor field Value Sensor
+symbol Interface:Sensor hash f042c8d472035b4e
+symbol Interface:Sensor pin 1 unit 1 body 1 name VCC type power_in style line
+symbol Interface:Sensor pin 2 unit 1 body 1 name GND type power_in style line
+symbol Interface:Sensor pin 3 unit 1 body 1 name OUT type output style line
+symbol Interface:Sensor units 1
+symbol MCU_Test:MCU_Generic description "Microcontroller, test symbol"
+symbol MCU_Test:MCU_Generic field Description "Microcontroller, test symbol"
+symbol MCU_Test:MCU_Generic field Reference U
+symbol MCU_Test:MCU_Generic field Value MCU_Generic
+symbol MCU_Test:MCU_Generic hash 8ca768c2fc38ed4d
+symbol MCU_Test:MCU_Generic pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Test:MCU_Generic pin 2 unit 1 body 1 name GND type power_in style line
+symbol MCU_Test:MCU_Generic pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Test:MCU_Generic pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Test:MCU_Generic units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+3V3_FLT description "Power symbol +3V3_FLT"
+symbol power:+3V3_FLT field Description "Power symbol +3V3_FLT"
+symbol power:+3V3_FLT field Reference "#PWR"
+symbol power:+3V3_FLT field Value +3V3_FLT
+symbol power:+3V3_FLT hash 50c3021b452e95f8
+symbol power:+3V3_FLT pin 1 unit 1 body 1 name +3V3_FLT type power_in style line
+symbol power:+3V3_FLT units 1 power global
+symbol power:+3V3_OPA description "Power symbol +3V3_OPA"
+symbol power:+3V3_OPA field Description "Power symbol +3V3_OPA"
+symbol power:+3V3_OPA field Reference "#PWR"
+symbol power:+3V3_OPA field Value +3V3_OPA
+symbol power:+3V3_OPA hash 5b953c79a263e7e8
+symbol power:+3V3_OPA pin 1 unit 1 body 1 name +3V3_OPA type power_in style line
+symbol power:+3V3_OPA units 1 power global
+symbol power:+5V_ISO description "Power symbol +5V_ISO"
+symbol power:+5V_ISO field Description "Power symbol +5V_ISO"
+symbol power:+5V_ISO field Reference "#PWR"
+symbol power:+5V_ISO field Value +5V_ISO
+symbol power:+5V_ISO hash 328e2350ae7084f4
+symbol power:+5V_ISO pin 1 unit 1 body 1 name +5V_ISO type power_in style line
+symbol power:+5V_ISO units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global
