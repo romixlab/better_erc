@@ -45,16 +45,15 @@ check-baseline:
 netlists:
     cargo run -p generate_netlists
 
-# Both binaries go on PATH once, through tpm's kept-releases stack in ~/.local/bin (a stale ~/.cargo/bin copy is trashed).
-
 # Build the better_erc app and the berc command line tool and install them on this PC
 install:
     cargo build --profile deploy --locked -p better_erc_app -p berc
-    tpm install target/deploy/better_erc target/deploy/berc
+    # our PCs: the kept-releases stack, one copy on PATH; anywhere else: plain cargo install
+    if command -v tpm >/dev/null; then tpm install target/deploy/better_erc target/deploy/berc; else cargo install --locked --force --path better_erc_app && cargo install --locked --path berc; fi
 
 # Refuses on local changes (names them, never discards them). No systemd units.
 
-# Bring this PC up to main: pull --ff-only, install, check both --versions against main
+# Bring this PC up to main: pull --ff-only, install, check both --versions against main (works without tpm)
 deploy:
     #!/usr/bin/env bash
     set -eu

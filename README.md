@@ -58,8 +58,8 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 ## Install
 
 You need a Rust toolchain (1.86 or newer, from [rustup](https://rustup.rs)). From a clone of this repository, with
-[just](https://github.com/casey/just) and tpm: `just install` builds both binaries and puts each on PATH once
-(kept releases in `~/.local/bin`). Without tpm:
+[just](https://github.com/casey/just): `just install` works anywhere and builds both binaries; with tpm it uses the release
+stack (one copy on PATH), otherwise `cargo install`. Or by hand:
 
 ```sh
 cargo install --locked --path berc             # the berc command line tool
