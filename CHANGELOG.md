@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.3.7] - 2026-10-22
+
 ### Added
 
 - `erc_checks`, the check engine (`DIAG-1` to `DIAG-6`, `RPT-22`): one file per catalogue check with its id,
