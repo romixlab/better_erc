@@ -22,6 +22,8 @@ mod bom;
 mod i2c;
 #[path = "lib/mod.rs"]
 mod library;
+#[cfg(test)]
+mod testing;
 
 pub use catalogue::{CheckInfo, CheckState, Explanation, explain, list};
 pub use ctx::{Availability, Config, Ctx};
