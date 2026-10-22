@@ -31,7 +31,7 @@ small integer ids:
 
 | arena | id | what it is |
 |---|---|---|
-| `sheets` | `SheetId` | a sheet instance; a sheet file used twice is two instances, the root first |
+| `sheets` | `SheetId` | a sheet instance; a sheet file used twice is two instances, the root first; with its page number and its title block revision (`rev`) |
 | `symbols` | `SymbolId` | a library symbol as embedded in the schematic: pins with number, name, electrical type, alternates |
 | `parts` | `PartId` | one designator with all its units, fields, flags (DNP, in BOM, on board, ...) and per-variant overrides |
 | `pins` | `PinId` | a pin instance on a part, with its own net, no-connect flag and chosen alternate |

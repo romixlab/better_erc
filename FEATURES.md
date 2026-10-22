@@ -252,6 +252,48 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `test-4_rail_test_points`
 - ✅ `TEST-5` Bring-up line (UART TX/RX and SWD of an MCU by name, I2C, SPI) with no test point or header pin ·
   `test/test_5.rs`, `test-5_bring_up_test_points`
+- ✅ `SHORT-1` Two-terminal part with both ends on one net, transistor with G-S, D-S or B-E on one net · `short/short_1.rs`,
+  `short-1_shunted_parts`
+- ✅ `SHORT-2` Chain of passives that leads back to its start through nodes nothing else uses; a translator's two sides or
+  a load switch's IN/OUT on one net · `short/short_2.rs`, `short-2_name_collision`
+- ✅ `SHORT-3` Fitted 0 Ω, jumper, net tie or switch across another fitted part; two fitted links from one net to two rails
+  (per variant) · `short/short_3.rs`, `short-3_fitted_options`
+- 🚧 `SHORT-4` Resistors in series from a rail to a ground: 0 Ω, above `max_current` (50 mA), or above a power rating the
+  Value field states · `short/short_4.rs`, `short-4_low_resistance`. Missing: the package's power rating (part data, `CFG-5`)
+- ✅ `SHORT-5` Supply pin on a ground, ground pin or negative supply pin on a positive rail, by pin name · `short/short_5.rs`,
+  `short-5_supply_pins_swapped`
+- 🚧 `SHORT-6` Bidirectional or tri-state IC pin straight on a rail or ground · `short/short_6.rs`, `short-6_io_tied_to_rail`.
+  Missing: input pins of parts with configurable IO (`NET-7`)
+- ✅ `SHORT-7` IO pins of MCUs, SoCs, FPGAs tied together with no other driver (I2C lines left out) · `short/short_7.rs`,
+  `short-7_shorted_ios`
+- ✅ `SHORT-11` Two push-pull outputs on one net (fitted parts) · `short/short_11.rs`, `short-11_output_conflict`
+- ✅ `SHORT-12` P and N pins of one pair on one net; labels of both halves on one net · `short/short_12.rs`,
+  `short-12_pair_halves_tied`
+- ✅ `WIRE-1` Labelled net with a single pin, naming a `WIRE-2` look-alike · `wire/wire_1.rs`, `wire-1_single_pin_nets`
+- ✅ `WIRE-2` Net names equal once case, separators, a leading `+` and the active-low marker style are normalised ·
+  `wire/wire_2.rs`, `wire-2_similar_names`
+- ✅ `WIRE-11` Auto-named net with more than `max_pins` (4) pins or pins on several sheets · `wire/wire_11.rs`,
+  `wire-11_unnamed_nets`
+- ✅ `WIRE-13` Output whose net reaches no input, looking through `max_hops` (3) series parts · `wire/wire_13.rs`,
+  `wire-13_output_to_nowhere`
+- ✅ `WIRE-14` Ground-named pin on a net that is no ground (or a ground only by such pins) · `wire/wire_14.rs`,
+  `wire-14_ground_pin_not_ground`
+- ✅ `NAME-1` Active-low net names in several marker styles · `name/name_1.rs`, `name-1_inverted_signal_styles`
+- ✅ `NAME-2` Differential pairs in several naming styles; two halves of one pair in two styles · `name/name_2.rs`,
+  `name-2_diff_pair_styles`
+- 🚧 `NAME-4` UART nets named by one end, or by both ends and joining two TX or two RX pins, by pin name · `name/name_4.rs`,
+  `name-4_uart_names`. Missing: pins named by their port only (`NET-12`)
+- 🚧 `NAME-5` Gaps in designator series (per sheet block) on a first revision by the title block, or an unstated one ·
+  `name/name_5.rs`, `name-5_designator_gaps`. Missing: the project setting that turns it on for later revisions (`CFG-2`)
+- ✅ `NAME-6` Parts outside their sheet's series (page × 100 or × 1000); flat numbering on a multi-page design ·
+  `name/name_6.rs`, `name-6_per_sheet_designators`
+- ✅ `NAME-7` No rail named `+xVy` in strict mode · `name/name_7.rs`, `name-7_no_strict_power_names`
+- ✅ `NAME-9` Numbered net family out of order against an IC's GPIO numbers · `name/name_9.rs`, `name-9_io_order`
+- ✅ `NAME-10` Net on an active-low pin (marker or inversion bubble) without a marker · `name/name_10.rs`,
+  `name-10_active_low_unmarked`
+- 🚧 `NAME-11` Negative rail with its sign from a marker only or none; negative supply pins on a rail read positive ·
+  `name/name_11.rs`, `name-11_negative_rail_names`. Missing: rails a negative regulator feeds (power sources, `NET-5`)
+- ✅ `NAME-12` Unannotated designators, one designator placed twice for one unit · `name/name_12.rs`, `name-12_designators`
 - ⬜ `IO-1` Inputs without a drive source: the input pins on a net are collected (`graph::input_pins`), no check yet ·
   `erc_analysis/src/graph.rs`, test schematic `io-1_inputs`
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`

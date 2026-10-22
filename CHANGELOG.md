@@ -17,6 +17,10 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
   their style (`~{X}`, `~X`, `X_N`, `X_n`, `nX`/`NRST`, `X#`, `Xn`), differential halves (`_P`/`_N`, `+`/`-`,
   `DP`/`DM`, `_H`/`_L`, glued `XP`/`XN` where both exist) and `pair_halves`, numbered families (`IO4`), the GPIO a pin
   name gives (`PA5`, `GPIO17`, `P0.12`), UART TX/RX pins and net-name words, and `normalised` names (WIRE-2).
+- 24 checks on the analyses as they are, each with a test schematic of failing and correct cases (`<id>_<slug>`):
+  SHORT-1, SHORT-2, SHORT-3, SHORT-4, SHORT-5, SHORT-6, SHORT-7, SHORT-11, SHORT-12; WIRE-1, WIRE-2, WIRE-11, WIRE-13,
+  WIRE-14; NAME-1, NAME-2, NAME-4, NAME-5, NAME-6, NAME-7, NAME-9, NAME-10, NAME-11, NAME-12.
+  `erc_analysis::graph::series_paths` (two-terminal parts in series from a net) for the SHORT chains.
 - `erc_model::Sheet::rev`: the title block revision, read by the schematic and netlist importers and kept in the
   canonical dump (`rev A`).
 

@@ -211,6 +211,16 @@ pull-up made DNP is no pull-up. Pin roles will add pins named `SCL`/`SDA` as a s
 (active low) and a number (`EN2`, `INT1`). A pin named by its port alone (`PA13`) says nothing until alternate
 functions are known (NET-12); the DBG and TEST checks do not judge a part whose names state no debug port or UART.
 
+**Names** (`names`): the name grammar beyond power, plain functions over a net or pin name (no context needed).
+`active_low` reads an active-low marker and its style (`~{X}`, `~X`, `X_N`, `X_n`, `nX` and `NRST`, `X#`, `Xn`);
+`diff_half` the half of a differential pair (`_P`/`_N`, `+`/`-`, `DP`/`DM`, `_H`/`_L`, `CANH`/`CANL`), `pair_halves`
+the complete pairs among names (a glued `XP`/`XN` only where both exist) and the halves left alone; `numbered` a
+family member (`IO4`: `IO`, 4); `gpio` the GPIO a pin name gives (`PA5`, `GPIO17`, `IO5`, `P0.12`); `uart_pin` and
+`uart_words` the UART line of a pin name (`USART1_TX`, `U0TXD`; not a CAN, Ethernet, SPI or USB `TX`) and the `TX`/`RX`
+words of a net name; `normalised` the form under which two names mean one net (case, separators, a leading `+`, one
+active-low marker style). `graph::series_paths` follows two-terminal parts in series from a net, through the nets a
+caller lets it pass (no rail or ground), for the SHORT checks' chains.
+
 The analyses have their own test schematics in `test_schematics/analyses` (`power`, `parts` with a KiCad 10 variant,
 `drawing` with a sub-sheet), each with a sidecar `<name>.expect.toml` of what they find, one line per fact
 (`erc_analysis/tests/analyses.rs`; `BLESS=1` rewrites them).
@@ -352,6 +362,30 @@ of the threshold it used.
 | `TEST-2` | several test points on one net or 0 Ω group and board side | `test-2_duplicate_test_points` |
 | `TEST-4` | a rail or ground with no test point | `test-4_rail_test_points` |
 | `TEST-5` | a bring-up line (UART, SWD, I2C, SPI) with no test point or header pin | `test-5_bring_up_test_points` |
+| `SHORT-1` | a two-terminal part with both ends on one net, a transistor with G-S, D-S or B-E on one net | `short-1_shunted_parts` |
+| `SHORT-2` | a chain of passives through nodes nothing else uses that leads back to its start; a translator's A/B (SCL1/SCL2) or a load switch's IN/OUT on one net | `short-2_name_collision` |
+| `SHORT-3` | a fitted 0 Ω, jumper, net tie or switch across another fitted part; two fitted links from one net to two rails | `short-3_fitted_options` |
+| `SHORT-4` | fitted resistors in series from a rail to a ground: 0 Ω, over `max_current` (50 mA), or over a power rating the value states | `short-4_low_resistance` |
+| `SHORT-5` | a supply-named pin on a ground, a ground-named pin on a positive rail, a negative supply pin on a positive rail | `short-5_supply_pins_swapped` |
+| `SHORT-6` | a bidirectional or tri-state IC pin straight on a rail or ground | `short-6_io_tied_to_rail` |
+| `SHORT-7` | two or more IO pins of MCUs, SoCs or FPGAs on one signal net with no other driver (I2C lines left out) | `short-7_shorted_ios` |
+| `SHORT-11` | two or more `output` pins of fitted parts on one net | `short-11_output_conflict` |
+| `SHORT-12` | a part's P and N pins of one pair on one net; labels of both halves on one net | `short-12_pair_halves_tied` |
+| `WIRE-1` | a labelled net reaching one pin (naming a WIRE-2 look-alike when there is one) | `wire-1_single_pin_nets` |
+| `WIRE-2` | nets whose names differ only in case, separators, a leading `+` or the active-low marker style | `wire-2_similar_names` |
+| `WIRE-11` | an auto-named net with more than `max_pins` (4) pins, or pins on several sheets | `wire-11_unnamed_nets` |
+| `WIRE-13` | a signal net driven by an output that no input takes, through up to `max_hops` (3) series parts | `wire-13_output_to_nowhere` |
+| `WIRE-14` | a ground-named pin on a net that is no ground, or a ground only by such pins | `wire-14_ground_pin_not_ground` |
+| `NAME-1` | active-low net names in more than one marker style | `name-1_inverted_signal_styles` |
+| `NAME-2` | differential pairs in more than one naming style; two halves of one pair in two styles | `name-2_diff_pair_styles` |
+| `NAME-4` | a net on UART pins named by one end only; a net named by both ends joining two TX or two RX pins | `name-4_uart_names` |
+| `NAME-5` | gaps in a designator series (per sheet block), on a first revision or one the title block does not state | `name-5_designator_gaps`, `name-6_per_sheet_designators` |
+| `NAME-6` | a part outside its sheet's series (page × 100 or × 1000); a multi-page design numbered flat | `name-6_per_sheet_designators` |
+| `NAME-7` | rails, and no rail name read as `+xVy` in strict mode | `name-7_no_strict_power_names` |
+| `NAME-9` | a numbered net family out of order against the GPIO numbers of one IC's pins | `name-9_io_order` |
+| `NAME-10` | a net on an active-low pin (marker or inversion bubble) without a marker in its own name | `name-10_active_low_unmarked` |
+| `NAME-11` | a negative rail whose sign comes only from a marker or not at all; negative supply pins on a rail read positive | `name-11_negative_rail_names` |
+| `NAME-12` | a designator ending in `?`; one designator placed twice for one unit | `name-12_designators` |
 
 The I2C buses come from `erc_analysis::i2c` ([The analyses](#the-analyses)), ported from the first analysis code (the
 removed `erc_core`). Pin roles will replace the names as the way to find a bus (NET-4, NET-7).

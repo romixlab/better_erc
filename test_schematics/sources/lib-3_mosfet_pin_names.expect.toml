@@ -3,3 +3,27 @@
 [[finding]]
 check = "LIB-3"
 subjects = ["part Q1"]
+
+[[not_run]]
+check = "NAME-11"
+need = "rails"
+
+[[not_run]]
+check = "NAME-7"
+need = "rails"
+
+[[not_run]]
+check = "SHORT-4"
+need = "rails"
+
+[[not_run]]
+check = "SHORT-5"
+need = "rails"
+
+[[not_run]]
+check = "SHORT-6"
+need = "rails"
+
+[[not_run]]
+check = "WIRE-14"
+need = "rails"
