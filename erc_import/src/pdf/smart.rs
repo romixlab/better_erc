@@ -262,6 +262,7 @@ fn sheets(outline: &Outline, b: &mut Builder, file: &str, notes: &mut Notes) -> 
                 parent: Some(parent),
                 uuid_path: String::new(),
                 page: item.action.page.map(|p| (p + 1).to_string()),
+                rev: None,
             });
             out.push(SheetNode { item: i, id });
             here = id;
