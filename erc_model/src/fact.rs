@@ -18,6 +18,11 @@ pub enum Provenance {
     Board { file: String },
     /// A placement file exported from a board (pick-and-place CSV)
     Placement { file: String },
+    /// A schematic PDF (an Altium Smart PDF), and how the fact was read from it
+    Pdf {
+        file: String,
+        confidence: PdfConfidence,
+    },
     /// The KiCad project file (`.kicad_pro`)
     KicadProject { file: String },
     /// The better_erc project file, with the key the fact was read from
@@ -52,7 +57,12 @@ impl Provenance {
             | Provenance::Netlist { .. }
             | Provenance::Board { .. }
             | Provenance::Placement { .. }
-            | Provenance::KicadProject { .. } => Rank::DESIGN,
+            | Provenance::KicadProject { .. }
+            | Provenance::Pdf {
+                confidence: PdfConfidence::Bookmarks,
+                ..
+            } => Rank::DESIGN,
+            Provenance::Pdf { .. } => Rank::RECONSTRUCTED,
             Provenance::Vendor { .. } => Rank::VENDOR,
             Provenance::Mx3 { .. } | Provenance::PartDb { .. } | Provenance::Datasheet { .. } => {
                 Rank::DATASHEET
@@ -71,6 +81,7 @@ impl Provenance {
             Provenance::Netlist { .. } => "net",
             Provenance::Board { .. } => "pcb",
             Provenance::Placement { .. } => "pos",
+            Provenance::Pdf { .. } => "pdf",
             Provenance::KicadProject { .. } => "pro",
             Provenance::ProjectFile { .. } => "project",
             Provenance::PartDb { .. } => "partdb",
@@ -93,6 +104,7 @@ impl Provenance {
             | Provenance::Board { file }
             | Provenance::Placement { file }
             | Provenance::KicadProject { file } => vec![file],
+            Provenance::Pdf { file, confidence } => vec![file, confidence.name()],
             Provenance::ProjectFile { file, key } => vec![file, key],
             Provenance::PartDb { file, entry } => vec![file, entry],
             Provenance::Mx3 { part } => vec![part],
@@ -116,6 +128,10 @@ impl Provenance {
             "pcb" if one => Provenance::Board { file: a(0)? },
             "pos" if one => Provenance::Placement { file: a(0)? },
             "pro" if one => Provenance::KicadProject { file: a(0)? },
+            "pdf" if two => Provenance::Pdf {
+                file: a(0)?,
+                confidence: PdfConfidence::from_name(args.get(1)?)?,
+            },
             "project" if two => Provenance::ProjectFile {
                 file: a(0)?,
                 key: a(1)?,
@@ -147,6 +163,37 @@ impl fmt::Display for Provenance {
     }
 }
 
+/// How a fact was read from a PDF, from the surest to the least sure
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
+pub enum PdfConfidence {
+    /// The tool's own netlist, written into the bookmarks (an Altium Smart PDF): as sure as a netlist file
+    Bookmarks,
+    /// Attached to a part or pin by where it sits on the page (a property popup over a symbol)
+    Position,
+    /// Traced from the drawing: wires, junctions and pin ends
+    Geometry,
+}
+
+impl PdfConfidence {
+    /// The name the dump writes
+    pub fn name(self) -> &'static str {
+        match self {
+            PdfConfidence::Bookmarks => "bookmarks",
+            PdfConfidence::Position => "position",
+            PdfConfidence::Geometry => "geometry",
+        }
+    }
+
+    pub fn from_name(name: &str) -> Option<PdfConfidence> {
+        Some(match name {
+            "bookmarks" => PdfConfidence::Bookmarks,
+            "position" => PdfConfidence::Position,
+            "geometry" => PdfConfidence::Geometry,
+            _ => return None,
+        })
+    }
+}
+
 /// How much a source is trusted: higher wins. The constants are the defaults; a user can reorder sources per
 /// source, part or parameter (a person's value can be lowered below a supplier's without deleting it).
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
@@ -159,6 +206,8 @@ impl Rank {
     pub const PROJECT: Rank = Rank(900);
     /// The design files themselves (schematic, board, KiCad project, netlist)
     pub const DESIGN: Rank = Rank(800);
+    /// Read from a drawing rather than stated by the design: attached by position or traced from a PDF's geometry
+    pub const RECONSTRUCTED: Rank = Rank(750);
     /// The vendor's own data
     pub const VENDOR: Rank = Rank(700);
     /// Datasheet-derived (a person, a reviewed extraction, the part database, mx3)
@@ -448,6 +497,10 @@ mod tests {
             },
             Provenance::Assumed {
                 rule: "generic-cmos".into(),
+            },
+            Provenance::Pdf {
+                file: "board.pdf".into(),
+                confidence: PdfConfidence::Position,
             },
         ] {
             let args: Vec<String> = p.args().iter().map(|s| s.to_string()).collect();

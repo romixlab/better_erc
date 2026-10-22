@@ -197,6 +197,7 @@ impl Importer for PnpImporter {
                 tool: "pnp".into(),
                 version: None,
                 files: vec![file.to_string()],
+                connectivity: None,
             },
             layout: Some(layout),
             ..Board::default()

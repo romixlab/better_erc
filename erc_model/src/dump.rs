@@ -300,6 +300,14 @@ fn board_lines(b: &Board) -> Vec<String> {
     for f in &b.source.files {
         out.push(format!("source file {}", tok(f)));
     }
+    if let Some(p) = &b.source.connectivity {
+        let mut line = format!("source connectivity {}", p.kind());
+        for a in p.args() {
+            line.push(' ');
+            line.push_str(&tok(a));
+        }
+        out.push(line);
+    }
 
     for (i, s) in b.sheets.iter().enumerate() {
         let mut line = format!(
@@ -1245,6 +1253,14 @@ impl BoardReader {
                 "tool" => self.b.source.tool = c.next()?.into(),
                 "version" => self.b.source.version = Some(c.next()?.into()),
                 "file" => self.b.source.files.push(c.next()?.into()),
+                "connectivity" => {
+                    let kind = c.next()?.to_string();
+                    let args = c.rest();
+                    self.b.source.connectivity = Some(
+                        Provenance::from_parts(&kind, &args)
+                            .ok_or_else(|| format!("bad connectivity source `{kind}` {args:?}"))?,
+                    );
+                }
                 o => return Err(format!("bad source line `{o}`")),
             },
             "sheet" => {

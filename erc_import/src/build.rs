@@ -25,6 +25,7 @@ impl Builder {
                 tool: tool.into(),
                 version: None,
                 files: Vec::new(),
+                connectivity: None,
             },
             ..Board::default()
         };

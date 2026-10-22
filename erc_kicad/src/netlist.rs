@@ -48,6 +48,7 @@ pub fn read(text: &str, file: &str) -> Result<(Board, Vec<ImportNote>), ImportEr
         tool: "kicad-netlist".into(),
         version: None,
         files: vec![file.into()],
+        connectivity: None,
     };
     r.root(root);
     let mut b = r.b;

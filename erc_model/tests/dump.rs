@@ -15,6 +15,7 @@ fn sample() -> Design {
             tool: "kicad".into(),
             version: Some("10.0".into()),
             files: vec![root.into(), "power.kicad_sch".into()],
+            connectivity: None,
         },
         ..Board::default()
     };

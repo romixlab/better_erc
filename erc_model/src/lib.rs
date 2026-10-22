@@ -29,7 +29,7 @@ pub mod view;
 pub use canon::{link_layout, natural_cmp, part_paths};
 pub use class::PartClass;
 pub use design::*;
-pub use fact::{Fact, Facts, Provenance, Rank, Time};
+pub use fact::{Fact, Facts, PdfConfidence, Provenance, Rank, Time};
 #[cfg(feature = "fs")]
 pub use import::DirFiles;
 pub use import::{

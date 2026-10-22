@@ -65,6 +65,7 @@ pub fn read(files: &dyn Files, main: &str, opts: &ImportOptions) -> Result<Impor
                 tool: "kicad".into(),
                 version: None,
                 files: vec![pcb_file],
+                connectivity: None,
             },
             layout,
             ..Board::default()

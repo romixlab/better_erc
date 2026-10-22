@@ -447,6 +447,7 @@ fn assemble(
             tool: "kicad".into(),
             version: root.generator_version.clone().or(root.version.clone()),
             files: names.to_vec(),
+            connectivity: None,
         },
         ..Board::default()
     };

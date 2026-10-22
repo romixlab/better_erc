@@ -126,6 +126,11 @@ pub struct SourceInfo {
     pub version: Option<String>,
     /// The files read, relative to the project directory, in reading order
     pub files: Vec<String>,
+    /// Where the connectivity (which pin is on which net) came from when the files do not state it as design data
+    /// (a PDF: its bookmarks or its drawing); `None` for design files and netlists. A check's findings on a board
+    /// whose connectivity was reconstructed are estimates.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub connectivity: Option<Provenance>,
 }
 
 /// One board: a KiCad project, or one netlist
