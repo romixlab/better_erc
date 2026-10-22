@@ -93,7 +93,7 @@ fn json_is_the_report_schema_1() {
         .collect();
     assert_eq!(checks, ["I2C-1", "I2C-3", "I2C-3"]);
     // Reads back as a report: the same JSON is a baseline
-    let report = erc_checks::Report::from_json(&stdout(&out)).unwrap();
+    let report = better_erc::Report::from_json(&stdout(&out)).unwrap();
     assert_eq!(report.findings.len(), 3);
     assert!(report.baseline.is_none());
     // A symbol's location has its line in the schematic
@@ -137,7 +137,7 @@ fn sarif_is_structurally_valid() {
     for r in rules {
         let id = r["id"].as_str().unwrap();
         assert!(
-            erc_checks::explain(id).is_some(),
+            better_erc::explain(id).is_some(),
             "rule {id} is a catalogue id"
         );
         assert!(!r["shortDescription"]["text"].as_str().unwrap().is_empty());

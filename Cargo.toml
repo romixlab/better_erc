@@ -14,6 +14,7 @@ resolver = "3"
 
 members = [
     "berc",
+    "better_erc",
     "better_erc_app",
     "ecad_compare",
     "ecad_file_format",

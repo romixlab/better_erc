@@ -381,11 +381,24 @@ version = "0.3.9"
 dependencies = [
  "anstream",
  "anstyle",
+ "better_erc",
  "clap",
  "clap_complete",
- "erc_checks",
- "erc_kicad",
  "indicatif",
+ "serde_json",
+]
+
+[[package]]
+name = "better_erc"
+version = "0.3.9"
+dependencies = [
+ "anstyle",
+ "erc_analysis",
+ "erc_checks",
+ "erc_import",
+ "erc_kicad",
+ "erc_model",
+ "serde",
  "serde_json",
 ]
 

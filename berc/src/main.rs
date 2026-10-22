@@ -1,7 +1,9 @@
+use better_erc::diff::DiffError;
+use better_erc::model::placecmp::{Origin, PlaceOptions};
+use better_erc::{CheckError, CheckOptions, Need, RunOptions, RunState, Severity, Stage, Tier};
 use clap::builder::styling::Styles;
 use clap::{CommandFactory, Parser, Subcommand, ValueEnum, ValueHint};
 use clap_complete::engine::ArgValueCandidates;
-use erc_checks::{CheckError, CheckOptions, Need, RunOptions, RunState, Severity, Stage, Tier};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
@@ -21,6 +23,9 @@ const VERSION: &str = concat!(
 /// Shown under --help. Completion is dynamic (clap_complete's `CompleteEnv`): the shell asks berc itself.
 const AFTER_HELP: &str = "Shell completion: add `source <(COMPLETE=bash berc)` to ~/.bashrc, \
 `source <(COMPLETE=zsh berc)` to ~/.zshrc, or `COMPLETE=fish berc | source` to ~/.config/fish/config.fish.";
+
+/// Exit codes of `berc diff`, under its --help
+const DIFF_AFTER_HELP: &str = "Exit codes: 0 the same, 1 different, 2 usage or import error.";
 
 /// Exit codes of `berc check`, under its --help
 const CHECK_AFTER_HELP: &str = "Exit codes: 0 nothing at or above --fail-on, 1 findings at or above --fail-on \
@@ -53,6 +58,13 @@ enum Command {
         #[arg(long, value_enum, default_value_t = ExplainFormat::Text)]
         format: ExplainFormat,
     },
+    /// Compare two designs: so far their placements (--pnp)
+    ///
+    /// A and B are PnP files (KiCad, Altium, Allegro CSV), board files (.kicad_pcb) or KiCad projects with their
+    /// board. A board compared with a PnP file is brought into the PnP file's frame first: from --origin, y up,
+    /// without the footprints excluded from position files.
+    #[command(after_help = DIFF_AFTER_HELP)]
+    Diff(DiffArgs),
     /// The check catalogue
     Checks {
         #[command(subcommand)]
@@ -109,6 +121,38 @@ struct CheckArgs {
     #[arg(long, value_name = "NEED", value_delimiter = ',', value_parser = parse_need,
           add = ArgValueCandidates::new(complete::needs))]
     require: Vec<Need>,
+}
+
+#[derive(clap::Args)]
+struct DiffArgs {
+    /// The first design: a file or a directory
+    #[arg(value_hint = ValueHint::AnyPath)]
+    a: PathBuf,
+    /// The second design
+    #[arg(value_hint = ValueHint::AnyPath)]
+    b: PathBuf,
+    /// Compare the placements: each footprint's position, rotation, side, value and package by reference
+    #[arg(long, required = true)]
+    pnp: bool,
+    /// The origin the PnP file was exported from, for a board compared with one
+    #[arg(long, value_enum, default_value_t = OriginArg::Page)]
+    origin: OriginArg,
+    /// Largest difference in x or y that counts as the same position, in mm
+    #[arg(long, value_name = "MM", default_value_t = 0.0)]
+    tolerance: f64,
+    /// Largest difference in rotation that counts as the same, in degrees
+    #[arg(long, value_name = "DEG", default_value_t = 0.0)]
+    rotation_tolerance: f64,
+    #[arg(long, value_enum, default_value_t = ListFormat::Text)]
+    format: ListFormat,
+}
+
+#[derive(Clone, Copy, ValueEnum)]
+enum OriginArg {
+    /// The page's top left corner (KiCad's default)
+    Page,
+    /// The board's drill and place file origin (KiCad's --use-drill-file-origin)
+    Aux,
 }
 
 #[derive(Subcommand)]
@@ -187,6 +231,7 @@ fn main() -> ExitCode {
     match cli.command {
         Command::Check(args) => check(args),
         Command::Explain { id, format } => explain(&id, format),
+        Command::Diff(args) => diff(args),
         Command::Checks {
             command:
                 ChecksCommand::List {
@@ -231,7 +276,7 @@ fn check(args: CheckArgs) -> ExitCode {
         );
         return ExitCode::from(CheckError::EXIT_CODE);
     }
-    let baseline = match args.baseline.as_deref().map(erc_checks::read_baseline) {
+    let baseline = match args.baseline.as_deref().map(better_erc::read_baseline) {
         Some(Ok(b)) => Some(b),
         Some(Err(e)) => return check_error(&e),
         None => None,
@@ -251,7 +296,7 @@ fn check(args: CheckArgs) -> ExitCode {
         baseline,
     };
     let spinner = progress::Delayed::start();
-    let run = erc_checks::check_path(&args.project, &opts, &mut |stage| {
+    let run = better_erc::check_path(&args.project, &opts, &mut |stage| {
         spinner.set(match stage {
             Stage::Importing(file) => format!("reading {file}"),
             Stage::Checking => "running the checks".into(),
@@ -263,10 +308,10 @@ fn check(args: CheckArgs) -> ExitCode {
         Err(e) => return check_error(&e),
     };
     let format = match args.format {
-        Format::Text => erc_checks::Format::Text,
-        Format::Json => erc_checks::Format::Json,
-        Format::Sarif => erc_checks::Format::Sarif,
-        Format::Md => erc_checks::Format::Md,
+        Format::Text => better_erc::Format::Text,
+        Format::Json => better_erc::Format::Json,
+        Format::Sarif => better_erc::Format::Sarif,
+        Format::Md => better_erc::Format::Md,
     };
     let out = run.render(format, true);
     if matches!(args.format, Format::Text) {
@@ -284,13 +329,50 @@ fn check(args: CheckArgs) -> ExitCode {
     ExitCode::from(run.verdict.exit.code())
 }
 
+fn diff(args: DiffArgs) -> ExitCode {
+    let opts = PlaceOptions {
+        position_tolerance: (args.tolerance * 1e6).round() as i64,
+        rotation_tolerance: args.rotation_tolerance,
+        origin: match args.origin {
+            OriginArg::Page => Origin::Page,
+            OriginArg::Aux => Origin::Aux,
+        },
+    };
+    let spinner = progress::Delayed::start();
+    spinner.set("reading the designs".into());
+    let d = better_erc::diff::pnp(&args.a, &args.b, &opts);
+    spinner.finish();
+    let d = match d {
+        Ok(d) => d,
+        Err(e) => {
+            error(&e.to_string());
+            return ExitCode::from(DiffError::EXIT_CODE);
+        }
+    };
+    match args.format {
+        ListFormat::Text => {
+            let _ = anstream::stdout()
+                .lock()
+                .write_all(d.to_text_color().as_bytes());
+        }
+        ListFormat::Json => {
+            let _ = writeln!(std::io::stdout().lock(), "{}", d.to_json());
+        }
+    }
+    if d.is_empty() {
+        ExitCode::SUCCESS
+    } else {
+        ExitCode::from(1)
+    }
+}
+
 fn check_error(e: &CheckError) -> ExitCode {
     error(&e.to_string());
     ExitCode::from(CheckError::EXIT_CODE)
 }
 
 fn explain(id: &str, format: ExplainFormat) -> ExitCode {
-    let Some(e) = erc_checks::explain(&id.to_uppercase()) else {
+    let Some(e) = better_erc::explain(&id.to_uppercase()) else {
         error(&format!(
             "no check {id} in the catalogue (`berc checks list` lists them)"
         ));
@@ -318,7 +400,7 @@ fn list(
     let report = match project {
         Some(p) => {
             let spinner = progress::Delayed::start();
-            let run = erc_checks::check_path(p, &CheckOptions::default(), &mut |stage| {
+            let run = better_erc::check_path(p, &CheckOptions::default(), &mut |stage| {
                 if let Stage::Importing(file) = stage {
                     spinner.set(format!("reading {file}"));
                 }
@@ -341,12 +423,12 @@ fn list(
         TierArg::Hard => Tier::Hard,
         TierArg::Judgement => Tier::Judgement,
     });
-    let checks: Vec<_> = erc_checks::list_for(report.as_ref())
+    let checks: Vec<_> = better_erc::list_for(report.as_ref())
         .into_iter()
         .filter(|c| tier.is_none_or(|t| c.info.tier == t))
         .filter(|c| match status {
             None => true,
-            Some(RunState::Planned) => c.info.state == erc_checks::CheckState::Planned,
+            Some(RunState::Planned) => c.info.state == better_erc::CheckState::Planned,
             Some(s) => c.run == Some(s),
         })
         .collect();
@@ -361,7 +443,7 @@ fn list(
                 let i = &c.info;
                 let state = match c.run {
                     Some(r) => r.name(),
-                    None if i.state == erc_checks::CheckState::Implemented => "implemented",
+                    None if i.state == better_erc::CheckState::Implemented => "implemented",
                     None => "planned",
                 };
                 let sev = severity_style(i.severity);

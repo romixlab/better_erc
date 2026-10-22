@@ -17,6 +17,16 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
   the net, each a fact with its rule and the voltage from the name), grounds and switching nodes, ported from
   `erc_core`'s `power.rs`; the I2C lines and switching nodes are not rails. `name_voltage` reads `+1V25` as 1.25 V
   (the old parser read 2.25 V). `erc_analysis::graph::input_pins`: the input pins on a net (the IO-1 stub's list).
+- `berc diff --pnp A B` (`TOOL-1`): the PnP compare of the old `ecad_compare` tool on `erc_model::placecmp`, each side
+  any design `berc check` opens (PnP files, a `.kicad_pcb`, a KiCad project with its board); `--origin page|aux` for a
+  board compared with a PnP file (brought into the PnP frame: from the origin, y up, without footprints excluded
+  from position files, as kicad-cli's `pcb export pos` writes it), `--tolerance MM`, `--rotation-tolerance DEG`,
+  `--format text|json`; exit 0 same, 1 different, 2 error. The text names each side's footprint and test point
+  count, as the old example did. `placecmp::{Origin, to_placement_frame, aux_origin, is_board_file}`; the diff types
+  serialise.
+- The library facade, crate `better_erc` (lib): `model`, `kicad`, `import`, `analysis`, `checks` re-exported, the run
+  entry (`Project`, `check_path`, `CheckOptions`, `CheckRun`, `Verdict`) and the report types at the top, and
+  `better_erc::diff::pnp`. berc depends on it alone.
 - The old readers' tests as acceptance tests on the new core: `ecad_file_format::kicad_netlist`'s asserts in
   `erc_kicad/tests/netlist.rs`, the passive value table in `erc_model::value`.
 

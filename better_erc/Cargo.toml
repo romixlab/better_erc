@@ -1,0 +1,18 @@
+[package]
+name = "better_erc"
+description = "better_erc, the library: the board model, the importers, the analyses, the check engine and the reports in one dependency"
+authors.workspace = true
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+include.workspace = true
+
+[dependencies]
+anstyle = "1"
+erc_analysis = { path = "../erc_analysis" }
+erc_checks = { path = "../erc_checks" }
+erc_import = { path = "../erc_import" }
+erc_kicad = { path = "../erc_kicad" }
+erc_model = { path = "../erc_model" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"

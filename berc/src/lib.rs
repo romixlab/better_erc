@@ -6,7 +6,7 @@ pub mod pcb;
 pub mod pro;
 pub mod pro_defaults;
 pub mod sch;
-pub use erc_kicad::sexpr;
+pub use better_erc::kicad::sexpr;
 
 pub use common::Options;
 

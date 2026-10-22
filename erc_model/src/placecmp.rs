@@ -2,23 +2,44 @@
 //! package. The layouts can come from a board file or from a pick-and-place file (`erc_import`'s PnP importer), so
 //! two PnP files, two boards, or a board and the PnP file made from it compare the same way. It is the PnP compare of
 //! `berc diff --pnp`.
+//!
+//! A board file and a PnP file count in different frames: the board from the page's top left corner with y down,
+//! a PnP file (KiCad's `pcb export pos`, Altium's and Allegro's) from an origin with y up. When one side is a board
+//! and the other is not, [`compare_boards`] brings the board into the PnP frame first ([`to_placement_frame`]): from
+//! the [`Origin`] the PnP file was exported with, y negated, rotations as they are, and without the footprints
+//! marked `exclude_from_pos_files` (KiCad never writes those).
 
 use crate::canon::natural_cmp;
 use crate::design::Board;
-use crate::layout::{Footprint, Layout, Pt, Side};
+use crate::layout::{Footprint, Layout, Nm, Pt, Side};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-/// How close two placements must be to count as equal
+/// How close two placements must be to count as equal, and how a board meets a PnP file
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub struct PlaceOptions {
     /// Largest difference in x or y, in nanometres
     pub position_tolerance: i64,
     /// Largest difference in rotation, in degrees
     pub rotation_tolerance: f64,
+    /// The origin the PnP file was exported from, when a board is compared with one
+    pub origin: Origin,
+}
+
+/// Where a PnP file's coordinates start
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Origin {
+    /// The page's top left corner (KiCad's default)
+    #[default]
+    Page,
+    /// The board's drill and place file origin (`aux_axis_origin`; KiCad's `--use-drill-file-origin`)
+    Aux,
 }
 
 /// One attribute of a placement that differs, as `a` and `b` have it
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "attribute", rename_all = "snake_case")]
 pub enum PlaceChange {
     Position {
         a: Pt,
@@ -45,14 +66,14 @@ pub enum PlaceChange {
 }
 
 /// A footprint on both sides that is placed differently
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Moved {
     pub reference: String,
     pub changes: Vec<PlaceChange>,
 }
 
 /// The differences between two placements; every list in natural order of the references
-#[derive(Clone, Debug, Default, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 pub struct PlaceDiff {
     pub changed: Vec<Moved>,
     /// In `a` only
@@ -146,9 +167,62 @@ pub fn compare(a: &Layout, b: &Layout, opts: &PlaceOptions) -> PlaceDiff {
     diff
 }
 
-/// Compares the placements of two boards (from a board file or a PnP file); `None` when one has no layout
+/// Compares the placements of two boards (from a board file or a PnP file), a board in the PnP frame when the
+/// other is a PnP file; `None` when one has no layout
 pub fn compare_boards(a: &Board, b: &Board, opts: &PlaceOptions) -> Option<PlaceDiff> {
-    Some(compare(a.layout.as_ref()?, b.layout.as_ref()?, opts))
+    let (la, lb) = (a.layout.as_ref()?, b.layout.as_ref()?);
+    Some(match (is_board_file(la), is_board_file(lb)) {
+        (true, false) => compare(&to_placement_frame(la, opts.origin), lb, opts),
+        (false, true) => compare(la, &to_placement_frame(lb, opts.origin), opts),
+        _ => compare(la, lb, opts),
+    })
+}
+
+/// Whether a layout was read from a board file (`.kicad_pcb`), in the board's frame, rather than a PnP file
+pub fn is_board_file(layout: &Layout) -> bool {
+    layout.file.ends_with(".kicad_pcb")
+}
+
+/// The board's drill and place file origin (`aux_axis_origin` in its setup; the page corner when not set)
+pub fn aux_origin(layout: &Layout) -> Pt {
+    layout
+        .setup
+        .iter()
+        .find(|(k, _)| k == "aux_axis_origin")
+        .and_then(|(_, v)| {
+            let (x, y) = v.split_once(' ')?;
+            Some(Pt {
+                x: Nm::parse(x)?,
+                y: Nm::parse(y)?,
+            })
+        })
+        .unwrap_or_default()
+}
+
+/// A board's placements as a PnP file exported from it has them: relative to `origin`, y up, rotations as they are,
+/// without the footprints excluded from position files. Only the footprints are kept.
+pub fn to_placement_frame(layout: &Layout, origin: Origin) -> Layout {
+    let o = match origin {
+        Origin::Page => Pt::default(),
+        Origin::Aux => aux_origin(layout),
+    };
+    let footprints = layout
+        .footprints
+        .iter()
+        .filter(|f| !f.attrs.exclude_from_pos_files)
+        .map(|f| Footprint {
+            at: Pt {
+                x: f.at.x - o.x,
+                y: o.y - f.at.y,
+            },
+            ..f.clone()
+        })
+        .collect();
+    Layout {
+        file: layout.file.clone(),
+        footprints,
+        ..Layout::default()
+    }
 }
 
 #[cfg(test)]
@@ -206,9 +280,30 @@ mod tests {
         assert_eq!(d.changed[0].changes.len(), 5);
         let loose = PlaceOptions {
             position_tolerance: 1000,
-            rotation_tolerance: 0.0,
+            ..PlaceOptions::default()
         };
         assert_eq!(compare(&a, &b, &loose).changed[0].changes.len(), 4);
         assert!(compare(&a, &a, &PlaceOptions::default()).is_empty());
+    }
+
+    /// What KiCad 10's `pcb export pos` writes for a board with its aux origin at (100, 50)
+    #[test]
+    fn board_in_the_placement_frame() {
+        let mut board = layout(vec![
+            fp("R1", 110.0, 90.0, Side::Front, "10k", "Resistor_SMD:R_0603"),
+            fp("TP1", 130.0, 0.0, Side::Front, "", ""),
+        ]);
+        board.file = "b.kicad_pcb".into();
+        board.footprints[0].at = Pt::from_mm(110.0, 100.0);
+        board.footprints[1].attrs.exclude_from_pos_files = true;
+        board
+            .setup
+            .push(("aux_axis_origin".into(), "100 50".into()));
+        let page = to_placement_frame(&board, Origin::Page);
+        assert_eq!(page.footprints.len(), 1, "TP1 is not in position files");
+        assert_eq!(page.footprints[0].at, Pt::from_mm(110.0, -100.0));
+        let aux = to_placement_frame(&board, Origin::Aux);
+        assert_eq!(aux.footprints[0].at, Pt::from_mm(10.0, -50.0));
+        assert_eq!(aux.footprints[0].rotation, 90.0);
     }
 }

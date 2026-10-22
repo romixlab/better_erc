@@ -1,0 +1,4 @@
+Ref,Val,Package,PosX,PosY,Rot,Side
+"R5","10k","R_0603_1608Metric",120.000000,-100.000000,180.000000,bottom
+"J1","Conn_01x02","PinHeader_1x02_P2.54mm_Vertical",140.000000,-100.000000,-90.000000,top
+"R1","10k","R_0603_1608Metric",110.000000,-100.000000,90.000000,top

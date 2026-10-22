@@ -1,8 +1,8 @@
 //! Live values for shell completion, each with its help text: check ids and categories from the embedded
 //! catalogue, the needs `--require` knows, and the variants of the design in the current directory.
 
+use better_erc::checks::{Need, Project, catalogue::catalogue, registered};
 use clap_complete::engine::CompletionCandidate;
-use erc_checks::{Need, Project, catalogue::catalogue, registered};
 
 /// Every catalogue id, implemented or planned (`berc explain`)
 pub fn catalogue_ids() -> Vec<CompletionCandidate> {
