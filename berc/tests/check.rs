@@ -145,8 +145,8 @@ fn sarif_is_structurally_valid() {
     let driver = &run["tool"]["driver"];
     assert_eq!(driver["name"], "better_erc");
     let rules = driver["rules"].as_array().unwrap();
-    // A rule per check that ran: the six I2C checks
-    assert_eq!(rules.len(), 6);
+    // A rule per check that ran: the eight I2C checks
+    assert_eq!(rules.len(), 8);
     for r in rules {
         let id = r["id"].as_str().unwrap();
         assert!(
