@@ -27,6 +27,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 - The library facade, crate `better_erc` (lib): `model`, `kicad`, `import`, `analysis`, `checks` re-exported, the run
   entry (`Project`, `check_path`, `CheckOptions`, `CheckRun`, `Verdict`) and the report types at the top, and
   `better_erc::diff::pnp`. berc depends on it alone.
+- `Project::open_files(main, others)`: a design whose files were picked one by one from anywhere (an Altium EDIF and
+  its WireList, the OrCAD trio), read as if beside each other; the app's import tab uses it.
 - The old readers' tests as acceptance tests on the new core: `ecad_file_format::kicad_netlist`'s asserts in
   `erc_kicad/tests/netlist.rs`, the passive value table in `erc_model::value`.
 

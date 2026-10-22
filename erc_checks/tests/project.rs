@@ -124,3 +124,36 @@ fn sarif_uri_base() {
         "file:///elsewhere/b%20c/"
     );
 }
+
+/// The app's file pickers: an Altium EDIF and its WireList from two directories make one design
+#[test]
+fn open_files_from_two_directories() {
+    let fixtures = Path::new(env!("CARGO_MANIFEST_DIR")).join("../erc_import/tests/fixtures");
+    let elsewhere = Path::new(env!("CARGO_TARGET_TMPDIR")).join("open_files");
+    std::fs::create_dir_all(&elsewhere).unwrap();
+    let wirelist = elsewhere.join("netlist_altium_wirelist.net");
+    std::fs::copy(fixtures.join("netlist_altium_wirelist.net"), &wirelist).unwrap();
+    let edif = elsewhere.join("edif/netlist_altium_edif.edf");
+    std::fs::create_dir_all(edif.parent().unwrap()).unwrap();
+    std::fs::copy(fixtures.join("netlist_altium_edif.edf"), &edif).unwrap();
+    let alone = Project::open(&edif).unwrap();
+    let both = Project::open_files(&edif, &[wirelist]).unwrap();
+    assert_eq!(both.importer, "altium");
+    assert_eq!(both.main, "netlist_altium_edif.edf");
+    let footprint = |p: &Project| {
+        let b = &p.imported.design.boards[0];
+        b.part(b.part_by_designator("J2").unwrap())
+            .field("Footprint")
+            .map(String::from)
+    };
+    assert_eq!(
+        footprint(&both).as_deref(),
+        Some("HEADER-2.54-2x3-VSMT"),
+        "from the WireList"
+    );
+    let run = both.check(&CheckOptions::default()).unwrap();
+    assert_eq!(run.importer, "altium");
+    assert_eq!(footprint(&alone), None, "no WireList beside the EDIF");
+    let missing = Project::open_files(&edif, &[elsewhere.join("nothing.net")]);
+    assert!(matches!(missing, Err(CheckError::NotFound(_))));
+}

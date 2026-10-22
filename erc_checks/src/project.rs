@@ -8,7 +8,9 @@ use crate::finding::BaselineState;
 use crate::meta::{Need, Severity};
 use crate::report::{Report, SCHEMA_VERSION};
 use erc_import::Registry;
-use erc_model::{Confidence, DirFiles, ImportError, ImportOptions, Imported, Source};
+use erc_model::{
+    Confidence, DirFiles, Files, ImportError, ImportOptions, Imported, MemFiles, Source,
+};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::path::{Path, PathBuf};
@@ -208,7 +210,43 @@ impl Project {
             (dir, name)
         };
         let files = DirFiles(dir.clone());
-        let src = Source::new(main.clone(), &files);
+        Project::import(&registry, dir, main, &files, progress)
+    }
+
+    /// Opens a design whose files were picked one by one, from anywhere (a GUI's file dialogs): `main` (an Altium
+    /// EDIF, an OrCAD pstxnet) with `others` beside it (the WireList, pstxprt, pstchip), each by its file name, as
+    /// if they were in `main`'s directory
+    pub fn open_files(main: &Path, others: &[PathBuf]) -> Result<Project, CheckError> {
+        let mut files = MemFiles::default();
+        let mut name_of = |p: &Path| -> Result<String, CheckError> {
+            let name = p
+                .file_name()
+                .and_then(|n| n.to_str())
+                .ok_or_else(|| CheckError::NotFound(p.to_path_buf()))?
+                .to_string();
+            let bytes = std::fs::read(p).map_err(|_| CheckError::NotFound(p.to_path_buf()))?;
+            files.0.insert(name.clone(), bytes);
+            Ok(name)
+        };
+        let main_name = name_of(main)?;
+        for o in others {
+            name_of(o)?;
+        }
+        let dir = match main.parent() {
+            Some(p) if !p.as_os_str().is_empty() => p.to_path_buf(),
+            _ => PathBuf::from("."),
+        };
+        Project::import(&Registry::default(), dir, main_name, &files, &mut |_| {})
+    }
+
+    fn import(
+        registry: &Registry,
+        dir: PathBuf,
+        main: String,
+        files: &dyn Files,
+        progress: &mut dyn FnMut(Stage),
+    ) -> Result<Project, CheckError> {
+        let src = Source::new(main.clone(), files);
         let file = dir.join(&main);
         let Some((importer, _)) = registry.pick(&src) else {
             return Err(CheckError::Import {
