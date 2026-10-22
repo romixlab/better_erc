@@ -2,6 +2,10 @@
 //! on a crystal 16 MHz), as the variant checked mounts it, with the tolerance, ratings and dielectric the field
 //! states, the E-series it is in, and the source of the field. A part whose class has no value unit (an IC, a
 //! connector) still reads a value that names its unit (`3V3`), else keeps its text.
+//!
+//! The value is the part's (`erc_model::Part::value`, which the importer fills by the tool's convention: KiCad's
+//! `Value`, Altium's `Value`, else `Comment`), read from the text of the field it came from; never a tool's field by
+//! its name.
 
 use crate::class::{PartClass, PartClasses};
 use erc_model::{
@@ -33,9 +37,16 @@ pub struct PartValue {
     pub warnings: Vec<ValueWarning>,
     /// Where the field came from
     pub source: Option<Provenance>,
+    /// The field the value is written in (`Value`, `Comment`), when the part has one
+    pub field: Option<String>,
 }
 
 impl PartValue {
+    /// What a finding calls the value: `Value`, or `Value (from Comment)` when another field holds it
+    pub fn label(&self) -> String {
+        label(self.field.as_deref().unwrap_or("Value"))
+    }
+
     /// The value as a quantity
     pub fn quantity(&self) -> Option<Quantity> {
         Some(Quantity {
@@ -103,23 +114,62 @@ impl Values {
     }
 }
 
-/// The Value field of `part` in `variant` (the variant's override first), with its source
-pub fn value_field(
-    board: &Board,
-    part: PartId,
-    variant: Option<VariantId>,
-) -> Option<&Fact<String>> {
-    board.view(variant).field_fact(part, "Value")
+/// The text a part's value was read from
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ValueText<'b> {
+    /// The field (`Value`, `Comment`)
+    pub field: &'b str,
+    pub fact: &'b Fact<String>,
 }
 
-/// The Value field of `part` read in `unit` when it names none
+impl ValueText<'_> {
+    /// What a finding calls the value: `Value`, or `Value (from Comment)` when another field holds it
+    pub fn label(&self) -> String {
+        label(self.field)
+    }
+}
+
+fn label(field: &str) -> String {
+    if field == "Value" {
+        "Value".into()
+    } else {
+        format!("Value (from {field})")
+    }
+}
+
+/// The text of `part`'s value in `view`: the variant's override of the Value field first (KiCad variants), then the
+/// field the part's value was read from: the first field of the value's source whose text reads as that value.
+/// `None` when the part has no value.
+pub fn value_text<'b>(view: View<'b>, part: PartId) -> Option<ValueText<'b>> {
+    let p = view.board.part(part);
+    let in_variant = view
+        .variant
+        .and_then(|v| p.variants.iter().find(|pv| pv.variant == v))
+        .and_then(|pv| pv.fields.iter().find(|f| f.name == "Value"))
+        .and_then(|f| Some((f.name.as_str(), f.value.resolve()?)));
+    if let Some((field, fact)) = in_variant {
+        return Some(ValueText { field, fact });
+    }
+    let value = p.value.resolve()?;
+    p.fields.iter().find_map(|f| {
+        let fact = f.value.resolve()?;
+        (fact.source == value.source && Value::parse(&fact.value).0 == value.value).then_some(ValueText {
+            field: f.name.as_str(),
+            fact,
+        })
+    })
+}
+
+/// The value of `part` read in `unit` when it names none
 pub fn value_as(board: &Board, part: PartId, variant: Option<VariantId>, unit: Unit) -> PartValue {
     read(board.view(variant), part, Some(unit))
 }
 
-/// The Value field of `part` in `view`, read in `unit` when it names none (`None`: only a written unit counts)
+/// The value of `part` in `view` ([`value_text`]), read in `unit` when it names none (`None`: only a written unit
+/// counts)
 pub fn read(view: View, part: PartId, unit: Option<Unit>) -> PartValue {
-    let fact = view.field_fact(part, "Value");
+    let t = value_text(view, part);
+    let fact = t.map(|t| t.fact);
     let text = fact.map_or("", |f| f.value.as_str());
     let r = Value::read(text, unit);
     let q = r.value.quantity();
@@ -135,6 +185,7 @@ pub fn read(view: View, part: PartId, unit: Option<Unit>) -> PartValue {
         series: None,
         warnings: r.warnings,
         source: fact.map(|f| f.source.clone()),
+        field: t.map(|t| t.field.to_string()),
     };
     if v.series_applies() {
         v.series = v.value.and_then(ESeries::of);
@@ -201,8 +252,8 @@ mod tests {
             lib_id: lib.into(),
             sheet: SheetId(0),
             units: Vec::new(),
-            fields: vec![Field::new("Value", Fact::new(value.into(), sch))],
-            value: Facts::default(),
+            fields: vec![Field::new("Value", Fact::new(value.into(), sch.clone()))],
+            value: Facts::one(Fact::new(Value::parse(value).0, sch)),
             flags: PartFlags::default(),
             variants: Vec::new(),
             pins: Vec::new(),

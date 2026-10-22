@@ -91,10 +91,10 @@ impl Availability {
             Need::Values => count(
                 components
                     .iter()
-                    .filter(|p| board.part(**p).fields.iter().any(|f| f.name == "Value"))
+                    .filter(|p| erc_analysis::value::value_text(cx.view(), **p).is_some())
                     .count(),
                 components.len(),
-                "a Value field",
+                "a value",
             ),
             Need::Layout => {
                 if board.layout.is_some() {

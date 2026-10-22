@@ -140,7 +140,13 @@ keeps it in the model.
 - `berc diff --pnp A B [--origin page|aux] [--tolerance MM] [--rotation-tolerance DEG] [--format text|json]`:
   `better_erc::diff::pnp`, the placements of two designs (PnP files, boards, KiCad projects with their board)
   footprint by footprint; a board against a PnP file in the PnP frame ([model.md](model.md)). Exit codes 0 the
-  same, 1 different, 2 usage or import error. The netlist, BOM and findings modes come with RPT-16 and RPT-17.
+  same, 1 different, 2 usage or import error.
+- `berc diff --nets A B [--format text|json]`: `better_erc::diff::nets`, the nets of any two designs with
+  connectivity (a KiCad project or schematic, a netlist, Altium EDIF or WireList, OrCAD, a Smart PDF), each net as
+  the set of pins it connects (`erc_model::netcmp`): nets match by their pins whatever their names, and the report
+  lists renamed, removed and added nets and net class changes. It is the differential between a Smart PDF and an
+  Altium export of the same board, and the first piece of RPT-16 (between two git refs is still to come). Same exit
+  codes. The BOM and findings modes come with RPT-17.
 - `berc textconv FILE`: readable git diffs of KiCad files (README "Readable git diffs").
 
 Text goes through `anstream`, so colour is dropped on a pipe and with `NO_COLOR`; a spinner on stderr shows what a
@@ -159,7 +165,7 @@ is a `Fact` with `Provenance::Derived { rule }` (or `Assumed` for a guess), so a
 |---|---|---|---|
 | `cx.view()` | `erc_model::View` | the board as the variant checked mounts it: `fitted`, `flag`, `in_bom`, `field`, `field_fact`, `value_text`, `fitted_components` | `Variant` |
 | `cx.classes()` | `class::PartClasses` | each part's `PartClass` (architecture §1.3: resistor, polarized capacitor, Schottky diode, N-channel MOSFET, USB-C connector, buck regulator, pass-FET translator, ...), from a `ClassSource` (the part database's hook), the library symbol, its description and keywords, net-tie pad groups, else the designator prefix (assumed); `coverage` counts them | `PartClasses` |
-| `cx.values()` | `value::Values` | each part's Value field in the variant checked, read in the unit its class gives it (`PartClass::value_unit`: Ω, F, H, Hz, A, V for Zener and TVS), with tolerance, ratings (`50V`, `1/4W`), dielectric, the smallest E-series it is in (resistors, capacitors, inductors), the parse warnings and the field's source | `Values` |
+| `cx.values()` | `value::Values` | each part's value ([Values](#values)) in the variant checked, read in the unit its class gives it (`PartClass::value_unit`: Ω, F, H, Hz, A, V for Zener and TVS), with tolerance, ratings (`50V`, `1/4W`), dielectric, the smallest E-series it is in (resistors, capacitors, inductors), the parse warnings, the field it is written in and its source | `Values` |
 | `cx.power()` | `power::Power` | rails (`Rail`: kind, the signals that make it one, the voltage per source), grounds (`Ground`: kind, signals), ground groups joined at DC, every part linking two grounds, switching nodes | `Rails`, `RailVoltages` |
 | `cx.i2c()` | `i2c::I2cBuses` | the I2C buses of the fitted parts: pull-up pairs, devices, ties, translators, discrete translators with their gate nets, direct and logical segments, `pull_ups(segment)` | `Graph`, `PartClasses` |
 | `cx.drawing()` | `drawing::Drawing` | every label's scope (sheet, global, hierarchical, sheet pin, directive), labels by text, sheet pins matched with hierarchical labels and the unmatched ones, no-connect flags with their pin, `dangling`, `flagged_but_connected` | `Drawing` |
@@ -209,14 +215,31 @@ the same analyses the checks then use:
 |---|---|
 | `Graph` | the board has parts |
 | `PartClasses` | always; partial (with a coverage note) when some components are classified only by their designator prefix (assumed) or not at all |
-| `Values` | components have a Value field (partial when only some do) |
+| `Values` | components have a value (partial when only some do); see [Values](#values) |
 | `Rails` | some net reads as a rail or a ground |
 | `RailVoltages` | rails carry a voltage (partial when only some do; missing when none does) |
 | `Variant` | the design states what is fitted: a KiCad schematic or netlist, variants, or DNP flags |
 | `Layout` | the board file was read |
-| `Drawing` | the design came from KiCad schematics (labels, no-connect flags), not a netlist |
+| `Drawing` | the design came from KiCad schematics (labels, no-connect flags), not a netlist or a Smart PDF |
 | `MultiBoard` | the design joins boards through connectors |
 | `PinRoles`, `PinThresholds`, `PinFunctions`, `PowerStates`, `Conduction`, `PartDb`, `Project(key)` | not yet: the analyses and the project file are still to come, and the hint names the FEATURES.md id |
+
+## Values
+
+Checks read a part's value from the model (`Part::value`), never a tool's field by its name. The importer fills it by
+the tool's convention, as a fact whose note names the field: KiCad's `Value`; Altium's `Value`, else `Comment` (where
+Altium designers put an IC's part number), in the EDIF and WireList import and the Smart PDF alike. The field itself
+stays as the tool wrote it. `erc_analysis::value::value_text` gives the text a value was read from (a KiCad variant's
+override of `Value` first, then the field of the value's source whose text reads as that value), so a finding can
+name it: the fact is `Value`, or `Value (from Comment)`.
+
+## Certainty
+
+A finding is `certain` when every fact it rests on comes from the design or a stated source, an `estimate` when one
+is assumed (a default, a designator prefix) or reconstructed (`Provenance::is_estimate`): a Smart PDF's property
+bound to its part by where the popup is drawn (`PdfConfidence::Position`), or anything on a board whose nets were
+traced from a drawing (`SourceInfo::connectivity` with `PdfConfidence::Geometry`). A Smart PDF's netlist, read from
+its bookmarks, is as certain as a netlist file.
 
 ## The catalogue in the binary
 

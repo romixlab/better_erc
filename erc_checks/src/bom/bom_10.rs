@@ -105,7 +105,7 @@ impl Check for Bom10 {
                 .message(format!("{designator}: `{}` {}", v.text, odd.join("; ")))
                 .fact("class", class.describe(), class_fact.source.clone());
             if let Some(source) = &v.source {
-                f = f.fact("Value", &v.text, source.clone());
+                f = f.fact(v.label(), &v.text, source.clone());
             }
             out.push(
                 f.fix("one notation across the project (`4k7`, `100n`, `2R2`), values from the E-series the parts come from")

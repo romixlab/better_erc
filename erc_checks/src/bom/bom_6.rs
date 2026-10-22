@@ -27,7 +27,8 @@ impl Check for Bom6 {
         cx.components()
             .filter(|p| cx.fitted(*p))
             .filter_map(|p| {
-                let fact = erc_analysis::value::value_field(b, p, cx.variant)?;
+                let t = erc_analysis::value::value_text(cx.view(), p)?;
+                let fact = t.fact;
                 placeholder(&fact.value).then(|| {
                     cx.finding(&META)
                         .part(p)
@@ -36,7 +37,7 @@ impl Check for Bom6 {
                             b.part(p).designator,
                             fact.value
                         ))
-                        .fact("Value", &fact.value, fact.source.clone())
+                        .fact(t.label(), &fact.value, fact.source.clone())
                         .fix("decide the value, or make the part DNP")
                         .build()
                 })

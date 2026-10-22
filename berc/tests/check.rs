@@ -552,15 +552,18 @@ fn smart_pdf() {
     assert_eq!(board["tool"], "altium-pdf");
     assert_eq!((board["sheets"].as_u64(), board["parts"].as_u64()), (Some(4), Some(7)));
     assert!(r["summary"]["ran"].as_u64().unwrap() > 0);
-    let u1 = r["findings"]
+    let no_value: Vec<&str> = r["findings"]
         .as_array()
         .unwrap()
         .iter()
-        .find(|f| f["check"] == "BOM-9" && f["subjects"][0]["name"] == "U1")
-        .expect("U1 has a Comment but no Value");
-    assert_eq!(u1["confidence"], "certain", "read from the bookmarks");
-    assert_eq!(u1["locations"][1]["file"], "smart_pdf.pdf");
-    assert_eq!(u1["locations"][1]["what"], "symbol U1 on page 3 (MCU.SchDoc)");
+        .filter(|f| f["check"] == "BOM-9")
+        .map(|f| f["subjects"][0]["name"].as_str().unwrap())
+        .collect();
+    assert_eq!(no_value, ["R3", "R4"], "U1 and J1 have theirs in Comment");
+    let r4 = &r["findings"][1];
+    assert_eq!(r4["confidence"], "certain", "read from the bookmarks");
+    assert_eq!(r4["locations"][0]["file"], "smart_pdf.pdf");
+    assert_eq!(r4["locations"][0]["what"], "symbol R4 on page 3 (MCU.SchDoc)");
     assert!(
         r["notes"]
             .as_array()

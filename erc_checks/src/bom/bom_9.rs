@@ -25,8 +25,8 @@ impl Check for Bom9 {
         let b = cx.board();
         cx.components()
             .filter(|p| {
-                b.field(*p, "Value", cx.variant)
-                    .is_none_or(|v| v.trim().is_empty())
+                erc_analysis::value::value_text(cx.view(), *p)
+                    .is_none_or(|t| t.fact.value.trim().is_empty())
             })
             .map(|p| {
                 cx.finding(&META)
