@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "tool": "better_erc 0.3.8",
+  "tool": "better_erc 0.4.2",
   "summary": {
     "boards": [
       {
@@ -15,13 +15,13 @@
     ],
     "variant": null,
     "errors": 3,
-    "warnings": 6,
-    "suggestions": 0,
+    "warnings": 11,
+    "suggestions": 77,
     "infos": 0,
     "candidates": 0,
-    "ran": 11,
+    "ran": 34,
     "not_run": 0,
-    "planned": 502
+    "planned": 479
   },
   "checks": [
     {
@@ -330,7 +330,9 @@
       "title": "No decoupling capacitors on power nets",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 5,
+      "micros": 116
     },
     {
       "id": "DEC-2",
@@ -351,7 +353,9 @@
       "title": "Caution against ferrite beads without measurements",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 14
     },
     {
       "id": "DEC-5",
@@ -372,14 +376,18 @@
       "title": "Fewer decoupling capacitors than power pins on a part that wants one per pin",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 7
     },
     {
       "id": "DEC-8",
       "title": "Decoupling only on the source side of a ferrite, filter or series resistor: nothing at the pin it serves",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 19
     },
     {
       "id": "DEC-9",
@@ -393,21 +401,27 @@
       "title": "Bypass capacitor on the IC's power pin but not on the rail: a two-pin net of one passive and one power pin passes every ERC and powers nothing",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 84
     },
     {
       "id": "DEC-11",
       "title": "Parallel ceramics a decade apart (10 µF with 10 nF): anti-resonance between them; prefer multiples of one value or a graded set",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 8
     },
     {
       "id": "DEC-12",
       "title": "Polarized capacitor (electrolytic, tantalum) with its negative terminal on the higher-potential net",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 7
     },
     {
       "id": "DEC-13",
@@ -1606,7 +1620,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 562
+      "micros": 423
     },
     {
       "id": "I2C-2",
@@ -1615,7 +1629,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 3,
-      "micros": 632
+      "micros": 93
     },
     {
       "id": "I2C-3",
@@ -1624,7 +1638,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 586
+      "micros": 56
     },
     {
       "id": "I2C-4",
@@ -1654,7 +1668,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 566
+      "micros": 63
     },
     {
       "id": "I2C-8",
@@ -1670,7 +1684,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 737
+      "micros": 113
     },
     {
       "id": "I2C-10",
@@ -1679,7 +1693,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 591
+      "micros": 83
     },
     {
       "id": "I2C-11",
@@ -2904,28 +2918,36 @@
       "title": "SWD/JTAG not connected",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 5044
     },
     {
       "id": "DBG-2",
       "title": "No series resistors on an obvious debug header (e.g. SWD)",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 201
     },
     {
       "id": "DBG-3",
       "title": "No LEDs on the board at all: suggest at least one for debug",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 1,
+      "micros": 38
     },
     {
       "id": "DBG-4",
       "title": "No power rail LEDs",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 5,
+      "micros": 21
     },
     {
       "id": "DBG-5",
@@ -2946,14 +2968,18 @@
       "title": "Suggest DNM pull-up and down on EN pins",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 1,
+      "micros": 461
     },
     {
       "id": "DBG-8",
       "title": "Suggest DNM pull-ups on open drain pins; test point detector should highlight those nets",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 469
     },
     {
       "id": "DBG-9",
@@ -2967,14 +2993,18 @@
       "title": "Many things on one power net: suggest splitting with a 0R before each power input",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 2,
+      "micros": 58
     },
     {
       "id": "DBG-11",
       "title": "Suggest 0R on USART TX, RX, CTS, RTS and SPI MOSI, MISO, as they're often wrong",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 424
     },
     {
       "id": "DBG-12",
@@ -2995,7 +3025,9 @@
       "title": "No UART console reachable on a header or test points",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 191
     },
     {
       "id": "DBG-15",
@@ -3009,21 +3041,27 @@
       "title": "No firmware-driven LED (heartbeat), only power LEDs ≈ DBG-3",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 14
     },
     {
       "id": "DBG-17",
       "title": "SWD header without NRST (and SWO): the probe cannot reset a stuck target or trace",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 366
     },
     {
       "id": "DBG-18",
       "title": "I2C or SPI buses not reachable at a header or test points for a bus analyser",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 14,
+      "micros": 665
     },
     {
       "id": "DBG-19",
@@ -3072,14 +3110,18 @@
       "title": "Unconnected pins without test points (optional report table)",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 20,
+      "micros": 635
     },
     {
       "id": "TEST-2",
       "title": "Several test points on one net (incl. through 0R), unless top and bottom",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 49
     },
     {
       "id": "TEST-3",
@@ -3093,14 +3135,18 @@
       "title": "Power rail or ground without a test point",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 6,
+      "micros": 50
     },
     {
       "id": "TEST-5",
       "title": "Bring-up bus (UART, I2C, SPI, SWD) without test points",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 28,
+      "micros": 821
     },
     {
       "id": "TEST-6",
@@ -3151,7 +3197,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 52
+      "micros": 61
     },
     {
       "id": "BOM-6",
@@ -3160,7 +3206,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 60
+      "micros": 43
     },
     {
       "id": "BOM-7",
@@ -3183,7 +3229,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 37
+      "micros": 18
     },
     {
       "id": "BOM-10",
@@ -3192,7 +3238,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 412
+      "micros": 29
     },
     {
       "id": "BOM-11",
@@ -3355,7 +3401,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 104
+      "micros": 9
     },
     {
       "id": "LIB-4",
@@ -3930,6 +3976,141 @@
       "also": []
     },
     {
+      "check": "DEC-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              39
+            ]
+          },
+          "kind": "net",
+          "name": "VCC"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "VCC feeds 11 power pins of U201, U202, U203, U204, U301, U302, U601 and U602 and has no capacitor to a ground",
+      "facts": [],
+      "fingerprint": "DEC-1:net VCC",
+      "explain": "docs/checks/dec.md#dec-1",
+      "fix": "a 100 nF ceramic from the rail to ground at each power pin, plus bulk on the rail",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "DEC-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              40
+            ]
+          },
+          "kind": "net",
+          "name": "VCC2_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "VCC2_3V3 feeds 1 power pin of U405 and has no capacitor to a ground",
+      "facts": [],
+      "fingerprint": "DEC-1:net VCC2_3V3",
+      "explain": "docs/checks/dec.md#dec-1",
+      "fix": "a 100 nF ceramic from the rail to ground at each power pin, plus bulk on the rail",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "DEC-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              41
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_1V2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "VCC_1V2 feeds 2 power pins of U404 and U407 and has no capacitor to a ground",
+      "facts": [],
+      "fingerprint": "DEC-1:net VCC_1V2",
+      "explain": "docs/checks/dec.md#dec-1",
+      "fix": "a 100 nF ceramic from the rail to ground at each power pin, plus bulk on the rail",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "DEC-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              42
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_1V8"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "VCC_1V8 feeds 2 power pins of U406 and U506 and has no capacitor to a ground",
+      "facts": [],
+      "fingerprint": "DEC-1:net VCC_1V8",
+      "explain": "docs/checks/dec.md#dec-1",
+      "fix": "a 100 nF ceramic from the rail to ground at each power pin, plus bulk on the rail",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "DEC-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              43
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "VCC_3V3 feeds 10 power pins of U401, U402, U403, U404, U408, U501, U502 and U503 and has no capacitor to a ground",
+      "facts": [],
+      "fingerprint": "DEC-1:net VCC_3V3",
+      "explain": "docs/checks/dec.md#dec-1",
+      "fix": "a 100 nF ceramic from the rail to ground at each power pin, plus bulk on the rail",
+      "locations": [],
+      "also": []
+    },
+    {
       "check": "I2C-2",
       "severity": "warning",
       "confidence": "certain",
@@ -4465,11 +4646,11 @@
       ],
       "variant": null,
       "state": null,
-      "message": "I2C bus /C22: I2C Segments/I2C1_3V3 to /C22: I2C Segments/I2C1_3V3_to_U408: tie R413/R414 is 1 kΩ, over 100 Ω",
+      "message": "I2C bus /C22: I2C Segments/I2C1_3V3 to /C22: I2C Segments/I2C1_3V3_to_U408: tie R414/R413 is 1 kΩ, over 100 Ω",
       "facts": [
         {
-          "name": "R413",
-          "value": "10 Ω",
+          "name": "R414",
+          "value": "1 kΩ",
           "source": {
             "Schematic": {
               "file": "i2c-7_segments.kicad_sch"
@@ -4477,8 +4658,8 @@
           }
         },
         {
-          "name": "R414",
-          "value": "1 kΩ",
+          "name": "R413",
+          "value": "10 Ω",
           "source": {
             "Schematic": {
               "file": "i2c-7_segments.kicad_sch"
@@ -4814,12 +4995,4492 @@
         }
       ],
       "also": []
+    },
+    {
+      "check": "DBG-3",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              43
+            ]
+          },
+          "kind": "part",
+          "name": "U201"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              47
+            ]
+          },
+          "kind": "part",
+          "name": "U301"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              49
+            ]
+          },
+          "kind": "part",
+          "name": "U401"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              57
+            ]
+          },
+          "kind": "part",
+          "name": "U501"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              61
+            ]
+          },
+          "kind": "part",
+          "name": "U601"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "no LED on the board of U201, U301, U401, U501 and U601: nothing shows that the firmware runs",
+      "facts": [],
+      "fingerprint": "DBG-3:part U201|part U301|part U401|part U501|part U601",
+      "explain": "docs/checks/dbg.md#dbg-3",
+      "fix": "one LED on a free GPIO (DBG-16); 1-2 mA is enough",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol U201",
+          "line": 1913,
+          "at": [
+            49.53,
+            97.79
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol U501",
+          "line": 4027,
+          "at": [
+            48.26,
+            60.96
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U401",
+          "line": 5888,
+          "at": [
+            87.63,
+            73.66
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "symbol U301",
+          "line": 1366,
+          "at": [
+            73.66,
+            68.58
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "symbol U601",
+          "line": 1726,
+          "at": [
+            68.58,
+            63.5
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              39
+            ]
+          },
+          "kind": "net",
+          "name": "VCC"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "no LED shows VCC",
+      "facts": [],
+      "fingerprint": "DBG-4:net VCC",
+      "explain": "docs/checks/dbg.md#dbg-4",
+      "fix": "an LED with its resistor from the rail to ground (DNP on battery boards); the input rail and switched rails first",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "DBG-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              40
+            ]
+          },
+          "kind": "net",
+          "name": "VCC2_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "no LED shows VCC2_3V3",
+      "facts": [],
+      "fingerprint": "DBG-4:net VCC2_3V3",
+      "explain": "docs/checks/dbg.md#dbg-4",
+      "fix": "an LED with its resistor from the rail to ground (DNP on battery boards); the input rail and switched rails first",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "DBG-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              41
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_1V2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "no LED shows VCC_1V2",
+      "facts": [],
+      "fingerprint": "DBG-4:net VCC_1V2",
+      "explain": "docs/checks/dbg.md#dbg-4",
+      "fix": "an LED with its resistor from the rail to ground (DNP on battery boards); the input rail and switched rails first",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "DBG-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              42
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_1V8"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "no LED shows VCC_1V8",
+      "facts": [],
+      "fingerprint": "DBG-4:net VCC_1V8",
+      "explain": "docs/checks/dbg.md#dbg-4",
+      "fix": "an LED with its resistor from the rail to ground (DNP on battery boards); the input rail and switched rails first",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "DBG-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              43
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "no LED shows VCC_3V3",
+      "facts": [],
+      "fingerprint": "DBG-4:net VCC_3V3",
+      "explain": "docs/checks/dbg.md#dbg-4",
+      "fix": "an LED with its resistor from the rail to ground (DNP on battery boards); the input rail and switched rails first",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "DBG-7",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              106
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U404-EN-Pad8)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              208
+            ]
+          },
+          "kind": "pin",
+          "name": "U404.8"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U404.8 (EN) left with no pull either way",
+      "facts": [],
+      "fingerprint": "DBG-7:net unconnected-(U404-EN-Pad8)|pin U404.8",
+      "explain": "docs/checks/dbg.md#dbg-7",
+      "fix": "drive EN through a resistor (or from a GPIO with a pull) and add a DNM resistor to the other level",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U404",
+          "line": 7589,
+          "at": [
+            210.82,
+            204.47
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-10",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              39
+            ]
+          },
+          "kind": "net",
+          "name": "VCC"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "VCC feeds 8 parts directly (U201, U202, U203, U204, U301, U302, U601 and U602): no branch can be isolated or measured",
+      "facts": [
+        {
+          "name": "max_parts",
+          "value": "5",
+          "source": {
+            "Derived": {
+              "rule": "DBG-10 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "DBG-10:net VCC",
+      "explain": "docs/checks/dbg.md#dbg-10",
+      "fix": "a 0 Ω (or ferrite, or solder jumper) at the start of each block's branch",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "DBG-10",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              43
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "VCC_3V3 feeds 8 parts directly (U401, U402, U403, U404, U408, U501, U502 and U503): no branch can be isolated or measured",
+      "facts": [
+        {
+          "name": "max_parts",
+          "value": "5",
+          "source": {
+            "Derived": {
+              "rule": "DBG-10 default"
+            }
+          }
+        }
+      ],
+      "fingerprint": "DBG-10:net VCC_3V3",
+      "explain": "docs/checks/dbg.md#dbg-10",
+      "fix": "a 0 Ω (or ferrite, or solder jumper) at the start of each block's branch",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "DBG-18",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              32
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SCL1_1V8"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              35
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SDA1_1V8"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C107: I2C multiple pull-ups/I2C1_1V8: /C107: I2C multiple pull-ups/SCL1_1V8 and /C107: I2C multiple pull-ups/SDA1_1V8 reach no test point or header for an analyser",
+      "facts": [],
+      "fingerprint": "DBG-18:net /C107: I2C multiple pull-ups/SCL1_1V8|net /C107: I2C multiple pull-ups/SDA1_1V8",
+      "explain": "docs/checks/dbg.md#dbg-18",
+      "fix": "a test point per line plus GND, or an unpopulated 2.54 mm header",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SCL1_1V8",
+          "at": [
+            50.8,
+            190.5
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SCL1_1V8",
+          "at": [
+            222.25,
+            49.53
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA1_1V8",
+          "at": [
+            50.8,
+            187.96
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA1_1V8",
+          "at": [
+            87.63,
+            187.96
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA1_1V8",
+          "at": [
+            222.25,
+            46.99
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-18",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              33
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SCL1_3V3"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              36
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SDA1_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C107: I2C multiple pull-ups/I2C1_3V3: /C107: I2C multiple pull-ups/SCL1_3V3 and /C107: I2C multiple pull-ups/SDA1_3V3 reach no test point or header for an analyser",
+      "facts": [],
+      "fingerprint": "DBG-18:net /C107: I2C multiple pull-ups/SCL1_3V3|net /C107: I2C multiple pull-ups/SDA1_3V3",
+      "explain": "docs/checks/dbg.md#dbg-18",
+      "fix": "a test point per line plus GND, or an unpopulated 2.54 mm header",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SCL1_3V3",
+          "at": [
+            80.01,
+            66.04
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA1_3V3",
+          "at": [
+            80.01,
+            68.58
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-18",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              34
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SCL_U7"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              37
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SDA_U7"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C107: I2C multiple pull-ups/I2C_U7: /C107: I2C multiple pull-ups/SCL_U7 and /C107: I2C multiple pull-ups/SDA_U7 reach no test point or header for an analyser",
+      "facts": [],
+      "fingerprint": "DBG-18:net /C107: I2C multiple pull-ups/SCL_U7|net /C107: I2C multiple pull-ups/SDA_U7",
+      "explain": "docs/checks/dbg.md#dbg-18",
+      "fix": "a test point per line plus GND, or an unpopulated 2.54 mm header",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SCL_U7",
+          "at": [
+            149.86,
+            109.22
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA_U7",
+          "at": [
+            149.86,
+            106.68
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-18",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              5
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SCL1"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              8
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SDA1"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C20: I2C no pull-ups/I2C1: /C20: I2C no pull-ups/SCL1 and /C20: I2C no pull-ups/SDA1 reach no test point or header for an analyser",
+      "facts": [],
+      "fingerprint": "DBG-18:net /C20: I2C no pull-ups/SCL1|net /C20: I2C no pull-ups/SDA1",
+      "explain": "docs/checks/dbg.md#dbg-18",
+      "fix": "a test point per line plus GND, or an unpopulated 2.54 mm header",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SCL1",
+          "at": [
+            74.93,
+            102.87
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SCL1",
+          "at": [
+            82.55,
+            105.41
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SDA1",
+          "at": [
+            74.93,
+            105.41
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SDA1",
+          "at": [
+            82.55,
+            102.87
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-18",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              6
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SCL2"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              9
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SDA2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C20: I2C no pull-ups/I2C2: /C20: I2C no pull-ups/SCL2 and /C20: I2C no pull-ups/SDA2 reach no test point or header for an analyser",
+      "facts": [],
+      "fingerprint": "DBG-18:net /C20: I2C no pull-ups/SCL2|net /C20: I2C no pull-ups/SDA2",
+      "explain": "docs/checks/dbg.md#dbg-18",
+      "fix": "a test point per line plus GND, or an unpopulated 2.54 mm header",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SCL2",
+          "at": [
+            129.54,
+            105.41
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SDA2",
+          "at": [
+            129.54,
+            102.87
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-18",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              7
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SCL3"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              10
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SDA3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C20: I2C no pull-ups/I2C3: /C20: I2C no pull-ups/SCL3 and /C20: I2C no pull-ups/SDA3 reach no test point or header for an analyser",
+      "facts": [],
+      "fingerprint": "DBG-18:net /C20: I2C no pull-ups/SCL3|net /C20: I2C no pull-ups/SDA3",
+      "explain": "docs/checks/dbg.md#dbg-18",
+      "fix": "a test point per line plus GND, or an unpopulated 2.54 mm header",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SCL3",
+          "at": [
+            200.66,
+            105.41
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SDA3",
+          "at": [
+            200.66,
+            102.87
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-18",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              11
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C non equal pull-ups/SCL"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              12
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C non equal pull-ups/SDA"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C20: I2C non equal pull-ups/I2C: /C20: I2C non equal pull-ups/SCL and /C20: I2C non equal pull-ups/SDA reach no test point or header for an analyser",
+      "facts": [],
+      "fingerprint": "DBG-18:net /C20: I2C non equal pull-ups/SCL|net /C20: I2C non equal pull-ups/SDA",
+      "explain": "docs/checks/dbg.md#dbg-18",
+      "fix": "a test point per line plus GND, or an unpopulated 2.54 mm header",
+      "locations": [
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "local label SCL",
+          "at": [
+            109.22,
+            68.58
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "local label SCL",
+          "at": [
+            121.92,
+            71.12
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "local label SDA",
+          "at": [
+            109.22,
+            71.12
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "local label SDA",
+          "at": [
+            121.92,
+            68.58
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-18",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              13
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C non standard pull-ups/SCL"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              14
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C non standard pull-ups/SDA"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C20: I2C non standard pull-ups/I2C: /C20: I2C non standard pull-ups/SCL and /C20: I2C non standard pull-ups/SDA reach no test point or header for an analyser",
+      "facts": [],
+      "fingerprint": "DBG-18:net /C20: I2C non standard pull-ups/SCL|net /C20: I2C non standard pull-ups/SDA",
+      "explain": "docs/checks/dbg.md#dbg-18",
+      "fix": "a test point per line plus GND, or an unpopulated 2.54 mm header",
+      "locations": [
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "local label SCL",
+          "at": [
+            114.3,
+            73.66
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "local label SCL",
+          "at": [
+            127.0,
+            76.2
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "local label SDA",
+          "at": [
+            114.3,
+            76.2
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "local label SDA",
+          "at": [
+            127.0,
+            73.66
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-18",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              15
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL1_1V2"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              22
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA1_1V2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C22: I2C Segments/I2C1_1V2: /C22: I2C Segments/SCL1_1V2 and /C22: I2C Segments/SDA1_1V2 reach no test point or header for an analyser",
+      "facts": [],
+      "fingerprint": "DBG-18:net /C22: I2C Segments/SCL1_1V2|net /C22: I2C Segments/SDA1_1V2",
+      "explain": "docs/checks/dbg.md#dbg-18",
+      "fix": "a test point per line plus GND, or an unpopulated 2.54 mm header",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL1_1V2",
+          "at": [
+            262.89,
+            207.01
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA1_1V2",
+          "at": [
+            262.89,
+            204.47
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-18",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              16
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL1_1V8"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              23
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA1_1V8"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C22: I2C Segments/I2C1_1V8: /C22: I2C Segments/SCL1_1V8 and /C22: I2C Segments/SDA1_1V8 reach no test point or header for an analyser",
+      "facts": [],
+      "fingerprint": "DBG-18:net /C22: I2C Segments/SCL1_1V8|net /C22: I2C Segments/SDA1_1V8",
+      "explain": "docs/checks/dbg.md#dbg-18",
+      "fix": "a test point per line plus GND, or an unpopulated 2.54 mm header",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL1_1V8",
+          "at": [
+            261.62,
+            62.23
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA1_1V8",
+          "at": [
+            261.62,
+            59.69
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-18",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              18
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL1_3V3_VCC2"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              25
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA1_3V3_VCC2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C22: I2C Segments/I2C1_3V3_VCC2: /C22: I2C Segments/SCL1_3V3_VCC2 and /C22: I2C Segments/SDA1_3V3_VCC2 reach no test point or header for an analyser",
+      "facts": [],
+      "fingerprint": "DBG-18:net /C22: I2C Segments/SCL1_3V3_VCC2|net /C22: I2C Segments/SDA1_3V3_VCC2",
+      "explain": "docs/checks/dbg.md#dbg-18",
+      "fix": "a test point per line plus GND, or an unpopulated 2.54 mm header",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL1_3V3_VCC2",
+          "at": [
+            245.11,
+            160.02
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA1_3V3_VCC2",
+          "at": [
+            245.11,
+            157.48
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-18",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              17
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL1_3V3"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              24
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA1_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C22: I2C Segments/I2C1_3V3: /C22: I2C Segments/SCL1_3V3 and /C22: I2C Segments/SDA1_3V3 reach no test point or header for an analyser",
+      "facts": [],
+      "fingerprint": "DBG-18:net /C22: I2C Segments/SCL1_3V3|net /C22: I2C Segments/SDA1_3V3",
+      "explain": "docs/checks/dbg.md#dbg-18",
+      "fix": "a test point per line plus GND, or an unpopulated 2.54 mm header",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL1_3V3",
+          "at": [
+            119.38,
+            78.74
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA1_3V3",
+          "at": [
+            119.38,
+            81.28
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-18",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              21
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL_U7"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              29
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA_U7"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C22: I2C Segments/I2C_U7: /C22: I2C Segments/SCL_U7 and /C22: I2C Segments/SDA_U7 reach no test point or header for an analyser",
+      "facts": [],
+      "fingerprint": "DBG-18:net /C22: I2C Segments/SCL_U7|net /C22: I2C Segments/SDA_U7",
+      "explain": "docs/checks/dbg.md#dbg-18",
+      "fix": "a test point per line plus GND, or an unpopulated 2.54 mm header",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL_U7",
+          "at": [
+            189.23,
+            121.92
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA_U7",
+          "at": [
+            189.23,
+            119.38
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "DBG-18",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              30
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/UNM1"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              31
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/UNM2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C22: I2C Segments/I2C1_3V3_to_U408: /C22: I2C Segments/UNM2 and /C22: I2C Segments/UNM1 reach no test point or header for an analyser",
+      "facts": [],
+      "fingerprint": "DBG-18:net /C22: I2C Segments/UNM1|net /C22: I2C Segments/UNM2",
+      "explain": "docs/checks/dbg.md#dbg-18",
+      "fix": "a test point per line plus GND, or an unpopulated 2.54 mm header",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label UNM1",
+          "at": [
+            189.23,
+            251.46
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label UNM2",
+          "at": [
+            189.23,
+            254.0
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              43
+            ]
+          },
+          "kind": "part",
+          "name": "U201"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              93
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              94
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              95
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              96
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.4"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              98
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.6"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              99
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.7"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              100
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.8"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              101
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.9"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              102
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.10"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              103
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.11"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              104
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.12"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              105
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.13"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              106
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.14"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              111
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.19"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              112
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.20"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U201: 15 pins unconnected, no test point can reach them: U201.1 BOOT0 (input), U201.2 PF0 (bidirectional), U201.3 PF1 (bidirectional), U201.4 NRST (input), U201.6 PA0 (bidirectional), U201.7 PA1 (bidirectional), U201.8 PA2 (bidirectional), U201.9 PA3 (bidirectional), U201.10 PA4 (bidirectional), U201.11 PA5 (bidirectional), U201.12 PA6 (bidirectional), U201.13 PA7 (bidirectional), U201.14 PB1 (bidirectional), U201.19 PA13 (bidirectional), U201.20 PA14 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U201|pin U201.1|pin U201.10|pin U201.11|pin U201.12|pin U201.13|pin U201.14|pin U201.19|pin U201.2|pin U201.20|pin U201.3|pin U201.4|pin U201.6|pin U201.7|pin U201.8|pin U201.9",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol U201",
+          "line": 1913,
+          "at": [
+            49.53,
+            97.79
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              44
+            ]
+          },
+          "kind": "part",
+          "name": "U202"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              113
+            ]
+          },
+          "kind": "pin",
+          "name": "U202.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              114
+            ]
+          },
+          "kind": "pin",
+          "name": "U202.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              115
+            ]
+          },
+          "kind": "pin",
+          "name": "U202.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              117
+            ]
+          },
+          "kind": "pin",
+          "name": "U202.5"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U202: 4 pins unconnected, no test point can reach them: U202.1 IO0 (bidirectional), U202.2 IO1 (bidirectional), U202.3 IO2 (bidirectional), U202.5 IO3 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U202|pin U202.1|pin U202.2|pin U202.3|pin U202.5",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol U202",
+          "line": 2104,
+          "at": [
+            107.95,
+            100.33
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              45
+            ]
+          },
+          "kind": "part",
+          "name": "U203"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              121
+            ]
+          },
+          "kind": "pin",
+          "name": "U203.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              122
+            ]
+          },
+          "kind": "pin",
+          "name": "U203.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              123
+            ]
+          },
+          "kind": "pin",
+          "name": "U203.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              125
+            ]
+          },
+          "kind": "pin",
+          "name": "U203.5"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U203: 4 pins unconnected, no test point can reach them: U203.1 IO0 (bidirectional), U203.2 IO1 (bidirectional), U203.3 IO2 (bidirectional), U203.5 IO3 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U203|pin U203.1|pin U203.2|pin U203.3|pin U203.5",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol U203",
+          "line": 2192,
+          "at": [
+            172.72,
+            100.33
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              46
+            ]
+          },
+          "kind": "part",
+          "name": "U204"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              129
+            ]
+          },
+          "kind": "pin",
+          "name": "U204.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              130
+            ]
+          },
+          "kind": "pin",
+          "name": "U204.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              131
+            ]
+          },
+          "kind": "pin",
+          "name": "U204.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              133
+            ]
+          },
+          "kind": "pin",
+          "name": "U204.5"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U204: 4 pins unconnected, no test point can reach them: U204.1 IO0 (bidirectional), U204.2 IO1 (bidirectional), U204.3 IO2 (bidirectional), U204.5 IO3 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U204|pin U204.1|pin U204.2|pin U204.3|pin U204.5",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol U204",
+          "line": 1627,
+          "at": [
+            243.84,
+            100.33
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              47
+            ]
+          },
+          "kind": "part",
+          "name": "U301"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              137
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              138
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              139
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              140
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.4"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              142
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.6"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              143
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.7"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              144
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.8"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              145
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.9"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              146
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.10"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              147
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.11"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              148
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.12"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              149
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.13"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              150
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.14"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              155
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.19"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              156
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.20"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U301: 15 pins unconnected, no test point can reach them: U301.1 BOOT0 (input), U301.2 PF0 (bidirectional), U301.3 PF1 (bidirectional), U301.4 NRST (input), U301.6 PA0 (bidirectional), U301.7 PA1 (bidirectional), U301.8 PA2 (bidirectional), U301.9 PA3 (bidirectional), U301.10 PA4 (bidirectional), U301.11 PA5 (bidirectional), U301.12 PA6 (bidirectional), U301.13 PA7 (bidirectional), U301.14 PB1 (bidirectional), U301.19 PA13 (bidirectional), U301.20 PA14 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U301|pin U301.1|pin U301.10|pin U301.11|pin U301.12|pin U301.13|pin U301.14|pin U301.19|pin U301.2|pin U301.20|pin U301.3|pin U301.4|pin U301.6|pin U301.7|pin U301.8|pin U301.9",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "symbol U301",
+          "line": 1366,
+          "at": [
+            73.66,
+            68.58
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              48
+            ]
+          },
+          "kind": "part",
+          "name": "U302"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              157
+            ]
+          },
+          "kind": "pin",
+          "name": "U302.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              158
+            ]
+          },
+          "kind": "pin",
+          "name": "U302.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              159
+            ]
+          },
+          "kind": "pin",
+          "name": "U302.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              161
+            ]
+          },
+          "kind": "pin",
+          "name": "U302.5"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U302: 4 pins unconnected, no test point can reach them: U302.1 IO0 (bidirectional), U302.2 IO1 (bidirectional), U302.3 IO2 (bidirectional), U302.5 IO3 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U302|pin U302.1|pin U302.2|pin U302.3|pin U302.5",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "symbol U302",
+          "line": 1627,
+          "at": [
+            152.4,
+            71.12
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              49
+            ]
+          },
+          "kind": "part",
+          "name": "U401"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              165
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              166
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              167
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              168
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.4"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              170
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.6"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              171
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.7"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              172
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.8"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              173
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.9"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              174
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.10"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              175
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.11"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              177
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.13"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              178
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.14"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U401: 12 pins unconnected, no test point can reach them: U401.1 BOOT0 (input), U401.2 PF0 (bidirectional), U401.3 PF1 (bidirectional), U401.4 NRST (input), U401.6 PA0 (bidirectional), U401.7 PA1 (bidirectional), U401.8 PA2 (bidirectional), U401.9 PA3 (bidirectional), U401.10 PA4 (bidirectional), U401.11 PA5 (bidirectional), U401.13 PA7 (bidirectional), U401.14 PB1 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U401|pin U401.1|pin U401.10|pin U401.11|pin U401.13|pin U401.14|pin U401.2|pin U401.3|pin U401.4|pin U401.6|pin U401.7|pin U401.8|pin U401.9",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U401",
+          "line": 5888,
+          "at": [
+            87.63,
+            73.66
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              50
+            ]
+          },
+          "kind": "part",
+          "name": "U402"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              185
+            ]
+          },
+          "kind": "pin",
+          "name": "U402.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              186
+            ]
+          },
+          "kind": "pin",
+          "name": "U402.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              187
+            ]
+          },
+          "kind": "pin",
+          "name": "U402.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              189
+            ]
+          },
+          "kind": "pin",
+          "name": "U402.5"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U402: 4 pins unconnected, no test point can reach them: U402.1 IO0 (bidirectional), U402.2 IO1 (bidirectional), U402.3 IO2 (bidirectional), U402.5 IO3 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U402|pin U402.1|pin U402.2|pin U402.3|pin U402.5",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U402",
+          "line": 6357,
+          "at": [
+            190.5,
+            83.82
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              51
+            ]
+          },
+          "kind": "part",
+          "name": "U403"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              193
+            ]
+          },
+          "kind": "pin",
+          "name": "U403.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              194
+            ]
+          },
+          "kind": "pin",
+          "name": "U403.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              195
+            ]
+          },
+          "kind": "pin",
+          "name": "U403.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              197
+            ]
+          },
+          "kind": "pin",
+          "name": "U403.5"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U403: 4 pins unconnected, no test point can reach them: U403.1 IO0 (bidirectional), U403.2 IO1 (bidirectional), U403.3 IO2 (bidirectional), U403.5 IO3 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U403|pin U403.1|pin U403.2|pin U403.3|pin U403.5",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U403",
+          "line": 5238,
+          "at": [
+            210.82,
+            116.84
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              52
+            ]
+          },
+          "kind": "part",
+          "name": "U404"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              208
+            ]
+          },
+          "kind": "pin",
+          "name": "U404.8"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U404: 1 pin unconnected, no test point can reach it: U404.8 EN (input)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U404|pin U404.8",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U404",
+          "line": 7589,
+          "at": [
+            210.82,
+            204.47
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              53
+            ]
+          },
+          "kind": "part",
+          "name": "U405"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              209
+            ]
+          },
+          "kind": "pin",
+          "name": "U405.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              210
+            ]
+          },
+          "kind": "pin",
+          "name": "U405.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              211
+            ]
+          },
+          "kind": "pin",
+          "name": "U405.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              213
+            ]
+          },
+          "kind": "pin",
+          "name": "U405.5"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U405: 4 pins unconnected, no test point can reach them: U405.1 IO0 (bidirectional), U405.2 IO1 (bidirectional), U405.3 IO2 (bidirectional), U405.5 IO3 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U405|pin U405.1|pin U405.2|pin U405.3|pin U405.5",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U405",
+          "line": 3701,
+          "at": [
+            276.86,
+            154.94
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              54
+            ]
+          },
+          "kind": "part",
+          "name": "U406"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              217
+            ]
+          },
+          "kind": "pin",
+          "name": "U406.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              218
+            ]
+          },
+          "kind": "pin",
+          "name": "U406.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              219
+            ]
+          },
+          "kind": "pin",
+          "name": "U406.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              221
+            ]
+          },
+          "kind": "pin",
+          "name": "U406.5"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U406: 4 pins unconnected, no test point can reach them: U406.1 IO0 (bidirectional), U406.2 IO1 (bidirectional), U406.3 IO2 (bidirectional), U406.5 IO3 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U406|pin U406.1|pin U406.2|pin U406.3|pin U406.5",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U406",
+          "line": 5524,
+          "at": [
+            288.29,
+            57.15
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              55
+            ]
+          },
+          "kind": "part",
+          "name": "U407"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              225
+            ]
+          },
+          "kind": "pin",
+          "name": "U407.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              226
+            ]
+          },
+          "kind": "pin",
+          "name": "U407.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              227
+            ]
+          },
+          "kind": "pin",
+          "name": "U407.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              229
+            ]
+          },
+          "kind": "pin",
+          "name": "U407.5"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U407: 4 pins unconnected, no test point can reach them: U407.1 IO0 (bidirectional), U407.2 IO1 (bidirectional), U407.3 IO2 (bidirectional), U407.5 IO3 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U407|pin U407.1|pin U407.2|pin U407.3|pin U407.5",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U407",
+          "line": 4473,
+          "at": [
+            289.56,
+            201.93
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              56
+            ]
+          },
+          "kind": "part",
+          "name": "U408"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              233
+            ]
+          },
+          "kind": "pin",
+          "name": "U408.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              234
+            ]
+          },
+          "kind": "pin",
+          "name": "U408.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              235
+            ]
+          },
+          "kind": "pin",
+          "name": "U408.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              237
+            ]
+          },
+          "kind": "pin",
+          "name": "U408.5"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U408: 4 pins unconnected, no test point can reach them: U408.1 IO0 (bidirectional), U408.2 IO1 (bidirectional), U408.3 IO2 (bidirectional), U408.5 IO3 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U408|pin U408.1|pin U408.2|pin U408.3|pin U408.5",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U408",
+          "line": 3547,
+          "at": [
+            233.68,
+            248.92
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              57
+            ]
+          },
+          "kind": "part",
+          "name": "U501"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              241
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              242
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              243
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              244
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.4"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              246
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.6"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              247
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.7"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              248
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.8"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              249
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.9"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              250
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.10"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              251
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.11"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              252
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.12"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              253
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.13"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              254
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.14"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              259
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.19"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              260
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.20"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U501: 15 pins unconnected, no test point can reach them: U501.1 BOOT0 (input), U501.2 PF0 (bidirectional), U501.3 PF1 (bidirectional), U501.4 NRST (input), U501.6 PA0 (bidirectional), U501.7 PA1 (bidirectional), U501.8 PA2 (bidirectional), U501.9 PA3 (bidirectional), U501.10 PA4 (bidirectional), U501.11 PA5 (bidirectional), U501.12 PA6 (bidirectional), U501.13 PA7 (bidirectional), U501.14 PB1 (bidirectional), U501.19 PA13 (bidirectional), U501.20 PA14 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U501|pin U501.1|pin U501.10|pin U501.11|pin U501.12|pin U501.13|pin U501.14|pin U501.19|pin U501.2|pin U501.20|pin U501.3|pin U501.4|pin U501.6|pin U501.7|pin U501.8|pin U501.9",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol U501",
+          "line": 4027,
+          "at": [
+            48.26,
+            60.96
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              58
+            ]
+          },
+          "kind": "part",
+          "name": "U502"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              261
+            ]
+          },
+          "kind": "pin",
+          "name": "U502.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              262
+            ]
+          },
+          "kind": "pin",
+          "name": "U502.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              263
+            ]
+          },
+          "kind": "pin",
+          "name": "U502.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              265
+            ]
+          },
+          "kind": "pin",
+          "name": "U502.5"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U502: 4 pins unconnected, no test point can reach them: U502.1 IO0 (bidirectional), U502.2 IO1 (bidirectional), U502.3 IO2 (bidirectional), U502.5 IO3 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U502|pin U502.1|pin U502.2|pin U502.3|pin U502.5",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol U502",
+          "line": 4350,
+          "at": [
+            151.13,
+            71.12
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              59
+            ]
+          },
+          "kind": "part",
+          "name": "U503"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              269
+            ]
+          },
+          "kind": "pin",
+          "name": "U503.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              270
+            ]
+          },
+          "kind": "pin",
+          "name": "U503.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              271
+            ]
+          },
+          "kind": "pin",
+          "name": "U503.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              273
+            ]
+          },
+          "kind": "pin",
+          "name": "U503.5"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U503: 4 pins unconnected, no test point can reach them: U503.1 IO0 (bidirectional), U503.2 IO1 (bidirectional), U503.3 IO2 (bidirectional), U503.5 IO3 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U503|pin U503.1|pin U503.2|pin U503.3|pin U503.5",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol U503",
+          "line": 3031,
+          "at": [
+            204.47,
+            104.14
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              60
+            ]
+          },
+          "kind": "part",
+          "name": "U506"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              277
+            ]
+          },
+          "kind": "pin",
+          "name": "U506.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              278
+            ]
+          },
+          "kind": "pin",
+          "name": "U506.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              279
+            ]
+          },
+          "kind": "pin",
+          "name": "U506.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              281
+            ]
+          },
+          "kind": "pin",
+          "name": "U506.5"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U506: 4 pins unconnected, no test point can reach them: U506.1 IO0 (bidirectional), U506.2 IO1 (bidirectional), U506.3 IO2 (bidirectional), U506.5 IO3 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U506|pin U506.1|pin U506.2|pin U506.3|pin U506.5",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol U506",
+          "line": 3539,
+          "at": [
+            248.92,
+            44.45
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              61
+            ]
+          },
+          "kind": "part",
+          "name": "U601"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              285
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              286
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              287
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              288
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.4"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              290
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.6"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              291
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.7"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              292
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.8"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              293
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.9"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              294
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.10"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              295
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.11"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              296
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.12"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              297
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.13"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              298
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.14"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              303
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.19"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              304
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.20"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U601: 15 pins unconnected, no test point can reach them: U601.1 BOOT0 (input), U601.2 PF0 (bidirectional), U601.3 PF1 (bidirectional), U601.4 NRST (input), U601.6 PA0 (bidirectional), U601.7 PA1 (bidirectional), U601.8 PA2 (bidirectional), U601.9 PA3 (bidirectional), U601.10 PA4 (bidirectional), U601.11 PA5 (bidirectional), U601.12 PA6 (bidirectional), U601.13 PA7 (bidirectional), U601.14 PB1 (bidirectional), U601.19 PA13 (bidirectional), U601.20 PA14 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U601|pin U601.1|pin U601.10|pin U601.11|pin U601.12|pin U601.13|pin U601.14|pin U601.19|pin U601.2|pin U601.20|pin U601.3|pin U601.4|pin U601.6|pin U601.7|pin U601.8|pin U601.9",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "symbol U601",
+          "line": 1726,
+          "at": [
+            68.58,
+            63.5
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-1",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Part": [
+              0,
+              62
+            ]
+          },
+          "kind": "part",
+          "name": "U602"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              305
+            ]
+          },
+          "kind": "pin",
+          "name": "U602.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              306
+            ]
+          },
+          "kind": "pin",
+          "name": "U602.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              307
+            ]
+          },
+          "kind": "pin",
+          "name": "U602.3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              309
+            ]
+          },
+          "kind": "pin",
+          "name": "U602.5"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U602: 4 pins unconnected, no test point can reach them: U602.1 IO0 (bidirectional), U602.2 IO1 (bidirectional), U602.3 IO2 (bidirectional), U602.5 IO3 (bidirectional)",
+      "facts": [],
+      "fingerprint": "TEST-1:part U602|pin U602.1|pin U602.2|pin U602.3|pin U602.5",
+      "explain": "docs/checks/test.md#test-1",
+      "fix": "a test point on outputs and spare pins worth observing; a no-connect flag on the rest",
+      "locations": [
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "symbol U602",
+          "line": 1502,
+          "at": [
+            147.32,
+            66.04
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              38
+            ]
+          },
+          "kind": "net",
+          "name": "GND"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "ground GND has no test point",
+      "facts": [],
+      "fingerprint": "TEST-4:net GND",
+      "explain": "docs/checks/test.md#test-4",
+      "fix": "a test point per rail and at least one ground pad (or a ground loop) per board area",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "TEST-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              39
+            ]
+          },
+          "kind": "net",
+          "name": "VCC"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "rail VCC has no test point",
+      "facts": [],
+      "fingerprint": "TEST-4:net VCC",
+      "explain": "docs/checks/test.md#test-4",
+      "fix": "a test point per rail and at least one ground pad (or a ground loop) per board area",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "TEST-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              40
+            ]
+          },
+          "kind": "net",
+          "name": "VCC2_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "rail VCC2_3V3 has no test point",
+      "facts": [],
+      "fingerprint": "TEST-4:net VCC2_3V3",
+      "explain": "docs/checks/test.md#test-4",
+      "fix": "a test point per rail and at least one ground pad (or a ground loop) per board area",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "TEST-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              41
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_1V2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "rail VCC_1V2 has no test point",
+      "facts": [],
+      "fingerprint": "TEST-4:net VCC_1V2",
+      "explain": "docs/checks/test.md#test-4",
+      "fix": "a test point per rail and at least one ground pad (or a ground loop) per board area",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "TEST-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              42
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_1V8"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "rail VCC_1V8 has no test point",
+      "facts": [],
+      "fingerprint": "TEST-4:net VCC_1V8",
+      "explain": "docs/checks/test.md#test-4",
+      "fix": "a test point per rail and at least one ground pad (or a ground loop) per board area",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "TEST-4",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              43
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "rail VCC_3V3 has no test point",
+      "facts": [],
+      "fingerprint": "TEST-4:net VCC_3V3",
+      "explain": "docs/checks/test.md#test-4",
+      "fix": "a test point per rail and at least one ground pad (or a ground loop) per board area",
+      "locations": [],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              32
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SCL1_1V8"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C107: I2C multiple pull-ups/SCL1_1V8 (I2C bus /C107: I2C multiple pull-ups/I2C1_1V8) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C107: I2C multiple pull-ups/SCL1_1V8",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SCL1_1V8",
+          "at": [
+            50.8,
+            190.5
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SCL1_1V8",
+          "at": [
+            222.25,
+            49.53
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              33
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SCL1_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C107: I2C multiple pull-ups/SCL1_3V3 (I2C bus /C107: I2C multiple pull-ups/I2C1_3V3) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C107: I2C multiple pull-ups/SCL1_3V3",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SCL1_3V3",
+          "at": [
+            80.01,
+            66.04
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              34
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SCL_U7"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C107: I2C multiple pull-ups/SCL_U7 (I2C bus /C107: I2C multiple pull-ups/I2C_U7) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C107: I2C multiple pull-ups/SCL_U7",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SCL_U7",
+          "at": [
+            149.86,
+            109.22
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              35
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SDA1_1V8"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C107: I2C multiple pull-ups/SDA1_1V8 (I2C bus /C107: I2C multiple pull-ups/I2C1_1V8) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C107: I2C multiple pull-ups/SDA1_1V8",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA1_1V8",
+          "at": [
+            50.8,
+            187.96
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA1_1V8",
+          "at": [
+            87.63,
+            187.96
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA1_1V8",
+          "at": [
+            222.25,
+            46.99
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              36
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SDA1_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C107: I2C multiple pull-ups/SDA1_3V3 (I2C bus /C107: I2C multiple pull-ups/I2C1_3V3) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C107: I2C multiple pull-ups/SDA1_3V3",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA1_3V3",
+          "at": [
+            80.01,
+            68.58
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              37
+            ]
+          },
+          "kind": "net",
+          "name": "/C107: I2C multiple pull-ups/SDA_U7"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C107: I2C multiple pull-ups/SDA_U7 (I2C bus /C107: I2C multiple pull-ups/I2C_U7) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C107: I2C multiple pull-ups/SDA_U7",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "local label SDA_U7",
+          "at": [
+            149.86,
+            106.68
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              5
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SCL1"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C20: I2C no pull-ups/SCL1 (I2C bus /C20: I2C no pull-ups/I2C1) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C20: I2C no pull-ups/SCL1",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SCL1",
+          "at": [
+            74.93,
+            102.87
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SCL1",
+          "at": [
+            82.55,
+            105.41
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              6
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SCL2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C20: I2C no pull-ups/SCL2 (I2C bus /C20: I2C no pull-ups/I2C2) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C20: I2C no pull-ups/SCL2",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SCL2",
+          "at": [
+            129.54,
+            105.41
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              7
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SCL3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C20: I2C no pull-ups/SCL3 (I2C bus /C20: I2C no pull-ups/I2C3) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C20: I2C no pull-ups/SCL3",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SCL3",
+          "at": [
+            200.66,
+            105.41
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              8
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SDA1"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C20: I2C no pull-ups/SDA1 (I2C bus /C20: I2C no pull-ups/I2C1) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C20: I2C no pull-ups/SDA1",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SDA1",
+          "at": [
+            74.93,
+            105.41
+          ]
+        },
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SDA1",
+          "at": [
+            82.55,
+            102.87
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              9
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SDA2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C20: I2C no pull-ups/SDA2 (I2C bus /C20: I2C no pull-ups/I2C2) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C20: I2C no pull-ups/SDA2",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SDA2",
+          "at": [
+            129.54,
+            102.87
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              10
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C no pull-ups/SDA3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C20: I2C no pull-ups/SDA3 (I2C bus /C20: I2C no pull-ups/I2C3) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C20: I2C no pull-ups/SDA3",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "local label SDA3",
+          "at": [
+            200.66,
+            102.87
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              11
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C non equal pull-ups/SCL"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C20: I2C non equal pull-ups/SCL (I2C bus /C20: I2C non equal pull-ups/I2C) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C20: I2C non equal pull-ups/SCL",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "local label SCL",
+          "at": [
+            109.22,
+            68.58
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "local label SCL",
+          "at": [
+            121.92,
+            71.12
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              12
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C non equal pull-ups/SDA"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C20: I2C non equal pull-ups/SDA (I2C bus /C20: I2C non equal pull-ups/I2C) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C20: I2C non equal pull-ups/SDA",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "local label SDA",
+          "at": [
+            109.22,
+            71.12
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "local label SDA",
+          "at": [
+            121.92,
+            68.58
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              13
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C non standard pull-ups/SCL"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C20: I2C non standard pull-ups/SCL (I2C bus /C20: I2C non standard pull-ups/I2C) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C20: I2C non standard pull-ups/SCL",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "local label SCL",
+          "at": [
+            114.3,
+            73.66
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "local label SCL",
+          "at": [
+            127.0,
+            76.2
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              14
+            ]
+          },
+          "kind": "net",
+          "name": "/C20: I2C non standard pull-ups/SDA"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C20: I2C non standard pull-ups/SDA (I2C bus /C20: I2C non standard pull-ups/I2C) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C20: I2C non standard pull-ups/SDA",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "local label SDA",
+          "at": [
+            114.3,
+            76.2
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "local label SDA",
+          "at": [
+            127.0,
+            73.66
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              15
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL1_1V2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/SCL1_1V2 (I2C bus /C22: I2C Segments/I2C1_1V2) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C22: I2C Segments/SCL1_1V2",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL1_1V2",
+          "at": [
+            262.89,
+            207.01
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              16
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL1_1V8"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/SCL1_1V8 (I2C bus /C22: I2C Segments/I2C1_1V8) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C22: I2C Segments/SCL1_1V8",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL1_1V8",
+          "at": [
+            261.62,
+            62.23
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              17
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL1_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/SCL1_3V3 (I2C bus /C22: I2C Segments/I2C1_3V3) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C22: I2C Segments/SCL1_3V3",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL1_3V3",
+          "at": [
+            119.38,
+            78.74
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              18
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL1_3V3_VCC2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/SCL1_3V3_VCC2 (I2C bus /C22: I2C Segments/I2C1_3V3_VCC2) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C22: I2C Segments/SCL1_3V3_VCC2",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL1_3V3_VCC2",
+          "at": [
+            245.11,
+            160.02
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              21
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL_U7"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/SCL_U7 (I2C bus /C22: I2C Segments/I2C_U7) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C22: I2C Segments/SCL_U7",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL_U7",
+          "at": [
+            189.23,
+            121.92
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              22
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA1_1V2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/SDA1_1V2 (I2C bus /C22: I2C Segments/I2C1_1V2) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C22: I2C Segments/SDA1_1V2",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA1_1V2",
+          "at": [
+            262.89,
+            204.47
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              23
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA1_1V8"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/SDA1_1V8 (I2C bus /C22: I2C Segments/I2C1_1V8) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C22: I2C Segments/SDA1_1V8",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA1_1V8",
+          "at": [
+            261.62,
+            59.69
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              24
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA1_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/SDA1_3V3 (I2C bus /C22: I2C Segments/I2C1_3V3) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C22: I2C Segments/SDA1_3V3",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA1_3V3",
+          "at": [
+            119.38,
+            81.28
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              25
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA1_3V3_VCC2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/SDA1_3V3_VCC2 (I2C bus /C22: I2C Segments/I2C1_3V3_VCC2) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C22: I2C Segments/SDA1_3V3_VCC2",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA1_3V3_VCC2",
+          "at": [
+            245.11,
+            157.48
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              29
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA_U7"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/SDA_U7 (I2C bus /C22: I2C Segments/I2C_U7) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C22: I2C Segments/SDA_U7",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA_U7",
+          "at": [
+            189.23,
+            119.38
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              30
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/UNM1"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/UNM1 (I2C bus /C22: I2C Segments/I2C1_3V3_to_U408) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C22: I2C Segments/UNM1",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label UNM1",
+          "at": [
+            189.23,
+            251.46
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "TEST-5",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              31
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/UNM2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/UNM2 (I2C bus /C22: I2C Segments/I2C1_3V3_to_U408) has no test point or header pin",
+      "facts": [],
+      "fingerprint": "TEST-5:net /C22: I2C Segments/UNM2",
+      "explain": "docs/checks/test.md#test-5",
+      "fix": "a test point per line plus a nearby ground; on SWD also NRST",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label UNM2",
+          "at": [
+            189.23,
+            254.0
+          ]
+        }
+      ],
+      "also": []
     }
   ],
   "candidates": [],
-  "notes": [],
+  "notes": [
+    {
+      "kind": "coverage",
+      "at": "test_schematics",
+      "message": "part classes: 49 of 63 parts have a class from the library symbol or its description (14 by designator prefix, assumed; 0 unknown); checks ran on those"
+    },
+    {
+      "kind": "coverage",
+      "at": "test_schematics",
+      "message": "rail voltages: 4 of 5 parts have rails with a voltage; checks ran on those"
+    }
+  ],
   "timing": {
-    "checks_micros": 1166,
-    "total_micros": 1406
+    "checks_micros": 9379,
+    "total_micros": 11180
   }
 }

@@ -11,7 +11,7 @@ better_erc's core is a board model (`erc_model`) that every importer fills and e
 | `erc_model` | the board model, values, facts and provenance, the importer trait, the canonical dump, `netcmp`, `placecmp` | serde |
 | `erc_kicad` | KiCad projects, schematics, boards and netlists; the s-expression reader | `erc_model` |
 | `erc_import` | the importer registry; Altium, OrCAD, PnP and schematic PDFs (one cargo feature each) | `erc_model`, `erc_kicad` |
-| `erc_analysis` | part classes, values, graph queries, the power structure, the I2C bus recogniser | `erc_model` |
+| `erc_analysis` | part classes, values, graph queries, the power structure, the I2C bus recogniser, pin functions by name, probe access, supply pins | `erc_model` |
 | `erc_checks` | the check engine, the checks, the catalogue, reports; `project`, the run on a path | the above |
 | `better_erc` | the library: all of the above re-exported, the run entry at the top, `diff` (`berc diff`) | the above |
 | `berc` | the command line tool | `better_erc` |

@@ -23,4 +23,4 @@ Notes
   import i2c-1_no_pull_ups.kicad_sch: symbol R201 in i2c-1_no_pull_ups.kicad_sch: missing: no instance for sheet path /de541268-6318-4200-9bfc-af7855f4819c; the Reference field is used
   coverage i2c-1_no_pull_ups: part classes: 6 of 9 parts have a class from the library symbol or its description (3 by designator prefix, assumed; 0 unknown); checks ran on those
 
-3 errors, 0 warnings, 0 suggestions, 0 info, 0 candidates · checks: 11 ran, 0 not run, 502 planned · N ms
+3 errors, 0 warnings, 0 suggestions, 0 info, 0 candidates · checks: 6 ran, 0 not run, N planned · N ms

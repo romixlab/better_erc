@@ -5,6 +5,17 @@ use erc_checks::{
 };
 use std::path::Path;
 
+/// The I2C checks only: the counts below are about the verdict and the baseline, not about what other checks find
+fn i2c() -> CheckOptions {
+    CheckOptions {
+        run: erc_checks::RunOptions {
+            only: vec!["I2C".into()],
+            ..Default::default()
+        },
+        ..CheckOptions::default()
+    }
+}
+
 fn sources() -> &'static Path {
     Path::new(concat!(
         env!("CARGO_MANIFEST_DIR"),
@@ -19,7 +30,7 @@ fn open_check_and_verdict() {
         (p.main.as_str(), p.importer),
         ("i2c-1_no_pull_ups.kicad_sch", "kicad")
     );
-    let run = p.check(&CheckOptions::default()).unwrap();
+    let run = p.check(&i2c()).unwrap();
     assert_eq!(run.report.findings.len(), 3);
     assert_eq!(run.verdict.exit, Exit::Findings);
     assert_eq!((run.verdict.failing, run.verdict.exit.code()), (3, 1));
@@ -27,7 +38,7 @@ fn open_check_and_verdict() {
     let required = p
         .check(&CheckOptions {
             require: vec![Need::Layout, Need::Graph],
-            ..CheckOptions::default()
+            ..i2c()
         })
         .unwrap();
     assert_eq!(required.verdict.exit, Exit::Unavailable);
@@ -38,7 +49,7 @@ fn open_check_and_verdict() {
     let again = p
         .check(&CheckOptions {
             baseline: Some(run.report.clone()),
-            ..CheckOptions::default()
+            ..i2c()
         })
         .unwrap();
     assert_eq!(again.verdict.exit, Exit::Clean);
@@ -54,7 +65,7 @@ fn open_check_and_verdict() {
 #[test]
 fn compare_counts_repeated_fingerprints() {
     let p = Project::open(&sources().join("i2c-1_no_pull_ups.kicad_sch")).unwrap();
-    let run = p.check(&CheckOptions::default()).unwrap();
+    let run = p.check(&i2c()).unwrap();
     // The baseline has the first finding twice and lacks the last one
     let mut baseline = run.report.clone();
     let first = baseline.findings[0].clone();

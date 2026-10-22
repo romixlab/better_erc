@@ -169,6 +169,9 @@ is a `Fact` with `Provenance::Derived { rule }` (or `Assumed` for a guess), so a
 | `cx.power()` | `power::Power` | rails (`Rail`: kind, the signals that make it one, the voltage per source), grounds (`Ground`: kind, signals), ground groups joined at DC, every part linking two grounds, switching nodes | `Rails`, `RailVoltages` |
 | `cx.i2c()` | `i2c::I2cBuses` | the I2C buses of the fitted parts: pull-up pairs, devices, ties, translators, discrete translators with their gate nets, direct and logical segments, `pull_ups(segment)` | `Graph`, `PartClasses` |
 | `cx.drawing()` | `drawing::Drawing` | every label's scope (sheet, global, hierarchical, sheet pin, directive), labels by text, sheet pins matched with hierarchical labels and the unmatched ones, no-connect flags with their pin, `dangling`, `flagged_but_connected` | `Drawing` |
+| `access::reach(view, classes, power, net)` | `access` | where a probe reaches a net: test point and connector pins on it or one series resistor, ferrite, net tie or jumper away (a far side on a rail or ground is a pull, not a path); `zero_ohm_groups`, the nets joined by 0 Ω resistors, net ties and jumpers | `Graph`, `PartClasses` |
+| `supply::power_in_pins(view, net)`, `caps_to_ground` | `supply` | the power-input pins of the fitted parts on a net, by part; the fitted capacitors from a net to a ground | `Rails` |
+| `pin_name::functions(name)` | `pin_name` | what a pin name states: SWD, JTAG, SWO, reset, UART TX/RX/RTS/CTS, SPI SCK/MOSI/MISO/CS, I2C, enable, interrupt, power good, fault, with the peripheral instance (`USART1` in `PA9/USART1_TX`) | `Graph` |
 
 **Part classes.** A library symbol decides by its library and name (`Device:R`, `Transistor_FET:*`,
 `Regulator_Linear:*`, `MCU_*`, `74xGxx:*`, `Connector:USB_C_*`); a kind the name leaves open is taken from the
@@ -201,6 +204,12 @@ pull-up made DNP is no pull-up. Pin roles will add pins named `SCL`/`SDA` as a s
 **Drawing facts** (`drawing`): what the WIRE, NAME and SHORT checks need beyond connectivity. Labels keep their kind
 (`local`, `global`, `hierarchical`, `sheet_pin`, `power`, `local_power` for KiCad 10 local power symbols,
 `directive`), sheet, position, net and whether they dangle; the analysis adds the scope and the matching.
+
+**Pin functions by name** (`pin_name`, the name layer of pin roles, NET-7): a pin name is split into alternates at
+`/` (`PA13/JTMS-SWDIO`) and words at `_`, `-` and spaces; each word is matched whole (`SWDIO`, `TRACESWO`, `NRST`,
+`TXD`, `MOSI`, `NSS`, `EN`, `SHDN`, `ALERT`, `PGOOD`), past an overbar (`~{RESET}`), a leading `n` or trailing `N`
+(active low) and a number (`EN2`, `INT1`). A pin named by its port alone (`PA13`) says nothing until alternate
+functions are known (NET-12); the DBG and TEST checks do not judge a part whose names state no debug port or UART.
 
 The analyses have their own test schematics in `test_schematics/analyses` (`power`, `parts` with a KiCad 10 variant,
 `drawing` with a sub-sheet), each with a sidecar `<name>.expect.toml` of what they find, one line per fact
@@ -314,6 +323,29 @@ of the threshold it used.
 | `BOM-9` | a component without a value | `bom-10_values` |
 | `BOM-10` | a resistor, capacitor or inductor value that does not read in its unit, odd notation, or a value in no E-series | `bom-10_values` |
 | `LIB-3` | a MOSFET whose pins are not named G, D and S | `lib-3_mosfet_pin_names` |
+| `DEC-1` | a rail feeding power pins with no capacitor to a ground | `dec-1_no_decoupling` |
+| `DEC-4` | a ferrite between two rails, with the LC resonance against the capacitance behind it (`bead_inductance` assumed) | `dec-4_ferrite_beads` |
+| `DEC-7` | fewer capacitors of at most `max_decoupling` (1 µF) on a rail than a part has power pins there, the rail's capacitors handed out to the parts with the fewest pins first | `dec-7_caps_per_pin` |
+| `DEC-8` | a series ferrite, inductor or resistor between two rails with the capacitors only on the side without the power pins | `dec-8_source_side_caps` |
+| `DEC-10` | a net of power pins and capacitors to ground only | `dec-10_unsourced_bypass` |
+| `DEC-11` | neighbouring ceramic values on a rail `max_ratio` (10×) apart or more | `dec-11_decade_apart` |
+| `DEC-12` | a polarized capacitor with `+` on the lower voltage | `dec-12_reversed_polarized` |
+| `DBG-1` | an MCU, SoC or FPGA whose SWD or JTAG pins reach no connector or test point, or no ground does | `dbg-1_swd_not_connected` |
+| `DBG-2` | SWD or JTAG pins on the same net as a header pin | `dbg-2_swd_series_resistors` |
+| `DBG-3` | a board with an MCU, SoC or FPGA and no LED | `dbg-3_no_leds` |
+| `DBG-4` | a rail with no LED to a ground | `dbg-4_power_leds` |
+| `DBG-7` | an enable pin without resistor footprints to both levels | `dbg-7_enable_pulls` |
+| `DBG-8` | an open-drain output with no pull-up footprint | `dbg-8_open_drain_pull_ups` |
+| `DBG-10` | a rail feeding more than `max_parts` (5) parts directly | `dbg-10_crowded_rail` |
+| `DBG-11` | a UART or SPI data line meeting another part or a connector with no series resistor | `dbg-11_uart_spi_resistors` |
+| `DBG-14` | no UART TX/RX pair of an MCU reaching a header or test points | `dbg-14_uart_console` |
+| `DBG-16` | LEDs, none driven by an MCU pin (folds `DBG-3` in) | `dbg-16_heartbeat_led` |
+| `DBG-17` | a header with SWDIO and SWCLK but not the MCU's reset or SWO | `dbg-17_swd_without_reset` |
+| `DBG-18` | an I2C or SPI bus with lines no analyser can reach | `dbg-18_bus_access` |
+| `TEST-1` | per IC, the pins that connect to nothing (a report table) | `test-1_unconnected_pins` |
+| `TEST-2` | several test points on one net or 0 Ω group and board side | `test-2_duplicate_test_points` |
+| `TEST-4` | a rail or ground with no test point | `test-4_rail_test_points` |
+| `TEST-5` | a bring-up line (UART, SWD, I2C, SPI) with no test point or header pin | `test-5_bring_up_test_points` |
 
 The I2C buses come from `erc_analysis::i2c` ([The analyses](#the-analyses)), ported from the first analysis code (the
 removed `erc_core`). Pin roles will replace the names as the way to find a bus (NET-4, NET-7).

@@ -56,13 +56,17 @@ fn scratch(name: &str) -> PathBuf {
 
 #[test]
 fn text_matches_the_snapshot() {
-    let out = berc(&["check", i2c1().to_str().unwrap()]);
+    let out = berc(&["check", i2c1().to_str().unwrap(), "--only", "I2C"]);
     assert_eq!(code(&out), 1, "{}", stderr(&out));
     let text = stdout(&out);
     assert!(!text.contains('\x1b'), "colour codes on a pipe: {text:?}");
-    // The run time is the one thing that changes between runs
+    // The run time changes between runs, the number of planned checks with every check added
     let (head, tail) = text.rsplit_once(" · ").unwrap();
     assert!(tail.ends_with(" ms\n"), "{tail}");
+    let mut head = head.to_string();
+    let end = head.rfind(" planned").unwrap();
+    let start = head[..end].rfind(' ').unwrap() + 1;
+    head.replace_range(start..end, "N");
     let text = format!("{head} · N ms\n");
     let snapshot = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/check_i2c-1.txt");
     if std::env::var_os("BLESS").is_some() {
@@ -79,7 +83,14 @@ fn text_matches_the_snapshot() {
 
 #[test]
 fn json_is_the_report_schema_1() {
-    let out = berc(&["check", i2c1().to_str().unwrap(), "--format", "json"]);
+    let out = berc(&[
+        "check",
+        i2c1().to_str().unwrap(),
+        "--only",
+        "I2C",
+        "--format",
+        "json",
+    ]);
     assert_eq!(code(&out), 1);
     let v = json(&out);
     assert_eq!(v["schema"], 1);
@@ -115,6 +126,8 @@ fn sarif_is_structurally_valid() {
         &[
             "check",
             "test_schematics/sources/i2c-1_no_pull_ups.kicad_sch",
+            "--only",
+            "I2C",
             "--format",
             "sarif",
         ],
@@ -132,8 +145,8 @@ fn sarif_is_structurally_valid() {
     let driver = &run["tool"]["driver"];
     assert_eq!(driver["name"], "better_erc");
     let rules = driver["rules"].as_array().unwrap();
-    // A rule per check that ran
-    assert_eq!(rules.len(), 11);
+    // A rule per check that ran: the six I2C checks
+    assert_eq!(rules.len(), 6);
     for r in rules {
         let id = r["id"].as_str().unwrap();
         assert!(
@@ -182,7 +195,14 @@ fn sarif_is_structurally_valid() {
 
 #[test]
 fn markdown_for_a_pr_comment() {
-    let out = berc(&["check", i2c1().to_str().unwrap(), "--format", "md"]);
+    let out = berc(&[
+        "check",
+        i2c1().to_str().unwrap(),
+        "--only",
+        "I2C",
+        "--format",
+        "md",
+    ]);
     assert_eq!(code(&out), 1);
     let md = stdout(&out);
     assert!(
@@ -321,6 +341,12 @@ fn baseline_delta() {
     let original = std::fs::read_to_string(i2c1()).unwrap();
     std::fs::write(&sch, &original).unwrap();
     let s = sch.to_str().unwrap();
+    // The I2C checks and BOM-6: what the baseline steps below are about
+    let berc = |args: &[&str]| {
+        let mut all = args.to_vec();
+        all.extend(["--only", "I2C,BOM-6"]);
+        berc(&all)
+    };
     let first = berc(&["check", s, "--format", "json"]);
     let baseline = dir.join("baseline.json");
     std::fs::write(&baseline, &first.stdout).unwrap();
@@ -460,7 +486,8 @@ fn checks_list() {
     let all = all.as_array().unwrap();
     assert!(all.len() > 500);
     let implemented = all.iter().filter(|c| c["state"] == "implemented").count();
-    assert_eq!(implemented, 11);
+    let registered = better_erc::checks::registered().len();
+    assert_eq!(implemented, registered);
     let hard = json(&berc(&[
         "checks", "list", "--tier", "hard", "--format", "json",
     ]));
@@ -468,7 +495,7 @@ fn checks_list() {
     let planned = json(&berc(&[
         "checks", "list", "--status", "planned", "--format", "json",
     ]));
-    assert_eq!(planned.as_array().unwrap().len(), all.len() - 11);
+    assert_eq!(planned.as_array().unwrap().len(), all.len() - registered);
     // ran and not-run are about a design
     let out = berc(&["checks", "list", "--status", "ran"]);
     assert_eq!(code(&out), 2);
@@ -488,7 +515,24 @@ fn checks_list() {
         .iter()
         .map(|c| c["id"].as_str().unwrap())
         .collect();
-    assert_eq!(ids.len(), 11, "{ids:?}");
+    // What a run on the project reports as ran
+    let report = json(&berc(&[
+        "check",
+        i2c1().to_str().unwrap(),
+        "--format",
+        "json",
+    ]));
+    let mut ran_in_report: Vec<&str> = report["checks"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|c| c["status"] == "ran")
+        .map(|c| c["id"].as_str().unwrap())
+        .collect();
+    let mut sorted = ids.clone();
+    sorted.sort();
+    ran_in_report.sort();
+    assert_eq!(sorted, ran_in_report);
     assert!(ids.contains(&"I2C-3"));
     let text = stdout(&berc(&["checks", "list", "--tier", "easy"]));
     assert!(
