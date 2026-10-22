@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.3.8] - 2026-10-22
+
 ### Added
 
 - `erc_import`, every importer behind one registry (`IMP-15`): the importer for a file is picked by its name and
