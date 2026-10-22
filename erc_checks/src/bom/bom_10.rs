@@ -35,16 +35,16 @@ fn describe(w: &ValueWarning, class: &str) -> String {
     }
 }
 
-/// `resistance` for a resistor
+/// `a resistance` for a resistor
 fn quantity_name(unit: Unit) -> &'static str {
     match unit {
-        Unit::Ohm => "resistance",
-        Unit::Farad => "capacitance",
-        Unit::Henry => "inductance",
-        Unit::Volt => "voltage",
-        Unit::Ampere => "current",
-        Unit::Hertz => "frequency",
-        Unit::Watt => "power",
+        Unit::Ohm => "a resistance",
+        Unit::Farad => "a capacitance",
+        Unit::Henry => "an inductance",
+        Unit::Volt => "a voltage",
+        Unit::Ampere => "a current",
+        Unit::Hertz => "a frequency",
+        Unit::Watt => "a power",
     }
 }
 
@@ -73,7 +73,7 @@ impl Check for Bom10 {
             let designator = &b.part(p).designator;
             let mut odd: Vec<String> = Vec::new();
             if v.value.is_none() {
-                odd.push(format!("does not read as a {}", quantity_name(unit)));
+                odd.push(format!("does not read as {}", quantity_name(unit)));
             } else {
                 odd.extend(v.warnings.iter().map(|w| describe(w, class.name())));
                 if v.series_applies() && v.series.is_none() {
@@ -121,11 +121,18 @@ inventory::submit!(Registered(&Bom10));
 #[cfg(test)]
 mod tests {
     #[test]
-    fn notation_and_parse_errors() {
-        // R4 `10x`, R5 `4.7  k`, R6 `4r7`, R7 `10kR`; R1 `4k7` is fine, R2 empty, R3/R9/R10 placeholders, R8 `DNP`
+    fn notation_parse_errors_and_series() {
+        // R4 `10x`, R5 `4.7  k`, R6 `4r7`, R7 `10kR`, R11 `5k` (no E-series), R13 `4k7 Ohm`, C2 `4.8n` (no
+        // E-series), C3 `4,7u`, L2 `10x`; R1 `4k7`, R12 `4k99` (E96), C1 `100n 50V X7R`, L1 `10u` are fine, R2
+        // empty, R3/R9/R10 placeholders, R8 `DNP`
         assert_eq!(
             crate::testing::fingerprints(&super::Bom10, "bom-10_values"),
             [
+                "BOM-10:part C2",
+                "BOM-10:part C3",
+                "BOM-10:part L2",
+                "BOM-10:part R11",
+                "BOM-10:part R13",
                 "BOM-10:part R4",
                 "BOM-10:part R5",
                 "BOM-10:part R6",

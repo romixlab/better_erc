@@ -2,6 +2,26 @@
 
 [[finding]]
 check = "BOM-10"
+subjects = ["part C2"]
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part C3"]
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part L2"]
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part R11"]
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part R13"]
+
+[[finding]]
+check = "BOM-10"
 subjects = ["part R4"]
 
 [[finding]]
