@@ -220,9 +220,9 @@ impl Recogniser<'_> {
     /// The role of a part on a bus from its class; translators and ties are resolved later
     fn node(&self, p: PartId) -> Node {
         match self.classes.get(p) {
-            PartClass::Connector => Node::Connector(p),
+            PartClass::Connector { .. } => Node::Connector(p),
             PartClass::TestPoint => Node::TestPoint(p),
-            PartClass::Ic => Node::Device(p),
+            c if c.is_ic() && !c.is_translator() => Node::Device(p),
             _ => Node::Unknown(p),
         }
     }
@@ -358,7 +358,7 @@ impl Recogniser<'_> {
                 let Node::Unknown(part) = *node else {
                     continue;
                 };
-                if !self.classes.is(part, PartClass::Translator) {
+                if !self.classes.get(part).is_translator() {
                     continue;
                 }
                 let mut nets = part_nets(self.board, part);

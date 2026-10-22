@@ -2,7 +2,6 @@
 
 use crate::meta::*;
 use crate::{Ctx, Finding};
-use erc_analysis::PartClass;
 
 pub struct Lib3;
 
@@ -29,7 +28,7 @@ impl Check for Lib3 {
         let b = cx.board();
         let classes = cx.classes();
         cx.components()
-            .filter(|p| classes.is(*p, PartClass::Mosfet))
+            .filter(|p| classes.get(*p).is_mosfet())
             .filter_map(|p| {
                 let part = b.part(p);
                 let names: Vec<&str> = part.pins.iter().map(|q| b.pin(*q).name.as_str()).collect();

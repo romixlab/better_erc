@@ -100,7 +100,7 @@ impl Power {
     }
 
     fn find_switching_nodes(&self, board: &Board, classes: &PartClasses) -> BTreeSet<NetId> {
-        let ic = |p: PartId| classes.is(p, PartClass::Ic);
+        let ic = |p: PartId| classes.get(p).is_ic();
         let inductor = |p: PartId| classes.is(p, PartClass::Inductor);
         let mut nodes = BTreeSet::new();
         for chain in part_chains(board, &[&ic, &inductor], &|_| false) {

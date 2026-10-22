@@ -70,7 +70,7 @@ fn part_chains() {
     let (b, _) = erc_kicad::netlist::read(include_str!("fixtures/buck.net"), "buck.net").unwrap();
     let classes = PartClasses::of(&b);
     let power = Power::of(&b, &classes, &I2cBuses::of(&b, &classes));
-    let ic = |p| classes.is(p, PartClass::Ic);
+    let ic = |p| classes.get(p).is_ic();
     let inductor = |p| classes.is(p, PartClass::Inductor);
     let names = |chains: Vec<Vec<erc_model::PartId>>| -> Vec<Vec<String>> {
         chains

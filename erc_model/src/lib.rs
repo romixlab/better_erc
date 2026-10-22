@@ -15,6 +15,7 @@
 //! It is the golden-file format of the importer tests. No I/O here beyond [`DirFiles`] (feature `fs`).
 
 pub mod canon;
+pub mod class;
 pub mod design;
 pub mod dump;
 pub mod fact;
@@ -25,6 +26,7 @@ pub mod placecmp;
 pub mod value;
 
 pub use canon::{link_layout, natural_cmp, part_paths};
+pub use class::PartClass;
 pub use design::*;
 pub use fact::{Fact, Facts, Provenance, Rank, Time};
 #[cfg(feature = "fs")]
