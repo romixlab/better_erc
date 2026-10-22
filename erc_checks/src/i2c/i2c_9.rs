@@ -21,13 +21,13 @@ static META: CheckMeta = CheckMeta {
             name: "min_pull_up",
             default: 2200.0,
             unit: "ohm",
-            doc: "lower end of the pull-up window; a value at it is reported",
+            doc: "lower end of the pull-up window, inside it",
         },
         Param {
             name: "max_pull_up",
             default: 10_000.0,
             unit: "ohm",
-            doc: "upper end of the pull-up window; a value at it is reported",
+            doc: "upper end of the pull-up window, inside it",
         },
     ],
 };
@@ -37,7 +37,7 @@ impl Check for I2c9 {
         &META
     }
 
-    /// Pull-ups at or beyond either end of the window, or whose value does not read
+    /// Pull-ups outside the window (its ends are inside), or whose value does not read
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let b = cx.board();
         let (min, max) = (
@@ -50,7 +50,7 @@ impl Check for I2c9 {
             let resistors = [pu.scl, pu.sda];
             let values = resistors.map(|r| ohms(cx, r));
             let bad: Vec<usize> = (0..2)
-                .filter(|i| values[*i].value.is_none_or(|r| r <= min || r >= max))
+                .filter(|i| values[*i].value.is_none_or(|r| r < min || r > max))
                 .collect();
             if bad.is_empty() {
                 continue;
@@ -115,9 +115,7 @@ mod tests {
             fingerprints(&super::I2c9, "i2c-9_non_standard_pull_ups"),
             ["I2C-9:net /SCL|net /SDA|part R301|part R302"]
         );
-        let found = fingerprints(&super::I2c9, "i2c-7_segments");
-        for net in ["net /SCL1_3V3_VCC2|", "net /SCL1_3V3|", "net /SCL2_3V3|"] {
-            assert!(found.iter().any(|f| f.contains(net)), "{net} {found:?}");
-        }
+        // 2.2 kΩ (R407/R408) and 10 kΩ (R401/R403, R402/R404) are the window's ends: inside
+        assert!(fingerprints(&super::I2c9, "i2c-7_segments").is_empty());
     }
 }

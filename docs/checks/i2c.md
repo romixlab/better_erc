@@ -228,8 +228,8 @@ sensitive to leakage and noise. 2.2-4.7 kΩ at 3.3 V covers most boards; 1.8 V b
 sensor's 3 mA sink, VOL rises above 0.3·VDD = 0.54 V.
 
 **How to check.** Compare the parallel pull-up value per line with the window for the bus voltage and mode.
-better_erc so far reports a pull-up at or beyond either end of a fixed 2.2 kΩ to 10 kΩ window (the check's
-`min_pull_up` and `max_pull_up`) and one whose value does not read.
+better_erc so far reports a pull-up outside a fixed 2.2 kΩ to 10 kΩ window (the check's `min_pull_up` and
+`max_pull_up`; both ends are inside) and one whose value does not read.
 
 **Fix.** Pick within the window; SLVA689 gives the full calculation.
 

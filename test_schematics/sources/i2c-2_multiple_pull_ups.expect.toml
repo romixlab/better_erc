@@ -7,11 +7,3 @@ subjects = ["net /SCL1_1V8", "net /SDA1_1V8", "part R509", "part R510", "part R5
 [[finding]]
 check = "I2C-2"
 subjects = ["net /SCL1_3V3", "net /SCL_U7", "net /SDA1_3V3", "net /SDA_U7", "part R501", "part R502", "part R503", "part R504"]
-
-[[finding]]
-check = "I2C-9"
-subjects = ["net /SCL1_3V3", "net /SDA1_3V3", "part R501", "part R503"]
-
-[[finding]]
-check = "I2C-9"
-subjects = ["net /SCL_U7", "net /SDA_U7", "part R502", "part R504"]

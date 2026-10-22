@@ -153,7 +153,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `i2c-2_multiple_pull_ups`, `i2c-7_segments`
 - ✅ `I2C-3` Pull-up through series resistors to nowhere · `i2c/i2c_3.rs`, `i2c-1_no_pull_ups`
 - ✅ `I2C-7` Series tie resistor too high (`max_tie` = 100 Ω) · `i2c/i2c_7.rs`, `i2c-7_segments`
-- ✅ `I2C-9` Pull-up at or beyond the 2.2k-10k window, or not readable · `i2c/i2c_9.rs`, `i2c-9_non_standard_pull_ups`
+- ✅ `I2C-9` Pull-up outside the 2.2k-10k window (its ends inside), or not readable · `i2c/i2c_9.rs`, `i2c-9_non_standard_pull_ups`
 - ✅ `I2C-10` SCL and SDA pull-ups differ · `i2c/i2c_10.rs`, `i2c-10_non_equal_pull_ups`
 - ✅ `BOM-5` Placeholder values (`?`, `??k`, `TBD`, `TODO`) · `bom/bom_5.rs`, `bom-10_values`
 - ✅ `BOM-6` Placeholder value on a fitted part (folds `BOM-5` in) · `bom/bom_6.rs`, `bom-10_values`

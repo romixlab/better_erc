@@ -144,7 +144,7 @@ of the threshold it used.
 | `I2C-2` | resistors from a line to the pull-up rail besides the pair; several pairs on one segment | `i2c-2_multiple_pull_ups`, `i2c-7_segments` |
 | `I2C-3` | a pull-up pair whose rail has nothing else on it, or a resistor to nowhere | `i2c-1_no_pull_ups` |
 | `I2C-7` | a tie between two buses over `max_tie` | `i2c-7_segments` |
-| `I2C-9` | a pull-up at or beyond either end of the window, or whose value does not read | `i2c-9_non_standard_pull_ups`, `i2c-7_segments` |
+| `I2C-9` | a pull-up outside the 2.2k-10k window (its ends inside), or whose value does not read | `i2c-9_non_standard_pull_ups` |
 | `I2C-10` | SCL and SDA pull-ups of different value | `i2c-10_non_equal_pull_ups` |
 | `BOM-5` | a placeholder value (`?`, `??k`, `TBD`, `TODO`) | `bom-10_values` |
 | `BOM-6` | a placeholder value on a fitted part (folds `BOM-5` in) | `bom-10_values` |

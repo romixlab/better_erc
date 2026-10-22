@@ -24,7 +24,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
   embedded: `list()`, `explain(id)` and the not-run hints work offline. Described in [docs/engine.md](docs/engine.md).
 - The eleven shipped checks run on the new core: `I2C-1`, `I2C-2`, `I2C-3`, `I2C-7`, `I2C-9`, `I2C-10`, `BOM-5`,
   `BOM-6`, `BOM-9`, `BOM-10`, `LIB-3`, each with its unit test. `I2C-9` and `I2C-10` are findings of their own now,
-  `BOM-5` is an error as the catalogue says, `BOM-6` reports a placeholder on a fitted part (in the variant checked)
+  `BOM-5` is an error as the catalogue says, `I2C-9`'s window is inclusive as the catalogue says (2.2 kΩ and 10 kΩ
+  no longer fire; `erc_core` reported the ends with the lumped `I2C-1`), `BOM-6` reports a placeholder on a fitted part (in the variant checked)
   apart from `BOM-5`, and `BOM-5` also catches `TBD` and `TODO`.
 - `erc_analysis` (`NET-4`, `NET-19`): part classes from the library symbol, the description, or the designator prefix
   as an assumption (a finding resting on it is an estimate); values read in their class's unit per variant; graph
