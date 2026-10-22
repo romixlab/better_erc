@@ -1,0 +1,89 @@
+# What better_erc finds on mem-3_clk_and_detect_pulls.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SD1_CK", "pin J1.5", "pin U1.8"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SD1_CMD", "pin J1.3", "pin U1.7"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SD1_D0", "pin J1.7", "pin U1.3"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SD1_D1", "pin J1.8", "pin U1.4"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SD1_D2", "pin J1.1", "pin U1.5"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SD1_D3", "pin J1.2", "pin U1.6"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SD1_DET", "pin J1.9", "pin U1.9"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SD2_CD", "pin J2.10", "pin U2.9"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SD2_CMD", "pin J2.2", "pin U2.7"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SD2_D0", "pin J2.7", "pin U2.3"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SD2_D1", "pin J2.8", "pin U2.4"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SD2_D2", "pin J2.9", "pin U2.5"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SD2_D3", "pin J2.1", "pin U2.6"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SD2_WP", "pin J2.11", "pin U2.10"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1", "part U2"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U2"]
+
+[[finding]]
+check = "MEM-3"
+subjects = ["net /SD1_DET", "part J1", "pin J1.9"]
+
+[[finding]]
+check = "MEM-3"
+subjects = ["part J1", "part R6", "pin J1.5"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.10"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

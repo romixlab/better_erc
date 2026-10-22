@@ -37,6 +37,26 @@ check = "DBG-4"
 subjects = ["net +3V3"]
 
 [[finding]]
+check = "MEM-1"
+subjects = ["net /S3", "part J3", "pin J3.3"]
+
+[[finding]]
+check = "MEM-1"
+subjects = ["part J3", "pin J3.1"]
+
+[[finding]]
+check = "MEM-1"
+subjects = ["part J3", "pin J3.2"]
+
+[[finding]]
+check = "MEM-1"
+subjects = ["part J3", "pin J3.7"]
+
+[[finding]]
+check = "MEM-1"
+subjects = ["part J3", "pin J3.8"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.7", "pin U1.8"]
 

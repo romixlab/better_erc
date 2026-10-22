@@ -1,0 +1,81 @@
+# What better_erc finds on mem-8_ddr_zq.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-10"
+subjects = ["net +1V35"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U6"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +1V35"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +1V35", "part U2"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +1V35", "part U3"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +1V35", "part U4"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +1V35", "part U5"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +1V35", "part U6"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +1V35", "part U7"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +1V35", "part U8"]
+
+[[finding]]
+check = "MEM-8"
+subjects = ["net /ZQ2", "part R2", "pin U2.3"]
+
+[[finding]]
+check = "MEM-8"
+subjects = ["net /ZQ34", "part R3", "pin U3.3"]
+
+[[finding]]
+check = "MEM-8"
+subjects = ["net /ZQ34", "part R3", "pin U4.3"]
+
+[[finding]]
+check = "MEM-8"
+subjects = ["net /ZQ5", "part R5", "pin U5.3"]
+
+[[finding]]
+check = "MEM-8"
+subjects = ["net /ZQ7", "part R7", "pin U7.3"]
+
+[[finding]]
+check = "MEM-8"
+subjects = ["pin U8.3"]
+
+[[finding]]
+check = "NAME-5"
+subjects = ["part R3", "part R5"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U8", "pin U8.3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +1V35"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

@@ -1,0 +1,233 @@
+board eth-3_mdio_pull_up
+label / local MDC1 at 22.38,30 net /MDC1
+label / local MDC1 at 70.38,30 net /MDC1
+label / local MDC2 at 118.38,30 net /MDC2
+label / local MDC2 at 166.38,30 net /MDC2
+label / local MDC3 at 262.38,30 net /MDC3
+label / local MDC3 at 310.38,30 net /MDC3
+label / local MDIO1 at 22.38,27.46 net /MDIO1
+label / local MDIO1 at 70.38,27.46 net /MDIO1
+label / local MDIO2 at 118.38,27.46 net /MDIO2
+label / local MDIO2 at 166.38,27.46 net /MDIO2
+label / local MDIO2 at 222,26.19 net /MDIO2
+label / local MDIO3 at 262.38,27.46 net /MDIO3
+label / local MDIO3 at 310.38,27.46 net /MDIO3
+label / local MDIO3 at 366,26.19 net /MDIO3
+label / power +3V3 at 22.38,22.38 net +3V3
+label / power +3V3 at 30,63.97 net +3V3
+label / power +3V3 at 70.38,22.38 net +3V3
+label / power +3V3 at 118.38,22.38 net +3V3
+label / power +3V3 at 166.38,22.38 net +3V3
+label / power +3V3 at 222,33.81 net +3V3
+label / power +3V3 at 262.38,22.38 net +3V3
+label / power +3V3 at 310.38,22.38 net +3V3
+label / power +3V3 at 366,33.81 net +3V3
+label / power GND at 22.38,24.92 net GND
+label / power GND at 30,71.59 net GND
+label / power GND at 70.38,24.92 net GND
+label / power GND at 118.38,24.92 net GND
+label / power GND at 166.38,24.92 net GND
+label / power GND at 262.38,24.92 net GND
+label / power GND at 310.38,24.92 net GND
+net +3V3 class = Default @ sch eth-3_mdio_pull_up.kicad_sch note "effective net class"
+net +3V3 kind power
+net /MDC1 class = Default @ sch eth-3_mdio_pull_up.kicad_sch note "effective net class"
+net /MDC1 kind named
+net /MDC2 class = Default @ sch eth-3_mdio_pull_up.kicad_sch note "effective net class"
+net /MDC2 kind named
+net /MDC3 class = Default @ sch eth-3_mdio_pull_up.kicad_sch note "effective net class"
+net /MDC3 kind named
+net /MDIO1 class = Default @ sch eth-3_mdio_pull_up.kicad_sch note "effective net class"
+net /MDIO1 kind named
+net /MDIO2 class = Default @ sch eth-3_mdio_pull_up.kicad_sch note "effective net class"
+net /MDIO2 kind named
+net /MDIO3 class = Default @ sch eth-3_mdio_pull_up.kicad_sch note "effective net class"
+net /MDIO3 kind named
+net GND class = Default @ sch eth-3_mdio_pull_up.kicad_sch note "effective net class"
+net GND kind power
+part C1 field Value = 100n @ sch eth-3_mdio_pull_up.kicad_sch
+part C1 flag dnp = no @ sch eth-3_mdio_pull_up.kicad_sch
+part C1 flag exclude_from_sim = no @ sch eth-3_mdio_pull_up.kicad_sch
+part C1 flag in_bom = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part C1 flag on_board = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 60bf4203-0000-4000-8000-000000000078 line 262 at 30,67.78 rot 0
+part C1 value = text 100n @ sch eth-3_mdio_pull_up.kicad_sch note "from the Value field"
+part R2 field Value = 1k5 @ sch eth-3_mdio_pull_up.kicad_sch
+part R2 flag dnp = no @ sch eth-3_mdio_pull_up.kicad_sch
+part R2 flag exclude_from_sim = no @ sch eth-3_mdio_pull_up.kicad_sch
+part R2 flag in_bom = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part R2 flag on_board = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 60bf4203-0000-4000-8000-000000000044 line 178 at 222,30 rot 0
+part R2 value = text 1k5 @ sch eth-3_mdio_pull_up.kicad_sch note "from the Value field"
+part R3 field Value = 47k @ sch eth-3_mdio_pull_up.kicad_sch
+part R3 flag dnp = no @ sch eth-3_mdio_pull_up.kicad_sch
+part R3 flag exclude_from_sim = no @ sch eth-3_mdio_pull_up.kicad_sch
+part R3 flag in_bom = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part R3 flag on_board = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid 60bf4203-0000-4000-8000-000000000072 line 246 at 366,30 rot 0
+part R3 value = text 47k @ sch eth-3_mdio_pull_up.kicad_sch note "from the Value field"
+part U1 field Value = MCU_ETH @ sch eth-3_mdio_pull_up.kicad_sch
+part U1 flag dnp = no @ sch eth-3_mdio_pull_up.kicad_sch
+part U1 flag exclude_from_sim = no @ sch eth-3_mdio_pull_up.kicad_sch
+part U1 flag in_bom = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part U1 flag on_board = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part U1 lib MCU_Fixture:MCU_ETH sheet / symbol MCU_Fixture:MCU_ETH
+part U1 unit 1 sheet / uuid 60bf4203-0000-4000-8000-000000000000 line 74 at 30,30 rot 0
+part U1 value = text MCU_ETH @ sch eth-3_mdio_pull_up.kicad_sch note "from the Value field"
+part U2 field Value = PHY @ sch eth-3_mdio_pull_up.kicad_sch
+part U2 flag dnp = no @ sch eth-3_mdio_pull_up.kicad_sch
+part U2 flag exclude_from_sim = no @ sch eth-3_mdio_pull_up.kicad_sch
+part U2 flag in_bom = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part U2 flag on_board = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part U2 lib Interface_Ethernet:PHY_MDIO_FIXTURE sheet / symbol Interface_Ethernet:PHY_MDIO_FIXTURE
+part U2 unit 1 sheet / uuid 60bf4203-0000-4000-8000-000000000011 line 100 at 78,30 rot 0
+part U2 value = text PHY @ sch eth-3_mdio_pull_up.kicad_sch note "from the Value field"
+part U3 field Value = MCU_ETH @ sch eth-3_mdio_pull_up.kicad_sch
+part U3 flag dnp = no @ sch eth-3_mdio_pull_up.kicad_sch
+part U3 flag exclude_from_sim = no @ sch eth-3_mdio_pull_up.kicad_sch
+part U3 flag in_bom = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part U3 flag on_board = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part U3 lib MCU_Fixture:MCU_ETH sheet / symbol MCU_Fixture:MCU_ETH
+part U3 unit 1 sheet / uuid 60bf4203-0000-4000-8000-000000000022 line 126 at 126,30 rot 0
+part U3 value = text MCU_ETH @ sch eth-3_mdio_pull_up.kicad_sch note "from the Value field"
+part U4 field Value = PHY @ sch eth-3_mdio_pull_up.kicad_sch
+part U4 flag dnp = no @ sch eth-3_mdio_pull_up.kicad_sch
+part U4 flag exclude_from_sim = no @ sch eth-3_mdio_pull_up.kicad_sch
+part U4 flag in_bom = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part U4 flag on_board = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part U4 lib Interface_Ethernet:PHY_MDIO_FIXTURE sheet / symbol Interface_Ethernet:PHY_MDIO_FIXTURE
+part U4 unit 1 sheet / uuid 60bf4203-0000-4000-8000-000000000033 line 152 at 174,30 rot 0
+part U4 value = text PHY @ sch eth-3_mdio_pull_up.kicad_sch note "from the Value field"
+part U5 field Value = MCU_ETH @ sch eth-3_mdio_pull_up.kicad_sch
+part U5 flag dnp = no @ sch eth-3_mdio_pull_up.kicad_sch
+part U5 flag exclude_from_sim = no @ sch eth-3_mdio_pull_up.kicad_sch
+part U5 flag in_bom = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part U5 flag on_board = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part U5 lib MCU_Fixture:MCU_ETH sheet / symbol MCU_Fixture:MCU_ETH
+part U5 unit 1 sheet / uuid 60bf4203-0000-4000-8000-000000000050 line 194 at 270,30 rot 0
+part U5 value = text MCU_ETH @ sch eth-3_mdio_pull_up.kicad_sch note "from the Value field"
+part U6 field Value = PHY @ sch eth-3_mdio_pull_up.kicad_sch
+part U6 flag dnp = no @ sch eth-3_mdio_pull_up.kicad_sch
+part U6 flag exclude_from_sim = no @ sch eth-3_mdio_pull_up.kicad_sch
+part U6 flag in_bom = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part U6 flag on_board = yes @ sch eth-3_mdio_pull_up.kicad_sch
+part U6 lib Interface_Ethernet:PHY_MDIO_FIXTURE sheet / symbol Interface_Ethernet:PHY_MDIO_FIXTURE
+part U6 unit 1 sheet / uuid 60bf4203-0000-4000-8000-000000000061 line 220 at 318,30 rot 0
+part U6 value = text PHY @ sch eth-3_mdio_pull_up.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +3V3
+pin C1 1 type = passive @ sch eth-3_mdio_pull_up.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch eth-3_mdio_pull_up.kicad_sch
+pin R2 1 name "" unit 1 net /MDIO2
+pin R2 1 type = passive @ sch eth-3_mdio_pull_up.kicad_sch
+pin R2 2 name "" unit 1 net +3V3
+pin R2 2 type = passive @ sch eth-3_mdio_pull_up.kicad_sch
+pin R3 1 name "" unit 1 net /MDIO3
+pin R3 1 type = passive @ sch eth-3_mdio_pull_up.kicad_sch
+pin R3 2 name "" unit 1 net +3V3
+pin R3 2 type = passive @ sch eth-3_mdio_pull_up.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch eth-3_mdio_pull_up.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch eth-3_mdio_pull_up.kicad_sch
+pin U1 3 name PA2/ETH_MDIO unit 1 net /MDIO1
+pin U1 3 type = bidirectional @ sch eth-3_mdio_pull_up.kicad_sch
+pin U1 4 name PC1/ETH_MDC unit 1 net /MDC1
+pin U1 4 type = output @ sch eth-3_mdio_pull_up.kicad_sch
+pin U2 1 name VDD unit 1 net +3V3
+pin U2 1 type = power_in @ sch eth-3_mdio_pull_up.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch eth-3_mdio_pull_up.kicad_sch
+pin U2 3 name MDIO unit 1 net /MDIO1
+pin U2 3 type = bidirectional @ sch eth-3_mdio_pull_up.kicad_sch
+pin U2 4 name MDC unit 1 net /MDC1
+pin U2 4 type = input @ sch eth-3_mdio_pull_up.kicad_sch
+pin U3 1 name VDD unit 1 net +3V3
+pin U3 1 type = power_in @ sch eth-3_mdio_pull_up.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch eth-3_mdio_pull_up.kicad_sch
+pin U3 3 name PA2/ETH_MDIO unit 1 net /MDIO2
+pin U3 3 type = bidirectional @ sch eth-3_mdio_pull_up.kicad_sch
+pin U3 4 name PC1/ETH_MDC unit 1 net /MDC2
+pin U3 4 type = output @ sch eth-3_mdio_pull_up.kicad_sch
+pin U4 1 name VDD unit 1 net +3V3
+pin U4 1 type = power_in @ sch eth-3_mdio_pull_up.kicad_sch
+pin U4 2 name GND unit 1 net GND
+pin U4 2 type = power_in @ sch eth-3_mdio_pull_up.kicad_sch
+pin U4 3 name MDIO unit 1 net /MDIO2
+pin U4 3 type = bidirectional @ sch eth-3_mdio_pull_up.kicad_sch
+pin U4 4 name MDC unit 1 net /MDC2
+pin U4 4 type = input @ sch eth-3_mdio_pull_up.kicad_sch
+pin U5 1 name VDD unit 1 net +3V3
+pin U5 1 type = power_in @ sch eth-3_mdio_pull_up.kicad_sch
+pin U5 2 name GND unit 1 net GND
+pin U5 2 type = power_in @ sch eth-3_mdio_pull_up.kicad_sch
+pin U5 3 name PA2/ETH_MDIO unit 1 net /MDIO3
+pin U5 3 type = bidirectional @ sch eth-3_mdio_pull_up.kicad_sch
+pin U5 4 name PC1/ETH_MDC unit 1 net /MDC3
+pin U5 4 type = output @ sch eth-3_mdio_pull_up.kicad_sch
+pin U6 1 name VDD unit 1 net +3V3
+pin U6 1 type = power_in @ sch eth-3_mdio_pull_up.kicad_sch
+pin U6 2 name GND unit 1 net GND
+pin U6 2 type = power_in @ sch eth-3_mdio_pull_up.kicad_sch
+pin U6 3 name MDIO unit 1 net /MDIO3
+pin U6 3 type = bidirectional @ sch eth-3_mdio_pull_up.kicad_sch
+pin U6 4 name MDC unit 1 net /MDC3
+pin U6 4 type = input @ sch eth-3_mdio_pull_up.kicad_sch
+sheet / name "" file eth-3_mdio_pull_up.kicad_sch uuid /
+source file eth-3_mdio_pull_up.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Interface_Ethernet:PHY_MDIO_FIXTURE description "Ethernet PHY"
+symbol Interface_Ethernet:PHY_MDIO_FIXTURE field Description "Ethernet PHY"
+symbol Interface_Ethernet:PHY_MDIO_FIXTURE field Reference U
+symbol Interface_Ethernet:PHY_MDIO_FIXTURE field Value PHY_MDIO_FIXTURE
+symbol Interface_Ethernet:PHY_MDIO_FIXTURE hash 8faf962e7f2b02b9
+symbol Interface_Ethernet:PHY_MDIO_FIXTURE pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Interface_Ethernet:PHY_MDIO_FIXTURE pin 2 unit 1 body 1 name GND type power_in style line
+symbol Interface_Ethernet:PHY_MDIO_FIXTURE pin 3 unit 1 body 1 name MDIO type bidirectional style line
+symbol Interface_Ethernet:PHY_MDIO_FIXTURE pin 4 unit 1 body 1 name MDC type input style line
+symbol Interface_Ethernet:PHY_MDIO_FIXTURE units 1
+symbol MCU_Fixture:MCU_ETH description "Microcontroller with Ethernet MAC"
+symbol MCU_Fixture:MCU_ETH field Description "Microcontroller with Ethernet MAC"
+symbol MCU_Fixture:MCU_ETH field Reference U
+symbol MCU_Fixture:MCU_ETH field Value MCU_ETH
+symbol MCU_Fixture:MCU_ETH hash 4f048a2be1327283
+symbol MCU_Fixture:MCU_ETH pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_ETH pin 2 unit 1 body 1 name GND type power_in style line
+symbol MCU_Fixture:MCU_ETH pin 3 unit 1 body 1 name PA2/ETH_MDIO type bidirectional style line
+symbol MCU_Fixture:MCU_ETH pin 4 unit 1 body 1 name PC1/ETH_MDC type output style line
+symbol MCU_Fixture:MCU_ETH units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

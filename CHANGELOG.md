@@ -13,7 +13,7 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ### Added
 
-- Stage 1 easy checks, batch checks-bus: `USB-1`, `USB-4`, `USB-9`, `USB-10`, `USB-11`, `USB-16`, `CONN-2`, `CONN-4`, `CONN-8`, `CONN-10`, `CONN-16`, `CONN-17`, `HS-4`, `HS-7`, `HS-9`, `HS-15`, each with its test schematic and sidecar; `erc_analysis::connector` (shell and mounting pins, Type-C contacts by number or name, plugs) and `erc_analysis::interface` (USB data, MDIO, CAN, SD/eMMC, DDR, MIPI and multi-gigabit lane names).
+- Stage 1 easy checks, batch checks-bus: `USB-1`, `USB-4`, `USB-9`, `USB-10`, `USB-11`, `USB-16`, `CONN-2`, `CONN-4`, `CONN-8`, `CONN-10`, `CONN-16`, `CONN-17`, `HS-4`, `HS-7`, `HS-9`, `HS-15`, `MEM-1`, `MEM-3`, `MEM-8`, `MEM-10`, `ETH-3`, `SER-14`, each with its test schematic and sidecar; `erc_analysis::connector` (shell and mounting pins, Type-C contacts by number or name, plugs) and `erc_analysis::interface` (USB data, MDIO, CAN, SD/eMMC, DDR, MIPI and multi-gigabit lane names).
 
 ## [0.4.9] - 2026-10-22
 

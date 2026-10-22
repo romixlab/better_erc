@@ -1,0 +1,145 @@
+# What better_erc finds on ser-14_can_split_termination.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part R1"]
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part R2"]
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part R3"]
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part R4"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-10"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-10"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U2"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U3"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U4"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +5V", "part U2"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +5V", "part U3"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +5V", "part U4"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /CAN1_TX", "pin U1.1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /CAN2_TX", "pin U2.1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /CAN3_TX", "pin U3.1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /CAN4_TX", "pin U4.1"]
+
+[[finding]]
+check = "NAME-5"
+subjects = ["part C2", "part C8"]
+
+[[finding]]
+check = "SER-14"
+subjects = ["net /CAN1_SPLIT", "part R1", "part R2"]
+
+[[finding]]
+check = "SER-14"
+subjects = ["net /CAN3_SPLIT", "part R5", "part R6"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.1", "pin U1.4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.1", "pin U2.4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U3", "pin U3.1", "pin U3.4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U4", "pin U4.1", "pin U4.4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /CAN1_RX", "pin U1.4"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /CAN1_TX", "pin U1.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /CAN2_RX", "pin U2.4"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /CAN2_TX", "pin U2.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /CAN3_RX", "pin U3.4"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /CAN3_TX", "pin U3.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /CAN4_RX", "pin U4.4"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /CAN4_TX", "pin U4.1"]

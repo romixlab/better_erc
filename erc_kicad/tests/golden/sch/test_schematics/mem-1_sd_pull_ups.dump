@@ -1,0 +1,431 @@
+board mem-1_sd_pull_ups
+label / local EMMC_CK at 310.38,40.16 net /EMMC_CK
+label / local EMMC_CK at 358.38,32.54 net /EMMC_CK
+label / local EMMC_CMD at 30,86.83 net /EMMC_CMD
+label / local EMMC_CMD at 310.38,37.62 net /EMMC_CMD
+label / local EMMC_CMD at 358.38,30 net /EMMC_CMD
+label / local EMMC_D0 at 310.38,27.46 net /EMMC_D0
+label / local EMMC_D0 at 358.38,35.08 net /EMMC_D0
+label / local EMMC_D1 at 78,86.83 net /EMMC_D1
+label / local EMMC_D1 at 310.38,30 net /EMMC_D1
+label / local EMMC_D1 at 358.38,37.62 net /EMMC_D1
+label / local EMMC_D2 at 126,86.83 net /EMMC_D2
+label / local EMMC_D2 at 310.38,32.54 net /EMMC_D2
+label / local EMMC_D2 at 358.38,40.16 net /EMMC_D2
+label / local EMMC_D3 at 174,86.83 net /EMMC_D3
+label / local EMMC_D3 at 310.38,35.08 net /EMMC_D3
+label / local EMMC_D3 at 358.38,42.7 net /EMMC_D3
+label / local SD_CK at 22.38,40.16 net /SD_CK
+label / local SD_CK at 70.38,32.54 net /SD_CK
+label / local SD_CMD at 22.38,37.62 net /SD_CMD
+label / local SD_CMD at 70.38,27.46 net /SD_CMD
+label / local SD_CMD at 174,26.19 net /SD_CMD
+label / local SD_D0 at 70.38,37.62 net /SD_D0
+label / local SD_D0 at 126,26.19 net /SD_D0
+label / local SD_D0_MCU at 22.38,27.46 net /SD_D0_MCU
+label / local SD_D0_MCU at 126,33.81 net /SD_D0_MCU
+label / local SD_D0_MCU at 222,26.19 net /SD_D0_MCU
+label / local SD_D1 at 22.38,30 net /SD_D1
+label / local SD_D1 at 70.38,40.16 net /SD_D1
+label / local SD_D2 at 22.38,32.54 net /SD_D2
+label / local SD_D3 at 22.38,35.08 net /SD_D3
+label / local SD_D3 at 70.38,24.92 net /SD_D3
+label / local SD_D3 at 270,26.19 net /SD_D3
+label / power +1V8 at 30,94.45 net +1V8
+label / power +1V8 at 78,94.45 net +1V8
+label / power +1V8 at 126,94.45 net +1V8
+label / power +1V8 at 174,94.45 net +1V8
+label / power +1V8 at 270,86.83 net +1V8
+label / power +1V8 at 358.38,24.92 net +1V8
+label / power +3V3 at 22.38,22.38 net +3V3
+label / power +3V3 at 70.38,30 net +3V3
+label / power +3V3 at 174,33.81 net +3V3
+label / power +3V3 at 222,33.81 net +3V3
+label / power +3V3 at 222,86.83 net +3V3
+label / power +3V3 at 270,33.81 net +3V3
+label / power +3V3 at 310.38,22.38 net +3V3
+label / power +3V3 at 358.38,22.38 net +3V3
+label / power GND at 22.38,24.92 net GND
+label / power GND at 70.38,35.08 net GND
+label / power GND at 70.38,42.7 net GND
+label / power GND at 222,94.45 net GND
+label / power GND at 270,94.45 net GND
+label / power GND at 310.38,24.92 net GND
+label / power GND at 358.38,27.46 net GND
+net +1V8 class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net +1V8 kind power
+net +3V3 class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net +3V3 kind power
+net /EMMC_CK class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net /EMMC_CK kind named
+net /EMMC_CMD class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net /EMMC_CMD kind named
+net /EMMC_D0 class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net /EMMC_D0 kind named
+net /EMMC_D1 class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net /EMMC_D1 kind named
+net /EMMC_D2 class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net /EMMC_D2 kind named
+net /EMMC_D3 class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net /EMMC_D3 kind named
+net /SD_CK class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net /SD_CK kind named
+net /SD_CMD class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net /SD_CMD kind named
+net /SD_D0 class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net /SD_D0 kind named
+net /SD_D0_MCU class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net /SD_D0_MCU kind named
+net /SD_D1 class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net /SD_D1 kind named
+net /SD_D2 class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net /SD_D2 kind named
+net /SD_D3 class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net /SD_D3 kind named
+net GND class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(J1-DAT2-Pad1) class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net unconnected-(J1-DAT2-Pad1) kind unconnected
+net unconnected-(U1-PA0-Pad9) class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U1-PA0-Pad9) kind unconnected
+net unconnected-(U1-PA1-Pad10) class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U1-PA1-Pad10) kind unconnected
+net unconnected-(U2-PA0-Pad9) class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U2-PA0-Pad9) kind unconnected
+net unconnected-(U2-PA1-Pad10) class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U2-PA1-Pad10) kind unconnected
+net unconnected-(U3-DAT4-Pad10) class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U3-DAT4-Pad10) kind unconnected
+net unconnected-(U3-DAT5-Pad11) class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U3-DAT5-Pad11) kind unconnected
+net unconnected-(U3-DAT6-Pad12) class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U3-DAT6-Pad12) kind unconnected
+net unconnected-(U3-DAT7-Pad13) class = Default @ sch mem-1_sd_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U3-DAT7-Pad13) kind unconnected
+part C1 field Value = 100n @ sch mem-1_sd_pull_ups.kicad_sch
+part C1 flag dnp = no @ sch mem-1_sd_pull_ups.kicad_sch
+part C1 flag exclude_from_sim = no @ sch mem-1_sd_pull_ups.kicad_sch
+part C1 flag in_bom = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part C1 flag on_board = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid e29074e3-0000-4000-8000-000000000136 line 398 at 222,90.64 rot 0
+part C1 value = text 100n @ sch mem-1_sd_pull_ups.kicad_sch note "from the Value field"
+part C2 field Value = 100n @ sch mem-1_sd_pull_ups.kicad_sch
+part C2 flag dnp = no @ sch mem-1_sd_pull_ups.kicad_sch
+part C2 flag exclude_from_sim = no @ sch mem-1_sd_pull_ups.kicad_sch
+part C2 flag in_bom = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part C2 flag on_board = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid e29074e3-0000-4000-8000-000000000143 line 420 at 270,90.64 rot 0
+part C2 value = text 100n @ sch mem-1_sd_pull_ups.kicad_sch note "from the Value field"
+part J1 field Value = Micro_SD_Card @ sch mem-1_sd_pull_ups.kicad_sch
+part J1 flag dnp = no @ sch mem-1_sd_pull_ups.kicad_sch
+part J1 flag exclude_from_sim = no @ sch mem-1_sd_pull_ups.kicad_sch
+part J1 flag in_bom = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part J1 flag on_board = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part J1 lib Connector:Micro_SD_Card sheet / symbol Connector:Micro_SD_Card
+part J1 unit 1 sheet / uuid e29074e3-0000-4000-8000-000000000021 line 153 at 78,30 rot 0
+part J1 value = text Micro_SD_Card @ sch mem-1_sd_pull_ups.kicad_sch note "from the Value field"
+part R1 field Value = 33 @ sch mem-1_sd_pull_ups.kicad_sch
+part R1 flag dnp = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R1 flag exclude_from_sim = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R1 flag in_bom = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R1 flag on_board = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid e29074e3-0000-4000-8000-000000000042 line 194 at 126,30 rot 0
+part R1 value = text 33 @ sch mem-1_sd_pull_ups.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch mem-1_sd_pull_ups.kicad_sch
+part R2 flag dnp = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R2 flag exclude_from_sim = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R2 flag in_bom = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R2 flag on_board = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid e29074e3-0000-4000-8000-000000000047 line 204 at 174,30 rot 0
+part R2 value = text 10k @ sch mem-1_sd_pull_ups.kicad_sch note "from the Value field"
+part R3 field Value = 10k @ sch mem-1_sd_pull_ups.kicad_sch
+part R3 flag dnp = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R3 flag exclude_from_sim = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R3 flag in_bom = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R3 flag on_board = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid e29074e3-0000-4000-8000-000000000053 line 220 at 222,30 rot 0
+part R3 value = text 10k @ sch mem-1_sd_pull_ups.kicad_sch note "from the Value field"
+part R4 field Value = 1k @ sch mem-1_sd_pull_ups.kicad_sch
+part R4 flag dnp = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R4 flag exclude_from_sim = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R4 flag in_bom = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R4 flag on_board = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid e29074e3-0000-4000-8000-000000000059 line 236 at 270,30 rot 0
+part R4 value = text 1k @ sch mem-1_sd_pull_ups.kicad_sch note "from the Value field"
+part R5 field Value = 10k @ sch mem-1_sd_pull_ups.kicad_sch
+part R5 flag dnp = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R5 flag exclude_from_sim = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R5 flag in_bom = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R5 flag on_board = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R5 lib Device:R sheet / symbol Device:R
+part R5 unit 1 sheet / uuid e29074e3-0000-4000-8000-000000000112 line 334 at 30,90.64 rot 0
+part R5 value = text 10k @ sch mem-1_sd_pull_ups.kicad_sch note "from the Value field"
+part R6 field Value = 10k @ sch mem-1_sd_pull_ups.kicad_sch
+part R6 flag dnp = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R6 flag exclude_from_sim = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R6 flag in_bom = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R6 flag on_board = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R6 lib Device:R sheet / symbol Device:R
+part R6 unit 1 sheet / uuid e29074e3-0000-4000-8000-000000000118 line 350 at 78,90.64 rot 0
+part R6 value = text 10k @ sch mem-1_sd_pull_ups.kicad_sch note "from the Value field"
+part R7 field Value = 10k @ sch mem-1_sd_pull_ups.kicad_sch
+part R7 flag dnp = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R7 flag exclude_from_sim = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R7 flag in_bom = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R7 flag on_board = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R7 lib Device:R sheet / symbol Device:R
+part R7 unit 1 sheet / uuid e29074e3-0000-4000-8000-000000000124 line 366 at 126,90.64 rot 0
+part R7 value = text 10k @ sch mem-1_sd_pull_ups.kicad_sch note "from the Value field"
+part R8 field Value = 47k @ sch mem-1_sd_pull_ups.kicad_sch
+part R8 flag dnp = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R8 flag exclude_from_sim = no @ sch mem-1_sd_pull_ups.kicad_sch
+part R8 flag in_bom = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R8 flag on_board = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part R8 lib Device:R sheet / symbol Device:R
+part R8 unit 1 sheet / uuid e29074e3-0000-4000-8000-000000000130 line 382 at 174,90.64 rot 0
+part R8 value = text 47k @ sch mem-1_sd_pull_ups.kicad_sch note "from the Value field"
+part U1 field Value = MCU_SDMMC @ sch mem-1_sd_pull_ups.kicad_sch
+part U1 flag dnp = no @ sch mem-1_sd_pull_ups.kicad_sch
+part U1 flag exclude_from_sim = no @ sch mem-1_sd_pull_ups.kicad_sch
+part U1 flag in_bom = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part U1 flag on_board = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part U1 lib MCU_Fixture:MCU_SDMMC sheet / symbol MCU_Fixture:MCU_SDMMC
+part U1 unit 1 sheet / uuid e29074e3-0000-4000-8000-000000000000 line 117 at 30,30 rot 0
+part U1 value = text MCU_SDMMC @ sch mem-1_sd_pull_ups.kicad_sch note "from the Value field"
+part U2 field Value = MCU_SDMMC @ sch mem-1_sd_pull_ups.kicad_sch
+part U2 flag dnp = no @ sch mem-1_sd_pull_ups.kicad_sch
+part U2 flag exclude_from_sim = no @ sch mem-1_sd_pull_ups.kicad_sch
+part U2 flag in_bom = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part U2 flag on_board = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part U2 lib MCU_Fixture:MCU_SDMMC sheet / symbol MCU_Fixture:MCU_SDMMC
+part U2 unit 1 sheet / uuid e29074e3-0000-4000-8000-000000000065 line 252 at 318,30 rot 0
+part U2 value = text MCU_SDMMC @ sch mem-1_sd_pull_ups.kicad_sch note "from the Value field"
+part U3 field Value = EMMC @ sch mem-1_sd_pull_ups.kicad_sch
+part U3 flag dnp = no @ sch mem-1_sd_pull_ups.kicad_sch
+part U3 flag exclude_from_sim = no @ sch mem-1_sd_pull_ups.kicad_sch
+part U3 flag in_bom = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part U3 flag on_board = yes @ sch mem-1_sd_pull_ups.kicad_sch
+part U3 lib Memory_Flash:EMMC_FIXTURE sheet / symbol Memory_Flash:EMMC_FIXTURE
+part U3 unit 1 sheet / uuid e29074e3-0000-4000-8000-000000000086 line 288 at 366,30 rot 0
+part U3 value = text EMMC @ sch mem-1_sd_pull_ups.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +3V3
+pin C1 1 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin C2 1 name "" unit 1 net +1V8
+pin C2 1 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin J1 1 name DAT2 unit 1 net unconnected-(J1-DAT2-Pad1)
+pin J1 1 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin J1 2 name DAT3/CD unit 1 net /SD_D3
+pin J1 2 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin J1 3 name CMD unit 1 net /SD_CMD
+pin J1 3 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin J1 4 name VDD unit 1 net +3V3
+pin J1 4 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin J1 5 name CLK unit 1 net /SD_CK
+pin J1 5 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin J1 6 name VSS unit 1 net GND
+pin J1 6 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin J1 7 name DAT0 unit 1 net /SD_D0
+pin J1 7 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin J1 8 name DAT1 unit 1 net /SD_D1
+pin J1 8 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin J1 9 name SHIELD unit 1 net GND
+pin J1 9 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R1 1 name "" unit 1 net /SD_D0
+pin R1 1 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R1 2 name "" unit 1 net /SD_D0_MCU
+pin R1 2 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R2 1 name "" unit 1 net /SD_CMD
+pin R2 1 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R2 2 name "" unit 1 net +3V3
+pin R2 2 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R3 1 name "" unit 1 net /SD_D0_MCU
+pin R3 1 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R3 2 name "" unit 1 net +3V3
+pin R3 2 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R4 1 name "" unit 1 net /SD_D3
+pin R4 1 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R4 2 name "" unit 1 net +3V3
+pin R4 2 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R5 1 name "" unit 1 net /EMMC_CMD
+pin R5 1 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R5 2 name "" unit 1 net +1V8
+pin R5 2 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R6 1 name "" unit 1 net /EMMC_D1
+pin R6 1 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R6 2 name "" unit 1 net +1V8
+pin R6 2 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R7 1 name "" unit 1 net /EMMC_D2
+pin R7 1 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R7 2 name "" unit 1 net +1V8
+pin R7 2 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R8 1 name "" unit 1 net /EMMC_D3
+pin R8 1 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin R8 2 name "" unit 1 net +1V8
+pin R8 2 type = passive @ sch mem-1_sd_pull_ups.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch mem-1_sd_pull_ups.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch mem-1_sd_pull_ups.kicad_sch
+pin U1 3 name PC8/SDMMC1_D0 unit 1 net /SD_D0_MCU
+pin U1 3 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U1 4 name PC9/SDMMC1_D1 unit 1 net /SD_D1
+pin U1 4 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U1 5 name PC10/SDMMC1_D2 unit 1 net /SD_D2
+pin U1 5 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U1 6 name PC11/SDMMC1_D3 unit 1 net /SD_D3
+pin U1 6 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U1 7 name PD2/SDMMC1_CMD unit 1 net /SD_CMD
+pin U1 7 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U1 8 name PC12/SDMMC1_CK unit 1 net /SD_CK
+pin U1 8 type = output @ sch mem-1_sd_pull_ups.kicad_sch
+pin U1 9 name PA0 unit 1 net unconnected-(U1-PA0-Pad9)
+pin U1 9 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U1 10 name PA1 unit 1 net unconnected-(U1-PA1-Pad10)
+pin U1 10 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U2 1 name VDD unit 1 net +3V3
+pin U2 1 type = power_in @ sch mem-1_sd_pull_ups.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch mem-1_sd_pull_ups.kicad_sch
+pin U2 3 name PC8/SDMMC1_D0 unit 1 net /EMMC_D0
+pin U2 3 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U2 4 name PC9/SDMMC1_D1 unit 1 net /EMMC_D1
+pin U2 4 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U2 5 name PC10/SDMMC1_D2 unit 1 net /EMMC_D2
+pin U2 5 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U2 6 name PC11/SDMMC1_D3 unit 1 net /EMMC_D3
+pin U2 6 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U2 7 name PD2/SDMMC1_CMD unit 1 net /EMMC_CMD
+pin U2 7 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U2 8 name PC12/SDMMC1_CK unit 1 net /EMMC_CK
+pin U2 8 type = output @ sch mem-1_sd_pull_ups.kicad_sch
+pin U2 9 name PA0 unit 1 net unconnected-(U2-PA0-Pad9)
+pin U2 9 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U2 10 name PA1 unit 1 net unconnected-(U2-PA1-Pad10)
+pin U2 10 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U3 1 name VCC unit 1 net +3V3
+pin U3 1 type = power_in @ sch mem-1_sd_pull_ups.kicad_sch
+pin U3 2 name VCCQ unit 1 net +1V8
+pin U3 2 type = power_in @ sch mem-1_sd_pull_ups.kicad_sch
+pin U3 3 name VSS unit 1 net GND
+pin U3 3 type = power_in @ sch mem-1_sd_pull_ups.kicad_sch
+pin U3 4 name CMD unit 1 net /EMMC_CMD
+pin U3 4 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U3 5 name CLK unit 1 net /EMMC_CK
+pin U3 5 type = input @ sch mem-1_sd_pull_ups.kicad_sch
+pin U3 6 name DAT0 unit 1 net /EMMC_D0
+pin U3 6 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U3 7 name DAT1 unit 1 net /EMMC_D1
+pin U3 7 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U3 8 name DAT2 unit 1 net /EMMC_D2
+pin U3 8 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U3 9 name DAT3 unit 1 net /EMMC_D3
+pin U3 9 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U3 10 name DAT4 unit 1 net unconnected-(U3-DAT4-Pad10)
+pin U3 10 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U3 11 name DAT5 unit 1 net unconnected-(U3-DAT5-Pad11)
+pin U3 11 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U3 12 name DAT6 unit 1 net unconnected-(U3-DAT6-Pad12)
+pin U3 12 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+pin U3 13 name DAT7 unit 1 net unconnected-(U3-DAT7-Pad13)
+pin U3 13 type = bidirectional @ sch mem-1_sd_pull_ups.kicad_sch
+sheet / name "" file mem-1_sd_pull_ups.kicad_sch uuid /
+source file mem-1_sd_pull_ups.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:Micro_SD_Card description "Micro SD Card Socket"
+symbol Connector:Micro_SD_Card field Description "Micro SD Card Socket"
+symbol Connector:Micro_SD_Card field Reference J
+symbol Connector:Micro_SD_Card field Value Micro_SD_Card
+symbol Connector:Micro_SD_Card hash 210dfd9ecda2a084
+symbol Connector:Micro_SD_Card pin 1 unit 1 body 1 name DAT2 type passive style line
+symbol Connector:Micro_SD_Card pin 2 unit 1 body 1 name DAT3/CD type passive style line
+symbol Connector:Micro_SD_Card pin 3 unit 1 body 1 name CMD type passive style line
+symbol Connector:Micro_SD_Card pin 4 unit 1 body 1 name VDD type passive style line
+symbol Connector:Micro_SD_Card pin 5 unit 1 body 1 name CLK type passive style line
+symbol Connector:Micro_SD_Card pin 6 unit 1 body 1 name VSS type passive style line
+symbol Connector:Micro_SD_Card pin 7 unit 1 body 1 name DAT0 type passive style line
+symbol Connector:Micro_SD_Card pin 8 unit 1 body 1 name DAT1 type passive style line
+symbol Connector:Micro_SD_Card pin 9 unit 1 body 1 name SHIELD type passive style line
+symbol Connector:Micro_SD_Card units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Fixture:MCU_SDMMC description "Microcontroller with SDMMC"
+symbol MCU_Fixture:MCU_SDMMC field Description "Microcontroller with SDMMC"
+symbol MCU_Fixture:MCU_SDMMC field Reference U
+symbol MCU_Fixture:MCU_SDMMC field Value MCU_SDMMC
+symbol MCU_Fixture:MCU_SDMMC hash beb9ea158d90f162
+symbol MCU_Fixture:MCU_SDMMC pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_SDMMC pin 2 unit 1 body 1 name GND type power_in style line
+symbol MCU_Fixture:MCU_SDMMC pin 3 unit 1 body 1 name PC8/SDMMC1_D0 type bidirectional style line
+symbol MCU_Fixture:MCU_SDMMC pin 4 unit 1 body 1 name PC9/SDMMC1_D1 type bidirectional style line
+symbol MCU_Fixture:MCU_SDMMC pin 5 unit 1 body 1 name PC10/SDMMC1_D2 type bidirectional style line
+symbol MCU_Fixture:MCU_SDMMC pin 6 unit 1 body 1 name PC11/SDMMC1_D3 type bidirectional style line
+symbol MCU_Fixture:MCU_SDMMC pin 7 unit 1 body 1 name PD2/SDMMC1_CMD type bidirectional style line
+symbol MCU_Fixture:MCU_SDMMC pin 8 unit 1 body 1 name PC12/SDMMC1_CK type output style line
+symbol MCU_Fixture:MCU_SDMMC pin 9 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Fixture:MCU_SDMMC pin 10 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Fixture:MCU_SDMMC units 1
+symbol Memory_Flash:EMMC_FIXTURE description "eMMC 5.1 flash"
+symbol Memory_Flash:EMMC_FIXTURE field Description "eMMC 5.1 flash"
+symbol Memory_Flash:EMMC_FIXTURE field Reference U
+symbol Memory_Flash:EMMC_FIXTURE field Value EMMC_FIXTURE
+symbol Memory_Flash:EMMC_FIXTURE hash 114962465b590372
+symbol Memory_Flash:EMMC_FIXTURE pin 1 unit 1 body 1 name VCC type power_in style line
+symbol Memory_Flash:EMMC_FIXTURE pin 2 unit 1 body 1 name VCCQ type power_in style line
+symbol Memory_Flash:EMMC_FIXTURE pin 3 unit 1 body 1 name VSS type power_in style line
+symbol Memory_Flash:EMMC_FIXTURE pin 4 unit 1 body 1 name CMD type bidirectional style line
+symbol Memory_Flash:EMMC_FIXTURE pin 5 unit 1 body 1 name CLK type input style line
+symbol Memory_Flash:EMMC_FIXTURE pin 6 unit 1 body 1 name DAT0 type bidirectional style line
+symbol Memory_Flash:EMMC_FIXTURE pin 7 unit 1 body 1 name DAT1 type bidirectional style line
+symbol Memory_Flash:EMMC_FIXTURE pin 8 unit 1 body 1 name DAT2 type bidirectional style line
+symbol Memory_Flash:EMMC_FIXTURE pin 9 unit 1 body 1 name DAT3 type bidirectional style line
+symbol Memory_Flash:EMMC_FIXTURE pin 10 unit 1 body 1 name DAT4 type bidirectional style line
+symbol Memory_Flash:EMMC_FIXTURE pin 11 unit 1 body 1 name DAT5 type bidirectional style line
+symbol Memory_Flash:EMMC_FIXTURE pin 12 unit 1 body 1 name DAT6 type bidirectional style line
+symbol Memory_Flash:EMMC_FIXTURE pin 13 unit 1 body 1 name DAT7 type bidirectional style line
+symbol Memory_Flash:EMMC_FIXTURE units 1
+symbol power:+1V8 description "Power symbol +1V8"
+symbol power:+1V8 field Description "Power symbol +1V8"
+symbol power:+1V8 field Reference "#PWR"
+symbol power:+1V8 field Value +1V8
+symbol power:+1V8 hash a241c49db20b5bea
+symbol power:+1V8 pin 1 unit 1 body 1 name +1V8 type power_in style line
+symbol power:+1V8 units 1 power global
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

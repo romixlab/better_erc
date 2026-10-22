@@ -460,6 +460,21 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   transceiver lane (net or pin names, Type-C SuperSpeed contacts) · `hs/hs_9.rs`, `hs-9_choke_on_lanes`
 - 🚧 `HS-15` Fitted part on a MIPI D-PHY lane (net or pin names) that is no connector and has no lane pin of its own ·
   `hs/hs_15.rs`, `hs-15_mipi_lane_parts`. Missing: the waiver for D-PHY rated parts (part data, `CFG-5`)
+- ✅ `MEM-1` CMD or DAT pin of an SD socket or eMMC (by name) whose line (net and one series resistor away) has no
+  pull-up to a rail, or only ones outside 10k-100k (`min_pull_up`, `max_pull_up`); a socket's CMD and DAT0-3 connected
+  to nothing too · `mem/mem_1.rs`, `mem-1_sd_pull_ups`
+- 🚧 `MEM-3` SD or eMMC CLK line with a pull-up; a socket's card-detect or write-protect pin on a signal net with no
+  pull · `mem/mem_3.rs`, `mem-3_clk_and_detect_pulls`. Missing: MCU pins the project marks as pulled (`CFG-2`)
+- ✅ `MEM-8` ZQ pin of a DRAM or controller with no resistor, several, one to no ground, off 240 Ω ± 1 %
+  (`zq_resistance`, `tolerance`; a stated tolerance looser than 1 %), or shared with another ZQ pin · `mem/mem_8.rs`,
+  `mem-8_ddr_zq`
+- 🚧 `MEM-10` DRAM with a reset pin (DDR3, DDR4) whose RESET or CKE line has no pull-down to a ground ·
+  `mem/mem_10.rs`, `mem-10_ddr_reset_cke`. Missing: controller pins the project marks as driven low from power-up
+  (`CFG-2`)
+- ✅ `ETH-3` MDIO net (pin name) whose line has no pull-up to a rail, or only ones outside 1k-10k (`min_pull_up`,
+  `max_pull_up`) · `eth/eth_3.rs`, `eth-3_mdio_pull_up`
+- ✅ `SER-14` Two resistors of 50-70 Ω (`min_half`, `max_half`) in series between lines reaching one transceiver's
+  CANH and CANL, with no fitted capacitor from the centre to a ground · `ser/ser_14.rs`, `ser-14_can_split_termination`
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`
 - ✅ `DIAG-2` Every catalogue check reported as ran, not run (the missing need, why, and what would enable it) or
   planned; each check declares its needs, availability is worked out per board before the run from the analyses

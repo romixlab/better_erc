@@ -1,0 +1,73 @@
+# What better_erc finds on mem-10_ddr_reset_cke.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "CLK-7"
+subjects = ["net /DDR_RESETN", "pin U2.4"]
+
+[[finding]]
+check = "CLK-7"
+subjects = ["net /DDR_RESETN2", "pin U3.4"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +1V35"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-10"
+subjects = ["net +1V35"]
+
+[[finding]]
+check = "DEC-10"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +1V35", "part U2"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +1V35", "part U3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U4-CLK-Pad4)", "pin U4.4"]
+
+[[finding]]
+check = "MEM-10"
+subjects = ["net /DDR_CKE", "part U2", "pin U2.5"]
+
+[[finding]]
+check = "MEM-10"
+subjects = ["net /DDR_RESETN2", "part U3", "pin U3.4"]
+
+[[finding]]
+check = "NAME-10"
+subjects = ["net /DDR_RESETN", "pin U2.4"]
+
+[[finding]]
+check = "NAME-10"
+subjects = ["net /DDR_RESETN2", "pin U3.4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U4", "pin U4.4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +1V35"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
