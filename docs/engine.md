@@ -3,8 +3,9 @@
 `erc_checks` runs the checks of the [catalogue](checks.md) on a design of the [board model](model.md). Each check is
 one file with its catalogue id, the data it needs and a pure function from the design to findings; the engine works
 out which checks can run on a design, runs them in parallel, says which could not run and what would enable them,
-and returns one report. `erc_analysis` holds what the checks build on: part classes, values, graph queries, the power
-structure and the I2C bus recogniser. The library crate `better_erc` re-exports all of it (see [model.md](model.md)
+and returns one report. `erc_analysis` holds what the checks build on ([The analyses](#the-analyses)): part classes,
+values, rails and grounds, the I2C bus recogniser, drawing facts and graph queries, each built once per board and
+variant in the check context. The library crate `better_erc` re-exports all of it (see [model.md](model.md)
 "The crates").
 
 ## A run
@@ -25,8 +26,8 @@ goes board by board:
 1. **Availability.** For every [need](#needs) of the checks, the engine works out what this board has: available,
    partial (known for some parts: the checks run on those and the report says how many), or missing (with why).
 2. **Checks.** Every check whose needs are all there runs, in parallel (rayon), on one shared context (`Ctx`). The
-   context builds an analysis the first time a check asks for it (part classes, the I2C buses) and keeps it, so a
-   check pays only for what it uses and nothing is computed twice.
+   context builds an analysis the first time a check (or the availability of step 1) asks for it and keeps it, so
+   a check pays only for what it uses and nothing is computed twice.
 3. **Not run.** A check with a missing need is reported as `NotRun { check, need, hint }`: the hint says why the
    data is missing and what would provide it, followed by what the check's detail page says it needs.
 4. **Overlaps.** A check that overlaps another (the catalogue's `≈`) supersedes that one's finding on the same
@@ -148,19 +149,74 @@ berc`, `zsh`, `fish`) asks berc itself and offers check ids and categories from 
 and the variants of the design in the current directory, each with its help text. `berc --version` names the
 version, git commit and commit time.
 
+## The analyses
+
+`Ctx` holds the design, the board, the variant checked and the project's `Config`, and builds each analysis of
+`erc_analysis` on first use (a `OnceLock` each, shared read-only by the checks running in parallel). Every derived fact
+is a `Fact` with `Provenance::Derived { rule }` (or `Assumed` for a guess), so a finding can name the rule it rests on.
+
+| accessor | analysis | what it holds | need |
+|---|---|---|---|
+| `cx.view()` | `erc_model::View` | the board as the variant checked mounts it: `fitted`, `flag`, `in_bom`, `field`, `field_fact`, `value_text`, `fitted_components` | `Variant` |
+| `cx.classes()` | `class::PartClasses` | each part's `PartClass` (architecture §1.3: resistor, polarized capacitor, Schottky diode, N-channel MOSFET, USB-C connector, buck regulator, pass-FET translator, ...), from a `ClassSource` (the part database's hook), the library symbol, its description and keywords, net-tie pad groups, else the designator prefix (assumed); `coverage` counts them | `PartClasses` |
+| `cx.values()` | `value::Values` | each part's Value field in the variant checked, read in the unit its class gives it (`PartClass::value_unit`: Ω, F, H, Hz, A, V for Zener and TVS), with tolerance, ratings (`50V`, `1/4W`), dielectric, the smallest E-series it is in (resistors, capacitors, inductors), the parse warnings and the field's source | `Values` |
+| `cx.power()` | `power::Power` | rails (`Rail`: kind, the signals that make it one, the voltage per source), grounds (`Ground`: kind, signals), ground groups joined at DC, every part linking two grounds, switching nodes | `Rails`, `RailVoltages` |
+| `cx.i2c()` | `i2c::I2cBuses` | the I2C buses of the fitted parts: pull-up pairs, devices, ties, translators, discrete translators with their gate nets, direct and logical segments, `pull_ups(segment)` | `Graph`, `PartClasses` |
+| `cx.drawing()` | `drawing::Drawing` | every label's scope (sheet, global, hierarchical, sheet pin, directive), labels by text, sheet pins matched with hierarchical labels and the unmatched ones, no-connect flags with their pin, `dangling`, `flagged_but_connected` | `Drawing` |
+
+**Part classes.** A library symbol decides by its library and name (`Device:R`, `Transistor_FET:*`,
+`Regulator_Linear:*`, `MCU_*`, `74xGxx:*`, `Connector:USB_C_*`); a kind the name leaves open is taken from the
+description (`P-Channel`, `Schottky`, `bidirectional TVS`, `step-down`). A symbol of an unknown library is classified
+by its description and keywords, matched as whole words in order (a `gate driver` is no MOSFET, a `load switch` no
+switch, `isolated` is no isolator). The designator prefix is the last resort, an assumption a finding reports as an
+estimate.
+
+**Rails and grounds** (`power`, NET-5 first layer). A net name is read by a grammar (`read_name`): voltage tokens
+`+3V3`, `3V3`, `-5V`, `+5V`, `12V0`, `3.3V`, `3P3V`; power words `VDD*`, `VCC*`, `VBUS`, `VBAT`, `VIN`, `VSYS`,
+`VREF`, `VDDA`, `AVDD`, `+V...`, `V+`, `V-`, `VEE` (a negative rail, not a ground); ground words `GND*`, `AGND`,
+`DGND`, `PGND`, `VSS*`, `GND_ISO`, `CHASSIS`, `SHIELD`, `EARTH`, `PE`, `0V`; and signal words (`EN`, `PG`, `SENSE`,
+`FB`, `SCL`, `TX`, ...) that make a name a signal whatever voltage it mentions (`VDD_EN`, `SCL1_3V3`). The sheet path
+is left out and auto-named nets have no name to read. A net is a rail by its name, a power symbol on it (not
+`PWR_FLAG`), or power pins of components on it; a ground by its name or by pins named like a ground. `NetSource` is
+the hook for the project file (CFG-2), whose declarations rank first. A rail's voltage is a `Facts<f64>`: the name's
+reading (`Derived`, "voltage from the net name"; a name with a `NEG` marker and no sign reads negative and its rule
+says so), the project's when there is one. `PowerOptions::strict` reads voltages from `+xVy` only, as the first
+better_erc did (NAME-7). Grounds joined by a fitted net tie, jumper, 0 Ω resistor, ferrite or inductor form one
+`GroundGroup`; every fitted part on two grounds is a `GroundLink` with its `Joint` (an R or C to chassis, an IC with
+AGND and DGND pins). Switching nodes (the net between an IC and an inductor that no name makes a rail) are neither
+rail nor ground.
+
+**I2C** (`i2c`, NET-4). A bus is a pair of nets named alike with `SCL` and `SDA`; its pull-up a pair of resistors
+meeting on one net; a resistor, ferrite, net tie or jumper per line to another bus a tie (one direct segment), a FET
+per line a discrete translator (the BSS138 pair, with the nets of its gates), a translator IC with another bus on its
+other side a translator (one logical bus, several direct segments). Only the fitted parts of the variant count, so a
+pull-up made DNP is no pull-up. Pin roles will add pins named `SCL`/`SDA` as a source (NET-7).
+
+**Drawing facts** (`drawing`): what the WIRE, NAME and SHORT checks need beyond connectivity. Labels keep their kind
+(`local`, `global`, `hierarchical`, `sheet_pin`, `power`, `local_power` for KiCad 10 local power symbols,
+`directive`), sheet, position, net and whether they dangle; the analysis adds the scope and the matching.
+
+The analyses have their own test schematics in `test_schematics/analyses` (`power`, `parts` with a KiCad 10 variant,
+`drawing` with a sub-sheet), each with a sidecar `<name>.expect.toml` of what they find, one line per fact
+(`erc_analysis/tests/analyses.rs`; `BLESS=1` rewrites them).
+
 ## Needs
 
-`Need` is the data contract between a check and the design. What the engine can tell today:
+`Need` is the data contract between a check and the design. The engine asks the context, so availability comes from
+the same analyses the checks then use:
 
 | need | available when |
 |---|---|
 | `Graph` | the board has parts |
-| `PartClasses` | always: by library symbol, by description, else by designator prefix (marked assumed) |
+| `PartClasses` | always; partial (with a coverage note) when some components are classified only by their designator prefix (assumed) or not at all |
 | `Values` | components have a Value field (partial when only some do) |
+| `Rails` | some net reads as a rail or a ground |
+| `RailVoltages` | rails carry a voltage (partial when only some do; missing when none does) |
+| `Variant` | the design states what is fitted: a KiCad schematic or netlist, variants, or DNP flags |
 | `Layout` | the board file was read |
 | `Drawing` | the design came from KiCad schematics (labels, no-connect flags), not a netlist |
 | `MultiBoard` | the design joins boards through connectors |
-| `Rails`, `RailVoltages`, `PinRoles`, `PinThresholds`, `PinFunctions`, `PowerStates`, `Conduction`, `PartDb`, `Project(key)` | not yet: the analyses and the project file are still to come, and the hint names the FEATURES.md id |
+| `PinRoles`, `PinThresholds`, `PinFunctions`, `PowerStates`, `Conduction`, `PartDb`, `Project(key)` | not yet: the analyses and the project file are still to come, and the hint names the FEATURES.md id |
 
 ## The catalogue in the binary
 
@@ -213,8 +269,9 @@ of the threshold it used.
    category, severity and tier, the needs, overlaps and params; `impl Check` whose `run` builds findings with
    `cx.finding(&META).net(..).part(..).message(..).fact(..).fix(..).build()`; `inventory::submit!(Registered(&..))`;
    a unit test on its schematic (`crate::testing::fingerprints`). Add the module to the category's `mod.rs`.
-3. A missing analysis goes into `erc_analysis` (with its test) and a lazy accessor on `Ctx`; a missing accessor of
-   the model goes into `erc_model` (with its test).
+3. A missing analysis goes into `erc_analysis` (with its test, and its test schematic in `test_schematics/analyses`
+   when it is observable there), a lazy accessor on `Ctx` and, when it is new data, a `Need` with its availability;
+   a missing accessor of the model goes into `erc_model` (with its test).
 4. `test_schematics/sources/<id>_<slug>.kicad_sch` with the failing and the correct case, and its
    `.expect.toml`; `just netlists` for the picture.
 5. FEATURES.md and CHANGELOG.
@@ -223,7 +280,7 @@ of the threshold it used.
 
 | check | what it finds | schematic |
 |---|---|---|
-| `I2C-1` | a direct bus segment without a pull-up pair | `i2c-1_no_pull_ups` |
+| `I2C-1` | a direct bus segment without a pull-up pair (a segment behind a translator too) | `i2c-1_no_pull_ups`, `i2c-18_discrete_translator` |
 | `I2C-2` | resistors from a line to the pull-up rail besides the pair; several pairs on one segment | `i2c-2_multiple_pull_ups`, `i2c-7_segments` |
 | `I2C-3` | a pull-up pair whose rail has nothing else on it, or a resistor to nowhere | `i2c-1_no_pull_ups` |
 | `I2C-7` | a tie between two buses over `max_tie` | `i2c-7_segments` |
@@ -232,10 +289,8 @@ of the threshold it used.
 | `BOM-5` | a placeholder value (`?`, `??k`, `TBD`, `TODO`) | `bom-10_values` |
 | `BOM-6` | a placeholder value on a fitted part (folds `BOM-5` in) | `bom-10_values` |
 | `BOM-9` | a component without a value | `bom-10_values` |
-| `BOM-10` | a resistor value that does not read, or odd notation | `bom-10_values` |
+| `BOM-10` | a resistor, capacitor or inductor value that does not read in its unit, odd notation, or a value in no E-series | `bom-10_values` |
 | `LIB-3` | a MOSFET whose pins are not named G, D and S | `lib-3_mosfet_pin_names` |
 
-The I2C buses come from `erc_analysis::i2c`, ported from the first analysis code (the removed `erc_core`): SCL and SDA nets named alike,
-pull-up pairs meeting on one net, ties and discrete translators (a resistor or FET per line to another bus, or to an
-unnamed pair of nets that becomes a bus of its own), translator ICs, and the segments they form. Pin roles will
-replace the names as the way to find a bus (NET-4, NET-7).
+The I2C buses come from `erc_analysis::i2c` ([The analyses](#the-analyses)), ported from the first analysis code (the
+removed `erc_core`). Pin roles will replace the names as the way to find a bus (NET-4, NET-7).
