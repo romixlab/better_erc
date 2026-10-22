@@ -523,7 +523,7 @@ fn completion_offers_catalogue_values() {
     let dir = scratch("variants");
     std::fs::copy(
         Path::new(env!("CARGO_MANIFEST_DIR"))
-            .join("../ecad_file_format/test_input/kicad_versions/fixture_kicad10.kicad_sch"),
+            .join("../erc_kicad/tests/fixtures/netlist/kicad_versions/fixture_kicad10.kicad_sch"),
         dir.join("fixture_kicad10.kicad_sch"),
     )
     .unwrap();

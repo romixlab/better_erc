@@ -380,4 +380,39 @@ mod tests {
         // Without a known unit a lone multiplier is not joined
         assert_eq!(q("4.7 k"), None);
     }
+
+    /// The old `ecad_file_format::passive_value` table (`parse_resistance_value`), its warnings renamed: a redundant
+    /// space is [`ValueWarning::Spacing`], `SmallR` [`ValueWarning::LowercaseR`], `BigRInsteadOfOhmSymbol`
+    /// [`ValueWarning::RedundantR`]
+    #[test]
+    fn old_resistance_table() {
+        let ohm = |t: &str| {
+            let (v, w) = Value::parse_as(t, Unit::Ohm);
+            (v.quantity().map(|q| q.value), w)
+        };
+        for (text, want) in [
+            ("100", 100.0),
+            ("5k", 5e3),
+            ("5M", 5e6),
+            ("5G", 5e9),
+            ("1R", 1.0),
+            ("15.5", 15.5),
+            ("5.53R", 5.53),
+            ("1.0k", 1e3),
+            ("1k2", 1.2e3),
+            ("10 kΩ", 1e4),
+            ("5Ω", 5.0),
+            ("1mΩ", 1e-3),
+            ("1μΩ", 1e-6),
+            (" 0 ", 0.0),
+        ] {
+            assert_eq!(ohm(text), (Some(want), vec![]), "{text:?}");
+        }
+        assert_eq!(ohm(" 0  R "), (Some(0.0), vec![ValueWarning::Spacing]));
+        assert_eq!(ohm("49r"), (Some(49.0), vec![ValueWarning::LowercaseR]));
+        assert_eq!(
+            ohm(" 499kR "),
+            (Some(499e3), vec![ValueWarning::RedundantR])
+        );
+    }
 }

@@ -17,6 +17,18 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
   the net, each a fact with its rule and the voltage from the name), grounds and switching nodes, ported from
   `erc_core`'s `power.rs`; the I2C lines and switching nodes are not rails. `name_voltage` reads `+1V25` as 1.25 V
   (the old parser read 2.25 V). `erc_analysis::graph::input_pins`: the input pins on a net (the IO-1 stub's list).
+- The old readers' tests as acceptance tests on the new core: `ecad_file_format::kicad_netlist`'s asserts in
+  `erc_kicad/tests/netlist.rs`, the passive value table in `erc_model::value`.
+
+### Fixed
+
+- The KiCad netlist importer keeps KiCad 10's unit names (`A`, `B`) and unit count on the symbol, as the old reader
+  did (`IMP-12`).
+
+### Changed
+
+- The KiCad netlist fixtures move from `ecad_file_format/test_input` to `erc_kicad/tests/fixtures/netlist`;
+  `just netlist-fixtures` exports them there.
 
 ## [0.3.9] - 2026-10-22
 

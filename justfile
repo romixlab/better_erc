@@ -62,10 +62,10 @@ deploy:
 
 kicad := "podman run --rm --userns=keep-id -v $PWD:/w:Z -w /w docker.io/kicad/kicad"
 
-# So each KiCad version's netlist format stays covered by a test (ecad_file_format/test_input/kicad_versions).
+# So each KiCad version's netlist format stays covered by a test (erc_kicad/tests/fixtures/netlist/kicad_versions).
 
 # Export the netlist fixtures again with kicad-cli 8, 9 and 10 from KiCad's container images (podman)
-[working-directory: 'ecad_file_format/test_input/kicad_versions']
+[working-directory: 'erc_kicad/tests/fixtures/netlist/kicad_versions']
 netlist-fixtures:
     {{ kicad }}:8.0 kicad-cli sch export netlist -o fixture.kicad8.net fixture.kicad_sch
     {{ kicad }}:9.0 kicad-cli sch export netlist -o fixture.kicad9.net fixture.kicad_sch

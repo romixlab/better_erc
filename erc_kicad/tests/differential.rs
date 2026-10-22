@@ -2,7 +2,7 @@
 //! the set of `designator.pin` it connects, names included, for every KiCad major version the schematic can be
 //! read by.
 //!
-//! - The fixtures (`tests/fixtures`, `ecad_file_format/test_input/kicad_versions`) with their committed netlists
+//! - The fixtures (`tests/fixtures`, `erc_kicad/tests/fixtures/netlist/kicad_versions`) with their committed netlists
 //!   from KiCad 8, 9 and 10 (`just kicad-fixtures` exports them again).
 //! - The test schematics (`test_schematics/sources`), each sheet alone and the whole project, exported by the
 //!   installed kicad-cli (cached by content hash); skipped with a message when kicad-cli is not installed.
@@ -54,11 +54,11 @@ const FIXTURES: &[Fixture] = &[
         versions: &[10],
     },
     Fixture {
-        root: "ecad_file_format/test_input/kicad_versions/fixture.kicad_sch",
+        root: "erc_kicad/tests/fixtures/netlist/kicad_versions/fixture.kicad_sch",
         versions: &[8, 9, 10],
     },
     Fixture {
-        root: "ecad_file_format/test_input/kicad_versions/fixture_kicad10.kicad_sch",
+        root: "erc_kicad/tests/fixtures/netlist/kicad_versions/fixture_kicad10.kicad_sch",
         versions: &[10],
     },
 ];

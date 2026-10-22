@@ -67,7 +67,9 @@ symbol Fixture:DualAmp pin 3 unit 0 body 0 name +INA type input style ""
 symbol Fixture:DualAmp pin 5 unit 0 body 0 name +INB type input style ""
 symbol Fixture:DualAmp pin 6 unit 0 body 0 name -INB type input style ""
 symbol Fixture:DualAmp pin 7 unit 0 body 0 name OUTB type output style ""
-symbol Fixture:DualAmp units 1
+symbol Fixture:DualAmp unit-name 1 A
+symbol Fixture:DualAmp unit-name 2 B
+symbol Fixture:DualAmp units 2
 symbol Fixture:Jumper3 description "Three-pad solder jumper"
 symbol Fixture:Jumper3 field Description "Three-pad solder jumper"
 symbol Fixture:Jumper3 field Reference JP
@@ -75,6 +77,7 @@ symbol Fixture:Jumper3 field Value Jumper3
 symbol Fixture:Jumper3 pin 1 unit 0 body 0 name A type passive style ""
 symbol Fixture:Jumper3 pin 2 unit 0 body 0 name C type passive style ""
 symbol Fixture:Jumper3 pin 3 unit 0 body 0 name B type passive style ""
+symbol Fixture:Jumper3 unit-name 1 A
 symbol Fixture:Jumper3 units 1
 symbol Fixture:R description Resistor
 symbol Fixture:R field Description Resistor
@@ -82,4 +85,5 @@ symbol Fixture:R field Reference R
 symbol Fixture:R field Value R
 symbol Fixture:R pin 1 unit 0 body 0 name "" type passive style ""
 symbol Fixture:R pin 2 unit 0 body 0 name "" type passive style ""
+symbol Fixture:R unit-name 1 A
 symbol Fixture:R units 1

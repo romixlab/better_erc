@@ -323,6 +323,8 @@ impl Reader {
         let mut variants: Vec<PartVariant> = Vec::new();
         let mut ties: Vec<Vec<String>> = Vec::new();
         let mut jumpers = false;
+        // KiCad 10's unit list: the name of each unit, in unit order
+        let mut unit_names: Vec<String> = Vec::new();
         for item in c.args() {
             match item.head() {
                 Some("ref") => {}
@@ -392,6 +394,7 @@ impl Reader {
                 }
                 Some("units") => {
                     for (i, u) in item.children("unit").enumerate() {
+                        unit_names.push(u.value("name").unwrap_or("").to_string());
                         for pins in u.children("pins") {
                             for p in pins.children("pin") {
                                 if let Some(n) = p.value("num") {
@@ -465,8 +468,16 @@ impl Reader {
         }
         let sheet = sheet.unwrap_or_else(|| self.sheet("/", "/", None, None));
         let symbol = self.symbols.get(&lib_id).copied();
-        if jumpers && let Some(s) = symbol {
-            self.b.symbols[s.index()].duplicate_pins_are_jumpers = true;
+        if let Some(s) = symbol {
+            let def = &mut self.b.symbols[s.index()];
+            def.duplicate_pins_are_jumpers |= jumpers;
+            def.units = def.units.max(unit_names.len() as u32);
+            for (i, name) in unit_names.iter().enumerate() {
+                let unit = i as u32 + 1;
+                if !name.is_empty() && !def.unit_names.iter().any(|(u, _)| *u == unit) {
+                    def.unit_names.push((unit, name.clone()));
+                }
+            }
         }
         let value = fields
             .iter()
