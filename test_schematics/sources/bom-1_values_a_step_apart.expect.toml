@@ -1,0 +1,21 @@
+# What better_erc finds on bom-1_values_a_step_apart.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-1"
+subjects = ["part C1", "part C2"]
+
+[[finding]]
+check = "BOM-1"
+subjects = ["part R1", "part R2"]
+
+[[finding]]
+check = "BOM-1"
+subjects = ["part R3", "part R4"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board bom-1_values_a_step_apart"]
+
+[[not_run]]
+check = "BOM-8"
+need = "rails"

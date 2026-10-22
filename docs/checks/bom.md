@@ -45,7 +45,11 @@ bulk decoupling), merging them is free. Where it does matter (dividers, filters)
 change list asks the same for C301/C307, C506/C510 and a lone 49.9 Ω.
 
 **How to check.** Collect values per class (`IMP-6`), find pairs one step apart in the E24 or E96 grid and report them
-with their designators; a role filter (pull-up, series, decoupling) cuts the noise.
+with their designators; a role filter (pull-up, series, decoupling) cuts the noise. better_erc
+(`erc_checks/src/bom/bom_1.rs`) takes the distinct values of the fitted resistors and of the fitted capacitors and
+reports two values one step apart in the smallest series that has both (`ESeries::steps`): 33 Ω and 39 Ω in E12,
+4.7 kΩ and 5.1 kΩ in E24, 4.99 kΩ and 5.11 kΩ in E96, 1 µF and 2.2 µF in E3, with the parts of both. The role filter
+waits for pin roles (`NET-7`); until then every pair is listed and the ones in dividers and filters are waived.
 
 **Fix.** Pick one value where the circuit allows; leave dividers and filters alone.
 
@@ -95,7 +99,13 @@ Often the odd part is there by accident and has an SMT or same-size twin.
 0402s for hand assembly.
 
 **How to check.** Group footprints by package size and mount type from the footprint name or library data; report
-minorities.
+minorities. better_erc (`erc_checks/src/bom/bom_3.rs`, `erc_analysis::package`) reads each fitted part's footprint:
+the chip case size (`R_0402_1005Metric` is 0402), SMD or through-hole (from the name, or the board file's attribute
+when it was read) and the side (board file). Among the fitted parts it reports the minority mount type, each minority
+case size, each minority connector family (the footprint name up to its part number, with the pitch: `JST_PH
+P2.00mm`, `PinHeader P2.54mm`; only connectors whose family is a choice, not USB, HDMI, RJ45, card or coax), and the
+minority side; a minority is a group of at most `minority` (0.2) of its kind. A part in two minorities (a THT header
+that is also the odd family) is one finding.
 
 **Fix.** Pick an SMT or same-size alternative where it exists; if a mix stays, plan the assembly step for it.
 
@@ -118,7 +128,11 @@ couple the elements thermally.
 elements, 1206 size) replace them.
 
 **How to check.** Identical resistors whose one end goes to pins of the same part (or the same connector) and whose
-other end is shared (a rail) or free; groups of 2, 4 or 8.
+other end is shared (a rail) or free; groups of 2, 4 or 8. better_erc (`erc_checks/src/bom/bom_4.rs`): fitted
+two-pin resistors of one value and case whose one end is on signal pins of the same IC or connector (one resistor per
+net, not a supply net) and whose other ends share a net (pull-ups) or are all apart (series resistors); a group of
+`min_group` (2) or more is one finding, named with the parts on both sides, and a group inside a bigger one is the
+bigger one's.
 
 **Fix.** Use an isolated-element array where values and layout allow; keep discrete parts where rework or precision
 matters.
@@ -140,7 +154,7 @@ lost) or guesses (a board lost). The second form of the same mistake, the placeh
 **Example.** A feedback resistor marked `?k` "until the output voltage is decided": the BOM goes out with `?k`, the
 assembler fits the nearest reel.
 
-**How to check.** Values that start or end with `?`, or contain `TBD` or `TODO` as a word, on any part, fitted
+**How to check.** Values that start or end with `?`, or contain `TBD`, `TODO` or `calc` as a word, on any part, fitted
 or not (`erc_checks/src/bom/bom_5.rs`); a fitted one is reported once, as `BOM-6`.
 
 **Fix.** Decide the value; if it really stays open, mark the part DNP and say so on the sheet.
@@ -208,7 +222,10 @@ wrong (`LIB-11`, `LAY-6`); the schematic version of the mistake is the easy one 
 reverse-biased and dark.
 
 **How to check.** For each LED, find which pin leads (through resistors) to a rail and which to ground or a driver;
-anode toward ground is a finding. The footprint side needs `LIB-11`.
+anode toward ground is a finding. The footprint side needs `LIB-11`. better_erc (`erc_checks/src/bom/bom_8.rs`) takes
+the fitted LEDs with pins named anode and cathode (`A`, `K`), walks from each through fitted two-pin resistors and
+ferrites (`max_hops` = 2) to the rails and grounds of `NET-5`, and reports an anode that reaches only ground or a
+negative rail, or a cathode that reaches only a rail. A cathode toward a high-side driver needs pin roles (`NET-7`).
 
 **Fix.** Turn the LED in the schematic; check the footprint's pad 1 against the datasheet's cathode mark.
 
@@ -274,6 +291,9 @@ board). Sometimes it is right: power rating, voltage rating, or DC-bias derating
 **Example.** A board with 23 × 100 nF 0402 and 2 × 100 nF 0603 (copied with a USB block from an older design).
 
 **How to check.** Group by value and footprint; report values with more than one package, with designators.
+better_erc (`erc_checks/src/bom/bom_11.rs`) groups the fitted parts whose value reads in their class's unit
+(resistors, capacitors, inductors, ferrites, crystals, fuses) by class and value (`100n` and `100nF` are one), and
+reports a value in more than one package: the case size, else the footprint name.
 
 **Fix.** Move the minority to the majority package unless rating or derating needs the bigger one.
 
@@ -348,7 +368,11 @@ everything. Decisions made by someone who has not seen the schematic.
 **Example.** A 4.7 µH inductor with value and footprint but no MPN: the assembler fits a 0.8 A part on a 2 A buck.
 
 **How to check.** Parts not DNP whose MPN field (by name, configurable: `MPN`, `Mfr. Part`, `Manufacturer_Part_Number`)
-is empty. Test points, mounting holes and fiducials are exempt.
+is empty. Test points, mounting holes and fiducials are exempt. better_erc (`erc_checks/src/bom/bom_14.rs`) reads
+every field whose name starts with `MPN` (`Mpn1`, `MPN_2`) or is `Mfr. Part`, `Mfr PN`, `Manufacturer Part Number`
+(case and punctuation ignored), in the variant checked; a part with one non-empty is fine. Parts out of the BOM and net
+ties are exempt too. When no part of the board has an MPN, that is one finding for the board, not one per part. The
+field names become configurable with the project file (`CFG-2`).
 
 **Fix.** Fill in the MPN, with alternates for passives.
 
@@ -418,6 +442,9 @@ catch: no MPN decoding needed.
 `RC0402FR-074K7L` left as it was: the reset line gets 4.7 kΩ.
 
 **How to check.** Group parts by MPN; more than one distinct value (after normalising notation, `IMP-6`) is a finding.
+better_erc (`erc_checks/src/bom/bom_17.rs`) groups the parts, DNP ones too (another variant may fit them), by every
+MPN field they carry, and compares the values read in their class's unit (`4k7` and `4.7k` are one value; a value
+that does not read compares as text).
 
 **Fix.** Correct the MPN on the edited parts.
 

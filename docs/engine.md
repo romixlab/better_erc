@@ -168,6 +168,7 @@ is a `Fact` with `Provenance::Derived { rule }` (or `Assumed` for a guess), so a
 | `cx.values()` | `value::Values` | each part's value ([Values](#values)) in the variant checked, read in the unit its class gives it (`PartClass::value_unit`: Ω, F, H, Hz, A, V for Zener and TVS), with tolerance, ratings (`50V`, `1/4W`), dielectric, the smallest E-series it is in (resistors, capacitors, inductors), the parse warnings, the field it is written in and its source | `Values` |
 | `cx.power()` | `power::Power` | rails (`Rail`: kind, the signals that make it one, the voltage per source), grounds (`Ground`: kind, signals), ground groups joined at DC, every part linking two grounds, switching nodes | `Rails`, `RailVoltages` |
 | `cx.i2c()` | `i2c::I2cBuses` | the I2C buses of the fitted parts: pull-up pairs, devices, ties, translators, discrete translators with their gate nets, direct and logical segments, `pull_ups(segment)` | `Graph`, `PartClasses` |
+| `package::Package::of(board, part)` | `package::Package` | a part's package from its footprint: the chip case size (`0402`), SMD or through-hole (the board file's attribute when read, else the name), the board side | `Graph` |
 | `cx.drawing()` | `drawing::Drawing` | every label's scope (sheet, global, hierarchical, sheet pin, directive), labels by text, sheet pins matched with hierarchical labels and the unmatched ones, no-connect flags with their pin, `dangling`, `flagged_but_connected` | `Drawing` |
 | `access::reach(view, classes, power, net)` | `access` | where a probe reaches a net: test point and connector pins on it or one series resistor, ferrite, net tie or jumper away (a far side on a rail or ground is a pull, not a path); `zero_ohm_groups`, the nets joined by 0 Ω resistors, net ties and jumpers | `Graph`, `PartClasses` |
 | `supply::power_in_pins(view, net)`, `caps_to_ground` | `supply` | the power-input pins of the fitted parts on a net, by part; the fitted capacitors from a net to a ground | `Rails` |
@@ -343,6 +344,13 @@ of the threshold it used.
 | `BOM-6` | a placeholder value on a fitted part (folds `BOM-5` in) | `bom-10_values` |
 | `BOM-9` | a component without a value | `bom-10_values` |
 | `BOM-10` | a resistor, capacitor or inductor value that does not read in its unit, odd notation, or a value in no E-series | `bom-10_values` |
+| `BOM-1` | two resistor or capacitor values one step apart in the smallest series that has both (33 Ω and 39 Ω, 1 µF and 2.2 µF) | `bom-1_values_a_step_apart` |
+| `BOM-3` | the minority mount type, case size, connector family and board side among the fitted parts | `bom-3_assembly_mix` |
+| `BOM-4` | identical resistors from one IC's or connector's pins to a shared net or in series: an array candidate | `bom-4_resistor_arrays` |
+| `BOM-8` | an LED whose anode leads only to ground, or whose cathode leads only to a rail | `bom-8_led_polarity` |
+| `BOM-11` | one value in two packages | `bom-11_packages` |
+| `BOM-14` | a fitted part in the BOM without an MPN (one finding for the board when no part has one) | `bom-14_mpn` |
+| `BOM-17` | one MPN on parts with different values | `bom-17_mpn_values` |
 | `LIB-3` | a MOSFET whose pins are not named G, D and S | `lib-3_mosfet_pin_names` |
 | `DEC-1` | a rail feeding power pins with no capacitor to a ground | `dec-1_no_decoupling` |
 | `DEC-4` | a ferrite between two rails, with the LC resonance against the capacitance behind it (`bead_inductance` assumed) | `dec-4_ferrite_beads` |

@@ -1,0 +1,13 @@
+# What better_erc finds on bom-8_led_polarity.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board bom-8_led_polarity"]
+
+[[finding]]
+check = "BOM-8"
+subjects = ["net /+3V3", "part D3"]
+
+[[finding]]
+check = "BOM-8"
+subjects = ["net /GND", "part D2"]

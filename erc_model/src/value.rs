@@ -510,6 +510,19 @@ impl ESeries {
         ESeries::ALL.into_iter().find(|s| s.contains(value))
     }
 
+    /// How many steps of the series lie between two of its values, across decades (`E12`: 33 to 39 is 1, 39 to
+    /// 33 is -1, 82 to 100 is 1); `None` when either is not a value of the series
+    pub fn steps(self, from: f64, to: f64) -> Option<i64> {
+        let index = |v: f64| {
+            let m = mantissa(v)?;
+            let i = self.mantissas().iter().position(|x| *x == m)? as i64;
+            // `mantissa` rounds 9.999 up to the next decade's 100
+            let decade = (v.log10() + 1e-9).floor() as i64;
+            Some(decade * self.mantissas().len() as i64 + i)
+        };
+        Some(index(to)? - index(from)?)
+    }
+
     /// The value of the series nearest to `value` (in ratio), in the same unit
     pub fn nearest(self, value: f64) -> Option<f64> {
         if !(value.is_finite() && value > 0.0) {
@@ -770,5 +783,13 @@ mod tests {
         assert_eq!(ESeries::E12.nearest(9600.0), Some(10000.0));
         assert!(ESeries::E96.contains(97.6));
         assert!(!ESeries::E96.contains(4700.0));
+        assert_eq!(ESeries::E12.steps(33.0, 39.0), Some(1));
+        assert_eq!(ESeries::E12.steps(39.0, 33.0), Some(-1));
+        assert_eq!(ESeries::E12.steps(82.0, 100.0), Some(1));
+        assert_eq!(ESeries::E3.steps(1e-6, 2.2e-6), Some(1));
+        assert_eq!(ESeries::E3.steps(4.7e-6, 1e-5), Some(1));
+        assert_eq!(ESeries::E24.steps(4700.0, 5100.0), Some(1));
+        assert_eq!(ESeries::E12.steps(4700.0, 5100.0), None);
+        assert_eq!(ESeries::E96.steps(4990.0, 5110.0), Some(1));
     }
 }

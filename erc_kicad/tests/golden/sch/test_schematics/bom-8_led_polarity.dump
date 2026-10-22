@@ -1,0 +1,198 @@
+board bom-8_led_polarity
+label / local +3V3 at 30,36.19 net /+3V3
+label / local +3V3 at 90,36.19 net /+3V3
+label / local +3V3 at 142.38,52.38 net /+3V3
+label / local +5V at 123.81,70 net /+5V
+label / local D1_A at 30,43.81 net /D1_A
+label / local D1_A at 33.81,70 net /D1_A
+label / local D2_K at 56.19,70 net /D2_K
+label / local D2_K at 60,43.81 net /D2_K
+label / local D3_K at 86.19,70 net /D3_K
+label / local D3_K at 90,43.81 net /D3_K
+label / local D4_K at 116.19,70 net /D4_K
+label / local D4_K at 120,96.19 net /D4_K
+label / local GND at 26.19,70 net /GND
+label / local GND at 63.81,70 net /GND
+label / local GND at 120,103.81 net /GND
+label / local GND at 142.38,54.92 net /GND
+label / local LED2 at 60,36.19 net /LED2
+label / local LED2 at 142.38,57.46 net /LED2
+label / local LED3 at 93.81,70 net /LED3
+label / local LED3 at 142.38,60 net /LED3
+net /+3V3 class = Default @ sch bom-8_led_polarity.kicad_sch note "effective net class"
+net /+3V3 kind named
+net /+5V class = Default @ sch bom-8_led_polarity.kicad_sch note "effective net class"
+net /+5V kind named
+net /D1_A class = Default @ sch bom-8_led_polarity.kicad_sch note "effective net class"
+net /D1_A kind named
+net /D2_K class = Default @ sch bom-8_led_polarity.kicad_sch note "effective net class"
+net /D2_K kind named
+net /D3_K class = Default @ sch bom-8_led_polarity.kicad_sch note "effective net class"
+net /D3_K kind named
+net /D4_K class = Default @ sch bom-8_led_polarity.kicad_sch note "effective net class"
+net /D4_K kind named
+net /GND class = Default @ sch bom-8_led_polarity.kicad_sch note "effective net class"
+net /GND kind named
+net /LED2 class = Default @ sch bom-8_led_polarity.kicad_sch note "effective net class"
+net /LED2 kind named
+net /LED3 class = Default @ sch bom-8_led_polarity.kicad_sch note "effective net class"
+net /LED3 kind named
+part D1 field Description = "Light emitting diode" @ sch bom-8_led_polarity.kicad_sch
+part D1 field Footprint = LED_SMD:LED_0603_1608Metric @ sch bom-8_led_polarity.kicad_sch
+part D1 field Value = green @ sch bom-8_led_polarity.kicad_sch
+part D1 flag dnp = no @ sch bom-8_led_polarity.kicad_sch
+part D1 flag exclude_from_sim = no @ sch bom-8_led_polarity.kicad_sch
+part D1 flag in_bom = yes @ sch bom-8_led_polarity.kicad_sch
+part D1 flag on_board = yes @ sch bom-8_led_polarity.kicad_sch
+part D1 lib Fixture:LED sheet / symbol Fixture:LED
+part D1 unit 1 sheet / uuid b080001d-0000-4000-8000-000000000000 line 83 at 30,70 rot 0
+part D1 value = text green @ sch bom-8_led_polarity.kicad_sch note "from the Value field"
+part D2 field Description = "Light emitting diode" @ sch bom-8_led_polarity.kicad_sch
+part D2 field Footprint = LED_SMD:LED_0603_1608Metric @ sch bom-8_led_polarity.kicad_sch
+part D2 field Value = red @ sch bom-8_led_polarity.kicad_sch
+part D2 flag dnp = no @ sch bom-8_led_polarity.kicad_sch
+part D2 flag exclude_from_sim = no @ sch bom-8_led_polarity.kicad_sch
+part D2 flag in_bom = yes @ sch bom-8_led_polarity.kicad_sch
+part D2 flag on_board = yes @ sch bom-8_led_polarity.kicad_sch
+part D2 lib Fixture:LED sheet / symbol Fixture:LED
+part D2 unit 1 sheet / uuid b0800023-0000-4000-8000-000000000000 line 103 at 60,70 rot 0
+part D2 value = text red @ sch bom-8_led_polarity.kicad_sch note "from the Value field"
+part D3 field Description = "Light emitting diode" @ sch bom-8_led_polarity.kicad_sch
+part D3 field Footprint = LED_SMD:LED_0603_1608Metric @ sch bom-8_led_polarity.kicad_sch
+part D3 field Value = blue @ sch bom-8_led_polarity.kicad_sch
+part D3 flag dnp = no @ sch bom-8_led_polarity.kicad_sch
+part D3 flag exclude_from_sim = no @ sch bom-8_led_polarity.kicad_sch
+part D3 flag in_bom = yes @ sch bom-8_led_polarity.kicad_sch
+part D3 flag on_board = yes @ sch bom-8_led_polarity.kicad_sch
+part D3 lib Fixture:LED sheet / symbol Fixture:LED
+part D3 unit 1 sheet / uuid b0800029-0000-4000-8000-000000000000 line 123 at 90,70 rot 0
+part D3 value = text blue @ sch bom-8_led_polarity.kicad_sch note "from the Value field"
+part D4 field Description = "Light emitting diode" @ sch bom-8_led_polarity.kicad_sch
+part D4 field Footprint = LED_SMD:LED_0603_1608Metric @ sch bom-8_led_polarity.kicad_sch
+part D4 field Value = green @ sch bom-8_led_polarity.kicad_sch
+part D4 flag dnp = no @ sch bom-8_led_polarity.kicad_sch
+part D4 flag exclude_from_sim = no @ sch bom-8_led_polarity.kicad_sch
+part D4 flag in_bom = yes @ sch bom-8_led_polarity.kicad_sch
+part D4 flag on_board = yes @ sch bom-8_led_polarity.kicad_sch
+part D4 lib Fixture:LED sheet / symbol Fixture:LED
+part D4 unit 1 sheet / uuid b080002c-0000-4000-8000-000000000000 line 133 at 120,70 rot 0
+part D4 value = text green @ sch bom-8_led_polarity.kicad_sch note "from the Value field"
+part R1 field Description = Resistor @ sch bom-8_led_polarity.kicad_sch
+part R1 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-8_led_polarity.kicad_sch
+part R1 field Value = 1k @ sch bom-8_led_polarity.kicad_sch
+part R1 flag dnp = no @ sch bom-8_led_polarity.kicad_sch
+part R1 flag exclude_from_sim = no @ sch bom-8_led_polarity.kicad_sch
+part R1 flag in_bom = yes @ sch bom-8_led_polarity.kicad_sch
+part R1 flag on_board = yes @ sch bom-8_led_polarity.kicad_sch
+part R1 lib Fixture:R sheet / symbol Fixture:R
+part R1 unit 1 sheet / uuid b080001a-0000-4000-8000-000000000000 line 73 at 30,40 rot 0
+part R1 value = text 1k @ sch bom-8_led_polarity.kicad_sch note "from the Value field"
+part R2 field Description = Resistor @ sch bom-8_led_polarity.kicad_sch
+part R2 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-8_led_polarity.kicad_sch
+part R2 field Value = 1k @ sch bom-8_led_polarity.kicad_sch
+part R2 flag dnp = no @ sch bom-8_led_polarity.kicad_sch
+part R2 flag exclude_from_sim = no @ sch bom-8_led_polarity.kicad_sch
+part R2 flag in_bom = yes @ sch bom-8_led_polarity.kicad_sch
+part R2 flag on_board = yes @ sch bom-8_led_polarity.kicad_sch
+part R2 lib Fixture:R sheet / symbol Fixture:R
+part R2 unit 1 sheet / uuid b0800020-0000-4000-8000-000000000000 line 93 at 60,40 rot 0
+part R2 value = text 1k @ sch bom-8_led_polarity.kicad_sch note "from the Value field"
+part R3 field Description = Resistor @ sch bom-8_led_polarity.kicad_sch
+part R3 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-8_led_polarity.kicad_sch
+part R3 field Value = 1k @ sch bom-8_led_polarity.kicad_sch
+part R3 flag dnp = no @ sch bom-8_led_polarity.kicad_sch
+part R3 flag exclude_from_sim = no @ sch bom-8_led_polarity.kicad_sch
+part R3 flag in_bom = yes @ sch bom-8_led_polarity.kicad_sch
+part R3 flag on_board = yes @ sch bom-8_led_polarity.kicad_sch
+part R3 lib Fixture:R sheet / symbol Fixture:R
+part R3 unit 1 sheet / uuid b0800026-0000-4000-8000-000000000000 line 113 at 90,40 rot 0
+part R3 value = text 1k @ sch bom-8_led_polarity.kicad_sch note "from the Value field"
+part R4 field Description = Resistor @ sch bom-8_led_polarity.kicad_sch
+part R4 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-8_led_polarity.kicad_sch
+part R4 field Value = 1k @ sch bom-8_led_polarity.kicad_sch
+part R4 flag dnp = no @ sch bom-8_led_polarity.kicad_sch
+part R4 flag exclude_from_sim = no @ sch bom-8_led_polarity.kicad_sch
+part R4 flag in_bom = yes @ sch bom-8_led_polarity.kicad_sch
+part R4 flag on_board = yes @ sch bom-8_led_polarity.kicad_sch
+part R4 lib Fixture:R sheet / symbol Fixture:R
+part R4 unit 1 sheet / uuid b080002f-0000-4000-8000-000000000000 line 143 at 120,100 rot 0
+part R4 value = text 1k @ sch bom-8_led_polarity.kicad_sch note "from the Value field"
+part U1 field Description = Microcontroller @ sch bom-8_led_polarity.kicad_sch
+part U1 field Value = MCU @ sch bom-8_led_polarity.kicad_sch
+part U1 flag dnp = no @ sch bom-8_led_polarity.kicad_sch
+part U1 flag exclude_from_sim = no @ sch bom-8_led_polarity.kicad_sch
+part U1 flag in_bom = yes @ sch bom-8_led_polarity.kicad_sch
+part U1 flag on_board = yes @ sch bom-8_led_polarity.kicad_sch
+part U1 lib Fixture:MCU4 sheet / symbol Fixture:MCU4
+part U1 unit 1 sheet / uuid b0800015-0000-4000-8000-000000000000 line 61 at 150,60 rot 0
+part U1 value = text MCU @ sch bom-8_led_polarity.kicad_sch note "from the Value field"
+pin D1 1 name K unit 1 net /GND
+pin D1 1 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin D1 2 name A unit 1 net /D1_A
+pin D1 2 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin D2 1 name K unit 1 net /D2_K
+pin D2 1 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin D2 2 name A unit 1 net /GND
+pin D2 2 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin D3 1 name K unit 1 net /D3_K
+pin D3 1 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin D3 2 name A unit 1 net /LED3
+pin D3 2 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin D4 1 name K unit 1 net /D4_K
+pin D4 1 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin D4 2 name A unit 1 net /+5V
+pin D4 2 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin R1 1 name "" unit 1 net /+3V3
+pin R1 1 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin R1 2 name "" unit 1 net /D1_A
+pin R1 2 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin R2 1 name "" unit 1 net /LED2
+pin R2 1 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin R2 2 name "" unit 1 net /D2_K
+pin R2 2 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin R3 1 name "" unit 1 net /+3V3
+pin R3 1 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin R3 2 name "" unit 1 net /D3_K
+pin R3 2 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin R4 1 name "" unit 1 net /D4_K
+pin R4 1 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin R4 2 name "" unit 1 net /GND
+pin R4 2 type = passive @ sch bom-8_led_polarity.kicad_sch
+pin U1 1 name VDD unit 1 net /+3V3
+pin U1 1 type = power_in @ sch bom-8_led_polarity.kicad_sch
+pin U1 2 name GND unit 1 net /GND
+pin U1 2 type = power_in @ sch bom-8_led_polarity.kicad_sch
+pin U1 3 name PA0 unit 1 net /LED2
+pin U1 3 type = bidirectional @ sch bom-8_led_polarity.kicad_sch
+pin U1 4 name PA1 unit 1 net /LED3
+pin U1 4 type = bidirectional @ sch bom-8_led_polarity.kicad_sch
+sheet / name "" file bom-8_led_polarity.kicad_sch uuid /
+source file bom-8_led_polarity.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:LED description "Light emitting diode"
+symbol Fixture:LED field Description "Light emitting diode"
+symbol Fixture:LED field Reference D
+symbol Fixture:LED field Value LED
+symbol Fixture:LED hash b9e8b67e57a4b6af
+symbol Fixture:LED pin 1 unit 1 body 1 name K type passive style line
+symbol Fixture:LED pin 2 unit 1 body 1 name A type passive style line
+symbol Fixture:LED units 1
+symbol Fixture:MCU4 description Microcontroller
+symbol Fixture:MCU4 field Description Microcontroller
+symbol Fixture:MCU4 field Reference U
+symbol Fixture:MCU4 field Value MCU4
+symbol Fixture:MCU4 hash 6a277b5a5b9ed1c0
+symbol Fixture:MCU4 pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:MCU4 pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:MCU4 pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol Fixture:MCU4 pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol Fixture:MCU4 units 1
+symbol Fixture:R description Resistor
+symbol Fixture:R field Description Resistor
+symbol Fixture:R field Reference R
+symbol Fixture:R field Value R
+symbol Fixture:R hash 448da3f7f9000746
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:R units 1

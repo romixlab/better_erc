@@ -1,1 +1,9 @@
 # What better_erc finds on io-1_inputs.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board io-1_inputs"]
+
+[[not_run]]
+check = "BOM-8"
+need = "rails"

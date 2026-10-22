@@ -25,7 +25,7 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - `erc_kicad`: KiCad 8, 9 and 10 read by us: s-expression reader, schematic hierarchy with KiCad's connectivity,
   project file, board, the KiCad netlist as the oracle
 - `erc_analysis`: analyses over the board model: part classes, values, graph queries, the power structure, the I2C
-  bus recogniser
+  bus recogniser, packages from footprints
 - `erc_checks`: the check engine and the checks, one file per catalogue id; findings, not-run reports, the report
   as JSON and text, the embedded catalogue ([docs/engine.md](docs/engine.md))
 - `erc_import`: the importer registry, and the Altium, OrCAD and PnP importers into the board model
@@ -204,11 +204,22 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `I2C-7` Series tie resistor too high (`max_tie` = 100 Ω) · `i2c/i2c_7.rs`, `i2c-7_segments`
 - ✅ `I2C-9` Pull-up outside the 2.2k-10k window (its ends inside), or not readable · `i2c/i2c_9.rs`, `i2c-9_non_standard_pull_ups`
 - ✅ `I2C-10` SCL and SDA pull-ups differ · `i2c/i2c_10.rs`, `i2c-10_non_equal_pull_ups`
-- ✅ `BOM-5` Placeholder values (`?`, `??k`, `TBD`, `TODO`) · `bom/bom_5.rs`, `bom-10_values`
+- ✅ `BOM-5` Placeholder values (`?`, `??k`, `TBD`, `TODO`, `calc`) · `bom/bom_5.rs`, `bom-10_values`
 - ✅ `BOM-6` Placeholder value on a fitted part (folds `BOM-5` in) · `bom/bom_6.rs`, `bom-10_values`
 - ✅ `BOM-9` Part without a value · `bom/bom_9.rs`, `bom-10_values`
 - ✅ `BOM-10` Resistor, capacitor or inductor value that doesn't read, has odd notation or is in no E series (with the
   nearest E24 and E96 values) · `bom/bom_10.rs`, `bom-10_values`
+- ✅ `BOM-1` Resistor or capacitor values one step apart in the smallest series that has both · `bom/bom_1.rs`,
+  `bom-1_values_a_step_apart` (the role filter waits for `NET-7`)
+- ✅ `BOM-3` Assembly mixes: minority mount type, case size, connector family, board side · `bom/bom_3.rs`,
+  `erc_analysis/src/package.rs`, `bom-3_assembly_mix`
+- ✅ `BOM-4` Identical resistors on one part's pins, to a shared net or in series: array candidates · `bom/bom_4.rs`,
+  `bom-4_resistor_arrays`
+- ✅ `BOM-8` LED turned round: anode only to ground, cathode only to a rail · `bom/bom_8.rs`, `bom-8_led_polarity`
+  (a cathode toward a high-side driver waits for `NET-7`)
+- ✅ `BOM-11` One value in two packages · `bom/bom_11.rs`, `bom-11_packages`
+- ✅ `BOM-14` Fitted part without an MPN · `bom/bom_14.rs`, `bom-14_mpn` (field names configurable with `CFG-2`)
+- ✅ `BOM-17` One MPN with different values · `bom/bom_17.rs`, `bom-17_mpn_values`
 - ✅ `LIB-3` MOSFET pins not named G, D, S · `lib/lib_3.rs`, `lib-3_mosfet_pin_names`
 - ✅ `DEC-1` Rail feeding power pins with no capacitor to a ground · `dec/dec_1.rs`, `dec-1_no_decoupling`
 - ✅ `DEC-4` Ferrite in series between two rails, with the LC resonance against the capacitance behind it (bead

@@ -11,6 +11,7 @@
 //! - [`pull`]: the fitted pull-up and pull-down resistors on a net.
 //! - [`power`]: rails and grounds by name grammar, power symbols and pins, ground groups, switching nodes.
 //! - [`supply`]: power-input pins on a net and the capacitors from it to a ground.
+//! - [`package`]: a part's package from its footprint: case size, SMD or through-hole, board side.
 //! - [`names`]: the name grammar beyond power: active-low markers, differential halves, numbered families, GPIO
 //!   numbers and UART lines of pin names, names normalised for comparison.
 //! - [`drawing`]: labels with their scopes, sheet pins, no-connect flags.
@@ -24,6 +25,7 @@ pub mod class;
 pub mod drawing;
 pub mod graph;
 pub mod i2c;
+pub mod package;
 pub mod names;
 pub mod pin_name;
 pub mod power;

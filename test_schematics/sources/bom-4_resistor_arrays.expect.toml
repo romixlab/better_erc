@@ -1,0 +1,29 @@
+# What better_erc finds on bom-4_resistor_arrays.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-1"
+subjects = ["part R1", "part R2", "part R3", "part R4", "part R7", "part R8"]
+
+[[finding]]
+check = "BOM-11"
+subjects = ["part R1", "part R2", "part R3", "part R4", "part R7"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board bom-4_resistor_arrays"]
+
+[[finding]]
+check = "BOM-3"
+subjects = ["part J1"]
+
+[[finding]]
+check = "BOM-3"
+subjects = ["part R7"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net /+3V3", "part R1", "part R2", "part R3", "part R4"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["part R5", "part R6"]

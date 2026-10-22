@@ -1,0 +1,116 @@
+board bom-17_mpn_values
+net unconnected-(C1-Pad1) class = Default @ sch bom-17_mpn_values.kicad_sch note "effective net class"
+net unconnected-(C1-Pad1) kind unconnected
+net unconnected-(C1-Pad2) class = Default @ sch bom-17_mpn_values.kicad_sch note "effective net class"
+net unconnected-(C1-Pad2) kind unconnected
+net unconnected-(C2-Pad1) class = Default @ sch bom-17_mpn_values.kicad_sch note "effective net class"
+net unconnected-(C2-Pad1) kind unconnected
+net unconnected-(C2-Pad2) class = Default @ sch bom-17_mpn_values.kicad_sch note "effective net class"
+net unconnected-(C2-Pad2) kind unconnected
+net unconnected-(R1-Pad1) class = Default @ sch bom-17_mpn_values.kicad_sch note "effective net class"
+net unconnected-(R1-Pad1) kind unconnected
+net unconnected-(R1-Pad2) class = Default @ sch bom-17_mpn_values.kicad_sch note "effective net class"
+net unconnected-(R1-Pad2) kind unconnected
+net unconnected-(R2-Pad1) class = Default @ sch bom-17_mpn_values.kicad_sch note "effective net class"
+net unconnected-(R2-Pad1) kind unconnected
+net unconnected-(R2-Pad2) class = Default @ sch bom-17_mpn_values.kicad_sch note "effective net class"
+net unconnected-(R2-Pad2) kind unconnected
+net unconnected-(R3-Pad1) class = Default @ sch bom-17_mpn_values.kicad_sch note "effective net class"
+net unconnected-(R3-Pad1) kind unconnected
+net unconnected-(R3-Pad2) class = Default @ sch bom-17_mpn_values.kicad_sch note "effective net class"
+net unconnected-(R3-Pad2) kind unconnected
+part C1 field Description = "Unpolarized capacitor" @ sch bom-17_mpn_values.kicad_sch
+part C1 field Footprint = Capacitor_SMD:C_0402_1005Metric @ sch bom-17_mpn_values.kicad_sch
+part C1 field MPN = GRM155R71C104KA88D @ sch bom-17_mpn_values.kicad_sch
+part C1 field Value = 100n @ sch bom-17_mpn_values.kicad_sch
+part C1 flag dnp = no @ sch bom-17_mpn_values.kicad_sch
+part C1 flag exclude_from_sim = no @ sch bom-17_mpn_values.kicad_sch
+part C1 flag in_bom = yes @ sch bom-17_mpn_values.kicad_sch
+part C1 flag on_board = yes @ sch bom-17_mpn_values.kicad_sch
+part C1 lib Fixture:C sheet / symbol Fixture:C
+part C1 unit 1 sheet / uuid b170000a-0000-4000-8000-000000000000 line 61 at 90,40 rot 0
+part C1 value = text 100n @ sch bom-17_mpn_values.kicad_sch note "from the Value field"
+part C2 field Description = "Unpolarized capacitor" @ sch bom-17_mpn_values.kicad_sch
+part C2 field Footprint = Capacitor_SMD:C_0402_1005Metric @ sch bom-17_mpn_values.kicad_sch
+part C2 field MPN = GRM155R61A105KE15D @ sch bom-17_mpn_values.kicad_sch
+part C2 field Value = 1u @ sch bom-17_mpn_values.kicad_sch
+part C2 flag dnp = no @ sch bom-17_mpn_values.kicad_sch
+part C2 flag exclude_from_sim = no @ sch bom-17_mpn_values.kicad_sch
+part C2 flag in_bom = yes @ sch bom-17_mpn_values.kicad_sch
+part C2 flag on_board = yes @ sch bom-17_mpn_values.kicad_sch
+part C2 lib Fixture:C sheet / symbol Fixture:C
+part C2 unit 1 sheet / uuid b170000d-0000-4000-8000-000000000000 line 72 at 110,40 rot 0
+part C2 value = text 1u @ sch bom-17_mpn_values.kicad_sch note "from the Value field"
+part R1 field Description = Resistor @ sch bom-17_mpn_values.kicad_sch
+part R1 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-17_mpn_values.kicad_sch
+part R1 field MPN = RC0402FR-074K7L @ sch bom-17_mpn_values.kicad_sch
+part R1 field Value = 4k7 @ sch bom-17_mpn_values.kicad_sch
+part R1 flag dnp = no @ sch bom-17_mpn_values.kicad_sch
+part R1 flag exclude_from_sim = no @ sch bom-17_mpn_values.kicad_sch
+part R1 flag in_bom = yes @ sch bom-17_mpn_values.kicad_sch
+part R1 flag on_board = yes @ sch bom-17_mpn_values.kicad_sch
+part R1 lib Fixture:R sheet / symbol Fixture:R
+part R1 unit 1 sheet / uuid b1700001-0000-4000-8000-000000000000 line 28 at 30,40 rot 0
+part R1 value = text 4k7 @ sch bom-17_mpn_values.kicad_sch note "from the Value field"
+part R2 field Description = Resistor @ sch bom-17_mpn_values.kicad_sch
+part R2 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-17_mpn_values.kicad_sch
+part R2 field MPN = RC0402FR-074K7L @ sch bom-17_mpn_values.kicad_sch
+part R2 field Value = 4.7k @ sch bom-17_mpn_values.kicad_sch
+part R2 flag dnp = no @ sch bom-17_mpn_values.kicad_sch
+part R2 flag exclude_from_sim = no @ sch bom-17_mpn_values.kicad_sch
+part R2 flag in_bom = yes @ sch bom-17_mpn_values.kicad_sch
+part R2 flag on_board = yes @ sch bom-17_mpn_values.kicad_sch
+part R2 lib Fixture:R sheet / symbol Fixture:R
+part R2 unit 1 sheet / uuid b1700004-0000-4000-8000-000000000000 line 39 at 50,40 rot 0
+part R2 value = text 4.7k @ sch bom-17_mpn_values.kicad_sch note "from the Value field"
+part R3 field Description = Resistor @ sch bom-17_mpn_values.kicad_sch
+part R3 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-17_mpn_values.kicad_sch
+part R3 field MPN = RC0402FR-074K7L @ sch bom-17_mpn_values.kicad_sch
+part R3 field Value = 100k @ sch bom-17_mpn_values.kicad_sch
+part R3 flag dnp = no @ sch bom-17_mpn_values.kicad_sch
+part R3 flag exclude_from_sim = no @ sch bom-17_mpn_values.kicad_sch
+part R3 flag in_bom = yes @ sch bom-17_mpn_values.kicad_sch
+part R3 flag on_board = yes @ sch bom-17_mpn_values.kicad_sch
+part R3 lib Fixture:R sheet / symbol Fixture:R
+part R3 unit 1 sheet / uuid b1700007-0000-4000-8000-000000000000 line 50 at 70,40 rot 0
+part R3 value = text 100k @ sch bom-17_mpn_values.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net unconnected-(C1-Pad1)
+pin C1 1 type = passive @ sch bom-17_mpn_values.kicad_sch
+pin C1 2 name "" unit 1 net unconnected-(C1-Pad2)
+pin C1 2 type = passive @ sch bom-17_mpn_values.kicad_sch
+pin C2 1 name "" unit 1 net unconnected-(C2-Pad1)
+pin C2 1 type = passive @ sch bom-17_mpn_values.kicad_sch
+pin C2 2 name "" unit 1 net unconnected-(C2-Pad2)
+pin C2 2 type = passive @ sch bom-17_mpn_values.kicad_sch
+pin R1 1 name "" unit 1 net unconnected-(R1-Pad1)
+pin R1 1 type = passive @ sch bom-17_mpn_values.kicad_sch
+pin R1 2 name "" unit 1 net unconnected-(R1-Pad2)
+pin R1 2 type = passive @ sch bom-17_mpn_values.kicad_sch
+pin R2 1 name "" unit 1 net unconnected-(R2-Pad1)
+pin R2 1 type = passive @ sch bom-17_mpn_values.kicad_sch
+pin R2 2 name "" unit 1 net unconnected-(R2-Pad2)
+pin R2 2 type = passive @ sch bom-17_mpn_values.kicad_sch
+pin R3 1 name "" unit 1 net unconnected-(R3-Pad1)
+pin R3 1 type = passive @ sch bom-17_mpn_values.kicad_sch
+pin R3 2 name "" unit 1 net unconnected-(R3-Pad2)
+pin R3 2 type = passive @ sch bom-17_mpn_values.kicad_sch
+sheet / name "" file bom-17_mpn_values.kicad_sch uuid /
+source file bom-17_mpn_values.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:C description "Unpolarized capacitor"
+symbol Fixture:C field Description "Unpolarized capacitor"
+symbol Fixture:C field Reference C
+symbol Fixture:C field Value C
+symbol Fixture:C hash 19a8ecfb835f772e
+symbol Fixture:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:C units 1
+symbol Fixture:R description Resistor
+symbol Fixture:R field Description Resistor
+symbol Fixture:R field Reference R
+symbol Fixture:R field Value R
+symbol Fixture:R hash 448da3f7f9000746
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:R units 1

@@ -1,0 +1,9 @@
+# What better_erc finds on bom-17_mpn_values.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-17"
+subjects = ["part R1", "part R2", "part R3"]
+
+[[not_run]]
+check = "BOM-8"
+need = "rails"

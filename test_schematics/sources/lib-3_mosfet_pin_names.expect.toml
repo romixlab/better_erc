@@ -1,5 +1,13 @@
 # What better_erc finds on lib-3_mosfet_pin_names.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "BOM-14"
+subjects = ["board lib-3_mosfet_pin_names"]
+
+[[finding]]
 check = "LIB-3"
 subjects = ["part Q1"]
+
+[[not_run]]
+check = "BOM-8"
+need = "rails"

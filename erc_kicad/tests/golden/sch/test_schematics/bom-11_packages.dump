@@ -1,0 +1,165 @@
+board bom-11_packages
+net unconnected-(C1-Pad1) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(C1-Pad1) kind unconnected
+net unconnected-(C1-Pad2) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(C1-Pad2) kind unconnected
+net unconnected-(C2-Pad1) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(C2-Pad1) kind unconnected
+net unconnected-(C2-Pad2) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(C2-Pad2) kind unconnected
+net unconnected-(C3-Pad1) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(C3-Pad1) kind unconnected
+net unconnected-(C3-Pad2) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(C3-Pad2) kind unconnected
+net unconnected-(C4-Pad1) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(C4-Pad1) kind unconnected
+net unconnected-(C4-Pad2) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(C4-Pad2) kind unconnected
+net unconnected-(C5-Pad1) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(C5-Pad1) kind unconnected
+net unconnected-(C5-Pad2) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(C5-Pad2) kind unconnected
+net unconnected-(R1-Pad1) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(R1-Pad1) kind unconnected
+net unconnected-(R1-Pad2) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(R1-Pad2) kind unconnected
+net unconnected-(R2-Pad1) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(R2-Pad1) kind unconnected
+net unconnected-(R2-Pad2) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(R2-Pad2) kind unconnected
+net unconnected-(R3-Pad1) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(R3-Pad1) kind unconnected
+net unconnected-(R3-Pad2) class = Default @ sch bom-11_packages.kicad_sch note "effective net class"
+net unconnected-(R3-Pad2) kind unconnected
+part C1 field Description = "Unpolarized capacitor" @ sch bom-11_packages.kicad_sch
+part C1 field Footprint = Capacitor_SMD:C_0402_1005Metric @ sch bom-11_packages.kicad_sch
+part C1 field Value = 100n @ sch bom-11_packages.kicad_sch
+part C1 flag dnp = no @ sch bom-11_packages.kicad_sch
+part C1 flag exclude_from_sim = no @ sch bom-11_packages.kicad_sch
+part C1 flag in_bom = yes @ sch bom-11_packages.kicad_sch
+part C1 flag on_board = yes @ sch bom-11_packages.kicad_sch
+part C1 lib Fixture:C sheet / symbol Fixture:C
+part C1 unit 1 sheet / uuid b1100001-0000-4000-8000-000000000000 line 28 at 30,40 rot 0
+part C1 value = text 100n @ sch bom-11_packages.kicad_sch note "from the Value field"
+part C2 field Description = "Unpolarized capacitor" @ sch bom-11_packages.kicad_sch
+part C2 field Footprint = Capacitor_SMD:C_0402_1005Metric @ sch bom-11_packages.kicad_sch
+part C2 field Value = 100n @ sch bom-11_packages.kicad_sch
+part C2 flag dnp = no @ sch bom-11_packages.kicad_sch
+part C2 flag exclude_from_sim = no @ sch bom-11_packages.kicad_sch
+part C2 flag in_bom = yes @ sch bom-11_packages.kicad_sch
+part C2 flag on_board = yes @ sch bom-11_packages.kicad_sch
+part C2 lib Fixture:C sheet / symbol Fixture:C
+part C2 unit 1 sheet / uuid b1100004-0000-4000-8000-000000000000 line 38 at 50,40 rot 0
+part C2 value = text 100n @ sch bom-11_packages.kicad_sch note "from the Value field"
+part C3 field Description = "Unpolarized capacitor" @ sch bom-11_packages.kicad_sch
+part C3 field Footprint = Capacitor_SMD:C_0402_1005Metric @ sch bom-11_packages.kicad_sch
+part C3 field Value = 100nF @ sch bom-11_packages.kicad_sch
+part C3 flag dnp = no @ sch bom-11_packages.kicad_sch
+part C3 flag exclude_from_sim = no @ sch bom-11_packages.kicad_sch
+part C3 flag in_bom = yes @ sch bom-11_packages.kicad_sch
+part C3 flag on_board = yes @ sch bom-11_packages.kicad_sch
+part C3 lib Fixture:C sheet / symbol Fixture:C
+part C3 unit 1 sheet / uuid b1100007-0000-4000-8000-000000000000 line 48 at 70,40 rot 0
+part C3 value = qty 0.0000001 F @ sch bom-11_packages.kicad_sch note "from the Value field"
+part C4 field Description = "Unpolarized capacitor" @ sch bom-11_packages.kicad_sch
+part C4 field Footprint = Capacitor_SMD:C_0603_1608Metric @ sch bom-11_packages.kicad_sch
+part C4 field Value = 100n @ sch bom-11_packages.kicad_sch
+part C4 flag dnp = no @ sch bom-11_packages.kicad_sch
+part C4 flag exclude_from_sim = no @ sch bom-11_packages.kicad_sch
+part C4 flag in_bom = yes @ sch bom-11_packages.kicad_sch
+part C4 flag on_board = yes @ sch bom-11_packages.kicad_sch
+part C4 lib Fixture:C sheet / symbol Fixture:C
+part C4 unit 1 sheet / uuid b110000a-0000-4000-8000-000000000000 line 58 at 90,40 rot 0
+part C4 value = text 100n @ sch bom-11_packages.kicad_sch note "from the Value field"
+part C5 field Description = "Unpolarized capacitor" @ sch bom-11_packages.kicad_sch
+part C5 field Footprint = Capacitor_SMD:C_0603_1608Metric @ sch bom-11_packages.kicad_sch
+part C5 field Value = 1u @ sch bom-11_packages.kicad_sch
+part C5 flag dnp = no @ sch bom-11_packages.kicad_sch
+part C5 flag exclude_from_sim = no @ sch bom-11_packages.kicad_sch
+part C5 flag in_bom = yes @ sch bom-11_packages.kicad_sch
+part C5 flag on_board = yes @ sch bom-11_packages.kicad_sch
+part C5 lib Fixture:C sheet / symbol Fixture:C
+part C5 unit 1 sheet / uuid b1100013-0000-4000-8000-000000000000 line 88 at 150,40 rot 0
+part C5 value = text 1u @ sch bom-11_packages.kicad_sch note "from the Value field"
+part R1 field Description = Resistor @ sch bom-11_packages.kicad_sch
+part R1 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-11_packages.kicad_sch
+part R1 field Value = 10k @ sch bom-11_packages.kicad_sch
+part R1 flag dnp = no @ sch bom-11_packages.kicad_sch
+part R1 flag exclude_from_sim = no @ sch bom-11_packages.kicad_sch
+part R1 flag in_bom = yes @ sch bom-11_packages.kicad_sch
+part R1 flag on_board = yes @ sch bom-11_packages.kicad_sch
+part R1 lib Fixture:R sheet / symbol Fixture:R
+part R1 unit 1 sheet / uuid b110000d-0000-4000-8000-000000000000 line 68 at 110,40 rot 0
+part R1 value = text 10k @ sch bom-11_packages.kicad_sch note "from the Value field"
+part R2 field Description = Resistor @ sch bom-11_packages.kicad_sch
+part R2 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-11_packages.kicad_sch
+part R2 field Value = 10k @ sch bom-11_packages.kicad_sch
+part R2 flag dnp = no @ sch bom-11_packages.kicad_sch
+part R2 flag exclude_from_sim = no @ sch bom-11_packages.kicad_sch
+part R2 flag in_bom = yes @ sch bom-11_packages.kicad_sch
+part R2 flag on_board = yes @ sch bom-11_packages.kicad_sch
+part R2 lib Fixture:R sheet / symbol Fixture:R
+part R2 unit 1 sheet / uuid b1100010-0000-4000-8000-000000000000 line 78 at 130,40 rot 0
+part R2 value = text 10k @ sch bom-11_packages.kicad_sch note "from the Value field"
+part R3 field Description = Resistor @ sch bom-11_packages.kicad_sch
+part R3 field Footprint = Resistor_SMD:R_0805_2012Metric @ sch bom-11_packages.kicad_sch
+part R3 field Value = 10k @ sch bom-11_packages.kicad_sch
+part R3 flag dnp = yes @ sch bom-11_packages.kicad_sch
+part R3 flag exclude_from_sim = no @ sch bom-11_packages.kicad_sch
+part R3 flag in_bom = yes @ sch bom-11_packages.kicad_sch
+part R3 flag on_board = yes @ sch bom-11_packages.kicad_sch
+part R3 lib Fixture:R sheet / symbol Fixture:R
+part R3 unit 1 sheet / uuid b1100016-0000-4000-8000-000000000000 line 98 at 170,40 rot 0
+part R3 value = text 10k @ sch bom-11_packages.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net unconnected-(C1-Pad1)
+pin C1 1 type = passive @ sch bom-11_packages.kicad_sch
+pin C1 2 name "" unit 1 net unconnected-(C1-Pad2)
+pin C1 2 type = passive @ sch bom-11_packages.kicad_sch
+pin C2 1 name "" unit 1 net unconnected-(C2-Pad1)
+pin C2 1 type = passive @ sch bom-11_packages.kicad_sch
+pin C2 2 name "" unit 1 net unconnected-(C2-Pad2)
+pin C2 2 type = passive @ sch bom-11_packages.kicad_sch
+pin C3 1 name "" unit 1 net unconnected-(C3-Pad1)
+pin C3 1 type = passive @ sch bom-11_packages.kicad_sch
+pin C3 2 name "" unit 1 net unconnected-(C3-Pad2)
+pin C3 2 type = passive @ sch bom-11_packages.kicad_sch
+pin C4 1 name "" unit 1 net unconnected-(C4-Pad1)
+pin C4 1 type = passive @ sch bom-11_packages.kicad_sch
+pin C4 2 name "" unit 1 net unconnected-(C4-Pad2)
+pin C4 2 type = passive @ sch bom-11_packages.kicad_sch
+pin C5 1 name "" unit 1 net unconnected-(C5-Pad1)
+pin C5 1 type = passive @ sch bom-11_packages.kicad_sch
+pin C5 2 name "" unit 1 net unconnected-(C5-Pad2)
+pin C5 2 type = passive @ sch bom-11_packages.kicad_sch
+pin R1 1 name "" unit 1 net unconnected-(R1-Pad1)
+pin R1 1 type = passive @ sch bom-11_packages.kicad_sch
+pin R1 2 name "" unit 1 net unconnected-(R1-Pad2)
+pin R1 2 type = passive @ sch bom-11_packages.kicad_sch
+pin R2 1 name "" unit 1 net unconnected-(R2-Pad1)
+pin R2 1 type = passive @ sch bom-11_packages.kicad_sch
+pin R2 2 name "" unit 1 net unconnected-(R2-Pad2)
+pin R2 2 type = passive @ sch bom-11_packages.kicad_sch
+pin R3 1 name "" unit 1 net unconnected-(R3-Pad1)
+pin R3 1 type = passive @ sch bom-11_packages.kicad_sch
+pin R3 2 name "" unit 1 net unconnected-(R3-Pad2)
+pin R3 2 type = passive @ sch bom-11_packages.kicad_sch
+sheet / name "" file bom-11_packages.kicad_sch uuid /
+source file bom-11_packages.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:C description "Unpolarized capacitor"
+symbol Fixture:C field Description "Unpolarized capacitor"
+symbol Fixture:C field Reference C
+symbol Fixture:C field Value C
+symbol Fixture:C hash 19a8ecfb835f772e
+symbol Fixture:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:C units 1
+symbol Fixture:R description Resistor
+symbol Fixture:R field Description Resistor
+symbol Fixture:R field Reference R
+symbol Fixture:R field Value R
+symbol Fixture:R hash 448da3f7f9000746
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:R units 1

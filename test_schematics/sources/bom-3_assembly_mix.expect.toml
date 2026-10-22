@@ -1,0 +1,17 @@
+# What better_erc finds on bom-3_assembly_mix.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board bom-3_assembly_mix"]
+
+[[finding]]
+check = "BOM-3"
+subjects = ["part J4"]
+
+[[finding]]
+check = "BOM-3"
+subjects = ["part R7"]
+
+[[not_run]]
+check = "BOM-8"
+need = "rails"
