@@ -1,0 +1,45 @@
+# What better_erc finds on io-1_drive_sources.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /IN_CAP_ONLY", "pin U2.3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /IN_DEAD", "pin U3.3"]
+
+[[finding]]
+check = "IO-8"
+subjects = ["net /IN_SW", "part SW1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.9"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U3", "pin U3.5", "pin U3.6", "pin U3.7", "pin U3.8", "pin U3.9"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /DEAD_END", "pin R4.2"]

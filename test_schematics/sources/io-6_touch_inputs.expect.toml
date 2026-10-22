@@ -1,0 +1,31 @@
+# What better_erc finds on io-6_touch_inputs.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "IO-6"
+subjects = ["net /TOUCH_FAR", "pin U1.5"]
+also = ["IO-1"]
+
+[[finding]]
+check = "IO-6"
+subjects = ["net /TOUCH_TP", "pin U1.3"]
+also = ["IO-1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.1", "pin U1.6", "pin U1.7", "pin U1.8", "pin U1.9"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

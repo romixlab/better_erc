@@ -17,6 +17,10 @@ check = "DBG-7"
 subjects = ["net /PWR_EN", "pin U2.4"]
 
 [[finding]]
+check = "IO-1"
+subjects = ["net /PWR_EN", "pin U1.4", "pin U2.4"]
+
+[[finding]]
 check = "NAME-1"
 subjects = ["net /RESET_n"]
 

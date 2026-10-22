@@ -1,0 +1,37 @@
+# What better_erc finds on io-8_internal_pulls.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-8"
+subjects = ["net /LIGHT_DRDY", "pin U2.3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "IO-8"
+subjects = ["net /BTN_DN", "part SW2"]
+
+[[finding]]
+check = "IO-8"
+subjects = ["net /BTN_UP", "part SW1"]
+
+[[finding]]
+check = "IO-8"
+subjects = ["net /LIGHT_DRDY", "pin U2.3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

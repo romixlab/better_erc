@@ -13,6 +13,10 @@ check = "DEC-1"
 subjects = ["net +5V"]
 
 [[finding]]
+check = "IO-11"
+subjects = ["net /QGATE_R", "part Q1"]
+
+[[finding]]
 check = "TEST-4"
 subjects = ["net +3V3"]
 

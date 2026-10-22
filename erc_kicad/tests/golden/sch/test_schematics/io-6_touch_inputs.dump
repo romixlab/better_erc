@@ -1,0 +1,165 @@
+board io-6_touch_inputs
+label / local PAD at 222,33.81 net /PAD
+label / local PAD at 262.38,22.38 net /PAD
+label / local TOUCH_FAR at 22.38,32.54 net /TOUCH_FAR
+label / local TOUCH_FAR at 222,26.19 net /TOUCH_FAR
+label / local TOUCH_TP at 22.38,27.46 net /TOUCH_TP
+label / local TOUCH_TP at 70.38,22.38 net /TOUCH_TP
+label / local TP_PULLED at 22.38,30 net /TP_PULLED
+label / local TP_PULLED at 118.38,22.38 net /TP_PULLED
+label / local TP_PULLED at 174,26.19 net /TP_PULLED
+label / power +3V3 at 22.38,22.38 net +3V3
+label / power GND at 22.38,24.92 net GND
+label / power GND at 174,33.81 net GND
+nc / at 22.38,35.08 pin U1 6
+nc / at 22.38,37.62 pin U1 7
+nc / at 22.38,40.16 pin U1 8
+nc / at 22.38,42.7 pin U1 9
+net +3V3 class = Default @ sch io-6_touch_inputs.kicad_sch note "effective net class"
+net +3V3 kind power
+net /PAD class = Default @ sch io-6_touch_inputs.kicad_sch note "effective net class"
+net /PAD kind named
+net /TOUCH_FAR class = Default @ sch io-6_touch_inputs.kicad_sch note "effective net class"
+net /TOUCH_FAR kind named
+net /TOUCH_TP class = Default @ sch io-6_touch_inputs.kicad_sch note "effective net class"
+net /TOUCH_TP kind named
+net /TP_PULLED class = Default @ sch io-6_touch_inputs.kicad_sch note "effective net class"
+net /TP_PULLED kind named
+net GND class = Default @ sch io-6_touch_inputs.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U1-A4-Pad6) class = Default @ sch io-6_touch_inputs.kicad_sch note "effective net class"
+net unconnected-(U1-A4-Pad6) kind unconnected
+net unconnected-(U1-A5-Pad7) class = Default @ sch io-6_touch_inputs.kicad_sch note "effective net class"
+net unconnected-(U1-A5-Pad7) kind unconnected
+net unconnected-(U1-A6-Pad8) class = Default @ sch io-6_touch_inputs.kicad_sch note "effective net class"
+net unconnected-(U1-A6-Pad8) kind unconnected
+net unconnected-(U1-Y1-Pad9) class = Default @ sch io-6_touch_inputs.kicad_sch note "effective net class"
+net unconnected-(U1-Y1-Pad9) kind unconnected
+part R1 field Value = 100k @ sch io-6_touch_inputs.kicad_sch
+part R1 flag dnp = no @ sch io-6_touch_inputs.kicad_sch
+part R1 flag exclude_from_sim = no @ sch io-6_touch_inputs.kicad_sch
+part R1 flag in_bom = yes @ sch io-6_touch_inputs.kicad_sch
+part R1 flag on_board = yes @ sch io-6_touch_inputs.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 995621c4-0000-4000-8000-000000000028 line 117 at 174,30 rot 0
+part R1 value = text 100k @ sch io-6_touch_inputs.kicad_sch note "from the Value field"
+part R2 field Value = 100 @ sch io-6_touch_inputs.kicad_sch
+part R2 flag dnp = no @ sch io-6_touch_inputs.kicad_sch
+part R2 flag exclude_from_sim = no @ sch io-6_touch_inputs.kicad_sch
+part R2 flag in_bom = yes @ sch io-6_touch_inputs.kicad_sch
+part R2 flag on_board = yes @ sch io-6_touch_inputs.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 995621c4-0000-4000-8000-000000000034 line 133 at 222,30 rot 0
+part R2 value = text 100 @ sch io-6_touch_inputs.kicad_sch note "from the Value field"
+part TP1 field Value = TestPoint @ sch io-6_touch_inputs.kicad_sch
+part TP1 flag dnp = no @ sch io-6_touch_inputs.kicad_sch
+part TP1 flag exclude_from_sim = no @ sch io-6_touch_inputs.kicad_sch
+part TP1 flag in_bom = yes @ sch io-6_touch_inputs.kicad_sch
+part TP1 flag on_board = yes @ sch io-6_touch_inputs.kicad_sch
+part TP1 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP1 unit 1 sheet / uuid 995621c4-0000-4000-8000-000000000022 line 101 at 78,30 rot 0
+part TP1 value = text TestPoint @ sch io-6_touch_inputs.kicad_sch note "from the Value field"
+part TP2 field Value = TestPoint @ sch io-6_touch_inputs.kicad_sch
+part TP2 flag dnp = no @ sch io-6_touch_inputs.kicad_sch
+part TP2 flag exclude_from_sim = no @ sch io-6_touch_inputs.kicad_sch
+part TP2 flag in_bom = yes @ sch io-6_touch_inputs.kicad_sch
+part TP2 flag on_board = yes @ sch io-6_touch_inputs.kicad_sch
+part TP2 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP2 unit 1 sheet / uuid 995621c4-0000-4000-8000-000000000025 line 109 at 126,30 rot 0
+part TP2 value = text TestPoint @ sch io-6_touch_inputs.kicad_sch note "from the Value field"
+part TP3 field Value = TestPoint @ sch io-6_touch_inputs.kicad_sch
+part TP3 flag dnp = no @ sch io-6_touch_inputs.kicad_sch
+part TP3 flag exclude_from_sim = no @ sch io-6_touch_inputs.kicad_sch
+part TP3 flag in_bom = yes @ sch io-6_touch_inputs.kicad_sch
+part TP3 flag on_board = yes @ sch io-6_touch_inputs.kicad_sch
+part TP3 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP3 unit 1 sheet / uuid 995621c4-0000-4000-8000-000000000039 line 143 at 270,30 rot 0
+part TP3 value = text TestPoint @ sch io-6_touch_inputs.kicad_sch note "from the Value field"
+part U1 field Value = HexBuffer @ sch io-6_touch_inputs.kicad_sch
+part U1 flag dnp = no @ sch io-6_touch_inputs.kicad_sch
+part U1 flag exclude_from_sim = no @ sch io-6_touch_inputs.kicad_sch
+part U1 flag in_bom = yes @ sch io-6_touch_inputs.kicad_sch
+part U1 flag on_board = yes @ sch io-6_touch_inputs.kicad_sch
+part U1 lib Logic_Fixture:HexBuffer sheet / symbol Logic_Fixture:HexBuffer
+part U1 unit 1 sheet / uuid 995621c4-0000-4000-8000-000000000001 line 65 at 30,30 rot 0
+part U1 value = text HexBuffer @ sch io-6_touch_inputs.kicad_sch note "from the Value field"
+pin R1 1 name "" unit 1 net /TP_PULLED
+pin R1 1 type = passive @ sch io-6_touch_inputs.kicad_sch
+pin R1 2 name "" unit 1 net GND
+pin R1 2 type = passive @ sch io-6_touch_inputs.kicad_sch
+pin R2 1 name "" unit 1 net /TOUCH_FAR
+pin R2 1 type = passive @ sch io-6_touch_inputs.kicad_sch
+pin R2 2 name "" unit 1 net /PAD
+pin R2 2 type = passive @ sch io-6_touch_inputs.kicad_sch
+pin TP1 1 name 1 unit 1 net /TOUCH_TP
+pin TP1 1 type = passive @ sch io-6_touch_inputs.kicad_sch
+pin TP2 1 name 1 unit 1 net /TP_PULLED
+pin TP2 1 type = passive @ sch io-6_touch_inputs.kicad_sch
+pin TP3 1 name 1 unit 1 net /PAD
+pin TP3 1 type = passive @ sch io-6_touch_inputs.kicad_sch
+pin U1 1 name VCC unit 1 net +3V3
+pin U1 1 type = power_in @ sch io-6_touch_inputs.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch io-6_touch_inputs.kicad_sch
+pin U1 3 name A1 unit 1 net /TOUCH_TP
+pin U1 3 type = input @ sch io-6_touch_inputs.kicad_sch
+pin U1 4 name A2 unit 1 net /TP_PULLED
+pin U1 4 type = input @ sch io-6_touch_inputs.kicad_sch
+pin U1 5 name A3 unit 1 net /TOUCH_FAR
+pin U1 5 type = input @ sch io-6_touch_inputs.kicad_sch
+pin U1 6 name A4 unit 1 nc net unconnected-(U1-A4-Pad6)
+pin U1 6 type = input @ sch io-6_touch_inputs.kicad_sch
+pin U1 7 name A5 unit 1 nc net unconnected-(U1-A5-Pad7)
+pin U1 7 type = input @ sch io-6_touch_inputs.kicad_sch
+pin U1 8 name A6 unit 1 nc net unconnected-(U1-A6-Pad8)
+pin U1 8 type = input @ sch io-6_touch_inputs.kicad_sch
+pin U1 9 name Y1 unit 1 nc net unconnected-(U1-Y1-Pad9)
+pin U1 9 type = output @ sch io-6_touch_inputs.kicad_sch
+sheet / name "" file io-6_touch_inputs.kicad_sch uuid /
+source file io-6_touch_inputs.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:TestPoint description "test point"
+symbol Connector:TestPoint field Description "test point"
+symbol Connector:TestPoint field Reference TP
+symbol Connector:TestPoint field Value TestPoint
+symbol Connector:TestPoint hash c5f1d64ae086cd7d
+symbol Connector:TestPoint pin 1 unit 1 body 1 name 1 type passive style line
+symbol Connector:TestPoint units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Logic_Fixture:HexBuffer description "Hex buffer"
+symbol Logic_Fixture:HexBuffer field Description "Hex buffer"
+symbol Logic_Fixture:HexBuffer field Reference U
+symbol Logic_Fixture:HexBuffer field Value HexBuffer
+symbol Logic_Fixture:HexBuffer hash 946a400fd0ac71c0
+symbol Logic_Fixture:HexBuffer pin 1 unit 1 body 1 name VCC type power_in style line
+symbol Logic_Fixture:HexBuffer pin 2 unit 1 body 1 name GND type power_in style line
+symbol Logic_Fixture:HexBuffer pin 3 unit 1 body 1 name A1 type input style line
+symbol Logic_Fixture:HexBuffer pin 4 unit 1 body 1 name A2 type input style line
+symbol Logic_Fixture:HexBuffer pin 5 unit 1 body 1 name A3 type input style line
+symbol Logic_Fixture:HexBuffer pin 6 unit 1 body 1 name A4 type input style line
+symbol Logic_Fixture:HexBuffer pin 7 unit 1 body 1 name A5 type input style line
+symbol Logic_Fixture:HexBuffer pin 8 unit 1 body 1 name A6 type input style line
+symbol Logic_Fixture:HexBuffer pin 9 unit 1 body 1 name Y1 type output style line
+symbol Logic_Fixture:HexBuffer units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

@@ -294,8 +294,25 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - 🚧 `NAME-11` Negative rail with its sign from a marker only or none; negative supply pins on a rail read positive ·
   `name/name_11.rs`, `name-11_negative_rail_names`. Missing: rails a negative regulator feeds (power sources, `NET-5`)
 - ✅ `NAME-12` Unannotated designators, one designator placed twice for one unit · `name/name_12.rs`, `name-12_designators`
-- ⬜ `IO-1` Inputs without a drive source: the input pins on a net are collected (`graph::input_pins`), no check yet ·
-  `erc_analysis/src/graph.rs`, test schematic `io-1_inputs`
+- ✅ `IO-1` Input pins (pin type) on a net nothing drives: no output, bidirectional or open-drain pin, no IC pin of
+  unknown role, no rail, and no resistor, inductor, ferrite, crystal, FET channel or switch to a driven net (a
+  fixpoint over the board); a connector or test point is no source; pins with a no-connect flag left out ·
+  `io/io_1.rs`, `io-1_drive_sources`, `io-1_inputs`
+- ✅ `IO-6` IO-1 net a test point, a connector (on it or one series part away) or a switch reaches: a touch sensor
+  (≈ `IO-1`) · `io/io_6.rs`, `io-6_touch_inputs`
+- ✅ `IO-7` Switch to a rail or ground with a fitted pull to that same level on its signal side · `io/io_7.rs`,
+  `io-7_button_pulls`
+- ✅ `IO-8` Switch to a rail or ground with no pull to the other level, and an open-drain output that is no flag or
+  I2C line on an MCU net with no pull-up: the firmware needs an internal pull (errata that rule internal pulls out
+  wait for part data, `CFG-5`) (≈ by `IO-7`) · `io/io_8.rs`, `io-8_internal_pulls`
+- ✅ `IO-10` IO-1 net with a connector pin on it or one series part away: driven only from off the board (≈ `IO-6`) ·
+  `io/io_10.rs`, `io-10_connector_inputs`
+- ✅ `IO-11` MOSFET (pins G, S, D) whose gate, or a net one series resistor away, has no resistor to the source or the
+  off level, and no push-pull output of a non-MCU IC drives it · `io/io_11.rs`, `io-11_gate_pulls`
+- ✅ `IO-15` Interrupt, fault or power-good output by name, open-drain by pin type (or an IC pin whose type does not
+  say push-pull), on a net with no pull-up and no push-pull driver · `io/io_15.rs`, `io-15_open_drain_flags`
+- ✅ `IO-16` Signal net with fitted pull-up and pull-down, with the divided voltage; nets reaching an analog input by
+  name, an amplifier, regulator or load switch are dividers on purpose · `io/io_16.rs`, `io-16_pull_up_and_down`
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`
 - ✅ `DIAG-2` Every catalogue check reported as ran, not run (the missing need, why, and what would enable it) or
   planned; each check declares its needs, availability is worked out per board before the run from the analyses

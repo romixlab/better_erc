@@ -17,6 +17,10 @@ check = "DEC-8"
 subjects = ["net +3V3_IO", "part R1"]
 
 [[finding]]
+check = "IO-1"
+subjects = ["net /SER1", "pin U1.3"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.3"]
 

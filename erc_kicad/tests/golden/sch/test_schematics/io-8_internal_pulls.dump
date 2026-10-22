@@ -1,0 +1,204 @@
+board io-8_internal_pulls
+label / local BTN_DN at 22.38,30 net /BTN_DN
+label / local BTN_DN at 126,26.19 net /BTN_DN
+label / local BTN_OK at 22.38,32.54 net /BTN_OK
+label / local BTN_OK at 174,26.19 net /BTN_OK
+label / local BTN_OK at 222,26.19 net /BTN_OK
+label / local BTN_UP at 22.38,27.46 net /BTN_UP
+label / local BTN_UP at 78,26.19 net /BTN_UP
+label / local LIGHT2_DRDY at 22.38,37.62 net /LIGHT2_DRDY
+label / local LIGHT2_DRDY at 310.38,27.46 net /LIGHT2_DRDY
+label / local LIGHT2_DRDY at 366,26.19 net /LIGHT2_DRDY
+label / local LIGHT_DRDY at 22.38,35.08 net /LIGHT_DRDY
+label / local LIGHT_DRDY at 262.38,27.46 net /LIGHT_DRDY
+label / power +3V3 at 22.38,22.38 net +3V3
+label / power +3V3 at 126,33.81 net +3V3
+label / power +3V3 at 222,33.81 net +3V3
+label / power +3V3 at 262.38,22.38 net +3V3
+label / power +3V3 at 310.38,22.38 net +3V3
+label / power +3V3 at 366,33.81 net +3V3
+label / power GND at 22.38,24.92 net GND
+label / power GND at 78,33.81 net GND
+label / power GND at 174,33.81 net GND
+label / power GND at 262.38,24.92 net GND
+label / power GND at 310.38,24.92 net GND
+net +3V3 class = Default @ sch io-8_internal_pulls.kicad_sch note "effective net class"
+net +3V3 kind power
+net /BTN_DN class = Default @ sch io-8_internal_pulls.kicad_sch note "effective net class"
+net /BTN_DN kind named
+net /BTN_OK class = Default @ sch io-8_internal_pulls.kicad_sch note "effective net class"
+net /BTN_OK kind named
+net /BTN_UP class = Default @ sch io-8_internal_pulls.kicad_sch note "effective net class"
+net /BTN_UP kind named
+net /LIGHT2_DRDY class = Default @ sch io-8_internal_pulls.kicad_sch note "effective net class"
+net /LIGHT2_DRDY kind named
+net /LIGHT_DRDY class = Default @ sch io-8_internal_pulls.kicad_sch note "effective net class"
+net /LIGHT_DRDY kind named
+net GND class = Default @ sch io-8_internal_pulls.kicad_sch note "effective net class"
+net GND kind power
+part R1 field Value = 10k @ sch io-8_internal_pulls.kicad_sch
+part R1 flag dnp = no @ sch io-8_internal_pulls.kicad_sch
+part R1 flag exclude_from_sim = no @ sch io-8_internal_pulls.kicad_sch
+part R1 flag in_bom = yes @ sch io-8_internal_pulls.kicad_sch
+part R1 flag on_board = yes @ sch io-8_internal_pulls.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 896c89dc-0000-4000-8000-000000000036 line 156 at 222,30 rot 0
+part R1 value = text 10k @ sch io-8_internal_pulls.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch io-8_internal_pulls.kicad_sch
+part R2 flag dnp = no @ sch io-8_internal_pulls.kicad_sch
+part R2 flag exclude_from_sim = no @ sch io-8_internal_pulls.kicad_sch
+part R2 flag in_bom = yes @ sch io-8_internal_pulls.kicad_sch
+part R2 flag on_board = yes @ sch io-8_internal_pulls.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 896c89dc-0000-4000-8000-000000000060 line 220 at 366,30 rot 0
+part R2 value = text 10k @ sch io-8_internal_pulls.kicad_sch note "from the Value field"
+part SW1 field Value = SW_Push @ sch io-8_internal_pulls.kicad_sch
+part SW1 flag dnp = no @ sch io-8_internal_pulls.kicad_sch
+part SW1 flag exclude_from_sim = no @ sch io-8_internal_pulls.kicad_sch
+part SW1 flag in_bom = yes @ sch io-8_internal_pulls.kicad_sch
+part SW1 flag on_board = yes @ sch io-8_internal_pulls.kicad_sch
+part SW1 lib Switch:SW_Push sheet / symbol Switch:SW_Push
+part SW1 unit 1 sheet / uuid 896c89dc-0000-4000-8000-000000000018 line 108 at 78,30 rot 0
+part SW1 value = text SW_Push @ sch io-8_internal_pulls.kicad_sch note "from the Value field"
+part SW2 field Value = SW_Push @ sch io-8_internal_pulls.kicad_sch
+part SW2 flag dnp = no @ sch io-8_internal_pulls.kicad_sch
+part SW2 flag exclude_from_sim = no @ sch io-8_internal_pulls.kicad_sch
+part SW2 flag in_bom = yes @ sch io-8_internal_pulls.kicad_sch
+part SW2 flag on_board = yes @ sch io-8_internal_pulls.kicad_sch
+part SW2 lib Switch:SW_Push sheet / symbol Switch:SW_Push
+part SW2 unit 1 sheet / uuid 896c89dc-0000-4000-8000-000000000024 line 124 at 126,30 rot 0
+part SW2 value = text SW_Push @ sch io-8_internal_pulls.kicad_sch note "from the Value field"
+part SW3 field Value = SW_Push @ sch io-8_internal_pulls.kicad_sch
+part SW3 flag dnp = no @ sch io-8_internal_pulls.kicad_sch
+part SW3 flag exclude_from_sim = no @ sch io-8_internal_pulls.kicad_sch
+part SW3 flag in_bom = yes @ sch io-8_internal_pulls.kicad_sch
+part SW3 flag on_board = yes @ sch io-8_internal_pulls.kicad_sch
+part SW3 lib Switch:SW_Push sheet / symbol Switch:SW_Push
+part SW3 unit 1 sheet / uuid 896c89dc-0000-4000-8000-000000000030 line 140 at 174,30 rot 0
+part SW3 value = text SW_Push @ sch io-8_internal_pulls.kicad_sch note "from the Value field"
+part U1 field Value = MCU_IO4 @ sch io-8_internal_pulls.kicad_sch
+part U1 flag dnp = no @ sch io-8_internal_pulls.kicad_sch
+part U1 flag exclude_from_sim = no @ sch io-8_internal_pulls.kicad_sch
+part U1 flag in_bom = yes @ sch io-8_internal_pulls.kicad_sch
+part U1 flag on_board = yes @ sch io-8_internal_pulls.kicad_sch
+part U1 lib MCU_Fixture:MCU_IO4 sheet / symbol MCU_Fixture:MCU_IO4
+part U1 unit 1 sheet / uuid 896c89dc-0000-4000-8000-000000000001 line 76 at 30,30 rot 0
+part U1 value = text MCU_IO4 @ sch io-8_internal_pulls.kicad_sch note "from the Value field"
+part U2 field Value = Light @ sch io-8_internal_pulls.kicad_sch
+part U2 flag dnp = no @ sch io-8_internal_pulls.kicad_sch
+part U2 flag exclude_from_sim = no @ sch io-8_internal_pulls.kicad_sch
+part U2 flag in_bom = yes @ sch io-8_internal_pulls.kicad_sch
+part U2 flag on_board = yes @ sch io-8_internal_pulls.kicad_sch
+part U2 lib Sensor_Fixture:Light sheet / symbol Sensor_Fixture:Light
+part U2 unit 1 sheet / uuid 896c89dc-0000-4000-8000-000000000042 line 172 at 270,30 rot 0
+part U2 value = text Light @ sch io-8_internal_pulls.kicad_sch note "from the Value field"
+part U3 field Value = Light @ sch io-8_internal_pulls.kicad_sch
+part U3 flag dnp = no @ sch io-8_internal_pulls.kicad_sch
+part U3 flag exclude_from_sim = no @ sch io-8_internal_pulls.kicad_sch
+part U3 flag in_bom = yes @ sch io-8_internal_pulls.kicad_sch
+part U3 flag on_board = yes @ sch io-8_internal_pulls.kicad_sch
+part U3 lib Sensor_Fixture:Light sheet / symbol Sensor_Fixture:Light
+part U3 unit 1 sheet / uuid 896c89dc-0000-4000-8000-000000000051 line 196 at 318,30 rot 0
+part U3 value = text Light @ sch io-8_internal_pulls.kicad_sch note "from the Value field"
+pin R1 1 name "" unit 1 net /BTN_OK
+pin R1 1 type = passive @ sch io-8_internal_pulls.kicad_sch
+pin R1 2 name "" unit 1 net +3V3
+pin R1 2 type = passive @ sch io-8_internal_pulls.kicad_sch
+pin R2 1 name "" unit 1 net /LIGHT2_DRDY
+pin R2 1 type = passive @ sch io-8_internal_pulls.kicad_sch
+pin R2 2 name "" unit 1 net +3V3
+pin R2 2 type = passive @ sch io-8_internal_pulls.kicad_sch
+pin SW1 1 name 1 unit 1 net /BTN_UP
+pin SW1 1 type = passive @ sch io-8_internal_pulls.kicad_sch
+pin SW1 2 name 2 unit 1 net GND
+pin SW1 2 type = passive @ sch io-8_internal_pulls.kicad_sch
+pin SW2 1 name 1 unit 1 net /BTN_DN
+pin SW2 1 type = passive @ sch io-8_internal_pulls.kicad_sch
+pin SW2 2 name 2 unit 1 net +3V3
+pin SW2 2 type = passive @ sch io-8_internal_pulls.kicad_sch
+pin SW3 1 name 1 unit 1 net /BTN_OK
+pin SW3 1 type = passive @ sch io-8_internal_pulls.kicad_sch
+pin SW3 2 name 2 unit 1 net GND
+pin SW3 2 type = passive @ sch io-8_internal_pulls.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch io-8_internal_pulls.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch io-8_internal_pulls.kicad_sch
+pin U1 3 name PA0 unit 1 net /BTN_UP
+pin U1 3 type = bidirectional @ sch io-8_internal_pulls.kicad_sch
+pin U1 4 name PA1 unit 1 net /BTN_DN
+pin U1 4 type = bidirectional @ sch io-8_internal_pulls.kicad_sch
+pin U1 5 name PA2 unit 1 net /BTN_OK
+pin U1 5 type = bidirectional @ sch io-8_internal_pulls.kicad_sch
+pin U1 6 name PA3 unit 1 net /LIGHT_DRDY
+pin U1 6 type = bidirectional @ sch io-8_internal_pulls.kicad_sch
+pin U1 7 name PA4 unit 1 net /LIGHT2_DRDY
+pin U1 7 type = bidirectional @ sch io-8_internal_pulls.kicad_sch
+pin U2 1 name VDD unit 1 net +3V3
+pin U2 1 type = power_in @ sch io-8_internal_pulls.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch io-8_internal_pulls.kicad_sch
+pin U2 3 name DRDY unit 1 net /LIGHT_DRDY
+pin U2 3 type = open_collector @ sch io-8_internal_pulls.kicad_sch
+pin U3 1 name VDD unit 1 net +3V3
+pin U3 1 type = power_in @ sch io-8_internal_pulls.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch io-8_internal_pulls.kicad_sch
+pin U3 3 name DRDY unit 1 net /LIGHT2_DRDY
+pin U3 3 type = open_collector @ sch io-8_internal_pulls.kicad_sch
+sheet / name "" file io-8_internal_pulls.kicad_sch uuid /
+source file io-8_internal_pulls.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Fixture:MCU_IO4 description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_IO4 field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_IO4 field Reference U
+symbol MCU_Fixture:MCU_IO4 field Value MCU_IO4
+symbol MCU_Fixture:MCU_IO4 hash a51c2cf0c2e5fd40
+symbol MCU_Fixture:MCU_IO4 pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_IO4 pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_IO4 pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Fixture:MCU_IO4 pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Fixture:MCU_IO4 pin 5 unit 1 body 1 name PA2 type bidirectional style line
+symbol MCU_Fixture:MCU_IO4 pin 6 unit 1 body 1 name PA3 type bidirectional style line
+symbol MCU_Fixture:MCU_IO4 pin 7 unit 1 body 1 name PA4 type bidirectional style line
+symbol MCU_Fixture:MCU_IO4 units 1
+symbol Sensor_Fixture:Light description "Ambient light sensor"
+symbol Sensor_Fixture:Light field Description "Ambient light sensor"
+symbol Sensor_Fixture:Light field Reference U
+symbol Sensor_Fixture:Light field Value Light
+symbol Sensor_Fixture:Light hash 034455b78d22378e
+symbol Sensor_Fixture:Light pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Sensor_Fixture:Light pin 2 unit 1 body 1 name GND type power_in style line
+symbol Sensor_Fixture:Light pin 3 unit 1 body 1 name DRDY type open_collector style line
+symbol Sensor_Fixture:Light units 1
+symbol Switch:SW_Push description "Push button switch, generic, two pins"
+symbol Switch:SW_Push field Description "Push button switch, generic, two pins"
+symbol Switch:SW_Push field Reference SW
+symbol Switch:SW_Push field Value SW_Push
+symbol Switch:SW_Push hash b034fc69a532597f
+symbol Switch:SW_Push pin 1 unit 1 body 1 name 1 type passive style line
+symbol Switch:SW_Push pin 2 unit 1 body 1 name 2 type passive style line
+symbol Switch:SW_Push units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

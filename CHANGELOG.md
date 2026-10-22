@@ -11,6 +11,10 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- Stage 1 easy checks, batch checks-io: `IO-1`, `IO-6`, `IO-7`, `IO-8`, `IO-10`, `IO-11`, `IO-15`, `IO-16`, each with its test schematic and sidecar; `erc_analysis::{pull, analog}`, `pin_name` reads `RUN`, `CHIP_PU`, `MCO`, `CLKOUT` and says which names are active low; the catalogue marks `IO-6` ≈ `IO-1` and `IO-10` ≈ `IO-6`.
+
 ## [0.4.5] - 2026-10-22
 
 ### Added

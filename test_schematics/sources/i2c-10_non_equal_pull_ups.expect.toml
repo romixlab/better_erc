@@ -21,6 +21,14 @@ check = "I2C-10"
 subjects = ["net /SCL", "net /SDA", "part R601", "part R602"]
 
 [[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U601-BOOT0-Pad1)", "pin U601.1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U601-NRST-Pad4)", "pin U601.4"]
+
+[[finding]]
 check = "NAME-7"
 subjects = ["board i2c-10_non_equal_pull_ups"]
 

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "tool": "better_erc 0.4.4",
+  "tool": "better_erc 0.4.5",
   "summary": {
     "boards": [
       {
@@ -15,13 +15,13 @@
     ],
     "variant": null,
     "errors": 3,
-    "warnings": 16,
+    "warnings": 27,
     "suggestions": 79,
     "infos": 0,
     "candidates": 0,
-    "ran": 58,
+    "ran": 66,
     "not_run": 0,
-    "planned": 455
+    "planned": 447
   },
   "checks": [
     {
@@ -332,7 +332,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 258
+      "micros": 67
     },
     {
       "id": "DEC-2",
@@ -355,7 +355,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 48
+      "micros": 9
     },
     {
       "id": "DEC-5",
@@ -378,7 +378,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 46
+      "micros": 10
     },
     {
       "id": "DEC-8",
@@ -387,7 +387,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 57
+      "micros": 28
     },
     {
       "id": "DEC-9",
@@ -403,7 +403,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 219
+      "micros": 88
     },
     {
       "id": "DEC-11",
@@ -412,7 +412,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 25
+      "micros": 9
     },
     {
       "id": "DEC-12",
@@ -421,7 +421,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 14
+      "micros": 9
     },
     {
       "id": "DEC-13",
@@ -738,7 +738,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 194
+      "micros": 245
     },
     {
       "id": "SHORT-2",
@@ -747,7 +747,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 491
+      "micros": 280
     },
     {
       "id": "SHORT-3",
@@ -756,7 +756,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 254
+      "micros": 137
     },
     {
       "id": "SHORT-4",
@@ -765,7 +765,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 283
+      "micros": 138
     },
     {
       "id": "SHORT-5",
@@ -774,7 +774,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 924
+      "micros": 620
     },
     {
       "id": "SHORT-6",
@@ -783,7 +783,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 32
+      "micros": 38
     },
     {
       "id": "SHORT-7",
@@ -792,7 +792,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 230
+      "micros": 126
     },
     {
       "id": "SHORT-8",
@@ -822,7 +822,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 120
+      "micros": 62
     },
     {
       "id": "SHORT-12",
@@ -831,7 +831,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 2721
+      "micros": 2118
     },
     {
       "id": "WIRE-1",
@@ -840,7 +840,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 652
+      "micros": 453
     },
     {
       "id": "WIRE-2",
@@ -849,7 +849,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 187
+      "micros": 141
     },
     {
       "id": "WIRE-3",
@@ -914,7 +914,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 2
     },
     {
       "id": "WIRE-12",
@@ -930,7 +930,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 171
+      "micros": 107
     },
     {
       "id": "WIRE-14",
@@ -939,7 +939,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 696
+      "micros": 584
     },
     {
       "id": "WIRE-15",
@@ -1205,7 +1205,9 @@
       "title": "Input pin without a drive source, smart about resistors, FETs etc. ≈ IO-2",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 11,
+      "micros": 257
     },
     {
       "id": "IO-2",
@@ -1237,24 +1239,30 @@
     },
     {
       "id": "IO-6",
-      "title": "High impedance nets acting as touch buttons",
+      "title": "High impedance nets acting as touch buttons ≈ IO-1",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 215
     },
     {
       "id": "IO-7",
       "title": "Button to ground with a pull-down, or button to power with a pull-up ≈ IO-8",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 8
     },
     {
       "id": "IO-8",
       "title": "Mention a needed pull-up or down where it applies, e.g. buttons",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 452
     },
     {
       "id": "IO-9",
@@ -1265,17 +1273,21 @@
     },
     {
       "id": "IO-10",
-      "title": "Input driven only from a connector: floats when nothing is plugged in",
+      "title": "Input driven only from a connector: floats when nothing is plugged in ≈ IO-6",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 215
     },
     {
       "id": "IO-11",
       "title": "MOSFET gate without a pull: floats while its driver is in reset or unpowered",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 14
     },
     {
       "id": "IO-12",
@@ -1303,14 +1315,18 @@
       "title": "Open-drain interrupt or fault output without a pull-up",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 479
     },
     {
       "id": "IO-16",
       "title": "Pull-up and pull-down both on one net: an accidental divider, neither level clean",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 294
     },
     {
       "id": "IO-17",
@@ -1648,7 +1664,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 33
+      "micros": 58
     },
     {
       "id": "I2C-2",
@@ -1657,7 +1673,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 3,
-      "micros": 232
+      "micros": 92
     },
     {
       "id": "I2C-3",
@@ -1666,7 +1682,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 145
+      "micros": 54
     },
     {
       "id": "I2C-4",
@@ -1696,7 +1712,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 141
+      "micros": 213
     },
     {
       "id": "I2C-8",
@@ -1712,7 +1728,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 262
+      "micros": 656
     },
     {
       "id": "I2C-10",
@@ -1721,7 +1737,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 306
+      "micros": 178
     },
     {
       "id": "I2C-11",
@@ -2948,7 +2964,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1450
+      "micros": 1139
     },
     {
       "id": "DBG-2",
@@ -2957,7 +2973,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 300
+      "micros": 191
     },
     {
       "id": "DBG-3",
@@ -2966,7 +2982,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 94
+      "micros": 50
     },
     {
       "id": "DBG-4",
@@ -2975,7 +2991,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 73
+      "micros": 21
     },
     {
       "id": "DBG-5",
@@ -2998,7 +3014,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 644
+      "micros": 1397
     },
     {
       "id": "DBG-8",
@@ -3007,7 +3023,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 489
+      "micros": 444
     },
     {
       "id": "DBG-9",
@@ -3023,7 +3039,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 105
+      "micros": 67
     },
     {
       "id": "DBG-11",
@@ -3032,7 +3048,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 734
+      "micros": 507
     },
     {
       "id": "DBG-12",
@@ -3055,7 +3071,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 311
+      "micros": 218
     },
     {
       "id": "DBG-15",
@@ -3071,7 +3087,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 49
+      "micros": 18
     },
     {
       "id": "DBG-17",
@@ -3080,7 +3096,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 658
+      "micros": 410
     },
     {
       "id": "DBG-18",
@@ -3089,7 +3105,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 14,
-      "micros": 1859
+      "micros": 703
     },
     {
       "id": "DBG-19",
@@ -3140,7 +3156,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 20,
-      "micros": 987
+      "micros": 706
     },
     {
       "id": "TEST-2",
@@ -3149,7 +3165,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 69
+      "micros": 37
     },
     {
       "id": "TEST-3",
@@ -3165,7 +3181,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 130
+      "micros": 93
     },
     {
       "id": "TEST-5",
@@ -3174,7 +3190,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 28,
-      "micros": 2312
+      "micros": 996
     },
     {
       "id": "TEST-6",
@@ -3225,7 +3241,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 795
+      "micros": 454
     },
     {
       "id": "BOM-6",
@@ -3234,7 +3250,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 794
+      "micros": 427
     },
     {
       "id": "BOM-7",
@@ -3257,7 +3273,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 483
+      "micros": 405
     },
     {
       "id": "BOM-10",
@@ -3266,7 +3282,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 45
+      "micros": 33
     },
     {
       "id": "BOM-11",
@@ -3331,7 +3347,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 127
+      "micros": 78
     },
     {
       "id": "NAME-2",
@@ -3340,7 +3356,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 118
+      "micros": 55
     },
     {
       "id": "NAME-3",
@@ -3356,7 +3372,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 74
+      "micros": 97
     },
     {
       "id": "NAME-5",
@@ -3365,7 +3381,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 358
+      "micros": 163
     },
     {
       "id": "NAME-6",
@@ -3374,7 +3390,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 136
+      "micros": 88
     },
     {
       "id": "NAME-7",
@@ -3383,7 +3399,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 1901
+      "micros": 522
     },
     {
       "id": "NAME-8",
@@ -3399,7 +3415,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 161
+      "micros": 91
     },
     {
       "id": "NAME-10",
@@ -3408,7 +3424,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 203
+      "micros": 96
     },
     {
       "id": "NAME-11",
@@ -3417,7 +3433,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 296
+      "micros": 187
     },
     {
       "id": "NAME-12",
@@ -3426,7 +3442,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 114
+      "micros": 51
     },
     {
       "id": "LIB-1",
@@ -3449,7 +3465,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 23
+      "micros": 10
     },
     {
       "id": "LIB-4",
@@ -4428,6 +4444,523 @@
           "at": [
             87.63,
             73.66
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "IO-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              44
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U201-BOOT0-Pad1)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              93
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.1"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U201.1 (BOOT0) on unconnected-(U201-BOOT0-Pad1): nothing drives the net, the input floats",
+      "facts": [],
+      "fingerprint": "IO-1:net unconnected-(U201-BOOT0-Pad1)|pin U201.1",
+      "explain": "docs/checks/io.md#io-1",
+      "fix": "a driver, or a pull to the safe level",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol U201",
+          "line": 1913,
+          "at": [
+            49.53,
+            97.79
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "IO-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              45
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U201-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              96
+            ]
+          },
+          "kind": "pin",
+          "name": "U201.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U201.4 (NRST) on unconnected-(U201-NRST-Pad4): nothing drives the net, the input floats",
+      "facts": [],
+      "fingerprint": "IO-1:net unconnected-(U201-NRST-Pad4)|pin U201.4",
+      "explain": "docs/checks/io.md#io-1",
+      "fix": "a driver, or a pull to the safe level",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol U201",
+          "line": 1913,
+          "at": [
+            49.53,
+            97.79
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "IO-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              69
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U301-BOOT0-Pad1)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              137
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.1"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U301.1 (BOOT0) on unconnected-(U301-BOOT0-Pad1): nothing drives the net, the input floats",
+      "facts": [],
+      "fingerprint": "IO-1:net unconnected-(U301-BOOT0-Pad1)|pin U301.1",
+      "explain": "docs/checks/io.md#io-1",
+      "fix": "a driver, or a pull to the safe level",
+      "locations": [
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "symbol U301",
+          "line": 1366,
+          "at": [
+            73.66,
+            68.58
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "IO-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              70
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U301-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              140
+            ]
+          },
+          "kind": "pin",
+          "name": "U301.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U301.4 (NRST) on unconnected-(U301-NRST-Pad4): nothing drives the net, the input floats",
+      "facts": [],
+      "fingerprint": "IO-1:net unconnected-(U301-NRST-Pad4)|pin U301.4",
+      "explain": "docs/checks/io.md#io-1",
+      "fix": "a driver, or a pull to the safe level",
+      "locations": [
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "symbol U301",
+          "line": 1366,
+          "at": [
+            73.66,
+            68.58
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "IO-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              88
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U401-BOOT0-Pad1)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              165
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.1"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U401.1 (BOOT0) on unconnected-(U401-BOOT0-Pad1): nothing drives the net, the input floats",
+      "facts": [],
+      "fingerprint": "IO-1:net unconnected-(U401-BOOT0-Pad1)|pin U401.1",
+      "explain": "docs/checks/io.md#io-1",
+      "fix": "a driver, or a pull to the safe level",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U401",
+          "line": 5888,
+          "at": [
+            87.63,
+            73.66
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "IO-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              89
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U401-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              168
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U401.4 (NRST) on unconnected-(U401-NRST-Pad4): nothing drives the net, the input floats",
+      "facts": [],
+      "fingerprint": "IO-1:net unconnected-(U401-NRST-Pad4)|pin U401.4",
+      "explain": "docs/checks/io.md#io-1",
+      "fix": "a driver, or a pull to the safe level",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U401",
+          "line": 5888,
+          "at": [
+            87.63,
+            73.66
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "IO-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              106
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U404-EN-Pad8)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              208
+            ]
+          },
+          "kind": "pin",
+          "name": "U404.8"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U404.8 (EN) on unconnected-(U404-EN-Pad8): nothing drives the net, the input floats",
+      "facts": [],
+      "fingerprint": "IO-1:net unconnected-(U404-EN-Pad8)|pin U404.8",
+      "explain": "docs/checks/io.md#io-1",
+      "fix": "a driver, or a pull to the safe level",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U404",
+          "line": 7589,
+          "at": [
+            210.82,
+            204.47
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "IO-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              123
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U501-BOOT0-Pad1)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              241
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.1"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U501.1 (BOOT0) on unconnected-(U501-BOOT0-Pad1): nothing drives the net, the input floats",
+      "facts": [],
+      "fingerprint": "IO-1:net unconnected-(U501-BOOT0-Pad1)|pin U501.1",
+      "explain": "docs/checks/io.md#io-1",
+      "fix": "a driver, or a pull to the safe level",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol U501",
+          "line": 4027,
+          "at": [
+            48.26,
+            60.96
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "IO-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              124
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U501-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              244
+            ]
+          },
+          "kind": "pin",
+          "name": "U501.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U501.4 (NRST) on unconnected-(U501-NRST-Pad4): nothing drives the net, the input floats",
+      "facts": [],
+      "fingerprint": "IO-1:net unconnected-(U501-NRST-Pad4)|pin U501.4",
+      "explain": "docs/checks/io.md#io-1",
+      "fix": "a driver, or a pull to the safe level",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol U501",
+          "line": 4027,
+          "at": [
+            48.26,
+            60.96
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "IO-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              150
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U601-BOOT0-Pad1)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              285
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.1"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U601.1 (BOOT0) on unconnected-(U601-BOOT0-Pad1): nothing drives the net, the input floats",
+      "facts": [],
+      "fingerprint": "IO-1:net unconnected-(U601-BOOT0-Pad1)|pin U601.1",
+      "explain": "docs/checks/io.md#io-1",
+      "fix": "a driver, or a pull to the safe level",
+      "locations": [
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "symbol U601",
+          "line": 1726,
+          "at": [
+            68.58,
+            63.5
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "IO-1",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              151
+            ]
+          },
+          "kind": "net",
+          "name": "unconnected-(U601-NRST-Pad4)"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              288
+            ]
+          },
+          "kind": "pin",
+          "name": "U601.4"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U601.4 (NRST) on unconnected-(U601-NRST-Pad4): nothing drives the net, the input floats",
+      "facts": [],
+      "fingerprint": "IO-1:net unconnected-(U601-NRST-Pad4)|pin U601.4",
+      "explain": "docs/checks/io.md#io-1",
+      "fix": "a driver, or a pull to the safe level",
+      "locations": [
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "symbol U601",
+          "line": 1726,
+          "at": [
+            68.58,
+            63.5
           ]
         }
       ],
@@ -9903,7 +10436,7 @@
     }
   ],
   "timing": {
-    "checks_micros": 8331,
-    "total_micros": 9855
+    "checks_micros": 6891,
+    "total_micros": 7974
   }
 }

@@ -41,6 +41,14 @@ check = "I2C-2"
 subjects = ["net /SCL1_3V3", "net /SCL_U7", "net /SDA1_3V3", "net /SDA_U7", "part R501", "part R502", "part R503", "part R504"]
 
 [[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U501-BOOT0-Pad1)", "pin U501.1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U501-NRST-Pad4)", "pin U501.4"]
+
+[[finding]]
 check = "NAME-5"
 subjects = ["part U503", "part U506"]
 

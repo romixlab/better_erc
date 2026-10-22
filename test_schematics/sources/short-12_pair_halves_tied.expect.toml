@@ -17,6 +17,16 @@ check = "DEC-1"
 subjects = ["net +3V3"]
 
 [[finding]]
+check = "IO-10"
+subjects = ["net /ETH_RX", "pin U2.3"]
+also = ["IO-6"]
+
+[[finding]]
+check = "IO-6"
+subjects = ["net /ETH_RX_SPARE", "pin U2.4"]
+also = ["IO-1"]
+
+[[finding]]
 check = "SHORT-12"
 subjects = ["net /ETH_TX_N"]
 

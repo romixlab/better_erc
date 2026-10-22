@@ -1,0 +1,39 @@
+# What better_erc finds on io-7_button_pulls.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "IO-7"
+subjects = ["net /BTN_A", "part SW1"]
+also = ["IO-8"]
+
+[[finding]]
+check = "IO-7"
+subjects = ["net /BTN_B", "part SW2"]
+also = ["IO-8"]
+
+[[finding]]
+check = "SHORT-3"
+subjects = ["net +3V3", "net /BTN_B", "part R2", "part SW2"]
+
+[[finding]]
+check = "SHORT-3"
+subjects = ["net /BTN_A", "net GND", "part R1", "part SW1"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

@@ -1,0 +1,61 @@
+# What better_erc finds on io-15_open_drain_flags.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DBG-8"
+subjects = ["net /PMIC_INT", "pin U2.3"]
+
+[[finding]]
+check = "DBG-8"
+subjects = ["net /TEMP2_ALERT", "pin U5.3"]
+
+[[finding]]
+check = "DBG-8"
+subjects = ["net /TEMP_ALERT", "pin U4.3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "IO-15"
+subjects = ["net /PMIC_INT", "pin U2.3"]
+
+[[finding]]
+check = "IO-15"
+subjects = ["net /TEMP_ALERT", "pin U4.3"]
+
+[[finding]]
+check = "NAME-10"
+subjects = ["net /PMIC_INT", "pin U2.3"]
+
+[[finding]]
+check = "NAME-10"
+subjects = ["net /SW_FLT", "pin U3.3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

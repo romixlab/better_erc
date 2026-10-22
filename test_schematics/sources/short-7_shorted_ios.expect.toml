@@ -13,6 +13,11 @@ check = "DEC-1"
 subjects = ["net +3V3"]
 
 [[finding]]
+check = "IO-10"
+subjects = ["net /IN", "pin U3.3"]
+also = ["IO-6"]
+
+[[finding]]
 check = "SHORT-7"
 subjects = ["net /SPI_SCK", "part U1", "part U2"]
 

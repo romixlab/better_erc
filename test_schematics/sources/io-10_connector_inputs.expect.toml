@@ -1,0 +1,31 @@
+# What better_erc finds on io-10_connector_inputs.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /EXT_IN", "pin U1.5"]
+also = ["IO-6"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /REMOTE_EN", "pin U1.3"]
+also = ["IO-6"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.6", "pin U1.7", "pin U1.8", "pin U1.9"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

@@ -21,6 +21,11 @@ check = "DEC-1"
 subjects = ["net +3V3"]
 
 [[finding]]
+check = "IO-10"
+subjects = ["net /UART2_RX", "pin U1.2"]
+also = ["IO-6"]
+
+[[finding]]
 check = "NAME-4"
 subjects = ["net /UART2_RX", "pin U1.2"]
 

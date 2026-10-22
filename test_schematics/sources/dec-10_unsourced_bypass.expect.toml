@@ -13,6 +13,18 @@ check = "DEC-10"
 subjects = ["net +5V0_FLT"]
 
 [[finding]]
+check = "IO-1"
+subjects = ["net /AIN1", "pin U1.3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /AIN2", "pin U2.3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /AIN3", "pin U3.3"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.3", "pin U1.4"]
 

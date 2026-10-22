@@ -28,6 +28,7 @@ mod bom;
 mod dbg;
 mod dec;
 mod i2c;
+mod io;
 #[path = "lib/mod.rs"]
 mod library;
 mod name;

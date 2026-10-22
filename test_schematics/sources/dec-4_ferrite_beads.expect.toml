@@ -18,6 +18,10 @@ subjects = ["net +3V3", "net +3V3_A", "part FB1"]
 confidence = "estimate"
 
 [[finding]]
+check = "IO-1"
+subjects = ["net /SENSE_IN", "pin U2.3"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U2", "pin U2.3"]
 

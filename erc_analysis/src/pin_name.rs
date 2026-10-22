@@ -35,6 +35,8 @@ pub enum PinFunction {
     PowerGood,
     /// A fault flag output (`FAULT`, `FLT`)
     Fault,
+    /// A clock output (`MCO`, `CLKOUT`)
+    ClockOut,
 }
 
 impl PinFunction {
@@ -62,6 +64,7 @@ impl PinFunction {
             PinFunction::Interrupt => "interrupt",
             PinFunction::PowerGood => "power good",
             PinFunction::Fault => "fault",
+            PinFunction::ClockOut => "clock output",
         }
     }
 
@@ -118,11 +121,21 @@ pub struct NamedFunction {
 
 /// The functions a pin name states. Alternates are separated by `/` (`PA13/SWDIO`), words by `_`, `-`, spaces
 /// and brackets (`JTMS-SWDIO`, `USART1_TX`); an overbar (`~{RESET}`), a leading `n` or a trailing `N` or `#` mark
-/// an active-low signal and are read past.
+/// an active-low signal and are read past. A few names are read whole (`CHIP_PU`, the ESP32's reset).
 pub fn functions(name: &str) -> Vec<NamedFunction> {
     let mut out: Vec<NamedFunction> = Vec::new();
     let plain = name.replace("~{", "").replace(['}', '#'], "");
     for alternate in plain.split('/') {
+        if let Some(function) = whole(alternate) {
+            let f = NamedFunction {
+                function,
+                instance: String::new(),
+            };
+            if !out.contains(&f) {
+                out.push(f);
+            }
+            continue;
+        }
         let words: Vec<&str> = alternate
             .split(['_', '-', ' ', '(', ')', '.', ','])
             .filter(|w| !w.is_empty())
@@ -144,6 +157,28 @@ pub fn functions(name: &str) -> Vec<NamedFunction> {
 /// Whether a pin name states `function`
 pub fn states(name: &str, function: PinFunction) -> bool {
     functions(name).iter().any(|f| f.function == function)
+}
+
+/// Whether a pin name marks its signal active low: one of its `/`-separated alternates has a marker
+/// ([`crate::names::active_low`]: `~{RESET}`, `RST#`, `nRST`, `NRST`, `RESET_N`), or is active low by
+/// definition (`MCLR`, `XRES`, `RUN`, `CHIP_PU`)
+pub fn active_low(name: &str) -> bool {
+    name.split('/').any(|alternate| {
+        crate::names::active_low(alternate).is_some()
+            || whole(alternate).is_some()
+            || matches!(
+                alternate.to_uppercase().as_str(),
+                "MCLR" | "XRES" | "RUN" | "NRESET"
+            )
+    })
+}
+
+/// Names read whole, not word by word
+fn whole(alternate: &str) -> Option<PinFunction> {
+    match alternate.to_uppercase().as_str() {
+        "CHIP_PU" => Some(PinFunction::Reset),
+        _ => None,
+    }
 }
 
 fn word_function(word: &str) -> Option<PinFunction> {
@@ -177,7 +212,10 @@ fn word_function(word: &str) -> Option<PinFunction> {
         return exact(base).filter(|f| {
             matches!(
                 f,
-                PinFunction::Enable | PinFunction::Interrupt | PinFunction::SpiCs
+                PinFunction::Enable
+                    | PinFunction::Interrupt
+                    | PinFunction::SpiCs
+                    | PinFunction::ClockOut
             )
         });
     }
@@ -193,7 +231,7 @@ fn exact(w: &str) -> Option<PinFunction> {
         "TMS" | "JTMS" => PinFunction::Tms,
         "TDI" | "JTDI" => PinFunction::Tdi,
         "TDO" | "JTDO" => PinFunction::Tdo,
-        "RST" | "RESET" | "NRST" | "NRESET" | "XRES" | "MCLR" => PinFunction::Reset,
+        "RST" | "RESET" | "NRST" | "NRESET" | "XRES" | "MCLR" | "RUN" => PinFunction::Reset,
         "TX" | "TXD" | "UTX" => PinFunction::UartTx,
         "RX" | "RXD" | "URX" => PinFunction::UartRx,
         "RTS" => PinFunction::UartRts,
@@ -208,6 +246,7 @@ fn exact(w: &str) -> Option<PinFunction> {
         "INT" | "IRQ" | "ALERT" => PinFunction::Interrupt,
         "PG" | "PGOOD" | "PWRGD" | "POK" => PinFunction::PowerGood,
         "FAULT" | "FLT" => PinFunction::Fault,
+        "MCO" | "CLKOUT" => PinFunction::ClockOut,
         _ => return None,
     })
 }
@@ -255,9 +294,26 @@ mod tests {
             ("ENABLE_LDO", &[Enable]),
             ("N", &[]),
             ("~", &[]),
+            ("RUN", &[Reset]),
+            ("CHIP_PU", &[Reset]),
+            ("PA8/RCC_MCO", &[ClockOut]),
+            ("MCO2", &[ClockOut]),
+            ("CLKOUT", &[ClockOut]),
         ];
         for (name, want) in table {
             assert_eq!(fns(name), *want, "{name}");
+        }
+    }
+
+    #[test]
+    fn active_low_names() {
+        for name in [
+            "~{RESET}", "RST#", "nRST", "NRST", "RESET_N", "PA0/NRST", "MCLR", "RUN", "CHIP_PU",
+        ] {
+            assert!(active_low(name), "{name}");
+        }
+        for name in ["RESET", "RST", "EN", "PA13", "~", "N"] {
+            assert!(!active_low(name), "{name}");
         }
     }
 

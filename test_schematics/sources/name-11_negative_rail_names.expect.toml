@@ -41,6 +41,21 @@ check = "DEC-1"
 subjects = ["net VAUX"]
 
 [[finding]]
+check = "IO-10"
+subjects = ["net /IN1", "pin U1.3"]
+also = ["IO-6"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /IN2", "pin U2.3"]
+also = ["IO-6"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /IN3", "pin U3.3"]
+also = ["IO-6"]
+
+[[finding]]
 check = "NAME-11"
 subjects = ["net 5V0_NEG", "pin U1.4"]
 

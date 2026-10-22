@@ -1,0 +1,78 @@
+# What better_erc finds on io-11_gate_pulls.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /GATE6", "pin Q6.1"]
+also = ["IO-6"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /GATE1", "part Q1"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /GATE6", "part Q6"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /GATE7", "part Q7"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.1"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD1", "pin Q1.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD2", "pin Q2.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD3", "pin Q3.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD5", "pin Q5.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD6", "pin Q6.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD7", "pin Q7.3"]

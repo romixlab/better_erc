@@ -13,6 +13,14 @@ check = "DEC-1"
 subjects = ["net +3V3"]
 
 [[finding]]
+check = "IO-11"
+subjects = ["net /QGATE", "part Q1"]
+
+[[finding]]
+check = "IO-15"
+subjects = ["net /SENSOR_INT", "pin U3.3"]
+
+[[finding]]
 check = "NAME-10"
 subjects = ["net /PMIC_IRQ", "pin U2.3"]
 
