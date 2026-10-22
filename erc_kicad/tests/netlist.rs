@@ -73,8 +73,11 @@ fn net_pins(b: &erc_model::Board, name: &str) -> Vec<String> {
     pins
 }
 
+/// The parts, each net with its `part.pin`s, every symbol pin with its type
+type Summary = (Vec<String>, Vec<(String, Vec<String>)>, Vec<String>);
+
 /// Nets as sets of `part.pin`, and every symbol pin's type: what must read the same from every KiCad version
-fn summary(b: &erc_model::Board) -> (Vec<String>, Vec<(String, Vec<String>)>, Vec<String>) {
+fn summary(b: &erc_model::Board) -> Summary {
     let mut parts: Vec<String> = b.parts.iter().map(|p| p.designator.clone()).collect();
     parts.sort();
     let mut nets: Vec<(String, Vec<String>)> = b
