@@ -1,0 +1,234 @@
+board conn-4_no_ground
+label / local CAN1_H at 22.38,37.62 net /CAN1_H
+label / local CAN1_H at 78,26.19 net /CAN1_H
+label / local CAN1_L at 22.38,35.08 net /CAN1_L
+label / local CAN1_L at 78,33.81 net /CAN1_L
+label / local CAN1_RX at 22.38,30 net /CAN1_RX
+label / local CAN1_TX at 22.38,22.38 net /CAN1_TX
+label / local CAN2_H at 118.38,37.62 net /CAN2_H
+label / local CAN2_H at 166.38,22.38 net /CAN2_H
+label / local CAN2_L at 118.38,35.08 net /CAN2_L
+label / local CAN2_L at 166.38,24.92 net /CAN2_L
+label / local CAN2_RX at 118.38,30 net /CAN2_RX
+label / local CAN2_TX at 118.38,22.38 net /CAN2_TX
+label / power +3V3 at 22.38,32.54 net +3V3
+label / power +3V3 at 118.38,32.54 net +3V3
+label / power +3V3 at 318,26.19 net +3V3
+label / power +5V at 22.38,27.46 net +5V
+label / power +5V at 118.38,27.46 net +5V
+label / power +5V at 270,26.19 net +5V
+label / power GND at 22.38,24.92 net GND
+label / power GND at 22.38,40.16 net GND
+label / power GND at 118.38,24.92 net GND
+label / power GND at 118.38,40.16 net GND
+label / power GND at 166.38,27.46 net GND
+label / power GND at 270,33.81 net GND
+label / power GND at 318,33.81 net GND
+net +3V3 class = Default @ sch conn-4_no_ground.kicad_sch note "effective net class"
+net +3V3 kind power
+net +5V class = Default @ sch conn-4_no_ground.kicad_sch note "effective net class"
+net +5V kind power
+net /CAN1_H class = Default @ sch conn-4_no_ground.kicad_sch note "effective net class"
+net /CAN1_H kind named
+net /CAN1_L class = Default @ sch conn-4_no_ground.kicad_sch note "effective net class"
+net /CAN1_L kind named
+net /CAN1_RX class = Default @ sch conn-4_no_ground.kicad_sch note "effective net class"
+net /CAN1_RX kind named
+net /CAN1_TX class = Default @ sch conn-4_no_ground.kicad_sch note "effective net class"
+net /CAN1_TX kind named
+net /CAN2_H class = Default @ sch conn-4_no_ground.kicad_sch note "effective net class"
+net /CAN2_H kind named
+net /CAN2_L class = Default @ sch conn-4_no_ground.kicad_sch note "effective net class"
+net /CAN2_L kind named
+net /CAN2_RX class = Default @ sch conn-4_no_ground.kicad_sch note "effective net class"
+net /CAN2_RX kind named
+net /CAN2_TX class = Default @ sch conn-4_no_ground.kicad_sch note "effective net class"
+net /CAN2_TX kind named
+net GND class = Default @ sch conn-4_no_ground.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(J3-Pin_1-Pad1) class = Default @ sch conn-4_no_ground.kicad_sch note "effective net class"
+net unconnected-(J3-Pin_1-Pad1) kind unconnected
+net unconnected-(J3-Pin_2-Pad2) class = Default @ sch conn-4_no_ground.kicad_sch note "effective net class"
+net unconnected-(J3-Pin_2-Pad2) kind unconnected
+part C1 field Value = 100n @ sch conn-4_no_ground.kicad_sch
+part C1 flag dnp = no @ sch conn-4_no_ground.kicad_sch
+part C1 flag exclude_from_sim = no @ sch conn-4_no_ground.kicad_sch
+part C1 flag in_bom = yes @ sch conn-4_no_ground.kicad_sch
+part C1 flag on_board = yes @ sch conn-4_no_ground.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 9e0cc973-0000-4000-8000-000000000058 line 226 at 270,30 rot 0
+part C1 value = text 100n @ sch conn-4_no_ground.kicad_sch note "from the Value field"
+part C2 field Value = 100n @ sch conn-4_no_ground.kicad_sch
+part C2 flag dnp = no @ sch conn-4_no_ground.kicad_sch
+part C2 flag exclude_from_sim = no @ sch conn-4_no_ground.kicad_sch
+part C2 flag in_bom = yes @ sch conn-4_no_ground.kicad_sch
+part C2 flag on_board = yes @ sch conn-4_no_ground.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid 9e0cc973-0000-4000-8000-000000000065 line 248 at 318,30 rot 0
+part C2 value = text 100n @ sch conn-4_no_ground.kicad_sch note "from the Value field"
+part J1 field Value = Screw_Terminal_01x02 @ sch conn-4_no_ground.kicad_sch
+part J1 flag dnp = no @ sch conn-4_no_ground.kicad_sch
+part J1 flag exclude_from_sim = no @ sch conn-4_no_ground.kicad_sch
+part J1 flag in_bom = yes @ sch conn-4_no_ground.kicad_sch
+part J1 flag on_board = yes @ sch conn-4_no_ground.kicad_sch
+part J1 lib Connector:Screw_Terminal_01x02 sheet / symbol Connector:Screw_Terminal_01x02
+part J1 unit 1 sheet / uuid 9e0cc973-0000-4000-8000-000000000021 line 144 at 78,30 rot 0
+part J1 value = text Screw_Terminal_01x02 @ sch conn-4_no_ground.kicad_sch note "from the Value field"
+part J2 field Value = Screw_Terminal_01x03 @ sch conn-4_no_ground.kicad_sch
+part J2 flag dnp = no @ sch conn-4_no_ground.kicad_sch
+part J2 flag exclude_from_sim = no @ sch conn-4_no_ground.kicad_sch
+part J2 flag in_bom = yes @ sch conn-4_no_ground.kicad_sch
+part J2 flag on_board = yes @ sch conn-4_no_ground.kicad_sch
+part J2 lib Connector:Screw_Terminal_01x03 sheet / symbol Connector:Screw_Terminal_01x03
+part J2 unit 1 sheet / uuid 9e0cc973-0000-4000-8000-000000000047 line 200 at 174,30 rot 0
+part J2 value = text Screw_Terminal_01x03 @ sch conn-4_no_ground.kicad_sch note "from the Value field"
+part J3 field Value = Conn_01x02 @ sch conn-4_no_ground.kicad_sch
+part J3 flag dnp = no @ sch conn-4_no_ground.kicad_sch
+part J3 flag exclude_from_sim = no @ sch conn-4_no_ground.kicad_sch
+part J3 flag in_bom = yes @ sch conn-4_no_ground.kicad_sch
+part J3 flag on_board = yes @ sch conn-4_no_ground.kicad_sch
+part J3 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J3 unit 1 sheet / uuid 9e0cc973-0000-4000-8000-000000000055 line 218 at 222,30 rot 0
+part J3 value = text Conn_01x02 @ sch conn-4_no_ground.kicad_sch note "from the Value field"
+part U1 field Value = TCAN1042 @ sch conn-4_no_ground.kicad_sch
+part U1 flag dnp = no @ sch conn-4_no_ground.kicad_sch
+part U1 flag exclude_from_sim = no @ sch conn-4_no_ground.kicad_sch
+part U1 flag in_bom = yes @ sch conn-4_no_ground.kicad_sch
+part U1 flag on_board = yes @ sch conn-4_no_ground.kicad_sch
+part U1 lib Interface_CAN_LIN:TCAN1042 sheet / symbol Interface_CAN_LIN:TCAN1042
+part U1 unit 1 sheet / uuid 9e0cc973-0000-4000-8000-000000000000 line 98 at 30,30 rot 0
+part U1 value = text TCAN1042 @ sch conn-4_no_ground.kicad_sch note "from the Value field"
+part U2 field Value = TCAN1042 @ sch conn-4_no_ground.kicad_sch
+part U2 flag dnp = no @ sch conn-4_no_ground.kicad_sch
+part U2 flag exclude_from_sim = no @ sch conn-4_no_ground.kicad_sch
+part U2 flag in_bom = yes @ sch conn-4_no_ground.kicad_sch
+part U2 flag on_board = yes @ sch conn-4_no_ground.kicad_sch
+part U2 lib Interface_CAN_LIN:TCAN1042 sheet / symbol Interface_CAN_LIN:TCAN1042
+part U2 unit 1 sheet / uuid 9e0cc973-0000-4000-8000-000000000026 line 154 at 126,30 rot 0
+part U2 value = text TCAN1042 @ sch conn-4_no_ground.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net +5V
+pin C1 1 type = passive @ sch conn-4_no_ground.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch conn-4_no_ground.kicad_sch
+pin C2 1 name "" unit 1 net +3V3
+pin C2 1 type = passive @ sch conn-4_no_ground.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch conn-4_no_ground.kicad_sch
+pin J1 1 name Pin_1 unit 1 net /CAN1_H
+pin J1 1 type = passive @ sch conn-4_no_ground.kicad_sch
+pin J1 2 name Pin_2 unit 1 net /CAN1_L
+pin J1 2 type = passive @ sch conn-4_no_ground.kicad_sch
+pin J2 1 name Pin_1 unit 1 net /CAN2_H
+pin J2 1 type = passive @ sch conn-4_no_ground.kicad_sch
+pin J2 2 name Pin_2 unit 1 net /CAN2_L
+pin J2 2 type = passive @ sch conn-4_no_ground.kicad_sch
+pin J2 3 name Pin_3 unit 1 net GND
+pin J2 3 type = passive @ sch conn-4_no_ground.kicad_sch
+pin J3 1 name Pin_1 unit 1 net unconnected-(J3-Pin_1-Pad1)
+pin J3 1 type = passive @ sch conn-4_no_ground.kicad_sch
+pin J3 2 name Pin_2 unit 1 net unconnected-(J3-Pin_2-Pad2)
+pin J3 2 type = passive @ sch conn-4_no_ground.kicad_sch
+pin U1 1 name TXD unit 1 net /CAN1_TX
+pin U1 1 type = input @ sch conn-4_no_ground.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch conn-4_no_ground.kicad_sch
+pin U1 3 name VCC unit 1 net +5V
+pin U1 3 type = power_in @ sch conn-4_no_ground.kicad_sch
+pin U1 4 name RXD unit 1 net /CAN1_RX
+pin U1 4 type = output @ sch conn-4_no_ground.kicad_sch
+pin U1 5 name VIO unit 1 net +3V3
+pin U1 5 type = power_in @ sch conn-4_no_ground.kicad_sch
+pin U1 6 name CANL unit 1 net /CAN1_L
+pin U1 6 type = bidirectional @ sch conn-4_no_ground.kicad_sch
+pin U1 7 name CANH unit 1 net /CAN1_H
+pin U1 7 type = bidirectional @ sch conn-4_no_ground.kicad_sch
+pin U1 8 name STB unit 1 net GND
+pin U1 8 type = input @ sch conn-4_no_ground.kicad_sch
+pin U2 1 name TXD unit 1 net /CAN2_TX
+pin U2 1 type = input @ sch conn-4_no_ground.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch conn-4_no_ground.kicad_sch
+pin U2 3 name VCC unit 1 net +5V
+pin U2 3 type = power_in @ sch conn-4_no_ground.kicad_sch
+pin U2 4 name RXD unit 1 net /CAN2_RX
+pin U2 4 type = output @ sch conn-4_no_ground.kicad_sch
+pin U2 5 name VIO unit 1 net +3V3
+pin U2 5 type = power_in @ sch conn-4_no_ground.kicad_sch
+pin U2 6 name CANL unit 1 net /CAN2_L
+pin U2 6 type = bidirectional @ sch conn-4_no_ground.kicad_sch
+pin U2 7 name CANH unit 1 net /CAN2_H
+pin U2 7 type = bidirectional @ sch conn-4_no_ground.kicad_sch
+pin U2 8 name STB unit 1 net GND
+pin U2 8 type = input @ sch conn-4_no_ground.kicad_sch
+sheet / name "" file conn-4_no_ground.kicad_sch uuid /
+source file conn-4_no_ground.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:Screw_Terminal_01x02 description "Generic screw terminal, single row"
+symbol Connector:Screw_Terminal_01x02 field Description "Generic screw terminal, single row"
+symbol Connector:Screw_Terminal_01x02 field Reference J
+symbol Connector:Screw_Terminal_01x02 field Value Screw_Terminal_01x02
+symbol Connector:Screw_Terminal_01x02 hash 8d7f0f4e77ca8972
+symbol Connector:Screw_Terminal_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector:Screw_Terminal_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector:Screw_Terminal_01x02 units 1
+symbol Connector:Screw_Terminal_01x03 description "Generic screw terminal, single row"
+symbol Connector:Screw_Terminal_01x03 field Description "Generic screw terminal, single row"
+symbol Connector:Screw_Terminal_01x03 field Reference J
+symbol Connector:Screw_Terminal_01x03 field Value Screw_Terminal_01x03
+symbol Connector:Screw_Terminal_01x03 hash e60a7b9e1e72e58e
+symbol Connector:Screw_Terminal_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector:Screw_Terminal_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector:Screw_Terminal_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector:Screw_Terminal_01x03 units 1
+symbol Connector_Generic:Conn_01x02 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 5d37b768c270626e
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Interface_CAN_LIN:TCAN1042 description "CAN transceiver"
+symbol Interface_CAN_LIN:TCAN1042 field Description "CAN transceiver"
+symbol Interface_CAN_LIN:TCAN1042 field Reference U
+symbol Interface_CAN_LIN:TCAN1042 field Value TCAN1042
+symbol Interface_CAN_LIN:TCAN1042 hash 20938e730be3ae86
+symbol Interface_CAN_LIN:TCAN1042 pin 1 unit 1 body 1 name TXD type input style line
+symbol Interface_CAN_LIN:TCAN1042 pin 2 unit 1 body 1 name GND type power_in style line
+symbol Interface_CAN_LIN:TCAN1042 pin 3 unit 1 body 1 name VCC type power_in style line
+symbol Interface_CAN_LIN:TCAN1042 pin 4 unit 1 body 1 name RXD type output style line
+symbol Interface_CAN_LIN:TCAN1042 pin 5 unit 1 body 1 name VIO type power_in style line
+symbol Interface_CAN_LIN:TCAN1042 pin 6 unit 1 body 1 name CANL type bidirectional style line
+symbol Interface_CAN_LIN:TCAN1042 pin 7 unit 1 body 1 name CANH type bidirectional style line
+symbol Interface_CAN_LIN:TCAN1042 pin 8 unit 1 body 1 name STB type input style line
+symbol Interface_CAN_LIN:TCAN1042 units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

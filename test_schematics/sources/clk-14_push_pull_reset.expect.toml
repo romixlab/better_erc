@@ -13,6 +13,14 @@ check = "CLK-14"
 subjects = ["net /NRST", "pin U2.1"]
 
 [[finding]]
+check = "CONN-2"
+subjects = ["net /NRST", "pin J1.1", "pin U1.3"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /NRST3", "pin J2.1", "pin U3.3"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1", "part U3"]
 

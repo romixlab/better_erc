@@ -1,0 +1,65 @@
+# What better_erc finds on conn-17_look_alike_pinouts.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "CONN-17"
+subjects = ["part J5", "part J6"]
+
+[[finding]]
+check = "CONN-17"
+subjects = ["part J6", "part J9"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /GPS_RX", "pin J6.3", "pin U1.6"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /GPS_TX", "pin J6.2", "pin U1.5"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SCL", "pin J5.4", "pin U1.4"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SCL2", "pin J9.4", "pin U1.10"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SDA", "pin J5.3", "pin U1.3"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SDA2", "pin J9.3", "pin U1.9"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SIG7", "pin J7.3", "pin U1.7"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SIG8", "pin J8.3", "pin U1.8"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

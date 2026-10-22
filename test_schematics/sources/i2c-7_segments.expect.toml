@@ -57,6 +57,14 @@ check = "CLK-7"
 subjects = ["net unconnected-(U401-NRST-Pad4)", "pin U401.4"]
 
 [[finding]]
+check = "CONN-2"
+subjects = ["net /SCL2_3V3", "pin J401.2", "pin U401.19"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SDA2_3V3", "pin J401.1", "pin U401.20"]
+
+[[finding]]
 check = "DBG-18"
 subjects = ["net /SCL1_1V2", "net /SDA1_1V2"]
 

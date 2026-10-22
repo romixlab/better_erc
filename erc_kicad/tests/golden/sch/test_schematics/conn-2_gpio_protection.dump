@@ -1,0 +1,209 @@
+board conn-2_gpio_protection
+label / local IO_A at 22.38,27.46 net /IO_A
+label / local IO_A at 70.38,24.92 net /IO_A
+label / local IO_B at 22.38,30 net /IO_B
+label / local IO_B at 126,33.81 net /IO_B
+label / local IO_B_CONN at 70.38,27.46 net /IO_B_CONN
+label / local IO_B_CONN at 126,26.19 net /IO_B_CONN
+label / local IO_C at 22.38,32.54 net /IO_C
+label / local IO_C at 70.38,30 net /IO_C
+label / local IO_C at 174,26.19 net /IO_C
+label / local USB_DM at 22.38,37.62 net /USB_DM
+label / local USB_DM at 214.38,24.92 net /USB_DM
+label / local USB_DP at 22.38,40.16 net /USB_DP
+label / local USB_DP at 214.38,27.46 net /USB_DP
+label / power +3V3 at 22.38,22.38 net +3V3
+label / power +3V3 at 70.38,32.54 net +3V3
+label / power GND at 22.38,24.92 net GND
+label / power GND at 70.38,22.38 net GND
+label / power GND at 174,33.81 net GND
+label / power GND at 214.38,32.54 net GND
+label / power GND at 214.38,35.08 net GND
+label / power VBUS at 214.38,22.38 net VBUS
+nc / at 214.38,30 pin J2 4
+net +3V3 class = Default @ sch conn-2_gpio_protection.kicad_sch note "effective net class"
+net +3V3 kind power
+net /IO_A class = Default @ sch conn-2_gpio_protection.kicad_sch note "effective net class"
+net /IO_A kind named
+net /IO_B class = Default @ sch conn-2_gpio_protection.kicad_sch note "effective net class"
+net /IO_B kind named
+net /IO_B_CONN class = Default @ sch conn-2_gpio_protection.kicad_sch note "effective net class"
+net /IO_B_CONN kind named
+net /IO_C class = Default @ sch conn-2_gpio_protection.kicad_sch note "effective net class"
+net /IO_C kind named
+net /USB_DM class = Default @ sch conn-2_gpio_protection.kicad_sch note "effective net class"
+net /USB_DM kind named
+net /USB_DP class = Default @ sch conn-2_gpio_protection.kicad_sch note "effective net class"
+net /USB_DP kind named
+net GND class = Default @ sch conn-2_gpio_protection.kicad_sch note "effective net class"
+net GND kind power
+net VBUS class = Default @ sch conn-2_gpio_protection.kicad_sch note "effective net class"
+net VBUS kind power
+net unconnected-(J2-ID-Pad4) class = Default @ sch conn-2_gpio_protection.kicad_sch note "effective net class"
+net unconnected-(J2-ID-Pad4) kind unconnected
+net unconnected-(U1-PA3-Pad6) class = Default @ sch conn-2_gpio_protection.kicad_sch note "effective net class"
+net unconnected-(U1-PA3-Pad6) kind unconnected
+part D1 field Value = SMAJ5.0CA @ sch conn-2_gpio_protection.kicad_sch
+part D1 flag dnp = no @ sch conn-2_gpio_protection.kicad_sch
+part D1 flag exclude_from_sim = no @ sch conn-2_gpio_protection.kicad_sch
+part D1 flag in_bom = yes @ sch conn-2_gpio_protection.kicad_sch
+part D1 flag on_board = yes @ sch conn-2_gpio_protection.kicad_sch
+part D1 lib Device:D_TVS sheet / symbol Device:D_TVS
+part D1 unit 1 sheet / uuid 76197abe-0000-4000-8000-000000000036 line 175 at 174,30 rot 0
+part D1 value = text SMAJ5.0CA @ sch conn-2_gpio_protection.kicad_sch note "from the Value field"
+part J1 field Value = Conn_01x05 @ sch conn-2_gpio_protection.kicad_sch
+part J1 flag dnp = no @ sch conn-2_gpio_protection.kicad_sch
+part J1 flag exclude_from_sim = no @ sch conn-2_gpio_protection.kicad_sch
+part J1 flag in_bom = yes @ sch conn-2_gpio_protection.kicad_sch
+part J1 flag on_board = yes @ sch conn-2_gpio_protection.kicad_sch
+part J1 lib Connector_Generic:Conn_01x05 sheet / symbol Connector_Generic:Conn_01x05
+part J1 unit 1 sheet / uuid 76197abe-0000-4000-8000-000000000018 line 137 at 78,30 rot 0
+part J1 value = text Conn_01x05 @ sch conn-2_gpio_protection.kicad_sch note "from the Value field"
+part J2 field Value = USB_B_Micro @ sch conn-2_gpio_protection.kicad_sch
+part J2 flag dnp = no @ sch conn-2_gpio_protection.kicad_sch
+part J2 flag exclude_from_sim = no @ sch conn-2_gpio_protection.kicad_sch
+part J2 flag in_bom = yes @ sch conn-2_gpio_protection.kicad_sch
+part J2 flag on_board = yes @ sch conn-2_gpio_protection.kicad_sch
+part J2 lib Connector:USB_B_Micro sheet / symbol Connector:USB_B_Micro
+part J2 unit 1 sheet / uuid 76197abe-0000-4000-8000-000000000042 line 191 at 222,30 rot 0
+part J2 value = text USB_B_Micro @ sch conn-2_gpio_protection.kicad_sch note "from the Value field"
+part R1 field Value = 1k @ sch conn-2_gpio_protection.kicad_sch
+part R1 flag dnp = no @ sch conn-2_gpio_protection.kicad_sch
+part R1 flag exclude_from_sim = no @ sch conn-2_gpio_protection.kicad_sch
+part R1 flag in_bom = yes @ sch conn-2_gpio_protection.kicad_sch
+part R1 flag on_board = yes @ sch conn-2_gpio_protection.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 76197abe-0000-4000-8000-000000000031 line 165 at 126,30 rot 0
+part R1 value = text 1k @ sch conn-2_gpio_protection.kicad_sch note "from the Value field"
+part U1 field Value = MCU_GPIO @ sch conn-2_gpio_protection.kicad_sch
+part U1 flag dnp = no @ sch conn-2_gpio_protection.kicad_sch
+part U1 flag exclude_from_sim = no @ sch conn-2_gpio_protection.kicad_sch
+part U1 flag in_bom = yes @ sch conn-2_gpio_protection.kicad_sch
+part U1 flag on_board = yes @ sch conn-2_gpio_protection.kicad_sch
+part U1 lib MCU_Fixture:MCU_GPIO sheet / symbol MCU_Fixture:MCU_GPIO
+part U1 unit 1 sheet / uuid 76197abe-0000-4000-8000-000000000000 line 104 at 30,30 rot 0
+part U1 value = text MCU_GPIO @ sch conn-2_gpio_protection.kicad_sch note "from the Value field"
+pin D1 1 name A1 unit 1 net /IO_C
+pin D1 1 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin D1 2 name A2 unit 1 net GND
+pin D1 2 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin J1 1 name Pin_1 unit 1 net GND
+pin J1 1 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin J1 2 name Pin_2 unit 1 net /IO_A
+pin J1 2 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin J1 3 name Pin_3 unit 1 net /IO_B_CONN
+pin J1 3 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin J1 4 name Pin_4 unit 1 net /IO_C
+pin J1 4 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin J1 5 name Pin_5 unit 1 net +3V3
+pin J1 5 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin J2 1 name VBUS unit 1 net VBUS
+pin J2 1 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin J2 2 name D- unit 1 net /USB_DM
+pin J2 2 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin J2 3 name D+ unit 1 net /USB_DP
+pin J2 3 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin J2 4 name ID unit 1 nc net unconnected-(J2-ID-Pad4)
+pin J2 4 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin J2 5 name GND unit 1 net GND
+pin J2 5 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin J2 6 name Shield unit 1 net GND
+pin J2 6 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin R1 1 name "" unit 1 net /IO_B_CONN
+pin R1 1 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin R1 2 name "" unit 1 net /IO_B
+pin R1 2 type = passive @ sch conn-2_gpio_protection.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch conn-2_gpio_protection.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch conn-2_gpio_protection.kicad_sch
+pin U1 3 name PA0 unit 1 net /IO_A
+pin U1 3 type = bidirectional @ sch conn-2_gpio_protection.kicad_sch
+pin U1 4 name PA1 unit 1 net /IO_B
+pin U1 4 type = bidirectional @ sch conn-2_gpio_protection.kicad_sch
+pin U1 5 name PA2 unit 1 net /IO_C
+pin U1 5 type = bidirectional @ sch conn-2_gpio_protection.kicad_sch
+pin U1 6 name PA3 unit 1 net unconnected-(U1-PA3-Pad6)
+pin U1 6 type = bidirectional @ sch conn-2_gpio_protection.kicad_sch
+pin U1 7 name PA11/USB_DM unit 1 net /USB_DM
+pin U1 7 type = bidirectional @ sch conn-2_gpio_protection.kicad_sch
+pin U1 8 name PA12/USB_DP unit 1 net /USB_DP
+pin U1 8 type = bidirectional @ sch conn-2_gpio_protection.kicad_sch
+sheet / name "" file conn-2_gpio_protection.kicad_sch uuid /
+source file conn-2_gpio_protection.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:USB_B_Micro description "USB Micro Type B connector"
+symbol Connector:USB_B_Micro field Description "USB Micro Type B connector"
+symbol Connector:USB_B_Micro field Reference J
+symbol Connector:USB_B_Micro field Value USB_B_Micro
+symbol Connector:USB_B_Micro hash fe0ded7e2eadfaf9
+symbol Connector:USB_B_Micro pin 1 unit 1 body 1 name VBUS type passive style line
+symbol Connector:USB_B_Micro pin 2 unit 1 body 1 name D- type passive style line
+symbol Connector:USB_B_Micro pin 3 unit 1 body 1 name D+ type passive style line
+symbol Connector:USB_B_Micro pin 4 unit 1 body 1 name ID type passive style line
+symbol Connector:USB_B_Micro pin 5 unit 1 body 1 name GND type passive style line
+symbol Connector:USB_B_Micro pin 6 unit 1 body 1 name Shield type passive style line
+symbol Connector:USB_B_Micro units 1
+symbol Connector_Generic:Conn_01x05 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x05 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x05 field Reference J
+symbol Connector_Generic:Conn_01x05 field Value Conn_01x05
+symbol Connector_Generic:Conn_01x05 hash 0a4b7930abe3ac46
+symbol Connector_Generic:Conn_01x05 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x05 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x05 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x05 pin 4 unit 1 body 1 name Pin_4 type passive style line
+symbol Connector_Generic:Conn_01x05 pin 5 unit 1 body 1 name Pin_5 type passive style line
+symbol Connector_Generic:Conn_01x05 units 1
+symbol Device:D_TVS description "Bidirectional transient-voltage-suppression diode"
+symbol Device:D_TVS field Description "Bidirectional transient-voltage-suppression diode"
+symbol Device:D_TVS field Reference D
+symbol Device:D_TVS field Value D_TVS
+symbol Device:D_TVS hash d86434bc9ce9380c
+symbol Device:D_TVS pin 1 unit 1 body 1 name A1 type passive style line
+symbol Device:D_TVS pin 2 unit 1 body 1 name A2 type passive style line
+symbol Device:D_TVS units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Fixture:MCU_GPIO description Microcontroller
+symbol MCU_Fixture:MCU_GPIO field Description Microcontroller
+symbol MCU_Fixture:MCU_GPIO field Reference U
+symbol MCU_Fixture:MCU_GPIO field Value MCU_GPIO
+symbol MCU_Fixture:MCU_GPIO hash 84a211b3a8a9021c
+symbol MCU_Fixture:MCU_GPIO pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_GPIO pin 2 unit 1 body 1 name GND type power_in style line
+symbol MCU_Fixture:MCU_GPIO pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Fixture:MCU_GPIO pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Fixture:MCU_GPIO pin 5 unit 1 body 1 name PA2 type bidirectional style line
+symbol MCU_Fixture:MCU_GPIO pin 6 unit 1 body 1 name PA3 type bidirectional style line
+symbol MCU_Fixture:MCU_GPIO pin 7 unit 1 body 1 name PA11/USB_DM type bidirectional style line
+symbol MCU_Fixture:MCU_GPIO pin 8 unit 1 body 1 name PA12/USB_DP type bidirectional style line
+symbol MCU_Fixture:MCU_GPIO units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global
+symbol power:VBUS description "Power symbol VBUS"
+symbol power:VBUS field Description "Power symbol VBUS"
+symbol power:VBUS field Reference "#PWR"
+symbol power:VBUS field Value VBUS
+symbol power:VBUS hash 296adfea007b1a14
+symbol power:VBUS pin 1 unit 1 body 1 name VBUS type power_in style line
+symbol power:VBUS units 1 power global

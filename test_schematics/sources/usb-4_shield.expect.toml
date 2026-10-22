@@ -1,6 +1,10 @@
 # What better_erc finds on usb-4_shield.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "CONN-16"
+subjects = ["part J3", "pin J3.6"]
+
+[[finding]]
 check = "DBG-3"
 subjects = ["part U1"]
 

@@ -1,0 +1,85 @@
+# What better_erc finds on conn-8_micro_hdmi_pinout.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "CONN-8"
+subjects = ["net +5V", "net /HPD1", "net /TMDS1_D2+", "part J1"]
+
+[[finding]]
+check = "CONN-8"
+subjects = ["net +5V", "net /HPD2", "net /TMDS2_D2+", "part J2"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-10"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U2"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U3"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U4"]
+
+[[finding]]
+check = "I2C-1"
+subjects = ["net /DDC1_SCL", "net /DDC1_SDA"]
+
+[[finding]]
+check = "I2C-1"
+subjects = ["net /DDC2_SCL", "net /DDC2_SDA"]
+
+[[finding]]
+check = "I2C-1"
+subjects = ["net /DDC3_SCL", "net /DDC3_SDA"]
+
+[[finding]]
+check = "I2C-1"
+subjects = ["net /DDC4_SCL", "net /DDC4_SDA"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /HPD1", "pin U1.5"]
+also = ["IO-6"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /HPD2", "pin U2.5"]
+also = ["IO-6"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /HPD3", "pin U3.5"]
+also = ["IO-6"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /HPD4", "pin U4.5"]
+also = ["IO-6"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-14"
+subjects = ["net /DDC1_SDA", "part J1", "pin J1.16"]

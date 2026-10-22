@@ -27,6 +27,7 @@ pub mod report;
 mod ana;
 mod bom;
 mod clk;
+mod conn;
 mod dbg;
 mod dec;
 mod drv;

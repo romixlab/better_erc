@@ -438,6 +438,19 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   count as joined) · `usb/usb_11.rs`, `usb-11_one_orientation`
 - ✅ `USB-16` Type-C receptacle with VBUS or GND contacts connected to nothing, on several nets, or GND on no ground ·
   `usb/usb_16.rs`, `usb-16_vbus_gnd_pins`
+- ✅ `CONN-2` Connector pin on the same net as a logic pin of an MCU, SoC, FPGA or logic IC, nothing in series;
+  differential pairs, USB data, multi-gigabit and MIPI lanes (by net, pin or net class name) left out ·
+  `conn/conn_2.rs`, `conn-2_gpio_protection`
+- ✅ `CONN-4` Fitted connector with connected pins and none on a ground · `conn/conn_4.rs`, `conn-4_no_ground`
+- ✅ `CONN-8` Micro HDMI (type D by symbol or footprint) with a TMDS line on pin 1, HPD on 19 or a rail on 18: the
+  type A pinout · `conn/conn_8.rs`, `conn-8_micro_hdmi_pinout`
+- ✅ `CONN-10` Connector with at least 10 signal pins (`min_signals`) and more than 6 per ground
+  (`max_signals_per_ground`), or a signal pin more than 8 pins from the nearest ground (`max_distance`) ·
+  `conn/conn_10.rs`, `conn-10_few_grounds`
+- ✅ `CONN-16` Connector shell, shield or mounting pins connected to nothing (a no-connect flag included) or only to
+  each other · `conn/conn_16.rs`, `conn-16_floating_shell`
+- ✅ `CONN-17` Connectors of one footprint (else part number) with a pin on a rail on one and on a ground or signal on
+  the other · `conn/conn_17.rs`, `conn-17_look_alike_pinouts`
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`
 - ✅ `DIAG-2` Every catalogue check reported as ran, not run (the missing need, why, and what would enable it) or
   planned; each check declares its needs, availability is worked out per board before the run from the analyses

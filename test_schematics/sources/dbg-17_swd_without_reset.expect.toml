@@ -17,6 +17,30 @@ check = "CLK-7"
 subjects = ["net /NRST2", "pin U2.5"]
 
 [[finding]]
+check = "CONN-2"
+subjects = ["net /NRST2", "pin J2.5", "pin U2.5"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SWCLK", "pin J1.3", "pin U1.4"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SWCLK2", "pin J2.3", "pin U2.4"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SWDIO", "pin J1.2", "pin U1.3"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SWDIO2", "pin J2.2", "pin U2.3"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /SWO2", "pin J2.4", "pin U2.6"]
+
+[[finding]]
 check = "DBG-17"
 subjects = ["part J1", "part U1", "pin U1.5", "pin U1.6"]
 
