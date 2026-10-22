@@ -70,3 +70,88 @@ fn multiple_pull_ups() {
     assert_eq!(bus.redundant_pull_ups, all);
     assert!(net_parts(&b, &[pu.rail]).contains(&pu.scl));
 }
+
+/// The BSS138 pairs with their gates, the ferrite ties to the connector, the pull-ups per segment, and a fitted
+/// pull-up made DNP
+#[test]
+fn discrete_translator() {
+    use erc_analysis::i2c::Node;
+    let b = board("i2c-18_discrete_translator");
+    let classes = PartClasses::of(&b);
+    let buses = I2cBuses::of(&b, &classes);
+    let direct = names(&buses, &buses.direct_segments);
+    assert_eq!(
+        direct,
+        [
+            set(&["/I2C_1V8"]),
+            set(&["/I2C_3V3"]),
+            set(&["/I2C_5V", "/I2C_CONN"]),
+        ]
+    );
+    let same = names(&buses, &buses.same_bus_segments);
+    assert_eq!(
+        same,
+        [set(&["/I2C_1V8", "/I2C_3V3", "/I2C_5V", "/I2C_CONN"])]
+    );
+    let pulled: Vec<(String, usize)> = buses
+        .direct_segments
+        .iter()
+        .map(|s| {
+            (
+                buses
+                    .segment_names(s)
+                    .into_iter()
+                    .collect::<Vec<_>>()
+                    .join(" "),
+                buses.pull_ups(s).len(),
+            )
+        })
+        .collect();
+    assert_eq!(
+        pulled,
+        [
+            ("/I2C_1V8".to_string(), 0),
+            ("/I2C_3V3".to_string(), 1),
+            ("/I2C_5V /I2C_CONN".to_string(), 1)
+        ]
+    );
+    let bus = buses.by_name("/I2C_3V3").unwrap();
+    let mut gates: Vec<(String, String, String)> = bus
+        .nodes
+        .iter()
+        .filter_map(|n| match *n {
+            Node::DiscreteTranslator {
+                scl_fet,
+                other_side,
+                scl_gate,
+                sda_gate,
+                ..
+            } => {
+                assert_eq!(scl_gate, sda_gate);
+                Some((
+                    b.part(scl_fet).designator.clone(),
+                    buses.buses[other_side].name.clone(),
+                    b.net(scl_gate?).name.clone(),
+                ))
+            }
+            _ => None,
+        })
+        .collect();
+    gates.sort();
+    assert_eq!(
+        gates,
+        [
+            ("Q1".to_string(), "/I2C_5V".to_string(), "+3V3".to_string()),
+            ("Q3".to_string(), "/I2C_1V8".to_string(), "+1V8".to_string()),
+        ]
+    );
+    // Without R1 fitted the 3.3 V segment has no pull-up pair
+    let mut b2 = b.clone();
+    let r1 = b2.part_by_designator("R1").unwrap();
+    b2.parts[r1.index()].flags.dnp = erc_model::Facts::one(erc_model::Fact::new(
+        true,
+        erc_model::Provenance::Manual { who: "test".into() },
+    ));
+    let buses = I2cBuses::of(&b2, &PartClasses::of(&b2));
+    assert!(buses.by_name("/I2C_3V3").unwrap().pull_up.is_none());
+}
