@@ -56,8 +56,13 @@ fn scan_a_directory() {
         .filter(|c| c.confidence == Confidence::Yes)
         .map(|c| (c.main, c.importer))
         .collect();
-    assert_eq!(found.len(), 10, "{found:#?}");
+    assert_eq!(found.len(), 12, "{found:#?}");
     assert!(found.contains(&("smart_pdf.pdf".into(), "pdf")));
+    assert!(found.contains(&("smart_pdf_owner_only.pdf".into(), "pdf")));
+    assert!(
+        !found.contains(&("smart_pdf_user_password.pdf".into(), "pdf")),
+        "a file it cannot open is no more than a Maybe"
+    );
     assert!(found.contains(&("netlist_orcad_pstchip.dat".into(), "orcad")));
     assert!(found.contains(&("pnp_allegro.csv".into(), "pnp")));
     // EDIF found beside the WireList in a real directory
