@@ -106,7 +106,9 @@ pub(crate) fn parse(text: &str, file: &str, notes: &mut Notes) -> Result<WireLis
 
 /// The column texts of a line, trimmed
 fn texts(p: Pair<Rule>) -> Vec<String> {
-    p.into_inner().map(|c| c.as_str().trim().to_string()).collect()
+    p.into_inner()
+        .map(|c| c.as_str().trim().to_string())
+        .collect()
 }
 
 fn bad_line(notes: &mut Notes, file: &str, at: &str, p: &Pair<Rule>) {

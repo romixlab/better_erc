@@ -43,6 +43,8 @@ pub struct Candidate {
 impl Default for Registry {
     /// Every importer this build has
     fn default() -> Registry {
+        // Without any importer feature nothing is registered
+        #[allow(unused_mut)]
         let mut r = Registry::empty();
         #[cfg(feature = "kicad")]
         for i in erc_kicad::importers() {

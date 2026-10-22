@@ -21,9 +21,13 @@ pub(crate) fn decode(bytes: &[u8]) -> String {
     detector.guess(None, true).decode(bytes).0.into_owned()
 }
 
+#[cfg_attr(not(any(feature = "altium", feature = "orcad")), allow(dead_code))]
 /// The first bytes of a file, for sniffing, without the byte order mark and leading white space
 pub(crate) fn head(src: &Source, path: &str, n: usize) -> Option<Vec<u8>> {
     let b = src.files.read(path)?;
-    let b = b.strip_prefix(b"\xEF\xBB\xBF").unwrap_or(&b).trim_ascii_start();
+    let b = b
+        .strip_prefix(b"\xEF\xBB\xBF")
+        .unwrap_or(&b)
+        .trim_ascii_start();
     Some(b[..b.len().min(n)].to_vec())
 }

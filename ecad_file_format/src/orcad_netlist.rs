@@ -350,8 +350,10 @@ mod tests {
 
     #[test]
     fn can_load_orcad_netlist() {
-        let netlist =
-            load_orcad_netlist(&PathBuf::from("../erc_import/tests/fixtures/netlist_orcad_pstxnet.dat")).unwrap();
+        let netlist = load_orcad_netlist(&PathBuf::from(
+            "../erc_import/tests/fixtures/netlist_orcad_pstxnet.dat",
+        ))
+        .unwrap();
         // println!("{:#?}", netlist);
         assert_eq!(netlist.nets.len(), 3);
         assert_eq!(

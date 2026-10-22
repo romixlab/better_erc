@@ -186,7 +186,10 @@ impl Builder {
                 let what = if first == file {
                     "also on".to_string()
                 } else {
-                    format!("{first} puts it on `{}`, this file on", self.b.nets[n.index()].name)
+                    format!(
+                        "{first} puts it on `{}`, this file on",
+                        self.b.nets[n.index()].name
+                    )
                 };
                 let msg = format!(
                     "pin {}: {what} `{}`; the first net is kept",

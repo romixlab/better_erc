@@ -76,7 +76,9 @@ fn kind_by_contents(src: &Source, path: &str) -> Option<Kind> {
     let head = String::from_utf8_lossy(&head);
     let rest = head.strip_prefix("FILE_TYPE")?;
     let rest = rest.trim_start().strip_prefix('=')?.trim_start();
-    Kind::ALL.into_iter().find(|k| rest.starts_with(k.file_type()))
+    Kind::ALL
+        .into_iter()
+        .find(|k| rest.starts_with(k.file_type()))
 }
 
 /// The kind by the file name, and where in the name its token is
@@ -182,7 +184,10 @@ impl Importer for OrcadImporter {
             parts.as_ref().map(|c| &c.0.comment),
             nets.as_ref().map(|c| &c.0.comment),
         ];
-        b.b.source.version = comments.into_iter().flatten().find_map(|c| writer_version(c));
+        b.b.source.version = comments
+            .into_iter()
+            .flatten()
+            .find_map(|c| writer_version(c));
         let mut f = Fill {
             b: &mut b,
             notes: &mut notes,
@@ -292,7 +297,10 @@ fn parse_chip(text: &str) -> Result<ChipFile, String> {
     };
     let param = |p: pest::iterators::Pair<Rule>| {
         let mut it = p.into_inner();
-        let k = it.next().map(|s| s.as_str().to_string()).unwrap_or_default();
+        let k = it
+            .next()
+            .map(|s| s.as_str().to_string())
+            .unwrap_or_default();
         let v = it.next().map(|v| inner!(v)).unwrap_or_default();
         (k, v)
     };
@@ -344,7 +352,10 @@ fn parse_parts(text: &str) -> Result<PartsFile, String> {
             Rule::directives => {
                 for d in p.into_inner() {
                     let mut it = d.into_inner();
-                    let k = it.next().map(|s| s.as_str().to_string()).unwrap_or_default();
+                    let k = it
+                        .next()
+                        .map(|s| s.as_str().to_string())
+                        .unwrap_or_default();
                     let v = it.next().map(|v| inner!(v)).unwrap_or_default();
                     out.directives.push((k, v));
                 }
@@ -606,7 +617,10 @@ impl Fill<'_> {
                     self.notes.missing(
                         file,
                         &at,
-                        format!("primitive `{}` is not in pstchip: its symbol has no pins", e.primitive),
+                        format!(
+                            "primitive `{}` is not in pstchip: its symbol has no pins",
+                            e.primitive
+                        ),
                     );
                 }
                 // What the part list says of the primitive: its name and sections

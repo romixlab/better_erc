@@ -47,7 +47,9 @@ fn companion(src: &Source, kind: Kind) -> Option<String> {
     let dir = dir_of(&src.main);
     let stem = |p: &str| {
         let n = file_name(p);
-        n.rsplit_once('.').map_or(n, |(s, _)| s).to_ascii_lowercase()
+        n.rsplit_once('.')
+            .map_or(n, |(s, _)| s)
+            .to_ascii_lowercase()
     };
     let main_stem = stem(&src.main);
     let siblings: Vec<String> = src
@@ -87,7 +89,10 @@ impl Importer for AltiumImporter {
         if kind_of(src, &src.main).is_some() {
             return Confidence::Yes;
         }
-        let ext = src.main.rsplit_once('.').map(|(_, e)| e.to_ascii_lowercase());
+        let ext = src
+            .main
+            .rsplit_once('.')
+            .map(|(_, e)| e.to_ascii_lowercase());
         match ext.as_deref() {
             Some("edf" | "edif") if src.files.read(&src.main).is_some() => Confidence::Maybe,
             _ => Confidence::No,
@@ -107,13 +112,15 @@ impl Importer for AltiumImporter {
             message,
         };
         let edif = match &edif_file {
-            Some(f) => Some(edif::parse(&text::read(src, f)?, f, &mut notes).map_err(|m| invalid(f, m))?),
+            Some(f) => {
+                Some(edif::parse(&text::read(src, f)?, f, &mut notes).map_err(|m| invalid(f, m))?)
+            }
             None => None,
         };
         let wire = match &wire_file {
-            Some(f) => {
-                Some(wirelist::parse(&text::read(src, f)?, f, &mut notes).map_err(|m| invalid(f, m))?)
-            }
+            Some(f) => Some(
+                wirelist::parse(&text::read(src, f)?, f, &mut notes).map_err(|m| invalid(f, m))?,
+            ),
             None => None,
         };
         let name = match &edif {
@@ -210,11 +217,19 @@ fn fill_edif(b: &mut Builder, e: &edif::Edif, file: &str, notes: &mut Notes) {
         for inst in &sheet.instances {
             let ctx = format!("instance {}", inst.designator);
             if inst.designator.is_empty() {
-                notes.missing(file, &format!("sheet {}", sheet.name), "an instance without a name");
+                notes.missing(
+                    file,
+                    &format!("sheet {}", sheet.name),
+                    "an instance without a name",
+                );
                 continue;
             }
             if b.find_part(&inst.designator).is_some() {
-                notes.invalid(file, &ctx, "a second instance with this designator; the first is kept");
+                notes.invalid(
+                    file,
+                    &ctx,
+                    "a second instance with this designator; the first is kept",
+                );
                 continue;
             }
             let part = b.part(&inst.designator);
@@ -222,7 +237,8 @@ fn fill_edif(b: &mut Builder, e: &edif::Edif, file: &str, notes: &mut Notes) {
             let symbol = cell.and_then(|c| b.symbol(&c.name));
             let p = b.part_mut(part);
             p.sheet = sid;
-            p.lib_id = cell.map_or_else(|| inst.cell.clone().unwrap_or_default(), |c| c.name.clone());
+            p.lib_id =
+                cell.map_or_else(|| inst.cell.clone().unwrap_or_default(), |c| c.name.clone());
             p.symbol = symbol;
             if cell.is_none() {
                 notes.missing(
@@ -265,7 +281,11 @@ fn fill_edif(b: &mut Builder, e: &edif::Edif, file: &str, notes: &mut Notes) {
             for (port, inst) in &n.refs {
                 let Some(inst) = inst else {
                     // A port of the sheet itself: Altium's flattened netlist has none
-                    notes.ignored(file, &ctx, "a port reference without an instance is not kept");
+                    notes.ignored(
+                        file,
+                        &ctx,
+                        "a port reference without an instance is not kept",
+                    );
                     continue;
                 };
                 // References use identifiers; the instance's designator and the port's number are display names
@@ -290,7 +310,9 @@ fn fill_edif(b: &mut Builder, e: &edif::Edif, file: &str, notes: &mut Notes) {
                         notes.invalid(
                             file,
                             &ctx,
-                            format!("{designator}.{number}: no such instance, added without fields"),
+                            format!(
+                                "{designator}.{number}: no such instance, added without fields"
+                            ),
                         );
                         b.part(&designator)
                     }
@@ -347,7 +369,11 @@ fn fill_wirelist(b: &mut Builder, w: &wirelist::WireList, file: &str, notes: &mu
     for c in &w.components {
         let part = b.part(&c.designator);
         b.field(part, "Comment", Fact::new(c.comment.clone(), src.clone()));
-        b.field(part, "Footprint", Fact::new(c.footprint.clone(), src.clone()));
+        b.field(
+            part,
+            "Footprint",
+            Fact::new(c.footprint.clone(), src.clone()),
+        );
         if b.b.parts[part.index()].field("Value").is_none() {
             b.value(part, &c.comment, &src, "component list");
         }
@@ -366,7 +392,11 @@ fn fill_wirelist(b: &mut Builder, w: &wirelist::WireList, file: &str, notes: &mu
             let part = b.part(&c.designator);
             if !listed.contains(c.designator.as_str()) {
                 // The part value column is all the WireList says about an unlisted part
-                b.field(part, "Comment", Fact::new(c.part_value.clone(), src.clone()));
+                b.field(
+                    part,
+                    "Comment",
+                    Fact::new(c.part_value.clone(), src.clone()),
+                );
             } else if let Some(comp) = w.components.iter().find(|x| x.designator == c.designator)
                 && comp.comment != c.part_value
             {

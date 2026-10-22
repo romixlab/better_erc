@@ -112,7 +112,10 @@ fn name_of(p: Pair<Rule>) -> (String, String) {
     match inner.as_rule() {
         Rule::rename => {
             let mut it = inner.into_inner().skip(1);
-            let id = it.next().map(|s| s.as_str().to_string()).unwrap_or_default();
+            let id = it
+                .next()
+                .map(|s| s.as_str().to_string())
+                .unwrap_or_default();
             let display = it
                 .next()
                 .and_then(|s| s.into_inner().next())

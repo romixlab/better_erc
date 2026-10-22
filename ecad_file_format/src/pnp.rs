@@ -117,7 +117,9 @@ mod tests {
 
     #[test]
     fn can_read_pnp_kicad() {
-        let positions = load_component_positions(Path::new("../erc_import/tests/fixtures/pnp_kicad.csv")).unwrap();
+        let positions =
+            load_component_positions(Path::new("../erc_import/tests/fixtures/pnp_kicad.csv"))
+                .unwrap();
         let pos_r1 = positions.get(&Designator("R1".to_string())).unwrap();
         assert_eq!(pos_r1.x_str, "56.600000");
         assert_eq!(pos_r1.side, Side::Bottom);
@@ -128,8 +130,10 @@ mod tests {
 
     #[test]
     fn can_read_pnp_altium() {
-        let positions =
-            load_component_positions(Path::new("../erc_import/tests/fixtures/pnp_altium_no_units.csv")).unwrap();
+        let positions = load_component_positions(Path::new(
+            "../erc_import/tests/fixtures/pnp_altium_no_units.csv",
+        ))
+        .unwrap();
         let pos_j1 = positions.get(&Designator("J1".to_string())).unwrap();
         assert_eq!(pos_j1.x_str, "1.3943");
         assert_eq!(pos_j1.side, Side::Top);
@@ -140,8 +144,10 @@ mod tests {
 
     #[test]
     fn can_read_pnp_altium_with_units() {
-        let positions =
-            load_component_positions(Path::new("../erc_import/tests/fixtures/pnp_altium_with_units.csv")).unwrap();
+        let positions = load_component_positions(Path::new(
+            "../erc_import/tests/fixtures/pnp_altium_with_units.csv",
+        ))
+        .unwrap();
         let pos_r1 = positions.get(&Designator("J1".to_string())).unwrap();
         assert_eq!(pos_r1.x_str, "1.3943");
         assert_eq!(pos_r1.side, Side::Top);
@@ -152,7 +158,9 @@ mod tests {
 
     #[test]
     fn can_read_pnp_allegro() {
-        let positions = load_component_positions(Path::new("../erc_import/tests/fixtures/pnp_allegro.csv")).unwrap();
+        let positions =
+            load_component_positions(Path::new("../erc_import/tests/fixtures/pnp_allegro.csv"))
+                .unwrap();
         let pos_r1 = positions.get(&Designator("R1".to_string())).unwrap();
         assert_eq!(pos_r1.x_str, "30.0200");
         assert_eq!(pos_r1.side, Side::Bottom);

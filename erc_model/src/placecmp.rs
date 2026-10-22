@@ -4,6 +4,7 @@
 //! `berc diff --pnp`.
 
 use crate::canon::natural_cmp;
+use crate::design::Board;
 use crate::layout::{Footprint, Layout, Pt, Side};
 use std::collections::HashMap;
 
@@ -19,13 +20,28 @@ pub struct PlaceOptions {
 /// One attribute of a placement that differs, as `a` and `b` have it
 #[derive(Clone, Debug, PartialEq)]
 pub enum PlaceChange {
-    Position { a: Pt, b: Pt },
+    Position {
+        a: Pt,
+        b: Pt,
+    },
     /// Degrees, as the files give them (compared modulo 360)
-    Rotation { a: f64, b: f64 },
-    Side { a: Side, b: Side },
-    Value { a: String, b: String },
+    Rotation {
+        a: f64,
+        b: f64,
+    },
+    Side {
+        a: Side,
+        b: Side,
+    },
+    Value {
+        a: String,
+        b: String,
+    },
     /// The footprint name, without a `library:` prefix
-    Package { a: String, b: String },
+    Package {
+        a: String,
+        b: String,
+    },
 }
 
 /// A footprint on both sides that is placed differently
@@ -130,6 +146,11 @@ pub fn compare(a: &Layout, b: &Layout, opts: &PlaceOptions) -> PlaceDiff {
     diff
 }
 
+/// Compares the placements of two boards (from a board file or a PnP file); `None` when one has no layout
+pub fn compare_boards(a: &Board, b: &Board, opts: &PlaceOptions) -> Option<PlaceDiff> {
+    Some(compare(a.layout.as_ref()?, b.layout.as_ref()?, opts))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -176,7 +197,11 @@ mod tests {
         let d = compare(&a, &b, &PlaceOptions::default());
         assert_eq!(d.removed, ["C1"]);
         assert_eq!(d.added, ["J1"]);
-        assert_eq!(d.changed.len(), 1, "R1: -90 is 270, the library prefix is not compared");
+        assert_eq!(
+            d.changed.len(),
+            1,
+            "R1: -90 is 270, the library prefix is not compared"
+        );
         assert_eq!(d.changed[0].reference, "R2");
         assert_eq!(d.changed[0].changes.len(), 5);
         let loose = PlaceOptions {
