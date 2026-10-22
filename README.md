@@ -17,8 +17,9 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
   [Readable git diffs](#readable-git-diffs).
 - **Import** into one board model ([docs/model.md](docs/model.md)): KiCad 8, 9 and 10 projects, schematics, boards
   and netlists read by better_erc itself (`erc_kicad`), OrCAD Capture netlists (pstxnet, pstxprt, pstchip), Altium
-  EDIF plus WireList, and pick-and-place CSV files from KiCad, Altium and Allegro (`erc_import`), all picked by one
-  importer registry.
+  EDIF plus WireList, Altium Smart PDFs (the netlist in their bookmarks: vendor boards that come as nothing but a
+  PDF), and pick-and-place CSV files from KiCad, Altium and Allegro (`erc_import`), all picked by one importer
+  registry.
 - **Checks** (`erc_checks`), run on a KiCad project read by better_erc itself (`erc_kicad`), with one finding
   type, a report of which checks ran and which could not run for lack of data, and the report as JSON or text
   ([docs/engine.md](docs/engine.md)):
@@ -28,12 +29,14 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
   - parts without a value, placeholder values like `?` or `TBD` (fitted or not), resistor values that don't read
     or are written in a non-standard way (`BOM-5`, `BOM-6`, `BOM-9`, `BOM-10`)
   - MOSFET symbols whose pins aren't named G, S and D (`LIB-3`)
-- **`berc check`**: the checks on a KiCad project (or a KiCad netlist, Altium, OrCAD or PnP file) from the shell
+- **`berc check`**: the checks on a KiCad project (or a KiCad netlist, Altium, OrCAD, Smart PDF or PnP file) from the shell
   or a CI job, as text, JSON, SARIF (GitHub code scanning) or Markdown (a PR comment), with an exit code by
   severity and a baseline so only new findings fail. `berc explain ID` and `berc checks list` show the catalogue.
   See [Checks in CI](#checks-in-ci).
 - **`berc diff --pnp A B`**: two pick-and-place files, two boards, or a board and the PnP file exported from it
   compared footprint by footprint (position, rotation, side, value, package), with tolerances.
+- **`berc diff --nets A B`**: the nets of any two designs (a schematic, a netlist, an Altium export, a Smart PDF)
+  compared as the pins each net connects, whatever their names: renamed, removed and added nets.
 - **The app** (`better_erc`, egui, crate `better_erc_app`): an import tab that opens any design the registry reads
   (and Altium or OrCAD files picked one by one) and shows its findings with their explanations and the checks that
   did not run, and tabs for nets (power rails, grounds and switching nodes from names and pin types), I2C buses,

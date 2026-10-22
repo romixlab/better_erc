@@ -11,6 +11,34 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- The schematic PDF importer (`IMP-16`, stage 1), cargo feature `pdf` of `erc_import`: an Altium Smart PDF read into
+  a board (tool `altium-pdf`) from its bookmarks: sheets, parts with their units, pins, nets, net labels and ports,
+  nets joined across sheets by power names and same-named ports (Altium names nets per sheet), part properties
+  from the popup scripts bound to their part by the hidden search words inside the link. Parsed with `hayro-syntax`
+  (pure Rust, no unsafe of its own); every walk bounded (file size, bookmarks, nesting, links, action chains,
+  script length, content operations, form drawings, words), scripts read as text, never run; owner-password files
+  read, a user password is an error. `berc check board.pdf` works; tests on a synthetic Smart PDF from our own
+  generator, its encrypted copies, hostile files, and the internal set of Altium PDFs when present (the Xyloni
+  against its hand-made netlist).
+- `erc_model`: `Provenance::Pdf { file, confidence }` with `PdfConfidence::{Bookmarks, Position, Geometry}`,
+  `Rank::RECONSTRUCTED` (750), `Provenance::is_estimate`, `SourceInfo::connectivity`.
+- `berc diff --nets A B` (`RPT-16`, first piece): the nets of two designs as pin sets, renamed, removed and added
+  nets and net class changes, text or JSON, exit 1 on a difference; `better_erc::diff::nets`. The differential
+  between a Smart PDF and an Altium export of the same board.
+
+### Changed
+
+- Checks read the part's value (`Part::value`), not the `Value` field by name: Altium's `Comment` counts where there is
+  no `Value` (BOM-5, BOM-6, BOM-9, BOM-10, the I2C pull-up checks, the `Values` need), and findings name the field
+  (`Value (from Comment)`); `erc_analysis::value::value_text` replaces `value_field`, `PartValue::field`.
+- A finding resting on a fact reconstructed from a PDF by position or geometry, or on a board whose nets were traced
+  from a drawing, is an estimate. Not-run hints for a PDF board say what a PDF cannot give (layout, wires,
+  no-connect flags), and its findings point at the PDF and the page (`symbol U1 on page 3 (MCU.SchDoc)`).
+- `Label::at` is optional (a PDF does not always say where a label is); the dump leaves `at` out then.
+- The workspace needs Rust 1.92 (`rust-version`), for `hayro-syntax`.
+
 ## [0.4.2] - 2026-10-22
 
 ### Added

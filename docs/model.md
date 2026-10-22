@@ -10,7 +10,7 @@ better_erc's core is a board model (`erc_model`) that every importer fills and e
 |---|---|---|
 | `erc_model` | the board model, values, facts and provenance, the importer trait, the canonical dump, `netcmp`, `placecmp` | serde |
 | `erc_kicad` | KiCad projects, schematics, boards and netlists; the s-expression reader | `erc_model` |
-| `erc_import` | the importer registry; Altium, OrCAD and PnP (one cargo feature each) | `erc_model`, `erc_kicad` |
+| `erc_import` | the importer registry; Altium, OrCAD, PnP and schematic PDFs (one cargo feature each) | `erc_model`, `erc_kicad` |
 | `erc_analysis` | part classes, values, graph queries, the power structure, the I2C bus recogniser | `erc_model` |
 | `erc_checks` | the check engine, the checks, the catalogue, reports; `project`, the run on a path | the above |
 | `better_erc` | the library: all of the above re-exported, the run entry at the top, `diff` (`berc diff`) | the above |
@@ -36,14 +36,17 @@ small integer ids:
 | `parts` | `PartId` | one designator with all its units, fields, flags (DNP, in BOM, on board, ...) and per-variant overrides |
 | `pins` | `PinId` | a pin instance on a part, with its own net, no-connect flag and chosen alternate |
 | `nets` | `NetId` | a net with its full KiCad name (`/MCU/SWDIO`, `+3V3`, `Net-(R1-Pad2)`), kind and net class |
-| `labels` | `LabelId` | local, global and hierarchical labels, sheet pins, power symbols, directive labels |
+| `labels` | `LabelId` | local, global and hierarchical labels, sheet pins, power symbols, directive labels; the position when the source gives one |
 | `no_connects` | | no-connect flags and the pin they sit on |
 | `variants`, `net_classes` | `VariantId` | KiCad 10 variants; net classes with their rules, patterns and assignments |
 
 Adjacency goes both ways (a net lists its pins, a part lists its pins, a pin names its net), so a query is O(degree).
 Names live in one place and are resolved through the board (`Board::pin_name` gives `R1.2`, `Board::sheet_path` gives
 `/MCU/`). The project settings (`ProjectSettings`: text variables, ERC and DRC severities and exclusions, design rules)
-and the `Layout` read from the board file hang off the board too.
+and the `Layout` read from the board file hang off the board too. `SourceInfo` says what the board was read from: the
+tool (`kicad`, `kicad-netlist`, `altium`, `altium-pdf`, `orcad`, `pnp`), its version, the files, and for a board whose
+connectivity is not design data, where it came from (`connectivity`: a Smart PDF's bookmarks, or one day a PDF's
+drawing).
 
 The `Layout` keeps geometry in integer nanometres, so it compares exactly: the layer table, stackup and setup,
 footprints (position, rotation, side, attributes, fields, courtyard, silk and fab graphics and texts in absolute
@@ -59,23 +62,28 @@ gives a `Conflict` import note where the two disagree.
 No attribute is a bare value. A field, a part value, a DNP flag, a pin's electrical type, a net class is a
 `Fact<T> { value, source, rank, at, note }`:
 
-- `source` is a `Provenance`: a schematic sheet file, the KiCad project file, the board file, a pick-and-place file, a netlist, the better_erc
-  project file, the part database, mx3, the vendor, a datasheet, a distributor, an unreviewed LLM extraction, a person
+- `source` is a `Provenance`: a schematic sheet file, the KiCad project file, the board file, a pick-and-place file, a netlist, a
+  schematic PDF (`Pdf { file, confidence }`: read from its bookmarks, bound by position, or traced from its drawing),
+  the better_erc project file, the part database, mx3, the vendor, a datasheet, a distributor, an unreviewed LLM extraction, a person
   (`Manual`), an analysis rule (`Derived`) or a default (`Assumed`).
-- `rank` orders sources; each kind has a default (manual 1000, project file 900, design files 800, vendor 700,
+- `rank` orders sources; each kind has a default (manual 1000, project file 900, design files and a PDF's bookmarks
+  800, a PDF's facts reconstructed by position or geometry 750, vendor 700,
   datasheet and part database 600, distributor 500, LLM 300, derived 200, assumed 100) that a user can override.
 - `at` is when the source said it (design files carry none: their time is their commit), `note` says why.
 
 A `Facts<T>` keeps one fact per source; a source stating the attribute again replaces only its own fact.
 `Facts::resolve` gives what a check sees: the highest rank, the newest on a tie, with its source, so a finding can say
 "10 kΩ (manual, Roman, 5 Oct 2026)". `Facts::disagreements` lists the facts that differ from the resolved one: a
-conflict between sources is reported, not silently chosen.
+conflict between sources is reported, not silently chosen. `Provenance::is_estimate` marks the sources a finding can
+only estimate from (an assumption, a reconstructed PDF fact): [engine.md](engine.md) "Certainty".
 
 Identity is structure, not a fact: designators, net names, sheet paths and pin numbers are plain fields.
 
 ### Values
 
-`Value` is the Value field parsed into a `Quantity` with a `Unit` (Ω, F, H, V, A, Hz, W) or kept as text. A bare number
+A part's `value` is stated by the importer from the tool's convention (KiCad's `Value` field; Altium's `Value`, else
+`Comment`), with a note naming the field; the checks read it, never a field by name ([engine.md](engine.md) "Values").
+`Value` is that text parsed into a `Quantity` with a `Unit` (Ω, F, H, V, A, Hz, W) or kept as text. A bare number
 with a multiplier (`10k`, `100n`) has no unit of its own: `Value::parse` keeps it as text and `Value::parse_as` reads it
 in the unit of a part class decided elsewhere, so the model never guesses a resistor from the letter `k`.
 
@@ -133,8 +141,8 @@ Entities with the same key (two `R?`, a pad number on both sides) carry `#2`, `#
 lengths are millimetres, rotations degrees.
 
 `netcmp::compare` compares two boards' connectivity: each net as the set of `designator.pin` it connects, matched by
-that set, with renamed nets and differing net classes listed. It is the differential test's comparison and the base of
-a netlist diff.
+that set, with renamed nets and differing net classes listed. It is the differential test's comparison and `berc diff
+--nets`.
 
 `placecmp::compare` compares two layouts' placements: each footprint by its reference, its position, rotation (modulo
 360), side, value and package (the name without its `library:` prefix), within optional tolerances. The layouts can
@@ -206,11 +214,11 @@ cargo run -p erc_kicad --example dump -- board.kicad_pro
 ## erc_import
 
 `erc_import::Registry` holds every importer: `Registry::default()` registers KiCad's (`erc_kicad::importers()`: the
-project and the netlist), Altium, OrCAD and PnP, and `register` adds others. `pick` asks each importer to sniff the
+project and the netlist), Altium, OrCAD, PnP and PDF, and `register` adds others. `pick` asks each importer to sniff the
 main file and takes the surest (an earlier one on a tie), `import` imports with it, and `scan` lists every file of a
 directory or file set that some importer reads. The dependency goes `erc_import` → `erc_kicad` → `erc_model`: the
 trait lives in the model, so `erc_kicad` stands alone, and each importer is a cargo feature (`kicad`, `altium`,
-`orcad`, `pnp`), so a KiCad-only tool or a wasm GUI builds without the rest.
+`orcad`, `pnp`, `pdf`), so a KiCad-only tool or a wasm GUI builds without the rest.
 
 - `altium`: the EDIF netlist ("EDIF for PCB") and the WireList, either one as the main file, the other found beside
   it (same name first, then the only file of its kind in the directory). EDIF gives the library symbols with their
@@ -229,6 +237,48 @@ trait lives in the model, so `erc_kicad` stands alone, and each importer is a ca
   reference, position, rotation, side, value and package, the other columns as its fields (`Provenance::Placement`).
   The header row is the first naming five of the known columns, the separator the one the file uses most; positions
   are millimetres unless the header or the file information says mil or inch, kept as the file writes them.
+- `pdf`: an Altium Smart PDF, the schematic print Altium writes with its netlist in the bookmarks, as a board with
+  parts, pins, nets, sheets, labels and ports (tool `altium-pdf`, `Provenance::Pdf`). See [The PDF importer](#the-pdf-importer).
+
+### The PDF importer
+
+A schematic PDF lets better_erc check a vendor's board that comes as nothing else. An Altium Smart PDF has, per
+schematic sheet, a bookmark `File.SchDoc(Name)` with `Components` (each unit, `U1A`, with its pin bookmarks `U1-C5`),
+`Nets` (each net with its `Pins`, `NetLabels` and `Ports`) and `Ports`, and every pin, label and port bookmark runs a
+script `_FindWord(page, "PIU10C5")` that names a hidden search word drawn at that spot. The importer reads:
+
+- sheets from the bookmarks, nested as the bookmarks nest; a bookmark with Components but no `.SchDoc` (the Top
+  Assembly or Multilayer Composite Print of a PCB print) is left out with a note;
+- parts and pins from Components, the pins of each net from Nets (`PdfConfidence::Bookmarks`, ranked as a design
+  file: this is Altium's netlist), labels with the position of their search word when there is one;
+- nets across sheets: Altium names a net per sheet (a port does not name the net, so one net can be `NetR87_1` on one
+  sheet and `NetSB45_2` on another); nets join by name only where no label names them (power ports), and through
+  ports of one name among sibling sheets and with the parent's net of that name. The wires between sheet entries on
+  a parent sheet are not in the bookmarks, so same-named entries are taken as wired, and a note says how many nets
+  that joined;
+- part properties from the popup each part's link opens (`ShowCompProps_<guid>()` → `app.popUpMenu("Value: 10k",
+  ...)`), bound to its part by the hidden `CO`/`PI` words inside the link's rectangle (`PdfConfidence::Position`,
+  rank 750: a finding resting on one is an estimate). A popup no part can be tied to is a note: some producers
+  (llPDFLib) draw every search word at one point, and binding by the drawn designator text is stage 2.
+
+The PDF is untrusted input: it is parsed by `hayro-syntax` (pure Rust, lazy, `None` instead of a panic) and every walk
+is bounded (file size, bookmarks, nesting, links, chained actions, script length, content operations, form drawings,
+words); a cut walk is a note. Scripts are read as text for their string and number literals, never run. Encrypted
+files with an owner password only read as plain ones; a user password is an error. The not-run list says what a PDF
+cannot give: no layout, no wires and no no-connect flags. Values are there when the popups are.
+
+An Allegro (Design Publisher) PDF carries part attributes and label positions in its link scripts but no netlist:
+its connectivity has to be traced from the drawing (wire segments, junction dots, pin stubs), stage 2 of the PDF
+importer, `PdfConfidence::Geometry`. Until then such a PDF is offered as a maybe and its import says why it is not
+read.
+
+The tests (`erc_import/tests/pdf.rs`, `erc_import/src/pdf/hostile.rs`) read a synthetic Smart PDF that our own
+generator writes (`tests/common/smart_pdf.rs`: sheets in sheets, units on two sheets, a bus, ports across siblings
+and to the parent, popups bound by pins and inside a form XObject, a UTF-16 title), its encrypted copies, hostile
+files (loops in bookmarks, actions and name trees, 10 000-deep outlines, 100 000 bookmarks, forms that draw
+themselves or each other 10^9 times, a 5 MB script), and, when present on the PC (`BERC_PDF_DIR`, default
+`~/sync`), the Altium Smart PDFs of the internal set, the Xyloni against its hand-made netlist. Vendor PDFs and their
+dumps stay out of the public repo.
 
 The Altium and OrCAD readers are pest grammars (`erc_import/grammar`) that take any unknown element or line as such
 and report it, instead of failing the file. The tests (`erc_import/tests`) import every fixture through the registry

@@ -81,6 +81,16 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   schematic, board, KiCad netlist, Altium, OrCAD, PnP), a directory scanned for what can be imported, one cargo
   feature per importer; every import gives notes for what it read past and never panics on broken input (a test on
   truncated and garbled fixtures), and a golden dump per fixture · `erc_import/src/lib.rs`, `erc_import/tests`
+- 🚧 `IMP-16` Schematic PDFs as a netlist source. Done: Altium Smart PDFs (stage 1): sheets, parts with their units,
+  pins and nets from the bookmarks (`Provenance::Pdf`, `PdfConfidence::Bookmarks`, design rank), nets joined across
+  sheets by power names and same-named ports, labels with their search-word position, part properties from the
+  popup scripts bound by position (`PdfConfidence::Position`: findings on them are estimates), read with
+  `hayro-syntax` under bounds on every walk, scripts read as text and never run, owner-password files read; the
+  Xyloni against its hand-made netlist, the internal set of Altium PDFs, hostile files; `berc check board.pdf`,
+  `berc diff --nets` against an Altium export. Missing: Allegro Design Publisher PDFs (stage 2: connectivity from the
+  drawing, `PdfConfidence::Geometry`), popups of llPDFLib files (bound by drawn designator text), the differential
+  on a real board with both a Smart PDF and its EDIF/WireList · `erc_import/src/pdf`, `erc_import/tests/pdf.rs`,
+  docs/model.md "The PDF importer"
 
 ## Netlist model and analysis (`NET`)
 
@@ -240,7 +250,9 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   configs, configurable I2C addresses, hw debounce
 - 📋 `RPT-14` Logic ICs: truth tables across several ICs
 - 📋 `RPT-15` Test points vs nets: power nets and buses without a test point
-- 📋 `RPT-16` Netlist change report between revisions
+- 🚧 `RPT-16` Netlist change report between revisions. Done: `berc diff --nets A B` between two files (any two
+  designs, nets matched as pin sets: renamed, removed, added, net class changes, text or JSON). Missing: between two
+  git refs · `better_erc/src/diff.rs`, `erc_model/src/netcmp.rs`, `berc/tests/diff.rs`
 - 📋 `RPT-17` BOM change report
 - 📋 `RPT-18` Revision page: group net changes, add descriptions
 - 📋 `RPT-19` Revision resistor calculator (table → alpha / numeric value)

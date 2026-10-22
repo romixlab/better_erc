@@ -120,7 +120,7 @@ pub enum LinkMap {
 /// Which tool and files a board was read from
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 pub struct SourceInfo {
-    /// `kicad`, `kicad-netlist`, `altium`, `orcad`
+    /// `kicad`, `kicad-netlist`, `altium`, `altium-pdf`, `orcad`, `pnp`
     pub tool: String,
     /// The tool's version as the files state it (`10.0`, file format `20250114`)
     pub version: Option<String>,
