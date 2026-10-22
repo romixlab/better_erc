@@ -539,3 +539,35 @@ fn completion_offers_catalogue_values() {
         "{variants}"
     );
 }
+
+/// An Altium Smart PDF end to end (the synthetic one of `erc_import`): read, checked on its graph and values, with
+/// the import notes in the report and locations on the PDF's pages
+#[test]
+fn smart_pdf() {
+    let pdf = Path::new(env!("CARGO_MANIFEST_DIR")).join("../erc_import/tests/fixtures/smart_pdf.pdf");
+    let out = berc(&["check", "--format", "json", pdf.to_str().unwrap()]);
+    assert_eq!(code(&out), 1, "{}", stderr(&out));
+    let r = json(&out);
+    let board = &r["summary"]["boards"][0];
+    assert_eq!(board["tool"], "altium-pdf");
+    assert_eq!((board["sheets"].as_u64(), board["parts"].as_u64()), (Some(4), Some(7)));
+    assert!(r["summary"]["ran"].as_u64().unwrap() > 0);
+    let u1 = r["findings"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|f| f["check"] == "BOM-9" && f["subjects"][0]["name"] == "U1")
+        .expect("U1 has a Comment but no Value");
+    assert_eq!(u1["confidence"], "certain", "read from the bookmarks");
+    assert_eq!(u1["locations"][1]["file"], "smart_pdf.pdf");
+    assert_eq!(u1["locations"][1]["what"], "symbol U1 on page 3 (MCU.SchDoc)");
+    assert!(
+        r["notes"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|n| n["at"] == "smart_pdf.pdf: nets"),
+        "{}",
+        r["notes"]
+    );
+}

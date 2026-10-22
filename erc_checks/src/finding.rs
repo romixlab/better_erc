@@ -312,13 +312,31 @@ fn mm(p: erc_model::Pt) -> (f64, f64) {
 
 /// Where a subject is drawn: a part's placed units, a pin's part, a net's labels
 fn locations(board: &Board, s: Subject) -> Vec<Location> {
+    // A board read from a PDF: its sheets are pages of that file, the sheet files it names are not there
+    let pdf = match &board.source.connectivity {
+        Some(Provenance::Pdf { file, .. }) => Some(file.as_str()),
+        _ => None,
+    };
+    let sheet_file = |s: erc_model::SheetId| match pdf {
+        Some(f) => f.to_string(),
+        None => board.sheet(s).file.clone(),
+    };
+    // ` on page 3 (MCU.SchDoc)` for a PDF, nothing otherwise
+    let on_page = |s: erc_model::SheetId| {
+        let sheet = board.sheet(s);
+        match (pdf, &sheet.page) {
+            (Some(_), Some(page)) if sheet.file.is_empty() => format!(" on page {page}"),
+            (Some(_), Some(page)) => format!(" on page {page} ({})", sheet.file),
+            _ => String::new(),
+        }
+    };
     let part_locations = |p: erc_model::PartId| {
         let part = board.part(p);
         part.units
             .iter()
             .map(|u| Location {
-                file: board.sheet(u.sheet).file.clone(),
-                what: format!("symbol {}", part.designator),
+                file: sheet_file(u.sheet),
+                what: format!("symbol {}{}", part.designator, on_page(u.sheet)),
                 line: u.line,
                 at: u.at.map(|a| mm(a.at)),
             })
@@ -335,23 +353,23 @@ fn locations(board: &Board, s: Subject) -> Vec<Location> {
             .filter(|l| !l.kind.is_power())
             .take(5)
             .map(|l| Location {
-                file: board.sheet(l.sheet).file.clone(),
-                what: format!("{} label {}", l.kind.name(), l.text),
+                file: sheet_file(l.sheet),
+                what: format!("{} label {}{}", l.kind.name(), l.text, on_page(l.sheet)),
                 line: None,
                 at: l.at.map(mm),
             })
             .collect(),
         Subject::Sheet(_, s) => vec![Location {
-            file: board.sheet(s).file.clone(),
-            what: format!("sheet {}", board.sheet_path(s)),
+            file: sheet_file(s),
+            what: format!("sheet {}{}", board.sheet_path(s), on_page(s)),
             line: None,
             at: None,
         }],
         Subject::Label(_, l) => {
             let l = board.label(l);
             vec![Location {
-                file: board.sheet(l.sheet).file.clone(),
-                what: format!("{} label {}", l.kind.name(), l.text),
+                file: sheet_file(l.sheet),
+                what: format!("{} label {}{}", l.kind.name(), l.text, on_page(l.sheet)),
                 line: None,
                 at: l.at.map(mm),
             }]
