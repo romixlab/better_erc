@@ -85,7 +85,7 @@ pub fn active_low(name: &str) -> Option<ActiveLow> {
             .chars()
             .chain(b[i + 2..].chars().filter(|c| *c != '}'))
             .collect();
-        return (!inner.is_empty()).then(|| ActiveLow {
+        return (!inner.is_empty()).then_some(ActiveLow {
             style: LowStyle::Overbar,
             base: inner,
         });
