@@ -1,0 +1,96 @@
+board board_kicad10
+fp J1 gfx F.CrtYd width 0.05 rect 135.65,98.2 141.8,101.8
+fp J1 gfx F.Fab width 0.1 poly 141.27,98.73 141.27,101.27 136.19,101.27 136.19,98.73
+fp J1 gfx F.SilkS width 0.12 arc 141.33,98.67 141.88,100 141.33,101.33
+fp J1 lib Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical value Conn_01x02 side front at 140,100 rot -90 mount through_hole board_only exclude_from_bom
+fp J1 model ${KICAD8_3DMODEL_DIR}/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x02_P2.54mm_Vertical.wrl
+fp J1 text F.Fab Conn_01x02 at 135.13,100 size 1
+fp J1 text F.SilkS J1 at 142.33,100 size 1
+fp NT1 gfx F.Fab width 0.1 poly 149.46967,100.176777 150.176777,99.46967 150.53033,99.823223 149.823223,100.53033
+fp NT1 lib NetTie:NetTie-2_SMD_Pad0.5mm value NetTie side front at 150,100 rot 45 mount smd board_only exclude_from_pos_files exclude_from_bom allow_missing_courtyard
+fp NT1 text F.Fab NetTie at 150.848528,100.848528 size 1
+fp NT1 text F.SilkS NT1 at 149.151472,99.151472 size 1
+fp NT1 tie 1 2
+fp R1 field Mpn1 = RC0603FR-0710KL @ pcb board_kicad10.kicad_pcb
+fp R1 gfx F.CrtYd width 0.05 rect 109.27,98.52 110.73,101.48
+fp R1 gfx F.Fab width 0.1 rect 109.5875,99.2 110.4125,100.8
+fp R1 gfx F.SilkS width 0.12 line 109.4775,100.237258 109.4775,99.762742
+fp R1 gfx F.SilkS width 0.12 line 110.5225,100.237258 110.5225,99.762742
+fp R1 lib Resistor_SMD:R_0603_1608Metric value 10k side front at 110,100 rot 90 mount smd
+fp R1 model ${KICAD8_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.wrl
+fp R1 text F.Fab ${REFERENCE} at 110,100 size 0.4
+fp R1 text F.Fab 10k at 111.43,100 size 1
+fp R1 text F.Fab RC0603FR-0710KL at 110,100 size 1.27 hidden
+fp R1 text F.SilkS R1 at 108.57,100 size 1
+fp R5 gfx B.CrtYd width 0.05 rect 118.52,99.27 121.48,100.73
+fp R5 lib Resistor_SMD:R_0603_1608Metric value 10k side back at 120,100 rot 180 mount smd dnp
+fp R5 text B.Fab 10k at 120,101.43 size 1 mirrored
+fp R5 text B.SilkS R5 at 120,98.57 size 1 mirrored
+fp TP1 gfx F.CrtYd width 0.05 circle 130,100 1
+fp TP1 gfx F.SilkS width 0.12 circle 130,100 0.7
+fp TP1 lib TestPoint:TestPoint_Pad_D1.0mm value TestPoint side front at 130,100 rot 0 board_only exclude_from_pos_files exclude_from_bom
+fp TP1 text F.Fab TestPoint at 130,101.55 size 1
+fp TP1 text F.SilkS TP1 at 130,98.55 size 1
+gfx Edge.Cuts width 0.05 rect 100,90 160,110
+gfx F.SilkS width 0.15 line 105,108 115,108
+layer 0 F.Cu signal
+layer 1 F.Mask user
+layer 2 B.Cu signal
+layer 3 B.Mask user
+layer 5 F.SilkS user user F.Silkscreen
+layer 7 B.SilkS user user B.Silkscreen
+layer 13 F.Paste user
+layer 15 B.Paste user
+layer 25 Edge.Cuts user
+layer 27 Margin user
+layer 29 B.CrtYd user user B.Courtyard
+layer 31 F.CrtYd user user F.Courtyard
+layer 33 B.Fab user
+layer 35 F.Fab user
+layout file board_kicad10.kicad_pcb thickness 1.6
+pad J1 1 kind thru_hole shape rect at 140,100 rot 270 size 1.7,1.7 drill 1,1 layers *.Cu,*.Mask net /DATA2 func Pin_1 ptype passive
+pad J1 2 kind thru_hole shape oval at 137.46,100 rot 270 size 1.7,2.2 drill 1,1.5 layers *.Cu,*.Mask net GND func Pin_2 ptype passive mask 0.1 zone-connect 2
+pad NT1 1 kind smd shape circle at 149.646447,100.353553 rot 45 size 0.5,0.5 layers F.Cu net GND
+pad NT1 2 kind smd shape custom at 150.353553,99.646447 rot 45 size 0.5,0.5 layers F.Cu net /CTL.EN
+pad NT1 2 prim "" width 0 filled poly 0,-0.25 -0.5,-0.25 -0.5,0.25 0,0.25
+pad R1 1 kind smd shape roundrect at 110,100.825 rot 90 size 0.8,0.95 layers F.Cu,F.Mask,F.Paste net +3V3 ptype passive
+pad R1 2 kind smd shape roundrect at 110,99.175 rot 90 size 0.8,0.95 layers F.Cu,F.Mask,F.Paste net /A/IN ptype passive
+pad R5 1 kind smd shape roundrect at 120.825,100 rot 180 size 0.8,0.95 layers B.Cu,B.Mask,B.Paste net GLOB ptype passive
+pad R5 2 kind smd shape roundrect at 119.175,100 rot 180 size 0.8,0.95 layers B.Cu,B.Mask,B.Paste net +3V3 ptype passive
+pad TP1 1 kind smd shape circle at 130,100 rot 0 size 1,1 layers F.Cu,F.Mask net GND prop pad_prop_testpoint
+pcbnet +3V3
+pcbnet /A/IN
+pcbnet /CTL.EN
+pcbnet /DATA2
+pcbnet GLOB
+pcbnet GND
+setup allow_soldermask_bridges_in_footprints no
+setup capping no
+setup covering.back no
+setup covering.front no
+setup filling no
+setup pad_to_mask_clearance 0.05
+setup plugging.back no
+setup plugging.front no
+setup stackup.copper_finish ENIG
+setup stackup.dielectric_constraints no
+setup tenting.back yes
+setup tenting.front yes
+source file board_kicad10.kicad_pcb
+source tool kicad
+stackup 0 F.SilkS "Top Silk Screen"
+stackup 1 F.Mask "Top Solder Mask" thickness 0.01
+stackup 2 F.Cu copper thickness 0.035
+stackup 3 "dielectric 1" core thickness 1.51 material FR4 er 4.5
+stackup 4 B.Cu copper thickness 0.035
+stackup 5 B.Mask "Bottom Solder Mask" thickness 0.01
+stackup 6 B.SilkS "Bottom Silk Screen"
+text B.SilkS BACK at 105,103 size 1 mirrored
+text F.SilkS B998A at 105,106 size 1.5
+track B.Cu 120.825,100 120.825,99.175 width 0.25 net GLOB
+track F.Cu 110,99.175 115,99.175 width 0.25 net /A/IN
+track F.Cu 115,99.175 mid 117.5,98.1 120,99.175 width 0.25 net /A/IN
+via at 120,99.175 size 0.6 drill 0.3 layers F.Cu,B.Cu kind through net /A/IN
+via at 130,102 size 0.6 drill 0.3 layers F.Cu,B.Cu kind through net GND
+zone name GND_B net GND layers B.Cu priority 1 connect thermal clearance 0.3 min-thickness 0.25 thermal-gap 0.5 thermal-bridge 0.5 filled outline 125,92 158,92 158,108 125,108
+zone name keepout layers F.Cu,B.Cu priority 0 connect thermal clearance 0 min-thickness 0.25 thermal-gap 0.5 thermal-bridge 0.5 keepout tracks not_allowed keepout vias not_allowed keepout pads allowed keepout copperpour not_allowed keepout footprints allowed outline 102,92 106,92 106,96 102,96

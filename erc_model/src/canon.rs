@@ -299,13 +299,25 @@ impl Board {
     fn canonicalize_layout(&mut self) {
         let Some(lay) = &mut self.layout else { return };
         let map = sort_remap(&mut lay.footprints, |f| {
-            (Nat(f.reference.clone()), f.at, Nat(f.lib_id.clone()))
+            (
+                Nat(f.reference.clone()),
+                f.at,
+                Nat(f.lib_id.clone()),
+                f.side,
+                f.rotation.to_string(),
+                f.value.clone(),
+            )
         });
         for p in &mut lay.pads {
             p.footprint = FootprintId::from_index(map[p.footprint.index()]);
         }
+        // Everything a pad line shows, so pads with one number (a pad on each side) have one order
         let map = sort_remap(&mut lay.pads, |p| {
-            (p.footprint, Nat(p.number.clone()), p.at)
+            (
+                (p.footprint, Nat(p.number.clone()), p.at),
+                (p.layers.join(","), p.kind.clone(), p.shape.clone(), p.size),
+                (p.rotation.to_string(), p.drill, p.net_name.clone()),
+            )
         });
         for f in &mut lay.footprints {
             for x in &mut f.pads {
@@ -342,6 +354,7 @@ impl Board {
             g.sort_by(|a, b| natural_cmp(&a.0, &b.0));
             p.primitives = g.into_iter().map(|x| x.1).collect();
         }
+        lay.layers.sort_by_key(|l| l.ordinal);
         lay.net_names.sort_by(|a, b| natural_cmp(a, b));
         lay.net_names.dedup();
         sort_by_line(&mut lay.tracks, dump::track_tokens);

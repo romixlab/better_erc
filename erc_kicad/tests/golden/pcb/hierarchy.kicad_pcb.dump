@@ -1,0 +1,417 @@
+board hierarchy
+fp J1 gfx F.CrtYd width 0.05 rect 135.65,98.2 141.8,101.8
+fp J1 gfx F.Fab width 0.1 poly 141.27,98.73 141.27,101.27 136.19,101.27 136.19,98.73
+fp J1 gfx F.SilkS width 0.12 arc 141.33,98.67 141.88,100 141.33,101.33
+fp J1 lib Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical value Conn_01x02 side front at 140,100 rot -90 mount through_hole board_only exclude_from_bom
+fp J1 model ${KICAD8_3DMODEL_DIR}/Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x02_P2.54mm_Vertical.wrl
+fp J1 text F.Fab Conn_01x02 at 135.13,100 size 1
+fp J1 text F.SilkS J1 at 142.33,100 size 1
+fp NT1 gfx F.Fab width 0.1 poly 149.46967,100.176777 150.176777,99.46967 150.53033,99.823223 149.823223,100.53033
+fp NT1 lib NetTie:NetTie-2_SMD_Pad0.5mm value NetTie side front at 150,100 rot 45 mount smd board_only exclude_from_pos_files exclude_from_bom allow_missing_courtyard
+fp NT1 text F.Fab NetTie at 150.848528,100.848528 size 1
+fp NT1 text F.SilkS NT1 at 149.151472,99.151472 size 1
+fp NT1 tie 1 2
+fp R1 field Footprint = Resistor_SMD:R_0603_1608Metric @ pcb hierarchy.kicad_pcb
+fp R1 field Mpn1 = RC0603FR-0710KL @ pcb hierarchy.kicad_pcb
+fp R1 gfx F.CrtYd width 0.05 rect 109.27,98.52 110.73,101.48
+fp R1 gfx F.Fab width 0.1 rect 109.5875,99.2 110.4125,100.8
+fp R1 gfx F.SilkS width 0.12 line 109.4775,100.237258 109.4775,99.762742
+fp R1 gfx F.SilkS width 0.12 line 110.5225,100.237258 110.5225,99.762742
+fp R1 lib Resistor_SMD:R_0603_1608Metric value 10k side front at 110,100 rot 90 mount smd
+fp R1 model ${KICAD8_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.wrl
+fp R1 text F.Fab ${REFERENCE} at 110,100 size 0.4
+fp R1 text F.Fab 10k at 111.43,100 size 1
+fp R1 text F.Fab RC0603FR-0710KL at 110,100 size 1.27 hidden
+fp R1 text F.Fab Resistor_SMD:R_0603_1608Metric at 110,100 size 1.27 hidden
+fp R1 text F.SilkS R1 at 108.57,100 size 1
+fp R5 field Footprint = Resistor_SMD:R_0603_1608Metric @ pcb hierarchy.kicad_pcb
+fp R5 gfx B.CrtYd width 0.05 rect 118.52,99.27 121.48,100.73
+fp R5 lib Resistor_SMD:R_0603_1608Metric value 10k side back at 120,100 rot 180 mount smd dnp
+fp R5 text B.Fab 10k at 120,101.43 size 1 mirrored
+fp R5 text B.Fab Resistor_SMD:R_0603_1608Metric at 120,100 size 1.27 hidden mirrored
+fp R5 text B.SilkS R5 at 120,98.57 size 1 mirrored
+fp TP1 gfx F.CrtYd width 0.05 circle 130,100 1
+fp TP1 gfx F.SilkS width 0.12 circle 130,100 0.7
+fp TP1 lib TestPoint:TestPoint_Pad_D1.0mm value TestPoint side front at 130,100 rot 0 board_only exclude_from_pos_files exclude_from_bom
+fp TP1 text F.Fab TestPoint at 130,101.55 size 1
+fp TP1 text F.SilkS TP1 at 130,98.55 size 1
+gfx Edge.Cuts width 0.05 rect 100,90 160,110
+gfx F.SilkS width 0.15 line 105,108 115,108
+label / global GLOB at 120,16.19 shape bidirectional net GLOB field Intersheetrefs ${INTERSHEET_REFS}
+label / local "CTL{EN RST}" at 45,40
+label / local CTL.EN at 52,52.54 net /CTL.EN
+label / local DATA2 at 30,47.54 net /DATA2
+label / local DATA[0..3] at 40,40
+label / local LOC at 130,16.19 net /LOC
+label / local MID at 50,25.08 net /MID
+label / local MID at 50,62.54 net /MID
+label / power +3V3 at 120,23.81 net +3V3
+label / sheet_pin "CTL{EN RST}" at 60,30.16 shape input child /A/
+label / sheet_pin "CTL{EN RST}" at 60,70.16 shape input child /B/
+label / sheet_pin D[0..3] at 60,27.62 shape bidirectional child /A/
+label / sheet_pin D[0..3] at 60,67.62 shape bidirectional child /B/
+label / sheet_pin IN at 60,22.54 shape input child /A/ net /A/IN
+label / sheet_pin IN at 60,62.54 shape input child /B/ net /MID
+label / sheet_pin OUT at 60,25.08 shape output child /A/ net /MID
+label / sheet_pin OUT at 60,65.08 shape output child /B/ net /B/OUT
+label /A/ global GLOB at 60,33.81 shape bidirectional net GLOB field Intersheetrefs ${INTERSHEET_REFS}
+label /A/ hierarchical "CTL{EN RST}" at 20,80 shape input
+label /A/ hierarchical D[0..3] at 20,60 shape bidirectional
+label /A/ hierarchical IN at 30,26.19 shape input net /A/IN
+label /A/ hierarchical OUT at 30,33.81 shape output net /MID
+label /A/ local CTL.EN at 32.54,70 net /CTL.EN
+label /A/ local D0 at 32.54,50 net /DATA0
+label /A/ local D2 at 42.54,50 net /DATA2
+label /A/ local LOC at 42.54,42.38 net /A/LOC
+label /A/ local LOC at 60,26.19 net /A/LOC
+label /A/ power +3V3 at 32.54,42.38 net +3V3
+label /A/ power GND at 32.54,62.38 net GND
+label /B/ global GLOB at 60,33.81 shape bidirectional net GLOB field Intersheetrefs ${INTERSHEET_REFS}
+label /B/ hierarchical "CTL{EN RST}" at 20,80 shape input
+label /B/ hierarchical D[0..3] at 20,60 shape bidirectional
+label /B/ hierarchical IN at 30,26.19 shape input net /MID
+label /B/ hierarchical OUT at 30,33.81 shape output net /B/OUT
+label /B/ local CTL.EN at 32.54,70 net /CTL.EN
+label /B/ local D0 at 32.54,50 net /DATA0
+label /B/ local D2 at 42.54,50 net /DATA2
+label /B/ local LOC at 42.54,42.38 net /B/LOC
+label /B/ local LOC at 60,26.19 net /B/LOC
+label /B/ power +3V3 at 32.54,42.38 net +3V3
+label /B/ power GND at 32.54,62.38 net GND
+layer 0 F.Cu signal
+layer 31 B.Cu signal
+layer 34 B.Paste user
+layer 35 F.Paste user
+layer 36 B.SilkS user user B.Silkscreen
+layer 37 F.SilkS user user F.Silkscreen
+layer 38 B.Mask user
+layer 39 F.Mask user
+layer 44 Edge.Cuts user
+layer 45 Margin user
+layer 46 B.CrtYd user user B.Courtyard
+layer 47 F.CrtYd user user F.Courtyard
+layer 48 B.Fab user
+layer 49 F.Fab user
+layout file hierarchy.kicad_pcb thickness 1.6
+net +3V3 class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net +3V3 kind power
+net /A/IN class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net /A/IN kind named
+net /A/LOC class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net /A/LOC kind named
+net /B/LOC class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net /B/LOC kind named
+net /B/OUT class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net /B/OUT kind named
+net /CTL.EN class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net /CTL.EN kind named
+net /DATA0 class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net /DATA0 kind named
+net /DATA2 class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net /DATA2 kind named
+net /LOC class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net /LOC kind named
+net /MID class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net /MID kind named
+net GLOB class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net GLOB kind named
+net GND class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(R1-Pad1) class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net unconnected-(R1-Pad1) kind unconnected
+net unconnected-(R2-Pad2) class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net unconnected-(R2-Pad2) kind unconnected
+net unconnected-(R3-Pad2) class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net unconnected-(R3-Pad2) kind unconnected
+net unconnected-(R4-Pad2) class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net unconnected-(R4-Pad2) kind unconnected
+net unconnected-(R6-Pad2) class = Default @ sch hierarchy.kicad_sch note "effective net class"
+net unconnected-(R6-Pad2) kind unconnected
+pad J1 1 kind thru_hole shape rect at 140,100 rot 270 size 1.7,1.7 drill 1,1 layers *.Cu,*.Mask,In1.Cu,In2.Cu,In3.Cu,In4.Cu,In5.Cu,In6.Cu,In7.Cu,In8.Cu,In9.Cu,In10.Cu,In11.Cu,In12.Cu,In13.Cu,In14.Cu,In15.Cu,In16.Cu,In17.Cu,In18.Cu,In19.Cu,In20.Cu,In21.Cu,In22.Cu,In23.Cu,In24.Cu,In25.Cu,In26.Cu,In27.Cu,In28.Cu,In29.Cu,In30.Cu net /DATA2 func Pin_1 ptype passive
+pad J1 2 kind thru_hole shape oval at 137.46,100 rot 270 size 1.7,2.2 drill 1,1.5 layers *.Cu,*.Mask,In1.Cu,In2.Cu,In3.Cu,In4.Cu,In5.Cu,In6.Cu,In7.Cu,In8.Cu,In9.Cu,In10.Cu,In11.Cu,In12.Cu,In13.Cu,In14.Cu,In15.Cu,In16.Cu,In17.Cu,In18.Cu,In19.Cu,In20.Cu,In21.Cu,In22.Cu,In23.Cu,In24.Cu,In25.Cu,In26.Cu,In27.Cu,In28.Cu,In29.Cu,In30.Cu net GND func Pin_2 ptype passive mask 0.1 zone-connect 2
+pad NT1 1 kind smd shape circle at 149.646447,100.353553 rot 45 size 0.5,0.5 layers F.Cu net GND
+pad NT1 2 kind smd shape custom at 150.353553,99.646447 rot 45 size 0.5,0.5 layers F.Cu net /CTL.EN
+pad NT1 2 prim "" width 0 filled poly 0,-0.25 -0.5,-0.25 -0.5,0.25 0,0.25
+pad R1 1 kind smd shape roundrect at 110,100.825 rot 90 size 0.8,0.95 layers F.Cu,F.Paste,F.Mask net +3V3 ptype passive
+pad R1 2 kind smd shape roundrect at 110,99.175 rot 90 size 0.8,0.95 layers F.Cu,F.Paste,F.Mask net /A/IN ptype passive
+pad R5 1 kind smd shape roundrect at 120.825,100 rot 180 size 0.8,0.95 layers B.Cu,B.Paste,B.Mask net GLOB ptype passive
+pad R5 2 kind smd shape roundrect at 119.175,100 rot 180 size 0.8,0.95 layers B.Cu,B.Paste,B.Mask net +3V3 ptype passive
+pad TP1 1 kind smd shape circle at 130,100 rot 0 size 1,1 layers F.Cu,F.Mask net GND prop pad_prop_testpoint
+part R1 field Value = 10k @ sch hierarchy.kicad_sch
+part R1 flag dnp = no @ sch hierarchy.kicad_sch
+part R1 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
+part R1 flag in_bom = yes @ sch hierarchy.kicad_sch
+part R1 flag on_board = yes @ sch hierarchy.kicad_sch
+part R1 lib Fixture:R sheet / symbol Fixture:R
+part R1 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000009 at 20,20 rot 0
+part R1 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch hierarchy.kicad_sch
+part R2 flag dnp = no @ sch hierarchy.kicad_sch
+part R2 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
+part R2 flag in_bom = yes @ sch hierarchy.kicad_sch
+part R2 flag on_board = yes @ sch hierarchy.kicad_sch
+part R2 lib Fixture:R sheet / symbol Fixture:R
+part R2 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000016 at 20,80 rot 0
+part R2 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
+part R3 field Value = 10k @ sch hierarchy.kicad_sch
+part R3 flag dnp = no @ sch hierarchy.kicad_sch
+part R3 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
+part R3 flag in_bom = yes @ sch hierarchy.kicad_sch
+part R3 flag on_board = yes @ sch hierarchy.kicad_sch
+part R3 lib Fixture:R sheet / symbol Fixture:R
+part R3 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000026 at 30,51.35 rot 0
+part R3 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
+part R4 field Value = 10k @ sch hierarchy.kicad_sch
+part R4 flag dnp = no @ sch hierarchy.kicad_sch
+part R4 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
+part R4 flag in_bom = yes @ sch hierarchy.kicad_sch
+part R4 flag on_board = yes @ sch hierarchy.kicad_sch
+part R4 lib Fixture:R sheet / symbol Fixture:R
+part R4 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000034 at 52,56.35 rot 0
+part R4 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
+part R5 field Value = 10k @ sch hierarchy.kicad_sch
+part R5 flag dnp = no @ sch hierarchy.kicad_sch
+part R5 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
+part R5 flag in_bom = yes @ sch hierarchy.kicad_sch
+part R5 flag on_board = yes @ sch hierarchy.kicad_sch
+part R5 lib Fixture:R sheet / symbol Fixture:R
+part R5 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000035 at 120,20 rot 0
+part R5 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
+part R6 field Value = 10k @ sch hierarchy.kicad_sch
+part R6 flag dnp = no @ sch hierarchy.kicad_sch
+part R6 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
+part R6 flag in_bom = yes @ sch hierarchy.kicad_sch
+part R6 flag on_board = yes @ sch hierarchy.kicad_sch
+part R6 lib Fixture:R sheet / symbol Fixture:R
+part R6 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000038 at 130,20 rot 0
+part R6 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
+part R10 field Value = 10k @ sch child.kicad_sch
+part R10 flag dnp = no @ sch child.kicad_sch
+part R10 flag exclude_from_sim = no @ sch child.kicad_sch
+part R10 flag in_bom = yes @ sch child.kicad_sch
+part R10 flag on_board = yes @ sch child.kicad_sch
+part R10 lib Fixture:R sheet /A/ symbol Fixture:R
+part R10 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000001 at 30,30 rot 0
+part R10 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R11 field Value = 10k @ sch child.kicad_sch
+part R11 flag dnp = no @ sch child.kicad_sch
+part R11 flag exclude_from_sim = no @ sch child.kicad_sch
+part R11 flag in_bom = yes @ sch child.kicad_sch
+part R11 flag on_board = yes @ sch child.kicad_sch
+part R11 lib Fixture:R sheet /A/ symbol Fixture:R
+part R11 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000009 at 32.54,46.19 rot 0
+part R11 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R12 field Value = 10k @ sch child.kicad_sch
+part R12 flag dnp = no @ sch child.kicad_sch
+part R12 flag exclude_from_sim = no @ sch child.kicad_sch
+part R12 flag in_bom = yes @ sch child.kicad_sch
+part R12 flag on_board = yes @ sch child.kicad_sch
+part R12 lib Fixture:R sheet /A/ symbol Fixture:R
+part R12 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000014 at 42.54,46.19 rot 0
+part R12 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R13 field Value = 10k @ sch child.kicad_sch
+part R13 flag dnp = no @ sch child.kicad_sch
+part R13 flag exclude_from_sim = no @ sch child.kicad_sch
+part R13 flag in_bom = yes @ sch child.kicad_sch
+part R13 flag on_board = yes @ sch child.kicad_sch
+part R13 lib Fixture:R sheet /A/ symbol Fixture:R
+part R13 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000016 at 60,30 rot 0
+part R13 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R14 field Value = 10k @ sch child.kicad_sch
+part R14 flag dnp = no @ sch child.kicad_sch
+part R14 flag exclude_from_sim = no @ sch child.kicad_sch
+part R14 flag in_bom = yes @ sch child.kicad_sch
+part R14 flag on_board = yes @ sch child.kicad_sch
+part R14 lib Fixture:R sheet /A/ symbol Fixture:R
+part R14 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000024 at 32.54,66.19 rot 0
+part R14 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R20 field Value = 10k @ sch child.kicad_sch
+part R20 flag dnp = no @ sch child.kicad_sch
+part R20 flag exclude_from_sim = no @ sch child.kicad_sch
+part R20 flag in_bom = yes @ sch child.kicad_sch
+part R20 flag on_board = yes @ sch child.kicad_sch
+part R20 lib Fixture:R sheet /B/ symbol Fixture:R
+part R20 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000001 at 30,30 rot 0
+part R20 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R21 field Value = 10k @ sch child.kicad_sch
+part R21 flag dnp = no @ sch child.kicad_sch
+part R21 flag exclude_from_sim = no @ sch child.kicad_sch
+part R21 flag in_bom = yes @ sch child.kicad_sch
+part R21 flag on_board = yes @ sch child.kicad_sch
+part R21 lib Fixture:R sheet /B/ symbol Fixture:R
+part R21 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000009 at 32.54,46.19 rot 0
+part R21 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R22 field Value = 10k @ sch child.kicad_sch
+part R22 flag dnp = no @ sch child.kicad_sch
+part R22 flag exclude_from_sim = no @ sch child.kicad_sch
+part R22 flag in_bom = yes @ sch child.kicad_sch
+part R22 flag on_board = yes @ sch child.kicad_sch
+part R22 lib Fixture:R sheet /B/ symbol Fixture:R
+part R22 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000014 at 42.54,46.19 rot 0
+part R22 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R23 field Value = 10k @ sch child.kicad_sch
+part R23 flag dnp = no @ sch child.kicad_sch
+part R23 flag exclude_from_sim = no @ sch child.kicad_sch
+part R23 flag in_bom = yes @ sch child.kicad_sch
+part R23 flag on_board = yes @ sch child.kicad_sch
+part R23 lib Fixture:R sheet /B/ symbol Fixture:R
+part R23 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000016 at 60,30 rot 0
+part R23 value = text 10k @ sch child.kicad_sch note "from the Value field"
+part R24 field Value = 10k @ sch child.kicad_sch
+part R24 flag dnp = no @ sch child.kicad_sch
+part R24 flag exclude_from_sim = no @ sch child.kicad_sch
+part R24 flag in_bom = yes @ sch child.kicad_sch
+part R24 flag on_board = yes @ sch child.kicad_sch
+part R24 lib Fixture:R sheet /B/ symbol Fixture:R
+part R24 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000024 at 32.54,66.19 rot 0
+part R24 value = text 10k @ sch child.kicad_sch note "from the Value field"
+pcbnet +3V3
+pcbnet /A/IN
+pcbnet /CTL.EN
+pcbnet /DATA2
+pcbnet GLOB
+pcbnet GND
+pin R1 1 name "" unit 1 net unconnected-(R1-Pad1)
+pin R1 1 type = passive @ sch hierarchy.kicad_sch
+pin R1 2 name "" unit 1 net /A/IN
+pin R1 2 type = passive @ sch hierarchy.kicad_sch
+pin R2 1 name "" unit 1 net /B/OUT
+pin R2 1 type = passive @ sch hierarchy.kicad_sch
+pin R2 2 name "" unit 1 net unconnected-(R2-Pad2)
+pin R2 2 type = passive @ sch hierarchy.kicad_sch
+pin R3 1 name "" unit 1 net /DATA2
+pin R3 1 type = passive @ sch hierarchy.kicad_sch
+pin R3 2 name "" unit 1 net unconnected-(R3-Pad2)
+pin R3 2 type = passive @ sch hierarchy.kicad_sch
+pin R4 1 name "" unit 1 net /CTL.EN
+pin R4 1 type = passive @ sch hierarchy.kicad_sch
+pin R4 2 name "" unit 1 net unconnected-(R4-Pad2)
+pin R4 2 type = passive @ sch hierarchy.kicad_sch
+pin R5 1 name "" unit 1 net GLOB
+pin R5 1 type = passive @ sch hierarchy.kicad_sch
+pin R5 2 name "" unit 1 net +3V3
+pin R5 2 type = passive @ sch hierarchy.kicad_sch
+pin R6 1 name "" unit 1 net /LOC
+pin R6 1 type = passive @ sch hierarchy.kicad_sch
+pin R6 2 name "" unit 1 net unconnected-(R6-Pad2)
+pin R6 2 type = passive @ sch hierarchy.kicad_sch
+pin R10 1 name "" unit 1 net /A/IN
+pin R10 1 type = passive @ sch child.kicad_sch
+pin R10 2 name "" unit 1 net /MID
+pin R10 2 type = passive @ sch child.kicad_sch
+pin R11 1 name "" unit 1 net +3V3
+pin R11 1 type = passive @ sch child.kicad_sch
+pin R11 2 name "" unit 1 net /DATA0
+pin R11 2 type = passive @ sch child.kicad_sch
+pin R12 1 name "" unit 1 net /A/LOC
+pin R12 1 type = passive @ sch child.kicad_sch
+pin R12 2 name "" unit 1 net /DATA2
+pin R12 2 type = passive @ sch child.kicad_sch
+pin R13 1 name "" unit 1 net /A/LOC
+pin R13 1 type = passive @ sch child.kicad_sch
+pin R13 2 name "" unit 1 net GLOB
+pin R13 2 type = passive @ sch child.kicad_sch
+pin R14 1 name "" unit 1 net GND
+pin R14 1 type = passive @ sch child.kicad_sch
+pin R14 2 name "" unit 1 net /CTL.EN
+pin R14 2 type = passive @ sch child.kicad_sch
+pin R20 1 name "" unit 1 net /MID
+pin R20 1 type = passive @ sch child.kicad_sch
+pin R20 2 name "" unit 1 net /B/OUT
+pin R20 2 type = passive @ sch child.kicad_sch
+pin R21 1 name "" unit 1 net +3V3
+pin R21 1 type = passive @ sch child.kicad_sch
+pin R21 2 name "" unit 1 net /DATA0
+pin R21 2 type = passive @ sch child.kicad_sch
+pin R22 1 name "" unit 1 net /B/LOC
+pin R22 1 type = passive @ sch child.kicad_sch
+pin R22 2 name "" unit 1 net /DATA2
+pin R22 2 type = passive @ sch child.kicad_sch
+pin R23 1 name "" unit 1 net /B/LOC
+pin R23 1 type = passive @ sch child.kicad_sch
+pin R23 2 name "" unit 1 net GLOB
+pin R23 2 type = passive @ sch child.kicad_sch
+pin R24 1 name "" unit 1 net GND
+pin R24 1 type = passive @ sch child.kicad_sch
+pin R24 2 name "" unit 1 net /CTL.EN
+pin R24 2 type = passive @ sch child.kicad_sch
+setup allow_soldermask_bridges_in_footprints no
+setup pad_to_mask_clearance 0.05
+setup stackup.copper_finish ENIG
+setup stackup.dielectric_constraints no
+sheet / name "" file hierarchy.kicad_sch uuid /
+sheet /A/ name A file child.kicad_sch uuid /30000000-0000-4000-8000-0000000000a1 page 2
+sheet /B/ name B file child.kicad_sch uuid /30000000-0000-4000-8000-0000000000b1 page 3
+source file child.kicad_sch
+source file hierarchy.kicad_pcb
+source file hierarchy.kicad_sch
+source tool kicad
+source version 8.0
+stackup 0 F.SilkS "Top Silk Screen"
+stackup 1 F.Mask "Top Solder Mask" thickness 0.01
+stackup 2 F.Cu copper thickness 0.035
+stackup 3 "dielectric 1" core thickness 1.51 material FR4 er 4.5
+stackup 4 B.Cu copper thickness 0.035
+stackup 5 B.Mask "Bottom Solder Mask" thickness 0.01
+stackup 6 B.SilkS "Bottom Silk Screen"
+symbol Fixture:DualAmp description "Dual amplifier, two units"
+symbol Fixture:DualAmp field Description "Dual amplifier, two units"
+symbol Fixture:DualAmp field Reference U
+symbol Fixture:DualAmp field Value DualAmp
+symbol Fixture:DualAmp hash 1e39e4d8a19b568e
+symbol Fixture:DualAmp pin 1 unit 1 body 1 name OUTA type output style line
+symbol Fixture:DualAmp pin 2 unit 1 body 1 name -INA type input style line
+symbol Fixture:DualAmp pin 3 unit 1 body 1 name +INA type input style line
+symbol Fixture:DualAmp pin 5 unit 2 body 1 name +INB type input style line
+symbol Fixture:DualAmp pin 6 unit 2 body 1 name -INB type input style line
+symbol Fixture:DualAmp pin 7 unit 2 body 1 name OUTB type output style line
+symbol Fixture:DualAmp units 2
+symbol Fixture:IC field Reference U
+symbol Fixture:IC field Value IC
+symbol Fixture:IC hash 1197febd51e4469b
+symbol Fixture:IC pin 1 unit 1 body 1 name IN type input style line
+symbol Fixture:IC pin 2 unit 1 body 1 name OUT type output style line
+symbol Fixture:IC pin 3 unit 1 body 1 name VDD type power_in style line hidden
+symbol Fixture:IC pin 4 unit 1 body 1 name GND type power_in style line hidden
+symbol Fixture:IC pin 5 unit 1 body 1 alt SDA type open_collector style line
+symbol Fixture:IC pin 5 unit 1 body 1 alt TX type output style line
+symbol Fixture:IC pin 5 unit 1 body 1 name IO type bidirectional style line
+symbol Fixture:IC pin 6 unit 1 body 1 name NC type no_connect style line
+symbol Fixture:IC units 1
+symbol Fixture:R description Resistor
+symbol Fixture:R field Description Resistor
+symbol Fixture:R field Reference R
+symbol Fixture:R field Value R
+symbol Fixture:R hash 87069a6c18644b32
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:R units 1
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 32f22f09c03fc124
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line hidden
+symbol power:+3V3 units 1 power global
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash cb6a747b7bfb0c44
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line hidden
+symbol power:GND units 1 power global
+symbol power:PWR_FLAG field Reference "#FLG"
+symbol power:PWR_FLAG field Value PWR_FLAG
+symbol power:PWR_FLAG hash 1747a8f6eb221e0e
+symbol power:PWR_FLAG pin 1 unit 0 body 0 name pwr type power_out style line
+symbol power:PWR_FLAG units 1 power global
+symbol power:VDD field Reference "#PWR"
+symbol power:VDD field Value VDD
+symbol power:VDD hash 5d35e1da63ab18c5
+symbol power:VDD pin 1 unit 1 body 1 name VDD type power_in style line hidden
+symbol power:VDD units 1 power global
+text B.SilkS BACK at 105,103 size 1 mirrored
+text F.SilkS B998A at 105,106 size 1.5
+track B.Cu 120.825,100 120.825,99.175 width 0.25 net GLOB
+track F.Cu 110,99.175 115,99.175 width 0.25 net /A/IN
+track F.Cu 115,99.175 mid 117.5,98.1 120,99.175 width 0.25 net /A/IN
+via at 120,99.175 size 0.6 drill 0.3 layers F.Cu,B.Cu kind through net /A/IN
+via at 130,102 size 0.6 drill 0.3 layers F.Cu,B.Cu kind through net GND
+zone name GND_B net GND layers B.Cu priority 1 connect thermal clearance 0.3 min-thickness 0.25 thermal-gap 0.5 thermal-bridge 0.5 filled outline 125,92 158,92 158,108 125,108
+zone name keepout layers F.Cu,B.Cu priority 0 connect thermal clearance 0 min-thickness 0.25 thermal-gap 0.5 thermal-bridge 0.5 keepout tracks not_allowed keepout vias not_allowed keepout pads allowed keepout copperpour not_allowed keepout footprints allowed outline 102,92 106,92 106,96 102,96

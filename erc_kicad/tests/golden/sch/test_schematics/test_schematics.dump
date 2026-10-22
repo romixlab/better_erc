@@ -117,6 +117,7 @@ label "/C107: I2C multiple pull-ups/" power VCC_3V3 at 151.13,59.69 net VCC_3V3
 label "/C107: I2C multiple pull-ups/" power VCC_3V3 at 171.45,86.36 net VCC_3V3
 label "/C107: I2C multiple pull-ups/" power VCC_3V3 at 181.61,86.36 net VCC_3V3
 label "/C107: I2C multiple pull-ups/" power VCC_3V3 at 204.47,92.71 net VCC_3V3
+layout file test_schematics.kicad_pcb
 net "/C20: I2C no pull-ups/I2C1_EN" class = Default @ pro test_schematics.kicad_pro note "effective net class"
 net "/C20: I2C no pull-ups/I2C1_EN" kind named
 net "/C20: I2C no pull-ups/I2C2_EN" class = Default @ pro test_schematics.kicad_pro note "effective net class"
@@ -1758,6 +1759,7 @@ source file i2c_no_pull_ups.kicad_sch
 source file i2c_non_equal_pull_ups.kicad_sch
 source file i2c_non_standard_pull_ups.kicad_sch
 source file i2c_segments.kicad_sch
+source file test_schematics.kicad_pcb
 source file test_schematics.kicad_pro
 source file test_schematics.kicad_sch
 source tool kicad

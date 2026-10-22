@@ -308,7 +308,7 @@ pub struct Layout {
     pub thickness: Option<i64>,
     pub layers: Vec<LayerDef>,
     pub stackup: Vec<StackupLayer>,
-    /// The board's net table (name per net code), as the board stores it
+    /// The board's nets: its net table (KiCad 8 and 9), or the nets its items name (KiCad 10 has no table)
     pub net_names: Vec<String>,
     pub footprints: Vec<Footprint>,
     pub pads: Vec<Pad>,
