@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.4.7] - 2026-10-22
+
 ### Added
 
 - Power checks with test schematics (`<id>_<slug>`): RAIL-1, RAIL-5, RAIL-18, RAIL-19; PIN-3, PIN-4, PIN-6; DRV-5,
