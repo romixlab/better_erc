@@ -1,0 +1,4 @@
+[package]
+name = "erc_checks"
+version.workspace = true
+edition.workspace = true

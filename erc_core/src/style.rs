@@ -113,13 +113,16 @@ mod tests {
     use ecad_file_format::kicad_netlist::load_kicad_netlist;
     use generate_netlists::get_netlist_path;
 
-    /// `test_schematics/sources/style_values.kicad_sch`: one resistor per value finding, R1 fine and R8 DNP,
-    /// Q1 a MOSFET with unnamed pins, Q2 one with G, S and D
+    /// `test_schematics/sources/bom-10_values.kicad_sch`: one resistor per value finding, R1 fine, R8 DNP as its
+    /// value, R9 a placeholder on a DNP part, R10 `TBD`; `lib-3_mosfet_pin_names.kicad_sch`: Q1 a MOSFET with
+    /// unnamed pins, Q2 one with G, S and D
     #[test]
     fn able_to_find_style_diagnostics() {
-        let netlist = load_kicad_netlist(&get_netlist_path("style_values")).unwrap();
         let mut diagnostics = Vec::new();
-        check_style(&netlist, &mut diagnostics);
+        for name in ["bom-10_values", "lib-3_mosfet_pin_names"] {
+            let netlist = load_kicad_netlist(&get_netlist_path(name)).unwrap();
+            check_style(&netlist, &mut diagnostics);
+        }
         let mut found: Vec<_> = diagnostics
             .iter()
             .map(|d| {
@@ -134,12 +137,14 @@ mod tests {
         found.sort();
         let expected = [
             ("Q1", "Warning MosfetPinsNotNamed"),
+            ("R10", "Error WrongValue"),
             ("R2", "Error NoValue"),
             ("R3", "Warning CalculateLaterValue"),
             ("R4", "Error WrongValue"),
             ("R5", "Warning NonStandardValue(RedundantSpace)"),
             ("R6", "Warning NonStandardValue(SmallR)"),
             ("R7", "Warning NonStandardValue(BigRInsteadOfOhmSymbol)"),
+            ("R9", "Warning CalculateLaterValue"),
         ]
         .map(|(d, f)| (d.to_string(), f.to_string()));
         assert_eq!(found, expected);

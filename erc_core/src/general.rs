@@ -44,11 +44,11 @@ mod tests {
     use generate_netlists::get_netlist_path;
     use std::path::Path;
 
-    /// `test_schematics/sources/io_inputs.kicad_sch`: U1A's +INA driven by its own output, -INA only reaching
+    /// `test_schematics/sources/io-1_inputs.kicad_sch`: U1A's +INA driven by its own output, -INA only reaching
     /// R1. IO-1 is a stub so far: it collects every input pin, driven or not.
     #[test]
     fn able_to_find_unconnected_inputs() {
-        let netlist = load_kicad_netlist(&get_netlist_path("io_inputs")).unwrap();
+        let netlist = load_kicad_netlist(&get_netlist_path("io-1_inputs")).unwrap();
         let mut inputs = inputs(&netlist);
         inputs.sort_by(|a, b| a.0.0.cmp(&b.0.0));
         let inputs: Vec<_> = inputs

@@ -1213,6 +1213,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "00d174d5400e5e8fd687ad1049e2f578285fa914201b1af7e8b112a4546bd826"
 
 [[package]]
+name = "erc_analysis"
+version = "0.3.6"
+dependencies = [
+ "erc_kicad",
+ "erc_model",
+ "serde",
+]
+
+[[package]]
+name = "erc_checks"
+version = "0.3.6"
+
+[[package]]
 name = "erc_core"
 version = "0.3.6"
 dependencies = [

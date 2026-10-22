@@ -25,7 +25,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "i2c_non_standard_pull_ups.kicad_sch"
+		(property "Sheetfile" "i2c-9_non_standard_pull_ups.kicad_sch"
 			(at 13.97 28.5246 0)
 			(effects
 				(font
@@ -62,7 +62,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "i2c_no_pull_ups.kicad_sch"
+		(property "Sheetfile" "i2c-1_no_pull_ups.kicad_sch"
 			(at 13.97 20.9046 0)
 			(effects
 				(font
@@ -99,7 +99,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "i2c_non_equal_pull_ups.kicad_sch"
+		(property "Sheetfile" "i2c-10_non_equal_pull_ups.kicad_sch"
 			(at 13.97 36.1446 0)
 			(effects
 				(font
@@ -136,7 +136,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "i2c_segments.kicad_sch"
+		(property "Sheetfile" "i2c-7_segments.kicad_sch"
 			(at 13.97 43.7646 0)
 			(effects
 				(font
@@ -173,7 +173,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "i2c_multiple_pull_ups.kicad_sch"
+		(property "Sheetfile" "i2c-2_multiple_pull_ups.kicad_sch"
 			(at 13.97 51.3846 0)
 			(effects
 				(font

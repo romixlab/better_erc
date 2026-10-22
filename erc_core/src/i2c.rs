@@ -732,7 +732,7 @@ mod tests {
 
     #[test]
     fn able_to_recognize_i2c_bus_segments() {
-        let path = get_netlist_path("i2c_segments");
+        let path = get_netlist_path("i2c-7_segments");
         let netlist = load_kicad_netlist(&path).unwrap();
         let mut diagnostics = Vec::new();
         let buses = find_i2c_buses(&netlist, &mut diagnostics);
@@ -832,7 +832,7 @@ mod tests {
 
     #[test]
     fn able_to_find_missing_i2c_pull_ups() {
-        let path = get_netlist_path("i2c_no_pull_ups");
+        let path = get_netlist_path("i2c-1_no_pull_ups");
         let netlist = load_kicad_netlist(&path).unwrap();
         let mut diagnostics = Vec::new();
         let _buses = find_i2c_buses(&netlist, &mut diagnostics);
@@ -854,7 +854,7 @@ mod tests {
 
     #[test]
     fn able_to_find_non_standard_pull_ups() {
-        let path = get_netlist_path("i2c_non_standard_pull_ups");
+        let path = get_netlist_path("i2c-9_non_standard_pull_ups");
         let netlist = load_kicad_netlist(&path).unwrap();
         let mut diagnostics = Vec::new();
         let _buses = find_i2c_buses(&netlist, &mut diagnostics);
@@ -871,7 +871,7 @@ mod tests {
 
     #[test]
     fn able_to_find_non_equal_pull_ups() {
-        let path = get_netlist_path("i2c_non_equal_pull_ups");
+        let path = get_netlist_path("i2c-10_non_equal_pull_ups");
         let netlist = load_kicad_netlist(&path).unwrap();
         let mut diagnostics = Vec::new();
         let _buses = find_i2c_buses(&netlist, &mut diagnostics);
@@ -889,7 +889,7 @@ mod tests {
 
     #[test]
     fn able_to_find_multiple_i2c_pull_ups() {
-        let path = get_netlist_path("i2c_multiple_pull_ups");
+        let path = get_netlist_path("i2c-2_multiple_pull_ups");
         let netlist = load_kicad_netlist(&path).unwrap();
         let mut diagnostics = Vec::new();
         let buses = find_i2c_buses(&netlist, &mut diagnostics);

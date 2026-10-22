@@ -17,6 +17,8 @@ members = [
     "better_erc",
     "ecad_compare",
     "ecad_file_format",
+    "erc_analysis",
+    "erc_checks",
     "erc_core",
     "erc_kicad",
     "erc_model",
