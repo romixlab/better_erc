@@ -11,6 +11,13 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- `erc_analysis::power` (`NET-5`, first layer): rails (by a voltage in the name, `+V`/`VDD`/`VCC`, or a power pin on
+  the net, each a fact with its rule and the voltage from the name), grounds and switching nodes, ported from
+  `erc_core`'s `power.rs`; the I2C lines and switching nodes are not rails. `name_voltage` reads `+1V25` as 1.25 V
+  (the old parser read 2.25 V). `erc_analysis::graph::input_pins`: the input pins on a net (the IO-1 stub's list).
+
 ## [0.3.9] - 2026-10-22
 
 ### Added

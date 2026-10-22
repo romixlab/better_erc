@@ -1,7 +1,7 @@
 //! Connectivity queries over a board's part-pin-net graph. Only real components count: virtual `#` parts (power
 //! symbols, flags) name nets but are not on them as far as these queries go.
 
-use erc_model::{Board, NetId, PartId, PinId};
+use erc_model::{Board, EcadPinType, NetId, PartId, PinId};
 use std::collections::BTreeSet;
 
 /// The component pins on a net
@@ -135,4 +135,23 @@ fn reachable_pins(
         }
     }
     out
+}
+
+/// The component pins typed `input` that are on a net, by net name and then pin: the inputs IO-1 will judge
+/// (driven or floating) and the Inputs view lists
+pub fn input_pins(board: &Board) -> Vec<PinId> {
+    let mut pins: Vec<PinId> = (0..board.pins.len())
+        .map(PinId::from_index)
+        .filter(|p| {
+            let pin = board.pin(*p);
+            pin.net.is_some()
+                && board.is_component(pin.part)
+                && pin.etype.get() == Some(&EcadPinType::Input)
+        })
+        .collect();
+    pins.sort_by(|a, b| {
+        let key = |p: &PinId| board.pin(*p).net.map(|n| board.net(n).name.as_str());
+        key(a).cmp(&key(b)).then_with(|| a.cmp(b))
+    });
+    pins
 }
