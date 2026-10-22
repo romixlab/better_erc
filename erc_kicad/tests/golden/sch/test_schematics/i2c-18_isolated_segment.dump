@@ -1,0 +1,355 @@
+board i2c-18_isolated_segment
+label / local GND_ISO at 99.06,54.61 net /GND_ISO
+label / local GND_ISO at 284.48,55.88 net /GND_ISO
+label / local GND_ISO at 332.74,50.8 net /GND_ISO
+label / local SCL_1V8 at 43.18,86.36 net /SCL_1V8
+label / local SCL_1V8 at 99.06,90.17 net /SCL_1V8
+label / local SCL_1V8 at 187.96,88.9 net /SCL_1V8
+label / local SCL_ISO at 284.48,58.42 net /SCL_ISO
+label / local SCL_ISO at 332.74,53.34 net /SCL_ISO
+label / local SCL_MCU at 43.18,91.44 net /SCL_MCU
+label / local SCL_MCU at 139.7,48.26 net /SCL_MCU
+label / local SCL_MCU at 195.58,54.61 net /SCL_MCU
+label / local SCL_MCU at 284.48,48.26 net /SCL_MCU
+label / local SDA_1V8 at 43.18,88.9 net /SDA_1V8
+label / local SDA_1V8 at 147.32,90.17 net /SDA_1V8
+label / local SDA_1V8 at 187.96,91.44 net /SDA_1V8
+label / local SDA_ISO at 284.48,60.96 net /SDA_ISO
+label / local SDA_ISO at 332.74,55.88 net /SDA_ISO
+label / local SDA_MCU at 43.18,93.98 net /SDA_MCU
+label / local SDA_MCU at 139.7,50.8 net /SDA_MCU
+label / local SDA_MCU at 243.84,54.61 net /SDA_MCU
+label / local SDA_MCU at 284.48,50.8 net /SDA_MCU
+label / power +1V8 at 43.18,50.8 net +1V8
+label / power +1V8 at 43.18,78.74 net +1V8
+label / power +1V8 at 99.06,82.55 net +1V8
+label / power +1V8 at 147.32,82.55 net +1V8
+label / power +1V8 at 187.96,83.82 net +1V8
+label / power +3V3 at 43.18,48.26 net +3V3
+label / power +3V3 at 43.18,81.28 net +3V3
+label / power +3V3 at 139.7,43.18 net +3V3
+label / power +3V3 at 195.58,46.99 net +3V3
+label / power +3V3 at 243.84,46.99 net +3V3
+label / power +3V3 at 284.48,43.18 net +3V3
+label / power +5V_ISO at 99.06,46.99 net +5V_ISO
+label / power +5V_ISO at 284.48,53.34 net +5V_ISO
+label / power +5V_ISO at 332.74,48.26 net +5V_ISO
+label / power GND at 43.18,53.34 net GND
+label / power GND at 43.18,83.82 net GND
+label / power GND at 139.7,45.72 net GND
+label / power GND at 187.96,86.36 net GND
+label / power GND at 284.48,45.72 net GND
+net +1V8 class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net +1V8 kind power
+net +3V3 class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net +3V3 kind power
+net +5V_ISO class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net +5V_ISO kind power
+net /GND_ISO class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net /GND_ISO kind named
+net /SCL_1V8 class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net /SCL_1V8 kind named
+net /SCL_ISO class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net /SCL_ISO kind named
+net /SCL_MCU class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net /SCL_MCU kind named
+net /SDA_1V8 class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net /SDA_1V8 kind named
+net /SDA_ISO class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net /SDA_ISO kind named
+net /SDA_MCU class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net /SDA_MCU kind named
+net GND class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U1-PA2-Pad5) class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net unconnected-(U1-PA2-Pad5) kind unconnected
+net unconnected-(U1-PA3-Pad6) class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net unconnected-(U1-PA3-Pad6) kind unconnected
+net unconnected-(U1-PA4-Pad7) class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net unconnected-(U1-PA4-Pad7) kind unconnected
+net unconnected-(U1-PA5-Pad8) class = Default @ sch i2c-18_isolated_segment.kicad_sch note "effective net class"
+net unconnected-(U1-PA5-Pad8) kind unconnected
+part J1 field Value = PWR @ sch i2c-18_isolated_segment.kicad_sch
+part J1 flag dnp = no @ sch i2c-18_isolated_segment.kicad_sch
+part J1 flag exclude_from_sim = no @ sch i2c-18_isolated_segment.kicad_sch
+part J1 flag in_bom = yes @ sch i2c-18_isolated_segment.kicad_sch
+part J1 flag on_board = yes @ sch i2c-18_isolated_segment.kicad_sch
+part J1 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J1 unit 1 sheet / uuid 12c18001-0000-4000-8000-000000000001 line 143 at 50.8,50.8 rot 0
+part J1 value = text PWR @ sch i2c-18_isolated_segment.kicad_sch note "from the Value field"
+part J2 field Value = PWR_ISO @ sch i2c-18_isolated_segment.kicad_sch
+part J2 flag dnp = no @ sch i2c-18_isolated_segment.kicad_sch
+part J2 flag exclude_from_sim = no @ sch i2c-18_isolated_segment.kicad_sch
+part J2 flag in_bom = yes @ sch i2c-18_isolated_segment.kicad_sch
+part J2 flag on_board = yes @ sch i2c-18_isolated_segment.kicad_sch
+part J2 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J2 unit 1 sheet / uuid 12c18001-0000-4000-8000-000000000011 line 173 at 99.06,50.8 rot 0
+part J2 value = text PWR_ISO @ sch i2c-18_isolated_segment.kicad_sch note "from the Value field"
+part R1 field Value = 4.7k @ sch i2c-18_isolated_segment.kicad_sch
+part R1 flag dnp = no @ sch i2c-18_isolated_segment.kicad_sch
+part R1 flag exclude_from_sim = no @ sch i2c-18_isolated_segment.kicad_sch
+part R1 flag in_bom = yes @ sch i2c-18_isolated_segment.kicad_sch
+part R1 flag on_board = yes @ sch i2c-18_isolated_segment.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 12c18001-0000-4000-8000-000000000032 line 219 at 195.58,50.8 rot 0
+part R1 value = text 4.7k @ sch i2c-18_isolated_segment.kicad_sch note "from the Value field"
+part R2 field Value = 4.7k @ sch i2c-18_isolated_segment.kicad_sch
+part R2 flag dnp = no @ sch i2c-18_isolated_segment.kicad_sch
+part R2 flag exclude_from_sim = no @ sch i2c-18_isolated_segment.kicad_sch
+part R2 flag in_bom = yes @ sch i2c-18_isolated_segment.kicad_sch
+part R2 flag on_board = yes @ sch i2c-18_isolated_segment.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 12c18001-0000-4000-8000-000000000038 line 235 at 243.84,50.8 rot 0
+part R2 value = text 4.7k @ sch i2c-18_isolated_segment.kicad_sch note "from the Value field"
+part R3 field Value = 4.7k @ sch i2c-18_isolated_segment.kicad_sch
+part R3 flag dnp = no @ sch i2c-18_isolated_segment.kicad_sch
+part R3 flag exclude_from_sim = no @ sch i2c-18_isolated_segment.kicad_sch
+part R3 flag in_bom = yes @ sch i2c-18_isolated_segment.kicad_sch
+part R3 flag on_board = yes @ sch i2c-18_isolated_segment.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid 12c18001-0000-4000-8000-000000000092 line 349 at 99.06,86.36 rot 0
+part R3 value = text 4.7k @ sch i2c-18_isolated_segment.kicad_sch note "from the Value field"
+part R4 field Value = 4.7k @ sch i2c-18_isolated_segment.kicad_sch
+part R4 flag dnp = no @ sch i2c-18_isolated_segment.kicad_sch
+part R4 flag exclude_from_sim = no @ sch i2c-18_isolated_segment.kicad_sch
+part R4 flag in_bom = yes @ sch i2c-18_isolated_segment.kicad_sch
+part R4 flag on_board = yes @ sch i2c-18_isolated_segment.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid 12c18001-0000-4000-8000-000000000098 line 365 at 147.32,86.36 rot 0
+part R4 value = text 4.7k @ sch i2c-18_isolated_segment.kicad_sch note "from the Value field"
+part U1 field Value = STM32 @ sch i2c-18_isolated_segment.kicad_sch
+part U1 flag dnp = no @ sch i2c-18_isolated_segment.kicad_sch
+part U1 flag exclude_from_sim = no @ sch i2c-18_isolated_segment.kicad_sch
+part U1 flag in_bom = yes @ sch i2c-18_isolated_segment.kicad_sch
+part U1 flag on_board = yes @ sch i2c-18_isolated_segment.kicad_sch
+part U1 lib MCU_Test:MCU_Generic8 sheet / symbol MCU_Test:MCU_Generic8
+part U1 unit 1 sheet / uuid 12c18001-0000-4000-8000-000000000017 line 189 at 147.32,50.8 rot 0
+part U1 value = text STM32 @ sch i2c-18_isolated_segment.kicad_sch note "from the Value field"
+part U2 field Value = ISO1540 @ sch i2c-18_isolated_segment.kicad_sch
+part U2 flag dnp = no @ sch i2c-18_isolated_segment.kicad_sch
+part U2 flag exclude_from_sim = no @ sch i2c-18_isolated_segment.kicad_sch
+part U2 flag in_bom = yes @ sch i2c-18_isolated_segment.kicad_sch
+part U2 flag on_board = yes @ sch i2c-18_isolated_segment.kicad_sch
+part U2 lib Isolator:ISO1540_Test sheet / symbol Isolator:ISO1540_Test
+part U2 unit 1 sheet / uuid 12c18001-0000-4000-8000-000000000044 line 251 at 292.1,50.8 rot 0
+part U2 value = text ISO1540 @ sch i2c-18_isolated_segment.kicad_sch note "from the Value field"
+part U3 field Value = SENSOR_5V @ sch i2c-18_isolated_segment.kicad_sch
+part U3 flag dnp = no @ sch i2c-18_isolated_segment.kicad_sch
+part U3 flag exclude_from_sim = no @ sch i2c-18_isolated_segment.kicad_sch
+part U3 flag in_bom = yes @ sch i2c-18_isolated_segment.kicad_sch
+part U3 flag on_board = yes @ sch i2c-18_isolated_segment.kicad_sch
+part U3 lib Sensor:I2C_Sensor_Test sheet / symbol Sensor:I2C_Sensor_Test
+part U3 unit 1 sheet / uuid 12c18001-0000-4000-8000-000000000064 line 291 at 340.36,50.8 rot 0
+part U3 value = text SENSOR_5V @ sch i2c-18_isolated_segment.kicad_sch note "from the Value field"
+part U4 field Value = PCA9306 @ sch i2c-18_isolated_segment.kicad_sch
+part U4 flag dnp = no @ sch i2c-18_isolated_segment.kicad_sch
+part U4 flag exclude_from_sim = no @ sch i2c-18_isolated_segment.kicad_sch
+part U4 flag in_bom = yes @ sch i2c-18_isolated_segment.kicad_sch
+part U4 flag on_board = yes @ sch i2c-18_isolated_segment.kicad_sch
+part U4 lib Logic_LevelTranslator:PCA9306_Test sheet / symbol Logic_LevelTranslator:PCA9306_Test
+part U4 unit 1 sheet / uuid 12c18001-0000-4000-8000-000000000074 line 311 at 50.8,86.36 rot 0
+part U4 value = text PCA9306 @ sch i2c-18_isolated_segment.kicad_sch note "from the Value field"
+part U5 field Value = SHT40 @ sch i2c-18_isolated_segment.kicad_sch
+part U5 flag dnp = no @ sch i2c-18_isolated_segment.kicad_sch
+part U5 flag exclude_from_sim = no @ sch i2c-18_isolated_segment.kicad_sch
+part U5 flag in_bom = yes @ sch i2c-18_isolated_segment.kicad_sch
+part U5 flag on_board = yes @ sch i2c-18_isolated_segment.kicad_sch
+part U5 lib Sensor:I2C_Sensor_Test sheet / symbol Sensor:I2C_Sensor_Test
+part U5 unit 1 sheet / uuid 12c18001-0000-4000-8000-000000000104 line 381 at 195.58,86.36 rot 0
+part U5 value = text SHT40 @ sch i2c-18_isolated_segment.kicad_sch note "from the Value field"
+pin J1 1 name Pin_1 unit 1 net +3V3
+pin J1 1 type = passive @ sch i2c-18_isolated_segment.kicad_sch
+pin J1 2 name Pin_2 unit 1 net +1V8
+pin J1 2 type = passive @ sch i2c-18_isolated_segment.kicad_sch
+pin J1 3 name Pin_3 unit 1 net GND
+pin J1 3 type = passive @ sch i2c-18_isolated_segment.kicad_sch
+pin J2 1 name Pin_1 unit 1 net +5V_ISO
+pin J2 1 type = passive @ sch i2c-18_isolated_segment.kicad_sch
+pin J2 2 name Pin_2 unit 1 net /GND_ISO
+pin J2 2 type = passive @ sch i2c-18_isolated_segment.kicad_sch
+pin R1 1 name "" unit 1 net +3V3
+pin R1 1 type = passive @ sch i2c-18_isolated_segment.kicad_sch
+pin R1 2 name "" unit 1 net /SCL_MCU
+pin R1 2 type = passive @ sch i2c-18_isolated_segment.kicad_sch
+pin R2 1 name "" unit 1 net +3V3
+pin R2 1 type = passive @ sch i2c-18_isolated_segment.kicad_sch
+pin R2 2 name "" unit 1 net /SDA_MCU
+pin R2 2 type = passive @ sch i2c-18_isolated_segment.kicad_sch
+pin R3 1 name "" unit 1 net +1V8
+pin R3 1 type = passive @ sch i2c-18_isolated_segment.kicad_sch
+pin R3 2 name "" unit 1 net /SCL_1V8
+pin R3 2 type = passive @ sch i2c-18_isolated_segment.kicad_sch
+pin R4 1 name "" unit 1 net +1V8
+pin R4 1 type = passive @ sch i2c-18_isolated_segment.kicad_sch
+pin R4 2 name "" unit 1 net /SDA_1V8
+pin R4 2 type = passive @ sch i2c-18_isolated_segment.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch i2c-18_isolated_segment.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch i2c-18_isolated_segment.kicad_sch
+pin U1 3 name PA0 unit 1 net /SCL_MCU
+pin U1 3 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U1 4 name PA1 unit 1 net /SDA_MCU
+pin U1 4 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U1 5 name PA2 unit 1 net unconnected-(U1-PA2-Pad5)
+pin U1 5 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U1 6 name PA3 unit 1 net unconnected-(U1-PA3-Pad6)
+pin U1 6 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U1 7 name PA4 unit 1 net unconnected-(U1-PA4-Pad7)
+pin U1 7 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U1 8 name PA5 unit 1 net unconnected-(U1-PA5-Pad8)
+pin U1 8 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U2 1 name VCC1 unit 1 net +3V3
+pin U2 1 type = power_in @ sch i2c-18_isolated_segment.kicad_sch
+pin U2 2 name GND1 unit 1 net GND
+pin U2 2 type = power_in @ sch i2c-18_isolated_segment.kicad_sch
+pin U2 3 name SCL1 unit 1 net /SCL_MCU
+pin U2 3 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U2 4 name SDA1 unit 1 net /SDA_MCU
+pin U2 4 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U2 5 name VCC2 unit 1 net +5V_ISO
+pin U2 5 type = power_in @ sch i2c-18_isolated_segment.kicad_sch
+pin U2 6 name GND2 unit 1 net /GND_ISO
+pin U2 6 type = power_in @ sch i2c-18_isolated_segment.kicad_sch
+pin U2 7 name SCL2 unit 1 net /SCL_ISO
+pin U2 7 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U2 8 name SDA2 unit 1 net /SDA_ISO
+pin U2 8 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U3 1 name VDD unit 1 net +5V_ISO
+pin U3 1 type = power_in @ sch i2c-18_isolated_segment.kicad_sch
+pin U3 2 name GND unit 1 net /GND_ISO
+pin U3 2 type = power_in @ sch i2c-18_isolated_segment.kicad_sch
+pin U3 3 name SCL unit 1 net /SCL_ISO
+pin U3 3 type = input @ sch i2c-18_isolated_segment.kicad_sch
+pin U3 4 name SDA unit 1 net /SDA_ISO
+pin U3 4 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U4 1 name VREF1 unit 1 net +1V8
+pin U4 1 type = power_in @ sch i2c-18_isolated_segment.kicad_sch
+pin U4 2 name VREF2 unit 1 net +3V3
+pin U4 2 type = power_in @ sch i2c-18_isolated_segment.kicad_sch
+pin U4 3 name GND unit 1 net GND
+pin U4 3 type = power_in @ sch i2c-18_isolated_segment.kicad_sch
+pin U4 4 name SCL1 unit 1 net /SCL_1V8
+pin U4 4 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U4 5 name SDA1 unit 1 net /SDA_1V8
+pin U4 5 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U4 6 name SCL2 unit 1 net /SCL_MCU
+pin U4 6 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U4 7 name SDA2 unit 1 net /SDA_MCU
+pin U4 7 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+pin U5 1 name VDD unit 1 net +1V8
+pin U5 1 type = power_in @ sch i2c-18_isolated_segment.kicad_sch
+pin U5 2 name GND unit 1 net GND
+pin U5 2 type = power_in @ sch i2c-18_isolated_segment.kicad_sch
+pin U5 3 name SCL unit 1 net /SCL_1V8
+pin U5 3 type = input @ sch i2c-18_isolated_segment.kicad_sch
+pin U5 4 name SDA unit 1 net /SDA_1V8
+pin U5 4 type = bidirectional @ sch i2c-18_isolated_segment.kicad_sch
+sheet / name "" file i2c-18_isolated_segment.kicad_sch uuid /
+source file i2c-18_isolated_segment.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x02 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 5d37b768c270626e
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Connector_Generic:Conn_01x03 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x03 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x03 field Reference J
+symbol Connector_Generic:Conn_01x03 field Value Conn_01x03
+symbol Connector_Generic:Conn_01x03 hash a7ec9647f5161425
+symbol Connector_Generic:Conn_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x03 units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Isolator:ISO1540_Test description "Bidirectional I2C isolator, test symbol"
+symbol Isolator:ISO1540_Test field Description "Bidirectional I2C isolator, test symbol"
+symbol Isolator:ISO1540_Test field Reference U
+symbol Isolator:ISO1540_Test field Value ISO1540_Test
+symbol Isolator:ISO1540_Test hash 5b205a23b52d72fc
+symbol Isolator:ISO1540_Test pin 1 unit 1 body 1 name VCC1 type power_in style line
+symbol Isolator:ISO1540_Test pin 2 unit 1 body 1 name GND1 type power_in style line
+symbol Isolator:ISO1540_Test pin 3 unit 1 body 1 name SCL1 type bidirectional style line
+symbol Isolator:ISO1540_Test pin 4 unit 1 body 1 name SDA1 type bidirectional style line
+symbol Isolator:ISO1540_Test pin 5 unit 1 body 1 name VCC2 type power_in style line
+symbol Isolator:ISO1540_Test pin 6 unit 1 body 1 name GND2 type power_in style line
+symbol Isolator:ISO1540_Test pin 7 unit 1 body 1 name SCL2 type bidirectional style line
+symbol Isolator:ISO1540_Test pin 8 unit 1 body 1 name SDA2 type bidirectional style line
+symbol Isolator:ISO1540_Test units 1
+symbol Logic_LevelTranslator:PCA9306_Test description "Dual bidirectional I2C-bus and SMBus voltage-level translator, test symbol"
+symbol Logic_LevelTranslator:PCA9306_Test field Description "Dual bidirectional I2C-bus and SMBus voltage-level translator, test symbol"
+symbol Logic_LevelTranslator:PCA9306_Test field Reference U
+symbol Logic_LevelTranslator:PCA9306_Test field Value PCA9306_Test
+symbol Logic_LevelTranslator:PCA9306_Test hash bc75ee3ffcd2acd6
+symbol Logic_LevelTranslator:PCA9306_Test pin 1 unit 1 body 1 name VREF1 type power_in style line
+symbol Logic_LevelTranslator:PCA9306_Test pin 2 unit 1 body 1 name VREF2 type power_in style line
+symbol Logic_LevelTranslator:PCA9306_Test pin 3 unit 1 body 1 name GND type power_in style line
+symbol Logic_LevelTranslator:PCA9306_Test pin 4 unit 1 body 1 name SCL1 type bidirectional style line
+symbol Logic_LevelTranslator:PCA9306_Test pin 5 unit 1 body 1 name SDA1 type bidirectional style line
+symbol Logic_LevelTranslator:PCA9306_Test pin 6 unit 1 body 1 name SCL2 type bidirectional style line
+symbol Logic_LevelTranslator:PCA9306_Test pin 7 unit 1 body 1 name SDA2 type bidirectional style line
+symbol Logic_LevelTranslator:PCA9306_Test units 1
+symbol MCU_Test:MCU_Generic8 description "Microcontroller, test symbol"
+symbol MCU_Test:MCU_Generic8 field Description "Microcontroller, test symbol"
+symbol MCU_Test:MCU_Generic8 field Reference U
+symbol MCU_Test:MCU_Generic8 field Value MCU_Generic8
+symbol MCU_Test:MCU_Generic8 hash 7baff662acb1c3d9
+symbol MCU_Test:MCU_Generic8 pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Test:MCU_Generic8 pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Test:MCU_Generic8 pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Test:MCU_Generic8 pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Test:MCU_Generic8 pin 5 unit 1 body 1 name PA2 type bidirectional style line
+symbol MCU_Test:MCU_Generic8 pin 6 unit 1 body 1 name PA3 type bidirectional style line
+symbol MCU_Test:MCU_Generic8 pin 7 unit 1 body 1 name PA4 type bidirectional style line
+symbol MCU_Test:MCU_Generic8 pin 8 unit 1 body 1 name PA5 type bidirectional style line
+symbol MCU_Test:MCU_Generic8 units 1
+symbol Sensor:I2C_Sensor_Test description "Humidity sensor, I2C, test symbol"
+symbol Sensor:I2C_Sensor_Test field Description "Humidity sensor, I2C, test symbol"
+symbol Sensor:I2C_Sensor_Test field Reference U
+symbol Sensor:I2C_Sensor_Test field Value I2C_Sensor_Test
+symbol Sensor:I2C_Sensor_Test hash 72ea6e3ddb608455
+symbol Sensor:I2C_Sensor_Test pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Sensor:I2C_Sensor_Test pin 2 unit 1 body 1 name GND type power_in style line
+symbol Sensor:I2C_Sensor_Test pin 3 unit 1 body 1 name SCL type input style line
+symbol Sensor:I2C_Sensor_Test pin 4 unit 1 body 1 name SDA type bidirectional style line
+symbol Sensor:I2C_Sensor_Test units 1
+symbol power:+1V8 description "Power symbol +1V8"
+symbol power:+1V8 field Description "Power symbol +1V8"
+symbol power:+1V8 field Reference "#PWR"
+symbol power:+1V8 field Value +1V8
+symbol power:+1V8 hash a241c49db20b5bea
+symbol power:+1V8 pin 1 unit 1 body 1 name +1V8 type power_in style line
+symbol power:+1V8 units 1 power global
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+5V_ISO description "Power symbol +5V_ISO"
+symbol power:+5V_ISO field Description "Power symbol +5V_ISO"
+symbol power:+5V_ISO field Reference "#PWR"
+symbol power:+5V_ISO field Value +5V_ISO
+symbol power:+5V_ISO hash 328e2350ae7084f4
+symbol power:+5V_ISO pin 1 unit 1 body 1 name +5V_ISO type power_in style line
+symbol power:+5V_ISO units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

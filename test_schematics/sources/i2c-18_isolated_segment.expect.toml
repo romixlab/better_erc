@@ -1,0 +1,114 @@
+# What better_erc finds on i2c-18_isolated_segment.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-18"
+subjects = ["net /SCL_1V8", "net /SDA_1V8"]
+
+[[finding]]
+check = "DBG-18"
+subjects = ["net /SCL_ISO", "net /SDA_ISO"]
+
+[[finding]]
+check = "DBG-18"
+subjects = ["net /SCL_MCU", "net /SDA_MCU"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V_ISO"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V_ISO"]
+
+[[finding]]
+check = "I2C-18"
+subjects = ["net /SCL_ISO", "net /SDA_ISO"]
+also = ["I2C-1"]
+
+[[finding]]
+check = "LVL-7"
+subjects = ["net +1V8", "net +3V3", "part U4"]
+
+[[finding]]
+check = "LVL-7"
+subjects = ["net +3V3", "net +5V_ISO", "part U2"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +1V8", "part J1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +5V_ISO", "part J2"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.5", "pin U1.6", "pin U1.7", "pin U1.8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V_ISO"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /GND_ISO"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SCL_1V8"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SCL_ISO"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SCL_MCU"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA_1V8"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA_ISO"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /SDA_MCU"]

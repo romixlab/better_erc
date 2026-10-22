@@ -201,8 +201,8 @@ rail nor ground.
 
 **I2C** (`i2c`, NET-4). A bus is a pair of nets named alike with `SCL` and `SDA`; its pull-up a pair of resistors
 meeting on one net; a resistor, ferrite, net tie or jumper per line to another bus a tie (one direct segment), a FET
-per line a discrete translator (the BSS138 pair, with the nets of its gates), a translator IC with another bus on its
-other side a translator (one logical bus, several direct segments). Only the fitted parts of the variant count, so a
+per line a discrete translator (the BSS138 pair, with the nets of its gates), a translator IC, bus buffer or isolator
+with another bus on its other side a translator (one logical bus, several direct segments). Only the fitted parts of the variant count, so a
 pull-up made DNP is no pull-up. Pin roles will add pins named `SCL`/`SDA` as a source (NET-7).
 
 **Drawing facts** (`drawing`): what the WIRE, NAME and SHORT checks need beyond connectivity. Labels keep their kind
@@ -341,6 +341,8 @@ of the threshold it used.
 | `I2C-7` | a tie between two buses over `max_tie` | `i2c-7_segments` |
 | `I2C-9` | a pull-up outside the 2.2k-10k window (its ends inside), or whose value does not read | `i2c-9_non_standard_pull_ups` |
 | `I2C-10` | SCL and SDA pull-ups of different value | `i2c-10_non_equal_pull_ups` |
+| `I2C-4` | a pull-up pair to a net that is no rail, or to a rail by name holding only resistors that no source reaches | `i2c-4_pull_up_to_signal` |
+| `I2C-18` | a segment behind a translator, buffer or isolator with no pull-ups of its own (folds `I2C-1` in) | `i2c-18_discrete_translator`, `i2c-18_isolated_segment` |
 | `BOM-5` | a placeholder value (`?`, `??k`, `TBD`, `TODO`) | `bom-10_values` |
 | `BOM-6` | a placeholder value on a fitted part (folds `BOM-5` in) | `bom-10_values` |
 | `BOM-9` | a component without a value | `bom-10_values` |

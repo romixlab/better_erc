@@ -49,8 +49,9 @@ check = "DEC-1"
 subjects = ["net +5V"]
 
 [[finding]]
-check = "I2C-1"
+check = "I2C-18"
 subjects = ["net /SCL_1V8", "net /SDA_1V8"]
+also = ["I2C-1"]
 
 [[finding]]
 check = "PIN-4"

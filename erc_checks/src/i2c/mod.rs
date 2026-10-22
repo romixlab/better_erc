@@ -2,8 +2,10 @@
 
 mod i2c_1;
 mod i2c_10;
+mod i2c_18;
 mod i2c_2;
 mod i2c_3;
+mod i2c_4;
 mod i2c_7;
 mod i2c_9;
 

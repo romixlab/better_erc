@@ -101,8 +101,9 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   run entry `Project`; `find_part_chains` is `graph::part_chains` · `erc_checks/src/{ctx,project}.rs`
 - ✅ `NET-4` I2C bus finder: direct and common segments, connected parts, voltage translators · `erc_analysis/src/i2c.rs`.
   On the parts a variant fits (`I2cBuses::on`); segments tied by resistors, ferrites, net ties and jumpers; discrete
-  translators (a BSS138 pair) with their gate nets; pull-ups per segment. Buses are still found by net names; pin roles
-  come with `NET-7` · test schematic `i2c-18_discrete_translator`
+  translators (a BSS138 pair) with their gate nets; isolators split a bus like translators; pull-ups per segment.
+  Buses are still found by net names; pin roles come with `NET-7` · test schematics `i2c-18_discrete_translator`,
+  `i2c-18_isolated_segment`
 - 🚧 `NET-5` Power structure, first layer: rails and grounds by the power name grammar (`+3V3`, `VDD_1V8`, `-5V`,
   `5V0_NEG`, `VBUS`, `VBAT`, `+V...`, `GND_ISO`; strict mode only `+xVy`), power symbols and power pins as the second
   signal, the project file as the third (`NetSource` hook); rail kinds (supply, USB, battery, analog, reference);
@@ -209,6 +210,12 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `I2C-7` Series tie resistor too high (`max_tie` = 100 Ω) · `i2c/i2c_7.rs`, `i2c-7_segments`
 - ✅ `I2C-9` Pull-up outside the 2.2k-10k window (its ends inside), or not readable · `i2c/i2c_9.rs`, `i2c-9_non_standard_pull_ups`
 - ✅ `I2C-10` SCL and SDA pull-ups differ · `i2c/i2c_10.rs`, `i2c-10_non_equal_pull_ups`
+- ✅ `I2C-4` Pull-up pair whose far end is no rail (an enable GPIO), or a rail by name alone holding only resistors
+  that no source reaches (`3V3` for `+3V3`); a far end with nothing else is `I2C-3`'s · `i2c/i2c_4.rs`,
+  `i2c-4_pull_up_to_signal`
+- ✅ `I2C-18` Segment behind a translator, bus buffer, isolator or discrete translator with no pull-ups of its own
+  (folds `I2C-1` in) · `i2c/i2c_18.rs`, `i2c-18_discrete_translator`, `i2c-18_isolated_segment`. Missing: muxes
+  (PCA9548) are not recognised as splitting the bus
 - ✅ `BOM-5` Placeholder values (`?`, `??k`, `TBD`, `TODO`, `calc`) · `bom/bom_5.rs`, `bom-10_values`
 - ✅ `BOM-6` Placeholder value on a fitted part (folds `BOM-5` in) · `bom/bom_6.rs`, `bom-10_values`
 - ✅ `BOM-9` Part without a value · `bom/bom_9.rs`, `bom-10_values`

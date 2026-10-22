@@ -15,7 +15,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 - Power checks with test schematics (`<id>_<slug>`): RAIL-1, RAIL-5, RAIL-18, RAIL-19; PIN-3, PIN-4, PIN-6;
   DRV-5, DRV-6, DRV-7, DRV-9, DRV-12, DRV-14, DRV-17; GND-3, GND-7; SEQ-5; LEAK-1;
-  LVL-4, LVL-7, LVL-9. `erc_analysis::feed`: the
+  LVL-4, LVL-7, LVL-9; I2C-4, I2C-18 (folds I2C-1 in on segments behind a translator; isolators now split a
+  bus in `erc_analysis::i2c`). `erc_analysis::feed`: the
   source pins of each net and the two-terminal links that carry power (`Ctx::feeds`). A finding can carry its own
   severity (`FindingBuilder::severity`, PIN-3's fused outputs one level lower); the project's override still wins. Part classes `Motor` and `Solenoid` (inductive loads, DRV-14).
 

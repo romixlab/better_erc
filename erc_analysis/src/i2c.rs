@@ -4,10 +4,11 @@
 //!   bus `/I2C1_3V3`). Pin roles will replace the names as the source (NET-7).
 //! - Its pull-up is a pair of resistors, one from each line, meeting on one net (the rail). Further resistors
 //!   from a line to that rail are redundant pull-ups.
-//! - The other parts on the lines are devices (ICs), connectors, test points, translators (a translator IC whose
-//!   other side is another bus), discrete translators (a FET per line to another bus, the BSS138 pair, with the
-//!   nets of their gates), ties (a resistor, 0 Ω or a few ohms, a ferrite, net tie or jumper per line, to another
-//!   bus, or to an unnamed pair of nets that becomes an ad-hoc bus named `<bus>_to_<part>`), or unknown.
+//! - The other parts on the lines are devices (ICs), connectors, test points, translators (a translator IC, bus
+//!   buffer or isolator whose other side is another bus), discrete translators (a FET per line to another bus, the
+//!   BSS138 pair, with the nets of their gates), ties (a resistor, 0 Ω or a few ohms, a ferrite, net tie or
+//!   jumper per line, to another bus, or to an unnamed pair of nets that becomes an ad-hoc bus named
+//!   `<bus>_to_<part>`), or unknown.
 //! - Only fitted parts count: the buses are found on a [`View`], so a pull-up made DNP in the variant checked is
 //!   no pull-up.
 //! - Buses joined by ties form a direct segment (one electrical bus: one pull-up pair wanted); buses joined by
@@ -54,7 +55,7 @@ pub enum Node {
     Device(PartId),
     Connector(PartId),
     TestPoint(PartId),
-    /// A translator IC with another bus on its other side
+    /// A translator IC (or a bus buffer, or an isolator) with another bus on its other side
     Translator {
         part: PartId,
         other_side: BusIdx,
@@ -290,7 +291,8 @@ impl Recogniser<'_> {
         match self.classes.get(p) {
             PartClass::Connector { .. } => Node::Connector(p),
             PartClass::TestPoint => Node::TestPoint(p),
-            c if c.is_ic() && !c.is_translator() => Node::Device(p),
+            // An isolator splits the bus like a translator (resolved in `find_translators`)
+            c if c.is_ic() && !c.is_translator() && c != PartClass::Isolator => Node::Device(p),
             _ => Node::Unknown(p),
         }
     }
@@ -425,7 +427,7 @@ impl Recogniser<'_> {
         }
     }
 
-    /// Translator ICs: the other bus whose SCL the IC also touches
+    /// Translator ICs and isolators: the other bus whose SCL the IC also touches
     fn find_translators(&self, buses: &mut [I2cBus]) {
         let scls: Vec<NetId> = buses.iter().map(|b| b.scl).collect();
         for bus in buses.iter_mut() {
@@ -433,7 +435,8 @@ impl Recogniser<'_> {
                 let Node::Unknown(part) = *node else {
                     continue;
                 };
-                if !self.classes.get(part).is_translator() {
+                let class = self.classes.get(part);
+                if !(class.is_translator() || class == PartClass::Isolator) {
                     continue;
                 }
                 let mut nets = part_nets(self.board, part);
