@@ -1,6 +1,6 @@
 //! The KiCad schematic hierarchy into a [`Board`]: the root sheet and its sub-sheets as sheet instances (a file
 //! used twice is two instances, each with its own references), parts with their units, fields, flags and
-//! KiCad 10 variants, pin instances, nets built by [`connect`] with KiCad's rules, labels, power symbols, sheet
+//! KiCad 10 variants, pin instances, nets built by `connect` with KiCad's rules, labels, power symbols, sheet
 //! pins and no-connect flags.
 
 pub(crate) mod bus;
