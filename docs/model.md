@@ -40,7 +40,7 @@ designator and pads to nets by name (`link_layout`).
 No attribute is a bare value. A field, a part value, a DNP flag, a pin's electrical type, a net class is a
 `Fact<T> { value, source, rank, at, note }`:
 
-- `source` is a `Provenance`: a schematic sheet file, the KiCad project file, the board file, a netlist, the better_erc
+- `source` is a `Provenance`: a schematic sheet file, the KiCad project file, the board file, a pick-and-place file, a netlist, the better_erc
   project file, the part database, mx3, the vendor, a datasheet, a distributor, an unreviewed LLM extraction, a person
   (`Manual`), an analysis rule (`Derived`) or a default (`Assumed`).
 - `rank` orders sources; each kind has a default (manual 1000, project file 900, design files 800, vendor 700,
@@ -87,6 +87,11 @@ lengths are millimetres, rotations degrees.
 `netcmp::compare` compares two boards' connectivity: each net as the set of `designator.pin` it connects, matched by
 that set, with renamed nets and differing net classes listed. It is the differential test's comparison and the base of
 a netlist diff.
+
+`placecmp::compare` compares two layouts' placements: each footprint by its reference, its position, rotation (modulo
+360), side, value and package (the name without its `library:` prefix), within optional tolerances. The layouts can
+come from board files or pick-and-place files, so two PnP files, two boards, or a board and its PnP file compare the
+same way; it is the PnP compare of `berc diff --pnp`.
 
 ## erc_kicad
 
@@ -144,3 +149,36 @@ To see where our reading and KiCad's differ on any project:
 cargo run -p erc_kicad --example differential -- board.kicad_sch board.net [8|9|10]
 cargo run -p erc_kicad --example dump -- board.kicad_pro
 ```
+
+## erc_import
+
+`erc_import::Registry` holds every importer: `Registry::default()` registers KiCad's (`erc_kicad::importers()`: the
+project and the netlist), Altium, OrCAD and PnP, and `register` adds others. `pick` asks each importer to sniff the
+main file and takes the surest (an earlier one on a tie), `import` imports with it, and `scan` lists every file of a
+directory or file set that some importer reads. The dependency goes `erc_import` → `erc_kicad` → `erc_model`: the
+trait lives in the model, so `erc_kicad` stands alone, and each importer is a cargo feature (`kicad`, `altium`,
+`orcad`, `pnp`), so a KiCad-only tool or a wasm GUI builds without the rest.
+
+- `altium`: the EDIF netlist ("EDIF for PCB") and the WireList, either one as the main file, the other found beside
+  it (same name first, then the only file of its kind in the directory). EDIF gives the library symbols with their
+  ports, the sheets, the parts with all their properties (the value from `Value`, else `Comment`) and the nets; the
+  WireList gives pin names, pin types and footprints. A pin's type is stated by both files: EDIF's port direction
+  (`INOUT` for nearly everything) ranks one below the design rank, so the WireList's type is the one a check sees.
+  Altium's `POWER` type is read as `power_in` with a note saying the direction is not given. A pin the two files put on
+  different nets is a note.
+- `orcad`: OrCAD Capture's pstxnet, pstxprt and pstchip, any of them as the main file and the others found by name. The
+  primitives of pstchip are the symbols (their body properties the parts' fields, `VALUE` as `Value` and `JEDEC_TYPE`
+  as `Footprint`); a multi-section pin number (`(A3,0,0)`) gives one pin per section it is in; the part list's sections
+  are the units, named by their section letters, on the sheet of their page (`/page3/`); pin types come from the pin
+  properties (`BIDIRECTIONAL`, `PINUSE`, `OUTPUT_LOAD`, `INPUT_LOAD`), which the fact's note names. Nets named `N`
+  plus digits are Capture's automatic names.
+- `pnp`: pick-and-place CSV from KiCad, Altium and Allegro as a board with a layout only: one footprint per row with
+  reference, position, rotation, side, value and package, the other columns as its fields (`Provenance::Placement`).
+  The header row is the first naming five of the known columns, the separator the one the file uses most; positions
+  are millimetres unless the header or the file information says mil or inch, kept as the file writes them.
+
+The Altium and OrCAD readers are pest grammars (`erc_import/grammar`) that take any unknown element or line as such
+and report it, instead of failing the file. The tests (`erc_import/tests`) import every fixture through the registry
+against a committed dump and notes (`BLESS=1` rewrites them), assert what the old `ecad_file_format` readers'
+tests asserted, and feed truncated and garbled copies of every fixture to every importer: an import fails with an
+error or gives a design that dumps and reads back, it never panics.

@@ -11,6 +11,25 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- `erc_import`, every importer behind one registry (`IMP-15`): the importer for a file is picked by its name and
+  contents, KiCad's through `erc_kicad::importers()`; one cargo feature per importer so a KiCad-only or wasm build
+  leaves the rest out.
+- Altium (EDIF plus WireList), OrCAD (pstxnet, pstxprt, pstchip) and pick-and-place CSV files read into the board
+  model (`IMP-3`, `IMP-4`, `IMP-5`), their pest grammars moved along and taught to read past unknown elements: every
+  attribute a fact with the file it came from, notes for everything not kept, no panic on broken input (a test feeds
+  truncated and garbled fixtures to every importer), a golden dump per fixture, and the old readers' test assertions
+  as acceptance tests.
+- `erc_model::placecmp`, the PnP compare on two layouts (two PnP files, two boards, or a board and its PnP file),
+  rotations modulo 360 and tolerances, for `berc diff --pnp` (`TOOL-1`).
+- `erc_model`: `Provenance::Placement` for facts from a PnP file, `SymbolDef::unit_names` (OrCAD section letters).
+
+### Changed
+
+- The Altium, OrCAD and PnP fixtures moved from `ecad_file_format/test_input` to `erc_import/tests/fixtures`; the old
+  readers' tests read them there.
+
 ## [0.3.7] - 2026-10-22
 
 ### Added

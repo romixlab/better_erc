@@ -27,6 +27,8 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - `erc_analysis`: analyses over the board model: part classes, values, graph queries, the I2C bus recogniser
 - `erc_checks`: the check engine and the checks, one file per catalogue id; findings, not-run reports, the report
   as JSON and text, the embedded catalogue ([docs/engine.md](docs/engine.md))
+- `erc_import`: the importer registry, and the Altium, OrCAD and PnP importers into the board model
+  ([docs/model.md](docs/model.md))
 - `ecad_file_format`: netlist, BOM and PnP parsers, the common `Netlist` model, passive value parsing
 - `erc_core`: the first analysis and checks on the old `Netlist` (`PcbAssembly`, power structure, I2C buses), still
   feeding the desktop app; the checks themselves run in `erc_checks`
@@ -40,9 +42,14 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - ✅ `IMP-1` KiCad netlist from KiCad 8, 9 and 10 (serde-lexpr), incl. pin types, net classes and units; a test per
   version · `ecad_file_format/src/kicad_netlist.rs`, `test_input/kicad_versions`
 - ✅ `IMP-2` KiCad schematic → netlist through kicad-cli, cached per file · `test_schematics/generate_netlists`
-- ✅ `IMP-3` OrCAD netlist: nets, components, library parts · `orcad_netlist.rs`
-- ✅ `IMP-4` Altium: EDIF netlist + WireList (for pin types) combined · `edif_netlist.rs`, `wirelist.rs`, `altium_netlist.rs`
-- ✅ `IMP-5` PnP CSV from KiCad, Altium and Allegro · `pnp.rs`
+- ✅ `IMP-3` OrCAD netlist: nets, components, library parts; in the board model: pstxnet, pstxprt and pstchip found
+  beside each other, sections as units with their letters, pages as sheets, pin types with the pstchip properties
+  that gave them · `erc_import/src/orcad`, old reader `orcad_netlist.rs`
+- ✅ `IMP-4` Altium: EDIF netlist + WireList (for pin types) combined; in the board model: either file as the main one,
+  symbols, sheets, part properties, nets, pin names and types with both files as sources (the WireList's type wins)
+  · `erc_import/src/altium`, old readers `edif_netlist.rs`, `wirelist.rs`, `altium_netlist.rs`
+- ✅ `IMP-5` PnP CSV from KiCad, Altium and Allegro; in the board model as a layout of footprints (position, rotation,
+  side, value, package, the other columns as fields), mm, mil or inch · `erc_import/src/pnp.rs`, old reader `pnp.rs`
 - ✅ `IMP-6` Passive values (Ω with milli/micro, k, M) · `passive_value.rs`
 - 🚧 `IMP-7` Import tab in the app: KiCad schematic, Altium and OrCAD netlist sources. Only Altium loads; the KiCad and
   OrCAD sources pick their files but load nothing yet · `tabs/pcb_data_import.rs`
@@ -63,6 +70,10 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   variables, variants, ERC and DRC severities and exclusions, design rules, bus aliases) and `.kicad_pcb` (layers,
   stackup, setup, footprints with fields, attributes, pads, courtyard, silk and fab graphics, tracks, vias, zones and
   rule areas, outline, texts), linked to the schematic by designator and net name · `erc_kicad/src/{pro,pcb}.rs`
+- ✅ `IMP-15` One importer registry: the importer for a file picked by its name and contents (KiCad project,
+  schematic, board, KiCad netlist, Altium, OrCAD, PnP), a directory scanned for what can be imported, one cargo
+  feature per importer; every import gives notes for what it read past and never panics on broken input (a test on
+  truncated and garbled fixtures), and a golden dump per fixture · `erc_import/src/lib.rs`, `erc_import/tests`
 
 ## Netlist model and analysis (`NET`)
 
@@ -247,7 +258,9 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 
 ## Tools (`TOOL`)
 
-- ✅ `TOOL-1` PnP compare between two files · `ecad_compare/examples/pnp_compare.rs`
+- ✅ `TOOL-1` PnP compare between two files; on the board model it compares any two layouts (two PnP files, two
+  boards, a board and its PnP file) by reference: position, rotation modulo 360, side, value, package, with
+  tolerances · `erc_model/src/placecmp.rs` (for `berc diff --pnp`), old `ecad_compare/examples/pnp_compare.rs`
 - 📋 `TOOL-2` Schematic vs layout match (catalogue `LAY-1`)
 - ✅ `TOOL-3` Readable git diffs: `berc textconv` prints a `.kicad_sch` / `.kicad_pcb` as sorted text without UUIDs
   or coordinates (`--with-geometry` adds them), and a `.kicad_pro` as dotted-path settings with named lists and
