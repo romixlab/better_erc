@@ -1244,7 +1244,9 @@ dependencies = [
 name = "erc_checks"
 version = "0.3.8"
 dependencies = [
+ "anstyle",
  "erc_analysis",
+ "erc_import",
  "erc_kicad",
  "erc_model",
  "inventory",

@@ -62,7 +62,7 @@ part R601 flag exclude_from_sim = no @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part R601 flag in_bom = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part R601 flag on_board = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part R601 lib Device:R sheet / symbol Device:R
-part R601 unit 1 sheet / uuid c4233c4b-e05a-4600-8cd9-d1e13b611099 at 91.44,57.15 rot 0
+part R601 unit 1 sheet / uuid c4233c4b-e05a-4600-8cd9-d1e13b611099 line 1656 at 91.44,57.15 rot 0
 part R601 value = text 3K0 @ sch i2c-10_non_equal_pull_ups.kicad_sch note "from the Value field"
 part R602 field Description = Resistor @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part R602 field Value = 3K3 @ sch i2c-10_non_equal_pull_ups.kicad_sch
@@ -71,7 +71,7 @@ part R602 flag exclude_from_sim = no @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part R602 flag in_bom = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part R602 flag on_board = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part R602 lib Device:R sheet / symbol Device:R
-part R602 unit 1 sheet / uuid 0a3542b5-0f7c-4f7a-ae3a-f72a96081a32 at 101.6,57.15 rot 0
+part R602 unit 1 sheet / uuid 0a3542b5-0f7c-4f7a-ae3a-f72a96081a32 line 1300 at 101.6,57.15 rot 0
 part R602 value = text 3K3 @ sch i2c-10_non_equal_pull_ups.kicad_sch note "from the Value field"
 part U601 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part U601 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c-10_non_equal_pull_ups.kicad_sch
@@ -82,7 +82,7 @@ part U601 flag exclude_from_sim = no @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part U601 flag in_bom = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part U601 flag on_board = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part U601 lib MCU_ST_STM32F0:STM32F030F4Px sheet / symbol MCU_ST_STM32F0:STM32F030F4Px
-part U601 unit 1 sheet / uuid d91f5e37-dde6-4071-8e3a-0dc3f1e3eecf at 68.58,63.5 rot 0
+part U601 unit 1 sheet / uuid d91f5e37-dde6-4071-8e3a-0dc3f1e3eecf line 1726 at 68.58,63.5 rot 0
 part U601 value = text STM32F030F4Px @ sch i2c-10_non_equal_pull_ups.kicad_sch note "from the Value field"
 part U602 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part U602 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-10_non_equal_pull_ups.kicad_sch
@@ -93,7 +93,7 @@ part U602 flag exclude_from_sim = no @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part U602 flag in_bom = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part U602 flag on_board = yes @ sch i2c-10_non_equal_pull_ups.kicad_sch
 part U602 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
-part U602 unit 1 sheet / uuid 9768d9c0-314b-48e4-a4b9-a87a4beb443c at 147.32,66.04 rot 0
+part U602 unit 1 sheet / uuid 9768d9c0-314b-48e4-a4b9-a87a4beb443c line 1502 at 147.32,66.04 rot 0
 part U602 value = text PCA9536DP @ sch i2c-10_non_equal_pull_ups.kicad_sch note "from the Value field"
 pin R601 1 name "" unit 1 net VCC
 pin R601 1 type = passive @ sch i2c-10_non_equal_pull_ups.kicad_sch

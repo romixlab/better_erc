@@ -342,6 +342,9 @@ pub struct UnitPlacement {
     pub sheet: SheetId,
     /// The symbol's UUID in its sheet file
     pub uuid: String,
+    /// The line of the symbol in its sheet file, when the importer knows it
+    #[serde(default)]
+    pub line: Option<u32>,
     pub at: Option<Placement>,
 }
 

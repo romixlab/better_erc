@@ -29,7 +29,7 @@ part JP1 flag exclude_from_sim = no @ sch fixture.kicad_sch
 part JP1 flag in_bom = yes @ sch fixture.kicad_sch
 part JP1 flag on_board = yes @ sch fixture.kicad_sch
 part JP1 lib Fixture:Jumper3 sheet / symbol Fixture:Jumper3
-part JP1 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000004 at 160,50 rot 0
+part JP1 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000004 line 698 at 160,50 rot 0
 part JP1 value = text Jumper3 @ sch fixture.kicad_sch note "from the Value field"
 part R1 field Description = Resistor @ sch fixture.kicad_sch
 part R1 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch fixture.kicad_sch
@@ -39,7 +39,7 @@ part R1 flag exclude_from_sim = no @ sch fixture.kicad_sch
 part R1 flag in_bom = yes @ sch fixture.kicad_sch
 part R1 flag on_board = yes @ sch fixture.kicad_sch
 part R1 lib Fixture:R sheet / symbol Fixture:R
-part R1 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000001 at 100,50 rot 0
+part R1 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000001 line 491 at 100,50 rot 0
 part R1 value = text 10k @ sch fixture.kicad_sch note "from the Value field"
 part U1 field Description = "Dual amplifier, two units" @ sch fixture.kicad_sch
 part U1 field Value = DualAmp @ sch fixture.kicad_sch
@@ -48,8 +48,8 @@ part U1 flag exclude_from_sim = no @ sch fixture.kicad_sch
 part U1 flag in_bom = yes @ sch fixture.kicad_sch
 part U1 flag on_board = yes @ sch fixture.kicad_sch
 part U1 lib Fixture:DualAmp sheet / symbol Fixture:DualAmp
-part U1 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000002 at 130,50 rot 0
-part U1 unit 2 sheet / uuid 00000000-0000-4000-8000-000000000003 at 130,80 rot 0
+part U1 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000002 line 558 at 130,50 rot 0
+part U1 unit 2 sheet / uuid 00000000-0000-4000-8000-000000000003 line 628 at 130,80 rot 0
 part U1 value = text DualAmp @ sch fixture.kicad_sch note "from the Value field"
 pin JP1 1 name A unit 1 net /INB
 pin JP1 1 type = passive @ sch fixture.kicad_sch

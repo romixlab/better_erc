@@ -169,7 +169,7 @@ part J401 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part J401 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part J401 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part J401 lib Connector:Conn_01x03_Pin sheet / symbol Connector:Conn_01x03_Pin
-part J401 unit 1 sheet / uuid 63102011-5c41-4316-b36a-b6b698e6ee43 at 121.92,120.65 rot 0
+part J401 unit 1 sheet / uuid 63102011-5c41-4316-b36a-b6b698e6ee43 line 5167 at 121.92,120.65 rot 0
 part J401 value = text Conn_01x03_Pin @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part Q401 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c-7_segments.kicad_sch
 part Q401 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c-7_segments.kicad_sch
@@ -180,7 +180,7 @@ part Q401 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part Q401 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part Q401 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part Q401 lib Transistor_FET:BSS138 sheet / symbol Transistor_FET:BSS138
-part Q401 unit 1 sheet / uuid 81a0f175-b57b-4355-aa28-e78fba1b353e at 210.82,154.94 rot 90 mirror x
+part Q401 unit 1 sheet / uuid 81a0f175-b57b-4355-aa28-e78fba1b353e line 5748 at 210.82,154.94 rot 90 mirror x
 part Q401 value = text BSS138 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part Q402 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c-7_segments.kicad_sch
 part Q402 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c-7_segments.kicad_sch
@@ -191,7 +191,7 @@ part Q402 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part Q402 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part Q402 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part Q402 lib Transistor_FET:BSS138 sheet / symbol Transistor_FET:BSS138
-part Q402 unit 1 sheet / uuid e01b01aa-3cf9-4772-bbec-27ee29c5ae14 at 210.82,173.99 rot 90 mirror x
+part Q402 unit 1 sheet / uuid e01b01aa-3cf9-4772-bbec-27ee29c5ae14 line 7247 at 210.82,173.99 rot 90 mirror x
 part Q402 value = text BSS138 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part Q403 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c-7_segments.kicad_sch
 part Q403 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c-7_segments.kicad_sch
@@ -202,7 +202,7 @@ part Q403 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part Q403 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part Q403 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part Q403 lib Transistor_FET:BSS138 sheet / symbol Transistor_FET:BSS138
-part Q403 unit 1 sheet / uuid 8f793adc-560b-454a-a802-f1a3f56faab8 at 222.25,57.15 rot 90 mirror x
+part Q403 unit 1 sheet / uuid 8f793adc-560b-454a-a802-f1a3f56faab8 line 6013 at 222.25,57.15 rot 90 mirror x
 part Q403 value = text BSS138 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part Q404 field Datasheet = https://www.onsemi.com/pub/Collateral/BSS138-D.PDF @ sch i2c-7_segments.kicad_sch
 part Q404 field Description = "50V Vds, 0.22A Id, N-Channel MOSFET, SOT-23" @ sch i2c-7_segments.kicad_sch
@@ -213,7 +213,7 @@ part Q404 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part Q404 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part Q404 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part Q404 lib Transistor_FET:BSS138 sheet / symbol Transistor_FET:BSS138
-part Q404 unit 1 sheet / uuid 344a4cd9-92bf-4b42-ae5a-d24959645732 at 222.25,76.2 rot 90 mirror x
+part Q404 unit 1 sheet / uuid 344a4cd9-92bf-4b42-ae5a-d24959645732 line 4329 at 222.25,76.2 rot 90 mirror x
 part Q404 value = text BSS138 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R401 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R401 field Value = 10K @ sch i2c-7_segments.kicad_sch
@@ -222,7 +222,7 @@ part R401 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R401 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R401 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R401 lib Device:R sheet / symbol Device:R
-part R401 unit 1 sheet / uuid db558b9b-d1c6-416f-b6e0-86752881e6c1 at 147.32,64.77 rot 0
+part R401 unit 1 sheet / uuid db558b9b-d1c6-416f-b6e0-86752881e6c1 line 7111 at 147.32,64.77 rot 0
 part R401 value = text 10K @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R402 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R402 field Value = 10K @ sch i2c-7_segments.kicad_sch
@@ -231,7 +231,7 @@ part R402 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R402 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R402 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R402 lib Device:R sheet / symbol Device:R
-part R402 unit 1 sheet / uuid 4ad0e533-851d-4845-9c67-373be976022d at 147.32,100.33 rot 0
+part R402 unit 1 sheet / uuid 4ad0e533-851d-4845-9c67-373be976022d line 4763 at 147.32,100.33 rot 0
 part R402 value = text 10K @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R403 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R403 field Value = 10K @ sch i2c-7_segments.kicad_sch
@@ -240,7 +240,7 @@ part R403 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R403 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R403 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R403 lib Device:R sheet / symbol Device:R
-part R403 unit 1 sheet / uuid 28213184-22b9-4c74-b9ef-167bf31565a4 at 157.48,64.77 rot 0
+part R403 unit 1 sheet / uuid 28213184-22b9-4c74-b9ef-167bf31565a4 line 4123 at 157.48,64.77 rot 0
 part R403 value = text 10K @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R404 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R404 field Value = 10K @ sch i2c-7_segments.kicad_sch
@@ -249,7 +249,7 @@ part R404 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R404 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R404 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R404 lib Device:R sheet / symbol Device:R
-part R404 unit 1 sheet / uuid cb48bcbd-7538-4527-b856-72d688cb58af at 157.48,100.33 rot 0
+part R404 unit 1 sheet / uuid cb48bcbd-7538-4527-b856-72d688cb58af line 6777 at 157.48,100.33 rot 0
 part R404 value = text 10K @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R405 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R405 field Value = 0 @ sch i2c-7_segments.kicad_sch
@@ -258,7 +258,7 @@ part R405 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R405 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R405 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R405 lib Device:R sheet / symbol Device:R
-part R405 unit 1 sheet / uuid b6a09870-a05a-4767-b39a-8f4a44d92e2b at 182.88,119.38 rot 90
+part R405 unit 1 sheet / uuid b6a09870-a05a-4767-b39a-8f4a44d92e2b line 6710 at 182.88,119.38 rot 90
 part R405 value = text 0 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R406 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R406 field Value = 0 @ sch i2c-7_segments.kicad_sch
@@ -267,7 +267,7 @@ part R406 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R406 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R406 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R406 lib Device:R sheet / symbol Device:R
-part R406 unit 1 sheet / uuid a30c07f7-f111-49a0-9da3-3f38a26820bf at 182.88,121.92 rot 90
+part R406 unit 1 sheet / uuid a30c07f7-f111-49a0-9da3-3f38a26820bf line 6153 at 182.88,121.92 rot 90
 part R406 value = text 0 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R407 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R407 field Value = 2K2 @ sch i2c-7_segments.kicad_sch
@@ -276,7 +276,7 @@ part R407 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R407 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R407 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R407 lib Device:R sheet / symbol Device:R
-part R407 unit 1 sheet / uuid 24ac2411-1d53-47bd-a974-34538e802693 at 231.14,149.86 rot 0
+part R407 unit 1 sheet / uuid 24ac2411-1d53-47bd-a974-34538e802693 line 3921 at 231.14,149.86 rot 0
 part R407 value = text 2K2 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R408 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R408 field Value = 2K2 @ sch i2c-7_segments.kicad_sch
@@ -285,7 +285,7 @@ part R408 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R408 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R408 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R408 lib Device:R sheet / symbol Device:R
-part R408 unit 1 sheet / uuid 5dec4617-7942-48bc-a411-b01b77d452f3 at 241.3,149.86 rot 0
+part R408 unit 1 sheet / uuid 5dec4617-7942-48bc-a411-b01b77d452f3 line 5097 at 241.3,149.86 rot 0
 part R408 value = text 2K2 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R409 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R409 field Value = 3K3 @ sch i2c-7_segments.kicad_sch
@@ -294,7 +294,7 @@ part R409 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R409 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R409 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R409 lib Device:R sheet / symbol Device:R
-part R409 unit 1 sheet / uuid e609dd63-e306-40d2-9898-74fba7f5306f at 242.57,52.07 rot 0
+part R409 unit 1 sheet / uuid e609dd63-e306-40d2-9898-74fba7f5306f line 7387 at 242.57,52.07 rot 0
 part R409 value = text 3K3 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R410 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R410 field Value = 4K7 @ sch i2c-7_segments.kicad_sch
@@ -303,7 +303,7 @@ part R410 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R410 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R410 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R410 lib Device:R sheet / symbol Device:R
-part R410 unit 1 sheet / uuid 34b6c37a-719d-42a3-b20d-96287dab309a at 243.84,196.85 rot 0
+part R410 unit 1 sheet / uuid 34b6c37a-719d-42a3-b20d-96287dab309a line 4403 at 243.84,196.85 rot 0
 part R410 value = text 4K7 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R411 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R411 field Value = 3K3 @ sch i2c-7_segments.kicad_sch
@@ -312,7 +312,7 @@ part R411 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R411 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R411 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R411 lib Device:R sheet / symbol Device:R
-part R411 unit 1 sheet / uuid 4aabdadc-16b2-4648-bc8f-efcd3676b0b9 at 252.73,52.07 rot 0
+part R411 unit 1 sheet / uuid 4aabdadc-16b2-4648-bc8f-efcd3676b0b9 line 4693 at 252.73,52.07 rot 0
 part R411 value = text 3K3 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R412 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R412 field Value = 4K7 @ sch i2c-7_segments.kicad_sch
@@ -321,7 +321,7 @@ part R412 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R412 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R412 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R412 lib Device:R sheet / symbol Device:R
-part R412 unit 1 sheet / uuid 2c00ddb7-743c-490f-a091-37a1f5eeece6 at 254,196.85 rot 0
+part R412 unit 1 sheet / uuid 2c00ddb7-743c-490f-a091-37a1f5eeece6 line 4193 at 254,196.85 rot 0
 part R412 value = text 4K7 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R413 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R413 field Value = 10R @ sch i2c-7_segments.kicad_sch
@@ -330,7 +330,7 @@ part R413 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R413 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R413 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R413 lib Device:R sheet / symbol Device:R
-part R413 unit 1 sheet / uuid ae0cf0d2-41d3-4c30-80ac-148af8fa4848 at 182.88,251.46 rot 90
+part R413 unit 1 sheet / uuid ae0cf0d2-41d3-4c30-80ac-148af8fa4848 line 6511 at 182.88,251.46 rot 90
 part R413 value = qty 10 ohm @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R414 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R414 field Value = 1K @ sch i2c-7_segments.kicad_sch
@@ -339,7 +339,7 @@ part R414 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R414 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R414 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R414 lib Device:R sheet / symbol Device:R
-part R414 unit 1 sheet / uuid a4aa93f6-2b2a-4e4d-807b-67617fc02332 at 182.88,254 rot 90
+part R414 unit 1 sheet / uuid a4aa93f6-2b2a-4e4d-807b-67617fc02332 line 6290 at 182.88,254 rot 90
 part R414 value = text 1K @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R415 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R415 field Value = 4K7 @ sch i2c-7_segments.kicad_sch
@@ -348,7 +348,7 @@ part R415 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R415 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R415 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R415 lib Device:R sheet / symbol Device:R
-part R415 unit 1 sheet / uuid a4776743-b5c4-45f6-bcc1-a45c93867582 at 201.93,243.84 rot 0
+part R415 unit 1 sheet / uuid a4776743-b5c4-45f6-bcc1-a45c93867582 line 6220 at 201.93,243.84 rot 0
 part R415 value = text 4K7 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part R416 field Description = Resistor @ sch i2c-7_segments.kicad_sch
 part R416 field Value = 4K7 @ sch i2c-7_segments.kicad_sch
@@ -357,7 +357,7 @@ part R416 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part R416 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part R416 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part R416 lib Device:R sheet / symbol Device:R
-part R416 unit 1 sheet / uuid 7ffb8bfd-c0da-4a18-83b8-32fa93e4f8ff at 212.09,243.84 rot 0
+part R416 unit 1 sheet / uuid 7ffb8bfd-c0da-4a18-83b8-32fa93e4f8ff line 5612 at 212.09,243.84 rot 0
 part R416 value = text 4K7 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part U401 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c-7_segments.kicad_sch
 part U401 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c-7_segments.kicad_sch
@@ -368,7 +368,7 @@ part U401 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part U401 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part U401 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U401 lib MCU_ST_STM32F0:STM32F030F4Px sheet / symbol MCU_ST_STM32F0:STM32F030F4Px
-part U401 unit 1 sheet / uuid 8c3f90d4-3c39-4cf2-9498-1eda9c5ba221 at 87.63,73.66 rot 0
+part U401 unit 1 sheet / uuid 8c3f90d4-3c39-4cf2-9498-1eda9c5ba221 line 5888 at 87.63,73.66 rot 0
 part U401 value = text STM32F030F4Px @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part U402 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-7_segments.kicad_sch
 part U402 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-7_segments.kicad_sch
@@ -379,7 +379,7 @@ part U402 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part U402 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part U402 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U402 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
-part U402 unit 1 sheet / uuid aa0e9c73-c302-4300-af36-47f3da10ae38 at 190.5,83.82 rot 0
+part U402 unit 1 sheet / uuid aa0e9c73-c302-4300-af36-47f3da10ae38 line 6357 at 190.5,83.82 rot 0
 part U402 value = text PCA9536DP @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part U403 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-7_segments.kicad_sch
 part U403 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-7_segments.kicad_sch
@@ -390,7 +390,7 @@ part U403 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part U403 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part U403 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U403 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
-part U403 unit 1 sheet / uuid 6b0e8400-2f4d-4874-8403-628486744bfd at 210.82,116.84 rot 0
+part U403 unit 1 sheet / uuid 6b0e8400-2f4d-4874-8403-628486744bfd line 5238 at 210.82,116.84 rot 0
 part U403 value = text PCA9536DP @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part U404 field Datasheet = http://www.ti.com/lit/ds/symlink/pca9306.pdf @ sch i2c-7_segments.kicad_sch
 part U404 field Description = "Dual bidirectional I2C Bus and SMBus voltage level translator" @ sch i2c-7_segments.kicad_sch
@@ -400,7 +400,7 @@ part U404 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part U404 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part U404 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U404 lib Interface:PCA9306 sheet / symbol Interface:PCA9306
-part U404 unit 1 sheet / uuid fb1ae9b3-78b1-4734-979d-8c59e3e214d6 at 210.82,204.47 rot 0
+part U404 unit 1 sheet / uuid fb1ae9b3-78b1-4734-979d-8c59e3e214d6 line 7589 at 210.82,204.47 rot 0
 part U404 value = text PCA9306 @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part U405 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-7_segments.kicad_sch
 part U405 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-7_segments.kicad_sch
@@ -411,7 +411,7 @@ part U405 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part U405 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part U405 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U405 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
-part U405 unit 1 sheet / uuid 1ab5acfc-041f-4aa5-9f9a-fbffe3d2903f at 276.86,154.94 rot 0
+part U405 unit 1 sheet / uuid 1ab5acfc-041f-4aa5-9f9a-fbffe3d2903f line 3701 at 276.86,154.94 rot 0
 part U405 value = text PCA9536DP @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part U406 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-7_segments.kicad_sch
 part U406 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-7_segments.kicad_sch
@@ -422,7 +422,7 @@ part U406 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part U406 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part U406 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U406 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
-part U406 unit 1 sheet / uuid 7c4bb93f-14a9-46ba-8b20-d129dd1b1dc0 at 288.29,57.15 rot 0
+part U406 unit 1 sheet / uuid 7c4bb93f-14a9-46ba-8b20-d129dd1b1dc0 line 5524 at 288.29,57.15 rot 0
 part U406 value = text PCA9536DP @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part U407 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-7_segments.kicad_sch
 part U407 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-7_segments.kicad_sch
@@ -433,7 +433,7 @@ part U407 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part U407 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part U407 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U407 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
-part U407 unit 1 sheet / uuid 3c1c5e4e-e1b6-4c5e-a884-0c1c12ed1609 at 289.56,201.93 rot 0
+part U407 unit 1 sheet / uuid 3c1c5e4e-e1b6-4c5e-a884-0c1c12ed1609 line 4473 at 289.56,201.93 rot 0
 part U407 value = text PCA9536DP @ sch i2c-7_segments.kicad_sch note "from the Value field"
 part U408 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-7_segments.kicad_sch
 part U408 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-7_segments.kicad_sch
@@ -444,7 +444,7 @@ part U408 flag exclude_from_sim = no @ sch i2c-7_segments.kicad_sch
 part U408 flag in_bom = yes @ sch i2c-7_segments.kicad_sch
 part U408 flag on_board = yes @ sch i2c-7_segments.kicad_sch
 part U408 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
-part U408 unit 1 sheet / uuid 0aa8cbb2-6a1e-4cfa-bdd3-9568fbf29177 at 233.68,248.92 rot 0
+part U408 unit 1 sheet / uuid 0aa8cbb2-6a1e-4cfa-bdd3-9568fbf29177 line 3547 at 233.68,248.92 rot 0
 part U408 value = text PCA9536DP @ sch i2c-7_segments.kicad_sch note "from the Value field"
 pin J401 1 name Pin_1 unit 1 net /SDA2_3V3
 pin J401 1 type = passive @ sch i2c-7_segments.kicad_sch

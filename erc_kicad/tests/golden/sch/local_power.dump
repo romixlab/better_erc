@@ -23,7 +23,7 @@ part R1 flag exclude_from_sim = no @ sch local_power.kicad_sch
 part R1 flag in_bom = yes @ sch local_power.kicad_sch
 part R1 flag on_board = yes @ sch local_power.kicad_sch
 part R1 lib Fixture:R sheet / symbol Fixture:R
-part R1 unit 1 sheet / uuid 40000000-0000-4000-8000-000000000001 at 20,20 rot 0
+part R1 unit 1 sheet / uuid 40000000-0000-4000-8000-000000000001 line 339 at 20,20 rot 0
 part R1 value = text 10k @ sch local_power.kicad_sch note "from the Value field"
 part R2 field Value = 10k @ sch local_power.kicad_sch
 part R2 flag dnp = no @ sch local_power.kicad_sch
@@ -31,7 +31,7 @@ part R2 flag exclude_from_sim = no @ sch local_power.kicad_sch
 part R2 flag in_bom = yes @ sch local_power.kicad_sch
 part R2 flag on_board = yes @ sch local_power.kicad_sch
 part R2 lib Fixture:R sheet / symbol Fixture:R
-part R2 unit 1 sheet / uuid 40000000-0000-4000-8000-000000000004 at 30,20 rot 0
+part R2 unit 1 sheet / uuid 40000000-0000-4000-8000-000000000004 line 357 at 30,20 rot 0
 part R2 value = text 10k @ sch local_power.kicad_sch note "from the Value field"
 part R10 field Value = 10k @ sch local_power_child.kicad_sch
 part R10 flag dnp = no @ sch local_power_child.kicad_sch
@@ -39,7 +39,7 @@ part R10 flag exclude_from_sim = no @ sch local_power_child.kicad_sch
 part R10 flag in_bom = yes @ sch local_power_child.kicad_sch
 part R10 flag on_board = yes @ sch local_power_child.kicad_sch
 part R10 lib Fixture:R sheet /Sub/ symbol Fixture:R
-part R10 unit 1 sheet /Sub/ uuid 41000000-0000-4000-8000-000000000001 at 20,20 rot 0
+part R10 unit 1 sheet /Sub/ uuid 41000000-0000-4000-8000-000000000001 line 334 at 20,20 rot 0
 part R10 value = text 10k @ sch local_power_child.kicad_sch note "from the Value field"
 part R11 field Value = 10k @ sch local_power_child.kicad_sch
 part R11 flag dnp = no @ sch local_power_child.kicad_sch
@@ -47,7 +47,7 @@ part R11 flag exclude_from_sim = no @ sch local_power_child.kicad_sch
 part R11 flag in_bom = yes @ sch local_power_child.kicad_sch
 part R11 flag on_board = yes @ sch local_power_child.kicad_sch
 part R11 lib Fixture:R sheet /Sub/ symbol Fixture:R
-part R11 unit 1 sheet /Sub/ uuid 41000000-0000-4000-8000-000000000004 at 30,20 rot 0
+part R11 unit 1 sheet /Sub/ uuid 41000000-0000-4000-8000-000000000004 line 352 at 30,20 rot 0
 part R11 value = text 10k @ sch local_power_child.kicad_sch note "from the Value field"
 pin R1 1 name ~ unit 1 net /VLOC
 pin R1 1 type = passive @ sch local_power.kicad_sch

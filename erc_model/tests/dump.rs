@@ -153,6 +153,7 @@ fn sample() -> Design {
                 unit: 1,
                 sheet: SheetId(1),
                 uuid: format!("u{i}"),
+                line: Some(10 + i as u32),
                 at: Some(Placement {
                     at: Pt::from_mm(10.16, 20.32),
                     rotation: 90.0,

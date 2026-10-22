@@ -28,7 +28,7 @@ part R1 field Mpn1 = RC0603FR-0710KL @ sch power.kicad_sch
 part R1 field Value = 10k @ sch power.kicad_sch
 part R1 flag dnp = no @ sch power.kicad_sch
 part R1 lib Device:R sheet "/Power supply/" symbol Device:R
-part R1 unit 1 sheet "/Power supply/" uuid u0 at 10.16,20.32 rot 90 mirror x
+part R1 unit 1 sheet "/Power supply/" uuid u0 line 10 at 10.16,20.32 rot 90 mirror x
 part R1 value = qty 10000 ohm @ derived value-as-class note "resistor by symbol"
 part R1 value = text 10k @ sch power.kicad_sch
 part R1 variant Plus
@@ -39,7 +39,7 @@ part R? #2 field Mpn1 = RC0603FR-0710KL @ sch power.kicad_sch
 part R? #2 field Value = 10k @ sch power.kicad_sch
 part R? #2 flag dnp = no @ sch power.kicad_sch
 part R? #2 lib Device:R sheet "/Power supply/" symbol Device:R
-part R? #2 unit 1 sheet "/Power supply/" uuid u2 at 10.16,20.32 rot 90 mirror x
+part R? #2 unit 1 sheet "/Power supply/" uuid u2 line 12 at 10.16,20.32 rot 90 mirror x
 part R? #2 value = qty 10000 ohm @ derived value-as-class note "resistor by symbol"
 part R? #2 value = text 10k @ sch power.kicad_sch
 part R? #2 variant Plus
@@ -50,7 +50,7 @@ part R? field Mpn1 = RC0603FR-0710KL @ sch power.kicad_sch
 part R? field Value = 10k @ sch power.kicad_sch
 part R? flag dnp = no @ sch power.kicad_sch
 part R? lib Device:R sheet "/Power supply/" symbol Device:R
-part R? unit 1 sheet "/Power supply/" uuid u1 at 10.16,20.32 rot 90 mirror x
+part R? unit 1 sheet "/Power supply/" uuid u1 line 11 at 10.16,20.32 rot 90 mirror x
 part R? value = qty 10000 ohm @ derived value-as-class note "resistor by symbol"
 part R? value = text 10k @ sch power.kicad_sch
 part R? variant Plus

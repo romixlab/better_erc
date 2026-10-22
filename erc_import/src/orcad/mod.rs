@@ -667,6 +667,7 @@ impl Fill<'_> {
                     unit,
                     sheet,
                     uuid: s.instance.clone(),
+                    line: None,
                     at: None,
                 });
             }

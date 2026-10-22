@@ -167,6 +167,72 @@ pub struct Explanation {
     pub implemented: bool,
 }
 
+impl Explanation {
+    /// The detail page section as Markdown, with a line saying whether better_erc runs the check
+    pub fn to_markdown(&self) -> String {
+        let mut text = if self.text.is_empty() {
+            format!(
+                "## `{}` {}\n\n{} · impl: {}",
+                self.id,
+                self.title,
+                self.severity,
+                self.tier.name()
+            )
+        } else {
+            self.text.clone()
+        };
+        text += &format!("\n\n*{}* · `{}`\n", self.state_line(), self.link);
+        text
+    }
+
+    /// The same as plain text: no emphasis, code marks, anchors or link targets
+    pub fn to_text(&self) -> String {
+        plain(&self.to_markdown())
+    }
+
+    fn state_line(&self) -> &'static str {
+        if self.implemented {
+            "better_erc runs this check"
+        } else {
+            "planned: better_erc does not run this check yet"
+        }
+    }
+}
+
+/// Markdown as plain text: `**x**`, `*x*` and `` `x` `` lose their marks, `[text](target)` keeps the text, HTML
+/// anchors go, a heading loses its `#`s
+pub fn plain(md: &str) -> String {
+    let mut out = String::with_capacity(md.len());
+    for line in md.lines() {
+        let line = line.trim_start_matches('#').trim_start_matches(' ');
+        let mut rest = line;
+        let mut l = String::with_capacity(line.len());
+        while let Some(c) = rest.chars().next() {
+            if let Some(tail) = rest.strip_prefix("<a ")
+                && let Some(end) = tail.find("</a>")
+            {
+                rest = &tail[end + 4..];
+                continue;
+            }
+            if c == '['
+                && let Some(close) = rest.find("](")
+                && let Some(end) = rest[close..].find(')')
+            {
+                l.push_str(&rest[1..close]);
+                rest = &rest[close + end + 1..];
+                continue;
+            }
+            if c != '*' && c != '`' {
+                l.push(c);
+            }
+            rest = &rest[c.len_utf8()..];
+        }
+        out.push_str(l.trim_end());
+        out.push('\n');
+    }
+    out
+}
+
 /// The explanation of a catalogue check, implemented or planned
 pub fn explain(id: &str) -> Option<Explanation> {
     let e = catalogue().entry(id)?;
@@ -255,6 +321,23 @@ mod tests {
             (w.severity, w.depends.as_str()),
             (Severity::Warning, "netlist")
         );
+    }
+
+    #[test]
+    fn explanation_as_text_and_markdown() {
+        let e = explain("I2C-3").unwrap();
+        let md = e.to_markdown();
+        assert!(md.starts_with("## `I2C-3` Pull-up"), "{md}");
+        assert!(md.contains("**What it catches.**"));
+        assert!(md.contains("better_erc runs this check"));
+        let text = e.to_text();
+        assert!(text.starts_with("I2C-3 Pull-up from two series resistors to nowhere\n"), "{text}");
+        assert!(text.contains("What it catches. A pull-up"), "{text}");
+        assert!(text.contains("resistor chains · catalogue entry\n"), "{text}");
+        assert!(!text.contains('`') && !text.contains("**") && !text.contains("<a "), "{text}");
+        let planned = explain("PIN-1").unwrap();
+        assert!(!planned.implemented);
+        assert!(planned.to_text().contains("planned: better_erc does not run this check yet"));
     }
 
     #[test]

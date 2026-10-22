@@ -143,7 +143,7 @@ part R1 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
 part R1 flag in_bom = yes @ sch hierarchy.kicad_sch
 part R1 flag on_board = yes @ sch hierarchy.kicad_sch
 part R1 lib Fixture:R sheet / symbol Fixture:R
-part R1 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000009 at 20,20 rot 0
+part R1 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000009 line 343 at 20,20 rot 0
 part R1 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
 part R2 field Value = 10k @ sch hierarchy.kicad_sch
 part R2 flag dnp = no @ sch hierarchy.kicad_sch
@@ -151,7 +151,7 @@ part R2 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
 part R2 flag in_bom = yes @ sch hierarchy.kicad_sch
 part R2 flag on_board = yes @ sch hierarchy.kicad_sch
 part R2 lib Fixture:R sheet / symbol Fixture:R
-part R2 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000016 at 20,80 rot 0
+part R2 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000016 line 355 at 20,80 rot 0
 part R2 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
 part R3 field Value = 10k @ sch hierarchy.kicad_sch
 part R3 flag dnp = no @ sch hierarchy.kicad_sch
@@ -159,7 +159,7 @@ part R3 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
 part R3 flag in_bom = yes @ sch hierarchy.kicad_sch
 part R3 flag on_board = yes @ sch hierarchy.kicad_sch
 part R3 lib Fixture:R sheet / symbol Fixture:R
-part R3 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000026 at 30,51.35 rot 0
+part R3 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000026 line 370 at 30,51.35 rot 0
 part R3 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
 part R4 field Value = 10k @ sch hierarchy.kicad_sch
 part R4 flag dnp = no @ sch hierarchy.kicad_sch
@@ -167,7 +167,7 @@ part R4 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
 part R4 flag in_bom = yes @ sch hierarchy.kicad_sch
 part R4 flag on_board = yes @ sch hierarchy.kicad_sch
 part R4 lib Fixture:R sheet / symbol Fixture:R
-part R4 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000034 at 52,56.35 rot 0
+part R4 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000034 line 383 at 52,56.35 rot 0
 part R4 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
 part R5 field Value = 10k @ sch hierarchy.kicad_sch
 part R5 flag dnp = no @ sch hierarchy.kicad_sch
@@ -175,7 +175,7 @@ part R5 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
 part R5 flag in_bom = yes @ sch hierarchy.kicad_sch
 part R5 flag on_board = yes @ sch hierarchy.kicad_sch
 part R5 lib Fixture:R sheet / symbol Fixture:R
-part R5 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000035 at 120,20 rot 0
+part R5 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000035 line 389 at 120,20 rot 0
 part R5 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
 part R6 field Value = 10k @ sch hierarchy.kicad_sch
 part R6 flag dnp = no @ sch hierarchy.kicad_sch
@@ -183,7 +183,7 @@ part R6 flag exclude_from_sim = no @ sch hierarchy.kicad_sch
 part R6 flag in_bom = yes @ sch hierarchy.kicad_sch
 part R6 flag on_board = yes @ sch hierarchy.kicad_sch
 part R6 lib Fixture:R sheet / symbol Fixture:R
-part R6 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000038 at 130,20 rot 0
+part R6 unit 1 sheet / uuid 30000000-0000-4000-8000-000000000038 line 402 at 130,20 rot 0
 part R6 value = text 10k @ sch hierarchy.kicad_sch note "from the Value field"
 part R10 field Value = 10k @ sch child.kicad_sch
 part R10 flag dnp = no @ sch child.kicad_sch
@@ -191,7 +191,7 @@ part R10 flag exclude_from_sim = no @ sch child.kicad_sch
 part R10 flag in_bom = yes @ sch child.kicad_sch
 part R10 flag on_board = yes @ sch child.kicad_sch
 part R10 lib Fixture:R sheet /A/ symbol Fixture:R
-part R10 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000001 at 30,30 rot 0
+part R10 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000001 line 327 at 30,30 rot 0
 part R10 value = text 10k @ sch child.kicad_sch note "from the Value field"
 part R11 field Value = 10k @ sch child.kicad_sch
 part R11 flag dnp = no @ sch child.kicad_sch
@@ -199,7 +199,7 @@ part R11 flag exclude_from_sim = no @ sch child.kicad_sch
 part R11 flag in_bom = yes @ sch child.kicad_sch
 part R11 flag on_board = yes @ sch child.kicad_sch
 part R11 lib Fixture:R sheet /A/ symbol Fixture:R
-part R11 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000009 at 32.54,46.19 rot 0
+part R11 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000009 line 340 at 32.54,46.19 rot 0
 part R11 value = text 10k @ sch child.kicad_sch note "from the Value field"
 part R12 field Value = 10k @ sch child.kicad_sch
 part R12 flag dnp = no @ sch child.kicad_sch
@@ -207,7 +207,7 @@ part R12 flag exclude_from_sim = no @ sch child.kicad_sch
 part R12 flag in_bom = yes @ sch child.kicad_sch
 part R12 flag on_board = yes @ sch child.kicad_sch
 part R12 lib Fixture:R sheet /A/ symbol Fixture:R
-part R12 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000014 at 42.54,46.19 rot 0
+part R12 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000014 line 355 at 42.54,46.19 rot 0
 part R12 value = text 10k @ sch child.kicad_sch note "from the Value field"
 part R13 field Value = 10k @ sch child.kicad_sch
 part R13 flag dnp = no @ sch child.kicad_sch
@@ -215,7 +215,7 @@ part R13 flag exclude_from_sim = no @ sch child.kicad_sch
 part R13 flag in_bom = yes @ sch child.kicad_sch
 part R13 flag on_board = yes @ sch child.kicad_sch
 part R13 lib Fixture:R sheet /A/ symbol Fixture:R
-part R13 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000016 at 60,30 rot 0
+part R13 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000016 line 362 at 60,30 rot 0
 part R13 value = text 10k @ sch child.kicad_sch note "from the Value field"
 part R14 field Value = 10k @ sch child.kicad_sch
 part R14 flag dnp = no @ sch child.kicad_sch
@@ -223,7 +223,7 @@ part R14 flag exclude_from_sim = no @ sch child.kicad_sch
 part R14 flag in_bom = yes @ sch child.kicad_sch
 part R14 flag on_board = yes @ sch child.kicad_sch
 part R14 lib Fixture:R sheet /A/ symbol Fixture:R
-part R14 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000024 at 32.54,66.19 rot 0
+part R14 unit 1 sheet /A/ uuid 31000000-0000-4000-8000-000000000024 line 375 at 32.54,66.19 rot 0
 part R14 value = text 10k @ sch child.kicad_sch note "from the Value field"
 part R20 field Value = 10k @ sch child.kicad_sch
 part R20 flag dnp = no @ sch child.kicad_sch
@@ -231,7 +231,7 @@ part R20 flag exclude_from_sim = no @ sch child.kicad_sch
 part R20 flag in_bom = yes @ sch child.kicad_sch
 part R20 flag on_board = yes @ sch child.kicad_sch
 part R20 lib Fixture:R sheet /B/ symbol Fixture:R
-part R20 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000001 at 30,30 rot 0
+part R20 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000001 line 327 at 30,30 rot 0
 part R20 value = text 10k @ sch child.kicad_sch note "from the Value field"
 part R21 field Value = 10k @ sch child.kicad_sch
 part R21 flag dnp = no @ sch child.kicad_sch
@@ -239,7 +239,7 @@ part R21 flag exclude_from_sim = no @ sch child.kicad_sch
 part R21 flag in_bom = yes @ sch child.kicad_sch
 part R21 flag on_board = yes @ sch child.kicad_sch
 part R21 lib Fixture:R sheet /B/ symbol Fixture:R
-part R21 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000009 at 32.54,46.19 rot 0
+part R21 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000009 line 340 at 32.54,46.19 rot 0
 part R21 value = text 10k @ sch child.kicad_sch note "from the Value field"
 part R22 field Value = 10k @ sch child.kicad_sch
 part R22 flag dnp = no @ sch child.kicad_sch
@@ -247,7 +247,7 @@ part R22 flag exclude_from_sim = no @ sch child.kicad_sch
 part R22 flag in_bom = yes @ sch child.kicad_sch
 part R22 flag on_board = yes @ sch child.kicad_sch
 part R22 lib Fixture:R sheet /B/ symbol Fixture:R
-part R22 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000014 at 42.54,46.19 rot 0
+part R22 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000014 line 355 at 42.54,46.19 rot 0
 part R22 value = text 10k @ sch child.kicad_sch note "from the Value field"
 part R23 field Value = 10k @ sch child.kicad_sch
 part R23 flag dnp = no @ sch child.kicad_sch
@@ -255,7 +255,7 @@ part R23 flag exclude_from_sim = no @ sch child.kicad_sch
 part R23 flag in_bom = yes @ sch child.kicad_sch
 part R23 flag on_board = yes @ sch child.kicad_sch
 part R23 lib Fixture:R sheet /B/ symbol Fixture:R
-part R23 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000016 at 60,30 rot 0
+part R23 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000016 line 362 at 60,30 rot 0
 part R23 value = text 10k @ sch child.kicad_sch note "from the Value field"
 part R24 field Value = 10k @ sch child.kicad_sch
 part R24 flag dnp = no @ sch child.kicad_sch
@@ -263,7 +263,7 @@ part R24 flag exclude_from_sim = no @ sch child.kicad_sch
 part R24 flag in_bom = yes @ sch child.kicad_sch
 part R24 flag on_board = yes @ sch child.kicad_sch
 part R24 lib Fixture:R sheet /B/ symbol Fixture:R
-part R24 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000024 at 32.54,66.19 rot 0
+part R24 unit 1 sheet /B/ uuid 31000000-0000-4000-8000-000000000024 line 375 at 32.54,66.19 rot 0
 part R24 value = text 10k @ sch child.kicad_sch note "from the Value field"
 pcbnet +3V3
 pcbnet /A/IN

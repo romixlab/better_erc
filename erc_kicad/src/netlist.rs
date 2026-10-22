@@ -481,6 +481,7 @@ impl Reader {
                 unit: if uuids.len() > 1 { i as u32 + 1 } else { 0 },
                 sheet,
                 uuid: u.clone(),
+                line: None,
                 at: None,
             })
             .collect();

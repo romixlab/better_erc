@@ -8,7 +8,14 @@ rust-version.workspace = true
 include.workspace = true
 build = "build.rs"
 
+[features]
+default = ["import"]
+# `project`: open a design from a path through the importer registry, the entry `berc check` and the MCP server use
+import = ["dep:erc_import", "erc_model/fs"]
+
 [dependencies]
+erc_import = { path = "../erc_import", optional = true }
+anstyle = "1"
 erc_analysis = { path = "../erc_analysis" }
 erc_model = { path = "../erc_model" }
 inventory = "0.3"

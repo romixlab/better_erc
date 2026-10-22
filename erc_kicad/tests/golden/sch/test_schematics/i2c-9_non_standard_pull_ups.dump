@@ -62,7 +62,7 @@ part R301 flag exclude_from_sim = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part R301 flag in_bom = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part R301 flag on_board = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part R301 lib Device:R sheet / symbol Device:R
-part R301 unit 1 sheet / uuid 6a52dfd1-33a3-4b22-b1f1-6e9a4dc8120d at 96.52,62.23 rot 0
+part R301 unit 1 sheet / uuid 6a52dfd1-33a3-4b22-b1f1-6e9a4dc8120d line 1557 at 96.52,62.23 rot 0
 part R301 value = text 1K @ sch i2c-9_non_standard_pull_ups.kicad_sch note "from the Value field"
 part R302 field Description = Resistor @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part R302 field Value = 1K @ sch i2c-9_non_standard_pull_ups.kicad_sch
@@ -71,7 +71,7 @@ part R302 flag exclude_from_sim = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part R302 flag in_bom = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part R302 flag on_board = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part R302 lib Device:R sheet / symbol Device:R
-part R302 unit 1 sheet / uuid 83017352-6d4a-4042-b8ec-ae67e7e8851d at 106.68,62.23 rot 0
+part R302 unit 1 sheet / uuid 83017352-6d4a-4042-b8ec-ae67e7e8851d line 1913 at 106.68,62.23 rot 0
 part R302 value = text 1K @ sch i2c-9_non_standard_pull_ups.kicad_sch note "from the Value field"
 part U301 field Datasheet = https://www.st.com/resource/en/datasheet/stm32f030f4.pdf @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part U301 field Description = "STMicroelectronics Arm Cortex-M0 MCU, 16KB flash, 4KB RAM, 48 MHz, 2.4-3.6V, 15 GPIO, TSSOP20" @ sch i2c-9_non_standard_pull_ups.kicad_sch
@@ -82,7 +82,7 @@ part U301 flag exclude_from_sim = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part U301 flag in_bom = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part U301 flag on_board = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part U301 lib MCU_ST_STM32F0:STM32F030F4Px sheet / symbol MCU_ST_STM32F0:STM32F030F4Px
-part U301 unit 1 sheet / uuid 615cc49e-6000-4e1b-a64d-f5d4d7e4e883 at 73.66,68.58 rot 0
+part U301 unit 1 sheet / uuid 615cc49e-6000-4e1b-a64d-f5d4d7e4e883 line 1366 at 73.66,68.58 rot 0
 part U301 value = text STM32F030F4Px @ sch i2c-9_non_standard_pull_ups.kicad_sch note "from the Value field"
 part U302 field Datasheet = http://www.nxp.com/docs/en/data-sheet/PCA9536.pdf @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part U302 field Description = "4-bit I2C-bus and SMBus IO port, TSSOP-8" @ sch i2c-9_non_standard_pull_ups.kicad_sch
@@ -93,7 +93,7 @@ part U302 flag exclude_from_sim = no @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part U302 flag in_bom = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part U302 flag on_board = yes @ sch i2c-9_non_standard_pull_ups.kicad_sch
 part U302 lib Interface_Expansion:PCA9536DP sheet / symbol Interface_Expansion:PCA9536DP
-part U302 unit 1 sheet / uuid 6e20a273-bc94-41bf-a574-6f21e400bca6 at 152.4,71.12 rot 0
+part U302 unit 1 sheet / uuid 6e20a273-bc94-41bf-a574-6f21e400bca6 line 1627 at 152.4,71.12 rot 0
 part U302 value = text PCA9536DP @ sch i2c-9_non_standard_pull_ups.kicad_sch note "from the Value field"
 pin R301 1 name "" unit 1 net VCC
 pin R301 1 type = passive @ sch i2c-9_non_standard_pull_ups.kicad_sch

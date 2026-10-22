@@ -150,6 +150,80 @@ impl Need {
     }
 }
 
+impl Need {
+    /// Every need without a parameter, in declaration order: what `--require` and its completion offer
+    pub const FIXED: &'static [Need] = &[
+        Need::Graph,
+        Need::PartClasses,
+        Need::Values,
+        Need::Rails,
+        Need::RailVoltages,
+        Need::PinRoles,
+        Need::PinThresholds,
+        Need::PinFunctions,
+        Need::PowerStates,
+        Need::Conduction,
+        Need::Layout,
+        Need::Drawing,
+        Need::PartDb,
+        Need::MultiBoard,
+    ];
+
+    /// The name on a command line (`pin-roles`, `project:nets.voltage`)
+    pub fn slug(self) -> String {
+        match self {
+            Need::Graph => "graph".into(),
+            Need::PartClasses => "part-classes".into(),
+            Need::Values => "values".into(),
+            Need::Rails => "rails".into(),
+            Need::RailVoltages => "rail-voltages".into(),
+            Need::PinRoles => "pin-roles".into(),
+            Need::PinThresholds => "pin-thresholds".into(),
+            Need::PinFunctions => "pin-functions".into(),
+            Need::PowerStates => "power-states".into(),
+            Need::Conduction => "conduction".into(),
+            Need::Layout => "layout".into(),
+            Need::Drawing => "drawing".into(),
+            Need::PartDb => "part-db".into(),
+            Need::Project(key) => format!("project:{key}"),
+            Need::MultiBoard => "multi-board".into(),
+        }
+    }
+
+    /// The need a [`Need::slug`] names; `project:KEY` only for a key some registered check declares
+    pub fn from_slug(slug: &str) -> Option<Need> {
+        if let Some(key) = slug.strip_prefix("project:") {
+            return registered()
+                .iter()
+                .flat_map(|c| c.meta().needs)
+                .find(|n| matches!(n, Need::Project(k) if *k == key))
+                .copied();
+        }
+        Need::FIXED.iter().find(|n| n.slug() == slug).copied()
+    }
+
+    /// One line on what the need is, for completion and help
+    pub fn about(self) -> &'static str {
+        match self {
+            Need::Graph => "parts, pins and nets",
+            Need::PartClasses => "what kind each part is",
+            Need::Values => "the Value fields",
+            Need::Rails => "power rails and grounds (NET-5)",
+            Need::RailVoltages => "rail voltages with their sources (NET-5)",
+            Need::PinRoles => "what each pin is for (NET-7)",
+            Need::PinThresholds => "input thresholds and output levels (NET-7)",
+            Need::PinFunctions => "alternate and reset-time pin functions (NET-12)",
+            Need::PowerStates => "power states from the project file (NET-8)",
+            Need::Conduction => "signal following through parts (NET-10)",
+            Need::Layout => "the board file",
+            Need::Drawing => "labels, no-connect flags, sheet pins",
+            Need::PartDb => "part data (CFG-5)",
+            Need::Project(_) => "a key of the better_erc project file (CFG-2)",
+            Need::MultiBoard => "several boards joined through connectors (NET-13)",
+        }
+    }
+}
+
 /// A threshold of a check with its default; the project file will override it per project (CFG-2)
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Param {
@@ -202,6 +276,21 @@ pub trait Check: Sync {
 
     /// The findings on the context's board; only called when every need is available
     fn run(&self, cx: &Ctx) -> Vec<Finding>;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn need_slugs_round_trip() {
+        for n in Need::FIXED {
+            assert_eq!(Need::from_slug(&n.slug()), Some(*n), "{}", n.slug());
+        }
+        assert_eq!(Need::from_slug("pin-roles"), Some(Need::PinRoles));
+        assert_eq!(Need::from_slug("pin roles"), None);
+        assert_eq!(Need::from_slug("project:no.such.key"), None);
+    }
 }
 
 /// A check in the static registry; each check file submits one with `inventory::submit!`

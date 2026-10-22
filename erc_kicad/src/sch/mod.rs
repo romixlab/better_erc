@@ -250,7 +250,7 @@ impl Loader<'_> {
             }
         };
         let mut notes = Notes::new(path);
-        let f = parse::read(root, &mut notes);
+        let f = parse::read(root, &sexpr::Lines::of(&text), &mut notes);
         self.notes.extend(notes.into_vec());
         self.sch.push(f);
         self.names.push(path.to_string());
@@ -571,6 +571,7 @@ fn assemble(
                 unit: res.unit,
                 sheet,
                 uuid: s.uuid.clone(),
+                line: s.line,
                 at: Some(Placement {
                     at: s.at,
                     rotation: s.rotation as f64,

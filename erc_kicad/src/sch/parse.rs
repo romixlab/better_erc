@@ -3,7 +3,7 @@
 //! here; [`super::connect`] does that per sheet instance.
 
 use crate::notes::Notes;
-use crate::sexpr::Sexp;
+use crate::sexpr::{Lines, Sexp};
 use erc_model::{EcadPinType, PinAlternate, PowerScope, Pt};
 use std::collections::HashMap;
 
@@ -72,6 +72,8 @@ pub struct SchSymbol {
     pub unit: u32,
     pub body_style: u32,
     pub uuid: String,
+    /// The line of `(symbol` in the file
+    pub line: Option<u32>,
     pub in_bom: Option<bool>,
     pub on_board: Option<bool>,
     pub dnp: Option<bool>,
@@ -182,7 +184,7 @@ fn line(item: &Sexp) -> Option<(Pt, Pt)> {
 }
 
 /// Reads one schematic file
-pub fn read(root: &Sexp, notes: &mut Notes) -> SchFile {
+pub fn read(root: &Sexp, lines: &Lines, notes: &mut Notes) -> SchFile {
     let mut f = SchFile::default();
     for item in root.args() {
         let Some(head) = item.head() else {
@@ -203,7 +205,10 @@ pub fn read(root: &Sexp, notes: &mut Notes) -> SchFile {
                     }
                 }
             }
-            "symbol" => f.symbols.push(symbol(item, notes)),
+            "symbol" => f.symbols.push(SchSymbol {
+                line: lines.line_of(item),
+                ..symbol(item, notes)
+            }),
             "wire" => match line(item) {
                 Some(l) => f.wires.push(l),
                 None => notes.invalid("wire", "not two points"),

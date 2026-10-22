@@ -96,6 +96,42 @@ impl<'a> Sexp<'a> {
     }
 }
 
+/// Line numbers of the expressions of one parsed text: atoms and plain strings borrow from the text, so where an
+/// expression starts is known without the parser tracking positions
+pub struct Lines {
+    /// Address and length of the text, to place a borrowed slice in it
+    base: usize,
+    len: usize,
+    /// Byte offset of every line start
+    starts: Vec<usize>,
+}
+
+impl Lines {
+    pub fn of(text: &str) -> Lines {
+        let mut starts = vec![0];
+        starts.extend(text.match_indices('\n').map(|(i, _)| i + 1));
+        Lines {
+            base: text.as_ptr() as usize,
+            len: text.len(),
+            starts,
+        }
+    }
+
+    /// The line (1-based) where `e` starts: a list's head, an atom, a string without escapes; `None` for an
+    /// expression that does not borrow from this text (an escaped string, a list without a head atom)
+    pub fn line_of(&self, e: &Sexp) -> Option<u32> {
+        let (ptr, back) = match e {
+            Sexp::Atom(a) => (a.as_ptr() as usize, 0),
+            Sexp::Str(Cow::Borrowed(s)) => (s.as_ptr() as usize, 1),
+            Sexp::Str(Cow::Owned(_)) => return None,
+            // `(` precedes the head, maybe with spaces: the head's line is the list's line in KiCad's files
+            Sexp::List(items) => return items.first().and_then(|h| self.line_of(h)),
+        };
+        let offset = ptr.checked_sub(self.base)?.checked_sub(back)?;
+        (offset <= self.len).then(|| self.starts.partition_point(|&s| s <= offset) as u32)
+    }
+}
+
 /// Parses all top-level expressions of `text`
 pub fn parse(text: &str) -> Result<Vec<Sexp<'_>>, ParseError> {
     let bytes = text.as_bytes();
@@ -252,6 +288,20 @@ mod tests {
         // UTF-8 and an unknown escape
         let v = parse("(t \"ドングル \\q\")").unwrap();
         assert_eq!(v[0].arg(0), Some("ドングル \\q"));
+    }
+
+    #[test]
+    fn lines() {
+        let text = "(a\n  (b 1)\n  (c \"x\")\n  (d \"e\\\"\"))";
+        let v = parse(text).unwrap();
+        let lines = Lines::of(text);
+        assert_eq!(lines.line_of(&v[0]), Some(1));
+        assert_eq!(lines.line_of(v[0].child("b").unwrap()), Some(2));
+        assert_eq!(lines.line_of(&v[0].child("c").unwrap().args()[0]), Some(3));
+        // An escaped string is owned: no position
+        assert_eq!(lines.line_of(&v[0].child("d").unwrap().args()[0]), None);
+        // Not from this text
+        assert_eq!(Lines::of("(z)").line_of(&v[0]), None);
     }
 
     #[test]

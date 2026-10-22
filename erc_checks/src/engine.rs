@@ -278,6 +278,7 @@ pub fn run_with(
             checks_micros,
             total_micros: start.elapsed().as_micros() as u64,
         },
+        baseline: None,
     })
 }
 

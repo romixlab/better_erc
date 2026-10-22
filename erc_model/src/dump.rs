@@ -443,6 +443,9 @@ fn board_lines(b: &Board) -> Vec<String> {
                 sheet(u.sheet),
                 tok(&u.uuid)
             );
+            if let Some(n) = u.line {
+                line += &format!(" line {n}");
+            }
             if let Some(pl) = &u.at {
                 line += &format!(" at {} rot {}", pl.at, pl.rotation);
                 if let Some(m) = pl.mirror {
@@ -1699,6 +1702,7 @@ impl BoardReader {
                 let sheet = self.sheet(c.next()?)?;
                 c.word("uuid")?;
                 let uuid = c.next()?.to_string();
+                let line = if c.opt("line") { Some(c.num()?) } else { None };
                 let at = if c.opt("at") {
                     let at = c.pt()?;
                     c.word("rot")?;
@@ -1720,6 +1724,7 @@ impl BoardReader {
                     unit,
                     sheet,
                     uuid,
+                    line,
                     at,
                 });
             }

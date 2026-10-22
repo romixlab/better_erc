@@ -176,7 +176,7 @@ part R1 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R1 flag in_bom = yes @ sch connectivity.kicad_sch
 part R1 flag on_board = yes @ sch connectivity.kicad_sch
 part R1 lib Fixture:R sheet / symbol Fixture:R
-part R1 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000001 at 20,20 rot 0
+part R1 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000001 line 327 at 20,20 rot 0
 part R1 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R2 field Value = 10k @ sch connectivity.kicad_sch
 part R2 flag dnp = no @ sch connectivity.kicad_sch
@@ -184,7 +184,7 @@ part R2 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R2 flag in_bom = yes @ sch connectivity.kicad_sch
 part R2 flag on_board = yes @ sch connectivity.kicad_sch
 part R2 lib Fixture:R sheet / symbol Fixture:R
-part R2 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000004 at 30,20 rot 0
+part R2 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000004 line 335 at 30,20 rot 0
 part R2 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R3 field Value = 10k @ sch connectivity.kicad_sch
 part R3 flag dnp = no @ sch connectivity.kicad_sch
@@ -192,7 +192,7 @@ part R3 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R3 flag in_bom = yes @ sch connectivity.kicad_sch
 part R3 flag on_board = yes @ sch connectivity.kicad_sch
 part R3 lib Fixture:R sheet / symbol Fixture:R
-part R3 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000007 at 45,20 rot 0
+part R3 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000007 line 343 at 45,20 rot 0
 part R3 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R4 field Value = 10k @ sch connectivity.kicad_sch
 part R4 flag dnp = no @ sch connectivity.kicad_sch
@@ -200,7 +200,7 @@ part R4 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R4 flag in_bom = yes @ sch connectivity.kicad_sch
 part R4 flag on_board = yes @ sch connectivity.kicad_sch
 part R4 lib Fixture:R sheet / symbol Fixture:R
-part R4 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000011 at 55,20 rot 0
+part R4 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000011 line 352 at 55,20 rot 0
 part R4 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R5 field Value = 10k @ sch connectivity.kicad_sch
 part R5 flag dnp = no @ sch connectivity.kicad_sch
@@ -208,7 +208,7 @@ part R5 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R5 flag in_bom = yes @ sch connectivity.kicad_sch
 part R5 flag on_board = yes @ sch connectivity.kicad_sch
 part R5 lib Fixture:R sheet / symbol Fixture:R
-part R5 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000013 at 70,20 rot 0
+part R5 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000013 line 359 at 70,20 rot 0
 part R5 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R6 field Value = 10k @ sch connectivity.kicad_sch
 part R6 flag dnp = no @ sch connectivity.kicad_sch
@@ -216,7 +216,7 @@ part R6 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R6 flag in_bom = yes @ sch connectivity.kicad_sch
 part R6 flag on_board = yes @ sch connectivity.kicad_sch
 part R6 lib Fixture:R sheet / symbol Fixture:R
-part R6 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000016 at 80,20 rot 0
+part R6 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000016 line 367 at 80,20 rot 0
 part R6 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R7 field Value = 10k @ sch connectivity.kicad_sch
 part R7 flag dnp = no @ sch connectivity.kicad_sch
@@ -224,7 +224,7 @@ part R7 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R7 flag in_bom = yes @ sch connectivity.kicad_sch
 part R7 flag on_board = yes @ sch connectivity.kicad_sch
 part R7 lib Fixture:R sheet / symbol Fixture:R
-part R7 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000018 at 100,20 rot 0
+part R7 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000018 line 374 at 100,20 rot 0
 part R7 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R8 field Value = 10k @ sch connectivity.kicad_sch
 part R8 flag dnp = no @ sch connectivity.kicad_sch
@@ -232,7 +232,7 @@ part R8 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R8 flag in_bom = yes @ sch connectivity.kicad_sch
 part R8 flag on_board = yes @ sch connectivity.kicad_sch
 part R8 lib Fixture:R sheet / symbol Fixture:R
-part R8 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000022 at 115,20 rot 0
+part R8 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000022 line 383 at 115,20 rot 0
 part R8 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R9 field Value = 10k @ sch connectivity.kicad_sch
 part R9 flag dnp = no @ sch connectivity.kicad_sch
@@ -240,7 +240,7 @@ part R9 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R9 flag in_bom = yes @ sch connectivity.kicad_sch
 part R9 flag on_board = yes @ sch connectivity.kicad_sch
 part R9 lib Fixture:R sheet / symbol Fixture:R
-part R9 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000024 at 130,20 rot 0
+part R9 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000024 line 390 at 130,20 rot 0
 part R9 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R10 field Value = 10k @ sch connectivity.kicad_sch
 part R10 flag dnp = no @ sch connectivity.kicad_sch
@@ -248,7 +248,7 @@ part R10 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R10 flag in_bom = yes @ sch connectivity.kicad_sch
 part R10 flag on_board = yes @ sch connectivity.kicad_sch
 part R10 lib Fixture:R sheet / symbol Fixture:R
-part R10 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000029 at 145,20 rot 0
+part R10 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000029 line 400 at 145,20 rot 0
 part R10 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R11 field Value = 10k @ sch connectivity.kicad_sch
 part R11 flag dnp = no @ sch connectivity.kicad_sch
@@ -256,7 +256,7 @@ part R11 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R11 flag in_bom = yes @ sch connectivity.kicad_sch
 part R11 flag on_board = yes @ sch connectivity.kicad_sch
 part R11 lib Fixture:R sheet / symbol Fixture:R
-part R11 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000031 at 165,20 rot 0
+part R11 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000031 line 407 at 165,20 rot 0
 part R11 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R12 field Value = 10k @ sch connectivity.kicad_sch
 part R12 flag dnp = no @ sch connectivity.kicad_sch
@@ -264,7 +264,7 @@ part R12 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R12 flag in_bom = yes @ sch connectivity.kicad_sch
 part R12 flag on_board = yes @ sch connectivity.kicad_sch
 part R12 lib Fixture:R sheet / symbol Fixture:R
-part R12 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000035 at 180,20 rot 0
+part R12 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000035 line 416 at 180,20 rot 0
 part R12 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R13 field Value = 10k @ sch connectivity.kicad_sch
 part R13 flag dnp = no @ sch connectivity.kicad_sch
@@ -272,7 +272,7 @@ part R13 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R13 flag in_bom = yes @ sch connectivity.kicad_sch
 part R13 flag on_board = yes @ sch connectivity.kicad_sch
 part R13 lib Fixture:R sheet / symbol Fixture:R
-part R13 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000037 at 200,20 rot 0
+part R13 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000037 line 423 at 200,20 rot 0
 part R13 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R14 field Value = 10k @ sch connectivity.kicad_sch
 part R14 flag dnp = no @ sch connectivity.kicad_sch
@@ -280,7 +280,7 @@ part R14 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R14 flag in_bom = yes @ sch connectivity.kicad_sch
 part R14 flag on_board = yes @ sch connectivity.kicad_sch
 part R14 lib Fixture:R sheet / symbol Fixture:R
-part R14 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000039 at 215,20 rot 0
+part R14 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000039 line 430 at 215,20 rot 0
 part R14 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R15 field Value = 10k @ sch connectivity.kicad_sch
 part R15 flag dnp = no @ sch connectivity.kicad_sch
@@ -288,7 +288,7 @@ part R15 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R15 flag in_bom = yes @ sch connectivity.kicad_sch
 part R15 flag on_board = yes @ sch connectivity.kicad_sch
 part R15 lib Fixture:R sheet / symbol Fixture:R
-part R15 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000043 at 20,60 rot 0
+part R15 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000043 line 439 at 20,60 rot 0
 part R15 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R16 field Value = 10k @ sch connectivity.kicad_sch
 part R16 flag dnp = no @ sch connectivity.kicad_sch
@@ -296,7 +296,7 @@ part R16 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R16 flag in_bom = yes @ sch connectivity.kicad_sch
 part R16 flag on_board = yes @ sch connectivity.kicad_sch
 part R16 lib Fixture:R sheet / symbol Fixture:R
-part R16 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000044 at 20,67.62 rot 0
+part R16 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000044 line 445 at 20,67.62 rot 0
 part R16 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R17 field Value = 10k @ sch connectivity.kicad_sch
 part R17 flag dnp = no @ sch connectivity.kicad_sch
@@ -304,7 +304,7 @@ part R17 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R17 flag in_bom = yes @ sch connectivity.kicad_sch
 part R17 flag on_board = yes @ sch connectivity.kicad_sch
 part R17 lib Fixture:R sheet / symbol Fixture:R
-part R17 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000045 at 40,60 rot 0
+part R17 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000045 line 451 at 40,60 rot 0
 part R17 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R18 field Value = 10k @ sch connectivity.kicad_sch
 part R18 flag dnp = no @ sch connectivity.kicad_sch
@@ -312,7 +312,7 @@ part R18 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R18 flag in_bom = yes @ sch connectivity.kicad_sch
 part R18 flag on_board = yes @ sch connectivity.kicad_sch
 part R18 lib Fixture:R sheet / symbol Fixture:R
-part R18 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000049 at 50,60 rot 0
+part R18 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000049 line 460 at 50,60 rot 0
 part R18 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R19 field Value = 10k @ sch connectivity.kicad_sch
 part R19 flag dnp = no @ sch connectivity.kicad_sch
@@ -320,7 +320,7 @@ part R19 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R19 flag in_bom = yes @ sch connectivity.kicad_sch
 part R19 flag on_board = yes @ sch connectivity.kicad_sch
 part R19 lib Fixture:R sheet / symbol Fixture:R
-part R19 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000051 at 70,60 rot 0
+part R19 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000051 line 467 at 70,60 rot 0
 part R19 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R20 field Value = 10k @ sch connectivity.kicad_sch
 part R20 flag dnp = no @ sch connectivity.kicad_sch
@@ -328,7 +328,7 @@ part R20 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R20 flag in_bom = yes @ sch connectivity.kicad_sch
 part R20 flag on_board = yes @ sch connectivity.kicad_sch
 part R20 lib Fixture:R sheet / symbol Fixture:R
-part R20 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000054 at 80,60 rot 0
+part R20 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000054 line 480 at 80,60 rot 0
 part R20 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R21 field Value = 10k @ sch connectivity.kicad_sch
 part R21 flag dnp = no @ sch connectivity.kicad_sch
@@ -336,7 +336,7 @@ part R21 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R21 flag in_bom = yes @ sch connectivity.kicad_sch
 part R21 flag on_board = yes @ sch connectivity.kicad_sch
 part R21 lib Fixture:R sheet / symbol Fixture:R
-part R21 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000057 at 125,60 rot 0
+part R21 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000057 line 493 at 125,60 rot 0
 part R21 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R22 field Value = 10k @ sch connectivity.kicad_sch
 part R22 flag dnp = no @ sch connectivity.kicad_sch
@@ -344,7 +344,7 @@ part R22 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R22 flag in_bom = yes @ sch connectivity.kicad_sch
 part R22 flag on_board = yes @ sch connectivity.kicad_sch
 part R22 lib Fixture:R sheet / symbol Fixture:R
-part R22 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000062 at 145,60 rot 0
+part R22 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000062 line 508 at 145,60 rot 0
 part R22 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R23 field Value = 10k @ sch connectivity.kicad_sch
 part R23 flag dnp = no @ sch connectivity.kicad_sch
@@ -352,7 +352,7 @@ part R23 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R23 flag in_bom = yes @ sch connectivity.kicad_sch
 part R23 flag on_board = yes @ sch connectivity.kicad_sch
 part R23 lib Fixture:R sheet / symbol Fixture:R
-part R23 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000066 at 165,60 rot 0
+part R23 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000066 line 517 at 165,60 rot 0
 part R23 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R24 field Value = 10k @ sch connectivity.kicad_sch
 part R24 flag dnp = no @ sch connectivity.kicad_sch
@@ -360,7 +360,7 @@ part R24 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R24 flag in_bom = yes @ sch connectivity.kicad_sch
 part R24 flag on_board = yes @ sch connectivity.kicad_sch
 part R24 lib Fixture:R sheet / symbol Fixture:R
-part R24 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000072 at 205,60 rot 0
+part R24 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000072 line 544 at 205,60 rot 0
 part R24 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R25 field Value = 10k @ sch connectivity.kicad_sch
 part R25 flag dnp = no @ sch connectivity.kicad_sch
@@ -368,7 +368,7 @@ part R25 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R25 flag in_bom = yes @ sch connectivity.kicad_sch
 part R25 flag on_board = yes @ sch connectivity.kicad_sch
 part R25 lib Fixture:R sheet / symbol Fixture:R
-part R25 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000079 at 32.54,86.19 rot 0
+part R25 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000079 line 556 at 32.54,86.19 rot 0
 part R25 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R26 field Value = 10k @ sch connectivity.kicad_sch
 part R26 flag dnp = no @ sch connectivity.kicad_sch
@@ -376,7 +376,7 @@ part R26 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R26 flag in_bom = yes @ sch connectivity.kicad_sch
 part R26 flag on_board = yes @ sch connectivity.kicad_sch
 part R26 lib Fixture:R sheet / symbol Fixture:R
-part R26 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000083 at 42.54,86.19 rot 0
+part R26 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000083 line 565 at 42.54,86.19 rot 0
 part R26 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R27 field Value = 10k @ sch connectivity.kicad_sch
 part R27 flag dnp = no @ sch connectivity.kicad_sch
@@ -384,7 +384,7 @@ part R27 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R27 flag in_bom = yes @ sch connectivity.kicad_sch
 part R27 flag on_board = yes @ sch connectivity.kicad_sch
 part R27 lib Fixture:R sheet / symbol Fixture:R
-part R27 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000084 at 70,90 rot 0
+part R27 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000084 line 571 at 70,90 rot 0
 part R27 value = text 10k @ sch connectivity.kicad_sch note "from the Value field"
 part R30 field Value = 1k @ sch connectivity.kicad_sch
 part R30 flag dnp = no @ sch connectivity.kicad_sch
@@ -392,7 +392,7 @@ part R30 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R30 flag in_bom = yes @ sch connectivity.kicad_sch
 part R30 flag on_board = yes @ sch connectivity.kicad_sch
 part R30 lib Fixture:R sheet / symbol Fixture:R
-part R30 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000090 at 150,100 rot 90
+part R30 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000090 line 592 at 150,100 rot 90
 part R30 value = text 1k @ sch connectivity.kicad_sch note "from the Value field"
 part R31 field Value = 1k @ sch connectivity.kicad_sch
 part R31 flag dnp = no @ sch connectivity.kicad_sch
@@ -400,7 +400,7 @@ part R31 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R31 flag in_bom = yes @ sch connectivity.kicad_sch
 part R31 flag on_board = yes @ sch connectivity.kicad_sch
 part R31 lib Fixture:R sheet / symbol Fixture:R
-part R31 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000091 at 165,100 rot 180
+part R31 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000091 line 598 at 165,100 rot 180
 part R31 value = text 1k @ sch connectivity.kicad_sch note "from the Value field"
 part R32 field Value = 1k @ sch connectivity.kicad_sch
 part R32 flag dnp = no @ sch connectivity.kicad_sch
@@ -408,7 +408,7 @@ part R32 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R32 flag in_bom = yes @ sch connectivity.kicad_sch
 part R32 flag on_board = yes @ sch connectivity.kicad_sch
 part R32 lib Fixture:R sheet / symbol Fixture:R
-part R32 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000092 at 180,100 rot 270
+part R32 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000092 line 604 at 180,100 rot 270
 part R32 value = text 1k @ sch connectivity.kicad_sch note "from the Value field"
 part R33 field Value = 1k @ sch connectivity.kicad_sch
 part R33 flag dnp = no @ sch connectivity.kicad_sch
@@ -416,7 +416,7 @@ part R33 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R33 flag in_bom = yes @ sch connectivity.kicad_sch
 part R33 flag on_board = yes @ sch connectivity.kicad_sch
 part R33 lib Fixture:R sheet / symbol Fixture:R
-part R33 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000093 at 195,100 rot 90 mirror x
+part R33 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000093 line 610 at 195,100 rot 90 mirror x
 part R33 value = text 1k @ sch connectivity.kicad_sch note "from the Value field"
 part R34 field Value = 1k @ sch connectivity.kicad_sch
 part R34 flag dnp = no @ sch connectivity.kicad_sch
@@ -424,7 +424,7 @@ part R34 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part R34 flag in_bom = yes @ sch connectivity.kicad_sch
 part R34 flag on_board = yes @ sch connectivity.kicad_sch
 part R34 lib Fixture:R sheet / symbol Fixture:R
-part R34 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000094 at 210,100 rot 0 mirror y
+part R34 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000094 line 616 at 210,100 rot 0 mirror y
 part R34 value = text 1k @ sch connectivity.kicad_sch note "from the Value field"
 part U1 field Value = IC @ sch connectivity.kicad_sch
 part U1 flag dnp = no @ sch connectivity.kicad_sch
@@ -432,7 +432,7 @@ part U1 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part U1 flag in_bom = yes @ sch connectivity.kicad_sch
 part U1 flag on_board = yes @ sch connectivity.kicad_sch
 part U1 lib Fixture:IC sheet / symbol Fixture:IC
-part U1 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000056 at 110,60 rot 0
+part U1 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000056 line 487 at 110,60 rot 0
 part U1 value = text IC @ sch connectivity.kicad_sch note "from the Value field"
 part U2 field Value = IC @ sch connectivity.kicad_sch
 part U2 flag dnp = no @ sch connectivity.kicad_sch
@@ -440,7 +440,7 @@ part U2 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part U2 flag in_bom = yes @ sch connectivity.kicad_sch
 part U2 flag on_board = yes @ sch connectivity.kicad_sch
 part U2 lib Fixture:IC sheet / symbol Fixture:IC
-part U2 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000070 at 190,60 rot 0
+part U2 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000070 line 536 at 190,60 rot 0
 part U2 value = text IC @ sch connectivity.kicad_sch note "from the Value field"
 part U3 field Value = DualAmp @ sch connectivity.kicad_sch
 part U3 flag dnp = no @ sch connectivity.kicad_sch
@@ -448,8 +448,8 @@ part U3 flag exclude_from_sim = no @ sch connectivity.kicad_sch
 part U3 flag in_bom = yes @ sch connectivity.kicad_sch
 part U3 flag on_board = yes @ sch connectivity.kicad_sch
 part U3 lib Fixture:DualAmp sheet / symbol Fixture:DualAmp
-part U3 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000086 at 100,100 rot 0
-part U3 unit 2 sheet / uuid 20000000-0000-4000-8000-000000000087 at 130,100 rot 0
+part U3 unit 1 sheet / uuid 20000000-0000-4000-8000-000000000086 line 578 at 100,100 rot 0
+part U3 unit 2 sheet / uuid 20000000-0000-4000-8000-000000000087 line 584 at 130,100 rot 0
 part U3 value = text DualAmp @ sch connectivity.kicad_sch note "from the Value field"
 pin R1 1 name "" unit 1 net unconnected-(R1-Pad1)
 pin R1 1 type = passive @ sch connectivity.kicad_sch

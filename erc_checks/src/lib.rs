@@ -10,12 +10,18 @@
 //! The check catalogue (`docs/checks.md`) and its detail pages are embedded at build time: [`explain`] and the
 //! not-run hints work offline, [`list`] gives every catalogue check as implemented or planned, and a test holds
 //! every registered check's id, severity and tier to its catalogue line.
+//!
+//! [`project`] (cargo feature `import`, on by default) is the entry for a caller with a path: it opens the design
+//! through the importer registry, runs the checks, compares with a baseline and decides the exit code as data. The
+//! report renders as JSON, text, SARIF 2.1 and Markdown ([`report`]).
 
 pub mod catalogue;
 pub mod ctx;
 pub mod engine;
 pub mod finding;
 pub mod meta;
+#[cfg(feature = "import")]
+pub mod project;
 pub mod report;
 
 mod bom;
@@ -28,8 +34,13 @@ mod testing;
 pub use catalogue::{CheckInfo, CheckState, Explanation, explain, list};
 pub use ctx::{Availability, Config, Ctx};
 pub use engine::{RunError, RunOptions, run, run_imported, run_with};
-pub use finding::{Confidence, Finding, FindingFact, Location, NotRun, SubjectRef};
+pub use finding::{BaselineState, Confidence, Finding, FindingFact, Location, NotRun, SubjectRef};
 pub use meta::{
     Check, CheckMeta, Need, Param, Registered, Scope, Severity, Tier, check, registered,
 };
-pub use report::{Report, Status};
+#[cfg(feature = "import")]
+pub use project::{
+    CheckError, CheckOptions, CheckRun, Exit, Format, Project, Stage, Unavailable, Verdict, check_path,
+    read_baseline,
+};
+pub use report::{Delta, Report, Status};

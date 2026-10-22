@@ -49,6 +49,9 @@ pub struct Location {
     pub file: String,
     /// What is there (`symbol R1`, `label SDA`)
     pub what: String,
+    /// The line in the file, when the importer knows it (a KiCad symbol)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub line: Option<u32>,
     /// Position in millimetres, when known
     pub at: Option<(f64, f64)>,
 }
@@ -80,6 +83,19 @@ pub struct Finding {
     pub locations: Vec<Location>,
     /// Overlapping checks whose findings on the same subjects this one supersedes (`also RAIL-1`)
     pub also: Vec<String>,
+    /// New or unchanged against the baseline, when the run was compared with one ([`crate::Report::compare`])
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub baseline: Option<BaselineState>,
+}
+
+/// A finding against a baseline report, matched by board and fingerprint
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum BaselineState {
+    /// Not in the baseline
+    New,
+    /// In the baseline too
+    Unchanged,
 }
 
 impl Finding {
@@ -238,6 +254,7 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
             fix: self.fix,
             locations,
             also: Vec::new(),
+            baseline: None,
         }
     }
 }
@@ -293,6 +310,7 @@ fn locations(board: &Board, s: Subject) -> Vec<Location> {
             .map(|u| Location {
                 file: board.sheet(u.sheet).file.clone(),
                 what: format!("symbol {}", part.designator),
+                line: u.line,
                 at: u.at.map(|a| mm(a.at)),
             })
             .collect::<Vec<_>>()
@@ -310,12 +328,14 @@ fn locations(board: &Board, s: Subject) -> Vec<Location> {
             .map(|l| Location {
                 file: board.sheet(l.sheet).file.clone(),
                 what: format!("{} label {}", l.kind.name(), l.text),
+                line: None,
                 at: Some(mm(l.at)),
             })
             .collect(),
         Subject::Sheet(_, s) => vec![Location {
             file: board.sheet(s).file.clone(),
             what: format!("sheet {}", board.sheet_path(s)),
+            line: None,
             at: None,
         }],
         Subject::Label(_, l) => {
@@ -323,6 +343,7 @@ fn locations(board: &Board, s: Subject) -> Vec<Location> {
             vec![Location {
                 file: board.sheet(l.sheet).file.clone(),
                 what: format!("{} label {}", l.kind.name(), l.text),
+                line: None,
                 at: Some(mm(l.at)),
             }]
         }
