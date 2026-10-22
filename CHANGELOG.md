@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-10-22
+
 ### Added
 
 - `erc_kicad`: footprints link to schematic parts by the footprint's schematic UUID path, KiCad's own link
