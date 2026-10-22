@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.3.6] - 2026-10-22
+
 ### Added
 
 - `erc_model`, the board model of the rewrite (`NET-17`): an arena-indexed design of boards, sheets, symbols, parts,
