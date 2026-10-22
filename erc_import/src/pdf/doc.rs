@@ -166,7 +166,12 @@ impl Doc {
     /// A page's media box as `x0, y0, x1, y1`
     pub fn media_box(&self, page: usize) -> Option<[f64; 4]> {
         let r = self.pdf.pages().get(page)?.media_box();
-        Some([r.x0.min(r.x1), r.y0.min(r.y1), r.x0.max(r.x1), r.y0.max(r.y1)])
+        Some([
+            r.x0.min(r.x1),
+            r.y0.min(r.y1),
+            r.x0.max(r.x1),
+            r.y0.max(r.y1),
+        ])
     }
 
     /// The document information's `Creator` and `Producer`
@@ -262,7 +267,9 @@ impl Doc {
             None => Action::default(),
         };
         if a.page.is_none() {
-            a.page = dict.get::<Object<'_>>("Dest").and_then(|d| self.dest_page(d));
+            a.page = dict
+                .get::<Object<'_>>("Dest")
+                .and_then(|d| self.dest_page(d));
         }
         a
     }
@@ -502,8 +509,10 @@ fn first_child<'a>(d: &Dict<'a>) -> Option<MaybeRef<Dict<'a>>> {
 pub(crate) fn text_string(b: &[u8]) -> String {
     if let Some(rest) = b.strip_prefix(b"\xFE\xFF") {
         let units: Vec<u16> = rest
-            .chunks_exact(2)
-            .map(|c| u16::from_be_bytes([c[0], c[1]]))
+            .as_chunks::<2>()
+            .0
+            .iter()
+            .map(|c| u16::from_be_bytes(*c))
             .collect();
         return String::from_utf16_lossy(&units);
     }
@@ -517,8 +526,8 @@ pub(crate) fn text_string(b: &[u8]) -> String {
 fn pdf_doc_char(c: u8) -> char {
     const LOW: [char; 8] = ['˘', 'ˇ', 'ˆ', '˙', '˝', '˛', '˚', '˜'];
     const HIGH: [char; 32] = [
-        '•', '†', '‡', '…', '—', '–', 'ƒ', '⁄', '‹', '›', '−', '‰', '„', '“', '”', '‘', '’', '‚', '™',
-        'ﬁ', 'ﬂ', 'Ł', 'Œ', 'Š', 'Ÿ', 'Ž', 'ı', 'ł', 'œ', 'š', 'ž', '\u{FFFD}',
+        '•', '†', '‡', '…', '—', '–', 'ƒ', '⁄', '‹', '›', '−', '‰', '„', '“', '”', '‘', '’', '‚',
+        '™', 'ﬁ', 'ﬂ', 'Ł', 'Œ', 'Š', 'Ÿ', 'Ž', 'ı', 'ł', 'œ', 'š', 'ž', '\u{FFFD}',
     ];
     match c {
         0x18..=0x1F => LOW[(c - 0x18) as usize],
@@ -618,7 +627,14 @@ impl TextWalk<'_> {
                     None
                 }
                 TypedInstruction::Transform(t) => {
-                    let m = [num(&t.0), num(&t.1), num(&t.2), num(&t.3), num(&t.4), num(&t.5)];
+                    let m = [
+                        num(&t.0),
+                        num(&t.1),
+                        num(&t.2),
+                        num(&t.3),
+                        num(&t.4),
+                        num(&t.5),
+                    ];
                     st.ctm = mul(&m, &st.ctm);
                     None
                 }
@@ -643,7 +659,14 @@ impl TextWalk<'_> {
                     None
                 }
                 TypedInstruction::SetTextMatrix(m) => {
-                    tlm = [num(&m.0), num(&m.1), num(&m.2), num(&m.3), num(&m.4), num(&m.5)];
+                    tlm = [
+                        num(&m.0),
+                        num(&m.1),
+                        num(&m.2),
+                        num(&m.3),
+                        num(&m.4),
+                        num(&m.5),
+                    ];
                     tm = tlm;
                     None
                 }

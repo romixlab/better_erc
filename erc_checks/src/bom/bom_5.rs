@@ -62,10 +62,14 @@ mod tests {
     #[test]
     fn value_from_another_field() {
         use erc_model::{DirFiles, ImportOptions};
-        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../test_schematics/sources");
-        let mut imported =
-            erc_kicad::project::read(&DirFiles(dir), "bom-10_values.kicad_sch", &ImportOptions::default())
-                .unwrap();
+        let dir =
+            std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../test_schematics/sources");
+        let mut imported = erc_kicad::project::read(
+            &DirFiles(dir),
+            "bom-10_values.kicad_sch",
+            &ImportOptions::default(),
+        )
+        .unwrap();
         let b = &mut imported.design.boards[0];
         for p in &mut b.parts {
             for f in &mut p.fields {
@@ -74,8 +78,12 @@ mod tests {
                 }
             }
         }
-        let report =
-            crate::run_with(&[&super::Bom5], &imported.design, &crate::RunOptions::default()).unwrap();
+        let report = crate::run_with(
+            &[&super::Bom5],
+            &imported.design,
+            &crate::RunOptions::default(),
+        )
+        .unwrap();
         let r3 = report
             .findings
             .iter()

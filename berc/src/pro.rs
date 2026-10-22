@@ -77,13 +77,12 @@ fn walk(
     // A path with a known KiCad default is judged only against that default, even when the actual value also
     // happens to look like JSON's own "nothing here" (reuse_designators: false is real content, not noise,
     // even though its default is true, not false)
-    if !opts.show_defaults {
-        if let Some(default) = defaults.get(path) {
-            if pro_defaults::value_eq(v, default) {
-                *folded += 1;
-                return;
-            }
-        }
+    if !opts.show_defaults
+        && let Some(default) = defaults.get(path)
+        && pro_defaults::value_eq(v, default)
+    {
+        *folded += 1;
+        return;
     }
     let known_not_default = !opts.show_defaults && defaults.contains_key(path);
     match v {

@@ -23,6 +23,9 @@ use std::collections::{BTreeMap, HashMap, HashSet, VecDeque};
 /// `CO` word on the edge of the symbol's box
 const SLACK: f64 = 1.5;
 
+/// A popup's properties: key and value, in the popup's order
+type Properties = Vec<(String, String)>;
+
 /// The page key of a sheet whose bookmark leads to no page
 const ANY_PAGE: usize = usize::MAX;
 
@@ -227,12 +230,8 @@ fn sheets(outline: &Outline, b: &mut Builder, file: &str, notes: &mut Notes) -> 
     // known by their sections only
     let named = outline.items.iter().any(|i| sheet_file(&i.title).is_some());
     // (bookmark, sheet of the nearest sheet bookmark above it)
-    let mut todo: Vec<(usize, SheetId)> = outline
-        .roots
-        .iter()
-        .rev()
-        .map(|&r| (r, b.root()))
-        .collect();
+    let mut todo: Vec<(usize, SheetId)> =
+        outline.roots.iter().rev().map(|&r| (r, b.root())).collect();
     let mut names: HashSet<(SheetId, String)> = HashSet::new();
     while let Some((i, parent)) = todo.pop() {
         let item = &outline.items[i];
@@ -527,12 +526,10 @@ impl Reader<'_> {
         let n = self.sheet_nets.len();
         let mut uf = UnionFind::new(n);
         let parent_of = |s: SheetId| self.b.b.sheets[s.index()].parent;
-        let hierarchy = self
-            .b
-            .b
-            .sheets
-            .iter()
-            .any(|s| s.parent.is_some_and(|p| self.b.b.sheets[p.index()].parent.is_some()));
+        let hierarchy = self.b.b.sheets.iter().any(|s| {
+            s.parent
+                .is_some_and(|p| self.b.b.sheets[p.index()].parent.is_some())
+        });
 
         let mut by_name: HashMap<&str, Vec<usize>> = HashMap::new();
         for (i, net) in self.sheet_nets.iter().enumerate() {
@@ -554,7 +551,11 @@ impl Reader<'_> {
         for (i, net) in self.sheet_nets.iter().enumerate() {
             for (_, w) in &net.ports {
                 if let Some(w) = w {
-                    let scope = if hierarchy { parent_of(net.sheet) } else { None };
+                    let scope = if hierarchy {
+                        parent_of(net.sheet)
+                    } else {
+                        None
+                    };
                     let list = by_port.entry((scope, w.as_str())).or_default();
                     if !list.contains(&i) {
                         list.push(i);
@@ -608,7 +609,11 @@ impl Reader<'_> {
             let mut by_rank: Vec<(u8, usize, &str)> = Vec::new();
             for &m in &members {
                 let net = &self.sheet_nets[m];
-                let rank = if net_kind(&net.name) == NetKind::Named { 0 } else { 2 };
+                let rank = if net_kind(&net.name) == NetKind::Named {
+                    0
+                } else {
+                    2
+                };
                 by_rank.push((rank, depth(net.sheet), &net.name));
                 for (_, w) in &net.ports {
                     if let Some(real) = w.as_ref().and_then(|w| self.port_names.get(w)) {
@@ -651,7 +656,11 @@ impl Reader<'_> {
                 let sn = &self.sheet_nets[m];
                 let (sheet, page) = (sn.sheet, sn.page);
                 let at = match &sn.bus {
-                    Some(bus) => format!("sheet {} net {} of bus {bus}", self.b.b.sheet_path(sheet), sn.name),
+                    Some(bus) => format!(
+                        "sheet {} net {} of bus {bus}",
+                        self.b.b.sheet_path(sheet),
+                        sn.name
+                    ),
                     None => format!("sheet {} net {}", self.b.b.sheet_path(sheet), sn.name),
                 };
                 for p in net {
@@ -769,7 +778,8 @@ impl Reader<'_> {
             by_page.entry(w.page).or_default().push(w);
         }
         let sheet_pages: HashSet<usize> = self.hidden.keys().map(|(p, _)| *p).collect();
-        let mut found: Vec<(usize, &Link, Vec<(String, String)>)> = Vec::new();
+        // (popup index, its link, its properties)
+        let mut found: Vec<(usize, &Link, Properties)> = Vec::new();
         let mut elsewhere = 0;
         for link in &extras.links {
             let mut props = None;
@@ -929,8 +939,11 @@ impl Reader<'_> {
             if v.is_empty() {
                 continue;
             }
-            self.b
-                .field(part, k, Fact::new(v.clone(), src.clone()).with_note("property popup"));
+            self.b.field(
+                part,
+                k,
+                Fact::new(v.clone(), src.clone()).with_note("property popup"),
+            );
         }
         let get = |k: &str| props.iter().find(|(n, v)| n == k && !v.is_empty());
         if let Some((k, v)) = get("Value").or_else(|| get("Comment")) {
@@ -1023,7 +1036,10 @@ impl LabelWords {
     /// The position of the next label with this text; ports have no word of their own
     fn take(&mut self, kind: LabelKind, text: &str) -> Option<Pt> {
         if kind == LabelKind::Local
-            && let Some(p) = self.words.get_mut(&ident(text)).and_then(VecDeque::pop_front)
+            && let Some(p) = self
+                .words
+                .get_mut(&ident(text))
+                .and_then(VecDeque::pop_front)
         {
             return Some(p);
         }
@@ -1053,7 +1069,10 @@ mod tests {
         );
         assert_eq!(
             sheet_file("NandFlash Board(A).SchDoc(\"NandFlash Board(A)\")"),
-            Some(("NandFlash Board(A).SchDoc".into(), "NandFlash Board(A)".into()))
+            Some((
+                "NandFlash Board(A).SchDoc".into(),
+                "NandFlash Board(A)".into()
+            ))
         );
         assert_eq!(
             sheet_file("JGL1905_Xyloni_FPGA_V1.06.SchDoc"),
@@ -1068,8 +1087,14 @@ mod tests {
     #[test]
     fn designators_and_units() {
         let pins = |v: &[&str]| v.iter().map(|s| s.to_string()).collect::<Vec<_>>();
-        assert_eq!(designator_of("U1A", &pins(&["U1-C5", "U1-D7"])), ("U1".into(), "A"));
-        assert_eq!(designator_of("R75", &pins(&["R75-1", "R75-2"])), ("R75".into(), ""));
+        assert_eq!(
+            designator_of("U1A", &pins(&["U1-C5", "U1-D7"])),
+            ("U1".into(), "A")
+        );
+        assert_eq!(
+            designator_of("R75", &pins(&["R75-1", "R75-2"])),
+            ("R75".into(), "")
+        );
         assert_eq!(
             designator_of("ETH2_JP1", &pins(&["ETH2_JP1-1"])),
             ("ETH2_JP1".into(), "")
@@ -1083,10 +1108,16 @@ mod tests {
 
     #[test]
     fn popup_properties() {
-        let args: Vec<String> = ["Value: 10K", "Ibis Model: ", "Note", ": x", "URL: http://a:b"]
-            .iter()
-            .map(|s| s.to_string())
-            .collect();
+        let args: Vec<String> = [
+            "Value: 10K",
+            "Ibis Model: ",
+            "Note",
+            ": x",
+            "URL: http://a:b",
+        ]
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
         assert_eq!(
             properties_of(&args),
             [

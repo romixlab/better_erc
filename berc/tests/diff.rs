@@ -139,7 +139,8 @@ fn text_and_errors() {
 }
 
 fn smart_pdf() -> String {
-    let p = Path::new(env!("CARGO_MANIFEST_DIR")).join("../erc_import/tests/fixtures/smart_pdf.pdf");
+    let p =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("../erc_import/tests/fixtures/smart_pdf.pdf");
     p.to_str().unwrap().to_string()
 }
 
@@ -166,7 +167,11 @@ fn nets_of_a_pdf_and_a_wirelist() {
 
     let same = berc(&["diff", "--nets", &smart_pdf(), &smart_pdf()]);
     assert_eq!(same.status.code(), Some(0));
-    assert!(String::from_utf8(same.stdout).unwrap().ends_with("same nets (11)\n"));
+    assert!(
+        String::from_utf8(same.stdout)
+            .unwrap()
+            .ends_with("same nets (11)\n")
+    );
 }
 
 #[test]
@@ -176,7 +181,10 @@ fn nets_that_differ() {
     std::fs::create_dir_all(&dir).unwrap();
     let text = std::fs::read_to_string(wirelist()).unwrap();
     let moved = text
-        .replace("[00004] EN_uC\r\n        J1         4 ", "[00004] EN_uC\r\n        R9         4 ")
+        .replace(
+            "[00004] EN_uC\r\n        J1         4 ",
+            "[00004] EN_uC\r\n        R9         4 ",
+        )
         .replace(
             "[00001] GND\r\n",
             "[00001] GND\r\n        J1         4       4              PASSIVE     HEADER4\r\n",
@@ -184,7 +192,14 @@ fn nets_that_differ() {
     assert_ne!(moved, text);
     let b = dir.join("moved.net");
     std::fs::write(&b, moved).unwrap();
-    let out = berc(&["diff", "--nets", "--format", "json", &smart_pdf(), b.to_str().unwrap()]);
+    let out = berc(&[
+        "diff",
+        "--nets",
+        "--format",
+        "json",
+        &smart_pdf(),
+        b.to_str().unwrap(),
+    ]);
     assert_eq!(out.status.code(), Some(1));
     let v = json(&out);
     let names = |list: &str| -> Vec<String> {

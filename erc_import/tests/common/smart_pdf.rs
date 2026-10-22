@@ -58,7 +58,11 @@ fn comp(page: usize, title: &str, pins: &[&str]) -> Node {
 /// A net bookmark: its pins, labels and ports
 fn net(page: usize, name: Node, pins: &[&str], labels: &[&str], ports: &[&str]) -> Node {
     let mut n = name;
-    for (section, list, prefix) in [("Pins", pins, "PI"), ("NetLabels", labels, "NL"), ("Ports", ports, "PO")] {
+    for (section, list, prefix) in [
+        ("Pins", pins, "PI"),
+        ("NetLabels", labels, "NL"),
+        ("Ports", ports, "PO"),
+    ] {
         if list.is_empty() {
             continue;
         }
@@ -80,7 +84,11 @@ fn port_net(page: usize, name: &str, pins: &[&str], port_name: &str) -> Node {
     n.kids.push(node(
         "Ports",
         Act::None,
-        vec![node(name, Act::Find(page, format!("PO{}", ident(port_name))), vec![])],
+        vec![node(
+            name,
+            Act::Find(page, format!("PO{}", ident(port_name))),
+            vec![],
+        )],
     ));
     n
 }
@@ -122,12 +130,48 @@ fn outline() -> Vec<Node> {
                         "Nets",
                         Act::None,
                         vec![
-                            net(top, node("EN_µC", Act::Page(top), vec![]), &["J1-4"], &["EN_µC"], &[]),
-                            net(top, node("GND", Act::Page(top), vec![]), &["J1-3", "U1-6"], &[], &[]),
-                            net(top, node("NetR1_2", Act::Page(top), vec![]), &["R1-2", "U1-5"], &[], &[]),
-                            net(top, node("NRST", Act::Page(top), vec![]), &["J1-5"], &["NRST"], &[]),
-                            net(top, node("SDA", Act::Page(top), vec![]), &["J1-2"], &[], &["SDA"]),
-                            net(top, node("VIN", Act::Page(top), vec![]), &["J1-1", "R1-1"], &["VIN"], &[]),
+                            net(
+                                top,
+                                node("EN_µC", Act::Page(top), vec![]),
+                                &["J1-4"],
+                                &["EN_µC"],
+                                &[],
+                            ),
+                            net(
+                                top,
+                                node("GND", Act::Page(top), vec![]),
+                                &["J1-3", "U1-6"],
+                                &[],
+                                &[],
+                            ),
+                            net(
+                                top,
+                                node("NetR1_2", Act::Page(top), vec![]),
+                                &["R1-2", "U1-5"],
+                                &[],
+                                &[],
+                            ),
+                            net(
+                                top,
+                                node("NRST", Act::Page(top), vec![]),
+                                &["J1-5"],
+                                &["NRST"],
+                                &[],
+                            ),
+                            net(
+                                top,
+                                node("SDA", Act::Page(top), vec![]),
+                                &["J1-2"],
+                                &[],
+                                &["SDA"],
+                            ),
+                            net(
+                                top,
+                                node("VIN", Act::Page(top), vec![]),
+                                &["J1-1", "R1-1"],
+                                &["VIN"],
+                                &[],
+                            ),
                         ],
                     ),
                     node(
@@ -152,7 +196,13 @@ fn outline() -> Vec<Node> {
                                         "D[0..1]",
                                         Act::Page(mcu),
                                         vec![
-                                            net(mcu, node("D0", Act::Page(mcu), vec![]), &["U1-2"], &["D0"], &[]),
+                                            net(
+                                                mcu,
+                                                node("D0", Act::Page(mcu), vec![]),
+                                                &["U1-2"],
+                                                &["D0"],
+                                                &[],
+                                            ),
                                             net(
                                                 mcu,
                                                 node("D1", Act::Page(mcu), vec![]),
@@ -162,7 +212,13 @@ fn outline() -> Vec<Node> {
                                             ),
                                         ],
                                     ),
-                                    net(mcu, node("EN", Act::Page(mcu), vec![]), &["R4-1"], &["EN"], &[]),
+                                    net(
+                                        mcu,
+                                        node("EN", Act::Page(mcu), vec![]),
+                                        &["R4-1"],
+                                        &["EN"],
+                                        &[],
+                                    ),
                                     net(
                                         mcu,
                                         node("GND", Act::Page(mcu), vec![]),
@@ -178,17 +234,19 @@ fn outline() -> Vec<Node> {
                                         &["SDA"],
                                         &["SDA"],
                                     ),
-                                    net(mcu, node("VDD_3V3", Act::Page(mcu), vec![]), &["C1-1"], &[], &["VDD_3V3"]),
+                                    net(
+                                        mcu,
+                                        node("VDD_3V3", Act::Page(mcu), vec![]),
+                                        &["C1-1"],
+                                        &[],
+                                        &["VDD_3V3"],
+                                    ),
                                 ],
                             ),
                             node(
                                 "Ports",
                                 Act::None,
-                                vec![
-                                    port(mcu, "NRST"),
-                                    port(mcu, "SDA"),
-                                    port(mcu, "VDD_3V3"),
-                                ],
+                                vec![port(mcu, "NRST"), port(mcu, "SDA"), port(mcu, "VDD_3V3")],
                             ),
                         ],
                     ),
@@ -197,12 +255,22 @@ fn outline() -> Vec<Node> {
                         "IO.SchDoc(U_IO)",
                         Act::Page(io),
                         vec![
-                            node("Components", Act::None, vec![comp(io, "R3", &["R3-1", "R3-2"])]),
+                            node(
+                                "Components",
+                                Act::None,
+                                vec![comp(io, "R3", &["R3-1", "R3-2"])],
+                            ),
                             node(
                                 "Nets",
                                 Act::None,
                                 vec![
-                                    net(io, node("EN", Act::Page(io), vec![]), &["R3-2"], &["EN"], &[]),
+                                    net(
+                                        io,
+                                        node("EN", Act::Page(io), vec![]),
+                                        &["R3-2"],
+                                        &["EN"],
+                                        &[],
+                                    ),
                                     port_net(io, "NetR3_1", &["R3-1"], "NRST"),
                                 ],
                             ),
@@ -251,6 +319,16 @@ const POPUPS: &[(&str, &str)] = &[
 ];
 
 /// The synthetic Smart PDF
+/// A bookmark as written: its id, parent, previous and next sibling, the node, its children's ids
+type Flat<'n> = (
+    Ref,
+    Option<Ref>,
+    Option<Ref>,
+    Option<Ref>,
+    &'n Node,
+    Vec<Ref>,
+);
+
 pub fn synthetic() -> Vec<u8> {
     let mut pdf = Pdf::new();
     let mut next = 1;
@@ -330,7 +408,11 @@ pub fn synthetic() -> Vec<u8> {
     let mut c1 = Content::new();
     words(
         &mut c1,
-        &[(b"COC1", 5.0, 41.0), (b"PIC101", 7.0, 38.0), (b"PIC102", 7.0, 2.0)],
+        &[
+            (b"COC1", 5.0, 41.0),
+            (b"PIC101", 7.0, 38.0),
+            (b"PIC102", 7.0, 2.0),
+        ],
     );
 
     let mut io = Content::new();
@@ -429,12 +511,12 @@ pub fn synthetic() -> Vec<u8> {
 
     // Bookmarks
     let tree = outline();
-    let mut flat: Vec<(Ref, Option<Ref>, Option<Ref>, Option<Ref>, &Node, Vec<Ref>)> = Vec::new();
+    let mut flat: Vec<Flat> = Vec::new();
     fn assign<'n>(
         nodes: &'n [Node],
         parent: Ref,
         id: &mut dyn FnMut() -> Ref,
-        out: &mut Vec<(Ref, Option<Ref>, Option<Ref>, Option<Ref>, &'n Node, Vec<Ref>)>,
+        out: &mut Vec<Flat<'n>>,
     ) -> Vec<Ref> {
         let refs: Vec<Ref> = nodes.iter().map(|_| id()).collect();
         for (i, n) in nodes.iter().enumerate() {

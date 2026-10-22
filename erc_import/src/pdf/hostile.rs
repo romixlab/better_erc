@@ -1,8 +1,8 @@
 //! Hostile PDFs: loops, depths and sizes a broken or malicious file can have. Each must end, within its limit, in
 //! a time that does not grow past the file's size, and say what it cut.
 
-use super::doc::{Doc, Limits};
 use super::PdfImporter;
+use super::doc::{Doc, Limits};
 use erc_model::*;
 use pdf_writer::{Content, Finish, Name, Pdf, Rect, Ref, Str};
 use std::time::{Duration, Instant};
@@ -252,7 +252,12 @@ fn many_bookmarks() {
     };
     let o = open(bytes, few).outline(None);
     assert_eq!(o.items.len(), 1000);
-    assert!(o.truncated.as_deref().unwrap().contains("first 1000 bookmarks"));
+    assert!(
+        o.truncated
+            .as_deref()
+            .unwrap()
+            .contains("first 1000 bookmarks")
+    );
 }
 
 /// A page that draws `Fm0`, with the given forms: (name, content, resources: names of other forms)
@@ -390,7 +395,11 @@ fn action_chains() {
     let (links, _) = open(with_link(b"x();", 1000, false), limits.clone()).links();
     assert_eq!(links[0].action.scripts.len(), limits.next_actions + 1);
     let (links, _) = open(with_link(b"x();", 3, true), limits).links();
-    assert_eq!(links[0].action.scripts.len(), 4, "the loop back is not followed");
+    assert_eq!(
+        links[0].action.scripts.len(),
+        4,
+        "the loop back is not followed"
+    );
 }
 
 #[test]

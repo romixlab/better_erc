@@ -113,10 +113,10 @@ fn compact_into(e: &Sexp, opts: Options, out: &mut String) {
             out.push('(');
             let mut first = true;
             for item in items {
-                if let Some(h) = item.head() {
-                    if DROP_ALWAYS.contains(&h) || (!opts.with_geometry && GEOMETRY.contains(&h)) {
-                        continue;
-                    }
+                if let Some(h) = item.head()
+                    && (DROP_ALWAYS.contains(&h) || (!opts.with_geometry && GEOMETRY.contains(&h)))
+                {
+                    continue;
                 }
                 if !first {
                     out.push(' ');

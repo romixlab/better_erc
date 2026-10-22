@@ -183,7 +183,9 @@ fn string_literal(s: &str, i: usize) -> (String, usize) {
                         }
                     }
                     'x' => {
-                        let h: String = (0..2).filter_map(|_| chars.next().map(|(_, c)| c)).collect();
+                        let h: String = (0..2)
+                            .filter_map(|_| chars.next().map(|(_, c)| c))
+                            .collect();
                         push_code(&mut out, &h);
                     }
                     'u' => {
@@ -198,8 +200,9 @@ fn string_literal(s: &str, i: usize) -> (String, usize) {
                             }
                             push_code(&mut out, &h);
                         } else {
-                            let h: String =
-                                (0..4).filter_map(|_| chars.next().map(|(_, c)| c)).collect();
+                            let h: String = (0..4)
+                                .filter_map(|_| chars.next().map(|(_, c)| c))
+                                .collect();
                             push_code(&mut out, &h);
                         }
                     }
@@ -247,7 +250,10 @@ mod tests {
     fn find_word_and_calls() {
         let s = r#"_FindWord(0, "PIU10G9"); x_FindWord(1, "no"); _FindWord(a+1, "expr");"#;
         let calls = call_args(s, "_FindWord");
-        assert_eq!(calls, [vec!["0".to_string(), "PIU10G9".into()], vec!["expr".into()]]);
+        assert_eq!(
+            calls,
+            [vec!["0".to_string(), "PIU10G9".into()], vec!["expr".into()]]
+        );
         assert_eq!(
             called_functions("ShowCompProps_0EB7(); f(1); g( )"),
             ["ShowCompProps_0EB7", "g"]
@@ -262,9 +268,20 @@ mod tests {
 
     #[test]
     fn broken_scripts() {
-        for s in ["f(", "f(\"abc", "f(\"\\", "f(\"\\u{110000}\")", "f(\"\\xZ\")", "f([[[", "f)"] {
+        for s in [
+            "f(",
+            "f(\"abc",
+            "f(\"\\",
+            "f(\"\\u{110000}\")",
+            "f(\"\\xZ\")",
+            "f([[[",
+            "f)",
+        ] {
             let _ = call_args(s, "f");
         }
-        assert_eq!(call_args("f(\"\\u{110000}\")", "f"), [vec!["\u{FFFD}".to_string()]]);
+        assert_eq!(
+            call_args("f(\"\\u{110000}\")", "f"),
+            [vec!["\u{FFFD}".to_string()]]
+        );
     }
 }

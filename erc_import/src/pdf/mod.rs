@@ -7,10 +7,10 @@
 //! walk over it is bounded ([`doc::Limits`]); scripts are read as text for their literals and never run.
 
 mod doc;
-mod js;
-mod smart;
 #[cfg(test)]
 mod hostile;
+mod js;
+mod smart;
 
 use crate::notes::Notes;
 use doc::{Doc, Limits, OpenError};

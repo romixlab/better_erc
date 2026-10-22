@@ -17,10 +17,10 @@ fn main() {
     println!("cargo:rerun-if-changed={git_dir}/index");
     // HEAD here is this worktree's own, but "ref: refs/heads/X" only changes on a checkout; a commit on X
     // updates the ref file itself, shared in the common dir (or, once git packs it, packed-refs there).
-    if let Ok(head) = std::fs::read_to_string(format!("{git_dir}/HEAD")) {
-        if let Some(r) = head.trim().strip_prefix("ref: ") {
-            watch_if_there(&format!("{common_dir}/{r}"));
-        }
+    if let Ok(head) = std::fs::read_to_string(format!("{git_dir}/HEAD"))
+        && let Some(r) = head.trim().strip_prefix("ref: ")
+    {
+        watch_if_there(&format!("{common_dir}/{r}"));
     }
     watch_if_there(&format!("{common_dir}/packed-refs"));
     println!("cargo:rustc-env=GIT_SHA={}", git_sha());

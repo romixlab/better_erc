@@ -334,7 +334,6 @@ fn ident(name: &str) -> String {
         .collect()
 }
 
-
 fn wire_type(t: &str) -> (EcadPinType, Option<&'static str>) {
     match t {
         "PASSIVE" => (EcadPinType::Passive, None),

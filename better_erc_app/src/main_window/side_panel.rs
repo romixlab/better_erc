@@ -35,12 +35,11 @@ impl BetterErcApp {
                 if let Some(id) = id {
                     let is_visible = self.state.tabs.is_visible(id);
                     self.state.tabs.set_visible(id, !is_visible);
-                    if let Some(r) = self.state.tabs.root {
-                        if let Some(Tile::Container(Container::Tabs(tabs))) =
+                    if let Some(r) = self.state.tabs.root
+                        && let Some(Tile::Container(Container::Tabs(tabs))) =
                             self.state.tabs.tiles.get_mut(r)
-                        {
-                            tabs.set_active(id);
-                        }
+                    {
+                        tabs.set_active(id);
                     }
                     debug!("Changed visible");
                 } else {

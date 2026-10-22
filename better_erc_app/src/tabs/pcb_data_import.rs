@@ -120,11 +120,11 @@ impl TabUi for PcbDataImport {
                 changed |= file_path("file", path, ui);
                 ui.horizontal(|ui| {
                     ui.monospace("or directory");
-                    if ui.button("Choose").clicked() {
-                        if let Some(p) = FileDialog::new().pick_folder() {
-                            *path = Some(p);
-                            changed = true;
-                        }
+                    if ui.button("Choose").clicked()
+                        && let Some(p) = FileDialog::new().pick_folder()
+                    {
+                        *path = Some(p);
+                        changed = true;
                     }
                 });
             }
@@ -264,11 +264,11 @@ fn file_path(label: &str, path: &mut Option<PathBuf>, ui: &mut Ui) -> bool {
         } else {
             ui.label("-");
         }
-        if ui.button("Choose").clicked() {
-            if let Some(p) = FileDialog::new().pick_file() {
-                *path = Some(p);
-                changed = true;
-            }
+        if ui.button("Choose").clicked()
+            && let Some(p) = FileDialog::new().pick_file()
+        {
+            *path = Some(p);
+            changed = true;
         }
     });
     changed

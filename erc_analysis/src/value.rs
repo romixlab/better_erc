@@ -153,10 +153,12 @@ pub fn value_text<'b>(view: View<'b>, part: PartId) -> Option<ValueText<'b>> {
     let value = p.value.resolve()?;
     p.fields.iter().find_map(|f| {
         let fact = f.value.resolve()?;
-        (fact.source == value.source && Value::parse(&fact.value).0 == value.value).then_some(ValueText {
-            field: f.name.as_str(),
-            fact,
-        })
+        (fact.source == value.source && Value::parse(&fact.value).0 == value.value).then_some(
+            ValueText {
+                field: f.name.as_str(),
+                fact,
+            },
+        )
     })
 }
 

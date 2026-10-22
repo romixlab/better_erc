@@ -100,7 +100,9 @@ impl Availability {
                 if board.layout.is_some() {
                     Availability::Available
                 } else if board.source.tool == "altium-pdf" {
-                    missing("no layout: a schematic PDF carries none (its PCB prints are drawings only)")
+                    missing(
+                        "no layout: a schematic PDF carries none (its PCB prints are drawings only)",
+                    )
                 } else {
                     missing("no layout: import the project with its .kicad_pcb")
                 }
