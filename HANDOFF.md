@@ -24,3 +24,7 @@ Decisions:
 Gotchas:
 - Label text in files is escaped (`{slash}`); bus parsing runs on the unescaped text (`sch::unescape`).
 - Sheet files of one project can have different format versions (KiCad saves only changed sheets).
+
+How the hand checks were run (to turn into the cargo test):
+- hw: for each `~/git/hw/**/X.kicad_pro` with `X.kicad_sch`: `kicad-cli sch export netlist -o OUT.net X.kicad_sch`, then the `differential` example. KiCad 8/9 exports: `podman run --rm --userns=keep-id -v DIR:/w:ro,Z -v OUTDIR:/o:Z -w /w docker.io/kicad/kicad:9.0 kicad-cli sch export netlist -o /o/OUT.net X.kicad_sch`, only for projects whose newest sheet format is <= 20231120 (8) or <= 20250114 (9).
+- KiCad's own rules were read from its source (gitlab.com/kicad/code/kicad, branch 10.0: eeschema/connection_graph.cpp, sch_pin.cpp GetDefaultNetName, sch_connection.cpp, net_settings.cpp ParseBusVector/ParseBusGroup, netlist_exporter_xml.cpp) and checked by experiment.
