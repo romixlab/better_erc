@@ -383,6 +383,7 @@ dependencies = [
  "anstyle",
  "clap",
  "clap_complete",
+ "erc_kicad",
  "serde_json",
 ]
 
@@ -1218,6 +1219,15 @@ dependencies = [
  "ecad_file_format",
  "generate_netlists",
  "regex",
+]
+
+[[package]]
+name = "erc_kicad"
+version = "0.3.5"
+dependencies = [
+ "erc_model",
+ "generate_netlists",
+ "serde_json",
 ]
 
 [[package]]

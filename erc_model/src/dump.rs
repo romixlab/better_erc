@@ -21,7 +21,7 @@
 //! Entities with the same key (two `R?`, two pads `MP`) carry `#2`, `#3` after the key in canonical order.
 //! Coordinates are millimetres (`x,y`), lengths millimetres, rotations degrees.
 
-use crate::canon::{link_layout, natural_cmp, rebuild_adjacency};
+use crate::canon::natural_cmp;
 use crate::design::*;
 use crate::fact::{Fact, Facts, Provenance, Rank, Time};
 use crate::layout::*;
@@ -1161,9 +1161,7 @@ fn read_board(name: String, lines: Vec<(usize, Vec<Tok>)>) -> Result<Board, Dump
         }
     }
     let mut b = r.b;
-    rebuild_adjacency(&mut b);
-    link_layout(&mut b);
-    b.canonicalize();
+    b.finish();
     Ok(b)
 }
 

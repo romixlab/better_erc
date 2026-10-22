@@ -1,0 +1,15 @@
+[package]
+name = "erc_kicad"
+description = "KiCad 8, 9 and 10 read by better_erc: schematic hierarchy with KiCad's connectivity rules, project file, board, and the netlist as the oracle"
+authors.workspace = true
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+include.workspace = true
+
+[dependencies]
+erc_model = { path = "../erc_model" }
+serde_json = "1"
+
+[dev-dependencies]
+generate_netlists = { path = "../test_schematics/generate_netlists" }

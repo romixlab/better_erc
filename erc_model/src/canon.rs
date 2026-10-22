@@ -69,6 +69,14 @@ impl Ord for Nat {
 }
 
 impl Board {
+    /// What every importer does last: the adjacency rebuilt from the pins and labels, the layout linked to the
+    /// schematic by name, and the canonical order
+    pub fn finish(&mut self) {
+        rebuild_adjacency(self);
+        link_layout(self);
+        self.canonicalize();
+    }
+
     /// Puts every arena and list into the canonical order and remaps the ids. Idempotent.
     pub fn canonicalize(&mut self) {
         // Sheets: root first, then by path
@@ -365,8 +373,8 @@ fn sort_remap_with<T, K: Ord>(v: &mut Vec<T>, key: impl Fn(usize, &T) -> K) -> V
     map
 }
 
-/// Rebuilds the derived adjacency from the pins: each net's pin list and each part's pin list
-pub(crate) fn rebuild_adjacency(board: &mut Board) {
+/// Rebuilds the derived adjacency from the pins and labels: each net's pin and label lists, each part's pin list
+pub fn rebuild_adjacency(board: &mut Board) {
     for n in &mut board.nets {
         n.pins.clear();
         n.labels.clear();

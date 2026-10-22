@@ -374,21 +374,9 @@ fn sample() -> Design {
     Design::single(b)
 }
 
-/// The importers' last steps: adjacency, layout links, canonical order
+/// The importers' last steps
 fn rebuild(b: &mut Board) {
-    for (i, p) in b.pins.iter().enumerate() {
-        b.parts[p.part.index()].pins.push(PinId(i as u32));
-        if let Some(n) = p.net {
-            b.nets[n.index()].pins.push(PinId(i as u32));
-        }
-    }
-    for (i, l) in b.labels.iter().enumerate() {
-        if let Some(n) = l.net {
-            b.nets[n.index()].labels.push(LabelId(i as u32));
-        }
-    }
-    link_layout(b);
-    b.canonicalize();
+    b.finish();
 }
 
 #[test]

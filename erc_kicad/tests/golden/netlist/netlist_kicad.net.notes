@@ -1,0 +1,9 @@
+netlist_kicad.net: net /Eth/RXD0: invalid: node R21.2: no such component, added without fields
+netlist_kicad.net: net /Eth/RXD0: invalid: node R29.2: no such component, added without fields
+netlist_kicad.net: net /Eth/RXD0: invalid: node U2.11: no such component, added without fields
+netlist_kicad.net: net /Eth/RXD1: invalid: node R22.2: no such component, added without fields
+netlist_kicad.net: net /Eth/RXD1: invalid: node R27.2: no such component, added without fields
+netlist_kicad.net: net /Eth/RXD2_NU: invalid: node R30.2: no such component, added without fields
+netlist_kicad.net: net /Eth/TD_N: invalid: node D21.2: no such component, added without fields
+netlist_kicad.net: net /Eth/TD_N: invalid: node J4.8: no such component, added without fields
+netlist_kicad.net: net /Eth/TD_N: invalid: node R38.2: no such component, added without fields

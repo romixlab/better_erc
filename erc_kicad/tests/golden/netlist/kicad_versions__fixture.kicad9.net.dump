@@ -1,0 +1,85 @@
+board fixture.kicad9
+net /INA class = Default @ net kicad_versions/fixture.kicad9.net
+net /INA kind named
+net /INB class = Default @ net kicad_versions/fixture.kicad9.net
+net /INB kind named
+net /MID class = Default @ net kicad_versions/fixture.kicad9.net
+net /MID kind named
+net /OUTA class = Default @ net kicad_versions/fixture.kicad9.net
+net /OUTA kind named
+net unconnected-(U1A-+INA-Pad3) class = Default @ net kicad_versions/fixture.kicad9.net
+net unconnected-(U1A-+INA-Pad3) kind unconnected
+net unconnected-(U1B-+INB-Pad5) class = Default @ net kicad_versions/fixture.kicad9.net
+net unconnected-(U1B-+INB-Pad5) kind unconnected
+net unconnected-(U1B-OUTB-Pad7) class = Default @ net kicad_versions/fixture.kicad9.net
+net unconnected-(U1B-OUTB-Pad7) kind unconnected
+part JP1 field "Component Class" = Jumpers @ net kicad_versions/fixture.kicad9.net
+part JP1 field Description = "Three-pad solder jumper" @ net kicad_versions/fixture.kicad9.net
+part JP1 field Value = Jumper3 @ net kicad_versions/fixture.kicad9.net
+part JP1 lib Fixture:Jumper3 sheet / symbol Fixture:Jumper3
+part JP1 unit 0 sheet / uuid 00000000-0000-4000-8000-000000000004
+part JP1 value = text Jumper3 @ net kicad_versions/fixture.kicad9.net note "from the Value field"
+part R1 field Description = Resistor @ net kicad_versions/fixture.kicad9.net
+part R1 field Footprint = Resistor_SMD:R_0402_1005Metric @ net kicad_versions/fixture.kicad9.net
+part R1 field Value = 10k @ net kicad_versions/fixture.kicad9.net
+part R1 lib Fixture:R sheet / symbol Fixture:R
+part R1 unit 0 sheet / uuid 00000000-0000-4000-8000-000000000001
+part R1 value = text 10k @ net kicad_versions/fixture.kicad9.net note "from the Value field"
+part U1 field Description = "Dual amplifier, two units" @ net kicad_versions/fixture.kicad9.net
+part U1 field Value = DualAmp @ net kicad_versions/fixture.kicad9.net
+part U1 lib Fixture:DualAmp sheet / symbol Fixture:DualAmp
+part U1 unit 1 sheet / uuid 00000000-0000-4000-8000-000000000003
+part U1 unit 2 sheet / uuid 00000000-0000-4000-8000-000000000002
+part U1 value = text DualAmp @ net kicad_versions/fixture.kicad9.net note "from the Value field"
+pin JP1 1 name A unit 0 net /INB
+pin JP1 1 type = passive @ net kicad_versions/fixture.kicad9.net
+pin JP1 2 name C unit 0 net /MID
+pin JP1 2 type = passive @ net kicad_versions/fixture.kicad9.net
+pin JP1 3 name B unit 0 net /INA
+pin JP1 3 type = passive @ net kicad_versions/fixture.kicad9.net
+pin R1 1 name "" unit 0 net /OUTA
+pin R1 1 type = passive @ net kicad_versions/fixture.kicad9.net
+pin R1 2 name "" unit 0 net /MID
+pin R1 2 type = passive @ net kicad_versions/fixture.kicad9.net
+pin U1 1 name OUTA unit 0 net /OUTA
+pin U1 1 type = output @ net kicad_versions/fixture.kicad9.net
+pin U1 2 name -INA unit 0 net /INA
+pin U1 2 type = input @ net kicad_versions/fixture.kicad9.net
+pin U1 3 name +INA unit 0 net unconnected-(U1A-+INA-Pad3)
+pin U1 3 type = input @ net kicad_versions/fixture.kicad9.net
+pin U1 5 name +INB unit 0 net unconnected-(U1B-+INB-Pad5)
+pin U1 5 type = input @ net kicad_versions/fixture.kicad9.net
+pin U1 6 name -INB unit 0 net /INB
+pin U1 6 type = input @ net kicad_versions/fixture.kicad9.net
+pin U1 7 name OUTB unit 0 net unconnected-(U1B-OUTB-Pad7)
+pin U1 7 type = output @ net kicad_versions/fixture.kicad9.net
+sheet / name "" file fixture.kicad_sch uuid / page 1
+source file kicad_versions/fixture.kicad9.net
+source tool kicad-netlist
+source version 9.0.9
+symbol Fixture:DualAmp description "Dual amplifier, two units"
+symbol Fixture:DualAmp field Description "Dual amplifier, two units"
+symbol Fixture:DualAmp field Reference U
+symbol Fixture:DualAmp field Value DualAmp
+symbol Fixture:DualAmp pin 1 unit 0 body 0 name OUTA type output style ""
+symbol Fixture:DualAmp pin 2 unit 0 body 0 name -INA type input style ""
+symbol Fixture:DualAmp pin 3 unit 0 body 0 name +INA type input style ""
+symbol Fixture:DualAmp pin 5 unit 0 body 0 name +INB type input style ""
+symbol Fixture:DualAmp pin 6 unit 0 body 0 name -INB type input style ""
+symbol Fixture:DualAmp pin 7 unit 0 body 0 name OUTB type output style ""
+symbol Fixture:DualAmp units 1
+symbol Fixture:Jumper3 description "Three-pad solder jumper"
+symbol Fixture:Jumper3 field Description "Three-pad solder jumper"
+symbol Fixture:Jumper3 field Reference JP
+symbol Fixture:Jumper3 field Value Jumper3
+symbol Fixture:Jumper3 pin 1 unit 0 body 0 name A type passive style ""
+symbol Fixture:Jumper3 pin 2 unit 0 body 0 name C type passive style ""
+symbol Fixture:Jumper3 pin 3 unit 0 body 0 name B type passive style ""
+symbol Fixture:Jumper3 units 1
+symbol Fixture:R description Resistor
+symbol Fixture:R field Description Resistor
+symbol Fixture:R field Reference R
+symbol Fixture:R field Value R
+symbol Fixture:R pin 1 unit 0 body 0 name "" type passive style ""
+symbol Fixture:R pin 2 unit 0 body 0 name "" type passive style ""
+symbol Fixture:R units 1
