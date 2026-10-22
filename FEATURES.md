@@ -294,6 +294,24 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - 🚧 `NAME-11` Negative rail with its sign from a marker only or none; negative supply pins on a rail read positive ·
   `name/name_11.rs`, `name-11_negative_rail_names`. Missing: rails a negative regulator feeds (power sources, `NET-5`)
 - ✅ `NAME-12` Unannotated designators, one designator placed twice for one unit · `name/name_12.rs`, `name-12_designators`
+- ✅ `ANA-3` Shunt (resistor below `max_shunt` = 1 Ω) whose ends reach a current-sense amplifier's sense inputs (by
+  name, directly or through one series resistor each) with no capacitor across them and no RC at the output ·
+  `ana/ana_3.rs`, `ana-3_shunt_filters`
+- ✅ `ANA-4` Shunt with an end on a rail or ground where a sense input sits too: suggest a net tie · `ana/ana_4.rs`,
+  `ana-4_shunt_kelvin`
+- ✅ `ANA-10` Op-amp channel (pins by name, KiCad's `~` output) whose output reaches its inverting input through no
+  resistor, capacitor, inductor, diode or transistor, or reaches only the non-inverting one · `ana/ana_10.rs`,
+  `ana-10_opamp_feedback`
+- ✅ `ANA-11` Op-amp channel with an input connected to nothing, both inputs on rails, or a follower with its input on
+  a supply rail (an estimate: output swing is part data) · `ana/ana_11.rs`, `ana-11_unused_channels`
+- ✅ `ANA-12` Comparator channel with no resistor from the output to the non-inverting input and no hysteresis pin ·
+  `ana/ana_12.rs`, `ana-12_comparator_hysteresis`
+- ✅ `ANA-16` Op-amp gain network resistors outside 1 kΩ-1 MΩ (`min_resistance`, `max_resistance`), feedback
+  capacitors below 1 pF (`min_capacitance`) · `ana/ana_16.rs`, `ana-16_gain_resistor_range`
+- ✅ `ANA-21` Op-amp input whose DC path (resistors, inductors, ferrites, ties) reaches no rail, ground, connector or
+  driving pin while a capacitor (or a transformer, an estimate) sits on it · `ana/ana_21.rs`, `ana-21_dc_return`
+- ✅ `ANA-22` Divider from a rail to a ground feeding an op-amp input (directly or through one resistor) with no
+  capacitor to ground · `ana/ana_22.rs`, `ana-22_bias_divider_caps`
 - ✅ `CLK-3` Crystal of four pins or more with two connected and the others connected to nothing; with the board
   file, crystal footprint pads beyond the symbol's pins with no net · `clk/clk_3.rs`, `clk-3_crystal_case_pads`
 - ✅ `CLK-5` Active-low reset input by name (`NRST`, `~{RESET}`, `RUN`, `CHIP_PU`; an MCU's reset) with no pull-up

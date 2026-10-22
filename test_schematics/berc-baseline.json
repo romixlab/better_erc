@@ -19,9 +19,9 @@
     "suggestions": 79,
     "infos": 0,
     "candidates": 0,
-    "ran": 73,
+    "ran": 81,
     "not_run": 0,
-    "planned": 440
+    "planned": 432
   },
   "checks": [
     {
@@ -332,7 +332,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 105
+      "micros": 87
     },
     {
       "id": "DEC-2",
@@ -355,7 +355,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 12
+      "micros": 25
     },
     {
       "id": "DEC-5",
@@ -378,7 +378,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7
+      "micros": 26
     },
     {
       "id": "DEC-8",
@@ -387,7 +387,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 19
+      "micros": 20
     },
     {
       "id": "DEC-9",
@@ -403,7 +403,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 96
+      "micros": 86
     },
     {
       "id": "DEC-11",
@@ -412,7 +412,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 9
     },
     {
       "id": "DEC-12",
@@ -738,7 +738,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 87
+      "micros": 75
     },
     {
       "id": "SHORT-2",
@@ -756,7 +756,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 138
+      "micros": 126
     },
     {
       "id": "SHORT-4",
@@ -765,7 +765,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 115
+      "micros": 147
     },
     {
       "id": "SHORT-5",
@@ -774,7 +774,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 616
+      "micros": 619
     },
     {
       "id": "SHORT-6",
@@ -783,7 +783,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 42
+      "micros": 40
     },
     {
       "id": "SHORT-7",
@@ -792,7 +792,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 123
+      "micros": 457
     },
     {
       "id": "SHORT-8",
@@ -822,7 +822,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 60
+      "micros": 57
     },
     {
       "id": "SHORT-12",
@@ -831,7 +831,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 3680
+      "micros": 1776
     },
     {
       "id": "WIRE-1",
@@ -840,7 +840,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 3452
+      "micros": 573
     },
     {
       "id": "WIRE-2",
@@ -849,7 +849,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 173
+      "micros": 127
     },
     {
       "id": "WIRE-3",
@@ -914,7 +914,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 5
+      "micros": 2
     },
     {
       "id": "WIRE-12",
@@ -930,7 +930,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 107
+      "micros": 95
     },
     {
       "id": "WIRE-14",
@@ -939,7 +939,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 534
+      "micros": 538
     },
     {
       "id": "WIRE-15",
@@ -1207,7 +1207,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 11,
-      "micros": 275
+      "micros": 387
     },
     {
       "id": "IO-2",
@@ -1244,7 +1244,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 218
+      "micros": 236
     },
     {
       "id": "IO-7",
@@ -1253,7 +1253,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7
+      "micros": 8
     },
     {
       "id": "IO-8",
@@ -1262,7 +1262,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 451
+      "micros": 455
     },
     {
       "id": "IO-9",
@@ -1278,7 +1278,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 206
+      "micros": 995
     },
     {
       "id": "IO-11",
@@ -1287,7 +1287,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 13
+      "micros": 21
     },
     {
       "id": "IO-12",
@@ -1317,7 +1317,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 442
+      "micros": 440
     },
     {
       "id": "IO-16",
@@ -1326,7 +1326,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 85
+      "micros": 133
     },
     {
       "id": "IO-17",
@@ -1545,7 +1545,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 12
     },
     {
       "id": "CLK-4",
@@ -1561,7 +1561,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 417
+      "micros": 643
     },
     {
       "id": "CLK-6",
@@ -1570,7 +1570,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 392
+      "micros": 412
     },
     {
       "id": "CLK-7",
@@ -1579,7 +1579,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 412
+      "micros": 565
     },
     {
       "id": "CLK-8",
@@ -1630,7 +1630,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 5399
+      "micros": 387
     },
     {
       "id": "CLK-15",
@@ -1639,7 +1639,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 756
+      "micros": 523
     },
     {
       "id": "CLK-16",
@@ -1662,7 +1662,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 444
+      "micros": 643
     },
     {
       "id": "CLK-19",
@@ -1678,7 +1678,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 495
+      "micros": 17
     },
     {
       "id": "I2C-2",
@@ -1687,7 +1687,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 3,
-      "micros": 96
+      "micros": 99
     },
     {
       "id": "I2C-3",
@@ -1696,7 +1696,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 58
+      "micros": 56
     },
     {
       "id": "I2C-4",
@@ -1726,7 +1726,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 78
+      "micros": 67
     },
     {
       "id": "I2C-8",
@@ -1742,7 +1742,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 174
+      "micros": 576
     },
     {
       "id": "I2C-10",
@@ -1751,7 +1751,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 153
+      "micros": 169
     },
     {
       "id": "I2C-11",
@@ -2654,14 +2654,18 @@
       "title": "Shunt lines to the amplifier without a filter",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 12
     },
     {
       "id": "ANA-4",
       "title": "Current sense resistor straight to ground or power: suggest net ties",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 262
     },
     {
       "id": "ANA-5",
@@ -2703,21 +2707,27 @@
       "title": "Op-amp with no feedback path, or feedback into the non-inverting input (a comparator by accident)",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 8
     },
     {
       "id": "ANA-11",
       "title": "Unused op-amp channel left floating: wire it as a buffer to mid-rail or ground",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 10
     },
     {
       "id": "ANA-12",
       "title": "Comparator on a slow or noisy signal without hysteresis",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 6
     },
     {
       "id": "ANA-13",
@@ -2745,7 +2755,9 @@
       "title": "Gain or filter resistors far outside the sane range for the op-amp (10 Ω loading the output, 10 MΩ against bias current)",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 7
     },
     {
       "id": "ANA-17",
@@ -2780,14 +2792,18 @@
       "title": "AC-coupled (or transformer-coupled) amplifier input with no DC return path for the bias current: the coupling capacitor charges until the amplifier saturates, hours later",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 6
     },
     {
       "id": "ANA-22",
       "title": "Mid-rail bias divider without a capacitor to ground: the supply noise rides on the bias",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 80
     },
     {
       "id": "ANA-23",
@@ -2978,7 +2994,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1116
+      "micros": 1225
     },
     {
       "id": "DBG-2",
@@ -2987,7 +3003,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 188
+      "micros": 295
     },
     {
       "id": "DBG-3",
@@ -2996,7 +3012,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 34
+      "micros": 46
     },
     {
       "id": "DBG-4",
@@ -3005,7 +3021,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 20
+      "micros": 21
     },
     {
       "id": "DBG-5",
@@ -3028,7 +3044,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 409
+      "micros": 462
     },
     {
       "id": "DBG-8",
@@ -3037,7 +3053,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8296
+      "micros": 555
     },
     {
       "id": "DBG-9",
@@ -3053,7 +3069,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 44
+      "micros": 39
     },
     {
       "id": "DBG-11",
@@ -3062,7 +3078,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 455
+      "micros": 446
     },
     {
       "id": "DBG-12",
@@ -3085,7 +3101,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 193
+      "micros": 298
     },
     {
       "id": "DBG-15",
@@ -3101,7 +3117,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 16
+      "micros": 26
     },
     {
       "id": "DBG-17",
@@ -3110,7 +3126,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 377
+      "micros": 399
     },
     {
       "id": "DBG-18",
@@ -3119,7 +3135,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 14,
-      "micros": 671
+      "micros": 681
     },
     {
       "id": "DBG-19",
@@ -3170,7 +3186,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 20,
-      "micros": 4317
+      "micros": 799
     },
     {
       "id": "TEST-2",
@@ -3179,7 +3195,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 38
+      "micros": 39
     },
     {
       "id": "TEST-3",
@@ -3195,7 +3211,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 108
+      "micros": 73
     },
     {
       "id": "TEST-5",
@@ -3204,7 +3220,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 28,
-      "micros": 874
+      "micros": 962
     },
     {
       "id": "TEST-6",
@@ -3255,7 +3271,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 468
+      "micros": 512
     },
     {
       "id": "BOM-6",
@@ -3264,7 +3280,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 430
+      "micros": 463
     },
     {
       "id": "BOM-7",
@@ -3287,7 +3303,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 427
+      "micros": 396
     },
     {
       "id": "BOM-10",
@@ -3296,7 +3312,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 32
+      "micros": 29
     },
     {
       "id": "BOM-11",
@@ -3361,7 +3377,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 78
+      "micros": 89
     },
     {
       "id": "NAME-2",
@@ -3370,7 +3386,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 72
+      "micros": 55
     },
     {
       "id": "NAME-3",
@@ -3386,7 +3402,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 100
+      "micros": 87
     },
     {
       "id": "NAME-5",
@@ -3395,7 +3411,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 179
+      "micros": 160
     },
     {
       "id": "NAME-6",
@@ -3404,7 +3420,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 83
+      "micros": 84
     },
     {
       "id": "NAME-7",
@@ -3413,7 +3429,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 583
+      "micros": 561
     },
     {
       "id": "NAME-8",
@@ -3429,7 +3445,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1408
+      "micros": 79
     },
     {
       "id": "NAME-10",
@@ -3438,7 +3454,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 85
+      "micros": 89
     },
     {
       "id": "NAME-11",
@@ -3447,7 +3463,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 186
+      "micros": 183
     },
     {
       "id": "NAME-12",
@@ -10920,7 +10936,7 @@
     }
   ],
   "timing": {
-    "checks_micros": 14203,
-    "total_micros": 15574
+    "checks_micros": 5519,
+    "total_micros": 6812
   }
 }

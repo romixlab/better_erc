@@ -24,6 +24,7 @@ pub mod meta;
 pub mod project;
 pub mod report;
 
+mod ana;
 mod bom;
 mod clk;
 mod dbg;

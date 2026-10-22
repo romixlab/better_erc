@@ -1,0 +1,53 @@
+# What better_erc finds on ana-3_shunt_filters.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "ANA-3"
+subjects = ["part R1", "part U1"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U4"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /S2N", "pin U2.4"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /S2P", "pin U2.3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /SH1_N", "pin U1.4"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /SH1_P", "pin U1.3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /SH3_N", "pin U3.4"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /SH3_P", "pin U3.3"]
+
+[[finding]]
+check = "NAME-2"
+subjects = ["net /S2N", "net /S2P"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

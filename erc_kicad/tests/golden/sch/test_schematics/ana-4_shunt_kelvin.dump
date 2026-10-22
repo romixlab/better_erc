@@ -1,0 +1,226 @@
+board ana-4_shunt_kelvin
+label / local ISENSE1 at 70.38,22.38 net /ISENSE1
+label / local ISENSE1 at 358.38,27.46 net /ISENSE1
+label / local ISENSE2 at 262.38,22.38 net /ISENSE2
+label / local ISENSE2 at 358.38,30 net /ISENSE2
+label / local ISENSE_N at 174,33.81 net /ISENSE_N
+label / local ISENSE_N at 222,26.19 net /ISENSE_N
+label / local ISENSE_N at 262.38,30 net /ISENSE_N
+label / local ISENSE_N at 318,33.81 net /ISENSE_N
+label / local MOTOR2_LOW at 174,26.19 net /MOTOR2_LOW
+label / local MOTOR2_LOW at 262.38,27.46 net /MOTOR2_LOW
+label / local MOTOR2_LOW at 318,26.19 net /MOTOR2_LOW
+label / local MOTOR_LOW at 30,26.19 net /MOTOR_LOW
+label / local MOTOR_LOW at 70.38,27.46 net /MOTOR_LOW
+label / local MOTOR_LOW at 126,26.19 net /MOTOR_LOW
+label / power +3V3 at 70.38,32.54 net +3V3
+label / power +3V3 at 262.38,32.54 net +3V3
+label / power +3V3 at 358.38,22.38 net +3V3
+label / power GND at 30,33.81 net GND
+label / power GND at 70.38,24.92 net GND
+label / power GND at 70.38,30 net GND
+label / power GND at 70.38,35.08 net GND
+label / power GND at 126,33.81 net GND
+label / power GND at 222,33.81 net GND
+label / power GND at 262.38,24.92 net GND
+label / power GND at 262.38,35.08 net GND
+label / power GND at 358.38,24.92 net GND
+net +3V3 class = Default @ sch ana-4_shunt_kelvin.kicad_sch note "effective net class"
+net +3V3 kind power
+net /ISENSE1 class = Default @ sch ana-4_shunt_kelvin.kicad_sch note "effective net class"
+net /ISENSE1 kind named
+net /ISENSE2 class = Default @ sch ana-4_shunt_kelvin.kicad_sch note "effective net class"
+net /ISENSE2 kind named
+net /ISENSE_N class = Default @ sch ana-4_shunt_kelvin.kicad_sch note "effective net class"
+net /ISENSE_N kind named
+net /MOTOR2_LOW class = Default @ sch ana-4_shunt_kelvin.kicad_sch note "effective net class"
+net /MOTOR2_LOW kind named
+net /MOTOR_LOW class = Default @ sch ana-4_shunt_kelvin.kicad_sch note "effective net class"
+net /MOTOR_LOW kind named
+net GND class = Default @ sch ana-4_shunt_kelvin.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U3-PA2-Pad5) class = Default @ sch ana-4_shunt_kelvin.kicad_sch note "effective net class"
+net unconnected-(U3-PA2-Pad5) kind unconnected
+part C1 field Value = 1u @ sch ana-4_shunt_kelvin.kicad_sch
+part C1 flag dnp = no @ sch ana-4_shunt_kelvin.kicad_sch
+part C1 flag exclude_from_sim = no @ sch ana-4_shunt_kelvin.kicad_sch
+part C1 flag in_bom = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part C1 flag on_board = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid b93060f8-0000-4000-8000-000000000024 line 146 at 126,30 rot 0
+part C1 value = text 1u @ sch ana-4_shunt_kelvin.kicad_sch note "from the Value field"
+part C2 field Value = 1u @ sch ana-4_shunt_kelvin.kicad_sch
+part C2 flag dnp = no @ sch ana-4_shunt_kelvin.kicad_sch
+part C2 flag exclude_from_sim = no @ sch ana-4_shunt_kelvin.kicad_sch
+part C2 flag in_bom = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part C2 flag on_board = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid b93060f8-0000-4000-8000-000000000057 line 224 at 318,30 rot 0
+part C2 value = text 1u @ sch ana-4_shunt_kelvin.kicad_sch note "from the Value field"
+part NT1 field Value = NetTie_2 @ sch ana-4_shunt_kelvin.kicad_sch
+part NT1 flag dnp = no @ sch ana-4_shunt_kelvin.kicad_sch
+part NT1 flag exclude_from_sim = no @ sch ana-4_shunt_kelvin.kicad_sch
+part NT1 flag in_bom = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part NT1 flag on_board = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part NT1 lib Device:NetTie_2 sheet / symbol Device:NetTie_2
+part NT1 unit 1 sheet / uuid b93060f8-0000-4000-8000-000000000035 line 172 at 222,30 rot 0
+part NT1 value = text NetTie_2 @ sch ana-4_shunt_kelvin.kicad_sch note "from the Value field"
+part R1 field Value = 10m @ sch ana-4_shunt_kelvin.kicad_sch
+part R1 flag dnp = no @ sch ana-4_shunt_kelvin.kicad_sch
+part R1 flag exclude_from_sim = no @ sch ana-4_shunt_kelvin.kicad_sch
+part R1 flag in_bom = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part R1 flag on_board = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid b93060f8-0000-4000-8000-000000000001 line 88 at 30,30 rot 0
+part R1 value = text 10m @ sch ana-4_shunt_kelvin.kicad_sch note "from the Value field"
+part R2 field Value = 10m @ sch ana-4_shunt_kelvin.kicad_sch
+part R2 flag dnp = no @ sch ana-4_shunt_kelvin.kicad_sch
+part R2 flag exclude_from_sim = no @ sch ana-4_shunt_kelvin.kicad_sch
+part R2 flag in_bom = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part R2 flag on_board = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid b93060f8-0000-4000-8000-000000000030 line 162 at 174,30 rot 0
+part R2 value = text 10m @ sch ana-4_shunt_kelvin.kicad_sch note "from the Value field"
+part U1 field Value = INA181 @ sch ana-4_shunt_kelvin.kicad_sch
+part U1 flag dnp = no @ sch ana-4_shunt_kelvin.kicad_sch
+part U1 flag exclude_from_sim = no @ sch ana-4_shunt_kelvin.kicad_sch
+part U1 flag in_bom = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part U1 flag on_board = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part U1 lib Amplifier_Current:INA181 sheet / symbol Amplifier_Current:INA181
+part U1 unit 1 sheet / uuid b93060f8-0000-4000-8000-000000000007 line 104 at 78,30 rot 0
+part U1 value = text INA181 @ sch ana-4_shunt_kelvin.kicad_sch note "from the Value field"
+part U2 field Value = INA181 @ sch ana-4_shunt_kelvin.kicad_sch
+part U2 flag dnp = no @ sch ana-4_shunt_kelvin.kicad_sch
+part U2 flag exclude_from_sim = no @ sch ana-4_shunt_kelvin.kicad_sch
+part U2 flag in_bom = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part U2 flag on_board = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part U2 lib Amplifier_Current:INA181 sheet / symbol Amplifier_Current:INA181
+part U2 unit 1 sheet / uuid b93060f8-0000-4000-8000-000000000041 line 188 at 270,30 rot 0
+part U2 value = text INA181 @ sch ana-4_shunt_kelvin.kicad_sch note "from the Value field"
+part U3 field Value = MCU_ADC @ sch ana-4_shunt_kelvin.kicad_sch
+part U3 flag dnp = no @ sch ana-4_shunt_kelvin.kicad_sch
+part U3 flag exclude_from_sim = no @ sch ana-4_shunt_kelvin.kicad_sch
+part U3 flag in_bom = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part U3 flag on_board = yes @ sch ana-4_shunt_kelvin.kicad_sch
+part U3 lib MCU_Fixture:MCU_ADC sheet / symbol MCU_Fixture:MCU_ADC
+part U3 unit 1 sheet / uuid b93060f8-0000-4000-8000-000000000062 line 234 at 366,30 rot 0
+part U3 value = text MCU_ADC @ sch ana-4_shunt_kelvin.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net /MOTOR_LOW
+pin C1 1 type = passive @ sch ana-4_shunt_kelvin.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch ana-4_shunt_kelvin.kicad_sch
+pin C2 1 name "" unit 1 net /MOTOR2_LOW
+pin C2 1 type = passive @ sch ana-4_shunt_kelvin.kicad_sch
+pin C2 2 name "" unit 1 net /ISENSE_N
+pin C2 2 type = passive @ sch ana-4_shunt_kelvin.kicad_sch
+pin NT1 1 name 1 unit 1 net /ISENSE_N
+pin NT1 1 type = passive @ sch ana-4_shunt_kelvin.kicad_sch
+pin NT1 2 name 2 unit 1 net GND
+pin NT1 2 type = passive @ sch ana-4_shunt_kelvin.kicad_sch
+pin R1 1 name "" unit 1 net /MOTOR_LOW
+pin R1 1 type = passive @ sch ana-4_shunt_kelvin.kicad_sch
+pin R1 2 name "" unit 1 net GND
+pin R1 2 type = passive @ sch ana-4_shunt_kelvin.kicad_sch
+pin R2 1 name "" unit 1 net /MOTOR2_LOW
+pin R2 1 type = passive @ sch ana-4_shunt_kelvin.kicad_sch
+pin R2 2 name "" unit 1 net /ISENSE_N
+pin R2 2 type = passive @ sch ana-4_shunt_kelvin.kicad_sch
+pin U1 1 name OUT unit 1 net /ISENSE1
+pin U1 1 type = output @ sch ana-4_shunt_kelvin.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch ana-4_shunt_kelvin.kicad_sch
+pin U1 3 name IN+ unit 1 net /MOTOR_LOW
+pin U1 3 type = input @ sch ana-4_shunt_kelvin.kicad_sch
+pin U1 4 name IN- unit 1 net GND
+pin U1 4 type = input @ sch ana-4_shunt_kelvin.kicad_sch
+pin U1 5 name VS unit 1 net +3V3
+pin U1 5 type = power_in @ sch ana-4_shunt_kelvin.kicad_sch
+pin U1 6 name REF unit 1 net GND
+pin U1 6 type = input @ sch ana-4_shunt_kelvin.kicad_sch
+pin U2 1 name OUT unit 1 net /ISENSE2
+pin U2 1 type = output @ sch ana-4_shunt_kelvin.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch ana-4_shunt_kelvin.kicad_sch
+pin U2 3 name IN+ unit 1 net /MOTOR2_LOW
+pin U2 3 type = input @ sch ana-4_shunt_kelvin.kicad_sch
+pin U2 4 name IN- unit 1 net /ISENSE_N
+pin U2 4 type = input @ sch ana-4_shunt_kelvin.kicad_sch
+pin U2 5 name VS unit 1 net +3V3
+pin U2 5 type = power_in @ sch ana-4_shunt_kelvin.kicad_sch
+pin U2 6 name REF unit 1 net GND
+pin U2 6 type = input @ sch ana-4_shunt_kelvin.kicad_sch
+pin U3 1 name VDD unit 1 net +3V3
+pin U3 1 type = power_in @ sch ana-4_shunt_kelvin.kicad_sch
+pin U3 2 name VSS unit 1 net GND
+pin U3 2 type = power_in @ sch ana-4_shunt_kelvin.kicad_sch
+pin U3 3 name PA0 unit 1 net /ISENSE1
+pin U3 3 type = bidirectional @ sch ana-4_shunt_kelvin.kicad_sch
+pin U3 4 name PA1 unit 1 net /ISENSE2
+pin U3 4 type = bidirectional @ sch ana-4_shunt_kelvin.kicad_sch
+pin U3 5 name PA2 unit 1 net unconnected-(U3-PA2-Pad5)
+pin U3 5 type = bidirectional @ sch ana-4_shunt_kelvin.kicad_sch
+sheet / name "" file ana-4_shunt_kelvin.kicad_sch uuid /
+source file ana-4_shunt_kelvin.kicad_sch
+source tool kicad
+source version 8.0
+symbol Amplifier_Current:INA181 description "Bidirectional, low- and high-side voltage output, current-sense amplifier"
+symbol Amplifier_Current:INA181 field Description "Bidirectional, low- and high-side voltage output, current-sense amplifier"
+symbol Amplifier_Current:INA181 field Reference U
+symbol Amplifier_Current:INA181 field Value INA181
+symbol Amplifier_Current:INA181 hash 21e4e316c6850755
+symbol Amplifier_Current:INA181 pin 1 unit 1 body 1 name OUT type output style line
+symbol Amplifier_Current:INA181 pin 2 unit 1 body 1 name GND type power_in style line
+symbol Amplifier_Current:INA181 pin 3 unit 1 body 1 name IN+ type input style line
+symbol Amplifier_Current:INA181 pin 4 unit 1 body 1 name IN- type input style line
+symbol Amplifier_Current:INA181 pin 5 unit 1 body 1 name VS type power_in style line
+symbol Amplifier_Current:INA181 pin 6 unit 1 body 1 name REF type input style line
+symbol Amplifier_Current:INA181 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:NetTie_2 description "Net tie, 2 pins"
+symbol Device:NetTie_2 field Description "Net tie, 2 pins"
+symbol Device:NetTie_2 field Reference NT
+symbol Device:NetTie_2 field Value NetTie_2
+symbol Device:NetTie_2 hash 7c30ac4b5755060e
+symbol Device:NetTie_2 pin 1 unit 1 body 1 name 1 type passive style line
+symbol Device:NetTie_2 pin 2 unit 1 body 1 name 2 type passive style line
+symbol Device:NetTie_2 units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Fixture:MCU_ADC description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_ADC field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_ADC field Reference U
+symbol MCU_Fixture:MCU_ADC field Value MCU_ADC
+symbol MCU_Fixture:MCU_ADC hash 18e25c35badbac62
+symbol MCU_Fixture:MCU_ADC pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_ADC pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_ADC pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Fixture:MCU_ADC pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Fixture:MCU_ADC pin 5 unit 1 body 1 name PA2 type bidirectional style line
+symbol MCU_Fixture:MCU_ADC units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

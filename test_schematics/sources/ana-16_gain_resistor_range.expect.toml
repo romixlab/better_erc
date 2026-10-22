@@ -1,0 +1,60 @@
+# What better_erc finds on ana-16_gain_resistor_range.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "ANA-16"
+subjects = ["part C1", "part U2"]
+
+[[finding]]
+check = "ANA-16"
+subjects = ["part R1", "part U1"]
+
+[[finding]]
+check = "ANA-16"
+subjects = ["part R2", "part U1"]
+
+[[finding]]
+check = "ANA-16"
+subjects = ["part R5", "part U2"]
+
+[[finding]]
+check = "BOM-10"
+subjects = ["part C1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /SIG1", "pin U1.3"]
+also = ["IO-6"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /SIG2", "pin U2.3"]
+also = ["IO-6"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /SIG3", "pin U3.3"]
+also = ["IO-6"]
+
+[[finding]]
+check = "NAME-5"
+subjects = ["part R2", "part R5"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board ana-16_gain_resistor_range"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

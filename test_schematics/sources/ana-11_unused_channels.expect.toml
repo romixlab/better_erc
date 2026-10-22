@@ -1,0 +1,70 @@
+# What better_erc finds on ana-11_unused_channels.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "ANA-11"
+subjects = ["part U1", "pin U1.5", "pin U1.6"]
+
+[[finding]]
+check = "ANA-11"
+subjects = ["part U2", "pin U2.5"]
+confidence = "estimate"
+
+[[finding]]
+check = "ANA-11"
+subjects = ["part U3", "pin U3.5", "pin U3.6"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U1B-+-Pad5)", "pin U1.5"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net unconnected-(U1B---Pad6)", "pin U1.6"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /SIG1", "pin U1.3"]
+also = ["IO-6"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /SIG2", "pin U2.3"]
+also = ["IO-6"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /SIG3", "pin U3.3"]
+also = ["IO-6"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /SIG4", "pin U4.3"]
+also = ["IO-6"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board ana-11_unused_channels"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.5", "pin U1.6", "pin U1.7"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U3", "pin U3.7"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

@@ -1,0 +1,29 @@
+# What better_erc finds on ana-4_shunt_kelvin.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "ANA-4"
+subjects = ["net GND", "part R1"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U3", "pin U3.5"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

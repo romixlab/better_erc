@@ -1,0 +1,34 @@
+# What better_erc finds on ana-12_comparator_hysteresis.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "ANA-12"
+subjects = ["part U1", "pin U1.1", "pin U1.3"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U2"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /SENSE_A", "pin U1.3"]
+also = ["IO-6"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.5"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

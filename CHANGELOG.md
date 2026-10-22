@@ -13,7 +13,7 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ### Added
 
-- Stage 1 easy checks, batch checks-io: `IO-1`, `IO-6`, `IO-7`, `IO-8`, `IO-10`, `IO-11`, `IO-15`, `IO-16`, `CLK-3`, `CLK-5`, `CLK-6`, `CLK-7`, `CLK-14`, `CLK-15`, `CLK-18`, each with its test schematic and sidecar; `erc_analysis::{pull, analog}`, `pin_name` reads `RUN`, `CHIP_PU`, `MCO`, `CLKOUT` and says which names are active low; the catalogue marks `IO-6` ≈ `IO-1` and `IO-10` ≈ `IO-6`.
+- Stage 1 easy checks, batch checks-io: `IO-1`, `IO-6`, `IO-7`, `IO-8`, `IO-10`, `IO-11`, `IO-15`, `IO-16`, `CLK-3`, `CLK-5`, `CLK-6`, `CLK-7`, `CLK-14`, `CLK-15`, `CLK-18`, `ANA-3`, `ANA-4`, `ANA-10`, `ANA-11`, `ANA-12`, `ANA-16`, `ANA-21`, `ANA-22`, each with its test schematic and sidecar; `erc_analysis::{pull, analog}`, `FindingBuilder::pins`, `pin_name` reads `RUN`, `CHIP_PU`, `MCO`, `CLKOUT` and says which names are active low; the catalogue marks `IO-6` ≈ `IO-1` and `IO-10` ≈ `IO-6`.
 
 ## [0.4.5] - 2026-10-22
 

@@ -1,0 +1,38 @@
+# What better_erc finds on ana-10_opamp_feedback.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "ANA-10"
+subjects = ["part U1", "pin U1.1", "pin U1.2"]
+
+[[finding]]
+check = "ANA-10"
+subjects = ["part U1", "pin U1.6", "pin U1.7"]
+
+[[finding]]
+check = "ANA-22"
+subjects = ["net /THRESH_B", "part R4", "part R5"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "IO-10"
+subjects = ["net /SIG_B", "pin U1.5"]
+also = ["IO-6"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board ana-10_opamp_feedback"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

@@ -1,0 +1,242 @@
+board ana-12_comparator_hysteresis
+label / local CMP2_OUT at 30,76.19 net /CMP2_OUT
+label / local CMP2_OUT at 70.38,27.46 net /CMP2_OUT
+label / local CMP2_OUT at 118.38,80 net /CMP2_OUT
+label / local CMP2_OUT at 222,26.19 net /CMP2_OUT
+label / local CMP_OUT at 22.38,22.38 net /CMP_OUT
+label / local CMP_OUT at 118.38,77.46 net /CMP_OUT
+label / local CMP_OUT at 174,26.19 net /CMP_OUT
+label / local REF at 22.38,24.92 net /REF
+label / local REF at 70.38,24.92 net /REF
+label / local REF at 270,26.19 net /REF
+label / local REF at 318,26.19 net /REF
+label / local REF at 366,26.19 net /REF
+label / local SENSE_A at 22.38,27.46 net /SENSE_A
+label / local SENSE_A at 70.38,72.38 net /SENSE_A
+label / local SENSE_B at 30,83.81 net /SENSE_B
+label / local SENSE_B at 70.38,22.38 net /SENSE_B
+label / local SENSE_B at 70.38,74.92 net /SENSE_B
+label / power +3V3 at 118.38,24.92 net +3V3
+label / power +3V3 at 118.38,72.38 net +3V3
+label / power +3V3 at 174,33.81 net +3V3
+label / power +3V3 at 222,33.81 net +3V3
+label / power +3V3 at 270,33.81 net +3V3
+label / power GND at 70.38,77.46 net GND
+label / power GND at 118.38,22.38 net GND
+label / power GND at 118.38,74.92 net GND
+label / power GND at 318,33.81 net GND
+label / power GND at 366,33.81 net GND
+net +3V3 class = Default @ sch ana-12_comparator_hysteresis.kicad_sch note "effective net class"
+net +3V3 kind power
+net /CMP2_OUT class = Default @ sch ana-12_comparator_hysteresis.kicad_sch note "effective net class"
+net /CMP2_OUT kind named
+net /CMP_OUT class = Default @ sch ana-12_comparator_hysteresis.kicad_sch note "effective net class"
+net /CMP_OUT kind named
+net /REF class = Default @ sch ana-12_comparator_hysteresis.kicad_sch note "effective net class"
+net /REF kind named
+net /SENSE_A class = Default @ sch ana-12_comparator_hysteresis.kicad_sch note "effective net class"
+net /SENSE_A kind named
+net /SENSE_B class = Default @ sch ana-12_comparator_hysteresis.kicad_sch note "effective net class"
+net /SENSE_B kind named
+net GND class = Default @ sch ana-12_comparator_hysteresis.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U2-PA2-Pad5) class = Default @ sch ana-12_comparator_hysteresis.kicad_sch note "effective net class"
+net unconnected-(U2-PA2-Pad5) kind unconnected
+part C1 field Value = 100n @ sch ana-12_comparator_hysteresis.kicad_sch
+part C1 flag dnp = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part C1 flag exclude_from_sim = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part C1 flag in_bom = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part C1 flag on_board = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 348d259e-0000-4000-8000-000000000046 line 205 at 366,30 rot 0
+part C1 value = text 100n @ sch ana-12_comparator_hysteresis.kicad_sch note "from the Value field"
+part J1 field Value = SENSE @ sch ana-12_comparator_hysteresis.kicad_sch
+part J1 flag dnp = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part J1 flag exclude_from_sim = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part J1 flag in_bom = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part J1 flag on_board = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part J1 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J1 unit 1 sheet / uuid 348d259e-0000-4000-8000-000000000057 line 231 at 78,80 rot 0
+part J1 value = text SENSE @ sch ana-12_comparator_hysteresis.kicad_sch note "from the Value field"
+part R1 field Value = 10k @ sch ana-12_comparator_hysteresis.kicad_sch
+part R1 flag dnp = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part R1 flag exclude_from_sim = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part R1 flag in_bom = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part R1 flag on_board = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 348d259e-0000-4000-8000-000000000022 line 141 at 174,30 rot 0
+part R1 value = text 10k @ sch ana-12_comparator_hysteresis.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch ana-12_comparator_hysteresis.kicad_sch
+part R2 flag dnp = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part R2 flag exclude_from_sim = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part R2 flag in_bom = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part R2 flag on_board = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 348d259e-0000-4000-8000-000000000028 line 157 at 222,30 rot 0
+part R2 value = text 10k @ sch ana-12_comparator_hysteresis.kicad_sch note "from the Value field"
+part R3 field Value = 100k @ sch ana-12_comparator_hysteresis.kicad_sch
+part R3 flag dnp = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part R3 flag exclude_from_sim = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part R3 flag in_bom = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part R3 flag on_board = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid 348d259e-0000-4000-8000-000000000034 line 173 at 270,30 rot 0
+part R3 value = text 100k @ sch ana-12_comparator_hysteresis.kicad_sch note "from the Value field"
+part R4 field Value = 100k @ sch ana-12_comparator_hysteresis.kicad_sch
+part R4 flag dnp = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part R4 flag exclude_from_sim = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part R4 flag in_bom = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part R4 flag on_board = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid 348d259e-0000-4000-8000-000000000040 line 189 at 318,30 rot 0
+part R4 value = text 100k @ sch ana-12_comparator_hysteresis.kicad_sch note "from the Value field"
+part R5 field Value = 1M @ sch ana-12_comparator_hysteresis.kicad_sch
+part R5 flag dnp = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part R5 flag exclude_from_sim = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part R5 flag in_bom = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part R5 flag on_board = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part R5 lib Device:R sheet / symbol Device:R
+part R5 unit 1 sheet / uuid 348d259e-0000-4000-8000-000000000052 line 221 at 30,80 rot 0
+part R5 value = text 1M @ sch ana-12_comparator_hysteresis.kicad_sch note "from the Value field"
+part U1 field Value = LM393 @ sch ana-12_comparator_hysteresis.kicad_sch
+part U1 flag dnp = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part U1 flag exclude_from_sim = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part U1 flag in_bom = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part U1 flag on_board = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part U1 lib Comparator:LM393 sheet / symbol Comparator:LM393
+part U1 unit 1 sheet / uuid 348d259e-0000-4000-8000-000000000001 line 95 at 30,30 rot 0
+part U1 unit 2 sheet / uuid 348d259e-0000-4000-8000-000000000008 line 107 at 78,30 rot 0
+part U1 unit 3 sheet / uuid 348d259e-0000-4000-8000-000000000015 line 119 at 126,30 rot 0
+part U1 value = text LM393 @ sch ana-12_comparator_hysteresis.kicad_sch note "from the Value field"
+part U2 field Value = MCU_ADC @ sch ana-12_comparator_hysteresis.kicad_sch
+part U2 flag dnp = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part U2 flag exclude_from_sim = no @ sch ana-12_comparator_hysteresis.kicad_sch
+part U2 flag in_bom = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part U2 flag on_board = yes @ sch ana-12_comparator_hysteresis.kicad_sch
+part U2 lib MCU_Fixture:MCU_ADC sheet / symbol MCU_Fixture:MCU_ADC
+part U2 unit 1 sheet / uuid 348d259e-0000-4000-8000-000000000065 line 249 at 126,80 rot 0
+part U2 value = text MCU_ADC @ sch ana-12_comparator_hysteresis.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net /REF
+pin C1 1 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin J1 1 name Pin_1 unit 1 net /SENSE_A
+pin J1 1 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin J1 2 name Pin_2 unit 1 net /SENSE_B
+pin J1 2 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin J1 3 name Pin_3 unit 1 net GND
+pin J1 3 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin R1 1 name "" unit 1 net /CMP_OUT
+pin R1 1 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin R1 2 name "" unit 1 net +3V3
+pin R1 2 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin R2 1 name "" unit 1 net /CMP2_OUT
+pin R2 1 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin R2 2 name "" unit 1 net +3V3
+pin R2 2 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin R3 1 name "" unit 1 net /REF
+pin R3 1 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin R3 2 name "" unit 1 net +3V3
+pin R3 2 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin R4 1 name "" unit 1 net /REF
+pin R4 1 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin R4 2 name "" unit 1 net GND
+pin R4 2 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin R5 1 name "" unit 1 net /CMP2_OUT
+pin R5 1 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin R5 2 name "" unit 1 net /SENSE_B
+pin R5 2 type = passive @ sch ana-12_comparator_hysteresis.kicad_sch
+pin U1 1 name "" unit 1 net /CMP_OUT
+pin U1 1 type = open_collector @ sch ana-12_comparator_hysteresis.kicad_sch
+pin U1 2 name - unit 1 net /REF
+pin U1 2 type = input @ sch ana-12_comparator_hysteresis.kicad_sch
+pin U1 3 name + unit 1 net /SENSE_A
+pin U1 3 type = input @ sch ana-12_comparator_hysteresis.kicad_sch
+pin U1 4 name V- unit 3 net GND
+pin U1 4 type = power_in @ sch ana-12_comparator_hysteresis.kicad_sch
+pin U1 5 name + unit 2 net /SENSE_B
+pin U1 5 type = input @ sch ana-12_comparator_hysteresis.kicad_sch
+pin U1 6 name - unit 2 net /REF
+pin U1 6 type = input @ sch ana-12_comparator_hysteresis.kicad_sch
+pin U1 7 name "" unit 2 net /CMP2_OUT
+pin U1 7 type = open_collector @ sch ana-12_comparator_hysteresis.kicad_sch
+pin U1 8 name V+ unit 3 net +3V3
+pin U1 8 type = power_in @ sch ana-12_comparator_hysteresis.kicad_sch
+pin U2 1 name VDD unit 1 net +3V3
+pin U2 1 type = power_in @ sch ana-12_comparator_hysteresis.kicad_sch
+pin U2 2 name VSS unit 1 net GND
+pin U2 2 type = power_in @ sch ana-12_comparator_hysteresis.kicad_sch
+pin U2 3 name PA0 unit 1 net /CMP_OUT
+pin U2 3 type = bidirectional @ sch ana-12_comparator_hysteresis.kicad_sch
+pin U2 4 name PA1 unit 1 net /CMP2_OUT
+pin U2 4 type = bidirectional @ sch ana-12_comparator_hysteresis.kicad_sch
+pin U2 5 name PA2 unit 1 net unconnected-(U2-PA2-Pad5)
+pin U2 5 type = bidirectional @ sch ana-12_comparator_hysteresis.kicad_sch
+sheet / name "" file ana-12_comparator_hysteresis.kicad_sch uuid /
+source file ana-12_comparator_hysteresis.kicad_sch
+source tool kicad
+source version 8.0
+symbol Comparator:LM393 description "Low-power, low-offset voltage, dual comparators"
+symbol Comparator:LM393 field Description "Low-power, low-offset voltage, dual comparators"
+symbol Comparator:LM393 field Reference U
+symbol Comparator:LM393 field Value LM393
+symbol Comparator:LM393 hash 822def0b4fe95737
+symbol Comparator:LM393 pin 1 unit 1 body 1 name "" type open_collector style line
+symbol Comparator:LM393 pin 2 unit 1 body 1 name - type input style line
+symbol Comparator:LM393 pin 3 unit 1 body 1 name + type input style line
+symbol Comparator:LM393 pin 4 unit 3 body 1 name V- type power_in style line
+symbol Comparator:LM393 pin 5 unit 2 body 1 name + type input style line
+symbol Comparator:LM393 pin 6 unit 2 body 1 name - type input style line
+symbol Comparator:LM393 pin 7 unit 2 body 1 name "" type open_collector style line
+symbol Comparator:LM393 pin 8 unit 3 body 1 name V+ type power_in style line
+symbol Comparator:LM393 units 3
+symbol Connector_Generic:Conn_01x03 description "Generic connector"
+symbol Connector_Generic:Conn_01x03 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x03 field Reference J
+symbol Connector_Generic:Conn_01x03 field Value Conn_01x03
+symbol Connector_Generic:Conn_01x03 hash 674cec87f5e4478a
+symbol Connector_Generic:Conn_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x03 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Fixture:MCU_ADC description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_ADC field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_ADC field Reference U
+symbol MCU_Fixture:MCU_ADC field Value MCU_ADC
+symbol MCU_Fixture:MCU_ADC hash 18e25c35badbac62
+symbol MCU_Fixture:MCU_ADC pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_ADC pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_ADC pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Fixture:MCU_ADC pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Fixture:MCU_ADC pin 5 unit 1 body 1 name PA2 type bidirectional style line
+symbol MCU_Fixture:MCU_ADC units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

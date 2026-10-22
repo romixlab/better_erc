@@ -1,0 +1,29 @@
+# What better_erc finds on ana-21_dc_return.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "ANA-21"
+subjects = ["part U1", "pin U1.3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /AC_IN", "pin U1.3"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board ana-21_dc_return"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

@@ -1,0 +1,404 @@
+board ana-10_opamp_feedback
+label / local BUF at 214.38,72.38 net /BUF
+label / local BUF at 214.38,80 net /BUF
+label / local BUF at 262.38,77.46 net /BUF
+label / local IN_A at 22.38,72.38 net /IN_A
+label / local IN_A at 270,26.19 net /IN_A
+label / local OUT2 at 70.38,72.38 net /OUT2
+label / local OUT2 at 174,83.81 net /OUT2
+label / local OUT2 at 262.38,74.92 net /OUT2
+label / local OUT_A at 22.38,22.38 net /OUT_A
+label / local OUT_A at 174,26.19 net /OUT_A
+label / local OUT_B at 22.38,77.46 net /OUT_B
+label / local OUT_B at 70.38,27.46 net /OUT_B
+label / local REF_A at 22.38,24.92 net /REF_A
+label / local REF_A at 222,26.19 net /REF_A
+label / local SIG3 at 126,76.19 net /SIG3
+label / local SIG3 at 214.38,77.46 net /SIG3
+label / local SIG3 at 262.38,72.38 net /SIG3
+label / local SIG3 at 310.38,77.46 net /SIG3
+label / local SIG_A at 22.38,27.46 net /SIG_A
+label / local SIG_A at 174,33.81 net /SIG_A
+label / local SIG_A at 270,33.81 net /SIG_A
+label / local SIG_B at 22.38,74.92 net /SIG_B
+label / local SIG_B at 70.38,22.38 net /SIG_B
+label / local SUM at 70.38,80 net /SUM
+label / local SUM at 126,83.81 net /SUM
+label / local SUM at 174,76.19 net /SUM
+label / local THRESH_B at 70.38,24.92 net /THRESH_B
+label / local THRESH_B at 318,26.19 net /THRESH_B
+label / local THRESH_B at 366,26.19 net /THRESH_B
+label / local VI_GATE at 78,126.19 net /VI_GATE
+label / local VI_GATE at 310.38,72.38 net /VI_GATE
+label / local VI_GATE at 358.38,72.38 net /VI_GATE
+label / local VI_LOAD at 126,126.19 net /VI_LOAD
+label / local VI_LOAD at 358.38,77.46 net /VI_LOAD
+label / local VI_SENSE at 30,126.19 net /VI_SENSE
+label / local VI_SENSE at 310.38,80 net /VI_SENSE
+label / local VI_SENSE at 358.38,74.92 net /VI_SENSE
+label / power +5V at 70.38,82.54 net +5V
+label / power +5V at 118.38,24.92 net +5V
+label / power +5V at 126,133.81 net +5V
+label / power +5V at 214.38,82.54 net +5V
+label / power +5V at 310.38,82.54 net +5V
+label / power +5V at 318,33.81 net +5V
+label / power GND at 30,133.81 net GND
+label / power GND at 70.38,74.92 net GND
+label / power GND at 70.38,77.46 net GND
+label / power GND at 78,133.81 net GND
+label / power GND at 118.38,22.38 net GND
+label / power GND at 214.38,74.92 net GND
+label / power GND at 222,33.81 net GND
+label / power GND at 310.38,74.92 net GND
+label / power GND at 366,33.81 net GND
+net +5V class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net +5V kind power
+net /BUF class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net /BUF kind named
+net /IN_A class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net /IN_A kind named
+net /OUT2 class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net /OUT2 kind named
+net /OUT_A class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net /OUT_A kind named
+net /OUT_B class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net /OUT_B kind named
+net /REF_A class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net /REF_A kind named
+net /SIG3 class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net /SIG3 kind named
+net /SIG_A class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net /SIG_A kind named
+net /SIG_B class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net /SIG_B kind named
+net /SUM class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net /SUM kind named
+net /THRESH_B class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net /THRESH_B kind named
+net /VI_GATE class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net /VI_GATE kind named
+net /VI_LOAD class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net /VI_LOAD kind named
+net /VI_SENSE class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net /VI_SENSE kind named
+net GND class = Default @ sch ana-10_opamp_feedback.kicad_sch note "effective net class"
+net GND kind power
+part J1 field Value = SIGNALS @ sch ana-10_opamp_feedback.kicad_sch
+part J1 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part J1 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part J1 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part J1 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part J1 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J1 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000050 line 221 at 30,80 rot 0
+part J1 value = text SIGNALS @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part J2 field Value = SIGNALS @ sch ana-10_opamp_feedback.kicad_sch
+part J2 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part J2 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part J2 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part J2 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part J2 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J2 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000094 line 315 at 270,80 rot 0
+part J2 value = text SIGNALS @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part J3 field Value = LOAD @ sch ana-10_opamp_feedback.kicad_sch
+part J3 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part J3 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part J3 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part J3 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part J3 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J3 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000133 line 399 at 126,130 rot 0
+part J3 value = text LOAD @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part Q1 field Value = 2N7002 @ sch ana-10_opamp_feedback.kicad_sch
+part Q1 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part Q1 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part Q1 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part Q1 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part Q1 lib Transistor_FET:2N7002 sheet / symbol Transistor_FET:2N7002
+part Q1 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000114 line 355 at 366,80 rot 0
+part Q1 value = text 2N7002 @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part R1 field Value = 100k @ sch ana-10_opamp_feedback.kicad_sch
+part R1 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part R1 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part R1 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R1 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000022 line 153 at 174,30 rot 0
+part R1 value = text 100k @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch ana-10_opamp_feedback.kicad_sch
+part R2 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part R2 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part R2 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R2 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000027 line 163 at 222,30 rot 0
+part R2 value = text 10k @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part R3 field Value = 10k @ sch ana-10_opamp_feedback.kicad_sch
+part R3 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part R3 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part R3 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R3 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000033 line 179 at 270,30 rot 0
+part R3 value = text 10k @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part R4 field Value = 10k @ sch ana-10_opamp_feedback.kicad_sch
+part R4 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part R4 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part R4 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R4 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000038 line 189 at 318,30 rot 0
+part R4 value = text 10k @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part R5 field Value = 10k @ sch ana-10_opamp_feedback.kicad_sch
+part R5 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part R5 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part R5 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R5 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R5 lib Device:R sheet / symbol Device:R
+part R5 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000044 line 205 at 366,30 rot 0
+part R5 value = text 10k @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part R6 field Value = 10k @ sch ana-10_opamp_feedback.kicad_sch
+part R6 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part R6 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part R6 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R6 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R6 lib Device:R sheet / symbol Device:R
+part R6 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000071 line 267 at 126,80 rot 0
+part R6 value = text 10k @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part R7 field Value = 100k @ sch ana-10_opamp_feedback.kicad_sch
+part R7 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part R7 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part R7 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R7 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R7 lib Device:R sheet / symbol Device:R
+part R7 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000076 line 277 at 174,80 rot 0
+part R7 value = text 100k @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part R8 field Value = 100 @ sch ana-10_opamp_feedback.kicad_sch
+part R8 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part R8 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part R8 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R8 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R8 lib Device:R sheet / symbol Device:R
+part R8 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000121 line 367 at 30,130 rot 0
+part R8 value = text 100 @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part R9 field Value = 100k @ sch ana-10_opamp_feedback.kicad_sch
+part R9 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part R9 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part R9 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R9 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part R9 lib Device:R sheet / symbol Device:R
+part R9 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000127 line 383 at 78,130 rot 0
+part R9 value = text 100k @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part U1 field Value = LM358 @ sch ana-10_opamp_feedback.kicad_sch
+part U1 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part U1 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part U1 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part U1 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part U1 lib Amplifier_Operational:LM358 sheet / symbol Amplifier_Operational:LM358
+part U1 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000001 line 107 at 30,30 rot 0
+part U1 unit 2 sheet / uuid 6a5c1823-0000-4000-8000-000000000008 line 119 at 78,30 rot 0
+part U1 unit 3 sheet / uuid 6a5c1823-0000-4000-8000-000000000015 line 131 at 126,30 rot 0
+part U1 value = text LM358 @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part U2 field Value = OPA340NA @ sch ana-10_opamp_feedback.kicad_sch
+part U2 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part U2 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part U2 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part U2 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part U2 lib Amplifier_Operational:OPA340NA sheet / symbol Amplifier_Operational:OPA340NA
+part U2 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000057 line 233 at 78,80 rot 0
+part U2 value = text OPA340NA @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part U3 field Value = OPA340NA @ sch ana-10_opamp_feedback.kicad_sch
+part U3 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part U3 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part U3 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part U3 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part U3 lib Amplifier_Operational:OPA340NA sheet / symbol Amplifier_Operational:OPA340NA
+part U3 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000081 line 287 at 222,80 rot 0
+part U3 value = text OPA340NA @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+part U4 field Value = OPA340NA @ sch ana-10_opamp_feedback.kicad_sch
+part U4 flag dnp = no @ sch ana-10_opamp_feedback.kicad_sch
+part U4 flag exclude_from_sim = no @ sch ana-10_opamp_feedback.kicad_sch
+part U4 flag in_bom = yes @ sch ana-10_opamp_feedback.kicad_sch
+part U4 flag on_board = yes @ sch ana-10_opamp_feedback.kicad_sch
+part U4 lib Amplifier_Operational:OPA340NA sheet / symbol Amplifier_Operational:OPA340NA
+part U4 unit 1 sheet / uuid 6a5c1823-0000-4000-8000-000000000101 line 327 at 318,80 rot 0
+part U4 value = text OPA340NA @ sch ana-10_opamp_feedback.kicad_sch note "from the Value field"
+pin J1 1 name Pin_1 unit 1 net /IN_A
+pin J1 1 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin J1 2 name Pin_2 unit 1 net /SIG_B
+pin J1 2 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin J1 3 name Pin_3 unit 1 net /OUT_B
+pin J1 3 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin J2 1 name Pin_1 unit 1 net /SIG3
+pin J2 1 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin J2 2 name Pin_2 unit 1 net /OUT2
+pin J2 2 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin J2 3 name Pin_3 unit 1 net /BUF
+pin J2 3 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin J3 1 name Pin_1 unit 1 net /VI_LOAD
+pin J3 1 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin J3 2 name Pin_2 unit 1 net +5V
+pin J3 2 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin Q1 1 name G unit 1 net /VI_GATE
+pin Q1 1 type = input @ sch ana-10_opamp_feedback.kicad_sch
+pin Q1 2 name S unit 1 net /VI_SENSE
+pin Q1 2 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin Q1 3 name D unit 1 net /VI_LOAD
+pin Q1 3 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R1 1 name "" unit 1 net /OUT_A
+pin R1 1 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R1 2 name "" unit 1 net /SIG_A
+pin R1 2 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R2 1 name "" unit 1 net /REF_A
+pin R2 1 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R2 2 name "" unit 1 net GND
+pin R2 2 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R3 1 name "" unit 1 net /IN_A
+pin R3 1 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R3 2 name "" unit 1 net /SIG_A
+pin R3 2 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R4 1 name "" unit 1 net /THRESH_B
+pin R4 1 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R4 2 name "" unit 1 net +5V
+pin R4 2 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R5 1 name "" unit 1 net /THRESH_B
+pin R5 1 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R5 2 name "" unit 1 net GND
+pin R5 2 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R6 1 name "" unit 1 net /SIG3
+pin R6 1 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R6 2 name "" unit 1 net /SUM
+pin R6 2 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R7 1 name "" unit 1 net /SUM
+pin R7 1 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R7 2 name "" unit 1 net /OUT2
+pin R7 2 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R8 1 name "" unit 1 net /VI_SENSE
+pin R8 1 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R8 2 name "" unit 1 net GND
+pin R8 2 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R9 1 name "" unit 1 net /VI_GATE
+pin R9 1 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin R9 2 name "" unit 1 net GND
+pin R9 2 type = passive @ sch ana-10_opamp_feedback.kicad_sch
+pin U1 1 name "" unit 1 net /OUT_A
+pin U1 1 type = output @ sch ana-10_opamp_feedback.kicad_sch
+pin U1 2 name - unit 1 net /REF_A
+pin U1 2 type = input @ sch ana-10_opamp_feedback.kicad_sch
+pin U1 3 name + unit 1 net /SIG_A
+pin U1 3 type = input @ sch ana-10_opamp_feedback.kicad_sch
+pin U1 4 name V- unit 3 net GND
+pin U1 4 type = power_in @ sch ana-10_opamp_feedback.kicad_sch
+pin U1 5 name + unit 2 net /SIG_B
+pin U1 5 type = input @ sch ana-10_opamp_feedback.kicad_sch
+pin U1 6 name - unit 2 net /THRESH_B
+pin U1 6 type = input @ sch ana-10_opamp_feedback.kicad_sch
+pin U1 7 name "" unit 2 net /OUT_B
+pin U1 7 type = output @ sch ana-10_opamp_feedback.kicad_sch
+pin U1 8 name V+ unit 3 net +5V
+pin U1 8 type = power_in @ sch ana-10_opamp_feedback.kicad_sch
+pin U2 1 name "" unit 1 net /OUT2
+pin U2 1 type = output @ sch ana-10_opamp_feedback.kicad_sch
+pin U2 2 name V- unit 1 net GND
+pin U2 2 type = power_in @ sch ana-10_opamp_feedback.kicad_sch
+pin U2 3 name + unit 1 net GND
+pin U2 3 type = input @ sch ana-10_opamp_feedback.kicad_sch
+pin U2 4 name - unit 1 net /SUM
+pin U2 4 type = input @ sch ana-10_opamp_feedback.kicad_sch
+pin U2 5 name V+ unit 1 net +5V
+pin U2 5 type = power_in @ sch ana-10_opamp_feedback.kicad_sch
+pin U3 1 name "" unit 1 net /BUF
+pin U3 1 type = output @ sch ana-10_opamp_feedback.kicad_sch
+pin U3 2 name V- unit 1 net GND
+pin U3 2 type = power_in @ sch ana-10_opamp_feedback.kicad_sch
+pin U3 3 name + unit 1 net /SIG3
+pin U3 3 type = input @ sch ana-10_opamp_feedback.kicad_sch
+pin U3 4 name - unit 1 net /BUF
+pin U3 4 type = input @ sch ana-10_opamp_feedback.kicad_sch
+pin U3 5 name V+ unit 1 net +5V
+pin U3 5 type = power_in @ sch ana-10_opamp_feedback.kicad_sch
+pin U4 1 name "" unit 1 net /VI_GATE
+pin U4 1 type = output @ sch ana-10_opamp_feedback.kicad_sch
+pin U4 2 name V- unit 1 net GND
+pin U4 2 type = power_in @ sch ana-10_opamp_feedback.kicad_sch
+pin U4 3 name + unit 1 net /SIG3
+pin U4 3 type = input @ sch ana-10_opamp_feedback.kicad_sch
+pin U4 4 name - unit 1 net /VI_SENSE
+pin U4 4 type = input @ sch ana-10_opamp_feedback.kicad_sch
+pin U4 5 name V+ unit 1 net +5V
+pin U4 5 type = power_in @ sch ana-10_opamp_feedback.kicad_sch
+sheet / name "" file ana-10_opamp_feedback.kicad_sch uuid /
+source file ana-10_opamp_feedback.kicad_sch
+source tool kicad
+source version 8.0
+symbol Amplifier_Operational:LM358 description "Low-power, dual operational amplifiers"
+symbol Amplifier_Operational:LM358 field Description "Low-power, dual operational amplifiers"
+symbol Amplifier_Operational:LM358 field Reference U
+symbol Amplifier_Operational:LM358 field Value LM358
+symbol Amplifier_Operational:LM358 hash d83eba24a81318bd
+symbol Amplifier_Operational:LM358 pin 1 unit 1 body 1 name "" type output style line
+symbol Amplifier_Operational:LM358 pin 2 unit 1 body 1 name - type input style line
+symbol Amplifier_Operational:LM358 pin 3 unit 1 body 1 name + type input style line
+symbol Amplifier_Operational:LM358 pin 4 unit 3 body 1 name V- type power_in style line
+symbol Amplifier_Operational:LM358 pin 5 unit 2 body 1 name + type input style line
+symbol Amplifier_Operational:LM358 pin 6 unit 2 body 1 name - type input style line
+symbol Amplifier_Operational:LM358 pin 7 unit 2 body 1 name "" type output style line
+symbol Amplifier_Operational:LM358 pin 8 unit 3 body 1 name V+ type power_in style line
+symbol Amplifier_Operational:LM358 units 3
+symbol Amplifier_Operational:OPA340NA description "Single rail-to-rail CMOS operational amplifier"
+symbol Amplifier_Operational:OPA340NA field Description "Single rail-to-rail CMOS operational amplifier"
+symbol Amplifier_Operational:OPA340NA field Reference U
+symbol Amplifier_Operational:OPA340NA field Value OPA340NA
+symbol Amplifier_Operational:OPA340NA hash 60ac319d1d9cb8f2
+symbol Amplifier_Operational:OPA340NA pin 1 unit 1 body 1 name "" type output style line
+symbol Amplifier_Operational:OPA340NA pin 2 unit 1 body 1 name V- type power_in style line
+symbol Amplifier_Operational:OPA340NA pin 3 unit 1 body 1 name + type input style line
+symbol Amplifier_Operational:OPA340NA pin 4 unit 1 body 1 name - type input style line
+symbol Amplifier_Operational:OPA340NA pin 5 unit 1 body 1 name V+ type power_in style line
+symbol Amplifier_Operational:OPA340NA units 1
+symbol Connector_Generic:Conn_01x02 description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 0711e142aa29a066
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Connector_Generic:Conn_01x03 description "Generic connector"
+symbol Connector_Generic:Conn_01x03 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x03 field Reference J
+symbol Connector_Generic:Conn_01x03 field Value Conn_01x03
+symbol Connector_Generic:Conn_01x03 hash 674cec87f5e4478a
+symbol Connector_Generic:Conn_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x03 units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Transistor_FET:2N7002 description "N-Channel MOSFET"
+symbol Transistor_FET:2N7002 field Description "N-Channel MOSFET"
+symbol Transistor_FET:2N7002 field Reference Q
+symbol Transistor_FET:2N7002 field Value 2N7002
+symbol Transistor_FET:2N7002 hash 3666a4680b5e54ae
+symbol Transistor_FET:2N7002 pin 1 unit 1 body 1 name G type input style line
+symbol Transistor_FET:2N7002 pin 2 unit 1 body 1 name S type passive style line
+symbol Transistor_FET:2N7002 pin 3 unit 1 body 1 name D type passive style line
+symbol Transistor_FET:2N7002 units 1
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

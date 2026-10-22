@@ -173,6 +173,10 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
         self.subject(Subject::Pin(b, p))
     }
 
+    pub fn pins(self, pins: impl IntoIterator<Item = erc_model::PinId>) -> Self {
+        pins.into_iter().fold(self, |f, p| f.pin(p))
+    }
+
     pub fn message(mut self, m: impl Into<String>) -> Self {
         self.message = m.into();
         self

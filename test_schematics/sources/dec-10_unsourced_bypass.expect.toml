@@ -1,6 +1,18 @@
 # What better_erc finds on dec-10_unsourced_bypass.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
 
 [[finding]]
+check = "ANA-11"
+subjects = ["part U1", "pin U1.3"]
+
+[[finding]]
+check = "ANA-11"
+subjects = ["part U2", "pin U2.3"]
+
+[[finding]]
+check = "ANA-11"
+subjects = ["part U3", "pin U3.3"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +5V0_FLT"]
 
