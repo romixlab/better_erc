@@ -1,0 +1,94 @@
+board sample
+fp R1 field Mpn1 = X @ pcb sample.kicad_pcb
+fp R1 gfx B.CrtYd width 0.05 rect 99,49 101,51
+fp R1 gfx B.SilkS width 0.12 arc 0,0 0.000001,0.000001 0.000002,0
+fp R1 lib R:R_0603 value 10k side back at 100,50 rot 180 mount smd dnp
+fp R1 model ${KICAD9_3DMODEL_DIR}/R.step
+fp R1 text B.SilkS R1 at 100,48 size 1 mirrored
+gfx Edge.Cuts width 0.05 circle 50,50 40
+label "/Power supply/" hierarchical VIN at 1,2 shape input net "/Power supply/VIN"
+label / directive Netclass=Power at 3,5 dangling field Netclass Power
+label / sheet_pin VIN at 3,4 shape input child "/Power supply/" net "/Power supply/VIN"
+layer 0 F.Cu signal user Top
+layout file sample.kicad_pcb thickness 1.6
+nc "/Power supply/" at 5,5 pin R1 2
+net "/Power supply/VIN" class = Power @ sch root.kicad_sch
+net "/Power supply/VIN" kind named
+net GND kind power
+netclass Power
+netclass Power param track_width = 0.5 @ pro s.kicad_pro
+netclass Power pattern +*
+pad R1 1 kind smd shape roundrect at 99.2,50 rot 180 size 0.8,0.95 layers B.Cu,B.Paste,B.Mask net "/Power supply/VIN" prop pad_prop_testpoint ptype passive paste -0.05
+pad R1 1 prim B.Cu width 0 filled poly 0,0 0.000001,0 0,0.000001
+pad R1 2 kind smd shape roundrect at 99.2,50 rot 180 size 0.8,0.95 layers B.Cu,B.Paste,B.Mask net GND prop pad_prop_testpoint ptype passive paste -0.05
+pad R1 2 prim B.Cu width 0 filled poly 0,0 0.000001,0 0,0.000001
+part R1 field Mpn1 = RC0603FR-0710KL @ manual Roman rank 950 at 2026-10-22T00:00:00Z note "checked on the reel"
+part R1 field Mpn1 = RC0603FR-0710KL @ sch power.kicad_sch
+part R1 field Value = 10k @ sch power.kicad_sch
+part R1 flag dnp = no @ sch power.kicad_sch
+part R1 lib Device:R sheet "/Power supply/" symbol Device:R
+part R1 unit 1 sheet "/Power supply/" uuid u0 at 10.16,20.32 rot 90 mirror x
+part R1 value = qty 10000 ohm @ derived value-as-class note "resistor by symbol"
+part R1 value = text 10k @ sch power.kicad_sch
+part R1 variant Plus
+part R1 variant Plus field Mpn1 = other @ sch power.kicad_sch
+part R1 variant Plus flag dnp = yes @ sch power.kicad_sch
+part R? #2 field Mpn1 = RC0603FR-0710KL @ manual Roman rank 950 at 2026-10-22T00:00:00Z note "checked on the reel"
+part R? #2 field Mpn1 = RC0603FR-0710KL @ sch power.kicad_sch
+part R? #2 field Value = 10k @ sch power.kicad_sch
+part R? #2 flag dnp = no @ sch power.kicad_sch
+part R? #2 lib Device:R sheet "/Power supply/" symbol Device:R
+part R? #2 unit 1 sheet "/Power supply/" uuid u2 at 10.16,20.32 rot 90 mirror x
+part R? #2 value = qty 10000 ohm @ derived value-as-class note "resistor by symbol"
+part R? #2 value = text 10k @ sch power.kicad_sch
+part R? #2 variant Plus
+part R? #2 variant Plus field Mpn1 = other @ sch power.kicad_sch
+part R? #2 variant Plus flag dnp = yes @ sch power.kicad_sch
+part R? field Mpn1 = RC0603FR-0710KL @ manual Roman rank 950 at 2026-10-22T00:00:00Z note "checked on the reel"
+part R? field Mpn1 = RC0603FR-0710KL @ sch power.kicad_sch
+part R? field Value = 10k @ sch power.kicad_sch
+part R? flag dnp = no @ sch power.kicad_sch
+part R? lib Device:R sheet "/Power supply/" symbol Device:R
+part R? unit 1 sheet "/Power supply/" uuid u1 at 10.16,20.32 rot 90 mirror x
+part R? value = qty 10000 ohm @ derived value-as-class note "resistor by symbol"
+part R? value = text 10k @ sch power.kicad_sch
+part R? variant Plus
+part R? variant Plus field Mpn1 = other @ sch power.kicad_sch
+part R? variant Plus flag dnp = yes @ sch power.kicad_sch
+pcbnet "/Power supply/VIN"
+pcbnet GND
+pin R1 1 name ~ unit 1 net "/Power supply/VIN"
+pin R1 1 type = passive @ sch power.kicad_sch
+pin R1 2 name ~ unit 1 net GND
+pin R1 2 type = passive @ sch power.kicad_sch
+pin R? #2 1 name ~ unit 1 net "/Power supply/VIN"
+pin R? #2 1 type = passive @ sch power.kicad_sch
+pin R? #2 2 name ~ unit 1 net GND
+pin R? #2 2 type = passive @ sch power.kicad_sch
+pin R? 1 name ~ unit 1 net "/Power supply/VIN"
+pin R? 1 type = passive @ sch power.kicad_sch
+pin R? 2 name ~ unit 1 net GND
+pin R? 2 type = passive @ sch power.kicad_sch
+setting textvar REV = A @ pro s.kicad_pro
+setup pad_to_mask_clearance 0
+sheet "/Power supply/" name "Power supply" file power.kicad_sch uuid /aaaa/bbbb page 2
+sheet / name "" file root.kicad_sch uuid /aaaa page 1
+source file power.kicad_sch
+source file root.kicad_sch
+source tool kicad
+source version 10.0
+stackup 0 "dielectric 1" core thickness 1.51 material FR4 er 4.5
+symbol Device:R description Resistor
+symbol Device:R field Value R
+symbol Device:R fp-filter R_*
+symbol Device:R hash 1a2b
+symbol Device:R jumper-group 1 2
+symbol Device:R keywords "R res"
+symbol Device:R pin 1 unit 0 body 0 name ~ type passive style line
+symbol Device:R pin 2 unit 0 body 0 alt "ALT \"two\"" type output style inverted
+symbol Device:R pin 2 unit 0 body 0 name ~ type passive style line
+symbol Device:R units 1
+track F.Cu 1,1 2,1 width 0.25 net GND
+variant Plus description "with the extras"
+via at 2,1 size 0.6 drill 0.3 layers F.Cu,B.Cu kind through net GND
+zone net GND layers B.Cu priority 1 connect thermal clearance 0.2 min-thickness 0.25 thermal-gap 0.5 thermal-bridge 0.5 filled outline 0,0 0.00001,0 0.00001,0.00001

@@ -1,0 +1,16 @@
+[package]
+name = "erc_model"
+description = "better_erc board model: arena-indexed parts, pins, nets, sheets, variants and layout, every fact with its provenance"
+authors.workspace = true
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+include.workspace = true
+
+[features]
+default = ["fs"]
+# Reading a project from a directory (`DirFiles`); off for builds without a file system (wasm)
+fs = []
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }

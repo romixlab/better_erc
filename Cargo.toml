@@ -18,6 +18,7 @@ members = [
     "ecad_compare",
     "ecad_file_format",
     "erc_core",
+    "erc_model",
     "test_schematics/generate_netlists",
 ]
 
