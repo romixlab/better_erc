@@ -33,10 +33,10 @@ mod i2c;
 mod io;
 #[path = "lib/mod.rs"]
 mod library;
-mod name;
-mod short;
 mod logic;
 mod mux;
+mod name;
+mod short;
 mod test;
 #[cfg(test)]
 mod testing;
