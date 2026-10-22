@@ -1,0 +1,145 @@
+board short-7_shorted_ios
+label / local DATA at 20.32,38.1 net /DATA
+label / local DATA at 60.96,38.1 net /DATA
+label / local DATA at 101.6,38.1 net /DATA
+label / local IN at 101.6,35.56 net /IN
+label / local IN at 142.24,30.48 net /IN
+label / local IN at 193.04,30.48 net /IN
+label / local SPI_SCK at 20.32,35.56 net /SPI_SCK
+label / local SPI_SCK at 60.96,35.56 net /SPI_SCK
+label / power +3V3 at 20.32,30.48 net +3V3
+label / power +3V3 at 60.96,30.48 net +3V3
+label / power +3V3 at 101.6,30.48 net +3V3
+label / power GND at 20.32,33.02 net GND
+label / power GND at 60.96,33.02 net GND
+label / power GND at 101.6,33.02 net GND
+net +3V3 class = Default @ sch short-7_shorted_ios.kicad_sch note "effective net class"
+net +3V3 kind power
+net /DATA class = Default @ sch short-7_shorted_ios.kicad_sch note "effective net class"
+net /DATA kind named
+net /IN class = Default @ sch short-7_shorted_ios.kicad_sch note "effective net class"
+net /IN kind named
+net /SPI_SCK class = Default @ sch short-7_shorted_ios.kicad_sch note "effective net class"
+net /SPI_SCK kind named
+net GND class = Default @ sch short-7_shorted_ios.kicad_sch note "effective net class"
+net GND kind power
+part J1 field Value = Conn @ sch short-7_shorted_ios.kicad_sch
+part J1 flag dnp = no @ sch short-7_shorted_ios.kicad_sch
+part J1 flag exclude_from_sim = no @ sch short-7_shorted_ios.kicad_sch
+part J1 flag in_bom = yes @ sch short-7_shorted_ios.kicad_sch
+part J1 flag on_board = yes @ sch short-7_shorted_ios.kicad_sch
+part J1 lib Connector_Generic:Conn_01x01 sheet / symbol Connector_Generic:Conn_01x01
+part J1 unit 1 sheet / uuid 5e000700-0000-4000-8000-000000000022 line 150 at 152.4,30.48 rot 0
+part J1 value = text Conn @ sch short-7_shorted_ios.kicad_sch note "from the Value field"
+part TP1 field Value = TP @ sch short-7_shorted_ios.kicad_sch
+part TP1 flag dnp = no @ sch short-7_shorted_ios.kicad_sch
+part TP1 flag exclude_from_sim = no @ sch short-7_shorted_ios.kicad_sch
+part TP1 flag in_bom = yes @ sch short-7_shorted_ios.kicad_sch
+part TP1 flag on_board = yes @ sch short-7_shorted_ios.kicad_sch
+part TP1 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP1 unit 1 sheet / uuid 5e000700-0000-4000-8000-000000000025 line 158 at 193.04,30.48 rot 0
+part TP1 value = text TP @ sch short-7_shorted_ios.kicad_sch note "from the Value field"
+part U1 field Value = MCU @ sch short-7_shorted_ios.kicad_sch
+part U1 flag dnp = no @ sch short-7_shorted_ios.kicad_sch
+part U1 flag exclude_from_sim = no @ sch short-7_shorted_ios.kicad_sch
+part U1 flag in_bom = yes @ sch short-7_shorted_ios.kicad_sch
+part U1 flag on_board = yes @ sch short-7_shorted_ios.kicad_sch
+part U1 lib MCU_Fixture:MCU sheet / symbol MCU_Fixture:MCU
+part U1 unit 1 sheet / uuid 5e000700-0000-4000-8000-000000000001 line 72 at 30.48,30.48 rot 0
+part U1 value = text MCU @ sch short-7_shorted_ios.kicad_sch note "from the Value field"
+part U2 field Value = MCU @ sch short-7_shorted_ios.kicad_sch
+part U2 flag dnp = no @ sch short-7_shorted_ios.kicad_sch
+part U2 flag exclude_from_sim = no @ sch short-7_shorted_ios.kicad_sch
+part U2 flag in_bom = yes @ sch short-7_shorted_ios.kicad_sch
+part U2 flag on_board = yes @ sch short-7_shorted_ios.kicad_sch
+part U2 lib MCU_Fixture:MCU sheet / symbol MCU_Fixture:MCU
+part U2 unit 1 sheet / uuid 5e000700-0000-4000-8000-00000000000c line 98 at 71.12,30.48 rot 0
+part U2 value = text MCU @ sch short-7_shorted_ios.kicad_sch note "from the Value field"
+part U3 field Value = BUF @ sch short-7_shorted_ios.kicad_sch
+part U3 flag dnp = no @ sch short-7_shorted_ios.kicad_sch
+part U3 flag exclude_from_sim = no @ sch short-7_shorted_ios.kicad_sch
+part U3 flag in_bom = yes @ sch short-7_shorted_ios.kicad_sch
+part U3 flag on_board = yes @ sch short-7_shorted_ios.kicad_sch
+part U3 lib Fixture:BUF sheet / symbol Fixture:BUF
+part U3 unit 1 sheet / uuid 5e000700-0000-4000-8000-000000000017 line 124 at 111.76,30.48 rot 0
+part U3 value = text BUF @ sch short-7_shorted_ios.kicad_sch note "from the Value field"
+pin J1 1 name Pin_1 unit 1 net /IN
+pin J1 1 type = passive @ sch short-7_shorted_ios.kicad_sch
+pin TP1 1 name 1 unit 1 net /IN
+pin TP1 1 type = passive @ sch short-7_shorted_ios.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch short-7_shorted_ios.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch short-7_shorted_ios.kicad_sch
+pin U1 3 name PA5 unit 1 net /SPI_SCK
+pin U1 3 type = bidirectional @ sch short-7_shorted_ios.kicad_sch
+pin U1 4 name PB3 unit 1 net /DATA
+pin U1 4 type = bidirectional @ sch short-7_shorted_ios.kicad_sch
+pin U2 1 name VDD unit 1 net +3V3
+pin U2 1 type = power_in @ sch short-7_shorted_ios.kicad_sch
+pin U2 2 name VSS unit 1 net GND
+pin U2 2 type = power_in @ sch short-7_shorted_ios.kicad_sch
+pin U2 3 name PA5 unit 1 net /SPI_SCK
+pin U2 3 type = bidirectional @ sch short-7_shorted_ios.kicad_sch
+pin U2 4 name PB3 unit 1 net /DATA
+pin U2 4 type = bidirectional @ sch short-7_shorted_ios.kicad_sch
+pin U3 1 name VCC unit 1 net +3V3
+pin U3 1 type = power_in @ sch short-7_shorted_ios.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch short-7_shorted_ios.kicad_sch
+pin U3 3 name A unit 1 net /IN
+pin U3 3 type = input @ sch short-7_shorted_ios.kicad_sch
+pin U3 4 name Y unit 1 net /DATA
+pin U3 4 type = output @ sch short-7_shorted_ios.kicad_sch
+sheet / name "" file short-7_shorted_ios.kicad_sch uuid /
+source file short-7_shorted_ios.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:TestPoint description "test point"
+symbol Connector:TestPoint field Description "test point"
+symbol Connector:TestPoint field Reference TP
+symbol Connector:TestPoint field Value TestPoint
+symbol Connector:TestPoint hash 628289b26f78f9ac
+symbol Connector:TestPoint pin 1 unit 1 body 1 name 1 type passive style line
+symbol Connector:TestPoint units 1
+symbol Connector_Generic:Conn_01x01 description "Generic connector"
+symbol Connector_Generic:Conn_01x01 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x01 field Reference J
+symbol Connector_Generic:Conn_01x01 field Value Conn_01x01
+symbol Connector_Generic:Conn_01x01 hash 04374e317a7b1a77
+symbol Connector_Generic:Conn_01x01 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x01 units 1
+symbol Fixture:BUF description Buffer
+symbol Fixture:BUF field Description Buffer
+symbol Fixture:BUF field Reference U
+symbol Fixture:BUF field Value BUF
+symbol Fixture:BUF hash 4b5a3334858c61fb
+symbol Fixture:BUF pin 1 unit 1 body 1 name VCC type power_in style line
+symbol Fixture:BUF pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:BUF pin 3 unit 1 body 1 name A type input style line
+symbol Fixture:BUF pin 4 unit 1 body 1 name Y type output style line
+symbol Fixture:BUF units 1
+symbol MCU_Fixture:MCU description Microcontroller
+symbol MCU_Fixture:MCU field Description Microcontroller
+symbol MCU_Fixture:MCU field Reference U
+symbol MCU_Fixture:MCU field Value MCU
+symbol MCU_Fixture:MCU hash bcf1f9db81a5d1fa
+symbol MCU_Fixture:MCU pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU pin 3 unit 1 body 1 name PA5 type bidirectional style line
+symbol MCU_Fixture:MCU pin 4 unit 1 body 1 name PB3 type bidirectional style line
+symbol MCU_Fixture:MCU units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

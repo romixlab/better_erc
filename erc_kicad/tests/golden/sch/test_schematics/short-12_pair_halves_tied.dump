@@ -1,0 +1,230 @@
+board short-12_pair_halves_tied
+label / local ETH_RX at 101.6,33.02 net /ETH_RX
+label / local ETH_RX at 142.24,35.56 net /ETH_RX
+label / local ETH_RX_SPARE at 142.24,38.1 net /ETH_RX_SPARE
+label / local ETH_RX_SPARE at 233.68,30.48 net /ETH_RX_SPARE
+label / local ETH_TX_N at 101.6,30.48 net /ETH_TX_N
+label / local ETH_TX_P at 101.6,30.48 net /ETH_TX_N
+label / local ETH_TX_P at 142.24,30.48 net /ETH_TX_N
+label / local ETH_TX_SPARE at 142.24,33.02 net /ETH_TX_SPARE
+label / local ETH_TX_SPARE at 193.04,30.48 net /ETH_TX_SPARE
+label / local USB2_N at 264.16,33.02 net /USB2_N
+label / local USB2_N at 304.8,33.02 net /USB2_N
+label / local USB2_P at 264.16,30.48 net /USB2_P
+label / local USB2_P at 304.8,35.56 net /USB2_P
+label / local USB_D_N at 60.96,33.02 net /USB_D_N
+label / local USB_D_P at 20.32,30.48 net /USB_D_P
+label / local USB_D_P at 20.32,33.02 net /USB_D_P
+label / local USB_D_P at 60.96,35.56 net /USB_D_P
+label / power +3V3 at 20.32,35.56 net +3V3
+label / power +3V3 at 264.16,35.56 net +3V3
+label / power GND at 20.32,38.1 net GND
+label / power GND at 60.96,38.1 net GND
+label / power GND at 264.16,38.1 net GND
+label / power GND at 304.8,38.1 net GND
+label / power VBUS at 60.96,30.48 net VBUS
+label / power VBUS at 304.8,30.48 net VBUS
+net +3V3 class = Default @ sch short-12_pair_halves_tied.kicad_sch note "effective net class"
+net +3V3 kind power
+net /ETH_RX class = Default @ sch short-12_pair_halves_tied.kicad_sch note "effective net class"
+net /ETH_RX kind named
+net /ETH_RX_SPARE class = Default @ sch short-12_pair_halves_tied.kicad_sch note "effective net class"
+net /ETH_RX_SPARE kind named
+net /ETH_TX_N class = Default @ sch short-12_pair_halves_tied.kicad_sch note "effective net class"
+net /ETH_TX_N kind named
+net /ETH_TX_SPARE class = Default @ sch short-12_pair_halves_tied.kicad_sch note "effective net class"
+net /ETH_TX_SPARE kind named
+net /USB2_N class = Default @ sch short-12_pair_halves_tied.kicad_sch note "effective net class"
+net /USB2_N kind named
+net /USB2_P class = Default @ sch short-12_pair_halves_tied.kicad_sch note "effective net class"
+net /USB2_P kind named
+net /USB_D_N class = Default @ sch short-12_pair_halves_tied.kicad_sch note "effective net class"
+net /USB_D_N kind named
+net /USB_D_P class = Default @ sch short-12_pair_halves_tied.kicad_sch note "effective net class"
+net /USB_D_P kind named
+net GND class = Default @ sch short-12_pair_halves_tied.kicad_sch note "effective net class"
+net GND kind power
+net VBUS class = Default @ sch short-12_pair_halves_tied.kicad_sch note "effective net class"
+net VBUS kind power
+part J1 field Value = USB_B_Micro @ sch short-12_pair_halves_tied.kicad_sch
+part J1 flag dnp = no @ sch short-12_pair_halves_tied.kicad_sch
+part J1 flag exclude_from_sim = no @ sch short-12_pair_halves_tied.kicad_sch
+part J1 flag in_bom = yes @ sch short-12_pair_halves_tied.kicad_sch
+part J1 flag on_board = yes @ sch short-12_pair_halves_tied.kicad_sch
+part J1 lib Connector:USB_B_Micro sheet / symbol Connector:USB_B_Micro
+part J1 unit 1 sheet / uuid 5e000c00-0000-4000-8000-00000000000c line 122 at 71.12,30.48 rot 0
+part J1 value = text USB_B_Micro @ sch short-12_pair_halves_tied.kicad_sch note "from the Value field"
+part J2 field Value = Conn @ sch short-12_pair_halves_tied.kicad_sch
+part J2 flag dnp = no @ sch short-12_pair_halves_tied.kicad_sch
+part J2 flag exclude_from_sim = no @ sch short-12_pair_halves_tied.kicad_sch
+part J2 flag in_bom = yes @ sch short-12_pair_halves_tied.kicad_sch
+part J2 flag on_board = yes @ sch short-12_pair_halves_tied.kicad_sch
+part J2 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J2 unit 1 sheet / uuid 5e000c00-0000-4000-8000-000000000017 line 148 at 111.76,30.48 rot 0
+part J2 value = text Conn @ sch short-12_pair_halves_tied.kicad_sch note "from the Value field"
+part J3 field Value = USB_B_Micro @ sch short-12_pair_halves_tied.kicad_sch
+part J3 flag dnp = no @ sch short-12_pair_halves_tied.kicad_sch
+part J3 flag exclude_from_sim = no @ sch short-12_pair_halves_tied.kicad_sch
+part J3 flag in_bom = yes @ sch short-12_pair_halves_tied.kicad_sch
+part J3 flag on_board = yes @ sch short-12_pair_halves_tied.kicad_sch
+part J3 lib Connector:USB_B_Micro sheet / symbol Connector:USB_B_Micro
+part J3 unit 1 sheet / uuid 5e000c00-0000-4000-8000-000000000037 line 215 at 314.96,30.48 rot 0
+part J3 value = text USB_B_Micro @ sch short-12_pair_halves_tied.kicad_sch note "from the Value field"
+part TP1 field Value = TP @ sch short-12_pair_halves_tied.kicad_sch
+part TP1 flag dnp = no @ sch short-12_pair_halves_tied.kicad_sch
+part TP1 flag exclude_from_sim = no @ sch short-12_pair_halves_tied.kicad_sch
+part TP1 flag in_bom = yes @ sch short-12_pair_halves_tied.kicad_sch
+part TP1 flag on_board = yes @ sch short-12_pair_halves_tied.kicad_sch
+part TP1 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP1 unit 1 sheet / uuid 5e000c00-0000-4000-8000-000000000026 line 173 at 193.04,30.48 rot 0
+part TP1 value = text TP @ sch short-12_pair_halves_tied.kicad_sch note "from the Value field"
+part TP2 field Value = TP @ sch short-12_pair_halves_tied.kicad_sch
+part TP2 flag dnp = no @ sch short-12_pair_halves_tied.kicad_sch
+part TP2 flag exclude_from_sim = no @ sch short-12_pair_halves_tied.kicad_sch
+part TP2 flag in_bom = yes @ sch short-12_pair_halves_tied.kicad_sch
+part TP2 flag on_board = yes @ sch short-12_pair_halves_tied.kicad_sch
+part TP2 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP2 unit 1 sheet / uuid 5e000c00-0000-4000-8000-000000000029 line 181 at 233.68,30.48 rot 0
+part TP2 value = text TP @ sch short-12_pair_halves_tied.kicad_sch note "from the Value field"
+part U1 field Value = MCU @ sch short-12_pair_halves_tied.kicad_sch
+part U1 flag dnp = no @ sch short-12_pair_halves_tied.kicad_sch
+part U1 flag exclude_from_sim = no @ sch short-12_pair_halves_tied.kicad_sch
+part U1 flag in_bom = yes @ sch short-12_pair_halves_tied.kicad_sch
+part U1 flag on_board = yes @ sch short-12_pair_halves_tied.kicad_sch
+part U1 lib MCU_Fixture:MCU sheet / symbol MCU_Fixture:MCU
+part U1 unit 1 sheet / uuid 5e000c00-0000-4000-8000-000000000001 line 96 at 30.48,30.48 rot 0
+part U1 value = text MCU @ sch short-12_pair_halves_tied.kicad_sch note "from the Value field"
+part U2 field Value = PHY @ sch short-12_pair_halves_tied.kicad_sch
+part U2 flag dnp = no @ sch short-12_pair_halves_tied.kicad_sch
+part U2 flag exclude_from_sim = no @ sch short-12_pair_halves_tied.kicad_sch
+part U2 flag in_bom = yes @ sch short-12_pair_halves_tied.kicad_sch
+part U2 flag on_board = yes @ sch short-12_pair_halves_tied.kicad_sch
+part U2 lib Fixture:PHY sheet / symbol Fixture:PHY
+part U2 unit 1 sheet / uuid 5e000c00-0000-4000-8000-00000000001d line 159 at 152.4,30.48 rot 0
+part U2 value = text PHY @ sch short-12_pair_halves_tied.kicad_sch note "from the Value field"
+part U3 field Value = MCU @ sch short-12_pair_halves_tied.kicad_sch
+part U3 flag dnp = no @ sch short-12_pair_halves_tied.kicad_sch
+part U3 flag exclude_from_sim = no @ sch short-12_pair_halves_tied.kicad_sch
+part U3 flag in_bom = yes @ sch short-12_pair_halves_tied.kicad_sch
+part U3 flag on_board = yes @ sch short-12_pair_halves_tied.kicad_sch
+part U3 lib MCU_Fixture:MCU sheet / symbol MCU_Fixture:MCU
+part U3 unit 1 sheet / uuid 5e000c00-0000-4000-8000-00000000002c line 189 at 274.32,30.48 rot 0
+part U3 value = text MCU @ sch short-12_pair_halves_tied.kicad_sch note "from the Value field"
+pin J1 1 name VBUS unit 1 net VBUS
+pin J1 1 type = power_out @ sch short-12_pair_halves_tied.kicad_sch
+pin J1 2 name D- unit 1 net /USB_D_N
+pin J1 2 type = bidirectional @ sch short-12_pair_halves_tied.kicad_sch
+pin J1 3 name D+ unit 1 net /USB_D_P
+pin J1 3 type = bidirectional @ sch short-12_pair_halves_tied.kicad_sch
+pin J1 4 name GND unit 1 net GND
+pin J1 4 type = power_out @ sch short-12_pair_halves_tied.kicad_sch
+pin J2 1 name Pin_1 unit 1 net /ETH_TX_N
+pin J2 1 type = passive @ sch short-12_pair_halves_tied.kicad_sch
+pin J2 2 name Pin_2 unit 1 net /ETH_RX
+pin J2 2 type = passive @ sch short-12_pair_halves_tied.kicad_sch
+pin J3 1 name VBUS unit 1 net VBUS
+pin J3 1 type = power_out @ sch short-12_pair_halves_tied.kicad_sch
+pin J3 2 name D- unit 1 net /USB2_N
+pin J3 2 type = bidirectional @ sch short-12_pair_halves_tied.kicad_sch
+pin J3 3 name D+ unit 1 net /USB2_P
+pin J3 3 type = bidirectional @ sch short-12_pair_halves_tied.kicad_sch
+pin J3 4 name GND unit 1 net GND
+pin J3 4 type = power_out @ sch short-12_pair_halves_tied.kicad_sch
+pin TP1 1 name 1 unit 1 net /ETH_TX_SPARE
+pin TP1 1 type = passive @ sch short-12_pair_halves_tied.kicad_sch
+pin TP2 1 name 1 unit 1 net /ETH_RX_SPARE
+pin TP2 1 type = passive @ sch short-12_pair_halves_tied.kicad_sch
+pin U1 1 name USB_DP unit 1 net /USB_D_P
+pin U1 1 type = bidirectional @ sch short-12_pair_halves_tied.kicad_sch
+pin U1 2 name USB_DM unit 1 net /USB_D_P
+pin U1 2 type = bidirectional @ sch short-12_pair_halves_tied.kicad_sch
+pin U1 3 name VDD unit 1 net +3V3
+pin U1 3 type = power_in @ sch short-12_pair_halves_tied.kicad_sch
+pin U1 4 name VSS unit 1 net GND
+pin U1 4 type = power_in @ sch short-12_pair_halves_tied.kicad_sch
+pin U2 1 name TD+ unit 1 net /ETH_TX_N
+pin U2 1 type = bidirectional @ sch short-12_pair_halves_tied.kicad_sch
+pin U2 2 name TD- unit 1 net /ETH_TX_SPARE
+pin U2 2 type = bidirectional @ sch short-12_pair_halves_tied.kicad_sch
+pin U2 3 name RD+ unit 1 net /ETH_RX
+pin U2 3 type = input @ sch short-12_pair_halves_tied.kicad_sch
+pin U2 4 name RD- unit 1 net /ETH_RX_SPARE
+pin U2 4 type = input @ sch short-12_pair_halves_tied.kicad_sch
+pin U3 1 name USB_DP unit 1 net /USB2_P
+pin U3 1 type = bidirectional @ sch short-12_pair_halves_tied.kicad_sch
+pin U3 2 name USB_DM unit 1 net /USB2_N
+pin U3 2 type = bidirectional @ sch short-12_pair_halves_tied.kicad_sch
+pin U3 3 name VDD unit 1 net +3V3
+pin U3 3 type = power_in @ sch short-12_pair_halves_tied.kicad_sch
+pin U3 4 name VSS unit 1 net GND
+pin U3 4 type = power_in @ sch short-12_pair_halves_tied.kicad_sch
+sheet / name "" file short-12_pair_halves_tied.kicad_sch uuid /
+source file short-12_pair_halves_tied.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:TestPoint description "test point"
+symbol Connector:TestPoint field Description "test point"
+symbol Connector:TestPoint field Reference TP
+symbol Connector:TestPoint field Value TestPoint
+symbol Connector:TestPoint hash 628289b26f78f9ac
+symbol Connector:TestPoint pin 1 unit 1 body 1 name 1 type passive style line
+symbol Connector:TestPoint units 1
+symbol Connector:USB_B_Micro description "USB Micro Type B connector"
+symbol Connector:USB_B_Micro field Description "USB Micro Type B connector"
+symbol Connector:USB_B_Micro field Reference J
+symbol Connector:USB_B_Micro field Value USB_B_Micro
+symbol Connector:USB_B_Micro hash 14afe3ee176c282f
+symbol Connector:USB_B_Micro pin 1 unit 1 body 1 name VBUS type power_out style line
+symbol Connector:USB_B_Micro pin 2 unit 1 body 1 name D- type bidirectional style line
+symbol Connector:USB_B_Micro pin 3 unit 1 body 1 name D+ type bidirectional style line
+symbol Connector:USB_B_Micro pin 4 unit 1 body 1 name GND type power_out style line
+symbol Connector:USB_B_Micro units 1
+symbol Connector_Generic:Conn_01x02 description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash ca21e152b9043025
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Fixture:PHY description "Ethernet PHY"
+symbol Fixture:PHY field Description "Ethernet PHY"
+symbol Fixture:PHY field Reference U
+symbol Fixture:PHY field Value PHY
+symbol Fixture:PHY hash df586812d4492239
+symbol Fixture:PHY pin 1 unit 1 body 1 name TD+ type bidirectional style line
+symbol Fixture:PHY pin 2 unit 1 body 1 name TD- type bidirectional style line
+symbol Fixture:PHY pin 3 unit 1 body 1 name RD+ type input style line
+symbol Fixture:PHY pin 4 unit 1 body 1 name RD- type input style line
+symbol Fixture:PHY units 1
+symbol MCU_Fixture:MCU description Microcontroller
+symbol MCU_Fixture:MCU field Description Microcontroller
+symbol MCU_Fixture:MCU field Reference U
+symbol MCU_Fixture:MCU field Value MCU
+symbol MCU_Fixture:MCU hash c10a3609d7e5282e
+symbol MCU_Fixture:MCU pin 1 unit 1 body 1 name USB_DP type bidirectional style line
+symbol MCU_Fixture:MCU pin 2 unit 1 body 1 name USB_DM type bidirectional style line
+symbol MCU_Fixture:MCU pin 3 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU pin 4 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global
+symbol power:VBUS description "Power symbol VBUS"
+symbol power:VBUS field Description "Power symbol VBUS"
+symbol power:VBUS field Reference "#PWR"
+symbol power:VBUS field Value VBUS
+symbol power:VBUS hash 296adfea007b1a14
+symbol power:VBUS pin 1 unit 1 body 1 name VBUS type power_in style line
+symbol power:VBUS units 1 power global

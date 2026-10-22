@@ -1,0 +1,13 @@
+# What better_erc finds on short-5_supply_pins_swapped.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "SHORT-5"
+subjects = ["net +3V3", "part U2", "pin U2.2"]
+
+[[finding]]
+check = "SHORT-5"
+subjects = ["net GND", "part U1", "pin U1.1"]
+
+[[finding]]
+check = "WIRE-14"
+subjects = ["net +3V3", "part U2", "pin U2.2"]

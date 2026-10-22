@@ -1,0 +1,9 @@
+# What better_erc finds on short-2_name_collision.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "SHORT-2"
+subjects = ["net /SDA", "part U1"]
+
+[[finding]]
+check = "SHORT-2"
+subjects = ["net VCCA", "part R1", "part R2"]

@@ -1,0 +1,17 @@
+# What better_erc finds on short-1_shunted_parts.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board short-1_shunted_parts"]
+
+[[finding]]
+check = "SHORT-1"
+subjects = ["net /VBAT", "part R12"]
+
+[[finding]]
+check = "SHORT-1"
+subjects = ["net GND", "part Q2"]
+
+[[finding]]
+check = "SHORT-1"
+subjects = ["net Net-(Q1-G)", "part Q1"]

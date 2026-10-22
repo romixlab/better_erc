@@ -1,0 +1,137 @@
+board short-11_output_conflict
+label / local REF_CLK at 20.32,35.56 net /REF_CLK
+label / local REF_CLK at 101.6,30.48 net /REF_CLK
+label / local REF_CLK at 142.24,30.48 net /REF_CLK
+label / local REF_CLK2 at 60.96,35.56 net /REF_CLK2
+label / local REF_CLK2 at 101.6,33.02 net /REF_CLK2
+label / local REF_CLK2 at 142.24,33.02 net /REF_CLK2
+label / power +3V3 at 20.32,30.48 net +3V3
+label / power +3V3 at 20.32,38.1 net +3V3
+label / power +3V3 at 60.96,30.48 net +3V3
+label / power +3V3 at 60.96,38.1 net +3V3
+label / power +3V3 at 101.6,35.56 net +3V3
+label / power +3V3 at 142.24,35.56 net +3V3
+label / power GND at 20.32,33.02 net GND
+label / power GND at 60.96,33.02 net GND
+label / power GND at 101.6,38.1 net GND
+label / power GND at 142.24,38.1 net GND
+net +3V3 class = Default @ sch short-11_output_conflict.kicad_sch note "effective net class"
+net +3V3 kind power
+net /REF_CLK class = Default @ sch short-11_output_conflict.kicad_sch note "effective net class"
+net /REF_CLK kind named
+net /REF_CLK2 class = Default @ sch short-11_output_conflict.kicad_sch note "effective net class"
+net /REF_CLK2 kind named
+net GND class = Default @ sch short-11_output_conflict.kicad_sch note "effective net class"
+net GND kind power
+part U1 field Value = MCU @ sch short-11_output_conflict.kicad_sch
+part U1 flag dnp = no @ sch short-11_output_conflict.kicad_sch
+part U1 flag exclude_from_sim = no @ sch short-11_output_conflict.kicad_sch
+part U1 flag in_bom = yes @ sch short-11_output_conflict.kicad_sch
+part U1 flag on_board = yes @ sch short-11_output_conflict.kicad_sch
+part U1 lib MCU_Fixture:MCU sheet / symbol MCU_Fixture:MCU
+part U1 unit 1 sheet / uuid 5e000b00-0000-4000-8000-000000000019 line 129 at 111.76,30.48 rot 0
+part U1 value = text MCU @ sch short-11_output_conflict.kicad_sch note "from the Value field"
+part U2 field Value = PHY @ sch short-11_output_conflict.kicad_sch
+part U2 flag dnp = no @ sch short-11_output_conflict.kicad_sch
+part U2 flag exclude_from_sim = no @ sch short-11_output_conflict.kicad_sch
+part U2 flag in_bom = yes @ sch short-11_output_conflict.kicad_sch
+part U2 flag on_board = yes @ sch short-11_output_conflict.kicad_sch
+part U2 lib Fixture:PHY sheet / symbol Fixture:PHY
+part U2 unit 1 sheet / uuid 5e000b00-0000-4000-8000-000000000024 line 155 at 152.4,30.48 rot 0
+part U2 value = text PHY @ sch short-11_output_conflict.kicad_sch note "from the Value field"
+part X1 field Value = 50MHz @ sch short-11_output_conflict.kicad_sch
+part X1 flag dnp = no @ sch short-11_output_conflict.kicad_sch
+part X1 flag exclude_from_sim = no @ sch short-11_output_conflict.kicad_sch
+part X1 flag in_bom = yes @ sch short-11_output_conflict.kicad_sch
+part X1 flag on_board = yes @ sch short-11_output_conflict.kicad_sch
+part X1 lib Oscillator:XO sheet / symbol Oscillator:XO
+part X1 unit 1 sheet / uuid 5e000b00-0000-4000-8000-000000000001 line 65 at 30.48,30.48 rot 0
+part X1 value = qty 50000000 Hz @ sch short-11_output_conflict.kicad_sch note "from the Value field"
+part X2 field Value = 50MHz @ sch short-11_output_conflict.kicad_sch
+part X2 flag dnp = yes @ sch short-11_output_conflict.kicad_sch
+part X2 flag exclude_from_sim = no @ sch short-11_output_conflict.kicad_sch
+part X2 flag in_bom = yes @ sch short-11_output_conflict.kicad_sch
+part X2 flag on_board = yes @ sch short-11_output_conflict.kicad_sch
+part X2 lib Oscillator:XO sheet / symbol Oscillator:XO
+part X2 unit 1 sheet / uuid 5e000b00-0000-4000-8000-00000000000d line 97 at 71.12,30.48 rot 0
+part X2 value = qty 50000000 Hz @ sch short-11_output_conflict.kicad_sch note "from the Value field"
+pin U1 1 name MCO1 unit 1 net /REF_CLK
+pin U1 1 type = output @ sch short-11_output_conflict.kicad_sch
+pin U1 2 name MCO2 unit 1 net /REF_CLK2
+pin U1 2 type = output @ sch short-11_output_conflict.kicad_sch
+pin U1 3 name VDD unit 1 net +3V3
+pin U1 3 type = power_in @ sch short-11_output_conflict.kicad_sch
+pin U1 4 name VSS unit 1 net GND
+pin U1 4 type = power_in @ sch short-11_output_conflict.kicad_sch
+pin U2 1 name REFCLK unit 1 net /REF_CLK
+pin U2 1 type = input @ sch short-11_output_conflict.kicad_sch
+pin U2 2 name REFCLK2 unit 1 net /REF_CLK2
+pin U2 2 type = input @ sch short-11_output_conflict.kicad_sch
+pin U2 3 name VDD unit 1 net +3V3
+pin U2 3 type = power_in @ sch short-11_output_conflict.kicad_sch
+pin U2 4 name GND unit 1 net GND
+pin U2 4 type = power_in @ sch short-11_output_conflict.kicad_sch
+pin X1 1 name EN unit 1 net +3V3
+pin X1 1 type = input @ sch short-11_output_conflict.kicad_sch
+pin X1 2 name GND unit 1 net GND
+pin X1 2 type = power_in @ sch short-11_output_conflict.kicad_sch
+pin X1 3 name OUT unit 1 net /REF_CLK
+pin X1 3 type = output @ sch short-11_output_conflict.kicad_sch
+pin X1 4 name VDD unit 1 net +3V3
+pin X1 4 type = power_in @ sch short-11_output_conflict.kicad_sch
+pin X2 1 name EN unit 1 net +3V3
+pin X2 1 type = input @ sch short-11_output_conflict.kicad_sch
+pin X2 2 name GND unit 1 net GND
+pin X2 2 type = power_in @ sch short-11_output_conflict.kicad_sch
+pin X2 3 name OUT unit 1 net /REF_CLK2
+pin X2 3 type = output @ sch short-11_output_conflict.kicad_sch
+pin X2 4 name VDD unit 1 net +3V3
+pin X2 4 type = power_in @ sch short-11_output_conflict.kicad_sch
+sheet / name "" file short-11_output_conflict.kicad_sch uuid /
+source file short-11_output_conflict.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:PHY description "Ethernet PHY"
+symbol Fixture:PHY field Description "Ethernet PHY"
+symbol Fixture:PHY field Reference U
+symbol Fixture:PHY field Value PHY
+symbol Fixture:PHY hash d5bcee487ce52084
+symbol Fixture:PHY pin 1 unit 1 body 1 name REFCLK type input style line
+symbol Fixture:PHY pin 2 unit 1 body 1 name REFCLK2 type input style line
+symbol Fixture:PHY pin 3 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:PHY pin 4 unit 1 body 1 name GND type power_in style line
+symbol Fixture:PHY units 1
+symbol MCU_Fixture:MCU description Microcontroller
+symbol MCU_Fixture:MCU field Description Microcontroller
+symbol MCU_Fixture:MCU field Reference U
+symbol MCU_Fixture:MCU field Value MCU
+symbol MCU_Fixture:MCU hash e4a52c553b1274ba
+symbol MCU_Fixture:MCU pin 1 unit 1 body 1 name MCO1 type output style line
+symbol MCU_Fixture:MCU pin 2 unit 1 body 1 name MCO2 type output style line
+symbol MCU_Fixture:MCU pin 3 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU pin 4 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU units 1
+symbol Oscillator:XO description "Crystal oscillator"
+symbol Oscillator:XO field Description "Crystal oscillator"
+symbol Oscillator:XO field Reference X
+symbol Oscillator:XO field Value XO
+symbol Oscillator:XO hash 2959a56a4a022f94
+symbol Oscillator:XO pin 1 unit 1 body 1 name EN type input style line
+symbol Oscillator:XO pin 2 unit 1 body 1 name GND type power_in style line
+symbol Oscillator:XO pin 3 unit 1 body 1 name OUT type output style line
+symbol Oscillator:XO pin 4 unit 1 body 1 name VDD type power_in style line
+symbol Oscillator:XO units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

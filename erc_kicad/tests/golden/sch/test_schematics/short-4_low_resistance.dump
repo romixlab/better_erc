@@ -1,0 +1,157 @@
+board short-4_low_resistance
+label / local ADC at 111.76,34.29 net /ADC
+label / local ADC at 152.4,26.67 net /ADC
+label / local ADC at 193.04,30.48 net /ADC
+label / local ADC2 at 233.68,34.29 net /ADC2
+label / local ADC2 at 274.32,26.67 net /ADC2
+label / local ADC2 at 314.96,30.48 net /ADC2
+label / power +3V3 at 30.48,26.67 net +3V3
+label / power +3V3 at 71.12,26.67 net +3V3
+label / power +5V at 111.76,26.67 net +5V
+label / power +5V at 233.68,26.67 net +5V
+label / power GND at 30.48,34.29 net GND
+label / power GND at 71.12,34.29 net GND
+label / power GND at 152.4,34.29 net GND
+label / power GND at 274.32,34.29 net GND
+net +3V3 class = Default @ sch short-4_low_resistance.kicad_sch note "effective net class"
+net +3V3 kind power
+net +5V class = Default @ sch short-4_low_resistance.kicad_sch note "effective net class"
+net +5V kind power
+net /ADC class = Default @ sch short-4_low_resistance.kicad_sch note "effective net class"
+net /ADC kind named
+net /ADC2 class = Default @ sch short-4_low_resistance.kicad_sch note "effective net class"
+net /ADC2 kind named
+net GND class = Default @ sch short-4_low_resistance.kicad_sch note "effective net class"
+net GND kind power
+part R1 field Value = 0 @ sch short-4_low_resistance.kicad_sch
+part R1 flag dnp = no @ sch short-4_low_resistance.kicad_sch
+part R1 flag exclude_from_sim = no @ sch short-4_low_resistance.kicad_sch
+part R1 flag in_bom = yes @ sch short-4_low_resistance.kicad_sch
+part R1 flag on_board = yes @ sch short-4_low_resistance.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 5e000400-0000-4000-8000-000000000001 line 57 at 30.48,30.48 rot 0
+part R1 value = text 0 @ sch short-4_low_resistance.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch short-4_low_resistance.kicad_sch
+part R2 flag dnp = no @ sch short-4_low_resistance.kicad_sch
+part R2 flag exclude_from_sim = no @ sch short-4_low_resistance.kicad_sch
+part R2 flag in_bom = yes @ sch short-4_low_resistance.kicad_sch
+part R2 flag on_board = yes @ sch short-4_low_resistance.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 5e000400-0000-4000-8000-000000000008 line 79 at 71.12,30.48 rot 0
+part R2 value = text 10k @ sch short-4_low_resistance.kicad_sch note "from the Value field"
+part R3 field Value = 10 @ sch short-4_low_resistance.kicad_sch
+part R3 flag dnp = no @ sch short-4_low_resistance.kicad_sch
+part R3 flag exclude_from_sim = no @ sch short-4_low_resistance.kicad_sch
+part R3 flag in_bom = yes @ sch short-4_low_resistance.kicad_sch
+part R3 flag on_board = yes @ sch short-4_low_resistance.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid 5e000400-0000-4000-8000-00000000000f line 101 at 111.76,30.48 rot 0
+part R3 value = text 10 @ sch short-4_low_resistance.kicad_sch note "from the Value field"
+part R4 field Value = 10 @ sch short-4_low_resistance.kicad_sch
+part R4 flag dnp = no @ sch short-4_low_resistance.kicad_sch
+part R4 flag exclude_from_sim = no @ sch short-4_low_resistance.kicad_sch
+part R4 flag in_bom = yes @ sch short-4_low_resistance.kicad_sch
+part R4 flag on_board = yes @ sch short-4_low_resistance.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid 5e000400-0000-4000-8000-000000000015 line 117 at 152.4,30.48 rot 0
+part R4 value = text 10 @ sch short-4_low_resistance.kicad_sch note "from the Value field"
+part R6 field Value = 100k @ sch short-4_low_resistance.kicad_sch
+part R6 flag dnp = no @ sch short-4_low_resistance.kicad_sch
+part R6 flag exclude_from_sim = no @ sch short-4_low_resistance.kicad_sch
+part R6 flag in_bom = yes @ sch short-4_low_resistance.kicad_sch
+part R6 flag on_board = yes @ sch short-4_low_resistance.kicad_sch
+part R6 lib Device:R sheet / symbol Device:R
+part R6 unit 1 sheet / uuid 5e000400-0000-4000-8000-00000000001e line 141 at 233.68,30.48 rot 0
+part R6 value = text 100k @ sch short-4_low_resistance.kicad_sch note "from the Value field"
+part R7 field Value = 10k @ sch short-4_low_resistance.kicad_sch
+part R7 flag dnp = no @ sch short-4_low_resistance.kicad_sch
+part R7 flag exclude_from_sim = no @ sch short-4_low_resistance.kicad_sch
+part R7 flag in_bom = yes @ sch short-4_low_resistance.kicad_sch
+part R7 flag on_board = yes @ sch short-4_low_resistance.kicad_sch
+part R7 lib Device:R sheet / symbol Device:R
+part R7 unit 1 sheet / uuid 5e000400-0000-4000-8000-000000000024 line 157 at 274.32,30.48 rot 0
+part R7 value = text 10k @ sch short-4_low_resistance.kicad_sch note "from the Value field"
+part TP1 field Value = TP @ sch short-4_low_resistance.kicad_sch
+part TP1 flag dnp = no @ sch short-4_low_resistance.kicad_sch
+part TP1 flag exclude_from_sim = no @ sch short-4_low_resistance.kicad_sch
+part TP1 flag in_bom = yes @ sch short-4_low_resistance.kicad_sch
+part TP1 flag on_board = yes @ sch short-4_low_resistance.kicad_sch
+part TP1 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP1 unit 1 sheet / uuid 5e000400-0000-4000-8000-00000000001b line 133 at 193.04,30.48 rot 0
+part TP1 value = text TP @ sch short-4_low_resistance.kicad_sch note "from the Value field"
+part TP2 field Value = TP @ sch short-4_low_resistance.kicad_sch
+part TP2 flag dnp = no @ sch short-4_low_resistance.kicad_sch
+part TP2 flag exclude_from_sim = no @ sch short-4_low_resistance.kicad_sch
+part TP2 flag in_bom = yes @ sch short-4_low_resistance.kicad_sch
+part TP2 flag on_board = yes @ sch short-4_low_resistance.kicad_sch
+part TP2 lib Connector:TestPoint sheet / symbol Connector:TestPoint
+part TP2 unit 1 sheet / uuid 5e000400-0000-4000-8000-00000000002a line 173 at 314.96,30.48 rot 0
+part TP2 value = text TP @ sch short-4_low_resistance.kicad_sch note "from the Value field"
+pin R1 1 name "" unit 1 net +3V3
+pin R1 1 type = passive @ sch short-4_low_resistance.kicad_sch
+pin R1 2 name "" unit 1 net GND
+pin R1 2 type = passive @ sch short-4_low_resistance.kicad_sch
+pin R2 1 name "" unit 1 net +3V3
+pin R2 1 type = passive @ sch short-4_low_resistance.kicad_sch
+pin R2 2 name "" unit 1 net GND
+pin R2 2 type = passive @ sch short-4_low_resistance.kicad_sch
+pin R3 1 name "" unit 1 net +5V
+pin R3 1 type = passive @ sch short-4_low_resistance.kicad_sch
+pin R3 2 name "" unit 1 net /ADC
+pin R3 2 type = passive @ sch short-4_low_resistance.kicad_sch
+pin R4 1 name "" unit 1 net /ADC
+pin R4 1 type = passive @ sch short-4_low_resistance.kicad_sch
+pin R4 2 name "" unit 1 net GND
+pin R4 2 type = passive @ sch short-4_low_resistance.kicad_sch
+pin R6 1 name "" unit 1 net +5V
+pin R6 1 type = passive @ sch short-4_low_resistance.kicad_sch
+pin R6 2 name "" unit 1 net /ADC2
+pin R6 2 type = passive @ sch short-4_low_resistance.kicad_sch
+pin R7 1 name "" unit 1 net /ADC2
+pin R7 1 type = passive @ sch short-4_low_resistance.kicad_sch
+pin R7 2 name "" unit 1 net GND
+pin R7 2 type = passive @ sch short-4_low_resistance.kicad_sch
+pin TP1 1 name 1 unit 1 net /ADC
+pin TP1 1 type = passive @ sch short-4_low_resistance.kicad_sch
+pin TP2 1 name 1 unit 1 net /ADC2
+pin TP2 1 type = passive @ sch short-4_low_resistance.kicad_sch
+sheet / name "" file short-4_low_resistance.kicad_sch uuid /
+source file short-4_low_resistance.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector:TestPoint description "test point"
+symbol Connector:TestPoint field Description "test point"
+symbol Connector:TestPoint field Reference TP
+symbol Connector:TestPoint field Value TestPoint
+symbol Connector:TestPoint hash 628289b26f78f9ac
+symbol Connector:TestPoint pin 1 unit 1 body 1 name 1 type passive style line
+symbol Connector:TestPoint units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 7be2b59127b371a9
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

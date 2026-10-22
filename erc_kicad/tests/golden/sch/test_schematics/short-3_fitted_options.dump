@@ -1,0 +1,256 @@
+board short-3_fitted_options
+label / local A_IN at 193.04,34.29 net /A_IN
+label / local A_IN at 233.68,26.67 net /A_IN
+label / local A_IN at 274.32,26.67 net /A_IN
+label / local A_OUT at 233.68,34.29 net /A_OUT
+label / local A_OUT at 274.32,34.29 net /A_OUT
+label / local A_OUT at 314.96,26.67 net /A_OUT
+label / local FILT_IN at 30.48,34.29 net /FILT_IN
+label / local FILT_IN at 71.12,26.67 net /FILT_IN
+label / local FILT_IN at 111.76,26.67 net /FILT_IN
+label / local FILT_OUT at 71.12,34.29 net /FILT_OUT
+label / local FILT_OUT at 111.76,34.29 net /FILT_OUT
+label / local FILT_OUT at 152.4,26.67 net /FILT_OUT
+label / local SEL at 30.48,80.01 net /SEL
+label / local SEL at 71.12,72.39 net /SEL
+label / local SEL at 355.6,34.29 net /SEL
+label / local SEL2 at 111.76,80.01 net /SEL2
+label / local SEL2 at 152.4,80.01 net /SEL2
+label / local SEL2 at 193.04,72.39 net /SEL2
+label / power +3V3 at 30.48,26.67 net +3V3
+label / power +3V3 at 111.76,72.39 net +3V3
+label / power +3V3 at 193.04,26.67 net +3V3
+label / power +3V3 at 355.6,26.67 net +3V3
+label / power +5V at 30.48,72.39 net +5V
+label / power +5V at 152.4,72.39 net +5V
+label / power GND at 71.12,80.01 net GND
+label / power GND at 152.4,34.29 net GND
+label / power GND at 193.04,80.01 net GND
+label / power GND at 314.96,34.29 net GND
+net +3V3 class = Default @ sch short-3_fitted_options.kicad_sch note "effective net class"
+net +3V3 kind power
+net +5V class = Default @ sch short-3_fitted_options.kicad_sch note "effective net class"
+net +5V kind power
+net /A_IN class = Default @ sch short-3_fitted_options.kicad_sch note "effective net class"
+net /A_IN kind named
+net /A_OUT class = Default @ sch short-3_fitted_options.kicad_sch note "effective net class"
+net /A_OUT kind named
+net /FILT_IN class = Default @ sch short-3_fitted_options.kicad_sch note "effective net class"
+net /FILT_IN kind named
+net /FILT_OUT class = Default @ sch short-3_fitted_options.kicad_sch note "effective net class"
+net /FILT_OUT kind named
+net /SEL class = Default @ sch short-3_fitted_options.kicad_sch note "effective net class"
+net /SEL kind named
+net /SEL2 class = Default @ sch short-3_fitted_options.kicad_sch note "effective net class"
+net /SEL2 kind named
+net GND class = Default @ sch short-3_fitted_options.kicad_sch note "effective net class"
+net GND kind power
+part C1 field Value = 1u @ sch short-3_fitted_options.kicad_sch
+part C1 flag dnp = no @ sch short-3_fitted_options.kicad_sch
+part C1 flag exclude_from_sim = no @ sch short-3_fitted_options.kicad_sch
+part C1 flag in_bom = yes @ sch short-3_fitted_options.kicad_sch
+part C1 flag on_board = yes @ sch short-3_fitted_options.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 5e000300-0000-4000-8000-000000000011 line 94 at 152.4,30.48 rot 0
+part C1 value = text 1u @ sch short-3_fitted_options.kicad_sch note "from the Value field"
+part C2 field Value = 100n @ sch short-3_fitted_options.kicad_sch
+part C2 flag dnp = no @ sch short-3_fitted_options.kicad_sch
+part C2 flag exclude_from_sim = no @ sch short-3_fitted_options.kicad_sch
+part C2 flag in_bom = yes @ sch short-3_fitted_options.kicad_sch
+part C2 flag on_board = yes @ sch short-3_fitted_options.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid 5e000300-0000-4000-8000-000000000039 line 194 at 71.12,76.2 rot 0
+part C2 value = text 100n @ sch short-3_fitted_options.kicad_sch note "from the Value field"
+part C3 field Value = 100n @ sch short-3_fitted_options.kicad_sch
+part C3 flag dnp = no @ sch short-3_fitted_options.kicad_sch
+part C3 flag exclude_from_sim = no @ sch short-3_fitted_options.kicad_sch
+part C3 flag in_bom = yes @ sch short-3_fitted_options.kicad_sch
+part C3 flag on_board = yes @ sch short-3_fitted_options.kicad_sch
+part C3 lib Device:C sheet / symbol Device:C
+part C3 unit 1 sheet / uuid 5e000300-0000-4000-8000-00000000004b line 242 at 193.04,76.2 rot 0
+part C3 value = text 100n @ sch short-3_fitted_options.kicad_sch note "from the Value field"
+part C4 field Value = 1u @ sch short-3_fitted_options.kicad_sch
+part C4 flag dnp = no @ sch short-3_fitted_options.kicad_sch
+part C4 flag exclude_from_sim = no @ sch short-3_fitted_options.kicad_sch
+part C4 flag in_bom = yes @ sch short-3_fitted_options.kicad_sch
+part C4 flag on_board = yes @ sch short-3_fitted_options.kicad_sch
+part C4 lib Device:C sheet / symbol Device:C
+part C4 unit 1 sheet / uuid 5e000300-0000-4000-8000-000000000027 line 146 at 314.96,30.48 rot 0
+part C4 value = text 1u @ sch short-3_fitted_options.kicad_sch note "from the Value field"
+part R1 field Value = 1k @ sch short-3_fitted_options.kicad_sch
+part R1 flag dnp = no @ sch short-3_fitted_options.kicad_sch
+part R1 flag exclude_from_sim = no @ sch short-3_fitted_options.kicad_sch
+part R1 flag in_bom = yes @ sch short-3_fitted_options.kicad_sch
+part R1 flag on_board = yes @ sch short-3_fitted_options.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 5e000300-0000-4000-8000-000000000007 line 74 at 71.12,30.48 rot 0
+part R1 value = text 1k @ sch short-3_fitted_options.kicad_sch note "from the Value field"
+part R2 field Value = 0 @ sch short-3_fitted_options.kicad_sch
+part R2 flag dnp = no @ sch short-3_fitted_options.kicad_sch
+part R2 flag exclude_from_sim = no @ sch short-3_fitted_options.kicad_sch
+part R2 flag in_bom = yes @ sch short-3_fitted_options.kicad_sch
+part R2 flag on_board = yes @ sch short-3_fitted_options.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 5e000300-0000-4000-8000-00000000000c line 84 at 111.76,30.48 rot 0
+part R2 value = text 0 @ sch short-3_fitted_options.kicad_sch note "from the Value field"
+part R3 field Value = 1k @ sch short-3_fitted_options.kicad_sch
+part R3 flag dnp = no @ sch short-3_fitted_options.kicad_sch
+part R3 flag exclude_from_sim = no @ sch short-3_fitted_options.kicad_sch
+part R3 flag in_bom = yes @ sch short-3_fitted_options.kicad_sch
+part R3 flag on_board = yes @ sch short-3_fitted_options.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid 5e000300-0000-4000-8000-00000000001d line 126 at 233.68,30.48 rot 0
+part R3 value = text 1k @ sch short-3_fitted_options.kicad_sch note "from the Value field"
+part R4 field Value = 0 @ sch short-3_fitted_options.kicad_sch
+part R4 flag dnp = yes @ sch short-3_fitted_options.kicad_sch
+part R4 flag exclude_from_sim = no @ sch short-3_fitted_options.kicad_sch
+part R4 flag in_bom = yes @ sch short-3_fitted_options.kicad_sch
+part R4 flag on_board = yes @ sch short-3_fitted_options.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid 5e000300-0000-4000-8000-000000000022 line 136 at 274.32,30.48 rot 0
+part R4 value = text 0 @ sch short-3_fitted_options.kicad_sch note "from the Value field"
+part R5 field Value = 0 @ sch short-3_fitted_options.kicad_sch
+part R5 flag dnp = no @ sch short-3_fitted_options.kicad_sch
+part R5 flag exclude_from_sim = no @ sch short-3_fitted_options.kicad_sch
+part R5 flag in_bom = yes @ sch short-3_fitted_options.kicad_sch
+part R5 flag on_board = yes @ sch short-3_fitted_options.kicad_sch
+part R5 lib Device:R sheet / symbol Device:R
+part R5 unit 1 sheet / uuid 5e000300-0000-4000-8000-00000000002d line 162 at 355.6,30.48 rot 0
+part R5 value = text 0 @ sch short-3_fitted_options.kicad_sch note "from the Value field"
+part R6 field Value = 0 @ sch short-3_fitted_options.kicad_sch
+part R6 flag dnp = no @ sch short-3_fitted_options.kicad_sch
+part R6 flag exclude_from_sim = no @ sch short-3_fitted_options.kicad_sch
+part R6 flag in_bom = yes @ sch short-3_fitted_options.kicad_sch
+part R6 flag on_board = yes @ sch short-3_fitted_options.kicad_sch
+part R6 lib Device:R sheet / symbol Device:R
+part R6 unit 1 sheet / uuid 5e000300-0000-4000-8000-000000000033 line 178 at 30.48,76.2 rot 0
+part R6 value = text 0 @ sch short-3_fitted_options.kicad_sch note "from the Value field"
+part R7 field Value = 0 @ sch short-3_fitted_options.kicad_sch
+part R7 flag dnp = no @ sch short-3_fitted_options.kicad_sch
+part R7 flag exclude_from_sim = no @ sch short-3_fitted_options.kicad_sch
+part R7 flag in_bom = yes @ sch short-3_fitted_options.kicad_sch
+part R7 flag on_board = yes @ sch short-3_fitted_options.kicad_sch
+part R7 lib Device:R sheet / symbol Device:R
+part R7 unit 1 sheet / uuid 5e000300-0000-4000-8000-00000000003f line 210 at 111.76,76.2 rot 0
+part R7 value = text 0 @ sch short-3_fitted_options.kicad_sch note "from the Value field"
+part R8 field Value = 0 @ sch short-3_fitted_options.kicad_sch
+part R8 flag dnp = yes @ sch short-3_fitted_options.kicad_sch
+part R8 flag exclude_from_sim = no @ sch short-3_fitted_options.kicad_sch
+part R8 flag in_bom = yes @ sch short-3_fitted_options.kicad_sch
+part R8 flag on_board = yes @ sch short-3_fitted_options.kicad_sch
+part R8 lib Device:R sheet / symbol Device:R
+part R8 unit 1 sheet / uuid 5e000300-0000-4000-8000-000000000045 line 226 at 152.4,76.2 rot 0
+part R8 value = text 0 @ sch short-3_fitted_options.kicad_sch note "from the Value field"
+part R9 field Value = 10 @ sch short-3_fitted_options.kicad_sch
+part R9 flag dnp = no @ sch short-3_fitted_options.kicad_sch
+part R9 flag exclude_from_sim = no @ sch short-3_fitted_options.kicad_sch
+part R9 flag in_bom = yes @ sch short-3_fitted_options.kicad_sch
+part R9 flag on_board = yes @ sch short-3_fitted_options.kicad_sch
+part R9 lib Device:R sheet / symbol Device:R
+part R9 unit 1 sheet / uuid 5e000300-0000-4000-8000-000000000001 line 58 at 30.48,30.48 rot 0
+part R9 value = text 10 @ sch short-3_fitted_options.kicad_sch note "from the Value field"
+part R10 field Value = 10 @ sch short-3_fitted_options.kicad_sch
+part R10 flag dnp = no @ sch short-3_fitted_options.kicad_sch
+part R10 flag exclude_from_sim = no @ sch short-3_fitted_options.kicad_sch
+part R10 flag in_bom = yes @ sch short-3_fitted_options.kicad_sch
+part R10 flag on_board = yes @ sch short-3_fitted_options.kicad_sch
+part R10 lib Device:R sheet / symbol Device:R
+part R10 unit 1 sheet / uuid 5e000300-0000-4000-8000-000000000017 line 110 at 193.04,30.48 rot 0
+part R10 value = text 10 @ sch short-3_fitted_options.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net /FILT_OUT
+pin C1 1 type = passive @ sch short-3_fitted_options.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch short-3_fitted_options.kicad_sch
+pin C2 1 name "" unit 1 net /SEL
+pin C2 1 type = passive @ sch short-3_fitted_options.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch short-3_fitted_options.kicad_sch
+pin C3 1 name "" unit 1 net /SEL2
+pin C3 1 type = passive @ sch short-3_fitted_options.kicad_sch
+pin C3 2 name "" unit 1 net GND
+pin C3 2 type = passive @ sch short-3_fitted_options.kicad_sch
+pin C4 1 name "" unit 1 net /A_OUT
+pin C4 1 type = passive @ sch short-3_fitted_options.kicad_sch
+pin C4 2 name "" unit 1 net GND
+pin C4 2 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R1 1 name "" unit 1 net /FILT_IN
+pin R1 1 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R1 2 name "" unit 1 net /FILT_OUT
+pin R1 2 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R2 1 name "" unit 1 net /FILT_IN
+pin R2 1 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R2 2 name "" unit 1 net /FILT_OUT
+pin R2 2 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R3 1 name "" unit 1 net /A_IN
+pin R3 1 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R3 2 name "" unit 1 net /A_OUT
+pin R3 2 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R4 1 name "" unit 1 net /A_IN
+pin R4 1 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R4 2 name "" unit 1 net /A_OUT
+pin R4 2 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R5 1 name "" unit 1 net +3V3
+pin R5 1 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R5 2 name "" unit 1 net /SEL
+pin R5 2 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R6 1 name "" unit 1 net +5V
+pin R6 1 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R6 2 name "" unit 1 net /SEL
+pin R6 2 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R7 1 name "" unit 1 net +3V3
+pin R7 1 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R7 2 name "" unit 1 net /SEL2
+pin R7 2 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R8 1 name "" unit 1 net +5V
+pin R8 1 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R8 2 name "" unit 1 net /SEL2
+pin R8 2 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R9 1 name "" unit 1 net +3V3
+pin R9 1 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R9 2 name "" unit 1 net /FILT_IN
+pin R9 2 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R10 1 name "" unit 1 net +3V3
+pin R10 1 type = passive @ sch short-3_fitted_options.kicad_sch
+pin R10 2 name "" unit 1 net /A_IN
+pin R10 2 type = passive @ sch short-3_fitted_options.kicad_sch
+sheet / name "" file short-3_fitted_options.kicad_sch uuid /
+source file short-3_fitted_options.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 4f61469a234b07ab
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 7be2b59127b371a9
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

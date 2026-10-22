@@ -1,0 +1,5 @@
+# What better_erc finds on short-11_output_conflict.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "SHORT-11"
+subjects = ["net /REF_CLK", "part U1", "part X1", "pin U1.1", "pin X1.3"]
