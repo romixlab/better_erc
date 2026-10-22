@@ -4,8 +4,14 @@ default:
 
 # erc_kicad's differential test exports the test schematics with kicad-cli first (skipped without KiCad).
 
+# The tests. `just test`: all of them (test-all), the run of the `tpm land` gate. `just test --changed`: only the
+# workspace crates changed against main and the crates that depend on them (tpm test changed), what a session runs
+# before tpm work ready.
+test *flags:
+    if [ "{{flags}}" = "--changed" ]; then tpm test changed -- cargo nextest run --workspace; else {{just_executable()}} test-all {{flags}}; fi
+
 # Run every test in the workspace; the hw differential compares a sample of the boards (BERC_HW_FULL: all)
-test:
+test-all:
     cargo test --workspace
 
 # The hw boards (~41) take 30-50 s through kicad-cli; the default `just test` compares a sample of them.
