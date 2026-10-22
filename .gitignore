@@ -22,3 +22,4 @@ target/
 .DS_Store
 
 test_schematics/generated_netlists
+test_schematics/generated_pictures_cache

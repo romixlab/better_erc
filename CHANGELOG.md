@@ -11,6 +11,10 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Fixed
+
+- `just test` no longer rewrites the committed pictures in `test_schematics/generated_pictures`: the tests export only the netlists, and `just netlists` is the one way the pictures change (which are current is kept in the gitignored `generated_pictures_cache`). It had left about 30 modified tracked SVGs in the tree after every test run.
+
 ### Changed
 
 - `just install` builds with `--profile deploy` and installs `better_erc` and `berc` through `tpm install` when tpm is there (each once on PATH, kept releases in `~/.local/bin`), else through `cargo install`; `better_erc --version` shows version, git sha and commit time (as berc does); `just deploy` checks both `--version`s against main's short sha. The README names `cargo install` for users without tpm.

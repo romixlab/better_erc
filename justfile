@@ -39,7 +39,7 @@ check:
 check-baseline:
     -cargo run -q -p berc -- check test_schematics/sources --format json > test_schematics/berc-baseline.json
 
-# Only the changed schematics are exported again; the netlists are cached by content hash.
+# Only the changed schematics are exported again; netlists and pictures are cached by content hash. The tests export netlists only.
 
 # Export the test schematics to netlists and SVG pictures with kicad-cli
 netlists:
