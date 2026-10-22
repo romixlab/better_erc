@@ -14,14 +14,14 @@
       }
     ],
     "variant": null,
-    "errors": 3,
-    "warnings": 38,
-    "suggestions": 97,
+    "errors": 9,
+    "warnings": 39,
+    "suggestions": 99,
     "infos": 0,
     "candidates": 0,
-    "ran": 94,
+    "ran": 117,
     "not_run": 0,
-    "planned": 419
+    "planned": 396
   },
   "checks": [
     {
@@ -43,14 +43,18 @@
       "title": "Power outputs on connectors from nets used on board: suggest an eFuse or switch with short and overload protection",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 282
     },
     {
       "id": "PIN-4",
       "title": "No overcurrent protection (fuse, polyfuse, eFuse) on a power input",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 3
     },
     {
       "id": "PIN-5",
@@ -64,7 +68,9 @@
       "title": "No input filter (bulk capacitor, ferrite or LC) on a power input",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 2
     },
     {
       "id": "PIN-7",
@@ -148,7 +154,9 @@
       "title": "Power input pins of parts not powered",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 537
     },
     {
       "id": "RAIL-2",
@@ -176,7 +184,9 @@
       "title": "Power net with loads but no source: no regulator output, connector, switch, ferrite or 0R from a sourced net (`+5V0_FLT` with nothing feeding it) ≈ RAIL-1",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 5,
+      "micros": 234
     },
     {
       "id": "RAIL-6",
@@ -267,14 +277,18 @@
       "title": "Two regulator outputs tied together without a part that allows it (parallel LDOs fight, one sinks)",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 8
     },
     {
       "id": "RAIL-19",
       "title": "Analog supply (VDDA, AVDD, VREF+) fed straight from the digital rail without a filter",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 2,
+      "micros": 350
     },
     {
       "id": "RAIL-20",
@@ -332,7 +346,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 97
+      "micros": 109
     },
     {
       "id": "DEC-2",
@@ -355,7 +369,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 15
     },
     {
       "id": "DEC-5",
@@ -378,7 +392,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7
+      "micros": 3256
     },
     {
       "id": "DEC-8",
@@ -387,7 +401,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 18
+      "micros": 30
     },
     {
       "id": "DEC-9",
@@ -403,7 +417,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 84
+      "micros": 141
     },
     {
       "id": "DEC-11",
@@ -412,7 +426,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 13
+      "micros": 17
     },
     {
       "id": "DEC-12",
@@ -421,7 +435,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7
+      "micros": 13
     },
     {
       "id": "DEC-13",
@@ -463,7 +477,9 @@
       "title": "High voltage net without self-discharge resistors",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 5
     },
     {
       "id": "SEQ-6",
@@ -512,7 +528,9 @@
       "title": "Analog and digital grounds joined at more than one point, or not joined at all",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 9
     },
     {
       "id": "GND-4",
@@ -540,7 +558,9 @@
       "title": "Chassis or shield ground tied straight to signal ground, or left floating, without a decision (R, C, or direct) ≈ USB-4",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 21
     },
     {
       "id": "DRV-1",
@@ -575,21 +595,27 @@
       "title": "MOSFET as inverter: gate resistor to stop Cgd pulling the output below ground",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 23
     },
     {
       "id": "DRV-6",
       "title": "Q-Q chain not back to back, e.g. pogo-pin VBUS protection; double check thresholds",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 40
     },
     {
       "id": "DRV-7",
       "title": "No snubbers on half bridge output",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 28
     },
     {
       "id": "DRV-8",
@@ -603,7 +629,9 @@
       "title": "Relays without flyback diode",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 13
     },
     {
       "id": "DRV-10",
@@ -624,7 +652,9 @@
       "title": "BJT base driven from a logic pin without a base resistor",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 13
     },
     {
       "id": "DRV-13",
@@ -638,7 +668,9 @@
       "title": "Inductive load (solenoid, motor, coil, transformer) switched without a freewheel diode, TVS or snubber ≈ DRV-9",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 11
     },
     {
       "id": "DRV-15",
@@ -659,7 +691,9 @@
       "title": "LED driven from a GPIO or a rail without a series resistor or current limit",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 16
     },
     {
       "id": "DRV-18",
@@ -738,7 +772,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 82
+      "micros": 166
     },
     {
       "id": "SHORT-2",
@@ -747,7 +781,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 257
+      "micros": 443
     },
     {
       "id": "SHORT-3",
@@ -756,7 +790,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 131
+      "micros": 262
     },
     {
       "id": "SHORT-4",
@@ -765,7 +799,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 120
+      "micros": 205
     },
     {
       "id": "SHORT-5",
@@ -774,7 +808,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 609
+      "micros": 8311
     },
     {
       "id": "SHORT-6",
@@ -783,7 +817,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 38
+      "micros": 80
     },
     {
       "id": "SHORT-7",
@@ -792,7 +826,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 123
+      "micros": 3680
     },
     {
       "id": "SHORT-8",
@@ -822,7 +856,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 58
+      "micros": 110
     },
     {
       "id": "SHORT-12",
@@ -831,7 +865,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1747
+      "micros": 5622
     },
     {
       "id": "WIRE-1",
@@ -840,7 +874,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 567
+      "micros": 646
     },
     {
       "id": "WIRE-2",
@@ -849,7 +883,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 117
+      "micros": 260
     },
     {
       "id": "WIRE-3",
@@ -914,7 +948,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 2
+      "micros": 6
     },
     {
       "id": "WIRE-12",
@@ -930,7 +964,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 96
+      "micros": 154
     },
     {
       "id": "WIRE-14",
@@ -939,7 +973,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 587
+      "micros": 9925
     },
     {
       "id": "WIRE-15",
@@ -1051,7 +1085,9 @@
       "title": "Resistor divider straight on a power rail, draining power all the time",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 211
     },
     {
       "id": "LEAK-2",
@@ -1121,7 +1157,9 @@
       "title": "I2C discrete translator pull-up to the wrong voltage",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 259
     },
     {
       "id": "LVL-5",
@@ -1142,7 +1180,9 @@
       "title": "Several power rails on a part and no banks defined: warn",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 1,
+      "micros": 8962
     },
     {
       "id": "LVL-8",
@@ -1156,7 +1196,9 @@
       "title": "Discrete translator (BSS138 pair) with a gate reference that gives the wrong threshold for one side",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 72
     },
     {
       "id": "LVL-10",
@@ -1207,7 +1249,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 11,
-      "micros": 278
+      "micros": 425
     },
     {
       "id": "IO-2",
@@ -1244,7 +1286,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 259
+      "micros": 429
     },
     {
       "id": "IO-7",
@@ -1253,7 +1295,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 25
+      "micros": 16
     },
     {
       "id": "IO-8",
@@ -1262,7 +1304,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 487
+      "micros": 9761
     },
     {
       "id": "IO-9",
@@ -1278,7 +1320,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 251
+      "micros": 397
     },
     {
       "id": "IO-11",
@@ -1287,7 +1329,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 14
+      "micros": 25
     },
     {
       "id": "IO-12",
@@ -1317,7 +1359,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 439
+      "micros": 3965
     },
     {
       "id": "IO-16",
@@ -1326,7 +1368,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 89
+      "micros": 141
     },
     {
       "id": "IO-17",
@@ -1363,7 +1405,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 519
+      "micros": 10722
     },
     {
       "id": "LOGIC-4",
@@ -1393,7 +1435,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 119
+      "micros": 179
     },
     {
       "id": "LOGIC-8",
@@ -1402,7 +1444,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 176
+      "micros": 292
     },
     {
       "id": "MUX-1",
@@ -1411,7 +1453,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 3166
+      "micros": 17097
     },
     {
       "id": "MUX-2",
@@ -1553,7 +1595,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 14
     },
     {
       "id": "CLK-4",
@@ -1569,7 +1611,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 427
+      "micros": 12222
     },
     {
       "id": "CLK-6",
@@ -1578,7 +1620,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 396
+      "micros": 3895
     },
     {
       "id": "CLK-7",
@@ -1587,7 +1629,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 410
+      "micros": 716
     },
     {
       "id": "CLK-8",
@@ -1638,7 +1680,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 383
+      "micros": 682
     },
     {
       "id": "CLK-15",
@@ -1647,7 +1689,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 394
+      "micros": 3969
     },
     {
       "id": "CLK-16",
@@ -1670,7 +1712,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 405
+      "micros": 2498
     },
     {
       "id": "CLK-19",
@@ -1686,7 +1728,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 15
+      "micros": 60
     },
     {
       "id": "I2C-2",
@@ -1695,7 +1737,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 3,
-      "micros": 490
+      "micros": 164
     },
     {
       "id": "I2C-3",
@@ -1704,14 +1746,16 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 58
+      "micros": 110
     },
     {
       "id": "I2C-4",
       "title": "Pull-up to a non-rail net (resistor with only two pins connected)?",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 1,
+      "micros": 126
     },
     {
       "id": "I2C-5",
@@ -1734,7 +1778,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 65
+      "micros": 204
     },
     {
       "id": "I2C-8",
@@ -1750,7 +1794,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 3063
+      "micros": 304
     },
     {
       "id": "I2C-10",
@@ -1759,7 +1803,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 206
+      "micros": 258
     },
     {
       "id": "I2C-11",
@@ -1812,10 +1856,12 @@
     },
     {
       "id": "I2C-18",
-      "title": "Bus segment behind a translator, isolator, buffer or mux with no pull-ups of its own",
+      "title": "Bus segment behind a translator, isolator, buffer or mux with no pull-ups of its own ≈ I2C-1",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 42
     },
     {
       "id": "I2C-19",
@@ -2664,7 +2710,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 12
+      "micros": 23
     },
     {
       "id": "ANA-4",
@@ -2673,7 +2719,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 275
+      "micros": 408
     },
     {
       "id": "ANA-5",
@@ -2717,7 +2763,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 17
     },
     {
       "id": "ANA-11",
@@ -2726,7 +2772,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 24
     },
     {
       "id": "ANA-12",
@@ -2735,7 +2781,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 13
     },
     {
       "id": "ANA-13",
@@ -2765,7 +2811,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7
+      "micros": 17
     },
     {
       "id": "ANA-17",
@@ -2802,7 +2848,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 12
     },
     {
       "id": "ANA-22",
@@ -2811,7 +2857,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 79
+      "micros": 126
     },
     {
       "id": "ANA-23",
@@ -3002,7 +3048,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1124
+      "micros": 6178
     },
     {
       "id": "DBG-2",
@@ -3011,7 +3057,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 191
+      "micros": 1358
     },
     {
       "id": "DBG-3",
@@ -3020,7 +3066,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 34
+      "micros": 131
     },
     {
       "id": "DBG-4",
@@ -3029,7 +3075,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 17
+      "micros": 49
     },
     {
       "id": "DBG-5",
@@ -3052,7 +3098,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 412
+      "micros": 680
     },
     {
       "id": "DBG-8",
@@ -3061,7 +3107,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 445
+      "micros": 9204
     },
     {
       "id": "DBG-9",
@@ -3077,7 +3123,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 35
+      "micros": 119
     },
     {
       "id": "DBG-11",
@@ -3086,7 +3132,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 436
+      "micros": 708
     },
     {
       "id": "DBG-12",
@@ -3109,7 +3155,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 196
+      "micros": 342
     },
     {
       "id": "DBG-15",
@@ -3125,7 +3171,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 14
+      "micros": 32
     },
     {
       "id": "DBG-17",
@@ -3134,7 +3180,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 377
+      "micros": 633
     },
     {
       "id": "DBG-18",
@@ -3143,7 +3189,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 14,
-      "micros": 644
+      "micros": 13563
     },
     {
       "id": "DBG-19",
@@ -3194,7 +3240,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 20,
-      "micros": 622
+      "micros": 6854
     },
     {
       "id": "TEST-2",
@@ -3203,7 +3249,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 32
+      "micros": 93
     },
     {
       "id": "TEST-3",
@@ -3219,7 +3265,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 44
+      "micros": 109
     },
     {
       "id": "TEST-5",
@@ -3228,7 +3274,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 28,
-      "micros": 816
+      "micros": 4673
     },
     {
       "id": "TEST-6",
@@ -3251,7 +3297,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 356
+      "micros": 3203
     },
     {
       "id": "BOM-2",
@@ -3267,7 +3313,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 308
+      "micros": 5854
     },
     {
       "id": "BOM-4",
@@ -3276,7 +3322,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 12,
-      "micros": 305
+      "micros": 648
     },
     {
       "id": "BOM-5",
@@ -3285,7 +3331,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 437
+      "micros": 10439
     },
     {
       "id": "BOM-6",
@@ -3294,7 +3340,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 428
+      "micros": 777
     },
     {
       "id": "BOM-7",
@@ -3310,7 +3356,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7
+      "micros": 14
     },
     {
       "id": "BOM-9",
@@ -3319,7 +3365,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 403
+      "micros": 7882
     },
     {
       "id": "BOM-10",
@@ -3328,7 +3374,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 30
+      "micros": 59
     },
     {
       "id": "BOM-11",
@@ -3337,7 +3383,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 15
+      "micros": 26
     },
     {
       "id": "BOM-12",
@@ -3360,7 +3406,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 120
+      "micros": 308
     },
     {
       "id": "BOM-15",
@@ -3383,7 +3429,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 79
+      "micros": 164
     },
     {
       "id": "BOM-18",
@@ -3399,7 +3445,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 76
+      "micros": 160
     },
     {
       "id": "NAME-2",
@@ -3408,7 +3454,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 63
+      "micros": 87
     },
     {
       "id": "NAME-3",
@@ -3424,7 +3470,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 82
+      "micros": 8560
     },
     {
       "id": "NAME-5",
@@ -3433,7 +3479,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 145
+      "micros": 293
     },
     {
       "id": "NAME-6",
@@ -3442,7 +3488,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 82
+      "micros": 124
     },
     {
       "id": "NAME-7",
@@ -3451,7 +3497,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 525
+      "micros": 7569
     },
     {
       "id": "NAME-8",
@@ -3467,7 +3513,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 75
+      "micros": 157
     },
     {
       "id": "NAME-10",
@@ -3476,7 +3522,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 87
+      "micros": 6490
     },
     {
       "id": "NAME-11",
@@ -3485,7 +3531,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 188
+      "micros": 282
     },
     {
       "id": "NAME-12",
@@ -3494,7 +3540,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 49
+      "micros": 124
     },
     {
       "id": "LIB-1",
@@ -3517,7 +3563,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 22
     },
     {
       "id": "LIB-4",
@@ -3596,7 +3642,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7
+      "micros": 15
     },
     {
       "id": "LIB-15",
@@ -3605,7 +3651,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 745
+      "micros": 6624
     },
     {
       "id": "LIB-16",
@@ -3805,6 +3851,151 @@
     }
   ],
   "findings": [
+    {
+      "check": "RAIL-5",
+      "severity": "error",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              39
+            ]
+          },
+          "kind": "net",
+          "name": "VCC"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "VCC has loads (U201, U202, U203, U204, U301, U302, U601 and U602) but no source: no regulator, connector, switch or series part brings power to it",
+      "facts": [],
+      "fingerprint": "RAIL-5:net VCC",
+      "explain": "docs/checks/rail.md#rail-5",
+      "fix": "add the missing link (a ferrite or 0 Ω from the rail meant to feed it); put a test point on every rail",
+      "locations": [],
+      "also": [
+        "RAIL-1"
+      ]
+    },
+    {
+      "check": "RAIL-5",
+      "severity": "error",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              40
+            ]
+          },
+          "kind": "net",
+          "name": "VCC2_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "VCC2_3V3 has loads (U405) but no source: no regulator, connector, switch or series part brings power to it",
+      "facts": [],
+      "fingerprint": "RAIL-5:net VCC2_3V3",
+      "explain": "docs/checks/rail.md#rail-5",
+      "fix": "add the missing link (a ferrite or 0 Ω from the rail meant to feed it); put a test point on every rail",
+      "locations": [],
+      "also": [
+        "RAIL-1"
+      ]
+    },
+    {
+      "check": "RAIL-5",
+      "severity": "error",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              41
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_1V2"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "VCC_1V2 has loads (U404 and U407) but no source: no regulator, connector, switch or series part brings power to it",
+      "facts": [],
+      "fingerprint": "RAIL-5:net VCC_1V2",
+      "explain": "docs/checks/rail.md#rail-5",
+      "fix": "add the missing link (a ferrite or 0 Ω from the rail meant to feed it); put a test point on every rail",
+      "locations": [],
+      "also": [
+        "RAIL-1"
+      ]
+    },
+    {
+      "check": "RAIL-5",
+      "severity": "error",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              42
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_1V8"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "VCC_1V8 has loads (U406 and U506) but no source: no regulator, connector, switch or series part brings power to it",
+      "facts": [],
+      "fingerprint": "RAIL-5:net VCC_1V8",
+      "explain": "docs/checks/rail.md#rail-5",
+      "fix": "add the missing link (a ferrite or 0 Ω from the rail meant to feed it); put a test point on every rail",
+      "locations": [],
+      "also": [
+        "RAIL-1"
+      ]
+    },
+    {
+      "check": "RAIL-5",
+      "severity": "error",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              43
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_3V3"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "VCC_3V3 has loads (U401, U402, U403, U404, U408, U501, U502 and U503) but no source: no regulator, connector, switch or series part brings power to it",
+      "facts": [],
+      "fingerprint": "RAIL-5:net VCC_3V3",
+      "explain": "docs/checks/rail.md#rail-5",
+      "fix": "add the missing link (a ferrite or 0 Ω from the rail meant to feed it); put a test point on every rail",
+      "locations": [],
+      "also": [
+        "RAIL-1"
+      ]
+    },
     {
       "check": "I2C-1",
       "severity": "error",
@@ -4090,6 +4281,116 @@
           "at": [
             220.98,
             95.25
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "I2C-4",
+      "severity": "error",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              19
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL2_3V3"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              26
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA2_3V3"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              27
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA2_EN"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              15
+            ]
+          },
+          "kind": "part",
+          "name": "R402"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              17
+            ]
+          },
+          "kind": "part",
+          "name": "R404"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "I2C bus /C22: I2C Segments/I2C2_3V3: pull-ups R404 and R402 go to /C22: I2C Segments/SDA2_EN, which is no rail: the bus works only once something drives it high",
+      "facts": [],
+      "fingerprint": "I2C-4:net /C22: I2C Segments/SCL2_3V3|net /C22: I2C Segments/SDA2_3V3|net /C22: I2C Segments/SDA2_EN|part R402|part R404",
+      "explain": "docs/checks/i2c.md#i2c-4",
+      "fix": "pull up to the rail; a switched pull-up wants a bus switch or a FET with a documented default (IO-3)",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL2_3V3",
+          "at": [
+            119.38,
+            83.82
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA2_3V3",
+          "at": [
+            119.38,
+            86.36
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA2_EN",
+          "at": [
+            110.49,
+            73.66
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R402",
+          "line": 4763,
+          "at": [
+            147.32,
+            100.33
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol R404",
+          "line": 6777,
+          "at": [
+            157.48,
+            100.33
           ]
         }
       ],
@@ -4500,6 +4801,63 @@
           "at": [
             87.63,
             73.66
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "LVL-7",
+      "severity": "warning",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              41
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_1V2"
+        },
+        {
+          "subject": {
+            "Net": [
+              0,
+              43
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_3V3"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              52
+            ]
+          },
+          "kind": "part",
+          "name": "U404"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "U404 is supplied from 2 rails (VCC_1V2, VCC_3V3) and nothing says which supply its signal pins follow",
+      "facts": [],
+      "fingerprint": "LVL-7:net VCC_1V2|net VCC_3V3|part U404",
+      "explain": "docs/checks/lvl.md#lvl-7",
+      "fix": "add bank data to the library part (a pin property, a unit per bank, or a pin file via IMP-10)",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U404",
+          "line": 7589,
+          "at": [
+            210.82,
+            204.47
           ]
         }
       ],
@@ -6400,6 +6758,157 @@
       "explain": "docs/checks/bom.md#bom-14",
       "fix": "add an MPN field (`MPN`, `Mpn1`) to the parts, with alternates for passives",
       "locations": [],
+      "also": []
+    },
+    {
+      "check": "RAIL-19",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              43
+            ]
+          },
+          "kind": "net",
+          "name": "VCC_3V3"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              49
+            ]
+          },
+          "kind": "part",
+          "name": "U401"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              57
+            ]
+          },
+          "kind": "part",
+          "name": "U501"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "analog supply U401.5 (VDDA) and U501.5 (VDDA) on VCC_3V3 shares VCC_3V3 with the digital supply pins of U401, U402, U403, U404, U408, U501, U502 and U503 on the same net: no ferrite, RC or regulator filters it",
+      "facts": [],
+      "fingerprint": "RAIL-19:net VCC_3V3|part U401|part U501",
+      "explain": "docs/checks/rail.md#rail-19",
+      "fix": "a ferrite or a small RC with the decoupling on the pin side, or a separate LDO; keep a 0 Ω footprint as the option",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "symbol U501",
+          "line": 4027,
+          "at": [
+            48.26,
+            60.96
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U401",
+          "line": 5888,
+          "at": [
+            87.63,
+            73.66
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "RAIL-19",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              39
+            ]
+          },
+          "kind": "net",
+          "name": "VCC"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              43
+            ]
+          },
+          "kind": "part",
+          "name": "U201"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              47
+            ]
+          },
+          "kind": "part",
+          "name": "U301"
+        },
+        {
+          "subject": {
+            "Part": [
+              0,
+              61
+            ]
+          },
+          "kind": "part",
+          "name": "U601"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "analog supply U201.5 (VDDA), U301.5 (VDDA) and U601.5 (VDDA) on VCC shares VCC with the digital supply pins of U201, U202, U203, U204, U301, U302, U601 and U602 on the same net: no ferrite, RC or regulator filters it",
+      "facts": [],
+      "fingerprint": "RAIL-19:net VCC|part U201|part U301|part U601",
+      "explain": "docs/checks/rail.md#rail-19",
+      "fix": "a ferrite or a small RC with the decoupling on the pin side, or a separate LDO; keep a 0 Ω footprint as the option",
+      "locations": [
+        {
+          "file": "i2c-1_no_pull_ups.kicad_sch",
+          "what": "symbol U201",
+          "line": 1913,
+          "at": [
+            49.53,
+            97.79
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "symbol U301",
+          "line": 1366,
+          "at": [
+            73.66,
+            68.58
+          ]
+        },
+        {
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "symbol U601",
+          "line": 1726,
+          "at": [
+            68.58,
+            63.5
+          ]
+        }
+      ],
       "also": []
     },
     {
@@ -13284,7 +13793,7 @@
     }
   ],
   "timing": {
-    "checks_micros": 6621,
-    "total_micros": 8281
+    "checks_micros": 35127,
+    "total_micros": 38688
   }
 }
