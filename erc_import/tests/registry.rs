@@ -14,7 +14,7 @@ fn picks_by_contents_and_name() {
 
     let kicad_net = std::fs::read(
         Path::new(env!("CARGO_MANIFEST_DIR"))
-            .join("../ecad_file_format/test_input/netlist_kicad.net"),
+            .join("../erc_kicad/tests/fixtures/netlist/netlist_kicad.net"),
     )
     .unwrap();
     let files = MemFiles::default()

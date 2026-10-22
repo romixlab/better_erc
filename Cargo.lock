@@ -142,12 +142,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "anyhow"
-version = "1.0.104"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "330a5ed07fa54e4702c9d6c4174f74427fc0ef6e214bbd677ae50a5099946470"
-
-[[package]]
 name = "arboard"
 version = "3.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -965,33 +959,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d8b14ccef22fc6f5a8f4d7d768562a182c04ce9a3b3157b91390b52ddfdf1a76"
 
 [[package]]
-name = "ecad_compare"
-version = "0.3.9"
-dependencies = [
- "anyhow",
- "ecad_file_format",
-]
-
-[[package]]
-name = "ecad_file_format"
-version = "0.3.9"
-dependencies = [
- "anyhow",
- "chardetng",
- "csv",
- "encoding_rs",
- "human-repr",
- "itertools 0.14.0",
- "lexpr",
- "pest",
- "pest_derive",
- "regex",
- "serde",
- "serde-lexpr",
- "serde_path_to_error",
-]
-
-[[package]]
 name = "ecolor"
 version = "0.31.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1134,7 +1101,7 @@ checksum = "67756b63b283a65bd0534b0c2a5fb1a12a5768bb6383d422147cc93193d09cfc"
 dependencies = [
  "ahash",
  "egui",
- "itertools 0.13.0",
+ "itertools",
  "log",
  "serde",
 ]
@@ -1285,15 +1252,6 @@ dependencies = [
  "serde",
  "serde_json",
  "toml",
-]
-
-[[package]]
-name = "erc_core"
-version = "0.3.9"
-dependencies = [
- "ecad_file_format",
- "generate_netlists",
- "regex",
 ]
 
 [[package]]
@@ -1736,12 +1694,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "human-repr"
-version = "1.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f58b778a5761513caf593693f8951c97a5b610841e754788400f32102eefdff1"
-
-[[package]]
 name = "icu_collections"
 version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1915,15 +1867,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "itertools"
-version = "0.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2b192c782037fadd9cfa75548310488aabdbf3d2da73885b31bd0abd03351285"
-dependencies = [
- "either",
-]
-
-[[package]]
 name = "itoa"
 version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2061,15 +2004,6 @@ name = "khronos_api"
 version = "3.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e2db585e1d738fc771bf08a151420d3ed193d9d895a36df7f6f8a9456b911ddc"
-
-[[package]]
-name = "lexpr"
-version = "0.3.0"
-source = "git+https://github.com/rotty/lexpr-rs?rev=09a61d3d132c37bf29d175b86d1b532dd41ca8bd#09a61d3d132c37bf29d175b86d1b532dd41ca8bd"
-dependencies = [
- "itoa",
- "ryu",
-]
 
 [[package]]
 name = "libc"
@@ -3181,15 +3115,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "serde-lexpr"
-version = "0.2.0"
-source = "git+https://github.com/rotty/lexpr-rs?rev=09a61d3d132c37bf29d175b86d1b532dd41ca8bd#09a61d3d132c37bf29d175b86d1b532dd41ca8bd"
-dependencies = [
- "lexpr",
- "serde",
-]
-
-[[package]]
 name = "serde_core"
 version = "1.0.229"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3220,17 +3145,6 @@ dependencies = [
  "serde",
  "serde_core",
  "zmij",
-]
-
-[[package]]
-name = "serde_path_to_error"
-version = "0.1.20"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "10a9ff822e371bb5403e391ecd83e182e0e77ba7f6fe0160b795797109d1b457"
-dependencies = [
- "itoa",
- "serde",
- "serde_core",
 ]
 
 [[package]]

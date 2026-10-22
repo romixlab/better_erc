@@ -17,4 +17,4 @@ pub mod value;
 
 pub use class::{PartClass, PartClasses};
 pub use i2c::I2cBuses;
-pub use power::Power;
+pub use power::{Power, PowerOptions};

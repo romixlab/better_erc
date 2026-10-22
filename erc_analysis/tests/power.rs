@@ -61,3 +61,33 @@ fn inputs() {
         ]
     );
 }
+
+/// `PcbAssembly::find_part_chains` on the buck: IC to inductor through any net, and through no rail or ground
+#[test]
+fn part_chains() {
+    use erc_analysis::PartClass;
+    use erc_analysis::graph::part_chains;
+    let (b, _) = erc_kicad::netlist::read(include_str!("fixtures/buck.net"), "buck.net").unwrap();
+    let classes = PartClasses::of(&b);
+    let power = Power::of(&b, &classes, &I2cBuses::of(&b, &classes));
+    let ic = |p| classes.is(p, PartClass::Ic);
+    let inductor = |p| classes.is(p, PartClass::Inductor);
+    let names = |chains: Vec<Vec<erc_model::PartId>>| -> Vec<Vec<String>> {
+        chains
+            .into_iter()
+            .map(|c| {
+                c.into_iter()
+                    .map(|p| b.part(p).designator.clone())
+                    .collect()
+            })
+            .collect()
+    };
+    let all = part_chains(&b, &[&ic, &inductor], &|_| false);
+    assert_eq!(
+        names(all),
+        [["U1", "L1"], ["U2", "L1"]],
+        "U2 reaches L1 through +1V25"
+    );
+    let no_power = part_chains(&b, &[&ic, &inductor], &|n| power.is_power_net(n));
+    assert_eq!(names(no_power), [["U1", "L1"]], "only through /SW");
+}

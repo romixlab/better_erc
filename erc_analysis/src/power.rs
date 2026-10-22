@@ -2,8 +2,9 @@
 //! the board model: rails, grounds and the switching nodes of converters. Every rail is a [`Fact`] with the rule
 //! that made it one; the voltage, where there is one, is read from the net name.
 //!
-//! - A rail is a net named with a voltage (`+3V3`, `VDD_+1V8`: a `+` before `<volts>V<decimals>`), a net named
-//!   `+V...`, `VDD...` or `VCC...`, or a net with a power pin (`power_in`, `power_out`) of a component on it.
+//! - A rail is a net named with a voltage (`+3V3`, `VDD_+1V8`: a `+` before `<volts>V<decimals>`; without the `+`
+//!   too in non-strict mode, [`PowerOptions::strict`]), a net named `+V...`, `VDD...` or `VCC...`, or a net with a
+//!   power pin (`power_in`, `power_out`) of a component on it.
 //! - A ground is a net named `GND`, `VSS`, `VEE` anywhere in the name, or starting with `ISO`; it is never a rail.
 //! - A switching node is the net between an IC and an inductor that is neither a ground nor a rail (a rail whose
 //!   name has `LX` or `SW` still counts: its pins are often typed power), unless the node or the inductor's other
@@ -13,7 +14,7 @@
 //! Sources, power trees and states come with the full NET-5 and NET-8; these rules stay as the fallback.
 
 use crate::class::{PartClass, PartClasses};
-use crate::graph::{net_pins, part_nets, parts_connected};
+use crate::graph::{net_pins, part_chains, part_nets};
 use crate::i2c::I2cBuses;
 use erc_model::{Board, EcadPinType, Fact, NetId, PartId, Provenance};
 use serde::{Deserialize, Serialize};
@@ -32,9 +33,27 @@ pub struct Power {
     pub switching_nodes: BTreeSet<NetId>,
 }
 
+/// How rails are read from names
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PowerOptions {
+    /// A voltage in a name only with a `+` before it (`+3V3`, not `VDD_1V8`); on by default
+    pub strict: bool,
+}
+
+impl Default for PowerOptions {
+    fn default() -> PowerOptions {
+        PowerOptions { strict: true }
+    }
+}
+
 impl Power {
-    /// Finds the rails, grounds and switching nodes of `board`
+    /// Finds the rails, grounds and switching nodes of `board`, in strict mode
     pub fn of(board: &Board, classes: &PartClasses, i2c: &I2cBuses) -> Power {
+        Power::with(board, classes, i2c, PowerOptions::default())
+    }
+
+    /// [`Power::of`] with options
+    pub fn with(board: &Board, classes: &PartClasses, i2c: &I2cBuses, opts: PowerOptions) -> Power {
         let derived = |v, rule: &str| Fact::new(v, Provenance::Derived { rule: rule.into() });
         let mut power = Power::default();
         for (i, net) in board.nets.iter().enumerate() {
@@ -43,7 +62,7 @@ impl Power {
             if n.contains("GND") || n.contains("VSS") || n.contains("VEE") || n.starts_with("ISO") {
                 power.grounds.insert(id);
             }
-            if let Some(v) = name_voltage(n) {
+            if let Some(v) = name_voltage(n, opts.strict) {
                 power.rails.insert(id, derived(Some(v), BY_VOLTAGE_NAME));
             } else if n.contains("+V") || n.contains("VDD") || n.contains("VCC") {
                 power.rails.insert(id, derived(None, BY_NAME));
@@ -81,56 +100,51 @@ impl Power {
     }
 
     fn find_switching_nodes(&self, board: &Board, classes: &PartClasses) -> BTreeSet<NetId> {
-        let parts = |class: PartClass| -> Vec<PartId> {
-            (0..board.parts.len())
-                .map(PartId::from_index)
-                .filter(|p| board.is_component(*p) && classes.is(*p, class))
-                .collect()
-        };
-        let inductors = parts(PartClass::Inductor);
+        let ic = |p: PartId| classes.is(p, PartClass::Ic);
+        let inductor = |p: PartId| classes.is(p, PartClass::Inductor);
         let mut nodes = BTreeSet::new();
-        for ic in parts(PartClass::Ic) {
-            for &l in &inductors {
-                if !parts_connected(board, ic, l) {
-                    continue;
-                }
-                let l_nets = part_nets(board, l);
-                let switching = part_nets(board, ic).into_iter().find(|n| {
-                    let name = &board.net(*n).name;
-                    l_nets.contains(n)
-                        && !self.grounds.contains(n)
-                        && (!self.rails.contains_key(n)
-                            || name.contains("LX")
-                            || name.contains("SW"))
-                });
-                let Some(switching) = switching else {
-                    continue;
-                };
-                let Some(other) = l_nets.iter().find(|n| **n != switching) else {
-                    continue;
-                };
-                let rf = |n: NetId| board.net(n).name.contains("RF");
-                if !rf(switching) && !rf(*other) {
-                    nodes.insert(switching);
-                }
+        for chain in part_chains(board, &[&ic, &inductor], &|_| false) {
+            let [ic, l] = chain[..] else { continue };
+            let l_nets = part_nets(board, l);
+            let switching = part_nets(board, ic).into_iter().find(|n| {
+                let name = &board.net(*n).name;
+                l_nets.contains(n)
+                    && !self.grounds.contains(n)
+                    && (!self.rails.contains_key(n) || name.contains("LX") || name.contains("SW"))
+            });
+            let Some(switching) = switching else {
+                continue;
+            };
+            let Some(other) = l_nets.iter().find(|n| **n != switching) else {
+                continue;
+            };
+            let rf = |n: NetId| board.net(n).name.contains("RF");
+            if !rf(switching) && !rf(*other) {
+                nodes.insert(switching);
             }
         }
         nodes
     }
 }
 
-/// The voltage in a rail name: `+3V3` is 3.3, `+1V25` 1.25, `+12V0` 12; only with the `+` in front
-pub fn name_voltage(name: &str) -> Option<f64> {
+/// The voltage in a rail name: `+3V3` is 3.3, `+1V25` 1.25, `+12V0` 12. Strict: only with the `+` in front;
+/// otherwise any `<volts>V<decimals>` (`VDD_1V8`).
+pub fn name_voltage(name: &str, strict: bool) -> Option<f64> {
     let bytes = name.as_bytes();
-    for (i, _) in name.match_indices('+') {
-        let digits = |from: usize| {
-            bytes[from..]
-                .iter()
-                .take_while(|b| b.is_ascii_digit())
-                .count()
-        };
-        let whole = digits(i + 1);
-        let v = i + 1 + whole;
+    let digits = |from: usize| {
+        bytes[from..]
+            .iter()
+            .take_while(|b| b.is_ascii_digit())
+            .count()
+    };
+    for start in 0..bytes.len() {
+        let after_plus = start > 0 && bytes[start - 1] == b'+';
+        let run_start = start == 0 || !bytes[start - 1].is_ascii_digit();
+        if !run_start || (strict && !after_plus) {
+            continue;
+        }
+        let whole = digits(start);
+        let v = start + whole;
         if whole == 0 || bytes.get(v) != Some(&b'V') {
             continue;
         }
@@ -138,7 +152,7 @@ pub fn name_voltage(name: &str) -> Option<f64> {
         if frac == 0 {
             continue;
         }
-        return format!("{}.{}", &name[i + 1..v], &name[v + 1..v + 1 + frac])
+        return format!("{}.{}", &name[start..v], &name[v + 1..v + 1 + frac])
             .parse()
             .ok();
     }
@@ -151,11 +165,18 @@ mod tests {
 
     #[test]
     fn voltages_in_names() {
-        assert_eq!(name_voltage("+3V3"), Some(3.3));
-        assert_eq!(name_voltage("/VDD_+1V25"), Some(1.25));
-        assert_eq!(name_voltage("+12V0_IN"), Some(12.0));
-        assert_eq!(name_voltage("3V3"), None, "only with the +");
-        assert_eq!(name_voltage("+5V"), None, "no decimals: a +V rail by name");
-        assert_eq!(name_voltage("+V+3V3"), Some(3.3));
+        let strict = |n| name_voltage(n, true);
+        assert_eq!(strict("+3V3"), Some(3.3));
+        assert_eq!(strict("/VDD_+1V25"), Some(1.25));
+        assert_eq!(strict("+12V0_IN"), Some(12.0));
+        assert_eq!(strict("3V3"), None, "only with the +");
+        assert_eq!(strict("+5V"), None, "no decimals: a +V rail by name");
+        assert_eq!(strict("+V+3V3"), Some(3.3));
+        // The catalogue's NAME example: non-strict reads VDD_1V8 only
+        let loose = |n| name_voltage(n, false);
+        assert_eq!(loose("VDD_1V8"), Some(1.8));
+        assert_eq!(loose("VDD_12V5"), Some(12.5));
+        assert_eq!(loose("+3.3V"), None);
+        assert_eq!(loose("+5V"), None);
     }
 }

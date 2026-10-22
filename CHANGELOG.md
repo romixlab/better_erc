@@ -29,6 +29,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
   `better_erc::diff::pnp`. berc depends on it alone.
 - `Project::open_files(main, others)`: a design whose files were picked one by one from anywhere (an Altium EDIF and
   its WireList, the OrCAD trio), read as if beside each other; the app's import tab uses it.
+- `erc_analysis::power::PowerOptions { strict }`: the old non-strict mode (`VDD_1V8` without the `+`) kept;
+  `erc_analysis::graph::part_chains`, `PcbAssembly::find_part_chains` on the board model.
 - The old readers' tests as acceptance tests on the new core: `ecad_file_format::kicad_netlist`'s asserts in
   `erc_kicad/tests/netlist.rs`, the passive value table in `erc_model::value`.
 
@@ -36,6 +38,14 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 - The KiCad netlist importer keeps KiCad 10's unit names (`A`, `B`) and unit count on the symbol, as the old reader
   did (`IMP-12`).
+
+### Removed
+
+- **Breaking:** the old crates `ecad_file_format` (netlist model and readers), `erc_core` (`PcbAssembly`, its checks
+  and analyses) and `ecad_compare` (PnP compare), and with them `lexpr` and `serde-lexpr` (`NET-16`). Everything they
+  did runs on the new core: the readers in `erc_kicad` and `erc_import`, values in `erc_model::value`, the
+  analyses in `erc_analysis` (classes, graph, I2C, power), the eleven checks in `erc_checks`, the PnP compare as
+  `berc diff --pnp`; their tests are acceptance tests there.
 
 ### Changed
 

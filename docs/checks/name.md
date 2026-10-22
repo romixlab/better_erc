@@ -93,7 +93,7 @@ divider with known reference, USB VBUS of a non-PD port), check whether the name
 
 **Fix.** Put the voltage in the name in the project's style (`+3V3`, `+3V3_MCU`, `VBUS_5V0`).
 
-**References.** better_erc `erc_core/src/power.rs` (voltage parsed from the name); catalogue `RAIL-2`, `RAIL-3`, `RAIL-4`.
+**References.** better_erc `erc_analysis/src/power.rs` (voltage parsed from the name); catalogue `RAIL-2`, `RAIL-3`, `RAIL-4`.
 
 ## `NAME-4` UART: suggest `X_TX_Y_RX` style names <a id="name-4"></a>
 
@@ -186,7 +186,7 @@ rails listed.
 
 **Fix.** Rename rails to `+xVy` (`+3V3`, `+5V0`), or run in non-strict mode and check what it picked up.
 
-**References.** better_erc `erc_core/src/power.rs` (`derive_power_structure`, strict and non-strict patterns).
+**References.** better_erc `erc_analysis/src/power.rs` (`Power::of`: `+xVy` names, `+V`, `VDD`, `VCC`, power pins).
 
 ## `NAME-8` Fixed-voltage name on a net that is not fixed <a id="name-8"></a>
 
@@ -282,7 +282,7 @@ and the op-amp's V− pin looks shorted to V+ in every voltage check.
 
 **Fix.** Name negative rails with a leading minus (`-5V0`, `-12V`) and make sure the parser reads it.
 
-**References.** better_erc `erc_core/src/power.rs` (voltage parsed from the name without a sign; `VEE` taken as ground); catalogue `RAIL-3`.
+**References.** better_erc `erc_analysis/src/power.rs` (voltage parsed from the name without a sign; `VEE` taken as ground); catalogue `RAIL-3`.
 
 ## `NAME-12` Unannotated or duplicate reference designators <a id="name-12"></a>
 

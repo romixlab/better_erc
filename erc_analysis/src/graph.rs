@@ -155,3 +155,45 @@ pub fn input_pins(board: &Board) -> Vec<PinId> {
     });
     pins
 }
+
+/// Chains of parts, each part passing its filter in `through` and sharing a net with the previous one; nets for
+/// which `skip` is true do not join parts (rails and grounds, which connect nearly everything). The first chain
+/// link is every part passing the first filter. `erc_core`'s `PcbAssembly::find_part_chains`: an IC then an
+/// inductor finds converters' switching nodes, IC, resistor, inductor one with a sense resistor.
+pub fn part_chains(
+    board: &Board,
+    through: &[&dyn Fn(PartId) -> bool],
+    skip: &dyn Fn(NetId) -> bool,
+) -> Vec<Vec<PartId>> {
+    if through.len() < 2 {
+        return Vec::new();
+    }
+    let parts: Vec<PartId> = (0..board.parts.len())
+        .map(PartId::from_index)
+        .filter(|p| board.is_component(*p))
+        .collect();
+    let mut chains: Vec<Vec<PartId>> = parts
+        .iter()
+        .filter(|p| through[0](**p))
+        .map(|p| vec![*p])
+        .collect();
+    for filter in &through[1..] {
+        let mut longer = Vec::new();
+        for chain in &chains {
+            let last = *chain.last().expect("never empty");
+            let nets: BTreeSet<NetId> = part_nets(board, last)
+                .into_iter()
+                .filter(|n| !skip(*n))
+                .collect();
+            for &p in &parts {
+                if p != last && filter(p) && part_nets(board, p).iter().any(|n| nets.contains(n)) {
+                    let mut c = chain.clone();
+                    c.push(p);
+                    longer.push(c);
+                }
+            }
+        }
+        chains = longer;
+    }
+    chains
+}
