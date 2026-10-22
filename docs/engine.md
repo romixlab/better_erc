@@ -3,8 +3,9 @@
 `erc_checks` runs the checks of the [catalogue](checks.md) on a design of the [board model](model.md). Each check is
 one file with its catalogue id, the data it needs and a pure function from the design to findings; the engine works
 out which checks can run on a design, runs them in parallel, says which could not run and what would enable them,
-and returns one report. `erc_analysis` holds what the checks build on: part classes, values, graph queries and the
-I2C bus recogniser.
+and returns one report. `erc_analysis` holds what the checks build on: part classes, values, graph queries, the power
+structure and the I2C bus recogniser. The library crate `better_erc` re-exports all of it (see [model.md](model.md)
+"The crates").
 
 ## A run
 
@@ -57,7 +58,7 @@ on by default) opens a path through the importer registry, runs the engine, comp
 the exit code as data.
 
 ```rust
-use erc_checks::{CheckOptions, Format, Need, Severity, check_path, read_baseline};
+use better_erc::{CheckOptions, Format, Need, Severity, check_path, read_baseline};
 
 let opts = CheckOptions {
     require: vec![Need::Layout],
@@ -72,7 +73,9 @@ std::process::exit(run.verdict.exit.code().into());
 
 - `Project::open(path)`: a design file (whatever an importer reads), or a directory: its `.kicad_pro` when there is
   exactly one, else the one file an importer is surest about; several equally likely files are an error naming
-  them. `Project::variants()` lists the variants (shell completion uses it), `Project::check(&opts)` runs.
+  them. `Project::open_files(main, others)`: a design whose files were picked one by one (the app's Altium and
+  OrCAD pickers), read as if beside each other. `Project::variants()` lists the variants (shell completion uses
+  it), `Project::check(&opts)` runs.
 - `CheckRun { dir, main, importer, report, verdict }`; `render(format, color)` gives text (coloured on request),
   JSON, SARIF (file URIs relative to the current directory) or Markdown.
 - `Verdict { exit, fail_on, failing, unavailable }`: `Exit::Unavailable` (code 3) when a required need is missing
@@ -119,7 +122,7 @@ keeps it in the model.
 
 ## The command line
 
-`berc` (the `berc` crate) is a thin client of the library; nothing it does is missing there.
+`berc` (the `berc` crate) is a thin client of the library (`better_erc`); nothing it does is missing there.
 
 - `berc check PROJECT [--variant V] [--only CAT,ID] [--format text|json|sarif|md] [--baseline report.json]
   [--fail-on error|warning|suggestion] [--require NEED]`: `check_path` and `render`. Exit codes 0 clean, 1 findings
@@ -133,6 +136,10 @@ keeps it in the model.
 - `berc checks list [--tier easy|mid|hard|judgement] [--status ran|not-run|planned] [--project PATH]
   [--format text|json]`: `list_for(report)`, every catalogue check with severity, tier and state; with `--project`
   what a run there does with each (ran, not run with the hint, planned), which `--status ran` and `not-run` need.
+- `berc diff --pnp A B [--origin page|aux] [--tolerance MM] [--rotation-tolerance DEG] [--format text|json]`:
+  `better_erc::diff::pnp`, the placements of two designs (PnP files, boards, KiCad projects with their board)
+  footprint by footprint; a board against a PnP file in the PnP frame ([model.md](model.md)). Exit codes 0 the
+  same, 1 different, 2 usage or import error. The netlist, BOM and findings modes come with RPT-16 and RPT-17.
 - `berc textconv FILE`: readable git diffs of KiCad files (README "Readable git diffs").
 
 Text goes through `anstream`, so colour is dropped on a pipe and with `NO_COLOR`; a spinner on stderr shows what a
@@ -228,7 +235,7 @@ of the threshold it used.
 | `BOM-10` | a resistor value that does not read, or odd notation | `bom-10_values` |
 | `LIB-3` | a MOSFET whose pins are not named G, D and S | `lib-3_mosfet_pin_names` |
 
-The I2C buses come from `erc_analysis::i2c`, ported from the first `erc_core` code: SCL and SDA nets named alike,
+The I2C buses come from `erc_analysis::i2c`, ported from the first analysis code (the removed `erc_core`): SCL and SDA nets named alike,
 pull-up pairs meeting on one net, ties and discrete translators (a resistor or FET per line to another bus, or to an
 unnamed pair of nets that becomes a bus of its own), translator ICs, and the segments they form. Pin roles will
 replace the names as the way to find a bus (NET-4, NET-7).

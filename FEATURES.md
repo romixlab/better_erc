@@ -24,41 +24,45 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   provenance; the importer trait; the canonical dump ([docs/model.md](docs/model.md))
 - `erc_kicad`: KiCad 8, 9 and 10 read by us: s-expression reader, schematic hierarchy with KiCad's connectivity,
   project file, board, the KiCad netlist as the oracle
-- `erc_analysis`: analyses over the board model: part classes, values, graph queries, the I2C bus recogniser
+- `erc_analysis`: analyses over the board model: part classes, values, graph queries, the power structure, the I2C
+  bus recogniser
 - `erc_checks`: the check engine and the checks, one file per catalogue id; findings, not-run reports, the report
   as JSON and text, the embedded catalogue ([docs/engine.md](docs/engine.md))
 - `erc_import`: the importer registry, and the Altium, OrCAD and PnP importers into the board model
   ([docs/model.md](docs/model.md))
-- `ecad_file_format`: netlist, BOM and PnP parsers, the common `Netlist` model, passive value parsing
-- `erc_core`: the first analysis and checks on the old `Netlist` (`PcbAssembly`, power structure, I2C buses), still
-  feeding the desktop app; the checks themselves run in `erc_checks`
-- `ecad_compare`: board file comparisons (PnP so far)
-- `better_erc`: egui/eframe desktop app (`egui_tiles` tabs)
-- `berc`: command line tools (`berc textconv` so far)
+- `better_erc`: the library: the crates above re-exported, the run entry and report types at the top, `diff`
+  (`TOOL-6`)
+- `better_erc_app`: egui/eframe desktop app (`egui_tiles` tabs), binary `better_erc`
+- `berc`: command line tool (`check`, `explain`, `checks list`, `diff --pnp`, `textconv`)
+- The first crates, `ecad_file_format` (netlist model and readers), `erc_core` (`PcbAssembly`, analysis and checks)
+  and `ecad_compare` (PnP compare), were removed in 0.4 once all they did ran on the crates above
 - `test_schematics`: KiCad test schematics, one per check, with a netlist generator (`generate_netlists`)
 
 ## Import (`IMP`)
 
-- ✅ `IMP-1` KiCad netlist from KiCad 8, 9 and 10 (serde-lexpr), incl. pin types, net classes and units; a test per
-  version · `ecad_file_format/src/kicad_netlist.rs`, `test_input/kicad_versions`
+- ✅ `IMP-1` KiCad netlist from KiCad 8, 9 and 10, incl. pin types, net classes, units and their names; a test per
+  version · `erc_kicad/src/netlist.rs`, `erc_kicad/tests/fixtures/netlist/kicad_versions`, `tests/netlist.rs`
 - ✅ `IMP-2` KiCad schematic → netlist through kicad-cli, cached per file · `test_schematics/generate_netlists`
 - ✅ `IMP-3` OrCAD netlist: nets, components, library parts; in the board model: pstxnet, pstxprt and pstchip found
   beside each other, sections as units with their letters, pages as sheets, pin types with the pstchip properties
-  that gave them · `erc_import/src/orcad`, old reader `orcad_netlist.rs`
+  that gave them · `erc_import/src/orcad`
 - ✅ `IMP-4` Altium: EDIF netlist + WireList (for pin types) combined; in the board model: either file as the main one,
   symbols, sheets, part properties, nets, pin names and types with both files as sources (the WireList's type wins)
-  · `erc_import/src/altium`, old readers `edif_netlist.rs`, `wirelist.rs`, `altium_netlist.rs`
+  · `erc_import/src/altium`
 - ✅ `IMP-5` PnP CSV from KiCad, Altium and Allegro; in the board model as a layout of footprints (position, rotation,
-  side, value, package, the other columns as fields), mm, mil or inch · `erc_import/src/pnp.rs`, old reader `pnp.rs`
-- ✅ `IMP-6` Passive values (Ω with milli/micro, k, M) · `passive_value.rs`
-- 🚧 `IMP-7` Import tab in the app: KiCad schematic, Altium and OrCAD netlist sources. Only Altium loads; the KiCad and
-  OrCAD sources pick their files but load nothing yet · `tabs/pcb_data_import.rs`
+  side, value, package, the other columns as fields), mm, mil or inch · `erc_import/src/pnp.rs`
+- ✅ `IMP-6` Passive values (Ω with milli/micro, k, M, G; F, H, V, A, Hz, W) with notation warnings · `erc_model/src/value.rs`
+- ✅ `IMP-7` Import tab in the app: any design the importer registry reads (a file or a directory), and the KiCad
+  schematic, Altium (EDIF + WireList) and OrCAD (three files) pickers, all loading; each design's report below:
+  findings with id, severity, subjects, facts and the catalogue explanation, not-run checks with their hints, notes ·
+  `better_erc_app/src/tabs/pcb_data_import.rs`, `Project::open_files`
 - 📋 `IMP-8` OrCAD: one BOM per variant
 - 📋 `IMP-9` Pinmux import from Excel
 - 📋 `IMP-10` Xilinx bank info from pin names or Xilinx ASCII pin files
 - 💡 `IMP-11` Watch the netlist file and reload on change
-- ✅ `IMP-12` KiCad 9 and 10 netlists load (a fixture per KiCad version, `test_input/kicad_versions`); the `general` and
-  `style` tests run on test schematics in `test_schematics` instead of project files that only existed on one PC
+- ✅ `IMP-12` KiCad 9 and 10 netlists load (a fixture per KiCad version, `erc_kicad/tests/fixtures/netlist/kicad_versions`,
+  `just netlist-fixtures`); the tests run on test schematics in `test_schematics` instead of project files that only
+  existed on one PC
 - ✅ `IMP-13` KiCad schematic hierarchy read by us (KiCad 8, 9, 10) into the board model: sheet instances, parts with
   units, fields, flags and KiCad 10 variants, pin instances, labels, no-connects, and connectivity by KiCad's rules
   (label scopes, power symbols global and KiCad 10 local, sheet pins, vector and group buses, bus entries and aliases,
@@ -77,15 +81,17 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 
 ## Netlist model and analysis (`NET`)
 
-- ✅ `NET-1` Common `Netlist` model with typed `Designator`, `NetName`, `PinName`, `PinId` · `netlist.rs`
-- ✅ `NET-2` Graph queries: `find_chains`, `find_connected_parts`, `is_connected`, `are_parts_connected`, `connected_net`
-- ✅ `NET-3` `PcbAssembly`: collects analysis results, `find_part_chains` · `erc_core/src/pcba.rs`
-- ✅ `NET-4` I2C bus finder: direct and common segments, connected parts, voltage translators · `erc_analysis/src/i2c.rs`
-  on the board model (ported from `erc_core/src/i2c.rs`, which still feeds the app). Buses are still found by net
-  names; pin roles come with `NET-7`
-- 🚧 `NET-5` Power structure: rails and grounds from net names only (strict mode needs `+xVy`); voltage parsed from
-  the name. Missing: sources (LDO, DC-DC, connectors), 0R and shunt ties, power switches · `power.rs`
-- 🚧 `NET-6` Switching nodes finder · `power.rs`
+- ✅ `NET-1` One model for every importer: first the `Netlist` of `ecad_file_format`, now the board model (`NET-17`)
+- ✅ `NET-2` Graph queries: nets of parts, parts on nets, parts connected, chains of parts between two nets ·
+  `erc_analysis/src/graph.rs`
+- ✅ `NET-3` Analysis results per board: first `PcbAssembly`, now the engine's context (`Ctx`, built lazily) and the
+  run entry `Project`; `find_part_chains` is `graph::part_chains` · `erc_checks/src/{ctx,project}.rs`
+- ✅ `NET-4` I2C bus finder: direct and common segments, connected parts, voltage translators · `erc_analysis/src/i2c.rs`.
+  Buses are still found by net names; pin roles come with `NET-7`
+- 🚧 `NET-5` Power structure: rails from net names (strict mode needs `+xVy`, non-strict takes `VDD_1V8`), `+V`,
+  `VDD`, `VCC` and power pins, each a fact with its rule; grounds by name; voltage parsed from the name. Missing:
+  sources (LDO, DC-DC, connectors), 0R and shunt ties, power switches · `erc_analysis/src/power.rs`
+- 🚧 `NET-6` Switching nodes finder: the net between an IC and an inductor that is no ground or rail · `erc_analysis/src/power.rs`
 - 📋 `NET-7` Pin model: digital/analog/power in, out, bidir, open drain; pulls; thresholds vs bank voltage; source
   and sink current per pin and bank; quiescent current per mode
 - 📋 `NET-8` Power states: which rails are on in each state, which parts are powered
@@ -96,7 +102,8 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - 📋 `NET-13` Multi-board: several netlists joined through connectors
 - 📋 `NET-14` Standard plug-in cards for multi-board (M.2 device, DP cable...)
 - 💡 `NET-15` Select a piece of schematic and simulate it
-- 🚧 `NET-16` Drop lexpr / serde-lexpr: `ecad_file_format` parses KiCad through them, pinned to upstream master `09a61d3` (Aug 2024) because crates.io 0.2.7 (Mar 2023) lacks numeric-looking symbols. The s-expr reader now lives in `erc_kicad::sexpr` (berc re-exports it) and the new importers use it; lexpr goes with `ecad_file_format` once the checks run on the new model
+- ✅ `NET-16` Drop lexpr / serde-lexpr (pinned to an upstream commit of Aug 2024): KiCad files are read by our own
+  s-expression reader, `erc_kicad::sexpr`; lexpr left with `ecad_file_format`
 - 🚧 `NET-17` Board model (`erc_model`): arena-indexed design of boards, sheets, symbols, parts, pin instances, nets,
   labels, variants, net classes, project settings and the layout; every attribute a `Fact` with provenance, rank, time
   and note (highest rank wins, newest on a tie, disagreements listed); typed `Value`; the `Importer` trait; the
@@ -172,8 +179,8 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - 🚧 `BOM-10` Resistor value that doesn't read or has odd notation · `bom/bom_10.rs`, `bom-10_values`. Missing: the
   E-series test and capacitor values
 - ✅ `LIB-3` MOSFET pins not named G, D, S · `lib/lib_3.rs`, `lib-3_mosfet_pin_names`
-- ⬜ `IO-1` Inputs without a drive source: collects input pins and prints them, no diagnostic yet · `erc_core/src/general.rs`,
-  test schematic `io-1_inputs`
+- ⬜ `IO-1` Inputs without a drive source: the input pins on a net are collected (`graph::input_pins`), no check yet ·
+  `erc_analysis/src/graph.rs`, test schematic `io-1_inputs`
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`
 - ✅ `DIAG-2` Every catalogue check reported as ran, not run (the missing need, why, and what would enable it) or
   planned; each check declares its needs, availability is worked out per board before the run · `erc_checks/src/{meta,ctx,engine}.rs`
@@ -191,8 +198,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 ## Configuration and waivers (`CFG`)
 
 - 🚧 `CFG-1` Thresholds: in `erc_checks` each check declares its own with a default (`CheckMeta::params`), and
-  `Config` overrides them and severities per project; the project file that sets them is `CFG-2`. `erc_core/src/config.rs`
-  still holds the app's
+  `Config` overrides them and severities per project; the project file that sets them is `CFG-2`
 - 📋 `CFG-2` Project file: net voltage ranges, currents, power states, I2C address choices, unknown part mapping
   (type and pin mapping)
 - 📋 `CFG-3` Waivers: check, nets involved, user, comment, date; one-click waiver; voting (disagree first)
@@ -243,10 +249,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 
 ## Views (`VIEW`)
 
-- 🚧 `VIEW-1` Nets tab: power rails, grounds, switching nodes, all nets with node count · `tabs/nets.rs`
-- ⬜ `VIEW-2` I2C tab: debug dump of the buses · `tabs/i2c.rs`
-- 🚧 `VIEW-3` Style tab: style findings list · `tabs/style.rs`
-- 🚧 `VIEW-4` Inputs tab · `tabs/inputs.rs`
+- 🚧 `VIEW-1` Nets tab: power rails with their voltage, grounds, switching nodes, all nets with node count · `tabs/nets.rs`
+- 🚧 `VIEW-2` I2C tab: the I2C findings, and the buses with net names, pull-ups, nodes and segments as text · `tabs/i2c.rs`
+- 🚧 `VIEW-3` Style tab: the BOM and LIB findings · `tabs/style.rs`
+- 🚧 `VIEW-4` Inputs tab: input and power input pins per symbol with the parts using it · `tabs/inputs.rs`
 - 📋 `VIEW-5` One-pin nets and unnamed nets, click to see where they go
 - 📋 `VIEW-6` Signal tracing: pick a net, follow it through parts (needs `NET-10`)
 - 📋 `VIEW-7` Power diagram
@@ -266,7 +272,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 
 ## App (`APP`)
 
-- ✅ `APP-1` egui app with tiles, tabs shown and hidden from the side panel, menu bar, debug window · `better_erc/src`
+- ✅ `APP-1` egui app with tiles, tabs shown and hidden from the side panel, menu bar, debug window · `better_erc_app/src`
 - 📋 `APP-2` Sidebar with view switching; netlist load and watch status in a status bar
 - 📋 `APP-3` `better_erc --version` with version, git SHA and commit time like `berc` (the app has no command line
   options at all yet), so `just deploy` can check the installed app and not only that it is on PATH
@@ -275,7 +281,9 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 
 - ✅ `TOOL-1` PnP compare between two files; on the board model it compares any two layouts (two PnP files, two
   boards, a board and its PnP file) by reference: position, rotation modulo 360, side, value, package, with
-  tolerances · `erc_model/src/placecmp.rs` (for `berc diff --pnp`), old `ecad_compare/examples/pnp_compare.rs`
+  tolerances; a board against a PnP file in the PnP frame (origin page or aux, y up, footprints excluded from
+  position files left out); `berc diff --pnp A B` with each side's footprint and test point count, text or JSON,
+  exit 1 on a difference · `erc_model/src/placecmp.rs`, `better_erc/src/diff.rs`, `berc/tests/diff.rs`
 - 📋 `TOOL-2` Schematic vs layout match (catalogue `LAY-1`)
 - ✅ `TOOL-3` Readable git diffs: `berc textconv` prints a `.kicad_sch` / `.kicad_pcb` as sorted text without UUIDs
   or coordinates (`--with-geometry` adds them), and a `.kicad_pro` as dotted-path settings with named lists and
@@ -290,6 +298,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   text or Markdown) and `berc checks list` (every catalogue id, `--tier`, `--status ran|not-run|planned` with
   `--project`, text or JSON); completion of check ids, categories, needs and the variants of the design in the
   current directory, each with a help text · `berc/src/main.rs`, `berc/src/complete.rs`, `erc_checks::list_for`
+- 🚧 `TOOL-6` The library facade: crate `better_erc` re-exports `erc_model`, `erc_kicad`, `erc_import`,
+  `erc_analysis` and `erc_checks`, with the run entry (`Project`, `check_path`, `CheckRun`, `Verdict`) and the report
+  types at the top and `diff::pnp`; berc and the app depend on it alone. Missing: `Workspace` and a watching
+  `Session` (architecture 5.2), queries, waivers · `better_erc/src/lib.rs`
 
 ## Code generation (`GEN`)
 

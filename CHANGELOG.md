@@ -24,9 +24,9 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
   `--format text|json`; exit 0 same, 1 different, 2 error. The text names each side's footprint and test point
   count, as the old example did. `placecmp::{Origin, to_placement_frame, aux_origin, is_board_file}`; the diff types
   serialise.
-- The library facade, crate `better_erc` (lib): `model`, `kicad`, `import`, `analysis`, `checks` re-exported, the run
-  entry (`Project`, `check_path`, `CheckOptions`, `CheckRun`, `Verdict`) and the report types at the top, and
-  `better_erc::diff::pnp`. berc depends on it alone.
+- The library facade (`TOOL-6`), crate `better_erc` (lib): `model`, `kicad`, `import`, `analysis`, `checks`
+  re-exported, the run entry (`Project`, `check_path`, `CheckOptions`, `CheckRun`, `Verdict`) and the report types at
+  the top, and `better_erc::diff::pnp`. berc and the app depend on it alone.
 - `Project::open_files(main, others)`: a design whose files were picked one by one from anywhere (an Altium EDIF and
   its WireList, the OrCAD trio), read as if beside each other; the app's import tab uses it.
 - `erc_analysis::power::PowerOptions { strict }`: the old non-strict mode (`VDD_1V8` without the `+`) kept;

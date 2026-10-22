@@ -1,9 +1,26 @@
-# The board model and the KiCad importer
+# The board model, the importers and the crates
 
-better_erc is being rebuilt on a new core: a board model (`erc_model`) that every importer fills and every check reads,
-and a KiCad importer (`erc_kicad`) that reads the schematic, project file and board itself. The checks run on it
-through the check engine ([engine.md](engine.md)). The old crates (`ecad_file_format`, `erc_core`) still feed the
-desktop app until it moves onto the new core.
+better_erc's core is a board model (`erc_model`) that every importer fills and every check reads, a KiCad importer
+(`erc_kicad`) that reads the schematic, project file and board itself, and the other importers behind one registry
+(`erc_import`). The analyses (`erc_analysis`) and the checks (`erc_checks`, [engine.md](engine.md)) run on it.
+
+## The crates
+
+| crate | what it is | depends on |
+|---|---|---|
+| `erc_model` | the board model, values, facts and provenance, the importer trait, the canonical dump, `netcmp`, `placecmp` | serde |
+| `erc_kicad` | KiCad projects, schematics, boards and netlists; the s-expression reader | `erc_model` |
+| `erc_import` | the importer registry; Altium, OrCAD and PnP (one cargo feature each) | `erc_model`, `erc_kicad` |
+| `erc_analysis` | part classes, values, graph queries, the power structure, the I2C bus recogniser | `erc_model` |
+| `erc_checks` | the check engine, the checks, the catalogue, reports; `project`, the run on a path | the above |
+| `better_erc` | the library: all of the above re-exported, the run entry at the top, `diff` (`berc diff`) | the above |
+| `berc` | the command line tool | `better_erc` |
+| `better_erc_app` | the egui app, binary `better_erc` | `better_erc` |
+
+One dependency on `better_erc` gives a Rust user the whole core: `better_erc::model`, `kicad`, `import`, `analysis`
+and `checks`, and at the top `Project`, `check_path`, `CheckOptions`, `CheckRun`, `Report`, `Finding`, `Verdict`
+([engine.md](engine.md) "A run on a path"). A `Workspace` that also watches the files and re-runs (a session for the
+MCP server and the GUI) is not built yet; `Project` is the entry until then.
 
 ## erc_model
 
@@ -91,7 +108,12 @@ a netlist diff.
 `placecmp::compare` compares two layouts' placements: each footprint by its reference, its position, rotation (modulo
 360), side, value and package (the name without its `library:` prefix), within optional tolerances. The layouts can
 come from board files or pick-and-place files, so two PnP files, two boards, or a board and its PnP file compare the
-same way; it is the PnP compare of `berc diff --pnp`.
+same way; it is the PnP compare of `berc diff --pnp`. A board file counts from the page's top left corner with y
+down, a PnP file from an origin with y up, so `compare_boards` brings a board compared with a PnP file into the PnP
+frame first (`to_placement_frame`): relative to `Origin::Page` (KiCad's default) or `Origin::Aux` (the board's
+`aux_axis_origin`, KiCad's `--use-drill-file-origin`), y negated, rotations unchanged, footprints marked
+`exclude_from_pos_files` left out: what kicad-cli's `pcb export pos` writes. `better_erc::diff::pnp` opens the two
+sides by path, counts each side's footprints and test points, and renders the result as text or JSON.
 
 ## erc_kicad
 
@@ -128,7 +150,7 @@ netlist writes only the classes of directive labels, KiCad 8's none):
 
 - the fixtures in `erc_kicad/tests/fixtures` (connectivity cases on one sheet, a hierarchy with a sheet used twice and
   buses through sheet pins, KiCad 10 local power symbols, bus aliases in a sheet and in a project file with net class
-  patterns) and `ecad_file_format/test_input/kicad_versions`, against their committed netlists from KiCad 8, 9 and 10
+  patterns) and `erc_kicad/tests/fixtures/netlist/kicad_versions`, against their committed netlists from KiCad 8, 9 and 10
   (`just kicad-fixtures` exports them again with KiCad's container images);
 - the test schematics in `test_schematics/sources`, through the installed kicad-cli;
 - every KiCad project under `~/git/hw` (or `BERC_HW_DIR`) when that folder exists, through the installed kicad-cli;
@@ -179,6 +201,6 @@ trait lives in the model, so `erc_kicad` stands alone, and each importer is a ca
 
 The Altium and OrCAD readers are pest grammars (`erc_import/grammar`) that take any unknown element or line as such
 and report it, instead of failing the file. The tests (`erc_import/tests`) import every fixture through the registry
-against a committed dump and notes (`BLESS=1` rewrites them), assert what the old `ecad_file_format` readers'
-tests asserted, and feed truncated and garbled copies of every fixture to every importer: an import fails with an
+against a committed dump and notes (`BLESS=1` rewrites them), assert what the readers' tests of the removed `ecad_file_format`
+asserted, and feed truncated and garbled copies of every fixture to every importer: an import fails with an
 error or gives a design that dumps and reads back, it never panics.

@@ -15,9 +15,10 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 - **`berc textconv`**: `.kicad_sch`, `.kicad_pcb` and `.kicad_pro` files as sorted, line-oriented text for
   `git diff`, `git log -p` and anything else that uses git's textconv. See
   [Readable git diffs](#readable-git-diffs).
-- **Netlist import** (`ecad_file_format`): KiCad 8, 9 and 10 netlists, OrCAD Capture netlists (pstxnet, pstxprt,
-  pstchip), Altium EDIF plus WireList, and pick-and-place CSV files from KiCad, Altium and Allegro, all into one
-  netlist model.
+- **Import** into one board model ([docs/model.md](docs/model.md)): KiCad 8, 9 and 10 projects, schematics, boards
+  and netlists read by better_erc itself (`erc_kicad`), OrCAD Capture netlists (pstxnet, pstxprt, pstchip), Altium
+  EDIF plus WireList, and pick-and-place CSV files from KiCad, Altium and Allegro (`erc_import`), all picked by one
+  importer registry.
 - **Checks** (`erc_checks`), run on a KiCad project read by better_erc itself (`erc_kicad`), with one finding
   type, a report of which checks ran and which could not run for lack of data, and the report as JSON or text
   ([docs/engine.md](docs/engine.md)):
@@ -31,10 +32,13 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
   or a CI job, as text, JSON, SARIF (GitHub code scanning) or Markdown (a PR comment), with an exit code by
   severity and a baseline so only new findings fail. `berc explain ID` and `berc checks list` show the catalogue.
   See [Checks in CI](#checks-in-ci).
-- **The app** (`better_erc`, egui): tabs for nets, power rails (rails and grounds derived from net names), I2C
-  buses, style findings and inputs, still on the first analysis code (`erc_core`). Its import tab loads Altium
-  netlists so far; KiCad and OrCAD import in the app are still to come.
-- **Tools**: a pick-and-place file comparison (`ecad_compare`).
+- **`berc diff --pnp A B`**: two pick-and-place files, two boards, or a board and the PnP file exported from it
+  compared footprint by footprint (position, rotation, side, value, package), with tolerances.
+- **The app** (`better_erc`, egui, crate `better_erc_app`): an import tab that opens any design the registry reads
+  (and Altium or OrCAD files picked one by one) and shows its findings with their explanations and the checks that
+  did not run, and tabs for nets (power rails, grounds and switching nodes from names and pin types), I2C buses,
+  style findings and inputs.
+- **The library** (crate `better_erc`): all of the above for Rust code in one dependency.
 
 ## Documentation
 
@@ -42,7 +46,7 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
   netlist, by ID (`PIN-1`, `I2C-3`) and severity.
 - [docs/engine.md](docs/engine.md): the check engine: checks and their data needs, findings, the report, the test
   schematics with their expectations, how to add a check.
-- [docs/model.md](docs/model.md): the board model and the KiCad importer.
+- [docs/model.md](docs/model.md): the board model, the importers and the crates.
 - [docs/review-checklist.md](docs/review-checklist.md): a condensed schematic review checklist that groups those
   IDs for a review pass.
 - [FEATURES.md](FEATURES.md): what the code does today and what is planned, item by item.
@@ -53,8 +57,8 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 You need a Rust toolchain (1.86 or newer, from [rustup](https://rustup.rs)). From a clone of this repository:
 
 ```sh
-cargo install --locked --path berc         # the berc command line tool
-cargo install --locked --path better_erc   # the desktop app
+cargo install --locked --path berc             # the berc command line tool
+cargo install --locked --path better_erc_app   # the desktop app (binary better_erc)
 ```
 
 or both at once with [just](https://github.com/casey/just): `just install`. `berc --version` shows the version,
@@ -149,13 +153,13 @@ In this repository `just check` runs `berc check` on the test schematics against
 
 ## Development
 
-The workspace has the crates of the new core, `erc_model` (the board model), `erc_kicad` (KiCad read by us),
-`erc_import` (the importer registry with Altium, OrCAD and PnP), `erc_analysis` and `erc_checks` (the engine, the
-checks, the report and its formats), and of the old one, `ecad_file_format` (importers and the netlist model),
-`erc_core` (analysis and checks) and `ecad_compare` (board file comparisons), which go once the new core has
-taken over; plus `better_erc` (the app) and `berc` (the command line tool).
-`test_schematics` holds a small KiCad schematic per check; the tests export them with `kicad-cli`, so KiCad must
-be installed to run them.
+The workspace has the crates of the core, `erc_model` (the board model, value parsing, the netlist and placement
+comparisons), `erc_kicad` (KiCad read by us), `erc_import` (the importer registry with Altium, OrCAD and PnP),
+`erc_analysis` (part classes, graph queries, power structure, I2C buses) and `erc_checks` (the engine, the checks,
+the report and its formats); `better_erc`, the library that re-exports them; `berc` (the command line tool) and
+`better_erc_app` (the app, binary `better_erc`), both on the library.
+`test_schematics` holds a small KiCad schematic per check; the differential test exports them with `kicad-cli`
+and is skipped with a message where KiCad is not installed.
 
 ```sh
 just test       # all tests
