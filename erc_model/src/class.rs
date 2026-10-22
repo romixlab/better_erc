@@ -38,6 +38,10 @@ pub enum PartClass {
         kind: Option<SwitchKind>,
     },
     Relay,
+    /// A DC, stepper or brushless motor: an inductive load (DRV-14)
+    Motor,
+    /// A solenoid, valve or other coil actuator: an inductive load (DRV-14)
+    Solenoid,
     Crystal,
     /// A crystal oscillator or other active clock source
     Oscillator,
@@ -222,6 +226,8 @@ impl PartClass {
             PartClass::TestPoint => "test point",
             PartClass::Switch { .. } => "switch",
             PartClass::Relay => "relay",
+            PartClass::Motor => "motor",
+            PartClass::Solenoid => "solenoid",
             PartClass::Crystal => "crystal",
             PartClass::Oscillator => "oscillator",
             PartClass::Regulator { .. } => "regulator",

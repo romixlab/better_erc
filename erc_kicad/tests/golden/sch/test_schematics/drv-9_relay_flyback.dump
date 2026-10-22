@@ -1,0 +1,421 @@
+board drv-9_relay_flyback
+label / local K1_B at 195.58,54.61 net /K1_B
+label / local K1_B at 236.22,48.26 net /K1_B
+label / local K1_COIL at 139.7,48.26 net /K1_COIL
+label / local K1_COIL at 236.22,53.34 net /K1_COIL
+label / local K1_DRV at 91.44,50.8 net /K1_DRV
+label / local K1_DRV at 195.58,46.99 net /K1_DRV
+label / local K2_B at 43.18,83.82 net /K2_B
+label / local K2_B at 340.36,54.61 net /K2_B
+label / local K2_COIL at 43.18,88.9 net /K2_COIL
+label / local K2_COIL at 99.06,90.17 net /K2_COIL
+label / local K2_COIL at 284.48,48.26 net /K2_COIL
+label / local K2_DRV at 91.44,53.34 net /K2_DRV
+label / local K2_DRV at 340.36,46.99 net /K2_DRV
+label / local K3_A at 139.7,83.82 net /K3_A
+label / local K3_A at 195.58,90.17 net /K3_A
+label / local K3_IN at 91.44,55.88 net /K3_IN
+label / local K3_IN at 236.22,83.82 net /K3_IN
+label / local K3_K at 139.7,86.36 net /K3_K
+label / local K3_K at 236.22,88.9 net /K3_K
+label / local K4_COIL at 284.48,83.82 net /K4_COIL
+label / local K4_COIL at 332.74,86.36 net /K4_COIL
+label / local K4_DRV at 91.44,58.42 net /K4_DRV
+label / local K4_DRV at 332.74,83.82 net /K4_DRV
+label / local LOAD1_COM at 139.7,50.8 net /LOAD1_COM
+label / local LOAD1_NC at 139.7,53.34 net /LOAD1_NC
+label / local LOAD1_NO at 139.7,55.88 net /LOAD1_NO
+label / local LOAD2_COM at 284.48,50.8 net /LOAD2_COM
+label / local LOAD2_NC at 284.48,53.34 net /LOAD2_NC
+label / local LOAD2_NO at 284.48,55.88 net /LOAD2_NO
+label / local LOAD3_A at 139.7,88.9 net /LOAD3_A
+label / local LOAD3_B at 139.7,91.44 net /LOAD3_B
+label / local LOAD4_COM at 284.48,86.36 net /LOAD4_COM
+label / local LOAD4_NC at 284.48,88.9 net /LOAD4_NC
+label / local LOAD4_NO at 284.48,91.44 net /LOAD4_NO
+label / power +3V3 at 43.18,50.8 net +3V3
+label / power +3V3 at 91.44,45.72 net +3V3
+label / power +3V3 at 195.58,82.55 net +3V3
+label / power +12V at 43.18,48.26 net +12V
+label / power +12V at 99.06,82.55 net +12V
+label / power +12V at 139.7,45.72 net +12V
+label / power +12V at 284.48,45.72 net +12V
+label / power +12V at 284.48,81.28 net +12V
+label / power +12V at 332.74,88.9 net +12V
+label / power GND at 43.18,53.34 net GND
+label / power GND at 43.18,86.36 net GND
+label / power GND at 91.44,48.26 net GND
+label / power GND at 236.22,50.8 net GND
+label / power GND at 236.22,86.36 net GND
+label / power GND at 332.74,91.44 net GND
+net +3V3 class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net +3V3 kind power
+net +12V class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net +12V kind power
+net /K1_B class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /K1_B kind named
+net /K1_COIL class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /K1_COIL kind named
+net /K1_DRV class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /K1_DRV kind named
+net /K2_B class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /K2_B kind named
+net /K2_COIL class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /K2_COIL kind named
+net /K2_DRV class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /K2_DRV kind named
+net /K3_A class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /K3_A kind named
+net /K3_IN class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /K3_IN kind named
+net /K3_K class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /K3_K kind named
+net /K4_COIL class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /K4_COIL kind named
+net /K4_DRV class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /K4_DRV kind named
+net /LOAD1_COM class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /LOAD1_COM kind named
+net /LOAD1_NC class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /LOAD1_NC kind named
+net /LOAD1_NO class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /LOAD1_NO kind named
+net /LOAD2_COM class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /LOAD2_COM kind named
+net /LOAD2_NC class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /LOAD2_NC kind named
+net /LOAD2_NO class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /LOAD2_NO kind named
+net /LOAD3_A class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /LOAD3_A kind named
+net /LOAD3_B class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /LOAD3_B kind named
+net /LOAD4_COM class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /LOAD4_COM kind named
+net /LOAD4_NC class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /LOAD4_NC kind named
+net /LOAD4_NO class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net /LOAD4_NO kind named
+net GND class = Default @ sch drv-9_relay_flyback.kicad_sch note "effective net class"
+net GND kind power
+part D1 field Value = 1N4148 @ sch drv-9_relay_flyback.kicad_sch
+part D1 flag dnp = no @ sch drv-9_relay_flyback.kicad_sch
+part D1 flag exclude_from_sim = no @ sch drv-9_relay_flyback.kicad_sch
+part D1 flag in_bom = yes @ sch drv-9_relay_flyback.kicad_sch
+part D1 flag on_board = yes @ sch drv-9_relay_flyback.kicad_sch
+part D1 lib Device:D sheet / symbol Device:D
+part D1 unit 1 sheet / uuid d0090001-0000-4000-8000-000000000076 line 309 at 99.06,86.36 rot 0
+part D1 value = text 1N4148 @ sch drv-9_relay_flyback.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch drv-9_relay_flyback.kicad_sch
+part J1 flag dnp = no @ sch drv-9_relay_flyback.kicad_sch
+part J1 flag exclude_from_sim = no @ sch drv-9_relay_flyback.kicad_sch
+part J1 flag in_bom = yes @ sch drv-9_relay_flyback.kicad_sch
+part J1 flag on_board = yes @ sch drv-9_relay_flyback.kicad_sch
+part J1 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J1 unit 1 sheet / uuid d0090001-0000-4000-8000-000000000001 line 149 at 50.8,50.8 rot 0
+part J1 value = text PWR @ sch drv-9_relay_flyback.kicad_sch note "from the Value field"
+part K1 field Value = G5V-1 @ sch drv-9_relay_flyback.kicad_sch
+part K1 flag dnp = no @ sch drv-9_relay_flyback.kicad_sch
+part K1 flag exclude_from_sim = no @ sch drv-9_relay_flyback.kicad_sch
+part K1 flag in_bom = yes @ sch drv-9_relay_flyback.kicad_sch
+part K1 flag on_board = yes @ sch drv-9_relay_flyback.kicad_sch
+part K1 lib Relay:G5V-1 sheet / symbol Relay:G5V-1
+part K1 unit 1 sheet / uuid d0090001-0000-4000-8000-000000000026 line 209 at 147.32,50.8 rot 0
+part K1 value = text G5V-1 @ sch drv-9_relay_flyback.kicad_sch note "from the Value field"
+part K2 field Value = G5V-1 @ sch drv-9_relay_flyback.kicad_sch
+part K2 flag dnp = no @ sch drv-9_relay_flyback.kicad_sch
+part K2 flag exclude_from_sim = no @ sch drv-9_relay_flyback.kicad_sch
+part K2 flag in_bom = yes @ sch drv-9_relay_flyback.kicad_sch
+part K2 flag on_board = yes @ sch drv-9_relay_flyback.kicad_sch
+part K2 lib Relay:G5V-1 sheet / symbol Relay:G5V-1
+part K2 unit 1 sheet / uuid d0090001-0000-4000-8000-000000000051 line 259 at 292.1,50.8 rot 0
+part K2 value = text G5V-1 @ sch drv-9_relay_flyback.kicad_sch note "from the Value field"
+part K3 field Value = ASSR-1218 @ sch drv-9_relay_flyback.kicad_sch
+part K3 flag dnp = no @ sch drv-9_relay_flyback.kicad_sch
+part K3 flag exclude_from_sim = no @ sch drv-9_relay_flyback.kicad_sch
+part K3 flag in_bom = yes @ sch drv-9_relay_flyback.kicad_sch
+part K3 flag on_board = yes @ sch drv-9_relay_flyback.kicad_sch
+part K3 lib Relay_SolidState:ASSR-1218 sheet / symbol Relay_SolidState:ASSR-1218
+part K3 unit 1 sheet / uuid d0090001-0000-4000-8000-000000000082 line 325 at 147.32,86.36 rot 0
+part K3 value = text ASSR-1218 @ sch drv-9_relay_flyback.kicad_sch note "from the Value field"
+part K4 field Value = G5V-1 @ sch drv-9_relay_flyback.kicad_sch
+part K4 flag dnp = no @ sch drv-9_relay_flyback.kicad_sch
+part K4 flag exclude_from_sim = no @ sch drv-9_relay_flyback.kicad_sch
+part K4 flag in_bom = yes @ sch drv-9_relay_flyback.kicad_sch
+part K4 flag on_board = yes @ sch drv-9_relay_flyback.kicad_sch
+part K4 lib Relay:G5V-1 sheet / symbol Relay:G5V-1
+part K4 unit 1 sheet / uuid d0090001-0000-4000-8000-000000000105 line 373 at 292.1,86.36 rot 0
+part K4 value = text G5V-1 @ sch drv-9_relay_flyback.kicad_sch note "from the Value field"
+part Q1 field Value = BC817 @ sch drv-9_relay_flyback.kicad_sch
+part Q1 flag dnp = no @ sch drv-9_relay_flyback.kicad_sch
+part Q1 flag exclude_from_sim = no @ sch drv-9_relay_flyback.kicad_sch
+part Q1 flag in_bom = yes @ sch drv-9_relay_flyback.kicad_sch
+part Q1 flag on_board = yes @ sch drv-9_relay_flyback.kicad_sch
+part Q1 lib Device:Q_NPN_BEC sheet / symbol Device:Q_NPN_BEC
+part Q1 unit 1 sheet / uuid d0090001-0000-4000-8000-000000000043 line 241 at 243.84,50.8 rot 0
+part Q1 value = text BC817 @ sch drv-9_relay_flyback.kicad_sch note "from the Value field"
+part Q2 field Value = BC817 @ sch drv-9_relay_flyback.kicad_sch
+part Q2 flag dnp = no @ sch drv-9_relay_flyback.kicad_sch
+part Q2 flag exclude_from_sim = no @ sch drv-9_relay_flyback.kicad_sch
+part Q2 flag in_bom = yes @ sch drv-9_relay_flyback.kicad_sch
+part Q2 flag on_board = yes @ sch drv-9_relay_flyback.kicad_sch
+part Q2 lib Device:Q_NPN_BEC sheet / symbol Device:Q_NPN_BEC
+part Q2 unit 1 sheet / uuid d0090001-0000-4000-8000-000000000068 line 291 at 50.8,86.36 rot 0
+part Q2 value = text BC817 @ sch drv-9_relay_flyback.kicad_sch note "from the Value field"
+part Q3 field Value = 2N7002 @ sch drv-9_relay_flyback.kicad_sch
+part Q3 flag dnp = no @ sch drv-9_relay_flyback.kicad_sch
+part Q3 flag exclude_from_sim = no @ sch drv-9_relay_flyback.kicad_sch
+part Q3 flag in_bom = yes @ sch drv-9_relay_flyback.kicad_sch
+part Q3 flag on_board = yes @ sch drv-9_relay_flyback.kicad_sch
+part Q3 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q3 unit 1 sheet / uuid d0090001-0000-4000-8000-000000000097 line 355 at 243.84,86.36 rot 0
+part Q3 value = text 2N7002 @ sch drv-9_relay_flyback.kicad_sch note "from the Value field"
+part R1 field Value = 1k @ sch drv-9_relay_flyback.kicad_sch
+part R1 flag dnp = no @ sch drv-9_relay_flyback.kicad_sch
+part R1 flag exclude_from_sim = no @ sch drv-9_relay_flyback.kicad_sch
+part R1 flag in_bom = yes @ sch drv-9_relay_flyback.kicad_sch
+part R1 flag on_board = yes @ sch drv-9_relay_flyback.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid d0090001-0000-4000-8000-000000000038 line 231 at 195.58,50.8 rot 0
+part R1 value = text 1k @ sch drv-9_relay_flyback.kicad_sch note "from the Value field"
+part R2 field Value = 1k @ sch drv-9_relay_flyback.kicad_sch
+part R2 flag dnp = no @ sch drv-9_relay_flyback.kicad_sch
+part R2 flag exclude_from_sim = no @ sch drv-9_relay_flyback.kicad_sch
+part R2 flag in_bom = yes @ sch drv-9_relay_flyback.kicad_sch
+part R2 flag on_board = yes @ sch drv-9_relay_flyback.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid d0090001-0000-4000-8000-000000000063 line 281 at 340.36,50.8 rot 0
+part R2 value = text 1k @ sch drv-9_relay_flyback.kicad_sch note "from the Value field"
+part R3 field Value = 1k @ sch drv-9_relay_flyback.kicad_sch
+part R3 flag dnp = no @ sch drv-9_relay_flyback.kicad_sch
+part R3 flag exclude_from_sim = no @ sch drv-9_relay_flyback.kicad_sch
+part R3 flag in_bom = yes @ sch drv-9_relay_flyback.kicad_sch
+part R3 flag on_board = yes @ sch drv-9_relay_flyback.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid d0090001-0000-4000-8000-000000000091 line 339 at 195.58,86.36 rot 0
+part R3 value = text 1k @ sch drv-9_relay_flyback.kicad_sch note "from the Value field"
+part U1 field Value = STM32 @ sch drv-9_relay_flyback.kicad_sch
+part U1 flag dnp = no @ sch drv-9_relay_flyback.kicad_sch
+part U1 flag exclude_from_sim = no @ sch drv-9_relay_flyback.kicad_sch
+part U1 flag in_bom = yes @ sch drv-9_relay_flyback.kicad_sch
+part U1 flag on_board = yes @ sch drv-9_relay_flyback.kicad_sch
+part U1 lib MCU_Test:MCU_Generic sheet / symbol MCU_Test:MCU_Generic
+part U1 unit 1 sheet / uuid d0090001-0000-4000-8000-000000000011 line 179 at 99.06,50.8 rot 0
+part U1 value = text STM32 @ sch drv-9_relay_flyback.kicad_sch note "from the Value field"
+part U2 field Value = ULN2003 @ sch drv-9_relay_flyback.kicad_sch
+part U2 flag dnp = no @ sch drv-9_relay_flyback.kicad_sch
+part U2 flag exclude_from_sim = no @ sch drv-9_relay_flyback.kicad_sch
+part U2 flag in_bom = yes @ sch drv-9_relay_flyback.kicad_sch
+part U2 flag on_board = yes @ sch drv-9_relay_flyback.kicad_sch
+part U2 lib Driver_Relay:ULN2003_Test sheet / symbol Driver_Relay:ULN2003_Test
+part U2 unit 1 sheet / uuid d0090001-0000-4000-8000-000000000117 line 395 at 340.36,86.36 rot 0
+part U2 value = text ULN2003 @ sch drv-9_relay_flyback.kicad_sch note "from the Value field"
+pin D1 1 name K unit 1 net +12V
+pin D1 1 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin D1 2 name A unit 1 net /K2_COIL
+pin D1 2 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +12V
+pin J1 1 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin J1 2 name Pin_2 unit 1 net +3V3
+pin J1 2 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin J1 3 name Pin_3 unit 1 net GND
+pin J1 3 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K1 1 name "" unit 1 net +12V
+pin K1 1 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K1 2 name "" unit 1 net /K1_COIL
+pin K1 2 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K1 3 name "" unit 1 net /LOAD1_COM
+pin K1 3 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K1 4 name "" unit 1 net /LOAD1_NC
+pin K1 4 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K1 5 name "" unit 1 net /LOAD1_NO
+pin K1 5 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K2 1 name "" unit 1 net +12V
+pin K2 1 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K2 2 name "" unit 1 net /K2_COIL
+pin K2 2 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K2 3 name "" unit 1 net /LOAD2_COM
+pin K2 3 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K2 4 name "" unit 1 net /LOAD2_NC
+pin K2 4 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K2 5 name "" unit 1 net /LOAD2_NO
+pin K2 5 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K3 1 name "" unit 1 net /K3_A
+pin K3 1 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K3 2 name "" unit 1 net /K3_K
+pin K3 2 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K3 3 name "" unit 1 net /LOAD3_A
+pin K3 3 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K3 4 name "" unit 1 net /LOAD3_B
+pin K3 4 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K4 1 name "" unit 1 net +12V
+pin K4 1 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K4 2 name "" unit 1 net /K4_COIL
+pin K4 2 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K4 3 name "" unit 1 net /LOAD4_COM
+pin K4 3 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K4 4 name "" unit 1 net /LOAD4_NC
+pin K4 4 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin K4 5 name "" unit 1 net /LOAD4_NO
+pin K4 5 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin Q1 1 name B unit 1 net /K1_B
+pin Q1 1 type = input @ sch drv-9_relay_flyback.kicad_sch
+pin Q1 2 name E unit 1 net GND
+pin Q1 2 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin Q1 3 name C unit 1 net /K1_COIL
+pin Q1 3 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin Q2 1 name B unit 1 net /K2_B
+pin Q2 1 type = input @ sch drv-9_relay_flyback.kicad_sch
+pin Q2 2 name E unit 1 net GND
+pin Q2 2 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin Q2 3 name C unit 1 net /K2_COIL
+pin Q2 3 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin Q3 1 name G unit 1 net /K3_IN
+pin Q3 1 type = input @ sch drv-9_relay_flyback.kicad_sch
+pin Q3 2 name S unit 1 net GND
+pin Q3 2 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin Q3 3 name D unit 1 net /K3_K
+pin Q3 3 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin R1 1 name "" unit 1 net /K1_DRV
+pin R1 1 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin R1 2 name "" unit 1 net /K1_B
+pin R1 2 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin R2 1 name "" unit 1 net /K2_DRV
+pin R2 1 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin R2 2 name "" unit 1 net /K2_B
+pin R2 2 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin R3 1 name "" unit 1 net +3V3
+pin R3 1 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin R3 2 name "" unit 1 net /K3_A
+pin R3 2 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch drv-9_relay_flyback.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch drv-9_relay_flyback.kicad_sch
+pin U1 3 name PA0 unit 1 net /K1_DRV
+pin U1 3 type = bidirectional @ sch drv-9_relay_flyback.kicad_sch
+pin U1 4 name PA1 unit 1 net /K2_DRV
+pin U1 4 type = bidirectional @ sch drv-9_relay_flyback.kicad_sch
+pin U1 5 name PA2 unit 1 net /K3_IN
+pin U1 5 type = bidirectional @ sch drv-9_relay_flyback.kicad_sch
+pin U1 6 name PA3 unit 1 net /K4_DRV
+pin U1 6 type = bidirectional @ sch drv-9_relay_flyback.kicad_sch
+pin U2 1 name IN1 unit 1 net /K4_DRV
+pin U2 1 type = input @ sch drv-9_relay_flyback.kicad_sch
+pin U2 2 name OUT1 unit 1 net /K4_COIL
+pin U2 2 type = open_collector @ sch drv-9_relay_flyback.kicad_sch
+pin U2 3 name COM unit 1 net +12V
+pin U2 3 type = passive @ sch drv-9_relay_flyback.kicad_sch
+pin U2 4 name GND unit 1 net GND
+pin U2 4 type = power_in @ sch drv-9_relay_flyback.kicad_sch
+sheet / name "" file drv-9_relay_flyback.kicad_sch uuid /
+source file drv-9_relay_flyback.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x03 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x03 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x03 field Reference J
+symbol Connector_Generic:Conn_01x03 field Value Conn_01x03
+symbol Connector_Generic:Conn_01x03 hash a7ec9647f5161425
+symbol Connector_Generic:Conn_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x03 units 1
+symbol Device:D description Diode
+symbol Device:D field Description Diode
+symbol Device:D field Reference D
+symbol Device:D field Value D
+symbol Device:D hash a2cd49c810dae14f
+symbol Device:D pin 1 unit 1 body 1 name K type passive style line
+symbol Device:D pin 2 unit 1 body 1 name A type passive style line
+symbol Device:D units 1
+symbol Device:Q_NMOS_GSD description "N-MOSFET transistor, gate/source/drain"
+symbol Device:Q_NMOS_GSD field Description "N-MOSFET transistor, gate/source/drain"
+symbol Device:Q_NMOS_GSD field Reference Q
+symbol Device:Q_NMOS_GSD field Value Q_NMOS_GSD
+symbol Device:Q_NMOS_GSD hash 06dd853b5ca1d89f
+symbol Device:Q_NMOS_GSD pin 1 unit 1 body 1 name G type input style line
+symbol Device:Q_NMOS_GSD pin 2 unit 1 body 1 name S type passive style line
+symbol Device:Q_NMOS_GSD pin 3 unit 1 body 1 name D type passive style line
+symbol Device:Q_NMOS_GSD units 1
+symbol Device:Q_NPN_BEC description "NPN transistor, base/emitter/collector"
+symbol Device:Q_NPN_BEC field Description "NPN transistor, base/emitter/collector"
+symbol Device:Q_NPN_BEC field Reference Q
+symbol Device:Q_NPN_BEC field Value Q_NPN_BEC
+symbol Device:Q_NPN_BEC hash eac096461dd14867
+symbol Device:Q_NPN_BEC pin 1 unit 1 body 1 name B type input style line
+symbol Device:Q_NPN_BEC pin 2 unit 1 body 1 name E type passive style line
+symbol Device:Q_NPN_BEC pin 3 unit 1 body 1 name C type passive style line
+symbol Device:Q_NPN_BEC units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Driver_Relay:ULN2003_Test description "Darlington transistor array with clamp diodes, test symbol"
+symbol Driver_Relay:ULN2003_Test field Description "Darlington transistor array with clamp diodes, test symbol"
+symbol Driver_Relay:ULN2003_Test field Reference U
+symbol Driver_Relay:ULN2003_Test field Value ULN2003_Test
+symbol Driver_Relay:ULN2003_Test hash 459c5b6c8069d999
+symbol Driver_Relay:ULN2003_Test pin 1 unit 1 body 1 name IN1 type input style line
+symbol Driver_Relay:ULN2003_Test pin 2 unit 1 body 1 name OUT1 type open_collector style line
+symbol Driver_Relay:ULN2003_Test pin 3 unit 1 body 1 name COM type passive style line
+symbol Driver_Relay:ULN2003_Test pin 4 unit 1 body 1 name GND type power_in style line
+symbol Driver_Relay:ULN2003_Test units 1
+symbol MCU_Test:MCU_Generic description "Microcontroller, test symbol"
+symbol MCU_Test:MCU_Generic field Description "Microcontroller, test symbol"
+symbol MCU_Test:MCU_Generic field Reference U
+symbol MCU_Test:MCU_Generic field Value MCU_Generic
+symbol MCU_Test:MCU_Generic hash 0bf76a84752c3321
+symbol MCU_Test:MCU_Generic pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Test:MCU_Generic pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Test:MCU_Generic pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Test:MCU_Generic pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Test:MCU_Generic pin 5 unit 1 body 1 name PA2 type bidirectional style line
+symbol MCU_Test:MCU_Generic pin 6 unit 1 body 1 name PA3 type bidirectional style line
+symbol MCU_Test:MCU_Generic units 1
+symbol Relay:G5V-1 description "Miniature relay, SPDT, 1A"
+symbol Relay:G5V-1 field Description "Miniature relay, SPDT, 1A"
+symbol Relay:G5V-1 field Reference K
+symbol Relay:G5V-1 field Value G5V-1
+symbol Relay:G5V-1 hash 1d3c25baf73acb31
+symbol Relay:G5V-1 pin 1 unit 1 body 1 name "" type passive style line
+symbol Relay:G5V-1 pin 2 unit 1 body 1 name "" type passive style line
+symbol Relay:G5V-1 pin 3 unit 1 body 1 name "" type passive style line
+symbol Relay:G5V-1 pin 4 unit 1 body 1 name "" type passive style line
+symbol Relay:G5V-1 pin 5 unit 1 body 1 name "" type passive style line
+symbol Relay:G5V-1 units 1
+symbol Relay_SolidState:ASSR-1218 description "Solid state relay, photoMOS, MOSFET output"
+symbol Relay_SolidState:ASSR-1218 field Description "Solid state relay, photoMOS, MOSFET output"
+symbol Relay_SolidState:ASSR-1218 field Reference K
+symbol Relay_SolidState:ASSR-1218 field Value ASSR-1218
+symbol Relay_SolidState:ASSR-1218 hash cb9976e9e9030a37
+symbol Relay_SolidState:ASSR-1218 pin 1 unit 1 body 1 name "" type passive style line
+symbol Relay_SolidState:ASSR-1218 pin 2 unit 1 body 1 name "" type passive style line
+symbol Relay_SolidState:ASSR-1218 pin 3 unit 1 body 1 name "" type passive style line
+symbol Relay_SolidState:ASSR-1218 pin 4 unit 1 body 1 name "" type passive style line
+symbol Relay_SolidState:ASSR-1218 units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+12V description "Power symbol +12V"
+symbol power:+12V field Description "Power symbol +12V"
+symbol power:+12V field Reference "#PWR"
+symbol power:+12V field Value +12V
+symbol power:+12V hash d7b0720d7961ef78
+symbol power:+12V pin 1 unit 1 body 1 name +12V type power_in style line
+symbol power:+12V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

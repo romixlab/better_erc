@@ -135,7 +135,8 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - ✅ `NET-19` Part classes: the full enum of architecture §1.3 with kinds (diode, BJT polarity, MOSFET channel,
   connector, switch, regulator, translator, memory, transceiver, logic family, fuse), each a fact with the rule that
   decided it: a `ClassSource` (the part database by MPN, `CFG-5`, plugs in here), the library symbol, description and
-  keywords, net-tie pad groups, the designator prefix as an assumption; coverage per board for `Need::PartClasses` ·
+  keywords, net-tie pad groups, the designator prefix as an assumption; coverage per board for `Need::PartClasses`;
+  motors and solenoids (valves) as inductive loads (`Motor` library, `M` designator, description) ·
   `erc_model/src/class.rs`, `erc_analysis/src/class.rs`, `test_schematics/analyses/parts`
 - ✅ `NET-20` Variant views: a board as a variant mounts it (`View`: DNP, BOM flags and field overrides applied); the
   analyses and checks read the view, `Need::Variant` · `erc_model/src/view.rs`
@@ -309,6 +310,21 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - 🚧 `NAME-11` Negative rail with its sign from a marker only or none; negative supply pins on a rail read positive ·
   `name/name_11.rs`, `name-11_negative_rail_names`. Missing: rails a negative regulator feeds (power sources, `NET-5`)
 - ✅ `NAME-12` Unannotated designators, one designator placed twice for one unit · `name/name_12.rs`, `name-12_designators`
+- ✅ `DRV-5` N-channel FET inverter (source on ground, drain pulled up) with its gate on an IC output's net: no gate
+  resistor · `drv/drv_5.rs`, `drv-5_inverter_gate_resistor`
+- ✅ `DRV-6` Two MOSFETs in series through a middle net of gate-drive passives only (ends no ground) with their body
+  diodes the same way · `drv/drv_6.rs`, `drv-6_back_to_back`. Missing: the thresholds of both FETs (part data, `CFG-5`)
+- ✅ `DRV-7` Switching node (a converter's, or a discrete half bridge's midpoint) with no series RC to a ground or rail,
+  fitted or DNP · `drv/drv_7.rs`, `drv-7_half_bridge_snubber`
+- ✅ `DRV-9` Relay coil switched by a transistor or IC output with no diode, TVS or RC across the coil or the switch
+  (solid-state relays left out; an IC's `COM` pin on the coil supply counts) · `drv/drv_9.rs`, `drv-9_relay_flyback`.
+  Missing: a relay no switch drives is not judged (KiCad's relay pins are unnamed, so the coil is found by its switch)
+- ✅ `DRV-12` BJT switch (emitter on a rail or ground) with its base on an IC output's net, pre-biased parts left out by
+  part number or description · `drv/drv_12.rs`, `drv-12_base_resistor`
+- ✅ `DRV-14` Motor, solenoid or transformer switched by a transistor with no freewheel diode, TVS or RC across the load
+  or the switch · `drv/drv_14.rs`, `drv-14_inductive_loads`. Missing: loads behind connectors (the project file, `CFG-2`)
+- ✅ `DRV-17` LED or LED string with both ends straight on a rail, ground, IC pin or transistor: no resistor or current
+  limit · `drv/drv_17.rs`, `drv-17_led_resistor`. Missing: LEDs of more than two pins (RGB, addressable)
 - ✅ `PIN-3` Connector pin handing out a regulated rail (or a USB, barrel or battery input passed on to a header) that
   reaches on-board power pins through passive links only, no load switch or eFuse; through a fuse on every way a
   suggestion · `pin/pin_3.rs`, `pin-3_unprotected_outputs`

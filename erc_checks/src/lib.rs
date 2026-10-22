@@ -29,6 +29,7 @@ mod bom;
 mod clk;
 mod dbg;
 mod dec;
+mod drv;
 mod i2c;
 mod io;
 #[path = "lib/mod.rs"]

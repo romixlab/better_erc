@@ -1,0 +1,382 @@
+board drv-7_half_bridge_snubber
+label / local HG_A at 187.96,83.82 net /HG_A
+label / local HG_B at 284.48,83.82 net /HG_B
+label / local LG_A at 236.22,83.82 net /LG_A
+label / local LG_B at 332.74,83.82 net /LG_B
+label / local PHASE_A at 147.32,118.11 net /PHASE_A
+label / local PHASE_A at 187.96,86.36 net /PHASE_A
+label / local PHASE_A at 236.22,88.9 net /PHASE_A
+label / local PHASE_B at 50.8,118.11 net /PHASE_B
+label / local PHASE_B at 147.32,125.73 net /PHASE_B
+label / local PHASE_B at 284.48,86.36 net /PHASE_B
+label / local PHASE_B at 332.74,88.9 net /PHASE_B
+label / local SN2 at 99.06,90.17 net /SN2
+label / local SN2 at 147.32,82.55 net /SN2
+label / local SNB at 50.8,125.73 net /SNB
+label / local SNB at 99.06,118.11 net /SNB
+label / local SW1 at 139.7,53.34 net /SW1
+label / local SW1 at 195.58,46.99 net /SW1
+label / local SW2 at 99.06,82.55 net /SW2
+label / local SW2 at 284.48,53.34 net /SW2
+label / local SW2 at 340.36,46.99 net /SW2
+label / power +3V3 at 50.8,82.55 net +3V3
+label / power +3V3 at 284.48,55.88 net +3V3
+label / power +3V3 at 340.36,54.61 net +3V3
+label / power +5V at 139.7,55.88 net +5V
+label / power +5V at 195.58,54.61 net +5V
+label / power +5V at 243.84,46.99 net +5V
+label / power +12V at 50.8,46.99 net +12V
+label / power +12V at 99.06,46.99 net +12V
+label / power +12V at 139.7,48.26 net +12V
+label / power +12V at 187.96,88.9 net +12V
+label / power +12V at 284.48,48.26 net +12V
+label / power +12V at 284.48,88.9 net +12V
+label / power GND at 50.8,54.61 net GND
+label / power GND at 50.8,90.17 net GND
+label / power GND at 99.06,54.61 net GND
+label / power GND at 99.06,125.73 net GND
+label / power GND at 139.7,50.8 net GND
+label / power GND at 147.32,90.17 net GND
+label / power GND at 236.22,86.36 net GND
+label / power GND at 243.84,54.61 net GND
+label / power GND at 284.48,50.8 net GND
+label / power GND at 332.74,86.36 net GND
+net +3V3 class = Default @ sch drv-7_half_bridge_snubber.kicad_sch note "effective net class"
+net +3V3 kind power
+net +5V class = Default @ sch drv-7_half_bridge_snubber.kicad_sch note "effective net class"
+net +5V kind power
+net +12V class = Default @ sch drv-7_half_bridge_snubber.kicad_sch note "effective net class"
+net +12V kind power
+net /HG_A class = Default @ sch drv-7_half_bridge_snubber.kicad_sch note "effective net class"
+net /HG_A kind named
+net /HG_B class = Default @ sch drv-7_half_bridge_snubber.kicad_sch note "effective net class"
+net /HG_B kind named
+net /LG_A class = Default @ sch drv-7_half_bridge_snubber.kicad_sch note "effective net class"
+net /LG_A kind named
+net /LG_B class = Default @ sch drv-7_half_bridge_snubber.kicad_sch note "effective net class"
+net /LG_B kind named
+net /PHASE_A class = Default @ sch drv-7_half_bridge_snubber.kicad_sch note "effective net class"
+net /PHASE_A kind named
+net /PHASE_B class = Default @ sch drv-7_half_bridge_snubber.kicad_sch note "effective net class"
+net /PHASE_B kind named
+net /SN2 class = Default @ sch drv-7_half_bridge_snubber.kicad_sch note "effective net class"
+net /SN2 kind named
+net /SNB class = Default @ sch drv-7_half_bridge_snubber.kicad_sch note "effective net class"
+net /SNB kind named
+net /SW1 class = Default @ sch drv-7_half_bridge_snubber.kicad_sch note "effective net class"
+net /SW1 kind named
+net /SW2 class = Default @ sch drv-7_half_bridge_snubber.kicad_sch note "effective net class"
+net /SW2 kind named
+net GND class = Default @ sch drv-7_half_bridge_snubber.kicad_sch note "effective net class"
+net GND kind power
+part C1 field Value = 220u @ sch drv-7_half_bridge_snubber.kicad_sch
+part C1 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part C1 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part C1 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part C1 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part C1 lib Device:C_Polarized sheet / symbol Device:C_Polarized
+part C1 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000008 line 148 at 99.06,50.8 rot 0
+part C1 value = text 220u @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part C2 field Value = 22u @ sch drv-7_half_bridge_snubber.kicad_sch
+part C2 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part C2 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part C2 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part C2 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000033 line 218 at 243.84,50.8 rot 0
+part C2 value = text 22u @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part C3 field Value = 22u @ sch drv-7_half_bridge_snubber.kicad_sch
+part C3 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part C3 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part C3 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part C3 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part C3 lib Device:C sheet / symbol Device:C
+part C3 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000058 line 288 at 50.8,86.36 rot 0
+part C3 value = text 22u @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part C4 field Value = 470p @ sch drv-7_half_bridge_snubber.kicad_sch
+part C4 flag dnp = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part C4 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part C4 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part C4 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part C4 lib Device:C sheet / symbol Device:C
+part C4 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000070 line 320 at 147.32,86.36 rot 0
+part C4 value = text 470p @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part C5 field Value = 1n @ sch drv-7_half_bridge_snubber.kicad_sch
+part C5 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part C5 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part C5 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part C5 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part C5 lib Device:C sheet / symbol Device:C
+part C5 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000113 line 418 at 99.06,121.92 rot 0
+part C5 value = text 1n @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch drv-7_half_bridge_snubber.kicad_sch
+part J1 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part J1 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part J1 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part J1 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part J1 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J1 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000001 line 126 at 50.8,50.8 rot 0
+part J1 value = text PWR @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part J2 field Value = MOTOR @ sch drv-7_half_bridge_snubber.kicad_sch
+part J2 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part J2 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part J2 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part J2 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part J2 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J2 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000119 line 434 at 147.32,121.92 rot 0
+part J2 value = text MOTOR @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part L1 field Value = 4.7u @ sch drv-7_half_bridge_snubber.kicad_sch
+part L1 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part L1 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part L1 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part L1 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part L1 lib Device:L sheet / symbol Device:L
+part L1 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000027 line 202 at 195.58,50.8 rot 0
+part L1 value = text 4.7u @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part L2 field Value = 4.7u @ sch drv-7_half_bridge_snubber.kicad_sch
+part L2 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part L2 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part L2 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part L2 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part L2 lib Device:L sheet / symbol Device:L
+part L2 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000052 line 272 at 340.36,50.8 rot 0
+part L2 value = text 4.7u @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part Q1 field Value = BSC010N04 @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q1 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q1 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q1 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q1 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q1 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q1 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000076 line 336 at 195.58,86.36 rot 0
+part Q1 value = text BSC010N04 @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part Q2 field Value = BSC010N04 @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q2 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q2 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q2 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q2 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q2 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q2 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000084 line 354 at 243.84,86.36 rot 0
+part Q2 value = text BSC010N04 @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part Q3 field Value = BSC010N04 @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q3 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q3 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q3 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q3 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q3 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q3 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000092 line 372 at 292.1,86.36 rot 0
+part Q3 value = text BSC010N04 @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part Q4 field Value = BSC010N04 @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q4 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q4 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q4 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q4 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part Q4 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q4 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000100 line 390 at 340.36,86.36 rot 0
+part Q4 value = text BSC010N04 @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part R1 field Value = 2R2 @ sch drv-7_half_bridge_snubber.kicad_sch
+part R1 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part R1 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part R1 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part R1 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000065 line 310 at 99.06,86.36 rot 0
+part R1 value = qty 2.2 ohm @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part R2 field Value = 4R7 @ sch drv-7_half_bridge_snubber.kicad_sch
+part R2 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part R2 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part R2 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part R2 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000108 line 408 at 50.8,121.92 rot 0
+part R2 value = qty 4.7 ohm @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part U1 field Value = LMR51430 @ sch drv-7_half_bridge_snubber.kicad_sch
+part U1 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part U1 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part U1 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part U1 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part U1 lib Regulator_Switching:Buck_Test sheet / symbol Regulator_Switching:Buck_Test
+part U1 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000015 line 170 at 147.32,50.8 rot 0
+part U1 value = text LMR51430 @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+part U2 field Value = LMR51430 @ sch drv-7_half_bridge_snubber.kicad_sch
+part U2 flag dnp = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part U2 flag exclude_from_sim = no @ sch drv-7_half_bridge_snubber.kicad_sch
+part U2 flag in_bom = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part U2 flag on_board = yes @ sch drv-7_half_bridge_snubber.kicad_sch
+part U2 lib Regulator_Switching:Buck_Test sheet / symbol Regulator_Switching:Buck_Test
+part U2 unit 1 sheet / uuid d0070001-0000-4000-8000-000000000040 line 240 at 292.1,50.8 rot 0
+part U2 value = text LMR51430 @ sch drv-7_half_bridge_snubber.kicad_sch note "from the Value field"
+pin C1 1 name + unit 1 net +12V
+pin C1 1 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin C1 2 name - unit 1 net GND
+pin C1 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin C2 1 name "" unit 1 net +5V
+pin C2 1 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin C3 1 name "" unit 1 net +3V3
+pin C3 1 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin C3 2 name "" unit 1 net GND
+pin C3 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin C4 1 name "" unit 1 net /SN2
+pin C4 1 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin C4 2 name "" unit 1 net GND
+pin C4 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin C5 1 name "" unit 1 net /SNB
+pin C5 1 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin C5 2 name "" unit 1 net GND
+pin C5 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +12V
+pin J1 1 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin J1 2 name Pin_2 unit 1 net GND
+pin J1 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin J2 1 name Pin_1 unit 1 net /PHASE_A
+pin J2 1 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin J2 2 name Pin_2 unit 1 net /PHASE_B
+pin J2 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin L1 1 name "" unit 1 net /SW1
+pin L1 1 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin L1 2 name "" unit 1 net +5V
+pin L1 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin L2 1 name "" unit 1 net /SW2
+pin L2 1 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin L2 2 name "" unit 1 net +3V3
+pin L2 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin Q1 1 name G unit 1 net /HG_A
+pin Q1 1 type = input @ sch drv-7_half_bridge_snubber.kicad_sch
+pin Q1 2 name S unit 1 net /PHASE_A
+pin Q1 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin Q1 3 name D unit 1 net +12V
+pin Q1 3 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin Q2 1 name G unit 1 net /LG_A
+pin Q2 1 type = input @ sch drv-7_half_bridge_snubber.kicad_sch
+pin Q2 2 name S unit 1 net GND
+pin Q2 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin Q2 3 name D unit 1 net /PHASE_A
+pin Q2 3 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin Q3 1 name G unit 1 net /HG_B
+pin Q3 1 type = input @ sch drv-7_half_bridge_snubber.kicad_sch
+pin Q3 2 name S unit 1 net /PHASE_B
+pin Q3 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin Q3 3 name D unit 1 net +12V
+pin Q3 3 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin Q4 1 name G unit 1 net /LG_B
+pin Q4 1 type = input @ sch drv-7_half_bridge_snubber.kicad_sch
+pin Q4 2 name S unit 1 net GND
+pin Q4 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin Q4 3 name D unit 1 net /PHASE_B
+pin Q4 3 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin R1 1 name "" unit 1 net /SW2
+pin R1 1 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin R1 2 name "" unit 1 net /SN2
+pin R1 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin R2 1 name "" unit 1 net /PHASE_B
+pin R2 1 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin R2 2 name "" unit 1 net /SNB
+pin R2 2 type = passive @ sch drv-7_half_bridge_snubber.kicad_sch
+pin U1 1 name VIN unit 1 net +12V
+pin U1 1 type = power_in @ sch drv-7_half_bridge_snubber.kicad_sch
+pin U1 2 name GND unit 1 net GND
+pin U1 2 type = power_in @ sch drv-7_half_bridge_snubber.kicad_sch
+pin U1 3 name SW unit 1 net /SW1
+pin U1 3 type = output @ sch drv-7_half_bridge_snubber.kicad_sch
+pin U1 4 name FB unit 1 net +5V
+pin U1 4 type = input @ sch drv-7_half_bridge_snubber.kicad_sch
+pin U2 1 name VIN unit 1 net +12V
+pin U2 1 type = power_in @ sch drv-7_half_bridge_snubber.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch drv-7_half_bridge_snubber.kicad_sch
+pin U2 3 name SW unit 1 net /SW2
+pin U2 3 type = output @ sch drv-7_half_bridge_snubber.kicad_sch
+pin U2 4 name FB unit 1 net +3V3
+pin U2 4 type = input @ sch drv-7_half_bridge_snubber.kicad_sch
+sheet / name "" file drv-7_half_bridge_snubber.kicad_sch uuid /
+source file drv-7_half_bridge_snubber.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x02 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x02 field Reference J
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash 5d37b768c270626e
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 44903c860f3903ef
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:C_Polarized description "Polarized capacitor"
+symbol Device:C_Polarized field Description "Polarized capacitor"
+symbol Device:C_Polarized field Reference C
+symbol Device:C_Polarized field Value C_Polarized
+symbol Device:C_Polarized hash 9932e595e31cf1cf
+symbol Device:C_Polarized pin 1 unit 1 body 1 name + type passive style line
+symbol Device:C_Polarized pin 2 unit 1 body 1 name - type passive style line
+symbol Device:C_Polarized units 1
+symbol Device:L description Inductor
+symbol Device:L field Description Inductor
+symbol Device:L field Reference L
+symbol Device:L field Value L
+symbol Device:L hash c56a8cbe187fa0ce
+symbol Device:L pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:L pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:L units 1
+symbol Device:Q_NMOS_GSD description "N-MOSFET transistor, gate/source/drain"
+symbol Device:Q_NMOS_GSD field Description "N-MOSFET transistor, gate/source/drain"
+symbol Device:Q_NMOS_GSD field Reference Q
+symbol Device:Q_NMOS_GSD field Value Q_NMOS_GSD
+symbol Device:Q_NMOS_GSD hash 06dd853b5ca1d89f
+symbol Device:Q_NMOS_GSD pin 1 unit 1 body 1 name G type input style line
+symbol Device:Q_NMOS_GSD pin 2 unit 1 body 1 name S type passive style line
+symbol Device:Q_NMOS_GSD pin 3 unit 1 body 1 name D type passive style line
+symbol Device:Q_NMOS_GSD units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Regulator_Switching:Buck_Test description "Step-down converter, test symbol"
+symbol Regulator_Switching:Buck_Test field Description "Step-down converter, test symbol"
+symbol Regulator_Switching:Buck_Test field Reference U
+symbol Regulator_Switching:Buck_Test field Value Buck_Test
+symbol Regulator_Switching:Buck_Test hash 81db0e3e9f35e782
+symbol Regulator_Switching:Buck_Test pin 1 unit 1 body 1 name VIN type power_in style line
+symbol Regulator_Switching:Buck_Test pin 2 unit 1 body 1 name GND type power_in style line
+symbol Regulator_Switching:Buck_Test pin 3 unit 1 body 1 name SW type output style line
+symbol Regulator_Switching:Buck_Test pin 4 unit 1 body 1 name FB type input style line
+symbol Regulator_Switching:Buck_Test units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:+12V description "Power symbol +12V"
+symbol power:+12V field Description "Power symbol +12V"
+symbol power:+12V field Reference "#PWR"
+symbol power:+12V field Value +12V
+symbol power:+12V hash d7b0720d7961ef78
+symbol power:+12V pin 1 unit 1 body 1 name +12V type power_in style line
+symbol power:+12V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

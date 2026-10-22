@@ -1,0 +1,271 @@
+board drv-14_inductive_loads
+label / local MOTOR_G at 91.44,53.34 net /MOTOR_G
+label / local MOTOR_G at 284.48,48.26 net /MOTOR_G
+label / local MOTOR_SW at 243.84,54.61 net /MOTOR_SW
+label / local MOTOR_SW at 284.48,53.34 net /MOTOR_SW
+label / local MOTOR_SW at 340.36,54.61 net /MOTOR_SW
+label / local VALVE2_G at 91.44,55.88 net /VALVE2_G
+label / local VALVE2_G at 91.44,83.82 net /VALVE2_G
+label / local VALVE2_SW at 50.8,90.17 net /VALVE2_SW
+label / local VALVE2_SW at 91.44,88.9 net /VALVE2_SW
+label / local VALVE2_SW at 147.32,82.55 net /VALVE2_SW
+label / local VALVE_G at 91.44,50.8 net /VALVE_G
+label / local VALVE_G at 187.96,48.26 net /VALVE_G
+label / local VALVE_SW at 147.32,54.61 net /VALVE_SW
+label / local VALVE_SW at 187.96,53.34 net /VALVE_SW
+label / power +3V3 at 43.18,50.8 net +3V3
+label / power +3V3 at 91.44,45.72 net +3V3
+label / power +12V at 43.18,48.26 net +12V
+label / power +12V at 50.8,82.55 net +12V
+label / power +12V at 147.32,46.99 net +12V
+label / power +12V at 243.84,46.99 net +12V
+label / power +12V at 340.36,46.99 net +12V
+label / power GND at 43.18,53.34 net GND
+label / power GND at 91.44,48.26 net GND
+label / power GND at 91.44,86.36 net GND
+label / power GND at 147.32,90.17 net GND
+label / power GND at 187.96,50.8 net GND
+label / power GND at 284.48,50.8 net GND
+net +3V3 class = Default @ sch drv-14_inductive_loads.kicad_sch note "effective net class"
+net +3V3 kind power
+net +12V class = Default @ sch drv-14_inductive_loads.kicad_sch note "effective net class"
+net +12V kind power
+net /MOTOR_G class = Default @ sch drv-14_inductive_loads.kicad_sch note "effective net class"
+net /MOTOR_G kind named
+net /MOTOR_SW class = Default @ sch drv-14_inductive_loads.kicad_sch note "effective net class"
+net /MOTOR_SW kind named
+net /VALVE2_G class = Default @ sch drv-14_inductive_loads.kicad_sch note "effective net class"
+net /VALVE2_G kind named
+net /VALVE2_SW class = Default @ sch drv-14_inductive_loads.kicad_sch note "effective net class"
+net /VALVE2_SW kind named
+net /VALVE_G class = Default @ sch drv-14_inductive_loads.kicad_sch note "effective net class"
+net /VALVE_G kind named
+net /VALVE_SW class = Default @ sch drv-14_inductive_loads.kicad_sch note "effective net class"
+net /VALVE_SW kind named
+net GND class = Default @ sch drv-14_inductive_loads.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U1-PA3-Pad6) class = Default @ sch drv-14_inductive_loads.kicad_sch note "effective net class"
+net unconnected-(U1-PA3-Pad6) kind unconnected
+part D1 field Value = SS34 @ sch drv-14_inductive_loads.kicad_sch
+part D1 flag dnp = no @ sch drv-14_inductive_loads.kicad_sch
+part D1 flag exclude_from_sim = no @ sch drv-14_inductive_loads.kicad_sch
+part D1 flag in_bom = yes @ sch drv-14_inductive_loads.kicad_sch
+part D1 flag on_board = yes @ sch drv-14_inductive_loads.kicad_sch
+part D1 lib Device:D_Schottky sheet / symbol Device:D_Schottky
+part D1 unit 1 sheet / uuid d0140001-0000-4000-8000-000000000053 line 246 at 340.36,50.8 rot 0
+part D1 value = text SS34 @ sch drv-14_inductive_loads.kicad_sch note "from the Value field"
+part D2 field Value = SMAJ24CA @ sch drv-14_inductive_loads.kicad_sch
+part D2 flag dnp = no @ sch drv-14_inductive_loads.kicad_sch
+part D2 flag exclude_from_sim = no @ sch drv-14_inductive_loads.kicad_sch
+part D2 flag in_bom = yes @ sch drv-14_inductive_loads.kicad_sch
+part D2 flag on_board = yes @ sch drv-14_inductive_loads.kicad_sch
+part D2 lib Device:D_TVS sheet / symbol Device:D_TVS
+part D2 unit 1 sheet / uuid d0140001-0000-4000-8000-000000000073 line 296 at 147.32,86.36 rot 0
+part D2 value = text SMAJ24CA @ sch drv-14_inductive_loads.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch drv-14_inductive_loads.kicad_sch
+part J1 flag dnp = no @ sch drv-14_inductive_loads.kicad_sch
+part J1 flag exclude_from_sim = no @ sch drv-14_inductive_loads.kicad_sch
+part J1 flag in_bom = yes @ sch drv-14_inductive_loads.kicad_sch
+part J1 flag on_board = yes @ sch drv-14_inductive_loads.kicad_sch
+part J1 lib Connector_Generic:Conn_01x03 sheet / symbol Connector_Generic:Conn_01x03
+part J1 unit 1 sheet / uuid d0140001-0000-4000-8000-000000000001 line 119 at 50.8,50.8 rot 0
+part J1 value = text PWR @ sch drv-14_inductive_loads.kicad_sch note "from the Value field"
+part M1 field Value = 12V @ sch drv-14_inductive_loads.kicad_sch
+part M1 flag dnp = no @ sch drv-14_inductive_loads.kicad_sch
+part M1 flag exclude_from_sim = no @ sch drv-14_inductive_loads.kicad_sch
+part M1 flag in_bom = yes @ sch drv-14_inductive_loads.kicad_sch
+part M1 flag on_board = yes @ sch drv-14_inductive_loads.kicad_sch
+part M1 lib Motor:Motor_DC sheet / symbol Motor:Motor_DC
+part M1 unit 1 sheet / uuid d0140001-0000-4000-8000-000000000039 line 212 at 243.84,50.8 rot 0
+part M1 value = qty 12 V @ sch drv-14_inductive_loads.kicad_sch note "from the Value field"
+part Q1 field Value = AO3400 @ sch drv-14_inductive_loads.kicad_sch
+part Q1 flag dnp = no @ sch drv-14_inductive_loads.kicad_sch
+part Q1 flag exclude_from_sim = no @ sch drv-14_inductive_loads.kicad_sch
+part Q1 flag in_bom = yes @ sch drv-14_inductive_loads.kicad_sch
+part Q1 flag on_board = yes @ sch drv-14_inductive_loads.kicad_sch
+part Q1 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q1 unit 1 sheet / uuid d0140001-0000-4000-8000-000000000031 line 194 at 195.58,50.8 rot 0
+part Q1 value = text AO3400 @ sch drv-14_inductive_loads.kicad_sch note "from the Value field"
+part Q2 field Value = AO3400 @ sch drv-14_inductive_loads.kicad_sch
+part Q2 flag dnp = no @ sch drv-14_inductive_loads.kicad_sch
+part Q2 flag exclude_from_sim = no @ sch drv-14_inductive_loads.kicad_sch
+part Q2 flag in_bom = yes @ sch drv-14_inductive_loads.kicad_sch
+part Q2 flag on_board = yes @ sch drv-14_inductive_loads.kicad_sch
+part Q2 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q2 unit 1 sheet / uuid d0140001-0000-4000-8000-000000000045 line 228 at 292.1,50.8 rot 0
+part Q2 value = text AO3400 @ sch drv-14_inductive_loads.kicad_sch note "from the Value field"
+part Q3 field Value = AO3400 @ sch drv-14_inductive_loads.kicad_sch
+part Q3 flag dnp = no @ sch drv-14_inductive_loads.kicad_sch
+part Q3 flag exclude_from_sim = no @ sch drv-14_inductive_loads.kicad_sch
+part Q3 flag in_bom = yes @ sch drv-14_inductive_loads.kicad_sch
+part Q3 flag on_board = yes @ sch drv-14_inductive_loads.kicad_sch
+part Q3 lib Device:Q_NMOS_GSD sheet / symbol Device:Q_NMOS_GSD
+part Q3 unit 1 sheet / uuid d0140001-0000-4000-8000-000000000065 line 278 at 99.06,86.36 rot 0
+part Q3 value = text AO3400 @ sch drv-14_inductive_loads.kicad_sch note "from the Value field"
+part SOL1 field Value = 12V @ sch drv-14_inductive_loads.kicad_sch
+part SOL1 flag dnp = no @ sch drv-14_inductive_loads.kicad_sch
+part SOL1 flag exclude_from_sim = no @ sch drv-14_inductive_loads.kicad_sch
+part SOL1 flag in_bom = yes @ sch drv-14_inductive_loads.kicad_sch
+part SOL1 flag on_board = yes @ sch drv-14_inductive_loads.kicad_sch
+part SOL1 lib Device:Solenoid_Test sheet / symbol Device:Solenoid_Test
+part SOL1 unit 1 sheet / uuid d0140001-0000-4000-8000-000000000025 line 178 at 147.32,50.8 rot 0
+part SOL1 value = qty 12 V @ sch drv-14_inductive_loads.kicad_sch note "from the Value field"
+part SOL2 field Value = 12V @ sch drv-14_inductive_loads.kicad_sch
+part SOL2 flag dnp = no @ sch drv-14_inductive_loads.kicad_sch
+part SOL2 flag exclude_from_sim = no @ sch drv-14_inductive_loads.kicad_sch
+part SOL2 flag in_bom = yes @ sch drv-14_inductive_loads.kicad_sch
+part SOL2 flag on_board = yes @ sch drv-14_inductive_loads.kicad_sch
+part SOL2 lib Device:Solenoid_Test sheet / symbol Device:Solenoid_Test
+part SOL2 unit 1 sheet / uuid d0140001-0000-4000-8000-000000000059 line 262 at 50.8,86.36 rot 0
+part SOL2 value = qty 12 V @ sch drv-14_inductive_loads.kicad_sch note "from the Value field"
+part U1 field Value = STM32 @ sch drv-14_inductive_loads.kicad_sch
+part U1 flag dnp = no @ sch drv-14_inductive_loads.kicad_sch
+part U1 flag exclude_from_sim = no @ sch drv-14_inductive_loads.kicad_sch
+part U1 flag in_bom = yes @ sch drv-14_inductive_loads.kicad_sch
+part U1 flag on_board = yes @ sch drv-14_inductive_loads.kicad_sch
+part U1 lib MCU_Test:MCU_Generic sheet / symbol MCU_Test:MCU_Generic
+part U1 unit 1 sheet / uuid d0140001-0000-4000-8000-000000000011 line 149 at 99.06,50.8 rot 0
+part U1 value = text STM32 @ sch drv-14_inductive_loads.kicad_sch note "from the Value field"
+pin D1 1 name K unit 1 net +12V
+pin D1 1 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin D1 2 name A unit 1 net /MOTOR_SW
+pin D1 2 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin D2 1 name A1 unit 1 net /VALVE2_SW
+pin D2 1 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin D2 2 name A2 unit 1 net GND
+pin D2 2 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +12V
+pin J1 1 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin J1 2 name Pin_2 unit 1 net +3V3
+pin J1 2 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin J1 3 name Pin_3 unit 1 net GND
+pin J1 3 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin M1 1 name + unit 1 net +12V
+pin M1 1 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin M1 2 name - unit 1 net /MOTOR_SW
+pin M1 2 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin Q1 1 name G unit 1 net /VALVE_G
+pin Q1 1 type = input @ sch drv-14_inductive_loads.kicad_sch
+pin Q1 2 name S unit 1 net GND
+pin Q1 2 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin Q1 3 name D unit 1 net /VALVE_SW
+pin Q1 3 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin Q2 1 name G unit 1 net /MOTOR_G
+pin Q2 1 type = input @ sch drv-14_inductive_loads.kicad_sch
+pin Q2 2 name S unit 1 net GND
+pin Q2 2 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin Q2 3 name D unit 1 net /MOTOR_SW
+pin Q2 3 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin Q3 1 name G unit 1 net /VALVE2_G
+pin Q3 1 type = input @ sch drv-14_inductive_loads.kicad_sch
+pin Q3 2 name S unit 1 net GND
+pin Q3 2 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin Q3 3 name D unit 1 net /VALVE2_SW
+pin Q3 3 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin SOL1 1 name 1 unit 1 net +12V
+pin SOL1 1 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin SOL1 2 name 2 unit 1 net /VALVE_SW
+pin SOL1 2 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin SOL2 1 name 1 unit 1 net +12V
+pin SOL2 1 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin SOL2 2 name 2 unit 1 net /VALVE2_SW
+pin SOL2 2 type = passive @ sch drv-14_inductive_loads.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch drv-14_inductive_loads.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch drv-14_inductive_loads.kicad_sch
+pin U1 3 name PA0 unit 1 net /VALVE_G
+pin U1 3 type = bidirectional @ sch drv-14_inductive_loads.kicad_sch
+pin U1 4 name PA1 unit 1 net /MOTOR_G
+pin U1 4 type = bidirectional @ sch drv-14_inductive_loads.kicad_sch
+pin U1 5 name PA2 unit 1 net /VALVE2_G
+pin U1 5 type = bidirectional @ sch drv-14_inductive_loads.kicad_sch
+pin U1 6 name PA3 unit 1 net unconnected-(U1-PA3-Pad6)
+pin U1 6 type = bidirectional @ sch drv-14_inductive_loads.kicad_sch
+sheet / name "" file drv-14_inductive_loads.kicad_sch uuid /
+source file drv-14_inductive_loads.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x03 description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x03 field Description "Generic connector, single row"
+symbol Connector_Generic:Conn_01x03 field Reference J
+symbol Connector_Generic:Conn_01x03 field Value Conn_01x03
+symbol Connector_Generic:Conn_01x03 hash a7ec9647f5161425
+symbol Connector_Generic:Conn_01x03 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x03 pin 3 unit 1 body 1 name Pin_3 type passive style line
+symbol Connector_Generic:Conn_01x03 units 1
+symbol Device:D_Schottky description "Schottky diode"
+symbol Device:D_Schottky field Description "Schottky diode"
+symbol Device:D_Schottky field Reference D
+symbol Device:D_Schottky field Value D_Schottky
+symbol Device:D_Schottky hash 6555ff281469d822
+symbol Device:D_Schottky pin 1 unit 1 body 1 name K type passive style line
+symbol Device:D_Schottky pin 2 unit 1 body 1 name A type passive style line
+symbol Device:D_Schottky units 1
+symbol Device:D_TVS description "Bidirectional transient-voltage-suppression diode"
+symbol Device:D_TVS field Description "Bidirectional transient-voltage-suppression diode"
+symbol Device:D_TVS field Reference D
+symbol Device:D_TVS field Value D_TVS
+symbol Device:D_TVS hash d86434bc9ce9380c
+symbol Device:D_TVS pin 1 unit 1 body 1 name A1 type passive style line
+symbol Device:D_TVS pin 2 unit 1 body 1 name A2 type passive style line
+symbol Device:D_TVS units 1
+symbol Device:Q_NMOS_GSD description "N-MOSFET transistor, gate/source/drain"
+symbol Device:Q_NMOS_GSD field Description "N-MOSFET transistor, gate/source/drain"
+symbol Device:Q_NMOS_GSD field Reference Q
+symbol Device:Q_NMOS_GSD field Value Q_NMOS_GSD
+symbol Device:Q_NMOS_GSD hash 06dd853b5ca1d89f
+symbol Device:Q_NMOS_GSD pin 1 unit 1 body 1 name G type input style line
+symbol Device:Q_NMOS_GSD pin 2 unit 1 body 1 name S type passive style line
+symbol Device:Q_NMOS_GSD pin 3 unit 1 body 1 name D type passive style line
+symbol Device:Q_NMOS_GSD units 1
+symbol Device:Solenoid_Test description "Solenoid valve, test symbol"
+symbol Device:Solenoid_Test field Description "Solenoid valve, test symbol"
+symbol Device:Solenoid_Test field Reference SOL
+symbol Device:Solenoid_Test field Value Solenoid_Test
+symbol Device:Solenoid_Test hash 78770336b71aef5e
+symbol Device:Solenoid_Test pin 1 unit 1 body 1 name 1 type passive style line
+symbol Device:Solenoid_Test pin 2 unit 1 body 1 name 2 type passive style line
+symbol Device:Solenoid_Test units 1
+symbol MCU_Test:MCU_Generic description "Microcontroller, test symbol"
+symbol MCU_Test:MCU_Generic field Description "Microcontroller, test symbol"
+symbol MCU_Test:MCU_Generic field Reference U
+symbol MCU_Test:MCU_Generic field Value MCU_Generic
+symbol MCU_Test:MCU_Generic hash 0bf76a84752c3321
+symbol MCU_Test:MCU_Generic pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Test:MCU_Generic pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Test:MCU_Generic pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Test:MCU_Generic pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Test:MCU_Generic pin 5 unit 1 body 1 name PA2 type bidirectional style line
+symbol MCU_Test:MCU_Generic pin 6 unit 1 body 1 name PA3 type bidirectional style line
+symbol MCU_Test:MCU_Generic units 1
+symbol Motor:Motor_DC description "DC Motor"
+symbol Motor:Motor_DC field Description "DC Motor"
+symbol Motor:Motor_DC field Reference M
+symbol Motor:Motor_DC field Value Motor_DC
+symbol Motor:Motor_DC hash 202ed1e672fc89ef
+symbol Motor:Motor_DC pin 1 unit 1 body 1 name + type passive style line
+symbol Motor:Motor_DC pin 2 unit 1 body 1 name - type passive style line
+symbol Motor:Motor_DC units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+12V description "Power symbol +12V"
+symbol power:+12V field Description "Power symbol +12V"
+symbol power:+12V field Reference "#PWR"
+symbol power:+12V field Value +12V
+symbol power:+12V hash d7b0720d7961ef78
+symbol power:+12V pin 1 unit 1 body 1 name +12V type power_in style line
+symbol power:+12V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

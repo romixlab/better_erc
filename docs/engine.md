@@ -429,6 +429,13 @@ of the threshold it used.
 | `ANA-16` | gain network resistors outside `min_resistance`..`max_resistance` (1 kΩ-1 MΩ), feedback capacitors below `min_capacitance` (1 pF) | `ana-16_gain_resistor_range` |
 | `ANA-21` | an op-amp input whose DC path reaches no rail, ground, connector or driver while a capacitor (or a transformer, estimate) sits on it | `ana-21_dc_return` |
 | `ANA-22` | a rail-to-ground divider feeding an op-amp input with no capacitor to ground | `ana-22_bias_divider_caps` |
+| `DRV-5` | an N-FET inverter with a pull-up whose gate is on an IC output's net, no gate resistor | `drv-5_inverter_gate_resistor` |
+| `DRV-6` | two MOSFETs in series with their body diodes the same way | `drv-6_back_to_back` |
+| `DRV-7` | a switching node with no RC snubber (or DNP footprint) to a ground or rail | `drv-7_half_bridge_snubber` |
+| `DRV-9` | a relay switched by a transistor or IC with no diode, TVS or RC across the coil or switch | `drv-9_relay_flyback` |
+| `DRV-12` | a BJT switch with its base on an IC output's net, not pre-biased | `drv-12_base_resistor` |
+| `DRV-14` | a motor, solenoid or transformer switched by a transistor with no freewheel path | `drv-14_inductive_loads` |
+| `DRV-17` | an LED (string) with both ends on stiff nodes, no resistor or LED driver | `drv-17_led_resistor` |
 | `PIN-3` | a connector pin handing a regulated rail out that reaches on-board power pins through passive links only (through a fuse: a suggestion) | `pin-3_unprotected_outputs` |
 | `PIN-4` | a power input reaching a part's power pins with no fuse or eFuse | `pin-4_unfused_inputs` |
 | `PIN-6` | a power input reaching a switching regulator with no ferrite, inductor or capacitor of its own | `pin-6_unfiltered_inputs` |

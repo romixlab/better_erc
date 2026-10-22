@@ -1,0 +1,85 @@
+# What better_erc finds on drv-9_relay_flyback.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +12V"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-8"
+subjects = ["net /K4_COIL", "pin U2.2"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DRV-9"
+subjects = ["net /K1_COIL", "part K1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +12V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD1_COM", "pin K1.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD1_NC", "pin K1.4"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD1_NO", "pin K1.5"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD2_COM", "pin K2.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD2_NC", "pin K2.4"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD2_NO", "pin K2.5"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD3_A", "pin K3.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD3_B", "pin K3.4"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD4_COM", "pin K4.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD4_NC", "pin K4.4"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LOAD4_NO", "pin K4.5"]

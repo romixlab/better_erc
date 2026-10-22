@@ -65,6 +65,14 @@ check = "DEC-7"
 subjects = ["net +12V_IN", "part U1"]
 
 [[finding]]
+check = "DRV-7"
+subjects = ["net /SW1", "part U1"]
+
+[[finding]]
+check = "DRV-7"
+subjects = ["net /SW2", "part U5"]
+
+[[finding]]
 check = "PIN-4"
 subjects = ["net +12V_IN", "part J1"]
 

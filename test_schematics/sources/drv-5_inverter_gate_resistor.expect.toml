@@ -1,0 +1,45 @@
+# What better_erc finds on drv-5_inverter_gate_resistor.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-7"
+subjects = ["net /EN_OUT", "pin U2.3"]
+
+[[finding]]
+check = "DBG-7"
+subjects = ["net /EN_OUT2", "pin U3.3"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U2"]
+
+[[finding]]
+check = "DEC-7"
+subjects = ["net +3V3", "part U3"]
+
+[[finding]]
+check = "DRV-5"
+subjects = ["net /RST_MCU", "part Q1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.5", "pin U1.6"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

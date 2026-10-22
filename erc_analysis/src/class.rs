@@ -223,6 +223,7 @@ fn by_library(lib: &str, name: &str) -> Option<PartClass> {
         "Fuse" => PartClass::Fuse { kind: None },
         "Switch" => PartClass::Switch { kind: None },
         "Relay" | "Relay_SolidState" => PartClass::Relay,
+        "Motor" => PartClass::Motor,
         "Jumper" => PartClass::Jumper,
         "Mechanical" if starts("MountingHole") => PartClass::MountingHole,
         "Mechanical" if starts("Fiducial") => PartClass::Fiducial,
@@ -385,6 +386,10 @@ fn by_description(t: &Text) -> Option<PartClass> {
             P::Crystal
         } else if t.has("relay") {
             P::Relay
+        } else if t.any(&["motor", "stepper", "brushless"]) {
+            P::Motor
+        } else if t.any(&["solenoid", "solenoid valve", "valve"]) {
+            P::Solenoid
         } else if t.has("transformer") {
             P::Transformer
         } else if t.any(&["polyfuse", "ptc", "resettable fuse", "fuse"]) {
@@ -728,6 +733,7 @@ fn by_prefix(designator: &str) -> PartClass {
         "F" => P::Fuse { kind: None },
         "SW" | "S" => P::Switch { kind: None },
         "K" | "RL" => P::Relay,
+        "M" | "MOT" => P::Motor,
         "BT" => P::Battery,
         "TR" => P::Transformer,
         "H" | "MH" => P::MountingHole,
@@ -928,6 +934,13 @@ mod tests {
             })
         );
         assert_eq!(desc("Low power op-amp, rail to rail"), Some(P::Opamp));
+        assert_eq!(desc("DC Motor"), Some(P::Motor));
+        assert_eq!(
+            desc("Stepper motor driver"),
+            Some(P::Ic),
+            "a driver, not the motor"
+        );
+        assert_eq!(desc("12 V solenoid valve"), Some(P::Solenoid));
         assert_eq!(desc("32.768 kHz crystal oscillator"), Some(P::Oscillator));
         assert_eq!(
             desc("Isolated DC-DC converter"),

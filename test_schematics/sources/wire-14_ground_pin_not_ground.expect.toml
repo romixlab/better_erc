@@ -17,6 +17,10 @@ check = "DEC-1"
 subjects = ["net +5V"]
 
 [[finding]]
+check = "DRV-7"
+subjects = ["net /SW2", "part U2"]
+
+[[finding]]
 check = "NAME-7"
 subjects = ["board wire-14_ground_pin_not_ground"]
 

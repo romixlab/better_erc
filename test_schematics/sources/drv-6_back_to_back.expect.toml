@@ -1,0 +1,61 @@
+# What better_erc finds on drv-6_back_to_back.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net /VREF_OUT"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DRV-6"
+subjects = ["net /MID_B", "part Q3", "part Q4"]
+
+[[finding]]
+check = "DRV-7"
+subjects = ["net /LOAD_SW", "part Q5", "part Q6"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +5V", "part J1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net /VREF_OUT", "part J2"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.5", "pin U1.6"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /VREF_OUT"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
