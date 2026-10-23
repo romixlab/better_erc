@@ -11,6 +11,10 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- Check catalogue: a new category `PAS` (passive selection, `PAS-1..39`) for a capacitor, resistor, inductor, bead or choke whose technology is wrong for where it sits (leakage on SET, REF and soft-start pins, class 2 ceramics in timing, signal and low-noise roles, piezo and singing parts, output capacitor technology vs compensation, flex cracking, sulfur, pulse and safety class, precision resistor drift and voltage coefficient, shunt technology, saturation type, core loss, shielding, SRF, beads and chokes), and `RATE-25..31` (ripple current, electrolytic life, resistor pulse energy, inductor RMS current, jumper current, film dV/dt, series balancing), with the detail page `docs/checks/pas.md`, the RATE sections and the review checklist. The data they need is planned as `NET-23` (passive roles), `NET-24` (passive technology), `CFG-6` (selection constraints in the part database), `CFG-7` (series table) and `RPT-26` (passive calculators). Docs only, from the P2503 passive-selection design note.
+
 ## [0.4.10] - 2026-10-23
 
 ### Added

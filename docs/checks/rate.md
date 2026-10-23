@@ -726,3 +726,192 @@ LED pair for AC indication.
 **References.** Kingbright APT1608SGC datasheet, absolute maximum ratings (reverse voltage 5 V)
 ([kingbrightusa.com](https://www.kingbrightusa.com/images/catalog/SPEC/APT1608SGC.pdf)); Wikipedia, Light-emitting diode
 "Electrical polarity".
+## `RATE-25` Capacitor ripple current rating below the RMS current it carries <a id="rate-25"></a>
+
+⚠️ warning · needs: the RMS current through the capacitor (converter input or output, PFC bulk, snubber), its ripple
+current rating at the frequency and temperature · [catalogue entry](../checks.md#rate-25)
+
+**Impl.** mid · depends on CFG-5, CFG-7, RPT-3
+
+**What it catches.** A capacitor whose ripple current rating, at the circuit's frequency and the board's temperature, is
+below the RMS current it carries: a buck converter's input capacitors (about half the output current RMS at 50 % duty),
+a boost's output capacitors, PFC and rectifier bulk capacitors, snubber and resonant capacitors.
+
+**Why it matters.** Ripple current heats a capacitor by `I² × ESR`. Electrolytics' lifetime is set by their core
+temperature, so ripple above the rating shortens it directly (Nichicon: the temperature rise grows with the square of
+the ripple ratio); polymers and MLCCs have ratings too, and a film capacitor's rating limits its self-heating. The
+ratings are given at a frequency and a temperature with multipliers for others.
+
+**Example.** A 5 A buck from 12 V with a single MLCC at its input: about 2.5 A RMS through one part, whose vendor
+heating curve at the switching frequency allows less.
+
+**How to check.** Compute the RMS current per capacitor role with `RPT-3` (shared between the parallel capacitors of the
+net by their impedance), apply the series' frequency and temperature multipliers to the rating, and report the margin
+below a ratio (default 1.0 for ceramics and polymers, 0.8 for wet electrolytics).
+
+**Fix.** More capacitors in parallel, a part with a higher ripple rating (polymer, a larger case), or a lower ripple
+design.
+
+**References.** Keys of the [PAS page](pas.md#pas-1) reference list: NIC-AL (ripple heating `Δt = I²R / (βA)`); CDE-AL;
+VIS-FILM.
+
+## `RATE-26` Electrolytic capacitor lifetime at the board's temperature below the product's life <a id="rate-26"></a>
+
+⚠️ warning · needs: the series' rated life and temperature, its ripple current, the project's ambient and required life
+· [catalogue entry](../checks.md#rate-26)
+
+**Impl.** hard · depends on CFG-2, CFG-5, CFG-7, RPT-3, RPT-26
+
+**What it catches.** Wet aluminium, polymer and hybrid electrolytic capacitors whose expected life at their core
+temperature (the board's ambient plus ripple self-heating) is shorter than the life the project states.
+
+**Why it matters.** Electrolytics wear out: the electrolyte dries through the seal, capacitance falls and ESR rises
+(CDE: it doubles by the end of life). Wet aluminium life doubles for every 10 K below the rated temperature and halves
+for every 10 K above (Nichicon, Würth SN008); polymer and OS-CON life grows tenfold per 20 K (Vishay 90017). A 2000 h at
+105 °C part at a 75 °C core lasts about 16000 h, under two years of continuous operation.
+
+**Example.** A 24/7 industrial controller rated for 10 years at 60 °C ambient with 85 °C 1000 h electrolytics on its 24
+V input.
+
+**How to check.** For each electrolytic, take the core temperature (project ambient plus the ripple self-heating from
+`RATE-25`'s current and the series' ripple rating), compute the life (`L0 × 2^((T0 − T)/10)` for wet, `L0 × 10^((T0 −
+T)/20)` for polymer and hybrid, capped as the vendor caps it), and compare with the project's `life_years` and duty.
+
+**Fix.** A higher temperature or long-life series, a polymer or hybrid capacitor, ceramics, or less ripple and heat.
+
+**References.** Keys of the [PAS page](pas.md#pas-1) reference list: NIC-AL; CDE-AL; VIS-OSCON; WE-SN008 (Würth
+Elektronik SN008, *Expected Lifetime of Aluminum Electrolytic and Aluminum Polymer Capacitor*,
+[we-online.com](https://www.we-online.com/components/media/o173043v410%20SN008a%20EN.pdf)); EAT-SC for supercapacitors.
+
+## `RATE-27` Resistor pulse energy above its pulse rating <a id="rate-27"></a>
+
+⚠️ warning · needs: the pulse the resistor takes (energy and duration: inrush, a capacitor discharge, a gate drive, a
+surge), its pulse rating · [catalogue entry](../checks.md#rate-27)
+
+**Impl.** mid · depends on NET-23, CFG-5, CFG-7, RPT-26
+
+**What it catches.** A resistor that takes a pulse of known energy (an inrush limiter charging bulk capacitance, a
+bleeder or discharge resistor emptying a capacitor, a pre-charge resistor, a gate resistor of a large FET, a snubber
+resistor, a series resistor in front of a surge clamp) whose single-pulse or repetitive pulse rating at that duration is
+below it.
+
+**Why it matters.** A resistor's continuous power rating says nothing about a millisecond pulse: for pulses shorter than
+a few hundred microseconds the heat cannot leave the element, and the limit is the element's mass and construction.
+Standard thick-film chips with small trimmed elements are the weakest; anti-surge thick film, thin-film MELF and
+wirewound take orders of magnitude more (Vishay: wirewound about 1000 times its rated power for 3 ms). A pre-charge
+resistor charging 1000 µF to 400 V absorbs 80 J.
+
+**Example.** A 0603 100 Ω resistor as the pre-charge path of a 470 µF capacitor on a 48 V input: 0.54 J in a few tens of
+milliseconds, beyond any 0603's pulse curve.
+
+**How to check.** For resistors in roles `InrushLimiter`, `Precharge`, `Discharge`, `Snubber`, `GateResistor` and
+`ConnectorSeries` with a computable pulse (`½ C V²`, `V² / R × t`, the surge standard of the project), compare with the
+series' pulse curve or a technology default, and report the margin.
+
+**Fix.** A pulse-rated part (anti-surge thick film, MELF, wirewound, a ceramic composition resistor for high energy),
+several in series, or an NTC or active limiter.
+
+**References.** Keys of the [PAS page](pas.md#pas-1) reference list: V-PULSE12; V-MELF; P-ERJP; R-ESR; V-ICL (NTC energy
+ratings).
+
+## `RATE-28` Inductor RMS current above its thermal rating, or temperature rise beyond its maximum <a id="rate-28"></a>
+
+⚠️ warning · needs: the RMS current through the inductor, its Irms rating with the temperature rise it is defined at,
+the board's ambient · [catalogue entry](../checks.md#rate-28)
+
+**Impl.** mid · depends on CFG-2, CFG-5, CFG-7, RPT-3
+
+**What it catches.** A power inductor, choke or bead whose RMS current is above its thermal current rating, or whose
+ambient plus temperature rise exceeds its maximum part temperature. Saturation is `RATE-15`'s.
+
+**Why it matters.** Irms is not a limit but the current that heats the part by a stated rise (Coilcraft XAL: 20 K and 40
+K from 25 °C; Würth: 40 K per IEC 62024-2; Vishay IHLP: about 40 K). The maximum part temperature includes that rise
+(XAL: 165 °C part temperature; IHLP: 125 °C). At 85 °C ambient a 40 K-rise rating already reaches 125 °C. Bead current
+ratings are thermal ratings too (Murata: at most 40 K rise).
+
+**Example.** A 4 A Irms (40 K rise) inductor at 4 A in a 100 °C enclosure: 140 °C, above its 125 °C maximum.
+
+**How to check.** With `RPT-3`'s RMS current, scale the rise as `(I / Irms)²` times the rated rise (plus core loss from
+`PAS-31` when known), add the project's ambient, and compare with the part's maximum temperature; report RMS above Irms
+in any case.
+
+**Fix.** A part with a higher Irms or maximum temperature, a larger case, or less current.
+
+**References.** Keys of the [PAS page](pas.md#pas-1) reference list: CCXAL (Coilcraft XAL4000 datasheet, doc. 806,
+[coilcraft.com](https://www.coilcraft.com/getmedia/6adcb47d-8b55-416c-976e-1e22e0d2848c/xal4000.pdf)); WE-MAPI; VI34244;
+MUbead.
+
+## `RATE-29` Zero-ohm jumper or bridge carrying more than its current rating <a id="rate-29"></a>
+
+⚠️ warning · needs: the current through the jumper (power path, project currents), its rated current by case ·
+[catalogue entry](../checks.md#rate-29)
+
+**Impl.** mid · depends on NET-5, CFG-2, CFG-7, RPT-2
+
+**What it catches.** A 0 Ω resistor used as a jumper, option link or net bridge in a power path whose current exceeds
+the jumper's rating for its case size.
+
+**Why it matters.** Zero-ohm chips are not zero: they are specified below 20 to 100 mΩ, and rated by current per case
+size, for example 1 A for 0402 and 0603 and 2 A from 0805 up (Panasonic, Yageo), or 1.5 A for 0402 to 7 A for 2512
+(Vishay CRCW). Above it they heat, drop voltage and eventually open, usually on the rail that matters most.
+
+**Example.** A 0402 0 Ω as the option link between a 5 V input and a 2 A USB host port.
+
+**How to check.** For resistors with value 0 (and net ties made of parts) on power paths found by the feed analysis,
+compare the path's current (project or `RPT-2`) with the series' jumper rating for the case.
+
+**Fix.** A larger case, two in parallel, a wide-terminal jumper, or a copper bridge or solder jumper.
+
+**References.** Keys of the [PAS page](pas.md#pas-1) reference list: V-CRCW; P-ERJS; Y-AF; R-LTR.
+
+## `RATE-30` Film capacitor dV/dt rating below the circuit's slew <a id="rate-30"></a>
+
+⚠️ warning · needs: the voltage slew and pulse across the capacitor (snubber, resonant, pulse discharge), its dV/dt
+rating · [catalogue entry](../checks.md#rate-30)
+
+**Impl.** mid · depends on NET-23, CFG-5, CFG-7, RPT-3
+
+**What it catches.** A film capacitor in a snubber, a resonant tank, a pulse-discharge or a gate-drive coupling position
+whose dV/dt (pulse rise) rating, adjusted for the actual pulse voltage, is below the slew it sees.
+
+**Why it matters.** dV/dt limits the peak current through a metallised film's thin electrodes and their contacts; above
+it the contacts heat and the film self-heals repeatedly, losing capacitance until it fails. Vishay specifies the
+steepest allowed edge per series and lets it rise in proportion when the pulse is below the rated voltage; film-foil
+types take far more. A snubber across a fast SiC or GaN switch sees tens of kV/µs.
+
+**Example.** A general-purpose metallised PET capacitor in an RC snubber on a 400 V SiC half-bridge.
+
+**How to check.** For film capacitors in roles `Snubber`, `Resonant` and `Discharge`, compute the slew (switch
+transition times from part data or the project, the pulse voltage) and compare with the series' dV/dt scaled by `Urated
+/ Upulse`.
+
+**Fix.** A pulse-rated polypropylene series or a film-foil construction, or a slower edge.
+
+**References.** Keys of the [PAS page](pas.md#pas-1) reference list: VIS-FILM (du/dt definition and scaling).
+
+## `RATE-31` Capacitors in series without voltage balancing <a id="rate-31"></a>
+
+⚠️ warning · needs: a series string of capacitors (supercapacitors, electrolytics), the total voltage, each part's
+rating, balancing parts across each · [catalogue entry](../checks.md#rate-31)
+
+**Impl.** mid · depends on NET-5, CFG-5, CFG-7
+
+**What it catches.** Two or more supercapacitors or electrolytic capacitors in series across a voltage higher than one
+can take, without balancing resistors (or an active balancer) across each, or with balancing resistors too large for the
+parts' leakage.
+
+**Why it matters.** In DC steady state the voltage divides by leakage, not capacitance, and leakage of supercapacitors
+and electrolytics varies widely: the cell with the least leakage takes most of the voltage and is overstressed. Eaton:
+with ±20 % cells on a 5 V supply, one cell sees 3 V, its surge rating; balancing resistors should draw at least 50 times
+the worst-case leakage (3.3 to 22 kΩ for their cells), or use active balancing.
+
+**Example.** Two 2.7 V supercapacitors in series on a 5 V hold-up rail with no resistors across them.
+
+**How to check.** Find series strings of capacitors (a net with exactly two capacitor pins and nothing else, repeated),
+compare the string's voltage with the sum of ratings and each part's share without balancing, and check for a resistor
+or balancing IC across each with a current at least 50 times the parts' leakage.
+
+**Fix.** Balancing resistors across each part, an active balancer, or parts rated for the full voltage.
+
+**References.** Keys of the [PAS page](pas.md#pas-1) reference list: EAT-SC.
+

@@ -151,6 +151,16 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   Missing: pins named by their port only (`PA13`) need alternate functions (`NET-12`)
 - ✅ `NET-18` Each net's effective net class as KiCad resolves it (directive labels, project patterns as anchored regex
   or wildcard, priority order, `Default` filling unset rules), equal to kicad-cli's netlist classes · `erc_kicad/src/netclass.rs`
+- 📋 `NET-23` Passive roles: what each resistor, capacitor, inductor and bead is for, as facts with provenance: from the
+  function of the pin it hangs on (current set, soft-start, timing, noise reduction, crystal, bootstrap, compensation),
+  from topology patterns (integrator, coupling, snubber, regulator input and output capacitor, power inductor, rail
+  filter, shunt, divider, battery-direct, mains and barrier capacitors), from net classes, directive labels and the
+  project; pattern-only roles are estimates. The PAS checks key on them
+- 📋 `NET-24` Passive technology per part: technology (MLCC class and dielectric, wet aluminium, polymer, tantalum, film,
+  thick or thin film, foil, wirewound, core material and shielding) and the passive parameter vocabulary (leakage, ESR,
+  ripple, lifetime, TCR, VCR, pulse, anti-sulfur, termination, safety class, Isat with its definition, Irms with its
+  rise, SRF) resolved as facts from mx3, the parts repo, the MPN's series (`CFG-7`), the symbol's fields, the
+  description and the footprint (`Assumed`); a constrained role without technology data is not run, never a pass
 
 ## Checks and diagnostics (`DIAG`)
 
@@ -159,7 +169,7 @@ planned.
 
 Every catalogue check carries an implementation tier (`impl:` in [docs/checks.md](docs/checks.md), explained in each
 detail page): `easy` runs on the netlist alone, `mid` needs part data or a project setting first, `hard` needs analysis
-the code lacks, `judgement` is not a rule. Counts on 22 Oct 2026:
+the code lacks, `judgement` is not a rule. Counts on 23 Oct 2026:
 
 | category | easy | mid | hard | judgement | total |
 |---|---|---|---|---|---|
@@ -189,7 +199,8 @@ the code lacks, `judgement` is not a rule. Counts on 22 Oct 2026:
 | `USB` | 6 | 11 | 2 | · | 19 |
 | `CONN` | 6 | 11 | 2 | 1 | 20 |
 | `ANA` | 8 | 11 | 3 | 1 | 23 |
-| `RATE` | · | 23 | 1 | · | 24 |
+| `RATE` | · | 29 | 2 | · | 31 |
+| `PAS` | · | 36 | 3 | · | 39 |
 | `ERR` | · | 1 | · | · | 1 |
 | `DBG` | 12 | 8 | 1 | 3 | 24 |
 | `TEST` | 4 | 1 | 2 | · | 7 |
@@ -197,7 +208,7 @@ the code lacks, `judgement` is not a rule. Counts on 22 Oct 2026:
 | `NAME` | 10 | 2 | · | · | 12 |
 | `LIB` | 3 | 12 | 2 | 1 | 18 |
 | `LAY` | · | 9 | 14 | 2 | 25 |
-| **all** | **139** | **291** | **64** | **19** | **513** |
+| **all** | **139** | **333** | **68** | **19** | **559** |
 
 The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per check under
 `erc_checks/src/<category>/`, each with its unit test and a test schematic with expectations
@@ -500,6 +511,15 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - 📋 `CFG-3` Waivers: check, nets involved, user, comment, date; one-click waiver; voting (disagree first)
 - 📋 `CFG-4` File-based config format for open source (RON?)
 - 📋 `CFG-5` Custom rules for parts in the database
+- 📋 `CFG-6` Selection constraints in the part database's `required` entries: one typed vocabulary of passive parameters
+  with `max`, `min`, `range`, `any`, `not`, `prefer` and `at` (pin voltage, hot, cold), conditions on project intent
+  (`vibration`, `audio`, `automotive`, `environment`) and the datasheet source each constraint cites; node facts on pins
+  (function, source current, accuracy) from which checks derive limits; generic pin profiles by name (`SET`, `SS`, `NR`,
+  `RT`, `XIN`) marked as assumptions
+- 📋 `CFG-7` Series table: the meaning of a passive series (Murata GRM/GCM/GCJ, KEMET T491/T520, Panasonic EEE-FK/OS-CON,
+  ERJ-P/ERJ-S, Vishay CRCW/TNPW/WSL, Coilcraft XAL/MSS, ...) as TOML data in `mpn_decode`, shared with mx3: technology and
+  series-typical figures (leakage formula, derating, lifetime, TCR, pulse, anti-sulfur, AEC-Q200, termination, core,
+  shielding, Isat definition) with the datasheet each row came from
 
 ## Reports and calculators (`RPT`)
 
@@ -533,6 +553,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   (`just netlists` exports SVGs, berc does not); `--state` waits for power states (NET-8) · `erc_checks/src/project.rs`,
   `berc/src/main.rs`, `berc/tests/check.rs`
 - 📋 `RPT-21` Mark findings as found by hand-written rules or by AI
+- 📋 `RPT-26` Passive calculators: leakage at a voltage and temperature per technology, electrolytic life with ripple
+  self-heating (10 K rule wet, ×10 per 20 K polymer), resistor drift budget (TCR, load life, VCR), NTC self-heating,
+  pulse energy of a capacitor discharge or inrush against a pulse curve; library functions shared by the PAS and RATE
+  checks, exposed in Python
 - ✅ `RPT-22` Report of a run: design summary, every check ran / not run / planned, findings, candidates, notes,
   timing; JSON with a versioned schema (read back by `from_json`) and a text rendering (coloured on request) ·
   `erc_checks/src/report/mod.rs`

@@ -124,7 +124,24 @@ hand or by Claude on a netlist export.
   [[RATE-5]](checks.md#rate-5), [[RATE-13]](checks.md#rate-13) · every supply pin inside its part's range, regulator Vin
   max [[RATE-11]](checks.md#rate-11), [[RATE-12]](checks.md#rate-12) · LED current and brightness [[RATE-10]](checks.md#rate-10),
   [[RATE-7]](checks.md#rate-7) · termination resistors under a bus fault [[RATE-20]](checks.md#rate-20) · temperature
-  ranges consistent [[RATE-8]](checks.md#rate-8) · known errata of every MPN read [[ERR-1]](checks.md#err-1)
+  ranges consistent [[RATE-8]](checks.md#rate-8) · known errata of every MPN read [[ERR-1]](checks.md#err-1) ·
+  ripple current and electrolytic life, pulse energy, inductor RMS current, jumper current, series balancing
+  [[RATE-25]](checks.md#rate-25), [[RATE-26]](checks.md#rate-26), [[RATE-27]](checks.md#rate-27),
+  [[RATE-28]](checks.md#rate-28), [[RATE-29]](checks.md#rate-29), [[RATE-31]](checks.md#rate-31)
+- *Passive selection:* every passive's technology fits its role: what the datasheet asks for on that pin
+  [[PAS-1]](checks.md#pas-1) · no leaky (polymer, electrolytic, tantalum) capacitor on a SET, REF or soft-start pin
+  [[PAS-2]](checks.md#pas-2), [[PAS-3]](checks.md#pas-3), [[PAS-4]](checks.md#pas-4) · C0G or film where a value sets
+  a time, a frequency or a signal, none of class 3 [[PAS-6]](checks.md#pas-6), [[PAS-7]](checks.md#pas-7),
+  [[PAS-10]](checks.md#pas-10), [[PAS-11]](checks.md#pas-11) · piezo and singing ceramics [[PAS-8]](checks.md#pas-8),
+  [[PAS-9]](checks.md#pas-9) · output capacitor technology vs compensation, cold electrolytics, ceramics-only hot-plug
+  inputs [[PAS-13]](checks.md#pas-13), [[PAS-14]](checks.md#pas-14), [[PAS-16]](checks.md#pas-16) · flex-crack, sulfur,
+  pulse, AEC-Q200 and X/Y safety class [[PAS-17]](checks.md#pas-17), [[PAS-18]](checks.md#pas-18),
+  [[PAS-19]](checks.md#pas-19), [[PAS-20]](checks.md#pas-20), [[PAS-21]](checks.md#pas-21) · precision resistor drift,
+  HV divider voltage coefficient, shunt technology [[PAS-22]](checks.md#pas-22), [[PAS-23]](checks.md#pas-23),
+  [[PAS-25]](checks.md#pas-25) · inductor saturation type vs current limit, core loss, shielding, SRF; beads not as
+  inductors and damped; chokes per interface [[PAS-30]](checks.md#pas-30), [[PAS-31]](checks.md#pas-31),
+  [[PAS-32]](checks.md#pas-32), [[PAS-33]](checks.md#pas-33), [[PAS-34]](checks.md#pas-34), [[PAS-35]](checks.md#pas-35),
+  [[PAS-36]](checks.md#pas-36)
 - *Debug and test:* SWD/JTAG connected, with series resistors, NRST on the header [[DBG-1]](checks.md#dbg-1),
   [[DBG-2]](checks.md#dbg-2), [[DBG-17]](checks.md#dbg-17) · at least one LED, a firmware-driven one, power rail LEDs
   [[DBG-3]](checks.md#dbg-3), [[DBG-16]](checks.md#dbg-16), [[DBG-4]](checks.md#dbg-4) · console and buses reachable
