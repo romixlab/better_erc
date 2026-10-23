@@ -9,6 +9,10 @@ check = "BOM-14"
 subjects = ["board drv-7_half_bridge_snubber"]
 
 [[finding]]
+check = "CONN-4"
+subjects = ["part J2"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net +12V"]
 

@@ -33,6 +33,27 @@ check = "DEC-1"
 subjects = ["net +3V3"]
 
 [[finding]]
+check = "GND-7"
+subjects = ["net GND", "part J1"]
+
+[[finding]]
+check = "GND-7"
+subjects = ["net GND", "part J2"]
+
+[[finding]]
+check = "GND-7"
+subjects = ["net GND", "part J3"]
+
+[[finding]]
+check = "GND-7"
+subjects = ["net GND", "part J4"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-4"
 subjects = ["net +3V3"]
 

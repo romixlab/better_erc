@@ -41,6 +41,24 @@ check = "IO-1"
 subjects = ["net /CAN2_TX", "pin U2.1"]
 
 [[finding]]
+check = "LVL-7"
+subjects = ["net +3V3", "net +5V", "part U1"]
+
+[[finding]]
+check = "LVL-7"
+subjects = ["net +3V3", "net +5V", "part U2"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +5V"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.1", "pin U1.4"]
 

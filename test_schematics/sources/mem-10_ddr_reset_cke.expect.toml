@@ -65,6 +65,16 @@ check = "NAME-10"
 subjects = ["net /DDR_RESETN2", "pin U3.4"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net +1V35"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U4", "pin U4.4"]
 

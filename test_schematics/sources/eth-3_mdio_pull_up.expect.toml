@@ -45,6 +45,11 @@ check = "ETH-3"
 subjects = ["net /MDIO3", "part R3", "pin U5.3", "pin U6.3"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-4"
 subjects = ["net +3V3"]
 

@@ -61,6 +61,10 @@ check = "MEM-1"
 subjects = ["part J3", "pin J3.8"]
 
 [[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J3"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.7", "pin U1.8"]
 
@@ -71,10 +75,6 @@ subjects = ["net +3V3"]
 [[finding]]
 check = "TEST-4"
 subjects = ["net GND"]
-
-[[finding]]
-check = "TEST-4"
-subjects = ["net unconnected-(J3-SHIELD-Pad9)"]
 
 [[finding]]
 check = "WIRE-1"

@@ -29,6 +29,10 @@ check = "DEC-1"
 subjects = ["net +3V3"]
 
 [[finding]]
+check = "GND-7"
+subjects = ["net GND", "part J1"]
+
+[[finding]]
 check = "HS-4"
 subjects = ["net /LVDS_N", "net /LVDS_P", "part TP1"]
 
@@ -45,8 +49,22 @@ check = "IO-1"
 subjects = ["net unconnected-(U2-IN-Pad3)", "pin U2.3"]
 
 [[finding]]
+check = "LVL-7"
+subjects = ["net +3V3", "net +5V", "part U4"]
+
+[[finding]]
 check = "NAME-2"
 subjects = ["net /CAN_H", "net /CAN_L", "net /USB_DM", "net /USB_DP"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +5V"]
+also = ["RAIL-1"]
 
 [[finding]]
 check = "TEST-1"

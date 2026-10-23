@@ -51,6 +51,11 @@ check = "NAME-2"
 subjects = ["net /CAM_D0N", "net /CAM_D0P"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net +1V8"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-4"
 subjects = ["net +1V8"]
 

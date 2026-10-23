@@ -33,8 +33,21 @@ check = "DEC-7"
 subjects = ["net +3V3", "part U2"]
 
 [[finding]]
+check = "GND-7"
+subjects = ["net GND", "part J1"]
+
+[[finding]]
+check = "GND-7"
+subjects = ["net GND", "part J2"]
+
+[[finding]]
 check = "HS-7"
 subjects = ["net /J1_DM", "net /J1_DP", "part J1", "part U1", "pin J1.A6", "pin J1.A7", "pin J1.B6", "pin J1.B7", "pin U1.3", "pin U1.4"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
 
 [[finding]]
 check = "TEST-4"

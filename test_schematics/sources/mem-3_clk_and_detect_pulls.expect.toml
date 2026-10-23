@@ -81,12 +81,24 @@ check = "DEC-7"
 subjects = ["net +3V3", "part U2"]
 
 [[finding]]
+check = "GND-7"
+subjects = ["net GND", "part J1"]
+
+[[finding]]
 check = "MEM-3"
 subjects = ["net /SD1_DET", "part J1", "pin J1.9"]
 
 [[finding]]
 check = "MEM-3"
 subjects = ["part J1", "part R6", "pin J1.5"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J2"]
 
 [[finding]]
 check = "TEST-1"

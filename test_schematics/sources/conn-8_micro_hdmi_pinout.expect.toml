@@ -37,6 +37,22 @@ check = "DEC-7"
 subjects = ["net +3V3", "part U4"]
 
 [[finding]]
+check = "GND-7"
+subjects = ["net GND", "part J1"]
+
+[[finding]]
+check = "GND-7"
+subjects = ["net GND", "part J2"]
+
+[[finding]]
+check = "GND-7"
+subjects = ["net GND", "part J3"]
+
+[[finding]]
+check = "GND-7"
+subjects = ["net GND", "part J4"]
+
+[[finding]]
 check = "I2C-1"
 subjects = ["net /DDC1_SCL", "net /DDC1_SDA"]
 
@@ -71,6 +87,11 @@ also = ["IO-6"]
 check = "IO-10"
 subjects = ["net /HPD4", "pin U4.5"]
 also = ["IO-6"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
 
 [[finding]]
 check = "TEST-4"

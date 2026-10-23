@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "tool": "better_erc 0.4.6",
+  "tool": "better_erc 0.4.9",
   "summary": {
     "boards": [
       {
@@ -16,12 +16,12 @@
     "variant": null,
     "errors": 9,
     "warnings": 39,
-    "suggestions": 99,
+    "suggestions": 101,
     "infos": 0,
     "candidates": 0,
-    "ran": 117,
+    "ran": 139,
     "not_run": 0,
-    "planned": 396
+    "planned": 374
   },
   "checks": [
     {
@@ -45,7 +45,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 282
+      "micros": 121
     },
     {
       "id": "PIN-4",
@@ -54,7 +54,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 3
+      "micros": 1
     },
     {
       "id": "PIN-5",
@@ -70,7 +70,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 2
+      "micros": 1
     },
     {
       "id": "PIN-7",
@@ -156,7 +156,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 537
+      "micros": 286
     },
     {
       "id": "RAIL-2",
@@ -186,7 +186,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 234
+      "micros": 152
     },
     {
       "id": "RAIL-6",
@@ -279,7 +279,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 2
     },
     {
       "id": "RAIL-19",
@@ -288,7 +288,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 350
+      "micros": 205
     },
     {
       "id": "RAIL-20",
@@ -346,7 +346,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 109
+      "micros": 59
     },
     {
       "id": "DEC-2",
@@ -369,7 +369,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 15
+      "micros": 9
     },
     {
       "id": "DEC-5",
@@ -392,7 +392,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 3256
+      "micros": 7
     },
     {
       "id": "DEC-8",
@@ -401,7 +401,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 30
+      "micros": 19
     },
     {
       "id": "DEC-9",
@@ -417,7 +417,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 141
+      "micros": 87
     },
     {
       "id": "DEC-11",
@@ -426,7 +426,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 17
+      "micros": 8
     },
     {
       "id": "DEC-12",
@@ -435,7 +435,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 13
+      "micros": 7
     },
     {
       "id": "DEC-13",
@@ -479,7 +479,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 5
+      "micros": 1
     },
     {
       "id": "SEQ-6",
@@ -530,7 +530,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 3
     },
     {
       "id": "GND-4",
@@ -560,7 +560,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 21
+      "micros": 10
     },
     {
       "id": "DRV-1",
@@ -597,7 +597,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 23
+      "micros": 12
     },
     {
       "id": "DRV-6",
@@ -606,7 +606,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 40
+      "micros": 18
     },
     {
       "id": "DRV-7",
@@ -615,7 +615,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 28
+      "micros": 12
     },
     {
       "id": "DRV-8",
@@ -631,7 +631,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 13
+      "micros": 9
     },
     {
       "id": "DRV-10",
@@ -654,7 +654,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 13
+      "micros": 7
     },
     {
       "id": "DRV-13",
@@ -670,7 +670,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 11
+      "micros": 6
     },
     {
       "id": "DRV-15",
@@ -693,7 +693,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 16
+      "micros": 9
     },
     {
       "id": "DRV-18",
@@ -772,7 +772,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 166
+      "micros": 87
     },
     {
       "id": "SHORT-2",
@@ -781,7 +781,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 443
+      "micros": 256
     },
     {
       "id": "SHORT-3",
@@ -790,7 +790,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 262
+      "micros": 134
     },
     {
       "id": "SHORT-4",
@@ -799,7 +799,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 205
+      "micros": 116
     },
     {
       "id": "SHORT-5",
@@ -808,7 +808,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8311
+      "micros": 10646
     },
     {
       "id": "SHORT-6",
@@ -817,7 +817,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 80
+      "micros": 39
     },
     {
       "id": "SHORT-7",
@@ -826,7 +826,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 3680
+      "micros": 404
     },
     {
       "id": "SHORT-8",
@@ -856,7 +856,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 110
+      "micros": 68
     },
     {
       "id": "SHORT-12",
@@ -865,7 +865,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 5622
+      "micros": 1803
     },
     {
       "id": "WIRE-1",
@@ -874,7 +874,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 646
+      "micros": 392
     },
     {
       "id": "WIRE-2",
@@ -883,7 +883,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 260
+      "micros": 137
     },
     {
       "id": "WIRE-3",
@@ -948,7 +948,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 3
     },
     {
       "id": "WIRE-12",
@@ -964,7 +964,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 154
+      "micros": 97
     },
     {
       "id": "WIRE-14",
@@ -973,7 +973,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9925
+      "micros": 538
     },
     {
       "id": "WIRE-15",
@@ -1087,7 +1087,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 211
+      "micros": 108
     },
     {
       "id": "LEAK-2",
@@ -1159,7 +1159,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 259
+      "micros": 543
     },
     {
       "id": "LVL-5",
@@ -1182,7 +1182,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 8962
+      "micros": 3761
     },
     {
       "id": "LVL-8",
@@ -1198,7 +1198,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 72
+      "micros": 58
     },
     {
       "id": "LVL-10",
@@ -1249,7 +1249,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 11,
-      "micros": 425
+      "micros": 315
     },
     {
       "id": "IO-2",
@@ -1286,7 +1286,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 429
+      "micros": 241
     },
     {
       "id": "IO-7",
@@ -1295,7 +1295,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 16
+      "micros": 9
     },
     {
       "id": "IO-8",
@@ -1304,7 +1304,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9761
+      "micros": 462
     },
     {
       "id": "IO-9",
@@ -1320,7 +1320,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 397
+      "micros": 2269
     },
     {
       "id": "IO-11",
@@ -1329,7 +1329,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 25
+      "micros": 16
     },
     {
       "id": "IO-12",
@@ -1359,7 +1359,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 3965
+      "micros": 868
     },
     {
       "id": "IO-16",
@@ -1368,7 +1368,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 141
+      "micros": 84
     },
     {
       "id": "IO-17",
@@ -1405,7 +1405,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 10722
+      "micros": 507
     },
     {
       "id": "LOGIC-4",
@@ -1435,7 +1435,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 179
+      "micros": 131
     },
     {
       "id": "LOGIC-8",
@@ -1444,7 +1444,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 292
+      "micros": 171
     },
     {
       "id": "MUX-1",
@@ -1453,7 +1453,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 17097
+      "micros": 10137
     },
     {
       "id": "MUX-2",
@@ -1595,7 +1595,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 14
+      "micros": 10
     },
     {
       "id": "CLK-4",
@@ -1611,7 +1611,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 12222
+      "micros": 5508
     },
     {
       "id": "CLK-6",
@@ -1620,7 +1620,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 3895
+      "micros": 417
     },
     {
       "id": "CLK-7",
@@ -1629,7 +1629,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 716
+      "micros": 450
     },
     {
       "id": "CLK-8",
@@ -1680,7 +1680,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 682
+      "micros": 391
     },
     {
       "id": "CLK-15",
@@ -1689,7 +1689,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 3969
+      "micros": 388
     },
     {
       "id": "CLK-16",
@@ -1712,7 +1712,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 2498
+      "micros": 403
     },
     {
       "id": "CLK-19",
@@ -1728,7 +1728,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 60
+      "micros": 21
     },
     {
       "id": "I2C-2",
@@ -1737,7 +1737,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 3,
-      "micros": 164
+      "micros": 101
     },
     {
       "id": "I2C-3",
@@ -1746,7 +1746,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 110
+      "micros": 64
     },
     {
       "id": "I2C-4",
@@ -1755,7 +1755,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 126
+      "micros": 47
     },
     {
       "id": "I2C-5",
@@ -1778,7 +1778,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 204
+      "micros": 77
     },
     {
       "id": "I2C-8",
@@ -1794,7 +1794,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 304
+      "micros": 177
     },
     {
       "id": "I2C-10",
@@ -1803,7 +1803,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 258
+      "micros": 155
     },
     {
       "id": "I2C-11",
@@ -1861,7 +1861,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 42
+      "micros": 25
     },
     {
       "id": "I2C-19",
@@ -1987,7 +1987,9 @@
       "title": "CAN split termination (2 × 60 Ω) without the centre capacitor to ground",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 17
     },
     {
       "id": "SER-15",
@@ -2078,7 +2080,9 @@
       "title": "MDIO without a pull-up (1.5k-10k)",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 358
     },
     {
       "id": "ETH-4",
@@ -2162,7 +2166,9 @@
       "title": "SD / eMMC CMD and DAT lines without pull-ups (10k-100k)",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 23
     },
     {
       "id": "MEM-2",
@@ -2176,7 +2182,9 @@
       "title": "SD / eMMC CLK with a pull-up, or CD / WP switch pins without one",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 16
     },
     {
       "id": "MEM-4",
@@ -2211,7 +2219,9 @@
       "title": "DDR ZQ pin without its 240 Ω to VSS",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 353
     },
     {
       "id": "MEM-9",
@@ -2225,7 +2235,9 @@
       "title": "DDR RESET_n without a pull-down and CKE without a defined level at power-up",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 9
     },
     {
       "id": "MEM-11",
@@ -2267,7 +2279,9 @@
       "title": "Differential asymmetry",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 212
     },
     {
       "id": "HS-5",
@@ -2288,7 +2302,9 @@
       "title": "USB D+ and D− swapped (by pin name on the part vs the connector)",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 8
     },
     {
       "id": "HS-8",
@@ -2302,7 +2318,9 @@
       "title": "Common-mode choke on USB 3 or PCIe lanes: hurts more than it helps at these rates",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 7
     },
     {
       "id": "HS-10",
@@ -2344,7 +2362,9 @@
       "title": "MIPI DSI / CSI lanes with series parts or protection in line: the lanes go straight to the connector",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 11110
     },
     {
       "id": "HS-16",
@@ -2421,7 +2441,9 @@
       "title": "Type-C without 5k1",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 11
     },
     {
       "id": "USB-2",
@@ -2442,7 +2464,9 @@
       "title": "USB shield connected through L/R/C, or not connected",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 13
     },
     {
       "id": "USB-5",
@@ -2477,21 +2501,27 @@
       "title": "CC1 and CC2 tied together on a receptacle: orientation detection and PD are gone, and a cable's VCONN lands on the device",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 42
     },
     {
       "id": "USB-10",
       "title": "Plug or captive cable with Rd on both CC pins: one is CC, the other is VCONN",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 7
     },
     {
       "id": "USB-11",
       "title": "Type-C receptacle with USB 2.0 wired to one orientation only: A6/B6 and A7/B7 must be joined",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 30
     },
     {
       "id": "USB-12",
@@ -2526,7 +2556,9 @@
       "title": "Type-C receptacle with some VBUS or GND pins left unconnected",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 7
     },
     {
       "id": "USB-17",
@@ -2561,7 +2593,9 @@
       "title": "GPIOs going straight to connectors without series protection: 1k on long lines or better",
       "severity": "suggestion",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 2,
+      "micros": 114
     },
     {
       "id": "CONN-3",
@@ -2575,7 +2609,9 @@
       "title": "Connector without a ground pin",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 13
     },
     {
       "id": "CONN-5",
@@ -2603,7 +2639,9 @@
       "title": "MicroHDMI wired with the full size HDMI pinout",
       "severity": "error",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 8
     },
     {
       "id": "CONN-9",
@@ -2617,7 +2655,9 @@
       "title": "Many pins and few grounds on a connector: suggest more",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 20
     },
     {
       "id": "CONN-11",
@@ -2659,14 +2699,18 @@
       "title": "Connector shell or mounting pins left floating without a decision (ground, chassis, or isolated)",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 10
     },
     {
       "id": "CONN-17",
       "title": "Two identical connectors on one board with incompatible pinouts: a cable fits the wrong one",
       "severity": "warning",
       "tier": "easy",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 8
     },
     {
       "id": "CONN-18",
@@ -2710,7 +2754,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 23
+      "micros": 10
     },
     {
       "id": "ANA-4",
@@ -2719,7 +2763,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 408
+      "micros": 250
     },
     {
       "id": "ANA-5",
@@ -2763,7 +2807,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 17
+      "micros": 9
     },
     {
       "id": "ANA-11",
@@ -2772,7 +2816,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 24
+      "micros": 6
     },
     {
       "id": "ANA-12",
@@ -2781,7 +2825,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 13
+      "micros": 6
     },
     {
       "id": "ANA-13",
@@ -2811,7 +2855,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 17
+      "micros": 7
     },
     {
       "id": "ANA-17",
@@ -2848,7 +2892,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 12
+      "micros": 6
     },
     {
       "id": "ANA-22",
@@ -2857,7 +2901,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 126
+      "micros": 78
     },
     {
       "id": "ANA-23",
@@ -3048,7 +3092,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6178
+      "micros": 1115
     },
     {
       "id": "DBG-2",
@@ -3057,7 +3101,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1358
+      "micros": 189
     },
     {
       "id": "DBG-3",
@@ -3066,7 +3110,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 131
+      "micros": 34
     },
     {
       "id": "DBG-4",
@@ -3075,7 +3119,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 49
+      "micros": 20
     },
     {
       "id": "DBG-5",
@@ -3098,7 +3142,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 680
+      "micros": 414
     },
     {
       "id": "DBG-8",
@@ -3107,7 +3151,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9204
+      "micros": 456
     },
     {
       "id": "DBG-9",
@@ -3123,7 +3167,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 119
+      "micros": 47
     },
     {
       "id": "DBG-11",
@@ -3132,7 +3176,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 708
+      "micros": 432
     },
     {
       "id": "DBG-12",
@@ -3155,7 +3199,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 342
+      "micros": 204
     },
     {
       "id": "DBG-15",
@@ -3171,7 +3215,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 32
+      "micros": 14
     },
     {
       "id": "DBG-17",
@@ -3180,7 +3224,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 633
+      "micros": 370
     },
     {
       "id": "DBG-18",
@@ -3189,7 +3233,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 14,
-      "micros": 13563
+      "micros": 9364
     },
     {
       "id": "DBG-19",
@@ -3240,7 +3284,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 20,
-      "micros": 6854
+      "micros": 688
     },
     {
       "id": "TEST-2",
@@ -3249,7 +3293,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 93
+      "micros": 51
     },
     {
       "id": "TEST-3",
@@ -3265,7 +3309,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 109
+      "micros": 62
     },
     {
       "id": "TEST-5",
@@ -3274,7 +3318,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 28,
-      "micros": 4673
+      "micros": 864
     },
     {
       "id": "TEST-6",
@@ -3297,7 +3341,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 3203
+      "micros": 384
     },
     {
       "id": "BOM-2",
@@ -3313,7 +3357,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 5854
+      "micros": 311
     },
     {
       "id": "BOM-4",
@@ -3322,7 +3366,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 12,
-      "micros": 648
+      "micros": 317
     },
     {
       "id": "BOM-5",
@@ -3331,7 +3375,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 10439
+      "micros": 3682
     },
     {
       "id": "BOM-6",
@@ -3340,7 +3384,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 777
+      "micros": 472
     },
     {
       "id": "BOM-7",
@@ -3356,7 +3400,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 14
+      "micros": 10
     },
     {
       "id": "BOM-9",
@@ -3365,7 +3409,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7882
+      "micros": 7105
     },
     {
       "id": "BOM-10",
@@ -3374,7 +3418,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 59
+      "micros": 31
     },
     {
       "id": "BOM-11",
@@ -3383,7 +3427,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 26
+      "micros": 17
     },
     {
       "id": "BOM-12",
@@ -3406,7 +3450,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 308
+      "micros": 120
     },
     {
       "id": "BOM-15",
@@ -3429,7 +3473,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 164
+      "micros": 91
     },
     {
       "id": "BOM-18",
@@ -3445,7 +3489,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 160
+      "micros": 83
     },
     {
       "id": "NAME-2",
@@ -3454,7 +3498,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 87
+      "micros": 55
     },
     {
       "id": "NAME-3",
@@ -3470,7 +3514,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8560
+      "micros": 82
     },
     {
       "id": "NAME-5",
@@ -3479,7 +3523,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 293
+      "micros": 144
     },
     {
       "id": "NAME-6",
@@ -3488,7 +3532,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 124
+      "micros": 98
     },
     {
       "id": "NAME-7",
@@ -3497,7 +3541,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 7569
+      "micros": 7067
     },
     {
       "id": "NAME-8",
@@ -3513,7 +3557,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 157
+      "micros": 105
     },
     {
       "id": "NAME-10",
@@ -3522,7 +3566,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6490
+      "micros": 93
     },
     {
       "id": "NAME-11",
@@ -3531,7 +3575,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 282
+      "micros": 193
     },
     {
       "id": "NAME-12",
@@ -3540,7 +3584,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 124
+      "micros": 52
     },
     {
       "id": "LIB-1",
@@ -3563,7 +3607,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 22
+      "micros": 10
     },
     {
       "id": "LIB-4",
@@ -3642,7 +3686,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 15
+      "micros": 8
     },
     {
       "id": "LIB-15",
@@ -3651,7 +3695,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6624
+      "micros": 733
     },
     {
       "id": "LIB-16",
@@ -6906,6 +6950,154 @@
           "at": [
             68.58,
             63.5
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "CONN-2",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              19
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SCL2_3V3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              1
+            ]
+          },
+          "kind": "pin",
+          "name": "J401.2"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              183
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.19"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/SCL2_3V3 goes straight from J401.2 (Pin_2) to U401.19 (PA13) with nothing in series: a fault on the cable drives the pin's clamp diodes",
+      "facts": [],
+      "fingerprint": "CONN-2:net /C22: I2C Segments/SCL2_3V3|pin J401.2|pin U401.19",
+      "explain": "docs/checks/conn.md#conn-2",
+      "fix": "100 Ω-1 kΩ in series near the connector, behind the TVS, sized from the worst fault voltage and the pin's injection limit; a buffer with Ioff for lines that need drive",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SCL2_3V3",
+          "at": [
+            119.38,
+            83.82
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol J401",
+          "line": 5167,
+          "at": [
+            121.92,
+            120.65
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U401",
+          "line": 5888,
+          "at": [
+            87.63,
+            73.66
+          ]
+        }
+      ],
+      "also": []
+    },
+    {
+      "check": "CONN-2",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Net": [
+              0,
+              26
+            ]
+          },
+          "kind": "net",
+          "name": "/C22: I2C Segments/SDA2_3V3"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              0
+            ]
+          },
+          "kind": "pin",
+          "name": "J401.1"
+        },
+        {
+          "subject": {
+            "Pin": [
+              0,
+              184
+            ]
+          },
+          "kind": "pin",
+          "name": "U401.20"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "/C22: I2C Segments/SDA2_3V3 goes straight from J401.1 (Pin_1) to U401.20 (PA14) with nothing in series: a fault on the cable drives the pin's clamp diodes",
+      "facts": [],
+      "fingerprint": "CONN-2:net /C22: I2C Segments/SDA2_3V3|pin J401.1|pin U401.20",
+      "explain": "docs/checks/conn.md#conn-2",
+      "fix": "100 Ω-1 kΩ in series near the connector, behind the TVS, sized from the worst fault voltage and the pin's injection limit; a buffer with Ioff for lines that need drive",
+      "locations": [
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "local label SDA2_3V3",
+          "at": [
+            119.38,
+            86.36
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol J401",
+          "line": 5167,
+          "at": [
+            121.92,
+            120.65
+          ]
+        },
+        {
+          "file": "i2c-7_segments.kicad_sch",
+          "what": "symbol U401",
+          "line": 5888,
+          "at": [
+            87.63,
+            73.66
           ]
         }
       ],
@@ -13793,7 +13985,7 @@
     }
   ],
   "timing": {
-    "checks_micros": 35127,
-    "total_micros": 38688
+    "checks_micros": 33265,
+    "total_micros": 35230
   }
 }

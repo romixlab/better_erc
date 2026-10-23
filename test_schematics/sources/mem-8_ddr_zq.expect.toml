@@ -77,6 +77,11 @@ check = "NAME-5"
 subjects = ["part R3", "part R5"]
 
 [[finding]]
+check = "RAIL-5"
+subjects = ["net +1V35"]
+also = ["RAIL-1"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U8", "pin U8.3"]
 

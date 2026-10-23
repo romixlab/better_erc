@@ -89,8 +89,34 @@ check = "IO-1"
 subjects = ["net /CAN4_TX", "pin U4.1"]
 
 [[finding]]
+check = "LVL-7"
+subjects = ["net +3V3", "net +5V", "part U1"]
+
+[[finding]]
+check = "LVL-7"
+subjects = ["net +3V3", "net +5V", "part U2"]
+
+[[finding]]
+check = "LVL-7"
+subjects = ["net +3V3", "net +5V", "part U3"]
+
+[[finding]]
+check = "LVL-7"
+subjects = ["net +3V3", "net +5V", "part U4"]
+
+[[finding]]
 check = "NAME-5"
 subjects = ["part C2", "part C8"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +5V"]
+also = ["RAIL-1"]
 
 [[finding]]
 check = "SER-14"

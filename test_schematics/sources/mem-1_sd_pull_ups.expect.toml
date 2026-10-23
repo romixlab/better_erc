@@ -49,6 +49,14 @@ check = "DEC-7"
 subjects = ["net +3V3", "part U3"]
 
 [[finding]]
+check = "GND-7"
+subjects = ["net GND", "part J1"]
+
+[[finding]]
+check = "LVL-7"
+subjects = ["net +1V8", "net +3V3", "part U3"]
+
+[[finding]]
 check = "MEM-1"
 subjects = ["net /EMMC_D0", "part U3", "pin U3.6"]
 
@@ -63,6 +71,15 @@ subjects = ["net /SD_D3", "part J1", "pin J1.2"]
 [[finding]]
 check = "MEM-1"
 subjects = ["part J1", "pin J1.1"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J1"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +1V8"]
+also = ["RAIL-1"]
 
 [[finding]]
 check = "TEST-1"

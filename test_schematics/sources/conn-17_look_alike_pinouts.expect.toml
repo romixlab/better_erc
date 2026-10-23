@@ -61,6 +61,22 @@ check = "DBG-4"
 subjects = ["net +5V"]
 
 [[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J5"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J7"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J8"]
+
+[[finding]]
+check = "PIN-4"
+subjects = ["net +3V3", "part J9"]
+
+[[finding]]
 check = "TEST-4"
 subjects = ["net +3V3"]
 

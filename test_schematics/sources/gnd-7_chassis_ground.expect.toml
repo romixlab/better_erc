@@ -5,6 +5,10 @@ check = "BOM-14"
 subjects = ["board gnd-7_chassis_ground"]
 
 [[finding]]
+check = "CONN-16"
+subjects = ["part J3", "pin J3.SH"]
+
+[[finding]]
 check = "DBG-4"
 subjects = ["net VBUS"]
 
