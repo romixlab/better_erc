@@ -138,7 +138,8 @@ hand or by Claude on a netlist export.
   pulse, AEC-Q200 and X/Y safety class [[PAS-17]](checks.md#pas-17), [[PAS-18]](checks.md#pas-18),
   [[PAS-19]](checks.md#pas-19), [[PAS-20]](checks.md#pas-20), [[PAS-21]](checks.md#pas-21) · precision resistor drift,
   HV divider voltage coefficient, shunt technology [[PAS-22]](checks.md#pas-22), [[PAS-23]](checks.md#pas-23),
-  [[PAS-25]](checks.md#pas-25) · inductor saturation type vs current limit, core loss, shielding, SRF; beads not as
+  [[PAS-25]](checks.md#pas-25) · one grade per precision circuit, no precision where nothing needs it, no odd one out
+  in a block [[PAS-40]](checks.md#pas-40), [[PAS-41]](checks.md#pas-41), [[BOM-19]](checks.md#bom-19) · inductor saturation type vs current limit, core loss, shielding, SRF; beads not as
   inductors and damped; chokes per interface [[PAS-30]](checks.md#pas-30), [[PAS-31]](checks.md#pas-31),
   [[PAS-32]](checks.md#pas-32), [[PAS-33]](checks.md#pas-33), [[PAS-34]](checks.md#pas-34), [[PAS-35]](checks.md#pas-35),
   [[PAS-36]](checks.md#pas-36)

@@ -200,15 +200,15 @@ the code lacks, `judgement` is not a rule. Counts on 23 Oct 2026:
 | `CONN` | 6 | 11 | 2 | 1 | 20 |
 | `ANA` | 8 | 11 | 3 | 1 | 23 |
 | `RATE` | · | 29 | 2 | · | 31 |
-| `PAS` | · | 36 | 3 | · | 39 |
+| `PAS` | · | 38 | 3 | · | 41 |
 | `ERR` | · | 1 | · | · | 1 |
 | `DBG` | 12 | 8 | 1 | 3 | 24 |
 | `TEST` | 4 | 1 | 2 | · | 7 |
-| `BOM` | 11 | 5 | · | 2 | 18 |
+| `BOM` | 11 | 6 | · | 2 | 19 |
 | `NAME` | 10 | 2 | · | · | 12 |
 | `LIB` | 3 | 12 | 2 | 1 | 18 |
 | `LAY` | · | 9 | 14 | 2 | 25 |
-| **all** | **139** | **333** | **68** | **19** | **559** |
+| **all** | **139** | **336** | **68** | **19** | **562** |
 
 The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per check under
 `erc_checks/src/<category>/`, each with its unit test and a test schematic with expectations

@@ -474,3 +474,37 @@ better_erc can list a part's pins and what hangs on them next to the datasheet's
 
 **References.** The part's datasheet (typical application) and evaluation board schematic; B153A schematic review §6
 (C306/C310); catalogue `RAIL-16`.
+
+## `BOM-19` Odd one out within a circuit block <a id="bom-19"></a>
+
+💡 suggestion · needs: circuit blocks, each part's case size, mount type, series, dielectric and tolerance · [catalogue
+entry](../checks.md#bom-19)
+
+**Impl.** mid · depends on NET-7, NET-23, NET-24, RPT-6
+
+**What it catches.** Within one circuit block, a part that differs from its siblings of the same role: a 0201 beside
+1206s, a through-hole or DIP part among SMD ones, a different series or manufacturer family, a different dielectric (one
+X5R among X7R output capacitors), a different tolerance grade (one 5 % resistor in a 1 % network), a precision part
+among general-grade ones or the reverse. Connectors are excluded. Each finding names the likely reason: an oversight, a
+leftover of a copied design (the odd part matches the original's BOM), lost cost (a better grade than the block needs,
+`PAS-41`) or a weak link (a worse grade than the block needs, `PAS-40`).
+
+**Why it matters.** Parts of one block are chosen together; a part that differs from its siblings usually was not chosen
+but kept: from an earlier revision, a copied reference design, a library default. `BOM-3` finds the board-wide assembly
+mixes; a mix inside one block is a different signal, as a 0201 among 0402s is unremarkable on a board that uses both,
+but odd in a regulator whose other passives are all 0603.
+
+**Example.** A regulator block with four 10 µF X7R 0805 output capacitors and one 10 µF X5R 0603 of another series:
+either the X5R one loses most of its capacitance at the rail voltage, or the other four could have been smaller.
+
+**How to check.** Find blocks, in this order: the functional group around an IC (the IC and the passives `NET-23`
+assigns to its pins, their rails and ground), the analog networks `RPT-6` finds (dividers, gain and feedback networks,
+filters), then a hierarchical sheet of at most a few dozen parts as one block. Within a block, group parts by role
+(`NET-23`) and compare case size, mount type, series (`NET-24`, `CFG-7`), dielectric and tolerance; report a minority
+(at most `minority` of its group, as in `BOM-3`) with its siblings and the likely reason. A part that is also a
+board-wide minority under `BOM-3`, or a grade mix that `PAS-40` or `PAS-41` reports, folds into that finding (`also
+BOM-19`).
+
+**Fix.** Bring the odd part in line with its siblings, or write on the sheet why it differs.
+
+**References.** Catalogue `BOM-3`, `PAS-40`, `PAS-41`; Roman, 23 Oct 2026.

@@ -32,18 +32,25 @@ electrolytic life, pulse energy, inductor RMS current) are `RATE` checks.
 `industrial`, `environment` (`sulfur`, `condensing`), `ambient` (the board's operating range) and `life_years`, set in
 the board's own project file. There are no lab-wide or built-in defaults: on a board that does not state the intent a
 check needs, that check (or the part of it that needs the intent) is reported as not run with the intent it would need,
-never guessed. Where an intent only refines a check (the hottest ambient for leakage, a precision budget), the check
-runs with the stated fallback and says so.
+never guessed. Where an intent only refines a check (the hottest ambient for leakage, the temperature range for drift),
+the check runs with the stated fallback and says so.
 
-**Accuracy budgets follow the circuit.** A pin or role that sets an accuracy (a current-set pin, a reference, a feedback
-or measurement divider) gets its budget from, in order: the project's explicit figure, a datasheet constraint on the
-pin, then a default by circuit: **0.1 %** when the circuit is a precision one (the board's intent `precision`, or the
-regulated or measured node feeds a precision role: an ADC or DAC reference input, a reference pin, a sensor bridge, a
-net of class `Precision`), **1 %** otherwise. 0.1 % is the error the LT3045 family's datasheets use as their example and
-what a precision rail can spend on one passive; 1 % is the initial accuracy of an ordinary regulator, so a passive that
-costs more than that is a real error on any board. With the leakage figures of `PAS-2`, a polymer or wet aluminium SET
-capacitor at its datasheet maximum is a finding on both kinds of board, an MnO2 tantalum only on a precision one, a
-ceramic or film part on neither.
+**Accuracy budgets come from the parts.** How precise the passives around a part must be follows from the part they
+serve, not from a default. A part with an accuracy spec (a voltage reference, a current-reference LDO, a regulator's
+feedback reference, a precision op-amp, an ADC, DAC or instrumentation amplifier, a current-sense amplifier) states its
+own error in its part data: initial accuracy, drift over temperature, offset, gain error. Each passive whose value or
+leakage enters that error (the SET capacitor and RSET, a feedback or gain network, a reference divider, a sense
+resistor) may add at most a share of it: **`passive_share` = 25 %** of the part's own error at the same condition (25 °C
+against the initial spec, the board's range against the full-range spec), configurable per project, so the passives
+never spend the accuracy the designer paid for in the part. The LT3045's SET current is 99 to 101 µA at 25 °C and 98 to
+102 µA over its range (LT3042 and LT3094 the same, LT3080 9.90 to 10.10 and 9.80 to 10.20 µA): a 0.25 % budget at 25 °C,
+250 nA of SET capacitor leakage on an LT3045 and 25 nA on an LT3080. With the leakage figures of `PAS-2`, a polymer or
+wet aluminium SET capacitor at its datasheet maximum (about 3 %) and an MnO2 tantalum (0.5 %) are findings, an X7R or
+film part is not. A non-precision part gives a looser budget the same way: an LDO with a 2 % reference leaves 0.5 % to
+its feedback divider. The order: the project's explicit figure, a datasheet constraint on the pin, then the budget
+derived from the part's spec; a part without that data falls back to its generic profile's assumed accuracy (stated in
+the profile, as data) and the finding is an estimate. Where one circuit mixes precision and general-grade passives, the
+weakest part sets the accuracy: `PAS-40`; precision parts where the circuit does not need them are lost cost: `PAS-41`.
 
 References used throughout:
 
@@ -250,12 +257,13 @@ node.
 enclosure: correct about piezo noise (`PAS-8`), but at the polymer's specified leakage the output can sit tens of
 millivolts low, more when hot.
 
-**How to check.** From the pin's electrical facts (`function = current_set` or `reference`, `source_current`,
-`accuracy`, pin voltage; a datasheet's own `leakage` constraint wins) and the capacitor's leakage model (the series' DCL
-formula or insulation resistance, scaled to the pin voltage and the board's hottest ambient from its intent, or 25 °C
-with a note when the board states none: `RPT-26`), report when `Ileak / ISET` exceeds the accuracy budget: 0.1 % on a
-precision circuit, 1 % otherwise (the page's introduction says how the budget is chosen). A generic profile (`SET`,
-`ISET` on a regulator) supplies an assumed current and makes the finding an estimate.
+**How to check.** From the pin's electrical facts (`function = current_set` or `reference`, `source_current` with its
+spec at 25 °C and over the range, pin voltage; a datasheet's own `leakage` constraint wins) and the capacitor's leakage
+model (the series' DCL formula or insulation resistance, scaled to the pin voltage and the board's hottest ambient from
+its intent, or 25 °C with a note when the board states none: `RPT-26`), report when `Ileak / ISET` exceeds the budget:
+`passive_share` (25 %) of the part's own SET-current error at the same condition, so 0.25 % (250 nA) at 25 °C and 0.5 %
+over the range on an LT3045 (the page's introduction says how the budget is derived). A generic profile (`SET`, `ISET`
+on a regulator) supplies an assumed current and accuracy and makes the finding an estimate.
 
 **Fix.** A low-leakage ceramic (class 1 where the value allows, else X7R) or a film capacitor; where vibration rules out
 ceramics, film, or a tantalum whose specified leakage fits the budget. Guard ring and clean board as the datasheet
@@ -806,8 +814,9 @@ Hence, it should be a precision resistor." In a ratio, matched TCRs cancel; mism
 
 **How to check.** For roles `SetResistor`, `FeedbackDivider`, `Gain`, `Bridge`, `AdcDivider`, compute the drift (`|TCR|
 × ΔT + stability`, and for a ratio the TCR difference) with `RPT-26` and compare with the budget (the project's figure,
-the pin's `accuracy`, else 0.1 % on a precision circuit and 1 % otherwise, as the introduction says), over the board's
-`ambient` range (25 ± 30 °C with a note when it states none).
+a datasheet constraint, else `passive_share` of the error of the part the network serves, from its spec: for an LT3045's
+RSET a quarter of the 2 % full-range SET current spread, 0.5 %; the introduction says how), over the board's `ambient`
+range (25 ± 30 °C with a note when it states none).
 
 **Fix.** Thin-film or foil parts, matched networks for ratios (ratio TCR of a few ppm/K), or the same technology and
 series for both resistors of a ratio.
@@ -1260,3 +1269,66 @@ a threshold (default 100 °C) over the product's life; a series datasheet that s
 **Fix.** A core material without thermal ageing, a larger part with lower loss, or a lower core temperature.
 
 **References.** MMcat; CC1192; WE128.
+
+## `PAS-40` One precision circuit mixing precision and general-grade passives <a id="pas-40"></a>
+
+⚠️ warning · needs: the circuit around a part with an accuracy spec, each passive's grade (tolerance, TCR, technology,
+dielectric) · [catalogue entry](../checks.md#pas-40)
+
+**Impl.** mid · depends on NET-7, NET-23, NET-24, CFG-5, RPT-26
+
+**What it catches.** The passives of one circuit that serves a part needing precision (a reference divider, a
+regulator's feedback divider or current-set pair, an amplifier's gain or feedback network, a matched pair, an active
+filter) drawn from different grades: a 0.1 % 25 ppm/K thin-film resistor beside a 1 % 100 ppm/K thick-film one in the
+same ratio, a C0G and an X7R in one filter, a low-leakage SET capacitor with a general-grade RSET.
+
+**Why it matters.** The circuit is only as accurate as its weakest part: the precision parts were paid for and their
+accuracy is lost to the one general-grade part, which usually is an oversight (a part kept from an earlier revision, a
+library default, a value the precision series did not have). In a ratio, mixed technologies also bring mismatched TCRs
+that no longer cancel (`PAS-22`).
+
+**Example.** An ADC reference divider of a 0.1 % thin-film top resistor and a 1 % thick-film bottom one: the ratio is
+good to about 1 %, ten times worse than the top part suggests.
+
+**How to check.** For each circuit whose role carries an accuracy (`NET-23` roles around a part whose spec sets a
+budget, as the introduction says), compare the grades of the passives that enter that accuracy; report the general-grade
+ones when the circuit's budget needs the better grade (by `RPT-26`: the weak part alone exceeds `passive_share` of the
+part's error), naming the precision siblings. Where no part in the circuit needs precision, the mix is `PAS-41`'s; where
+the budget is unknown, the finding is an estimate. Tolerance alone on a single part stays `BOM-16`; one part's drift
+against its budget `PAS-22`.
+
+**Fix.** Bring the weak part up to the grade of its siblings (same series for both parts of a ratio), or, when the
+circuit does not need the precision, take all of them down (`PAS-41`).
+
+**References.** LT3045 p. 15 (RSET "should be a precision resistor"); V-BASICS; V-ARRAYAN (ratio accuracy of networks);
+catalogue `PAS-22`, `BOM-16`, `BOM-19`.
+
+## `PAS-41` Precision passives where the circuit does not need them <a id="pas-41"></a>
+
+💡 suggestion · needs: the circuit's accuracy budget from its parts, each passive's grade · [catalogue
+entry](../checks.md#pas-41)
+
+**Impl.** mid · depends on NET-7, NET-23, NET-24, CFG-5, RPT-26
+
+**What it catches.** Passives of a precision grade (0.1 % or tighter, low-TCR thin film or foil, matched networks, C0G
+or film where a class 2 dielectric meets every constraint) in a circuit whose parts do not need it: a pull-up, an LED
+resistor, a divider into a comparator with a 5 % threshold, a 0.1 % feedback divider on a regulator with a 3 %
+reference.
+
+**Why it matters.** Precision parts cost several times more, have fewer second sources and fewer values; where the
+budget derived from the parts is far looser than the passive, the grade is lost cost. Often it is a leftover of a copied
+precision circuit or a library default.
+
+**Example.** A buck converter with a ±2 % reference and its feedback divider in 0.1 % 10 ppm/K thin film: 1 % thick film
+keeps the divider's error within a quarter of the reference's.
+
+**How to check.** For each circuit with a derived budget (the introduction: `passive_share` of the error of the parts it
+serves), compute what a general-grade part would add with `RPT-26`; report a precision part when the general grade would
+still fit the budget with margin, and no datasheet constraint or project figure asks for the grade. Where some passives
+of the circuit are precision and others not, report under this check only when the budget is loose; otherwise it is
+`PAS-40`. A circuit without part data is not reported (an estimate is not enough to call something waste).
+
+**Fix.** Use the general grade, or write down why the precision is needed (a constraint in the part database, or a
+project figure).
+
+**References.** V-BASICS (grades and their cost); catalogue `PAS-40`, `BOM-19`.
