@@ -1331,4 +1331,5 @@ of the circuit are precision and others not, report under this check only when t
 **Fix.** Use the general grade, or write down why the precision is needed (a constraint in the part database, or a
 project figure).
 
-**References.** V-BASICS (grades and their cost); catalogue `PAS-40`, `BOM-19`.
+**References.** V-BASICS (grades and their cost); catalogue `PAS-40`, `BOM-19`; `ANA-25`, the chain-wide counterpart, is
+a separate check.

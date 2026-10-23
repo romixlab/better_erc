@@ -705,3 +705,78 @@ shunts at low values, keep jumpers and ferrites out of the sense path, and avoid
 
 **References.** INA181 §8.4.1 (Kelvin connection); Wikipedia, Four-terminal sensing; Wikipedia, Electrical
 resistivity and conductivity (temperature coefficient of annealed copper 3.93 × 10⁻³ /K); `ANA-4`.
+
+## `ANA-24` Weakest link along a chain wastes a precise part <a id="ana-24"></a>
+
+⚠️ warning · needs: the chains through the board (`NET-25`), each stage's figures from part data, the class figure table
+(`CFG-8`) · [catalogue entry](../checks.md#ana-24)
+
+**Impl.** hard · depends on NET-5, NET-10, NET-25, CFG-5, CFG-8
+
+**What it catches.** Along any chain the analyses can follow (a signal path: sensor, amplifier, filter, ADC; a reference
+path: reference, buffer, ADC or DAC reference input; a power path: LDO, switcher, reference; a clock path: oscillator,
+PLL or clock buffer, converter or PHY), a stage whose contribution on a figure that matters for that chain (noise
+density, offset, drift, initial accuracy, bandwidth and slew, jitter, PSRR against upstream ripple, leakage, resolution)
+swamps what a precise part elsewhere in the chain delivers: a precision reference buffered by an op-amp whose offset and
+noise are larger than the reference's own, a 24-bit ADC on a reference whose noise exceeds the ADC's noise floor, a
+low-noise LDO fed or followed by a path whose ripple its PSRR cannot remove, a low-jitter oscillator through a clock
+buffer with ten times its jitter. ICs and passives are stages alike (a thick-film gain resistor, a class 2 filter
+capacitor).
+
+**Why it matters.** A chain is only as good as its weakest stage on each figure; the precise part was chosen and paid
+for, and its figure is lost in the stage after or before it. The mismatch is an architectural oversight that per-part
+checks do not see, because each part is fine on its own.
+
+**Example.** A 2 ppm/K, 3 µVpp reference buffered by a general-purpose op-amp with 3 mV offset and 10 µV/K drift: the
+buffer sets the reference's accuracy a hundred times over.
+
+**How to check.** No pair-specific rules. For each chain from `NET-25`, take each stage's figures from part data
+(`CFG-5`, mx3; datasheet maxima, typicals marked as such) and the class figure table (`CFG-8`), which says which figures
+a part class has, how each is referred through a stage (gain, attenuation by PSRR) and how stages combine on it (root
+sum of squares for noise and jitter, sum for offset, initial error and drift in the worst case, minimum for bandwidth).
+Refer every stage's contribution to one point (the chain's sink input) and report a stage whose contribution exceeds
+`dominance` (default 3×) that of the best-specified stage of the chain on the same figure when that best stage is of a
+precision grade, or exceeds what the sink can resolve (its own noise floor or LSB). The message names the figure, the
+weak stage, the precise part it wastes and the totals. Stages without data make the chain not run on that figure with
+the data that would decide it.
+
+**Fix.** Raise the weak stage to the chain's grade (a precision buffer, a quieter reference, a post-regulator, a jitter
+cleaner), or drop the precise part to the grade the chain can deliver (`ANA-25`).
+
+**Relation.** ≈ `PAS-40` and `BOM-19`: those judge the parts within one circuit block and keep firing there even when
+the board mixes grades on purpose; this check judges the chain across blocks. ≈ `PAS-2`, `PAS-22`, `RATE-1` where one
+passive is the weak stage.
+
+**References.** ADI MT-047 (op-amp noise, RSS of noise sources), MT-037 (offset and drift), MT-031 (ADC reference and
+its noise), MT-200 (clock jitter and ADC SNR), LT3045 datasheet (PSRR, post-regulating a switcher); catalogue `ANA-25`.
+
+## `ANA-25` Over-specified part a chain cannot use <a id="ana-25"></a>
+
+💡 suggestion · needs: the chains (`NET-25`), each stage's figures, the class figure table (`CFG-8`), the part's grade
+within its family · [catalogue entry](../checks.md#ana-25)
+
+**Impl.** hard · depends on NET-5, NET-10, NET-25, CFG-5, CFG-8
+
+**What it catches.** A part whose figure on a chain is far better than the chain can use: its contribution referred to
+the sink is below `negligible` (default 10 %) of the chain's total on that figure from the other stages and below what
+the sink resolves, and the part is a precision or premium grade of its class (a 0.05 % 3 ppm/K reference in front of a
+10-bit ADC, a zero-drift op-amp after a 1 % divider, a 100 fs oscillator for a 12-bit converter at a low input
+frequency, a low-noise LDO behind which a switcher path follows).
+
+**Why it matters.** Premium grades cost several times more and have fewer second sources; where the chain cannot use the
+figure, it is lost cost. Often it is a leftover of a copied design or a part picked without the chain in view.
+
+**Example.** A 24-bit-class 1 ppm/K reference for an MCU's 12-bit ADC with ±2 LSB INL: the ADC's own error is a hundred
+times larger.
+
+**How to check.** As `ANA-24`, on the same chains and figures; report a part whose contribution is negligible on every
+figure it is graded on, naming the stage that sets the chain's total. Only parts the data marks as a precision or
+premium grade of their class (`CFG-8`: the grade figures per class, or mx3 alternatives in the same family) are
+reported; without that, nothing is said (an estimate is not enough to call something waste).
+
+**Fix.** A general grade of the same family, or raise the stage that limits the chain if the precision is wanted.
+
+**Relation.** ≈ `PAS-41` and `BOM-19`, which judge one circuit block and stay their own checks; this one judges the
+chain across blocks.
+
+**References.** As `ANA-24`.

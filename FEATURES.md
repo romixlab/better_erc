@@ -161,6 +161,9 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   ripple, lifetime, TCR, VCR, pulse, anti-sulfur, termination, safety class, Isat with its definition, Irms with its
   rise, SRF) resolved as facts from mx3, the parts repo, the MPN's series (`CFG-7`), the symbol's fields, the
   description and the footprint (`Assumed`); a constrained role without technology data is not run, never a pass
+- 📋 `NET-25` Chains: the paths a quantity travels through the board's parts as ordered stages (signal paths from `NET-10`,
+  the power tree from `NET-5`, reference outputs to reference inputs, clock sources through PLLs and buffers to clock
+  inputs), each stage a part with its input and output pins and gain, for the board-wide grade checks (`ANA-24`, `ANA-25`)
 
 ## Checks and diagnostics (`DIAG`)
 
@@ -198,7 +201,7 @@ the code lacks, `judgement` is not a rule. Counts on 23 Oct 2026:
 | `RF` | · | 8 | 1 | · | 9 |
 | `USB` | 6 | 11 | 2 | · | 19 |
 | `CONN` | 6 | 11 | 2 | 1 | 20 |
-| `ANA` | 8 | 11 | 3 | 1 | 23 |
+| `ANA` | 8 | 11 | 5 | 1 | 25 |
 | `RATE` | · | 29 | 2 | · | 31 |
 | `PAS` | · | 38 | 3 | · | 41 |
 | `ERR` | · | 1 | · | · | 1 |
@@ -208,7 +211,7 @@ the code lacks, `judgement` is not a rule. Counts on 23 Oct 2026:
 | `NAME` | 10 | 2 | · | · | 12 |
 | `LIB` | 3 | 12 | 2 | 1 | 18 |
 | `LAY` | · | 9 | 14 | 2 | 25 |
-| **all** | **139** | **336** | **68** | **19** | **562** |
+| **all** | **139** | **336** | **70** | **19** | **564** |
 
 The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per check under
 `erc_checks/src/<category>/`, each with its unit test and a test schematic with expectations
@@ -520,6 +523,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   ERJ-P/ERJ-S, Vishay CRCW/TNPW/WSL, Coilcraft XAL/MSS, ...) as TOML data in `mpn_decode`, shared with mx3: technology and
   series-typical figures (leakage formula, derating, lifetime, TCR, pulse, anti-sulfur, AEC-Q200, termination, core,
   shielding, Isat definition) with the datasheet each row came from
+- 📋 `CFG-8` Class figure table: per part class (reference, op-amp, ADC, DAC, LDO, switcher, oscillator, PLL, clock
+  buffer, resistor, capacitor, ...) which figures it has (noise density, offset, drift, initial accuracy, bandwidth,
+  slew, jitter, PSRR, resolution, leakage), how each is referred through a stage and how stages combine on it (RSS for
+  noise and jitter, sum for offset and drift, minimum for bandwidth), and the grade bands per class, as TOML data
 
 ## Reports and calculators (`RPT`)
 
