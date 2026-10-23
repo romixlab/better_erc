@@ -757,13 +757,13 @@ VIS-FILM.
 
 ## `RATE-26` Electrolytic capacitor lifetime at the board's temperature below the product's life <a id="rate-26"></a>
 
-⚠️ warning · needs: the series' rated life and temperature, its ripple current, the project's ambient and required life
-· [catalogue entry](../checks.md#rate-26)
+⚠️ warning · needs: the series' rated life and temperature, its ripple current, the board's `ambient` and `life_years`
+intents · [catalogue entry](../checks.md#rate-26)
 
 **Impl.** hard · depends on CFG-2, CFG-5, CFG-7, RPT-3, RPT-26
 
 **What it catches.** Wet aluminium, polymer and hybrid electrolytic capacitors whose expected life at their core
-temperature (the board's ambient plus ripple self-heating) is shorter than the life the project states.
+temperature (the board's ambient plus ripple self-heating) is shorter than the life the board's intent states.
 
 **Why it matters.** Electrolytics wear out: the electrolyte dries through the seal, capacitance falls and ESR rises
 (CDE: it doubles by the end of life). Wet aluminium life doubles for every 10 K below the rated temperature and halves
@@ -775,7 +775,8 @@ V input.
 
 **How to check.** For each electrolytic, take the core temperature (project ambient plus the ripple self-heating from
 `RATE-25`'s current and the series' ripple rating), compute the life (`L0 × 2^((T0 − T)/10)` for wet, `L0 × 10^((T0 −
-T)/20)` for polymer and hybrid, capped as the vendor caps it), and compare with the project's `life_years` and duty.
+T)/20)` for polymer and hybrid, capped as the vendor caps it), and compare with the board's `life_years` and duty (not
+run on a board whose intent states no ambient or life).
 
 **Fix.** A higher temperature or long-life series, a polymer or hybrid capacitor, ceramics, or less ripple and heat.
 
@@ -832,8 +833,8 @@ ratings are thermal ratings too (Murata: at most 40 K rise).
 **Example.** A 4 A Irms (40 K rise) inductor at 4 A in a 100 °C enclosure: 140 °C, above its 125 °C maximum.
 
 **How to check.** With `RPT-3`'s RMS current, scale the rise as `(I / Irms)²` times the rated rise (plus core loss from
-`PAS-31` when known), add the project's ambient, and compare with the part's maximum temperature; report RMS above Irms
-in any case.
+`PAS-31` when known), add the board's `ambient` intent (not run without it), and compare with the part's maximum
+temperature; report RMS above Irms in any case.
 
 **Fix.** A part with a higher Irms or maximum temperature, a larger case, or less current.
 
@@ -914,4 +915,3 @@ or balancing IC across each with a current at least 50 times the parts' leakage.
 **Fix.** Balancing resistors across each part, an active balancer, or parts rated for the full voltage.
 
 **References.** Keys of the [PAS page](pas.md#pas-1) reference list: EAT-SC.
-

@@ -28,6 +28,23 @@ the data that would decide it, never as a pass. Findings computed from datasheet
 better, and a measurement is a good reason to waive. Stress-versus-rating checks of the same parts (ripple current,
 electrolytic life, pulse energy, inductor RMS current) are `RATE` checks.
 
+**Intent is per board.** Some checks depend on what the board is for: `vibration`, `audio`, `automotive`, `precision`,
+`industrial`, `environment` (`sulfur`, `condensing`), `ambient` (the board's operating range) and `life_years`, set in
+the board's own project file. There are no lab-wide or built-in defaults: on a board that does not state the intent a
+check needs, that check (or the part of it that needs the intent) is reported as not run with the intent it would need,
+never guessed. Where an intent only refines a check (the hottest ambient for leakage, a precision budget), the check
+runs with the stated fallback and says so.
+
+**Accuracy budgets follow the circuit.** A pin or role that sets an accuracy (a current-set pin, a reference, a feedback
+or measurement divider) gets its budget from, in order: the project's explicit figure, a datasheet constraint on the
+pin, then a default by circuit: **0.1 %** when the circuit is a precision one (the board's intent `precision`, or the
+regulated or measured node feeds a precision role: an ADC or DAC reference input, a reference pin, a sensor bridge, a
+net of class `Precision`), **1 %** otherwise. 0.1 % is the error the LT3045 family's datasheets use as their example and
+what a precision rail can spend on one passive; 1 % is the initial accuracy of an ordinary regulator, so a passive that
+costs more than that is a real error on any board. With the leakage figures of `PAS-2`, a polymer or wet aluminium SET
+capacitor at its datasheet maximum is a finding on both kinds of board, an MnO2 tantalum only on a precision one, a
+ceramic or film part on neither.
+
 References used throughout:
 
 - **LT3045** · Analog Devices, *LT3045 20V, 500mA, Ultralow Noise, Ultrahigh PSRR Linear Regulator*, datasheet Rev. D.
@@ -235,9 +252,10 @@ millivolts low, more when hot.
 
 **How to check.** From the pin's electrical facts (`function = current_set` or `reference`, `source_current`,
 `accuracy`, pin voltage; a datasheet's own `leakage` constraint wins) and the capacitor's leakage model (the series' DCL
-formula or insulation resistance, scaled to the pin voltage and the hottest ambient: `RPT-26`), report when `Ileak /
-ISET` exceeds the accuracy budget. A generic profile (`SET`, `ISET` on a regulator) supplies an assumed current and
-makes the finding an estimate.
+formula or insulation resistance, scaled to the pin voltage and the board's hottest ambient from its intent, or 25 °C
+with a note when the board states none: `RPT-26`), report when `Ileak / ISET` exceeds the accuracy budget: 0.1 % on a
+precision circuit, 1 % otherwise (the page's introduction says how the budget is chosen). A generic profile (`SET`,
+`ISET` on a regulator) supplies an assumed current and makes the finding an estimate.
 
 **Fix.** A low-leakage ceramic (class 1 where the value allows, else X7R) or a film capacitor; where vibration rules out
 ceramics, film, or a tantalum whose specified leakage fits the budget. Guard ring and clean board as the datasheet
@@ -268,8 +286,8 @@ The regulator then never reaches regulation or never asserts power-good, and onl
 specified leakage of 3 µA means the pin stops below the soft-start end voltage, and the output stays low.
 
 **How to check.** From the pin's facts (`function = soft_start | tracking | timing`, `source_current`, the end voltage)
-and the capacitor's leakage at that voltage and the hottest ambient: error when `Ileak ≥ 0.5 × Isource`, warning when
-the timing moves by more than 10 %.
+and the capacitor's leakage at that voltage and the board's hottest ambient (25 °C with a note when the board states
+none): error when `Ileak ≥ 0.5 × Isource`, warning when the timing moves by more than 10 %.
 
 **Fix.** A ceramic (X7R or C0G) soft-start capacitor; for very long ramps a different soft-start method (a slower
 reference, an RC on the enable, or a sequencer).
@@ -382,8 +400,8 @@ dominate the distortion budget.
 against the same filter with C0G.
 
 **How to check.** For capacitors in `Coupling`, `FeedbackCap` and `FilterCorner` roles on nets of an `Audio` or
-`Precision` class (or the project's intent `audio`), report a class 2 or 3 dielectric where a signal voltage is across
-it.
+`Precision` class, or anywhere on a board whose intent is `audio` or `precision`, report a class 2 or 3 dielectric where
+a signal voltage is across it.
 
 **Fix.** C0G/NP0 for small values, PPS, PP or PET film for larger ones; for coupling capacitors, enough capacitance that
 the signal across it is small.
@@ -393,8 +411,8 @@ MUR-VOLT.
 
 ## `PAS-8` Piezoelectric ceramic on a low-noise, high-impedance node in a product that vibrates <a id="pas-8"></a>
 
-⚠️ warning · needs: the node's role (noise-critical, high impedance), the capacitor's dielectric, the project's intent
-`vibration` · [catalogue entry](../checks.md#pas-8)
+⚠️ warning · needs: the node's role (noise-critical, high impedance), the capacitor's dielectric, the board's intent
+`vibration` (not run without it) · [catalogue entry](../checks.md#pas-8)
 
 **Impl.** mid · depends on NET-7, NET-23, NET-24, CFG-2
 
@@ -411,9 +429,9 @@ electrolytics' higher 1/f noise and that leakage still counts (`PAS-2`).
 **Example.** An LT3045 powering a clock synthesiser on a drone, with a 4.7 µF X7R on SET: the phase noise shows the
 motor vibration.
 
-**How to check.** With intent `vibration` set, report class 2 and 3 capacitors in the roles `SetBypass`, `NoiseFilter`,
-`RefDecoupling` and `LoopFilter`; a datasheet constraint (`required.when.intent = vibration`) states it for a specific
-part and cites the page.
+**How to check.** On a board whose intent includes `vibration`, report class 2 and 3 capacitors in the roles
+`SetBypass`, `NoiseFilter`, `RefDecoupling` and `LoopFilter`; a datasheet constraint (`required.when.intent =
+vibration`) states it for a specific part and cites the page.
 
 **Fix.** Film (PPS, PEN), C0G where the value allows, or a tantalum whose leakage fits `PAS-2`; mechanically, smaller
 cases and soft mounting help.
@@ -423,8 +441,9 @@ LT3094, the same section; KEM-C0G ("No piezoelectric noise").
 
 ## `PAS-9` Passive that sings: audio-band excitation of a class 2 ceramic or an open-core inductor <a id="pas-9"></a>
 
-💡 suggestion · needs: the converter's mode (PFM, burst, PWM in the audio band) or the load's pulse rate, the parts'
-dielectric and construction · [catalogue entry](../checks.md#pas-9)
+💡 suggestion (⚠️ warning on a board whose intent is `audio`) · needs: the converter's mode (PFM, burst, PWM in the audio
+band) or the load's pulse rate, the parts' dielectric and construction, the board's intent · [catalogue
+entry](../checks.md#pas-9)
 
 **Impl.** mid · depends on NET-7, NET-23, NET-24, CFG-2, CFG-5
 
@@ -441,7 +460,8 @@ board hums in a quiet room.
 
 **How to check.** For capacitors and inductors in the roles `OutputCap`, `InputCap`, `PowerInductor` of regulators whose
 part data names a light-load mode in the audio band (or a PWM frequency under 20 kHz from the project), report class 2
-ceramics (not of a low-acoustic-noise series) and unshielded or drum-core inductors.
+ceramics (not of a low-acoustic-noise series) and unshielded or drum-core inductors: as a suggestion, raised to a
+warning on a board whose intent is `audio`, where a whine is a product defect.
 
 **Fix.** Forced PWM above 20 kHz, low-acoustic-noise MLCC series (Murata ZRA, ZRB, or KRM and KR3 with metal terminals),
 polymer or tantalum capacitors in the worst spot, moulded composite inductors.
@@ -572,8 +592,8 @@ and hybrid capacitors change far less.
 specified at −40 °C) as the input bulk of a buck: brown-outs at cold start.
 
 **How to check.** For wet aluminium capacitors in roles `InputCap`, `OutputCap`, `InputBulk`, `Hold`, compare the
-project's minimum ambient with the series' category minimum and report a ratio above a threshold (default 4) at the
-lowest specified temperature.
+minimum of the board's `ambient` intent (not run without it) with the series' category minimum and report a ratio above
+a threshold (default 4) at the lowest specified temperature.
 
 **Fix.** A low-temperature series, a polymer or hybrid capacitor, or ceramics where the value allows.
 
@@ -632,8 +652,8 @@ resistor, a TVS) is present.
 
 ## `PAS-17` Large MLCC across a battery or unfused high-energy input with standard termination <a id="pas-17"></a>
 
-⚠️ warning · needs: the capacitor's case and termination, whether the net is battery-direct or unfused, the project's
-intent · [catalogue entry](../checks.md#pas-17)
+⚠️ warning · needs: the capacitor's case and termination, whether the net is battery-direct or unfused · [catalogue
+entry](../checks.md#pas-17)
 
 **Impl.** mid · depends on NET-5, NET-23, NET-24, CFG-7
 
@@ -675,8 +695,8 @@ gold or palladium-rich electrode or a barrier and survive.
 **Example.** A pump controller with ordinary 0402 thick-film resistors in a wastewater plant: field returns after two
 years with open pull-ups.
 
-**How to check.** With the project's `environment` containing `sulfur`, report thick-film resistors whose series is not
-anti-sulfur.
+**How to check.** On a board whose `environment` intent contains `sulfur` (not run on a board that states no
+environment), report thick-film resistors whose series is not anti-sulfur.
 
 **Fix.** Anti-sulfur series (Vishay CRCW-SR, Panasonic ERJ-S and ERJ-U, Yageo AF), thin-film or metal-strip parts
 (sulfur resistant by construction), or conformal coating as a partial remedy.
@@ -714,8 +734,8 @@ V-MELF.
 
 ## `PAS-20` Consumer-grade passives on an automotive design <a id="pas-20"></a>
 
-💡 suggestion · needs: the project's intent `automotive`, the passives' series and their AEC-Q200 status · [catalogue
-entry](../checks.md#pas-20)
+💡 suggestion (⚠️ warning on a board whose intent is `automotive`) · needs: the board's intent, the passives' series and
+their AEC-Q200 status · [catalogue entry](../checks.md#pas-20)
 
 **Impl.** mid · depends on NET-24, CFG-2, CFG-7
 
@@ -729,7 +749,9 @@ and it is cheapest to choose at design time.
 **Example.** An automotive CAN node with GRM capacitors throughout: the customer's PPAP asks for AEC-Q200 evidence on
 every passive.
 
-**How to check.** With intent `automotive`, report passives whose series is not AEC-Q200 (series table, mx3 `aec_q200`).
+**How to check.** Report passives whose series is not AEC-Q200 (series table, mx3 `aec_q200`): a warning on a board
+whose intent is `automotive`, a suggestion on one whose intent is `industrial` or harsh (`vibration`, an `ambient`
+beyond −40 to 85 °C), nothing on other boards, and not run on a board that states no intent.
 
 **Fix.** The AEC-Q200 series of the same vendor and size.
 
@@ -783,8 +805,9 @@ Hence, it should be a precision resistor." In a ratio, matched TCRs cancel; mism
 **Example.** An LT3045 with a 0.1 % thick-film RSET: precise at 25 °C, 1 % off at 85 °C.
 
 **How to check.** For roles `SetResistor`, `FeedbackDivider`, `Gain`, `Bridge`, `AdcDivider`, compute the drift (`|TCR|
-× ΔT + stability`, and for a ratio the TCR difference) with `RPT-26` and compare with the budget (the pin's `accuracy`,
-the role's default, or the project's).
+× ΔT + stability`, and for a ratio the TCR difference) with `RPT-26` and compare with the budget (the project's figure,
+the pin's `accuracy`, else 0.1 % on a precision circuit and 1 % otherwise, as the introduction says), over the board's
+`ambient` range (25 ± 30 °C with a note when it states none).
 
 **Fix.** Thin-film or foil parts, matched networks for ratios (ratio TCR of a few ppm/K), or the same technology and
 series for both resistors of a ratio.
@@ -1231,8 +1254,8 @@ Ferrite and some composite materials do not age this way.
 years in the field its losses have tripled.
 
 **How to check.** For power inductors whose series or core material is iron powder with organic binder, estimate the
-core temperature (`RPT-3` losses, ambient from the project) and report above a threshold (default 100 °C) over the
-product's life; a series datasheet that states no thermal ageing clears it.
+core temperature (`RPT-3` losses, the board's `ambient` and `life_years` intents; not run without them) and report above
+a threshold (default 100 °C) over the product's life; a series datasheet that states no thermal ageing clears it.
 
 **Fix.** A core material without thermal ageing, a larger part with lower loss, or a lower core temperature.
 
