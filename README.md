@@ -50,6 +50,9 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 - [docs/engine.md](docs/engine.md): the check engine: checks and their data needs, findings, the report, the test
   schematics with their expectations, how to add a check.
 - [docs/model.md](docs/model.md): the board model, the importers and the crates.
+- [docs/drawing-guide.md](docs/drawing-guide.md): how to draw a sheet that reads at a glance (signal flow, power and
+  ground, grid, labels, text, title block, KiCad shortcuts), each rule with its reason and source, and our own sheets
+  measured against it; the `DRAW` checks automate part of it.
 - [docs/review-checklist.md](docs/review-checklist.md): a condensed schematic review checklist that groups those
   IDs for a review pass.
 - [FEATURES.md](FEATURES.md): what the code does today and what is planned, item by item.

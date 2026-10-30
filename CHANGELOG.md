@@ -11,6 +11,10 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- `docs/drawing-guide.md`: a schematic drawing guide for sheets that read at a glance (sheet size and splitting, fill and centring, title block, sheet names, design-intent notes, the 1.27 mm grid and KiCad 10's Align commands, signal flow, connectors at the edge with their protection, symbol orientation, ground down and supplies up, decoupling at its pin, wires and junctions, hop-overs, labels and their scopes, sheet pins, buses, field placement, text size, overlaps, no-connect flags, DNP, colour, print and PDF), each rule with its reason, a bad/good sketch and its source (standard, house style or new), a KiCad 10 settings and shortcut table from its source, what other tools automate, and our house style measured over a private set of 157 production sheets; linked from the README and the review checklist. Check catalogue: a new category `DRAW` (drawing style, `DRAW-1..27`) with the detail page `docs/checks/draw.md`, listed in FEATURES.md as planned with `NET-26` (drawing geometry) and `TOOL-7` (the house style measurement as a `berc` command). Docs only.
+
 ## [0.4.11] - 2026-10-23
 
 ### Added

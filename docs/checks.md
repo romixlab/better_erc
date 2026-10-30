@@ -642,6 +642,35 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="name-11"></a>💡 `NAME-11` Negative rail named without its sign (`5V_NEG` vs `-5V`), or with a sign the tool does not parse · impl: easy (`NET-5`) · [📖](checks/name.md#name-11) <!-- 21 Oct 2026 -->
 - <a id="name-12"></a>🛑 `NAME-12` Unannotated or duplicate reference designators · impl: easy (netlist) · [📖](checks/name.md#name-12) <!-- 21 Oct 2026 -->
 
+### ✏️ DRAW - Drawing style
+- <a id="draw-1"></a>💡 `DRAW-1` Ground symbol not pointing down (rotated or mirrored) · impl: mid (NET-21, NET-26) · [📖](checks/draw.md#draw-1) <!-- 30 Oct 2026 -->
+- <a id="draw-2"></a>💡 `DRAW-2` Positive supply symbol not pointing up (negative rails pointing down are right) · impl: mid (NET-5, NET-26) · [📖](checks/draw.md#draw-2) <!-- 30 Oct 2026 -->
+- <a id="draw-3"></a>⚠️ `DRAW-3` Symbol pin, wire end, label anchor or sheet pin off the 1.27 mm connection grid ≈ WIRE-3 · impl: mid (NET-26) · [📖](checks/draw.md#draw-3) <!-- 30 Oct 2026; KiCad endpoint_off_grid -->
+- <a id="draw-4"></a>⚠️ `DRAW-4` Wire end or pin on the middle of another wire without a junction: drawn as a T, not connected ≈ WIRE-15 · impl: mid (NET-26) · [📖](checks/draw.md#draw-4) <!-- 30 Oct 2026 -->
+- <a id="draw-5"></a>💡 `DRAW-5` Diagonal wire segment · impl: mid (NET-26) · [📖](checks/draw.md#draw-5) <!-- 30 Oct 2026 -->
+- <a id="draw-6"></a>💡 `DRAW-6` Wire drawn on top of another wire, or of zero length (left over after a drag) · impl: mid (NET-26) · [📖](checks/draw.md#draw-6) <!-- 30 Oct 2026 -->
+- <a id="draw-7"></a>💡 `DRAW-7` Wire running through a symbol body, a field or a label · impl: hard (NET-26) · [📖](checks/draw.md#draw-7) <!-- 30 Oct 2026 -->
+- <a id="draw-8"></a>💡 `DRAW-8` Reference or value reading vertically: the fields of a rotated part turned with it instead of being placed horizontally · impl: mid (NET-26) · [📖](checks/draw.md#draw-8) <!-- 30 Oct 2026 -->
+- <a id="draw-9"></a>💡 `DRAW-9` Text overlapping other text, a symbol body or a wire (fields, labels, notes) · impl: hard (NET-26) · [📖](checks/draw.md#draw-9) <!-- 30 Oct 2026 -->
+- <a id="draw-10"></a>💡 `DRAW-10` Labels stacked next to each other but not aligned (anchors a grid step or two apart) · impl: mid (NET-21, NET-26) · [📖](checks/draw.md#draw-10) <!-- 30 Oct 2026 -->
+- <a id="draw-11"></a>💡 `DRAW-11` Net label written vertically where a horizontal wire stub would carry it · impl: mid (NET-21, NET-26) · [📖](checks/draw.md#draw-11) <!-- 30 Oct 2026 -->
+- <a id="draw-12"></a>💡 `DRAW-12` Symbol placed so its inputs face right and its outputs left (pin types as drawn, after rotation and mirror), against the sheet's left-to-right flow · impl: mid (NET-7, NET-26) · [📖](checks/draw.md#draw-12) <!-- 30 Oct 2026 -->
+- <a id="draw-13"></a>💡 `DRAW-13` Hierarchical sheet symbol with input pins on its right side or output pins on its left · impl: mid (NET-21, NET-26) · [📖](checks/draw.md#draw-13) <!-- 30 Oct 2026 -->
+- <a id="draw-14"></a>💡 `DRAW-14` Connector drawn in the middle of the circuit instead of at the sheet's edge, with its protection beside it · impl: mid (NET-19, NET-26) · [📖](checks/draw.md#draw-14) <!-- 30 Oct 2026 -->
+- <a id="draw-15"></a>💡 `DRAW-15` Decoupling capacitor drawn far from the power pin it serves, or on another sheet ≈ LAY-17 · impl: mid (NET-22, NET-26) · [📖](checks/draw.md#draw-15) <!-- 30 Oct 2026 -->
+- <a id="draw-16"></a>💡 `DRAW-16` Drawing fills too little of the sheet (paper too big for it) or runs into the frame or the title block · impl: mid (NET-26) · [📖](checks/draw.md#draw-16) <!-- 30 Oct 2026 -->
+- <a id="draw-17"></a>💡 `DRAW-17` Drawing not centred on the sheet · impl: mid (NET-26) · [📖](checks/draw.md#draw-17) <!-- 30 Oct 2026 -->
+- <a id="draw-18"></a>💡 `DRAW-18` Sheet too dense to read at its paper size: split it · impl: mid (NET-26) · [📖](checks/draw.md#draw-18) <!-- 30 Oct 2026 -->
+- <a id="draw-19"></a>💡 `DRAW-19` Title block without a title, revision or date, or with a text variable that does not resolve · impl: mid (NET-26) · [📖](checks/draw.md#draw-19) <!-- 30 Oct 2026 -->
+- <a id="draw-20"></a>⚠️ `DRAW-20` Sheets of one project with different revisions in their title blocks · impl: mid (NET-26) · [📖](checks/draw.md#draw-20) <!-- 30 Oct 2026 -->
+- <a id="draw-21"></a>💡 `DRAW-21` Sheets of one project on mixed paper sizes, or a sheet larger than A3 · impl: mid (NET-26) · [📖](checks/draw.md#draw-21) <!-- 30 Oct 2026 -->
+- <a id="draw-22"></a>💡 `DRAW-22` Reference designator hidden on a placed part (power symbols, logos and mounting holes aside) · impl: mid (NET-26) · [📖](checks/draw.md#draw-22) <!-- 30 Oct 2026 -->
+- <a id="draw-23"></a>⚠️ `DRAW-23` Value or a field says DNP, NF or DNF while the part's DNP attribute is not set: the sheet, the BOM and the placement files disagree ≈ BOM-13 · impl: mid (NET-20) · [📖](checks/draw.md#draw-23) <!-- 30 Oct 2026 -->
+- <a id="draw-24"></a>💡 `DRAW-24` Text smaller than 1.27 mm (fields, labels, pin names, notes): unreadable on a print of the sheet's paper size · impl: mid (NET-26) · [📖](checks/draw.md#draw-24) <!-- 30 Oct 2026 -->
+- <a id="draw-25"></a>💡 `DRAW-25` Hierarchical sheet without a meaningful name (`Sheet1`, `Untitled`), or two sheets with the same title · impl: mid (NET-26) · [📖](checks/draw.md#draw-25) <!-- 30 Oct 2026 -->
+- <a id="draw-26"></a>💡 `DRAW-26` Sheet with calculated parts (feedback divider, current-set resistor, filter, timing) and no note that gives the calculation or the reason · impl: judgement (NET-23, NET-26) · [📖](checks/draw.md#draw-26) <!-- 30 Oct 2026 -->
+- <a id="draw-27"></a>💡 `DRAW-27` Colour set by hand on wires, labels or text: it carries meaning a black and white print loses · impl: mid (NET-26) · [📖](checks/draw.md#draw-27) <!-- 30 Oct 2026 -->
+
 ### 📚 LIB - Library, symbols and footprints
 - <a id="lib-1"></a>⚠️ `LIB-1` Symbol pin names differ from the same part elsewhere in the database · impl: mid (CFG-5, NET-7) · [📖](checks/lib.md#lib-1) <!-- CHK-78; split 21 Oct 2026: LIB-4, LIB-5 -->
 - <a id="lib-2"></a>⚠️ `LIB-2` Global pinout database for common connectors, check against it · impl: mid (CFG-5, CFG-2) · [📖](checks/lib.md#lib-2) <!-- CHK-116 -->

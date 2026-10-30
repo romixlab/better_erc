@@ -50,6 +50,20 @@ hand or by Claude on a netlist export.
   [[WIRE-3]](checks.md#wire-3), [[WIRE-4]](checks.md#wire-4), [[WIRE-5]](checks.md#wire-5) · no-connect flags only where
   the datasheet allows, none on wired pins [[WIRE-9]](checks.md#wire-9), [[WIRE-7]](checks.md#wire-7),
   [[WIRE-8]](checks.md#wire-8) · one-pin and unnamed nets reviewed [VIEW-5], [[WIRE-11]](checks.md#wire-11)
+- *Drawing:* the sheet reads at a glance, per the [drawing guide](drawing-guide.md): ground down, supplies up
+  [[DRAW-1]](checks.md#draw-1), [[DRAW-2]](checks.md#draw-2) · on the grid, no T without a junction, no 4-way junction,
+  straight wires [[DRAW-3]](checks.md#draw-3), [[DRAW-4]](checks.md#draw-4), [[WIRE-15]](checks.md#wire-15),
+  [[DRAW-5]](checks.md#draw-5) · signal left to right, connectors at the edge with their protection, decoupling at its
+  pin [[DRAW-12]](checks.md#draw-12), [[DRAW-13]](checks.md#draw-13), [[DRAW-14]](checks.md#draw-14),
+  [[DRAW-15]](checks.md#draw-15) · fields horizontal and clear, labels aligned, text 1.27 mm
+  [[DRAW-8]](checks.md#draw-8), [[DRAW-9]](checks.md#draw-9), [[DRAW-10]](checks.md#draw-10), [[DRAW-11]](checks.md#draw-11),
+  [[DRAW-24]](checks.md#draw-24) · sheet filled and centred, not too dense, one paper size, named
+  [[DRAW-16]](checks.md#draw-16), [[DRAW-17]](checks.md#draw-17), [[DRAW-18]](checks.md#draw-18),
+  [[DRAW-21]](checks.md#draw-21), [[DRAW-25]](checks.md#draw-25) · title block with one revision, calculations in
+  notes, DNP as an attribute, no meaning in colour alone [[DRAW-19]](checks.md#draw-19), [[DRAW-20]](checks.md#draw-20),
+  [[DRAW-26]](checks.md#draw-26), [[DRAW-23]](checks.md#draw-23), [[DRAW-27]](checks.md#draw-27) · references shown
+  [[DRAW-22]](checks.md#draw-22) · no wire through a part [[DRAW-7]](checks.md#draw-7), no stray wire pieces
+  [[DRAW-6]](checks.md#draw-6)
 - *IO and defaults:* no floating inputs, none that float when a connector is empty [[IO-1]](checks.md#io-1),
   [[IO-2]](checks.md#io-2), [[IO-10]](checks.md#io-10) · enables and gates driven by MCU pins have a pull for the reset
   and unpowered state, output enables of registers and drivers pull to off [[IO-3]](checks.md#io-3),

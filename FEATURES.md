@@ -164,11 +164,17 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - 📋 `NET-25` Chains: the paths a quantity travels through the board's parts as ordered stages (signal paths from `NET-10`,
   the power tree from `NET-5`, reference outputs to reference inputs, clock sources through PLLs and buffers to clock
   inputs), each stage a part with its input and output pins and gain, for the board-wide grade checks (`ANA-24`, `ANA-25`)
+- 📋 `NET-26` Drawing geometry: what the sheet looks like, beyond `NET-21`'s labels and flags: paper size and title
+  block per sheet (title, date, revision, comments, text variables resolved), wires, buses and junctions with their
+  ends, label and sheet pin angles, the position, angle, size, visibility and justification of every symbol field,
+  free text and text boxes, hand-set colours, sheet symbol boxes with their pin sides, and library symbol body extents
+  and pin sides, so a placed symbol's outline and which way its pins face are known. The `DRAW` checks read it
+  ([docs/drawing-guide.md](docs/drawing-guide.md))
 
 ## Checks and diagnostics (`DIAG`)
 
 Checks are named by their catalogue ID. Only the ones with code are listed; everything else in the catalogue is
-planned.
+planned, except the drawing style checks (`DRAW`), listed below as planned since the category was opened.
 
 Every catalogue check carries an implementation tier (`impl:` in [docs/checks.md](docs/checks.md), explained in each
 detail page): `easy` runs on the netlist alone, `mid` needs part data or a project setting first, `hard` needs analysis
@@ -210,8 +216,9 @@ the code lacks, `judgement` is not a rule. Counts on 23 Oct 2026:
 | `BOM` | 11 | 6 | · | 2 | 19 |
 | `NAME` | 10 | 2 | · | · | 12 |
 | `LIB` | 3 | 12 | 2 | 1 | 18 |
+| `DRAW` | · | 24 | 2 | 1 | 27 |
 | `LAY` | · | 9 | 14 | 2 | 25 |
-| **all** | **139** | **336** | **70** | **19** | **564** |
+| **all** | **139** | **360** | **72** | **20** | **591** |
 
 The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per check under
 `erc_checks/src/<category>/`, each with its unit test and a test schematic with expectations
@@ -489,6 +496,35 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `max_pull_up`) · `eth/eth_3.rs`, `eth-3_mdio_pull_up`
 - ✅ `SER-14` Two resistors of 50-70 Ω (`min_half`, `max_half`) in series between lines reaching one transceiver's
   CANH and CANL, with no fitted capacitor from the centre to a ground · `ser/ser_14.rs`, `ser-14_can_split_termination`
+- 📋 Drawing style (`DRAW`), from the drawing facts (`NET-21`) and the drawing geometry (`NET-26`); the rules behind them
+  are in [docs/drawing-guide.md](docs/drawing-guide.md):
+  - 📋 `DRAW-1` Ground symbol not pointing down
+  - 📋 `DRAW-2` Positive supply symbol not pointing up
+  - 📋 `DRAW-3` Pin, wire end, label or sheet pin off the 1.27 mm grid
+  - 📋 `DRAW-4` Wire end or pin on the middle of a wire without a junction
+  - 📋 `DRAW-5` Diagonal wire segment
+  - 📋 `DRAW-6` Wire on top of another wire, or of zero length
+  - 📋 `DRAW-7` Wire through a symbol body, a field or a label
+  - 📋 `DRAW-8` Reference or value reading vertically on a rotated part
+  - 📋 `DRAW-9` Text overlapping text, a symbol body or a wire
+  - 📋 `DRAW-10` Stacked labels not aligned
+  - 📋 `DRAW-11` Net label written vertically
+  - 📋 `DRAW-12` Symbol with its inputs facing right and outputs left
+  - 📋 `DRAW-13` Sheet symbol with inputs on the right or outputs on the left
+  - 📋 `DRAW-14` Connector not at the sheet's edge
+  - 📋 `DRAW-15` Decoupling capacitor drawn far from its pin
+  - 📋 `DRAW-16` Drawing fills too little of the sheet, or runs into the frame or title block
+  - 📋 `DRAW-17` Drawing not centred on the sheet
+  - 📋 `DRAW-18` Sheet too dense for its paper size
+  - 📋 `DRAW-19` Title block without title, revision or date, or an unresolved variable
+  - 📋 `DRAW-20` Sheets with different revisions
+  - 📋 `DRAW-21` Mixed paper sizes, or a sheet larger than A3
+  - 📋 `DRAW-22` Reference designator hidden on a placed part
+  - 📋 `DRAW-23` DNP in the value or a field without the DNP attribute
+  - 📋 `DRAW-24` Text smaller than 1.27 mm
+  - 📋 `DRAW-25` Sheet without a meaningful name, or two sheets with one title
+  - 📋 `DRAW-26` Calculated parts without a note giving the calculation (candidates only)
+  - 📋 `DRAW-27` Colour set by hand on wires, labels or text
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`
 - ✅ `DIAG-2` Every catalogue check reported as ran, not run (the missing need, why, and what would enable it) or
   planned; each check declares its needs, availability is worked out per board before the run from the analyses
@@ -631,6 +667,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `erc_analysis` and `erc_checks`, with the run entry (`Project`, `check_path`, `CheckRun`, `Verdict`) and the report
   types at the top and `diff::pnp`; berc and the app depend on it alone. Missing: `Workspace` and a watching
   `Session` (architecture 5.2), queries, waivers · `better_erc/src/lib.rs`
+- 📋 `TOOL-7` Drawing house style: `berc` measures the drawing habits of every schematic under a folder (power and
+  ground orientation, grid, label alignment and scope, field and label direction, text sizes, paper size, fill and
+  centring, title blocks, notes, connectors at the edge, DNP, hand-set colours) and prints the table of
+  [docs/drawing-guide.md](docs/drawing-guide.md#house-style-measured), per sheet with `--sheets`; on `NET-26`
 
 ## Code generation (`GEN`)
 
