@@ -326,10 +326,11 @@ the rails, not the symbols one by one:
 
 | Net class | Patterns | Wire colour | Symbol colour |
 |---|---|---|---|
-| Ground | `GND` | `rgb(60, 170, 24)` light green | `GND` in a darker green `rgb(0, 115, 30)` |
-| Power | `+*`, `*/+*` (a local rail is `/<sheet>/+3V3_LDO`) | `rgb(232, 113, 10)` orange | `PWR_LOCAL` in a burnt orange `rgb(175, 50, 10)` |
+| Ground | `GND` | `rgb(0, 115, 30)` dark green | `GND` in a lighter green `rgb(60, 170, 24)` |
+| Power | `+*`, `*/+*` (a local rail is `/<sheet>/+3V3_LDO`) | `rgb(175, 50, 10)` burnt orange | `PWR_LOCAL` and the other `vhrd_power` supplies in orange `rgb(232, 113, 10)` |
 
-The orange is the Debug box orange and the theme's voltage-probe colour. A symbol and its wires differ by more than
+The symbol orange is the Debug box orange and the theme's voltage-probe colour, the one the `vhrd_power` supply
+symbols already had. A symbol and its wires differ by more than
 `drawing.colour.pair_min` ([neighbours in different colours](#neighbours-in-different-colours)), and all four keep
 about 3:1 on both the white and the VHRD Dark background, since net class and library colours do not change with
 the theme.
@@ -541,13 +542,13 @@ same for both themes (net classes and library symbols are). Our set:
 |---|---|---|---|
 | wire | theme `wire` | `rgb(74, 74, 74)` | `rgb(168, 168, 168)` |
 | pin | theme `pin` | `rgb(180, 20, 30)` (was `rgb(46, 46, 46)`, ΔE 9 to the wire) | `rgb(240, 100, 92)` (was `rgb(208, 208, 208)`, ΔE 10.5) |
-| ground wire | net class Ground | `rgb(60, 170, 24)` | same |
-| ground symbol | `vhrd_power:GND` | `rgb(0, 115, 30)` (ΔE 20.5 to its wire) | same |
-| power wire | net class Power | `rgb(232, 113, 10)` | same |
-| power symbol | `vhrd_power:PWR_LOCAL` | `rgb(175, 50, 10)` (ΔE 22.9 to its wire) | same |
+| ground wire | net class Ground | `rgb(0, 115, 30)` | same |
+| ground symbol | `vhrd_power:GND` | `rgb(60, 170, 24)` (ΔE 20.5 to its wire) | same |
+| power wire | net class Power | `rgb(175, 50, 10)` | same |
+| power symbol | `vhrd_power` supplies, `PWR_LOCAL` | `rgb(232, 113, 10)` (ΔE 22.9 to its wire) | same |
 
 The pin takes the red family of the symbol outline, as in KiCad's own default theme; the symbol of a rail is the
-darker, more saturated member of its family and its wires the lighter one. Why: where a pin and its wire are the
+lighter member of its family and its wires the darker one, so the long runs stay calm and the symbols stand out. Why: where a pin and its wire are the
 same grey, the reader cannot see where the part ends, and a green ground symbol on a green wire melts into it.
 Source: house (Roman, 31 Oct 2026). `DRAW-42`
 

@@ -516,6 +516,6 @@ come from the KiCad colour settings named in the better_erc project file.
 
 **Impl.** easy · depends on NET-26
 
-The first word of a text item, of each line of a text box or table cell, and of each sentence after `. ` starts
-lower case. Skipped: lines starting with a net name or reference known on the sheet, a unit or value (`mA`, `20u`,
+The first word of a text item, text box or table cell, of each paragraph in it, and of each sentence after a full
+stop starts lower case (a line that continues a sentence from the line before is not a start). Skipped: lines starting with a net name or reference known on the sheet, a unit or value (`mA`, `20u`,
 `nX`), code (a `.` directive, `i(`, `v(`) or a parameter name followed by `:` or `=`.
