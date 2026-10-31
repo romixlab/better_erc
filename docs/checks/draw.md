@@ -36,7 +36,11 @@ project file (`CFG-2`); see [clearance margins](../drawing-guide.md#room-around-
 | `drawing.label.stub_extra` | 1.27 mm | stub a local label needs beyond its text length (`DRAW-28`) |
 | `drawing.heading_size` | 2.54 mm | text size of a section heading, bold (`DRAW-31`, `DRAW-32`) |
 | `drawing.group_heading_size` | 1.905 mm | text size of a group heading (a table's title, a group of directives), bold (`DRAW-32`) |
-| `drawing.leader.clear` | 0.635 mm | gap from a leader's tip to the part's outline (`DRAW-46`) |
+| `drawing.leader.clear` | 0.635 mm | gap from a leader's tip to the part's outline, along the leader's line (`DRAW-46`) |
+| `drawing.leader.aim` | 2.54 mm | how far from the body centre a leader's line may pass (`DRAW-46`) |
+| `drawing.leader.angle_slack` | 3° | how far the last segment may be off 45° (`DRAW-46`) |
+| `drawing.leader.reach` | 5.08 mm | how far from a part a leader's tip still counts as ending at it (`DRAW-46`) |
+| `DRAW-46.max_pins` | 4 | most pins of a small part (`DRAW-46`) |
 | `drawing.note.item_words` | 15 | most words in a sentence of a note item (`DRAW-47`) |
 | `drawing.note.item_marks` | 3 | most `;`, `:` and `(` in one sentence of a note (`DRAW-47`) |
 | `drawing.note.colour_slack` | 8 | counts per RGB channel a note box colour may be off its kind's colour (`DRAW-32`) |
@@ -487,9 +491,11 @@ the leader colour) against the item boxes at the top of this page, minus its own
 **Impl.** mid · depends on NET-26
 
 Rule: [a note about a part points at it](../drawing-guide.md#a-note-about-a-part-points-at-it). For a leader ending
-at a small part (R, C, diode, TVS, up to 4 pins): the last segment must be a 45° diagonal, its line must pass through
-the centre of the body within one grid step, and the tip must stop `drawing.leader.clear` from the outline, not on or
-inside it. Leaders to a block's rectangle and to larger parts are out of scope.
+at a small part (within `drawing.leader.reach`; R, C, diode, TVS, up to `DRAW-46.max_pins` pins): the last segment
+must be a 45° diagonal within `drawing.leader.angle_slack`, its line must pass within `drawing.leader.aim` of the
+centre of the body, and the tip must stop `drawing.leader.clear` from the outline, not on or inside it. The gap is
+measured along the leader's line, not straight to the box: a tip 0.449 mm off on both axes is 0.635 mm. Leaders to a
+block's rectangle and to larger parts are out of scope.
 
 ## `DRAW-47` Run-on note text <a id="draw-47"></a>
 
@@ -500,7 +506,7 @@ inside it. Leaders to a block's rectangle and to larger parts are out of scope.
 Rule: [note boxes are lists and tables](../drawing-guide.md#note-boxes-are-lists-and-tables-not-paragraphs). In a note
 box, a sentence longer than `drawing.note.item_words` words, or with more than `drawing.note.item_marks` of `;`, `:`
 and `(`. A sentence runs over line ends until a full stop or a new item. Skipped: SPICE directives, the explanation
-box beside them, and table cells.
+box beside them (any box flush right of a directive box, within `drawing.clearance.text`), and table cells.
 
 ## `DRAW-39` Group of related nets labelled in many places, with no bus <a id="draw-39"></a>
 
