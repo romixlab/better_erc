@@ -10,10 +10,6 @@ subjects = ["item U1 pins 1, 2, 3", "sheet /"]
 
 [[finding]]
 check = "DRAW-40"
-subjects = ["item wire of GND (U1.1)", "sheet /"]
-
-[[finding]]
-check = "DRAW-40"
 subjects = ["item wire of GND (U1.2)", "sheet /"]
 
 [[finding]]

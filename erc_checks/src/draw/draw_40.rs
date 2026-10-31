@@ -6,7 +6,7 @@ use crate::{Ctx, Finding};
 use erc_analysis::power::{NameRole, read_name};
 use erc_analysis::scene::{PinRef, Scene, Tie, mm};
 use erc_model::Pt;
-use erc_model::geometry::{Dir, DrawnPin, Rect};
+use erc_model::geometry::{Dir, DrawnPin, DrawnSymbol, Rect};
 use std::collections::BTreeMap;
 
 pub struct Draw40;
@@ -194,9 +194,9 @@ fn crossing(a: Seg, b: Seg) -> Option<Pt> {
 }
 
 /// Bends of a drawn tie: points where exactly two wires end, across each other
-fn bends(scene: &Scene, tie: &Tie) -> usize {
+fn bends(scene: &Scene, wires: &[usize]) -> usize {
     let mut ends: BTreeMap<Pt, Vec<bool>> = BTreeMap::new();
-    for w in tie.wires.iter().map(|w| &scene.geometry.wires[*w]) {
+    for w in wires.iter().map(|w| &scene.geometry.wires[*w]) {
         for p in [w.a, w.b] {
             ends.entry(p).or_default().push(w.a.x == w.b.x);
         }
@@ -249,8 +249,9 @@ impl Group<'_> {
         (segs.into_iter().chain(collector).collect(), a, b)
     }
 
-    /// Dropped straight to a symbol of its own in `to`; `None` when the pins face away from it
-    fn drop_to(&self, to: Dir, step: i64) -> Option<(Vec<Seg>, usize)> {
+    /// Dropped straight to a symbol of its own in `to`, level with `row`, so the symbol keeps the section's row when
+    /// the pins are short of it; `None` when the pins face away from it
+    fn drop_to(&self, to: Dir, row: Pt, step: i64) -> Option<(Vec<Seg>, usize)> {
         if self.side == to.opposite() {
             return None;
         }
@@ -258,16 +259,43 @@ impl Group<'_> {
         let (dx, dy) = to.step();
         let further = |p: Pt| p.x * dx + p.y * dy;
         let from = if further(a) >= further(b) { a } else { b };
-        segs.push((from, Pt::new(from.x + dx * step, from.y + dy * step)));
+        let run = (further(row) - further(from)).max(step);
+        segs.push((from, Pt::new(from.x + dx * run, from.y + dy * run)));
         let straight = self.side == to && self.pins.len() == 1;
         Some((segs, if straight { 0 } else { 1 }))
     }
 }
 
-/// The two L paths between two points
+/// The way a piece of wire runs
+fn heading((a, b): Seg) -> Option<Dir> {
+    match ((b.x - a.x).signum(), (b.y - a.y).signum()) {
+        (1, 0) => Some(Dir::Right),
+        (-1, 0) => Some(Dir::Left),
+        (0, 1) => Some(Dir::Down),
+        (0, -1) => Some(Dir::Up),
+        _ => None,
+    }
+}
+
+/// The two L paths between two points, without their empty legs
 fn ells(a: Pt, b: Pt) -> [Vec<Seg>; 2] {
-    let bent = |c: Pt| vec![(a, c), (c, b)];
+    let bent = |c: Pt| {
+        let legs = [(a, c), (c, b)];
+        legs.into_iter().filter(|(p, q)| p != q).collect()
+    };
     [bent(Pt::new(a.x, b.y)), bent(Pt::new(b.x, a.y))]
+}
+
+/// The bends of a path out of a pin stub running `side`, when the path keeps `DRAW-41`: it does not turn back over
+/// the stub, and it reaches the symbol, when `into` says which way that takes, along the symbol's axis with a lead
+fn lead_kept(path: &[Seg], side: Dir, into: Option<Dir>, step: i64) -> Option<usize> {
+    let first = heading(*path.first()?)?;
+    if first == side.opposite() {
+        return None;
+    }
+    let last = *path.last()?;
+    let enters = into.is_none_or(|d| heading(last) == Some(d) && length(&[last]) >= step);
+    enters.then_some(path.len() - 1 + usize::from(first != side))
 }
 
 /// A candidate drawing, what it would cost and how to say it
@@ -276,60 +304,135 @@ struct Redraw {
     what: String,
 }
 
-/// Each pin group straight down its own way to a symbol of its own
-fn straight_drops(
-    scene: &Scene,
-    w: &Weights,
+/// What a candidate is scored against
+struct Site<'r, 's> {
+    scene: &'r Scene<'s>,
+    w: &'r Weights,
     tie: usize,
-    gs: &[Group],
-    to: Dir,
-    rail: &str,
-) -> Option<Redraw> {
+    /// The Manhattan length of the tie
+    span: i64,
+}
+
+impl Site<'_, '_> {
+    /// Whether a piece would land on another net's wire: a crossing is fine, a shared point joins the nets
+    fn blocked(&self, segs: &[Seg]) -> bool {
+        let g = self.scene.geometry;
+        let tied = &self.scene.ties[self.tie].wires;
+        let others = g
+            .wires
+            .iter()
+            .enumerate()
+            .filter(|(i, _)| !tied.contains(i));
+        let on = |(a, b): Seg, p: Pt| {
+            let r = Rect::of(a, b);
+            r.contains(p) && (r.width() == 0 || r.height() == 0)
+        };
+        others.into_iter().any(|(_, o)| {
+            segs.iter()
+                .any(|s| on((o.a, o.b), s.0) || on((o.a, o.b), s.1) || on(*s, o.a) || on(*s, o.b))
+        })
+    }
+
+    /// Length and detour of a redraw with this much wire
+    fn wire_cost(&self, wire: i64) -> f64 {
+        let w = self.w;
+        w.len * wire as f64 / w.step as f64
+            + w.detour * (wire as f64 / self.span.max(1) as f64 - 1.0).max(0.0)
+    }
+}
+
+/// Each pin group straight down its own way to a symbol of its own, on the row of the tie's symbol
+fn straight_drops(site: &Site, gs: &[Group], to: Dir, row: Pt, rail: &str) -> Option<Redraw> {
+    let w = site.w;
     let mut cost = w.symbol * (gs.len() - 1) as f64;
+    let mut wire = 0;
     for g in gs {
-        let (segs, bent) = g.drop_to(to, w.step)?;
-        let steps = length(&segs) as f64 / w.step as f64;
-        cost += w.len * steps + w.bend * bent as f64 + crossings(scene, w, tie, &segs);
+        let (segs, bent) = g.drop_to(to, row, w.step)?;
+        if site.blocked(&segs) {
+            return None;
+        }
+        wire += length(&segs);
+        cost += w.bend * bent as f64 + crossings(site.scene, w, site.tie, &segs);
     }
     let names: Vec<String> = gs.iter().map(Group::name).collect();
     Some(Redraw {
-        cost,
+        cost: cost + site.wire_cost(wire),
         what: format!("straight drop from {} to {rail}", names.join(" and ")),
     })
 }
 
-/// The groups joined by the shortest L each to the symbol, or to the first group where the tie has none
-fn joined(
-    scene: &Scene,
-    w: &Weights,
-    tie: usize,
-    gs: &[Group],
-    target: Pt,
-    rail: &str,
-    span: i64,
-) -> Redraw {
+/// The groups joined by the shortest L each to the symbol, or to the first group where the tie has none; `None` when
+/// no L keeps the pin lead at both ends
+fn joined(site: &Site, gs: &[Group], target: Pt, into: Option<Dir>, rail: &str) -> Option<Redraw> {
+    let (scene, w, tie) = (site.scene, site.w, site.tie);
     let mut cost = 0.0;
     let mut wire = 0;
     for g in gs {
         let (mut segs, a, b) = g.collect(w.step);
         let dist = |p: Pt| (p.x - target.x).abs() + (p.y - target.y).abs();
         let from = if dist(a) <= dist(b) { a } else { b };
-        let score = |path: &Vec<Seg>| crossings(scene, w, tie, path);
-        let [p, q] = ells(from, target);
-        let best = if score(&p) <= score(&q) { p } else { q };
-        let bent = usize::from(from.x != target.x && from.y != target.y);
-        cost += w.bend * bent as f64 + score(&best);
-        segs.extend(best);
-        cost += crossings(scene, w, tie, &segs[..segs.len() - 2]);
+        let scored = |path: Vec<Seg>| {
+            let bent = lead_kept(&path, g.side, into, w.step)?;
+            let blocked = site.blocked(&path) || site.blocked(&segs);
+            let cost = w.bend * bent as f64 + crossings(scene, w, tie, &path);
+            (!blocked).then_some((cost, path))
+        };
+        let (path_cost, path) = ells(from, target)
+            .into_iter()
+            .filter_map(scored)
+            .min_by(|p, q| p.0.total_cmp(&q.0))?;
+        cost += path_cost + crossings(scene, w, tie, &segs);
+        // The collector's far end is a corner
+        cost += w.bend * usize::from(g.pins.len() > 1) as f64;
+        segs.extend(path);
         wire += length(&segs);
     }
-    cost += w.len * wire as f64 / w.step as f64;
-    cost += w.detour * (wire as f64 / span.max(1) as f64 - 1.0).max(0.0);
     let at = format!("x {} y {}", target.x as f64 / MM, target.y as f64 / MM);
-    Redraw {
-        cost,
+    Some(Redraw {
+        cost: cost + site.wire_cost(wire),
         what: format!("a direct path to {rail} at {at}"),
+    })
+}
+
+/// Whether a symbol only marks its net for KiCad's ERC: it stands at no end of a route
+fn is_flag(s: &DrawnSymbol) -> bool {
+    s.value == "PWR_FLAG"
+}
+
+/// The tie's wires without the stubs that lead only to a `PWR_FLAG`: from each flag along wires that nothing else
+/// joins, up to the first joint or pin
+fn routed_wires(scene: &Scene, tie: &Tie) -> Vec<usize> {
+    let g = scene.geometry;
+    let mut wires = tie.wires.clone();
+    let pin_at = |p: &PinRef| g.symbols[p.symbol].pins[p.pin].at;
+    let others: Vec<Pt> = tie
+        .pins
+        .iter()
+        .filter(|p| !is_flag(&g.symbols[p.symbol]))
+        .map(pin_at)
+        .collect();
+    let flags = tie.pins.iter().filter(|p| is_flag(&g.symbols[p.symbol]));
+    for start in flags.map(pin_at) {
+        let mut at = start;
+        loop {
+            let on: Vec<usize> = wires
+                .iter()
+                .copied()
+                .filter(|w| g.wires[*w].contains(at))
+                .collect();
+            let [only] = on[..] else { break };
+            let w = &g.wires[only];
+            if at != w.a && at != w.b {
+                break;
+            }
+            wires.retain(|x| *x != only);
+            at = if at == w.a { w.b } else { w.a };
+            if others.contains(&at) {
+                break;
+            }
+        }
     }
+    wires
 }
 
 /// The tie's scored drawing and its cheapest candidate, when the tie is one this check reads: wires between pins
@@ -341,23 +444,27 @@ fn judge(scene: &Scene, w: &Weights, t: usize) -> Option<(f64, Redraw, f64)> {
     let powers: Vec<usize> = tie
         .pins
         .iter()
-        .filter(|p| g.symbols[p.symbol].power)
+        .filter(|p| g.symbols[p.symbol].power && !is_flag(&g.symbols[p.symbol]))
         .map(|p| p.symbol)
         .collect();
     let gs = groups(scene, tie);
+    let wires = routed_wires(scene, tie);
     let same_part = gs.iter().all(|x| x.reference == gs[0].reference);
     let readable = !gs.is_empty()
-        && tie.pins.len() >= 2
-        && tie.wires.len() >= 2
+        && gs.iter().map(|x| x.pins.len()).sum::<usize>() + powers.len() >= 2
+        && wires.len() >= 2
         && (!powers.is_empty() || (same_part && tie.labels.is_empty()));
     if !readable {
         return None;
     }
-    let ends = tie.pins.iter().map(|p| g.symbols[p.symbol].pins[p.pin].at);
+    let ends = tie
+        .pins
+        .iter()
+        .filter(|p| !is_flag(&g.symbols[p.symbol]))
+        .map(|p| g.symbols[p.symbol].pins[p.pin].at);
     let bounds = Rect::around(ends)?;
     let span = bounds.width() + bounds.height();
-    let segs: Vec<Seg> = tie
-        .wires
+    let segs: Vec<Seg> = wires
         .iter()
         .map(|i| (g.wires[*i].a, g.wires[*i].b))
         .collect();
@@ -365,7 +472,7 @@ fn judge(scene: &Scene, w: &Weights, t: usize) -> Option<(f64, Redraw, f64)> {
     let ratio = drawn as f64 / span.max(1) as f64;
     let power = powers.first().map(|s| &g.symbols[*s]);
     let w = &w.of_class(power.map(|s| s.value.as_str()));
-    let bent = bends(scene, tie);
+    let bent = bends(scene, &wires);
     if span == 0 || (ratio <= w.max && (power.is_none() || bent == 0)) {
         return None;
     }
@@ -375,17 +482,22 @@ fn judge(scene: &Scene, w: &Weights, t: usize) -> Option<(f64, Redraw, f64)> {
         + w.symbol * powers.len().saturating_sub(1) as f64
         + w.detour * (ratio - 1.0);
     let rail = power.map_or("the first pin", |s| s.value.as_str());
-    let target = power
-        .and_then(|s| s.pins.first())
-        .map_or(gs[0].pins[0].at, |p| p.at);
-    let mut best = joined(scene, w, t, &gs, target, rail, span);
-    let to = power
-        .and_then(|s| s.pins.first())
-        .map(|p| p.outward.opposite());
-    let drop = to.and_then(|d| straight_drops(scene, w, t, &gs, d, rail));
-    if let Some(o) = drop.filter(|o| o.cost < best.cost) {
-        best = o;
-    }
+    let pin = power.and_then(|s| s.pins.first());
+    let target = pin.map_or(gs[0].pins[0].at, |p| p.at);
+    // A wire reaches a symbol against the way it leaves the symbol's pin
+    let to = pin.map(|p| p.outward.opposite());
+    let site = Site {
+        scene,
+        w,
+        tie: t,
+        span,
+    };
+    let direct = joined(&site, &gs, target, to, rail);
+    let drop = to.and_then(|d| straight_drops(&site, &gs, d, target, rail));
+    let best = [direct, drop]
+        .into_iter()
+        .flatten()
+        .min_by(|a, b| a.cost.total_cmp(&b.cost))?;
     (best.cost + w.min_saving <= cost).then_some((cost, best, ratio))
 }
 

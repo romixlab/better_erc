@@ -590,6 +590,7 @@ stop starts lower case (a line that continues a sentence from the line before is
 `nX`), code (a `.` directive, `i(`, `v(`) or a parameter name followed by `:` or `=`.
 
 **Scope.** A single word (a table value, a case name) is no sentence.
+
 ## `DRAW-44` Two sections of a sheet closer than the section gap <a id="draw-44"></a>
 
 💡 suggestion · needs: the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-44)
