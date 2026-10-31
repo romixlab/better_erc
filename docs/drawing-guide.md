@@ -303,8 +303,10 @@ rail without its sign).
 wired together with short stubs and reach that rail through one power or ground symbol, not one symbol per pin.
 The unit is a *pin group*: pins of that rail next to each other on one side of the body. Two groups on different
 sides get a symbol each when one shared symbol would need a detour that costs more than the second symbol
-([routing is a weighed compromise](#routing-is-a-weighed-compromise)). Other parts keep their own symbols; a
-decoupling capacitor keeps its own.
+([routing is a weighed compromise](#routing-is-a-weighed-compromise)). Between parts, neither drawing is wrong:
+several parts on one rail (a divider, a reference and its capacitor; an LDO's diode, capacitor and load) may share
+one rail wire with one symbol, or each drop straight to a symbol of its own on the section's power row; the routing
+cost picks, and the cheaper wins (usually the straight drops). A decoupling capacitor keeps its own symbol.
 
 **Why.** Twenty ground symbols mashed under one IC are noise: the reader counts symbols instead of seeing that
 "all ground pins go to ground". One wire collecting the pins says it once and leaves room for the pins that matter.
@@ -319,8 +321,8 @@ bad:    GND ┤1   ├                  good:   ┌┤1   ├
         GND ┤3   ├                          ┴ GND
 ```
 
-**Source.** house (Roman, 31 Oct 2026, on the io_protection TMUX1511 and its four grounded selects); new for the
-exception of decoupling. Checks: `DRAW-30`, `DRAW-40`.
+**Source.** house (Roman, 31 Oct 2026, on the io_protection TMUX1511 and its four grounded selects; third review:
+a rail wire or a symbol per part, let the cost decide); new for the exception of decoupling. Checks: `DRAW-30`, `DRAW-40`.
 
 ### Power symbols, not long wires, to reach a rail
 
