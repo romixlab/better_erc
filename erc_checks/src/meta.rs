@@ -119,6 +119,8 @@ pub enum Need {
     Layout,
     /// The schematic drawing: labels, no-connect flags, sheet pins
     Drawing,
+    /// The sheets as drawn: symbol boxes, wires, text extents (NET-26)
+    Geometry,
     /// What is fitted: DNP flags and variant overrides the design states
     Variant,
     /// Part data from the part database or mx3 (CFG-5)
@@ -145,6 +147,7 @@ impl Need {
             Need::Conduction => "signal following".into(),
             Need::Layout => "layout".into(),
             Need::Drawing => "schematic drawing".into(),
+            Need::Geometry => "drawing geometry".into(),
             Need::Variant => "fitted parts".into(),
             Need::PartDb => "part data".into(),
             Need::Project(key) => format!("project file: {key}"),
@@ -168,6 +171,7 @@ impl Need {
         Need::Conduction,
         Need::Layout,
         Need::Drawing,
+        Need::Geometry,
         Need::Variant,
         Need::PartDb,
         Need::MultiBoard,
@@ -188,6 +192,7 @@ impl Need {
             Need::Conduction => "conduction".into(),
             Need::Layout => "layout".into(),
             Need::Drawing => "drawing".into(),
+            Need::Geometry => "geometry".into(),
             Need::Variant => "variant".into(),
             Need::PartDb => "part-db".into(),
             Need::Project(key) => format!("project:{key}"),
@@ -222,6 +227,7 @@ impl Need {
             Need::Conduction => "signal following through parts (NET-10)",
             Need::Layout => "the board file",
             Need::Drawing => "labels, no-connect flags, sheet pins",
+            Need::Geometry => "the sheets as drawn: symbol boxes, wires, text extents (NET-26)",
             Need::Variant => "DNP flags and variant overrides: what is fitted",
             Need::PartDb => "part data (CFG-5)",
             Need::Project(_) => "a key of the better_erc project file (CFG-2)",
@@ -230,7 +236,8 @@ impl Need {
     }
 }
 
-/// A threshold of a check with its default; the project file will override it per project (CFG-2)
+/// A threshold of a check with its default; the project file will override it per project (CFG-2). A name starting
+/// with `drawing.` is a setting several checks share, overridden under that name alone
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Param {
     pub name: &'static str,

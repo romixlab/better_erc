@@ -30,6 +30,7 @@ mod clk;
 mod conn;
 mod dbg;
 mod dec;
+mod draw;
 mod drv;
 mod eth;
 mod gnd;

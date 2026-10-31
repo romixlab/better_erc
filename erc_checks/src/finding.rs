@@ -23,7 +23,8 @@ pub enum Confidence {
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct SubjectRef {
     pub subject: Subject,
-    /// `part`, `pin`, `net`, `sheet`, `label`, `pad`, `board`
+    /// `part`, `pin`, `net`, `sheet`, `label`, `pad`, `board`, or `item` for a thing drawn on the sheet that has no
+    /// id of its own (`R1 Value`, `wire of SDA`): then `subject` is its sheet
     pub kind: String,
     /// `R1`, `R1.2`, `/I2C/SDA`, `/MCU/`
     pub name: String,
@@ -128,6 +129,8 @@ pub struct FindingBuilder<'c, 'a> {
     candidate: bool,
     estimate: bool,
     severity: Option<Severity>,
+    items: Vec<SubjectRef>,
+    locations: Vec<Location>,
 }
 
 impl<'c, 'a> FindingBuilder<'c, 'a> {
@@ -142,6 +145,8 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
             candidate: false,
             estimate: false,
             severity: None,
+            items: Vec::new(),
+            locations: Vec::new(),
         }
     }
 
@@ -177,6 +182,26 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
 
     pub fn pins(self, pins: impl IntoIterator<Item = erc_model::PinId>) -> Self {
         pins.into_iter().fold(self, |f, p| f.pin(p))
+    }
+
+    /// A thing drawn on `sheet` that has no id: a subject by name, in the fingerprint like any other. The caller
+    /// says where it is with [`FindingBuilder::location`]
+    pub fn item(mut self, sheet: Subject, name: impl Into<String>) -> Self {
+        let item = SubjectRef {
+            subject: sheet,
+            kind: "item".to_string(),
+            name: name.into(),
+        };
+        if !self.items.contains(&item) {
+            self.items.push(item);
+        }
+        self
+    }
+
+    /// Where to look, besides what the subjects say
+    pub fn location(mut self, l: Location) -> Self {
+        self.locations.push(l);
+        self
     }
 
     pub fn message(mut self, m: impl Into<String>) -> Self {
@@ -227,6 +252,7 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
             .subjects
             .iter()
             .map(|s| subject_ref(board, *s))
+            .chain(self.items)
             .collect();
         subjects.sort_by(|a, b| {
             kind_order(&a.kind)
@@ -240,6 +266,7 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
             .subjects
             .iter()
             .flat_map(|s| locations(board, *s))
+            .chain(self.locations)
             .collect();
         locations.sort_by(|a, b| {
             natural_cmp(&a.file, &b.file).then_with(|| natural_cmp(&a.what, &b.what))

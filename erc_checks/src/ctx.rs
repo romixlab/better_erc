@@ -5,6 +5,7 @@
 use crate::finding::FindingBuilder;
 use crate::meta::{CheckMeta, Need, Severity};
 use erc_analysis::drawing::Drawing;
+use erc_analysis::scene::Scene;
 use erc_analysis::{Feeds, I2cBuses, PartClasses, Power, Values};
 use erc_model::{Board, BoardId, Design, PartId, Provenance, VariantId, View};
 use serde::{Deserialize, Serialize};
@@ -18,7 +19,8 @@ pub struct Config {
     pub file: Option<String>,
     /// Severity per check id, over the catalogue's
     pub severity: BTreeMap<String, Severity>,
-    /// Thresholds per `CHECK-ID.param` (`I2C-9.min_pull_up`), over the check's defaults
+    /// Thresholds per `CHECK-ID.param` (`I2C-9.min_pull_up`), over the check's defaults; a shared setting by its
+    /// own name (`drawing.pin_lead`)
     pub params: BTreeMap<String, f64>,
     /// Check ids not to run
     pub disabled: BTreeSet<String>,
@@ -120,6 +122,15 @@ impl Availability {
                     )
                 }
             }
+            Need::Geometry => {
+                if board.geometry.is_some() {
+                    Availability::Available
+                } else {
+                    missing(
+                        "no drawing geometry: import the .kicad_sch, not a netlist or a PDF (NET-26)",
+                    )
+                }
+            }
             Need::Variant => {
                 let stated = matches!(board.source.tool.as_str(), "kicad" | "kicad-netlist")
                     || !board.variants.is_empty()
@@ -183,6 +194,18 @@ impl Availability {
     }
 }
 
+/// The prefix of a setting several checks share
+const SHARED: &str = "drawing.";
+
+/// The key of a threshold in [`Config::params`]
+fn param_key(meta: &CheckMeta, name: &str) -> String {
+    if name.starts_with(SHARED) {
+        name.to_string()
+    } else {
+        format!("{}.{name}", meta.id)
+    }
+}
+
 /// What a run looks at: the design, one of its boards, a variant; analyses are built lazily and shared
 pub struct Ctx<'a> {
     pub design: &'a Design,
@@ -196,6 +219,7 @@ pub struct Ctx<'a> {
     feeds: OnceLock<Feeds>,
     i2c: OnceLock<I2cBuses>,
     drawing: OnceLock<Drawing>,
+    scenes: OnceLock<Vec<Scene<'a>>>,
 }
 
 impl<'a> Ctx<'a> {
@@ -216,6 +240,7 @@ impl<'a> Ctx<'a> {
             feeds: OnceLock::new(),
             i2c: OnceLock::new(),
             drawing: OnceLock::new(),
+            scenes: OnceLock::new(),
         }
     }
 
@@ -269,6 +294,11 @@ impl<'a> Ctx<'a> {
         self.drawing.get_or_init(|| Drawing::of(self.board()))
     }
 
+    /// Each sheet as drawn, with its item boxes and wire ties (Need::Geometry)
+    pub fn scenes(&self) -> &[Scene<'a>] {
+        self.scenes.get_or_init(|| Scene::all(self.board()))
+    }
+
     /// The real components of the board, fitted or not
     pub fn components(&self) -> impl Iterator<Item = PartId> + 'a {
         self.view().components()
@@ -287,21 +317,21 @@ impl<'a> Ctx<'a> {
             .default;
         self.config
             .params
-            .get(&format!("{}.{name}", meta.id))
+            .get(&param_key(meta, name))
             .copied()
             .unwrap_or(default)
     }
 
     /// Where a threshold came from, for a finding's facts
     pub fn param_source(&self, meta: &CheckMeta, name: &str) -> Provenance {
-        if self
-            .config
-            .params
-            .contains_key(&format!("{}.{name}", meta.id))
-        {
+        if self.config.params.contains_key(&param_key(meta, name)) {
             Provenance::ProjectFile {
                 file: self.config.file.clone().unwrap_or_default(),
-                key: format!("checks.{}.{name}", meta.id),
+                key: if name.starts_with(SHARED) {
+                    name.to_string()
+                } else {
+                    format!("checks.{}.{name}", meta.id)
+                },
             }
         } else {
             Provenance::Derived {

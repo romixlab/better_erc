@@ -38,6 +38,7 @@ pub mod package;
 pub mod pin_name;
 pub mod power;
 pub mod pull;
+pub mod scene;
 pub mod supply;
 pub mod value;
 

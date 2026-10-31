@@ -1,0 +1,220 @@
+//! `DRAW-36` Near-miss alignment: label anchors, power symbols, tie verticals or part edges on one side of a part
+//! or within a window, off a shared column or row by more than zero and less than the snap distance
+
+use super::{ALIGN_SNAP, ALIGN_WINDOW, location, nm, sheet_subject};
+use crate::meta::*;
+use crate::{Ctx, Finding};
+use erc_analysis::scene::{Item, ItemKind as K, Scene, mm};
+use erc_model::Pt;
+use erc_model::geometry::Rect;
+use std::collections::BTreeMap;
+
+pub struct Draw36;
+
+static META: CheckMeta = CheckMeta {
+    id: "DRAW-36",
+    category: "DRAW",
+    severity: Severity::Warning,
+    tier: Tier::Mid,
+    scope: Scope::Board,
+    needs: &[Need::Geometry],
+    overlaps: &["DRAW-10"],
+    params: &[ALIGN_WINDOW, ALIGN_SNAP],
+};
+
+/// An axis things line up on
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+enum Axis {
+    /// A column: x is compared
+    X,
+    /// A row: y is compared
+    Y,
+}
+
+impl Axis {
+    fn of(self, p: Pt) -> i64 {
+        match self {
+            Axis::X => p.x,
+            Axis::Y => p.y,
+        }
+    }
+
+    fn name(self) -> &'static str {
+        match self {
+            Axis::X => "x",
+            Axis::Y => "y",
+        }
+    }
+
+    /// How far apart the boxes are across the axis: negative when they run alongside each other
+    fn apart(self, a: Rect, b: Rect) -> i64 {
+        match self {
+            Axis::X => (a.min.y - b.max.y).max(b.min.y - a.max.y),
+            Axis::Y => (a.min.x - b.max.x).max(b.min.x - a.max.x),
+        }
+    }
+}
+
+/// What may line up with what: labels with labels, power symbols with power symbols, tie wires with tie wires,
+/// parts with parts
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Class {
+    Label,
+    Power,
+    Wire,
+    Part,
+}
+
+/// A thing that can line up, with the lines it offers on an axis
+struct Liner<'s> {
+    item: &'s Item,
+    class: Class,
+    /// Where the lines come from: an anchor has one, a body its two edges and its centre, compared like with like
+    lines: Vec<(u8, Pt)>,
+}
+
+fn liners<'s>(scene: &'s Scene, axis: Axis) -> Vec<Liner<'s>> {
+    let g = scene.geometry;
+    let mut out = Vec::new();
+    let mut labels = g.labels.iter();
+    for item in &scene.items {
+        let lines = match item.kind {
+            K::Label => {
+                let l = labels.next().expect("one item per label");
+                (Class::Label, vec![(0, l.at)])
+            }
+            K::Power => {
+                let s = item.owner.map(|o| &g.symbols[o]);
+                let at = s.and_then(|s| s.pins.first()).map(|p| p.at);
+                (Class::Power, vec![(0, at.unwrap_or(item.rect.center()))])
+            }
+            K::Wire => {
+                let across = match axis {
+                    Axis::X => item.rect.width(),
+                    Axis::Y => item.rect.height(),
+                };
+                if across != 0 {
+                    continue;
+                }
+                (Class::Wire, vec![(0, item.rect.min)])
+            }
+            K::Body => {
+                let r = item.rect;
+                (Class::Part, vec![(0, r.min), (1, r.center()), (2, r.max)])
+            }
+            _ => continue,
+        };
+        out.push(Liner {
+            item,
+            class: lines.0,
+            lines: lines.1,
+        });
+    }
+    out
+}
+
+/// The smallest non-zero offset between two liners' lines, when no pair of their lines agrees exactly
+fn miss(axis: Axis, a: &Liner, b: &Liner, snap: i64) -> Option<(i64, i64, i64)> {
+    let mut best = None;
+    for (ka, pa) in &a.lines {
+        for (_, pb) in b.lines.iter().filter(|(kb, _)| kb == ka) {
+            let (va, vb) = (axis.of(*pa), axis.of(*pb));
+            let off = (va - vb).abs();
+            if off == 0 {
+                return None;
+            }
+            if off < snap && best.is_none_or(|(o, _, _)| off < o) {
+                best = Some((off, va, vb));
+            }
+        }
+    }
+    best
+}
+
+/// The parts each label, power symbol or wire is tied to, by symbol and the side its pin leaves the body
+fn sides(scene: &Scene, item: &Item) -> Vec<(usize, erc_model::geometry::Dir)> {
+    let Some(tie) = item.tie else {
+        return Vec::new();
+    };
+    let g = scene.geometry;
+    let parts = scene.ties[tie].pins.iter();
+    parts
+        .filter(|p| !g.symbols[p.symbol].power)
+        .map(|p| (p.symbol, g.symbols[p.symbol].pins[p.pin].outward))
+        .collect()
+}
+
+impl Check for Draw36 {
+    fn meta(&self) -> &'static CheckMeta {
+        &META
+    }
+
+    /// Two liners of one class in line with each other, not alongside: neighbours by the window or by being on
+    /// the same side of one part. Parallel wires and parts side by side are spacing, not a missed column. Of the
+    /// wires of one tie, the pair with the smallest offset speaks for the rest.
+    fn run(&self, cx: &Ctx) -> Vec<Finding> {
+        let window = nm(cx, &META, &ALIGN_WINDOW);
+        let snap = nm(cx, &META, &ALIGN_SNAP);
+        let mut out = Vec::new();
+        for scene in cx.scenes() {
+            for axis in [Axis::X, Axis::Y] {
+                let liners = liners(scene, axis);
+                let mut found: BTreeMap<(&str, &str), (&Liner, &Liner, i64, i64, i64)> =
+                    BTreeMap::new();
+                for (i, a) in liners.iter().enumerate() {
+                    for b in &liners[i + 1..] {
+                        if a.class != b.class || a.item.name == b.item.name {
+                            continue;
+                        }
+                        let apart = axis.apart(a.item.rect, b.item.rect);
+                        if apart < 0 {
+                            continue;
+                        }
+                        let same_side = {
+                            let sb = sides(scene, b.item);
+                            sides(scene, a.item).iter().any(|s| sb.contains(s))
+                        };
+                        if apart > window && !same_side {
+                            continue;
+                        }
+                        let Some((off, va, vb)) = miss(axis, a, b, snap) else {
+                            continue;
+                        };
+                        let key = (a.item.name.as_str(), b.item.name.as_str());
+                        let key = (key.0.min(key.1), key.0.max(key.1));
+                        let e = found.entry(key).or_insert((a, b, off, va, vb));
+                        if off < e.2 {
+                            *e = (a, b, off, va, vb);
+                        }
+                    }
+                }
+                let sheet = sheet_subject(cx, scene);
+                for (a, b, off, va, vb) in found.into_values() {
+                    let (pa, pb) = (a.lines[0].1, b.lines[0].1);
+                    let n = axis.name();
+                    out.push(
+                        cx.finding(&META)
+                            .subject(sheet)
+                            .item(sheet, a.item.name.clone())
+                            .item(sheet, b.item.name.clone())
+                            .location(location(scene, a.item, pa))
+                            .location(location(scene, b.item, pb))
+                            .message(format!(
+                                "{} at {n} {}, {} at {n} {}: {} mm",
+                                a.item.name,
+                                mm(va),
+                                b.item.name,
+                                mm(vb),
+                                mm(off)
+                            ))
+                            .fix("line them up, or move one clearly away")
+                            .build(),
+                    );
+                }
+            }
+        }
+        out
+    }
+}
+
+inventory::submit!(Registered(&Draw36));
