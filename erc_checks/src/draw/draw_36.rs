@@ -1,12 +1,15 @@
 //! `DRAW-36` Near-miss alignment: label anchors, power symbols, tie verticals or part edges on one side of a part
 //! or within a window, off a shared column or row by more than zero and less than the snap distance
 
-use super::{ALIGN_SNAP, ALIGN_WINDOW, location, nm, sheet_subject};
+use super::section::{Line, Section, line_up, sections};
+use super::{ALIGN_SNAP, ALIGN_WINDOW, HEADING_SIZE, SECTION_REACH, location, nm, sheet_subject};
 use crate::meta::*;
 use crate::{Ctx, Finding};
+use erc_analysis::power::{NameRole, read_name};
 use erc_analysis::scene::{Item, ItemKind as K, Scene, mm};
-use erc_model::Pt;
+use erc_model::geometry::Dir;
 use erc_model::geometry::Rect;
+use erc_model::{LabelKind, Pt};
 use std::collections::BTreeMap;
 
 pub struct Draw36;
@@ -19,7 +22,7 @@ static META: CheckMeta = CheckMeta {
     scope: Scope::Board,
     needs: &[Need::Geometry],
     overlaps: &["DRAW-10"],
-    params: &[ALIGN_WINDOW, ALIGN_SNAP],
+    params: &[ALIGN_WINDOW, ALIGN_SNAP, HEADING_SIZE, SECTION_REACH],
 };
 
 /// An axis things line up on
@@ -179,6 +182,96 @@ fn one_symbol(scene: &Scene, a: &Item, b: &Item) -> bool {
     sa.iter().any(|s| sb.contains(s))
 }
 
+/// What lines up inside a section, with the side a ladder is pulled to: rows of ground and of supply symbols with
+/// rail labels, columns of input and of output ports
+struct Ladder<'s> {
+    what: &'static str,
+    axis: Axis,
+    /// The line is the one furthest this way when no line has more members
+    low_wins: bool,
+    members: Vec<(i64, &'s Item)>,
+}
+
+/// The ports and symbols of a section by what they are
+fn ladders<'s>(scene: &'s Scene, section: &Section<'s>) -> [Ladder<'s>; 4] {
+    let g = scene.geometry;
+    let ladder = |what, axis, low_wins| Ladder {
+        what,
+        axis,
+        low_wins,
+        members: Vec::new(),
+    };
+    let mut out = [
+        ladder("ground symbols", Axis::Y, false),
+        ladder("supplies", Axis::Y, true),
+        ladder("input ports", Axis::X, true),
+        ladder("output ports", Axis::X, false),
+    ];
+    let labels: Vec<&Item> = scene.items.iter().filter(|i| i.kind == K::Label).collect();
+    for item in &section.items {
+        match item.kind {
+            K::Power => {
+                let Some(s) = item.owner.map(|o| &g.symbols[o]) else {
+                    continue;
+                };
+                let at = s.pins.first().map_or(s.at, |p| p.at);
+                let ground = matches!(read_name(&s.value, false).role, NameRole::Ground(_));
+                out[usize::from(!ground)].members.push((at.y, *item));
+            }
+            K::Label => {
+                let i = labels.iter().position(|l| std::ptr::eq(*l, *item));
+                let Some(l) = i.map(|i| &g.labels[i]) else {
+                    continue;
+                };
+                if matches!(read_name(&l.text.text, false).role, NameRole::Rail(_)) {
+                    out[1].members.push((l.at.y, *item));
+                } else if l.runs.is_horizontal() {
+                    // A local label's text runs along its stub to the block, a flag away from it
+                    let inward = l.kind == LabelKind::Local;
+                    let left = (l.runs == Dir::Right) == inward;
+                    out[if left { 2 } else { 3 }].members.push((l.at.x, *item));
+                }
+            }
+            _ => {}
+        }
+    }
+    out
+}
+
+/// A finding on the members of a section that form a ladder off their row or column
+fn ladder_finding(
+    cx: &Ctx,
+    scene: &Scene,
+    section: &Section,
+    ladder: &Ladder,
+    line: &Line,
+) -> Finding {
+    let sheet = sheet_subject(cx, scene);
+    let n = ladder.axis.name();
+    let what = ladder.what;
+    let off: Vec<String> = line
+        .off
+        .iter()
+        .map(|(v, i)| format!("{} at {n} {}", i.name, mm(*v)))
+        .collect();
+    let at = |i: &Item| i.rect.center();
+    let mut f = cx
+        .finding(&META)
+        .subject(sheet)
+        .item(sheet, format!("section {} {what}", section.title));
+    for (_, i) in &line.off {
+        f = f.location(location(scene, i, at(i)));
+    }
+    f.message(format!(
+        "section {}: {what} line up at {n} {}, off it: {}",
+        section.title,
+        mm(line.at),
+        off.join(", ")
+    ))
+    .fix("put them on one line, or clearly apart")
+    .build()
+}
+
 impl Check for Draw36 {
     fn meta(&self) -> &'static CheckMeta {
         &META
@@ -186,7 +279,8 @@ impl Check for Draw36 {
 
     /// Two liners of one class in line with each other, not alongside: neighbours by the window or by being on
     /// the same side of one part. Parallel wires and parts side by side are spacing, not a missed column. Of the
-    /// wires of one tie, the pair with the smallest offset speaks for the rest.
+    /// wires of one tie, the pair with the smallest offset speaks for the rest. Then each section's ladders: its
+    /// ground symbols, its supplies, its input and its output ports off their row or column.
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let window = nm(cx, &META, &ALIGN_WINDOW);
         let snap = nm(cx, &META, &ALIGN_SNAP);
@@ -249,6 +343,13 @@ impl Check for Draw36 {
                     );
                 }
             }
+            for section in sections(cx, &META, scene) {
+                for ladder in ladders(scene, &section) {
+                    for line in line_up(&ladder.members, snap, ladder.low_wins) {
+                        out.push(ladder_finding(cx, scene, &section, &ladder, &line));
+                    }
+                }
+            }
         }
         out
     }
@@ -263,6 +364,19 @@ mod tests {
         assert_eq!(
             crate::testing::fingerprints(&super::Draw36, "draw-36_near_miss"),
             ["DRAW-36:item label AAA|item label BBB|sheet /"]
+        );
+    }
+
+    #[test]
+    fn ladder_in_a_section() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw36, "draw-36_section_ladder"),
+            [
+                "DRAW-36:item label IN0|item label IN1|sheet /",
+                "DRAW-36:item label IN1|item label IN2|sheet /",
+                "DRAW-36:item section Ladder ground symbols|sheet /",
+                "DRAW-36:item section Ladder input ports|sheet /"
+            ]
         );
     }
 }

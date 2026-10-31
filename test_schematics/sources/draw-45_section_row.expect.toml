@@ -1,0 +1,29 @@
+# What better_erc finds on draw-45_section_row.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board draw-45_section_row"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DRAW-45"
+subjects = ["item text \"Just below\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-45"
+subjects = ["item text \"Just right\"", "sheet /"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board draw-45_section_row"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

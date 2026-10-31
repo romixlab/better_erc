@@ -17,9 +17,12 @@ mod draw_36;
 mod draw_40;
 mod draw_41;
 mod draw_43;
+mod draw_44;
+mod draw_45;
 mod draw_7;
 mod draw_9;
 mod overlap;
+mod section;
 
 const MM: f64 = 1e6;
 
@@ -63,6 +66,20 @@ pub(crate) const PIN_LEAD: Param = Param {
     default: 2.54,
     unit: "mm",
     doc: "straight wire at a pin or power symbol before the first bend",
+};
+
+pub(crate) const HEADING_SIZE: Param = Param {
+    name: "drawing.heading_size",
+    default: 2.54,
+    unit: "mm",
+    doc: "height of a section heading; larger bold text is a title",
+};
+
+pub(crate) const SECTION_REACH: Param = Param {
+    name: "drawing.section.reach",
+    default: 5.08,
+    unit: "mm",
+    doc: "how far left of its heading a section's parts may stand",
 };
 
 /// A length setting in nanometres

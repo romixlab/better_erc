@@ -9,6 +9,22 @@ check = "DRAW-30"
 subjects = ["item U1 pins 1, 2, 3", "sheet /"]
 
 [[finding]]
+check = "DRAW-40"
+subjects = ["item wire of GND (U1.1)", "sheet /"]
+
+[[finding]]
+check = "DRAW-40"
+subjects = ["item wire of GND (U1.2)", "sheet /"]
+
+[[finding]]
+check = "DRAW-40"
+subjects = ["item wire of GND (U1.3)", "sheet /"]
+
+[[finding]]
+check = "DRAW-40"
+subjects = ["item wire of GND (U1.5,6)", "sheet /"]
+
+[[finding]]
 check = "LIB-15"
 subjects = ["part U1"]
 confidence = "estimate"

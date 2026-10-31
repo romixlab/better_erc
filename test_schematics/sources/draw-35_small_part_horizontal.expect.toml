@@ -17,6 +17,14 @@ check = "DRAW-35"
 subjects = ["item R1 body", "sheet /"]
 
 [[finding]]
+check = "DRAW-40"
+subjects = ["item wire of +5V_IN (R3.1)", "sheet /"]
+
+[[finding]]
+check = "DRAW-40"
+subjects = ["item wire of +5V_OUT (R3.2)", "sheet /"]
+
+[[finding]]
 check = "DRAW-41"
 subjects = ["item R2.1 pin", "sheet /"]
 

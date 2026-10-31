@@ -1,16 +1,25 @@
 board draw-41_pin_lead
 label / local ACROSS at 96.52,53.34 net /ACROSS
+label / local SRC at 43.18,78.74 net /SRC
+label / local TEE at 83.82,78.74 net /TEE
 label / power +5V at 60.96,40.64 net +5V
+label / power +5V at 106.68,71.12 net +5V
 label / power +5V at 116.84,40.64 net +5V
-label / power GND at 50.8,60.96 net GND
-label / power GND at 83.82,60.96 net GND
-label / power GND at 116.84,60.96 net GND
+label / power GND at 50.8,60.96 net +5V
+label / power GND at 66.04,88.9 net +5V
+label / power GND at 83.82,60.96 net +5V
+label / power GND at 106.68,88.9 net +5V
+label / power GND at 116.84,60.96 net +5V
 net +5V class = Default @ sch draw-41_pin_lead.kicad_sch note "effective net class"
 net +5V kind power
 net /ACROSS class = Default @ sch draw-41_pin_lead.kicad_sch note "effective net class"
 net /ACROSS kind named
-net GND class = Default @ sch draw-41_pin_lead.kicad_sch note "effective net class"
-net GND kind power
+net /SRC class = Default @ sch draw-41_pin_lead.kicad_sch note "effective net class"
+net /SRC kind named
+net /TEE class = Default @ sch draw-41_pin_lead.kicad_sch note "effective net class"
+net /TEE kind named
+net unconnected-(R5-Pad2) class = Default @ sch draw-41_pin_lead.kicad_sch note "effective net class"
+net unconnected-(R5-Pad2) kind unconnected
 part R1 field Value = 10k @ sch draw-41_pin_lead.kicad_sch
 part R1 flag dnp = no @ sch draw-41_pin_lead.kicad_sch
 part R1 flag exclude_from_sim = no @ sch draw-41_pin_lead.kicad_sch
@@ -33,20 +42,44 @@ part R3 flag exclude_from_sim = no @ sch draw-41_pin_lead.kicad_sch
 part R3 flag in_bom = yes @ sch draw-41_pin_lead.kicad_sch
 part R3 flag on_board = yes @ sch draw-41_pin_lead.kicad_sch
 part R3 lib Device:R sheet / symbol Device:R
-part R3 unit 1 sheet / uuid d4100000-0000-4000-8000-000000000017 line 43 at 116.84,50.8 rot 0
+part R3 unit 1 sheet / uuid d4100000-0000-4000-8000-000000000029 line 54 at 116.84,50.8 rot 0
 part R3 value = text 10k @ sch draw-41_pin_lead.kicad_sch note "from the Value field"
+part R4 field Value = 10k @ sch draw-41_pin_lead.kicad_sch
+part R4 flag dnp = no @ sch draw-41_pin_lead.kicad_sch
+part R4 flag exclude_from_sim = no @ sch draw-41_pin_lead.kicad_sch
+part R4 flag in_bom = yes @ sch draw-41_pin_lead.kicad_sch
+part R4 flag on_board = yes @ sch draw-41_pin_lead.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid d4100000-0000-4000-8000-000000000017 line 43 at 60.96,78.74 rot 90
+part R4 value = text 10k @ sch draw-41_pin_lead.kicad_sch note "from the Value field"
+part R5 field Value = 10k @ sch draw-41_pin_lead.kicad_sch
+part R5 flag dnp = no @ sch draw-41_pin_lead.kicad_sch
+part R5 flag exclude_from_sim = no @ sch draw-41_pin_lead.kicad_sch
+part R5 flag in_bom = yes @ sch draw-41_pin_lead.kicad_sch
+part R5 flag on_board = yes @ sch draw-41_pin_lead.kicad_sch
+part R5 lib Device:R sheet / symbol Device:R
+part R5 unit 1 sheet / uuid d4100000-0000-4000-8000-00000000001f line 48 at 101.6,78.74 rot 90
+part R5 value = text 10k @ sch draw-41_pin_lead.kicad_sch note "from the Value field"
 pin R1 1 name "" unit 1 net +5V
 pin R1 1 type = passive @ sch draw-41_pin_lead.kicad_sch
-pin R1 2 name "" unit 1 net GND
+pin R1 2 name "" unit 1 net +5V
 pin R1 2 type = passive @ sch draw-41_pin_lead.kicad_sch
 pin R2 1 name "" unit 1 net /ACROSS
 pin R2 1 type = passive @ sch draw-41_pin_lead.kicad_sch
-pin R2 2 name "" unit 1 net GND
+pin R2 2 name "" unit 1 net +5V
 pin R2 2 type = passive @ sch draw-41_pin_lead.kicad_sch
 pin R3 1 name "" unit 1 net +5V
 pin R3 1 type = passive @ sch draw-41_pin_lead.kicad_sch
-pin R3 2 name "" unit 1 net GND
+pin R3 2 name "" unit 1 net +5V
 pin R3 2 type = passive @ sch draw-41_pin_lead.kicad_sch
+pin R4 1 name "" unit 1 net /SRC
+pin R4 1 type = passive @ sch draw-41_pin_lead.kicad_sch
+pin R4 2 name "" unit 1 net +5V
+pin R4 2 type = passive @ sch draw-41_pin_lead.kicad_sch
+pin R5 1 name "" unit 1 net /TEE
+pin R5 1 type = passive @ sch draw-41_pin_lead.kicad_sch
+pin R5 2 name "" unit 1 net unconnected-(R5-Pad2)
+pin R5 2 type = passive @ sch draw-41_pin_lead.kicad_sch
 sheet / name "" file draw-41_pin_lead.kicad_sch uuid /
 source file draw-41_pin_lead.kicad_sch
 source tool kicad

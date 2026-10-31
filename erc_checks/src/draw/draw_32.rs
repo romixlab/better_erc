@@ -1,20 +1,13 @@
 //! `DRAW-32` Free-standing text, or a note box that is not one of the six kinds (TODO, Information, Caution, Debug,
 //! Critical, Layout)
 
-use super::{nm, one};
+use super::{HEADING_SIZE, nm, one};
 use crate::meta::*;
 use crate::{Ctx, Finding};
 use erc_analysis::scene::{Item, ItemKind as K, Scene, mm};
 use erc_model::geometry::{Colour, DrawnTextBox, Text};
 
 pub struct Draw32;
-
-const HEADING_SIZE: Param = Param {
-    name: "drawing.heading_size",
-    default: 2.54,
-    unit: "mm",
-    doc: "height of a section heading; larger bold text is a title",
-};
 
 const GROUP_HEADING_SIZE: Param = Param {
     name: "drawing.group_heading_size",

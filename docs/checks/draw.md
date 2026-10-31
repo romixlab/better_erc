@@ -47,6 +47,8 @@ project file (`CFG-2`); see [clearance margins](../drawing-guide.md#room-around-
 | `drawing.route.k_power`, `.k_ground`, `.k_signal` | 2, 2, 1 | factor on the bends and detours of power, ground and signal ties (`DRAW-40`) |
 | `drawing.route.min_saving` | 2 | cost a redraw must save to be reported (`DRAW-40`) |
 | `drawing.route.step` | 2.54 mm | the grid step wire is counted in (`DRAW-40`) |
+| `drawing.section.reach` | 5.08 mm | how far left of its heading a section's parts may stand |
+| `drawing.section.snap` | 10.16 mm | offsets of section tops or left edges below this are near misses (`DRAW-45`) |
 | `drawing.colour.pair_min` | 20 | least CIEDE2000 difference between touching items (`DRAW-42`) |
 
 ## `DRAW-1` Ground symbol not pointing down (rotated or mirrored) <a id="draw-1"></a>
@@ -588,3 +590,21 @@ stop starts lower case (a line that continues a sentence from the line before is
 `nX`), code (a `.` directive, `i(`, `v(`) or a parameter name followed by `:` or `=`.
 
 **Scope.** A single word (a table value, a case name) is no sentence.
+## `DRAW-44` Two sections of a sheet closer than the section gap <a id="draw-44"></a>
+
+💡 suggestion · needs: the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-44)
+
+**Impl.** hard · depends on NET-26
+
+A section is a heading (bold text of `drawing.heading_size`), its grouped parameter box, and the parts, power symbols
+and labels nearest below and right of that heading, up to `drawing.section.reach` left of it; wires run between
+sections and are left out. Two section boxes less than `drawing.section_gap` apart are a finding.
+
+## `DRAW-45` Section headings just off a shared row or column <a id="draw-45"></a>
+
+💡 suggestion · needs: the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-45)
+
+**Impl.** mid · depends on NET-26
+
+Section tops line up on one row and left edges on one column. Heading positions closer than `drawing.section.snap`,
+and not equal, form one line; the finding names the line and the headings off it.

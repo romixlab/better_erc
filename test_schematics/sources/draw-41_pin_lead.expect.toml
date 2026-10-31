@@ -17,6 +17,14 @@ check = "DRAW-34"
 subjects = ["item label ACROSS", "item wire of ACROSS", "sheet /"]
 
 [[finding]]
+check = "DRAW-35"
+subjects = ["item R4 body", "sheet /"]
+
+[[finding]]
+check = "DRAW-40"
+subjects = ["item wire of +5V (R1.1)", "sheet /"]
+
+[[finding]]
 check = "DRAW-41"
 subjects = ["item R1.1 pin", "sheet /"]
 
@@ -25,17 +33,37 @@ check = "DRAW-41"
 subjects = ["item R2.1 pin", "sheet /"]
 
 [[finding]]
+check = "DRAW-41"
+subjects = ["item R4.2 pin", "sheet /"]
+
+[[finding]]
+check = "DRAW-41"
+subjects = ["item R5.2 pin", "sheet /"]
+
+[[finding]]
 check = "NAME-7"
 subjects = ["board draw-41_pin_lead"]
+
+[[finding]]
+check = "SHORT-1"
+subjects = ["net +5V", "part R1"]
+
+[[finding]]
+check = "SHORT-1"
+subjects = ["net +5V", "part R3"]
 
 [[finding]]
 check = "TEST-4"
 subjects = ["net +5V"]
 
 [[finding]]
-check = "TEST-4"
-subjects = ["net GND"]
+check = "WIRE-1"
+subjects = ["net /ACROSS", "pin R2.1"]
 
 [[finding]]
 check = "WIRE-1"
-subjects = ["net /ACROSS", "pin R2.1"]
+subjects = ["net /SRC", "pin R4.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /TEE", "pin R5.1"]

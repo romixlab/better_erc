@@ -1,0 +1,25 @@
+# What better_erc finds on draw-40_power_sideways.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board draw-40_power_sideways"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DRAW-40"
+subjects = ["item wire of +5V (R1.1)", "sheet /"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board draw-40_power_sideways"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

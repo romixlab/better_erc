@@ -3,6 +3,7 @@
 use super::{MM, location, nm, sheet_subject};
 use crate::meta::*;
 use crate::{Ctx, Finding};
+use erc_analysis::power::{NameRole, read_name};
 use erc_analysis::scene::{PinRef, Scene, Tie, mm};
 use erc_model::Pt;
 use erc_model::geometry::{Dir, DrawnPin, Rect};
@@ -46,6 +47,26 @@ const DETOUR_MAX: Param = weight(
     1.5,
     "drawn length over Manhattan length above which a cheaper drawing is looked for",
 );
+const K_POWER: Param = weight(
+    "drawing.route.k_power",
+    2.0,
+    "bends and detours of a power tie count this many times, and a bent one is looked at whatever its detour",
+);
+const K_GROUND: Param = weight(
+    "drawing.route.k_ground",
+    2.0,
+    "bends and detours of a ground tie count this many times, and a bent one is looked at whatever its detour",
+);
+const K_SIGNAL: Param = weight(
+    "drawing.route.k_signal",
+    1.0,
+    "bends and detours of a signal tie count this many times",
+);
+const MIN_SAVING: Param = weight(
+    "drawing.route.min_saving",
+    2.0,
+    "cost a redraw must save to be worth a finding",
+);
 const STEP: Param = Param {
     name: "drawing.route.step",
     default: 2.54,
@@ -69,11 +90,16 @@ static META: CheckMeta = CheckMeta {
         W_SYMBOL,
         W_DETOUR,
         DETOUR_MAX,
+        K_POWER,
+        K_GROUND,
+        K_SIGNAL,
+        MIN_SAVING,
         STEP,
     ],
 };
 
 /// The routing cost's terms, read once per run
+#[derive(Clone)]
 struct Weights {
     len: f64,
     bend: f64,
@@ -82,6 +108,10 @@ struct Weights {
     symbol: f64,
     detour: f64,
     max: f64,
+    k_power: f64,
+    k_ground: f64,
+    k_signal: f64,
+    min_saving: f64,
     step: i64,
 }
 
@@ -96,7 +126,25 @@ impl Weights {
             symbol: w(&W_SYMBOL),
             detour: w(&W_DETOUR),
             max: w(&DETOUR_MAX),
+            k_power: w(&K_POWER),
+            k_ground: w(&K_GROUND),
+            k_signal: w(&K_SIGNAL),
+            min_saving: w(&MIN_SAVING),
             step: nm(cx, &META, &STEP),
+        }
+    }
+
+    /// The weights for a tie of this rail, `None` for a signal: its class's bends and detours count more
+    fn of_class(&self, rail: Option<&str>) -> Weights {
+        let k = match rail.map(|r| read_name(r, false).role) {
+            None => self.k_signal,
+            Some(NameRole::Ground(_)) => self.k_ground,
+            Some(_) => self.k_power,
+        };
+        Weights {
+            bend: self.bend * k,
+            detour: self.detour * k,
+            ..self.clone()
         }
     }
 }
@@ -286,6 +334,7 @@ fn joined(
 
 /// The tie's scored drawing and its cheapest candidate, when the tie is one this check reads: wires between pins
 /// and a power symbol, or pins of one part tied together. A tie with a label goes on elsewhere and has no known end.
+/// Power and ground ties are looked at with any bend, a signal only past the detour limit: signals may bend more.
 fn judge(scene: &Scene, w: &Weights, t: usize) -> Option<(f64, Redraw, f64)> {
     let g = scene.geometry;
     let tie = &scene.ties[t];
@@ -314,15 +363,17 @@ fn judge(scene: &Scene, w: &Weights, t: usize) -> Option<(f64, Redraw, f64)> {
         .collect();
     let drawn = length(&segs);
     let ratio = drawn as f64 / span.max(1) as f64;
-    if span == 0 || ratio <= w.max {
+    let power = powers.first().map(|s| &g.symbols[*s]);
+    let w = &w.of_class(power.map(|s| s.value.as_str()));
+    let bent = bends(scene, tie);
+    if span == 0 || (ratio <= w.max && (power.is_none() || bent == 0)) {
         return None;
     }
     let cost = w.len * drawn as f64 / w.step as f64
-        + w.bend * bends(scene, tie) as f64
+        + w.bend * bent as f64
         + crossings(scene, w, t, &segs)
         + w.symbol * powers.len().saturating_sub(1) as f64
         + w.detour * (ratio - 1.0);
-    let power = powers.first().map(|s| &g.symbols[*s]);
     let rail = power.map_or("the first pin", |s| s.value.as_str());
     let target = power
         .and_then(|s| s.pins.first())
@@ -335,7 +386,7 @@ fn judge(scene: &Scene, w: &Weights, t: usize) -> Option<(f64, Redraw, f64)> {
     if let Some(o) = drop.filter(|o| o.cost < best.cost) {
         best = o;
     }
-    (best.cost < cost).then_some((cost, best, ratio))
+    (best.cost + w.min_saving <= cost).then_some((cost, best, ratio))
 }
 
 impl Check for Draw40 {
@@ -409,6 +460,14 @@ mod tests {
         assert_eq!(
             crate::testing::fingerprints(&super::Draw40, "draw-40_tie_detour"),
             ["DRAW-40:item wire of GND (U1.5,6,7)|sheet /"]
+        );
+    }
+
+    #[test]
+    fn power_tie_bent_sideways() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw40, "draw-40_power_sideways"),
+            ["DRAW-40:item wire of +5V (R1.1)|sheet /"]
         );
     }
 }

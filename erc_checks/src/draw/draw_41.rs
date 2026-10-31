@@ -5,7 +5,6 @@ use super::{PIN_LEAD, at, nm, one};
 use crate::meta::*;
 use crate::{Ctx, Finding};
 use erc_analysis::scene::mm;
-use erc_model::geometry::Segment;
 
 pub struct Draw41;
 
@@ -25,8 +24,8 @@ impl Check for Draw41 {
         &META
     }
 
-    /// Follows the wire from each pin along the pin's axis. No wire that way, with one ending on the pin, leaves
-    /// across the axis (a pin on the middle of a wire is a tee, no bend); a straight run that bends or branches before the lead is up bends too soon. A run that ends on a
+    /// Follows the wire from each pin along the pin's axis, from its end point however long the pin. No wire that
+    /// way, with one on the pin, leaves across the axis: a corner or a tee right at the tip; a straight run that bends or branches before the lead is up bends too soon. A run that ends on a
     /// pin or a label has no bend, however short: `DRAW-29` looks at the short ones between two pins.
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let lead = nm(cx, &META, &PIN_LEAD);
@@ -37,12 +36,10 @@ impl Check for Draw41 {
                 let Some(item) = scene.pin_item(r) else {
                     continue;
                 };
-                let ends = |w: &&Segment| !w.is_empty() && (w.a == p.at || w.b == p.at);
-                let on_pin = g.wires.iter().any(|w| ends(&w));
-                let through = g.wires.iter().any(|w| w.contains(p.at) && !ends(&w));
+                let on_pin = g.wires.iter().any(|w| !w.is_empty() && w.contains(p.at));
                 let end = scene.run_end(p.at, p.outward);
                 let run = (end.x - p.at.x).abs() + (end.y - p.at.y).abs();
-                let what = if !on_pin || through {
+                let what = if !on_pin {
                     continue;
                 } else if run == 0 {
                     format!(
@@ -77,7 +74,9 @@ mod tests {
             crate::testing::fingerprints(&super::Draw41, "draw-41_pin_lead"),
             [
                 "DRAW-41:item R1.1 pin|sheet /",
-                "DRAW-41:item R2.1 pin|sheet /"
+                "DRAW-41:item R2.1 pin|sheet /",
+                "DRAW-41:item R4.2 pin|sheet /",
+                "DRAW-41:item R5.2 pin|sheet /"
             ]
         );
     }

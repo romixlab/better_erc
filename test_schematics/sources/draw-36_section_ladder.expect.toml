@@ -1,0 +1,45 @@
+# What better_erc finds on draw-36_section_ladder.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board draw-36_section_ladder"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item label IN0", "item label IN1", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item label IN1", "item label IN2", "sheet /"]
+
+[[finding]]
+check = "DRAW-36"
+subjects = ["item label IN0", "item label IN1", "sheet /"]
+
+[[finding]]
+check = "DRAW-36"
+subjects = ["item label IN1", "item label IN2", "sheet /"]
+
+[[finding]]
+check = "DRAW-36"
+subjects = ["item section Ladder ground symbols", "sheet /"]
+
+[[finding]]
+check = "DRAW-36"
+subjects = ["item section Ladder input ports", "sheet /"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /IN0", "pin R1.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /IN1", "pin R2.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /IN2", "pin R3.1"]
