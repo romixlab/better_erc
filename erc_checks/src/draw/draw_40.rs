@@ -527,14 +527,20 @@ impl Check for Draw40 {
                 let pins = groups(scene, &scene.ties[t]);
                 let names: Vec<String> = pins.iter().map(Group::name).collect();
                 let at = scene.geometry.wires[wire].a;
+                // One wire to one symbol for several parts: not a KiCad bus
+                let shared = pins.iter().any(|g| g.reference != pins[0].reference);
+                let what = if shared {
+                    format!("shared rail {}", item.name)
+                } else {
+                    item.name.clone()
+                };
                 out.push(
                     cx.finding(&META)
                         .subject(sheet)
                         .item(sheet, format!("{} ({})", item.name, names.join(", ")))
                         .location(location(scene, item, at))
                         .message(format!(
-                            "{} at x {} y {} runs {ratio:.1} times its Manhattan length: {} costs {:.0} instead of {:.0}",
-                            item.name,
+                            "{what} at x {} y {} runs {ratio:.1} times its Manhattan length: {} costs {:.0} instead of {:.0}",
                             mm(at.x),
                             mm(at.y),
                             best.what,
