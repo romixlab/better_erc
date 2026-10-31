@@ -1,0 +1,33 @@
+# What better_erc finds on draw-7_wire_through_body.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board draw-7_wire_through_body"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DRAW-7"
+subjects = ["item R1 body", "item wire of THROUGH", "sheet /"]
+
+[[finding]]
+check = "NAME-5"
+subjects = ["part R1", "part R3"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board draw-7_wire_through_body"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /THROUGH", "pin R3.1"]

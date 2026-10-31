@@ -111,3 +111,14 @@ impl Check for Draw35 {
 }
 
 inventory::submit!(Registered(&Draw35));
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn fires_on_its_sheet() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw35, "draw-35_small_part_horizontal"),
+            ["DRAW-35:item R1 body|sheet /"]
+        );
+    }
+}

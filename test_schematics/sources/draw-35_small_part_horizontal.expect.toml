@@ -1,0 +1,49 @@
+# What better_erc finds on draw-35_small_part_horizontal.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board draw-35_small_part_horizontal"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V_IN"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V_OUT"]
+
+[[finding]]
+check = "DRAW-35"
+subjects = ["item R1 body", "sheet /"]
+
+[[finding]]
+check = "DRAW-41"
+subjects = ["item R2.1 pin", "sheet /"]
+
+[[finding]]
+check = "DRAW-41"
+subjects = ["item power GND", "sheet /"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board draw-35_small_part_horizontal"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V_IN"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V_OUT"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /PULL", "pin R1.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /STANDS", "pin R2.1"]

@@ -36,3 +36,14 @@ impl Check for Draw9 {
 }
 
 inventory::submit!(Registered(&Draw9));
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn fires_on_its_sheet() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw9, "draw-9_text_overlap"),
+            ["DRAW-9:item R1 Value|item text \"Over the value\"|sheet /"]
+        );
+    }
+}

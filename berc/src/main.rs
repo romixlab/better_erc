@@ -112,6 +112,9 @@ struct CheckArgs {
     #[arg(long, value_name = "CAT,ID", value_delimiter = ',',
           add = ArgValueCandidates::new(complete::check_ids_and_categories))]
     only: Vec<String>,
+    /// A setting over its default, repeatable: `drawing.clearance.part=2`, `I2C-9.min_pull_up=1000`
+    #[arg(long = "set", value_name = "NAME=VALUE")]
+    set: Vec<String>,
     #[arg(long, value_enum, default_value_t = Format::Text)]
     format: Format,
     /// A previous JSON report (`--format json`): findings are marked new or unchanged, the fixed ones listed, and
@@ -289,11 +292,24 @@ fn check(args: CheckArgs) -> ExitCode {
         Some(Err(e)) => return check_error(&e),
         None => None,
     };
+    let mut config = better_erc::Config::default();
+    for set in &args.set {
+        let parsed = set
+            .split_once('=')
+            .and_then(|(k, v)| Some((k, v.parse().ok()?)));
+        let done = parsed.map_or(Err(format!("--set {set}: not NAME=VALUE")), |(k, v)| {
+            config.set(k, v)
+        });
+        if let Err(e) = done {
+            error(&e);
+            return ExitCode::from(CheckError::EXIT_CODE);
+        }
+    }
     let opts = CheckOptions {
         run: RunOptions {
             variant: args.variant,
             only: args.only,
-            ..RunOptions::default()
+            config,
         },
         require: args.require,
         fail_on: match args.fail_on {

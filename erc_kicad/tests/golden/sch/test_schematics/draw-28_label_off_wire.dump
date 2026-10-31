@@ -1,0 +1,67 @@
+board draw-28_label_off_wire
+label / local GOOD at 35.56,45.72 net /GOOD
+label / local LONGNAME at 96.52,45.72 net /LONGNAME
+label / local OFF at 68.58,45.72 net /OFF
+label / local ONPIN at 76.2,55.88 net GND
+label / power GND at 50.8,60.96 net GND
+label / power GND at 76.2,60.96 net GND
+label / power GND at 101.6,60.96 net GND
+net /GOOD class = Default @ sch draw-28_label_off_wire.kicad_sch note "effective net class"
+net /GOOD kind named
+net /LONGNAME class = Default @ sch draw-28_label_off_wire.kicad_sch note "effective net class"
+net /LONGNAME kind named
+net /OFF class = Default @ sch draw-28_label_off_wire.kicad_sch note "effective net class"
+net /OFF kind named
+net GND class = Default @ sch draw-28_label_off_wire.kicad_sch note "effective net class"
+net GND kind power
+part R1 field Value = 10k @ sch draw-28_label_off_wire.kicad_sch
+part R1 flag dnp = no @ sch draw-28_label_off_wire.kicad_sch
+part R1 flag exclude_from_sim = no @ sch draw-28_label_off_wire.kicad_sch
+part R1 flag in_bom = yes @ sch draw-28_label_off_wire.kicad_sch
+part R1 flag on_board = yes @ sch draw-28_label_off_wire.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid d2800000-0000-4000-8000-000000000003 line 22 at 50.8,50.8 rot 0
+part R1 value = text 10k @ sch draw-28_label_off_wire.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch draw-28_label_off_wire.kicad_sch
+part R2 flag dnp = no @ sch draw-28_label_off_wire.kicad_sch
+part R2 flag exclude_from_sim = no @ sch draw-28_label_off_wire.kicad_sch
+part R2 flag in_bom = yes @ sch draw-28_label_off_wire.kicad_sch
+part R2 flag on_board = yes @ sch draw-28_label_off_wire.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid d2800000-0000-4000-8000-000000000009 line 25 at 76.2,50.8 rot 0
+part R2 value = text 10k @ sch draw-28_label_off_wire.kicad_sch note "from the Value field"
+part R3 field Value = 10k @ sch draw-28_label_off_wire.kicad_sch
+part R3 flag dnp = no @ sch draw-28_label_off_wire.kicad_sch
+part R3 flag exclude_from_sim = no @ sch draw-28_label_off_wire.kicad_sch
+part R3 flag in_bom = yes @ sch draw-28_label_off_wire.kicad_sch
+part R3 flag on_board = yes @ sch draw-28_label_off_wire.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid d2800000-0000-4000-8000-00000000000f line 28 at 101.6,50.8 rot 0
+part R3 value = text 10k @ sch draw-28_label_off_wire.kicad_sch note "from the Value field"
+pin R1 1 name "" unit 1 net /GOOD
+pin R1 1 type = passive @ sch draw-28_label_off_wire.kicad_sch
+pin R1 2 name "" unit 1 net GND
+pin R1 2 type = passive @ sch draw-28_label_off_wire.kicad_sch
+pin R2 1 name "" unit 1 net /OFF
+pin R2 1 type = passive @ sch draw-28_label_off_wire.kicad_sch
+pin R2 2 name "" unit 1 net GND
+pin R2 2 type = passive @ sch draw-28_label_off_wire.kicad_sch
+pin R3 1 name "" unit 1 net /LONGNAME
+pin R3 1 type = passive @ sch draw-28_label_off_wire.kicad_sch
+pin R3 2 name "" unit 1 net GND
+pin R3 2 type = passive @ sch draw-28_label_off_wire.kicad_sch
+sheet / name "" file draw-28_label_off_wire.kicad_sch uuid /
+source file draw-28_label_off_wire.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 3e34c61bed684ede
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash aa8c3f475abe7609
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

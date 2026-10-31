@@ -5,7 +5,6 @@ use super::{location, sheet_subject};
 use crate::meta::*;
 use crate::{Ctx, Finding};
 use erc_analysis::scene::{PinRef, Scene, mm};
-use erc_model::Pt;
 use erc_model::geometry::{Dir, DrawnSymbol};
 use std::collections::BTreeSet;
 
@@ -60,6 +59,68 @@ fn names(s: &DrawnSymbol, pins: &[usize]) -> String {
     n.join(", ")
 }
 
+/// The finding on a run of pins of one symbol
+fn finding(
+    cx: &Ctx,
+    scene: &Scene,
+    symbol: usize,
+    pins: &[usize],
+    rail: &str,
+    power: &BTreeSet<usize>,
+) -> Option<Finding> {
+    let g = scene.geometry;
+    let s = &g.symbols[symbol];
+    let sheet = sheet_subject(cx, scene);
+    let p = s.pins[pins[0]].at;
+    let item = scene.pin_item(PinRef {
+        symbol,
+        pin: pins[0],
+    })?;
+    let list = names(s, pins);
+    let mut f = cx
+        .finding(&META)
+        .subject(sheet)
+        .item(sheet, format!("{} pins {list}", s.reference))
+        .location(location(scene, item, p));
+    for n in power {
+        if let Some(i) = scene.items.iter().find(|i| i.owner == Some(*n)) {
+            f = f.location(location(scene, i, g.symbols[*n].at));
+        }
+    }
+    Some(
+        f.message(format!(
+            "{} pins {list} have {} {rail} symbols, from x {} y {}",
+            s.reference,
+            power.len(),
+            mm(p.x),
+            mm(p.y)
+        ))
+        .fix("wire the pins together to one symbol")
+        .build(),
+    )
+}
+
+/// The runs of next-door pins on one rail along a side: where each starts and ends, the rail, its symbols
+fn runs<'s>(
+    rails: &[Option<(&'s str, Vec<usize>)>],
+) -> Vec<(usize, usize, &'s str, BTreeSet<usize>)> {
+    let mut out = Vec::new();
+    let mut i = 0;
+    while i < rails.len() {
+        let Some((rail, _)) = &rails[i] else {
+            i += 1;
+            continue;
+        };
+        let same = |r: &&Option<(&str, Vec<usize>)>| r.as_ref().is_some_and(|(n, _)| n == rail);
+        let end = i + rails[i..].iter().take_while(same).count();
+        let power = rails[i..end].iter().flatten();
+        let power = power.flat_map(|(_, s)| s.iter().copied()).collect();
+        out.push((i, end, *rail, power));
+        i = end;
+    }
+    out
+}
+
 impl Check for Draw30 {
     fn meta(&self) -> &'static CheckMeta {
         &META
@@ -71,69 +132,18 @@ impl Check for Draw30 {
         let max = cx.param(&META, MAX_PER_GROUP.name) as usize;
         let mut out = Vec::new();
         for scene in cx.scenes() {
-            let sheet = sheet_subject(cx, scene);
             for (symbol, s) in scene.geometry.symbols.iter().enumerate() {
                 if s.power || s.pins.iter().filter(|p| !p.hidden).count() <= 2 {
                     continue;
                 }
                 for side in [Dir::Left, Dir::Right, Dir::Up, Dir::Down] {
                     let pins = side_pins(s, side);
-                    let rails: Vec<Option<(&str, Vec<usize>)>> = pins
-                        .iter()
-                        .map(|p| rail_of(scene, PinRef { symbol, pin: *p }))
-                        .collect();
-                    let mut i = 0;
-                    while i < pins.len() {
-                        let Some((rail, _)) = &rails[i] else {
-                            i += 1;
-                            continue;
-                        };
-                        let same = |r: &Option<(&str, Vec<usize>)>| {
-                            r.as_ref().is_some_and(|(n, _)| n == rail)
-                        };
-                        let end = i + rails[i..].iter().take_while(|r| same(r)).count();
-                        let symbols: BTreeSet<usize> = rails[i..end]
-                            .iter()
-                            .flatten()
-                            .flat_map(|(_, s)| s.iter().copied())
-                            .collect();
-                        if symbols.len() > max {
-                            let first = PinRef {
-                                symbol,
-                                pin: pins[i],
-                            };
-                            let p: Pt = s.pins[pins[i]].at;
-                            if let Some(item) = scene.pin_item(first) {
-                                let mut f = cx
-                                    .finding(&META)
-                                    .subject(sheet)
-                                    .item(
-                                        sheet,
-                                        format!("{} pins {}", s.reference, names(s, &pins[i..end])),
-                                    )
-                                    .location(location(scene, item, p));
-                                for n in &symbols {
-                                    let power = scene.items.iter().find(|i| i.owner == Some(*n));
-                                    if let Some(power) = power {
-                                        let at = scene.geometry.symbols[*n].at;
-                                        f = f.location(location(scene, power, at));
-                                    }
-                                }
-                                out.push(
-                                    f.message(format!(
-                                        "{} pins {} have {} {rail} symbols, from x {} y {}",
-                                        s.reference,
-                                        names(s, &pins[i..end]),
-                                        symbols.len(),
-                                        mm(p.x),
-                                        mm(p.y)
-                                    ))
-                                    .fix("wire the pins together to one symbol")
-                                    .build(),
-                                );
-                            }
+                    let rail = |p: &usize| rail_of(scene, PinRef { symbol, pin: *p });
+                    let rails: Vec<_> = pins.iter().map(rail).collect();
+                    for (start, end, rail, power) in runs(&rails) {
+                        if power.len() > max {
+                            out.extend(finding(cx, scene, symbol, &pins[start..end], rail, &power));
                         }
-                        i = end;
                     }
                 }
             }
@@ -143,3 +153,14 @@ impl Check for Draw30 {
 }
 
 inventory::submit!(Registered(&Draw30));
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn fires_on_its_sheet() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw30, "draw-30_symbols_per_pin_group"),
+            ["DRAW-30:item U1 pins 1, 2, 3|sheet /"]
+        );
+    }
+}

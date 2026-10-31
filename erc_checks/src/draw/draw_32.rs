@@ -185,3 +185,19 @@ impl Check for Draw32 {
 }
 
 inventory::submit!(Registered(&Draw32));
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn fires_on_its_sheet() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw32, "draw-32_free_text"),
+            [
+                "DRAW-32:item text \".notes for later\"|sheet /",
+                "DRAW-32:item text \"A loose remark\"|sheet /",
+                "DRAW-32:item text box \"Keep this short\"|sheet /",
+                "DRAW-32:item text box \"No kind at all\"|sheet /"
+            ]
+        );
+    }
+}

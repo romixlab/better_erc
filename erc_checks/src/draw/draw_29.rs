@@ -82,3 +82,17 @@ impl Check for Draw29 {
 }
 
 inventory::submit!(Registered(&Draw29));
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn fires_on_its_sheet() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw29, "draw-29_pin_on_pin"),
+            [
+                "DRAW-29:item R1.2 pin|item R2.1 pin|sheet /",
+                "DRAW-29:item R3.2 pin|item R4.1 pin|sheet /"
+            ]
+        );
+    }
+}

@@ -49,6 +49,10 @@ check = "DRV-7"
 subjects = ["net /SW2", "part U4"]
 
 [[finding]]
+check = "NAME-13"
+subjects = ["net +3V3"]
+
+[[finding]]
 check = "PIN-4"
 subjects = ["net +5V", "part J1"]
 

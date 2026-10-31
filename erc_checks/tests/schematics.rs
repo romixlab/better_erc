@@ -5,7 +5,8 @@
 //! new check does not rewrite every sidecar). This test imports each schematic, runs every registered check, and
 //! compares; a schematic without expectations, expectations without a schematic, or a registered check that no
 //! expectation shows firing fails it. `BLESS=1` rewrites the findings from what the engine finds, for review in
-//! the diff, and keeps the sidecar's `[[not_run]]` blocks as they are (it never adds any).
+//! the diff, and keeps the sidecar's `[[not_run]]` blocks as they are (it never adds any). `DRAW` findings are
+//! compared on the `draw-*` schematics only: the others were written for their circuit, not drawn for style.
 
 use erc_checks::catalogue::catalogue;
 use erc_checks::{Confidence, Report, RunOptions, registered, run_imported};
@@ -137,7 +138,10 @@ fn schematics_match_their_expectations() {
         )
         .unwrap();
         let report = run_imported(&imported, &RunOptions::default()).unwrap();
-        let got = actual(&report);
+        let mut got = actual(&report);
+        if !name.starts_with("draw-") {
+            got.findings.retain(|f| !f.check.starts_with("DRAW-"));
+        }
         fired.extend(got.findings.iter().map(|f| f.check.clone()));
         let sidecar = dir.join(format!("{name}.expect.toml"));
         let existing = std::fs::read_to_string(&sidecar).ok();

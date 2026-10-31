@@ -38,3 +38,14 @@ impl Check for Draw34 {
 }
 
 inventory::submit!(Registered(&Draw34));
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn fires_on_its_sheet() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw34, "draw-34_too_close"),
+            ["DRAW-34:item R1 body|item text box \"Near\"|sheet /"]
+        );
+    }
+}

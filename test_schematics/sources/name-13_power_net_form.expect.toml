@@ -1,0 +1,37 @@
+# What better_erc finds on name-13_power_net_form.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board name-13_power_net_form"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_LDO"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "NAME-13"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_LDO"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

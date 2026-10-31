@@ -1,0 +1,37 @@
+# What better_erc finds on draw-32_free_text.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["part R1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \".notes for later\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"A loose remark\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"Keep this short\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"No kind at all\"", "sheet /"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board draw-32_free_text"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

@@ -68,3 +68,17 @@ impl Check for Draw41 {
 }
 
 inventory::submit!(Registered(&Draw41));
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn fires_on_its_sheet() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw41, "draw-41_pin_lead"),
+            [
+                "DRAW-41:item R1.1 pin|sheet /",
+                "DRAW-41:item R2.1 pin|sheet /"
+            ]
+        );
+    }
+}

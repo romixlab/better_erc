@@ -625,3 +625,20 @@ fn smart_pdf() {
         r["notes"]
     );
 }
+
+#[test]
+fn set_changes_a_setting_and_refuses_an_unknown_one() {
+    let sheet = sources().join("draw-34_too_close.kicad_sch");
+    let sheet = sheet.to_str().unwrap();
+    let count = |out: &Output| json(out)["findings"].as_array().unwrap().len();
+    let base = berc(&["check", sheet, "--only", "DRAW-34", "--format", "json"]);
+    let margin = "drawing.clearance.part=0";
+    let text = "drawing.clearance.text=0";
+    let none = berc(&[
+        "check", sheet, "--only", "DRAW-34", "--format", "json", "--set", margin, "--set", text,
+    ]);
+    assert!(count(&base) > count(&none), "{}", stdout(&base));
+    let bad = berc(&["check", sheet, "--set", "drawing.nothing=1"]);
+    assert_eq!(code(&bad), 2);
+    assert!(stderr(&bad).contains("drawing.nothing"), "{}", stderr(&bad));
+}

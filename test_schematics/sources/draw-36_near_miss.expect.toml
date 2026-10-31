@@ -1,0 +1,29 @@
+# What better_erc finds on draw-36_near_miss.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board draw-36_near_miss"]
+
+[[finding]]
+check = "DRAW-36"
+subjects = ["item label AAA", "item label BBB", "sheet /"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /AAA", "pin R1.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /BBB", "pin R2.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /CCC", "pin R3.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /DDD", "pin R4.1"]

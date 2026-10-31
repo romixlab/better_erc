@@ -1,0 +1,37 @@
+# What better_erc finds on draw-9_text_overlap.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["part R1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"Over the value\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item R1 Reference", "item text \"Over the value\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item R1 body", "item text \"Over the value\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-9"
+subjects = ["item R1 Value", "item text \"Over the value\"", "sheet /"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board draw-9_text_overlap"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

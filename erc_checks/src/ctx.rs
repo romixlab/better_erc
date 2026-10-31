@@ -26,6 +26,22 @@ pub struct Config {
     pub disabled: BTreeSet<String>,
 }
 
+impl Config {
+    /// Sets a threshold by its key: a setting of `CHECK-ID.param`, or a shared one by its own name. A key no
+    /// registered check declares is refused.
+    pub fn set(&mut self, key: &str, value: f64) -> Result<(), String> {
+        let known = crate::meta::registered().into_iter().any(|c| {
+            let m = c.meta();
+            m.params.iter().any(|p| param_key(m, p.name) == key)
+        });
+        if !known {
+            return Err(format!("no check has the setting {key}"));
+        }
+        self.params.insert(key.to_string(), value);
+        Ok(())
+    }
+}
+
 /// Whether a board has the data a [`Need`] asks for
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase", tag = "availability")]

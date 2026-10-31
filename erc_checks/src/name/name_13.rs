@@ -95,4 +95,12 @@ mod tests {
             assert!(!in_form(bad), "{bad}");
         }
     }
+
+    #[test]
+    fn fires_on_its_sheet() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Name13, "name-13_power_net_form"),
+            ["NAME-13:net +3V3"]
+        );
+    }
 }

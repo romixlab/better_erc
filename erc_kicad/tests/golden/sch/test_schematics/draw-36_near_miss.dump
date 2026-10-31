@@ -1,0 +1,82 @@
+board draw-36_near_miss
+label / local AAA at 53.34,40.64 net /AAA
+label / local BBB at 50.8,55.88 net /BBB
+label / local CCC at 104.14,40.64 net /CCC
+label / local DDD at 104.14,55.88 net /DDD
+label / power GND at 66.04,78.74 net GND
+label / power GND at 76.2,60.96 net GND
+label / power GND at 116.84,78.74 net GND
+label / power GND at 127,60.96 net GND
+net /AAA class = Default @ sch draw-36_near_miss.kicad_sch note "effective net class"
+net /AAA kind named
+net /BBB class = Default @ sch draw-36_near_miss.kicad_sch note "effective net class"
+net /BBB kind named
+net /CCC class = Default @ sch draw-36_near_miss.kicad_sch note "effective net class"
+net /CCC kind named
+net /DDD class = Default @ sch draw-36_near_miss.kicad_sch note "effective net class"
+net /DDD kind named
+net GND class = Default @ sch draw-36_near_miss.kicad_sch note "effective net class"
+net GND kind power
+part R1 field Value = 10k @ sch draw-36_near_miss.kicad_sch
+part R1 flag dnp = no @ sch draw-36_near_miss.kicad_sch
+part R1 flag exclude_from_sim = no @ sch draw-36_near_miss.kicad_sch
+part R1 flag in_bom = yes @ sch draw-36_near_miss.kicad_sch
+part R1 flag on_board = yes @ sch draw-36_near_miss.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid d3600000-0000-4000-8000-000000000003 line 22 at 76.2,50.8 rot 0
+part R1 value = text 10k @ sch draw-36_near_miss.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch draw-36_near_miss.kicad_sch
+part R2 flag dnp = no @ sch draw-36_near_miss.kicad_sch
+part R2 flag exclude_from_sim = no @ sch draw-36_near_miss.kicad_sch
+part R2 flag in_bom = yes @ sch draw-36_near_miss.kicad_sch
+part R2 flag on_board = yes @ sch draw-36_near_miss.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid d3600000-0000-4000-8000-00000000000c line 28 at 66.04,68.58 rot 0
+part R2 value = text 10k @ sch draw-36_near_miss.kicad_sch note "from the Value field"
+part R3 field Value = 10k @ sch draw-36_near_miss.kicad_sch
+part R3 flag dnp = no @ sch draw-36_near_miss.kicad_sch
+part R3 flag exclude_from_sim = no @ sch draw-36_near_miss.kicad_sch
+part R3 flag in_bom = yes @ sch draw-36_near_miss.kicad_sch
+part R3 flag on_board = yes @ sch draw-36_near_miss.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid d3600000-0000-4000-8000-000000000015 line 34 at 127,50.8 rot 0
+part R3 value = text 10k @ sch draw-36_near_miss.kicad_sch note "from the Value field"
+part R4 field Value = 10k @ sch draw-36_near_miss.kicad_sch
+part R4 flag dnp = no @ sch draw-36_near_miss.kicad_sch
+part R4 flag exclude_from_sim = no @ sch draw-36_near_miss.kicad_sch
+part R4 flag in_bom = yes @ sch draw-36_near_miss.kicad_sch
+part R4 flag on_board = yes @ sch draw-36_near_miss.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid d3600000-0000-4000-8000-00000000001e line 40 at 116.84,68.58 rot 0
+part R4 value = text 10k @ sch draw-36_near_miss.kicad_sch note "from the Value field"
+pin R1 1 name "" unit 1 net /AAA
+pin R1 1 type = passive @ sch draw-36_near_miss.kicad_sch
+pin R1 2 name "" unit 1 net GND
+pin R1 2 type = passive @ sch draw-36_near_miss.kicad_sch
+pin R2 1 name "" unit 1 net /BBB
+pin R2 1 type = passive @ sch draw-36_near_miss.kicad_sch
+pin R2 2 name "" unit 1 net GND
+pin R2 2 type = passive @ sch draw-36_near_miss.kicad_sch
+pin R3 1 name "" unit 1 net /CCC
+pin R3 1 type = passive @ sch draw-36_near_miss.kicad_sch
+pin R3 2 name "" unit 1 net GND
+pin R3 2 type = passive @ sch draw-36_near_miss.kicad_sch
+pin R4 1 name "" unit 1 net /DDD
+pin R4 1 type = passive @ sch draw-36_near_miss.kicad_sch
+pin R4 2 name "" unit 1 net GND
+pin R4 2 type = passive @ sch draw-36_near_miss.kicad_sch
+sheet / name "" file draw-36_near_miss.kicad_sch uuid /
+source file draw-36_near_miss.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 3e34c61bed684ede
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash aa8c3f475abe7609
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

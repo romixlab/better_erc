@@ -1,0 +1,25 @@
+# What better_erc finds on draw-34_too_close.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["part R1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item R1 body", "item text box \"Near\"", "sheet /"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board draw-34_too_close"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

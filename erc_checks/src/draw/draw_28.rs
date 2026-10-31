@@ -82,3 +82,18 @@ impl Check for Draw28 {
 }
 
 inventory::submit!(Registered(&Draw28));
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn fires_on_its_sheet() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw28, "draw-28_label_off_wire"),
+            [
+                "DRAW-28:item label LONGNAME|sheet /",
+                "DRAW-28:item label OFF|sheet /",
+                "DRAW-28:item label ONPIN|sheet /"
+            ]
+        );
+    }
+}

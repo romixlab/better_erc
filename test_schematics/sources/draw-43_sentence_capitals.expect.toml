@@ -1,0 +1,33 @@
+# What better_erc finds on draw-43_sentence_capitals.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["part R1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"A sentence that goes on\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"the first sentence. The ...\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-43"
+subjects = ["item text box \"the first sentence. The ...\"", "sheet /"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board draw-43_sentence_capitals"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

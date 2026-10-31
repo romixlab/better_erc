@@ -149,6 +149,9 @@ fn miss(axis: Axis, a: &Liner, b: &Liner, snap: i64) -> Option<(i64, i64, i64)> 
     best
 }
 
+/// Two liners that miss each other: the offset and the two values on the axis
+type Missed<'l, 's> = (&'l Liner<'s>, &'l Liner<'s>, i64, i64, i64);
+
 /// The parts each label, power symbol or wire is tied to, by symbol and the side its pin leaves the body
 fn sides(scene: &Scene, item: &Item) -> Vec<(usize, erc_model::geometry::Dir)> {
     let Some(tie) = item.tie else {
@@ -191,8 +194,7 @@ impl Check for Draw36 {
         for scene in cx.scenes() {
             for axis in [Axis::X, Axis::Y] {
                 let liners = liners(scene, axis);
-                let mut found: BTreeMap<(&str, &str), (&Liner, &Liner, i64, i64, i64)> =
-                    BTreeMap::new();
+                let mut found: BTreeMap<(&str, &str), Missed> = BTreeMap::new();
                 for (i, a) in liners.iter().enumerate() {
                     for b in &liners[i + 1..] {
                         if a.class != b.class || a.item.name == b.item.name {
@@ -253,3 +255,14 @@ impl Check for Draw36 {
 }
 
 inventory::submit!(Registered(&Draw36));
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn fires_on_its_sheet() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw36, "draw-36_near_miss"),
+            ["DRAW-36:item label AAA|item label BBB|sheet /"]
+        );
+    }
+}

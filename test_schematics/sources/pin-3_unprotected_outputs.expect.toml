@@ -65,6 +65,14 @@ check = "IO-1"
 subjects = ["net /EN_EXT", "pin U3.4"]
 
 [[finding]]
+check = "NAME-13"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "NAME-13"
+subjects = ["net +5V0"]
+
+[[finding]]
 check = "PIN-3"
 subjects = ["net +3V3", "part J3"]
 

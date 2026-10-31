@@ -1,0 +1,17 @@
+# What better_erc finds on draw-29_pin_on_pin.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board draw-29_pin_on_pin"]
+
+[[finding]]
+check = "DRAW-29"
+subjects = ["item R1.2 pin", "item R2.1 pin", "sheet /"]
+
+[[finding]]
+check = "DRAW-29"
+subjects = ["item R3.2 pin", "item R4.1 pin", "sheet /"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

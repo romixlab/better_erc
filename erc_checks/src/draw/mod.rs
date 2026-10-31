@@ -14,6 +14,7 @@ mod draw_32;
 mod draw_34;
 mod draw_35;
 mod draw_36;
+mod draw_40;
 mod draw_41;
 mod draw_43;
 mod draw_7;

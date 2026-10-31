@@ -36,3 +36,14 @@ impl Check for Draw7 {
 }
 
 inventory::submit!(Registered(&Draw7));
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn fires_on_its_sheet() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw7, "draw-7_wire_through_body"),
+            ["DRAW-7:item R1 body|item wire of THROUGH|sheet /"]
+        );
+    }
+}

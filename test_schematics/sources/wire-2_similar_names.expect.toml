@@ -37,6 +37,14 @@ check = "NAME-1"
 subjects = ["net /RESET_n"]
 
 [[finding]]
+check = "NAME-13"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "NAME-13"
+subjects = ["net 3V3"]
+
+[[finding]]
 check = "RAIL-5"
 subjects = ["net +3V3"]
 also = ["RAIL-1"]

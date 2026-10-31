@@ -505,9 +505,9 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   - 📋 `DRAW-4` Wire end or pin on the middle of a wire without a junction
   - 📋 `DRAW-5` Diagonal wire segment
   - 📋 `DRAW-6` Wire on top of another wire, or of zero length
-  - 📋 `DRAW-7` Wire through a symbol body, a field or a label
+  - ✅ `DRAW-7` Wire through a symbol body, a field or a label
   - 📋 `DRAW-8` Reference or value reading vertically on a rotated part
-  - 📋 `DRAW-9` Text overlapping text, a symbol body or a wire
+  - ✅ `DRAW-9` Text overlapping text, a symbol body or a wire
   - 📋 `DRAW-10` Stacked labels not aligned
   - 📋 `DRAW-11` Net label written vertically
   - 📋 `DRAW-12` Symbol with its inputs facing right and outputs left
@@ -526,22 +526,22 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   - 📋 `DRAW-25` Sheet without a meaningful name, or two sheets with one title
   - 📋 `DRAW-26` Calculated parts without a note giving the calculation (candidates only)
   - 📋 `DRAW-27` Colour set by hand on wires, labels or text (off by default)
-  - 📋 `DRAW-28` Label not lying on its wire, or justified against its side
-  - 📋 `DRAW-29` Pin joined directly to another pin
-  - 📋 `DRAW-30` Several power symbols of one rail on one pin group of a part
+  - ✅ `DRAW-28` Label not lying on its wire, or justified against its side
+  - ✅ `DRAW-29` Pin joined directly to another pin
+  - ✅ `DRAW-30` Several power symbols of one rail on one pin group of a part
   - 📋 `DRAW-31` Section without a heading (candidates only)
-  - 📋 `DRAW-32` Free-standing text, or a note box not of the six kinds
+  - ✅ `DRAW-32` Free-standing text, or a note box not of the six kinds
   - 📋 `DRAW-33` Note laid out as a plain-text table (candidates only)
-  - 📋 `DRAW-34` Items closer than their clearance margins (`drawing.clearance.*`)
-  - 📋 `DRAW-35` Two- to four-pin part tied to a rail or ground drawn horizontal
-  - 📋 `DRAW-36` Near-miss alignment within a window, under the snap distance (`drawing.align.*`)
+  - ✅ `DRAW-34` Items closer than their clearance margins (`drawing.clearance.*`)
+  - ✅ `DRAW-35` Two- to four-pin part tied to a rail or ground drawn horizontal
+  - ✅ `DRAW-36` Near-miss alignment within a window, under the snap distance (`drawing.align.*`)
   - 📋 `DRAW-37` Note box naming a part with no leader to it (candidates only)
   - 📋 `DRAW-38` Leader line crossing a wire, part, label or text
   - 📋 `DRAW-39` Group of related nets labelled in three or more places with no bus (`drawing.bus_hint.*`)
-  - 📋 `DRAW-40` Tie wiring much longer than needed where the routing cost finds a cheaper drawing (`drawing.route.*`)
-  - 📋 `DRAW-41` Wire bending right at a pin or power symbol (`drawing.pin_lead`)
+  - ✅ `DRAW-40` Tie wiring much longer than needed where the routing cost finds a cheaper drawing (`drawing.route.*`)
+  - ✅ `DRAW-41` Wire bending right at a pin or power symbol (`drawing.pin_lead`)
   - 📋 `DRAW-42` Touching items too close in colour (`drawing.colour.pair_min`)
-  - 📋 `DRAW-43` Sentence starting with a lower-case letter
+  - ✅ `DRAW-43` Sentence starting with a lower-case letter
   - 📋 `DRAW-46` Leader into a small part off centre, not diagonal or clipped (`drawing.leader.clear`)
   - 📋 `DRAW-47` Run-on note text (`drawing.note.item_words`, `.item_marks`)
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`

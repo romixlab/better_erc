@@ -1,0 +1,58 @@
+board draw-30_symbols_per_pin_group
+label / power GND at 35.56,87.63 net GND
+label / power GND at 43.18,85.09 net GND
+label / power GND at 50.8,82.55 net GND
+label / power GND at 91.44,80.01 net GND
+net GND class = Default @ sch draw-30_symbols_per_pin_group.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U1-A4-Pad4) class = Default @ sch draw-30_symbols_per_pin_group.kicad_sch note "effective net class"
+net unconnected-(U1-A4-Pad4) kind unconnected
+net unconnected-(U1-B3-Pad7) class = Default @ sch draw-30_symbols_per_pin_group.kicad_sch note "effective net class"
+net unconnected-(U1-B3-Pad7) kind unconnected
+net unconnected-(U1-B4-Pad8) class = Default @ sch draw-30_symbols_per_pin_group.kicad_sch note "effective net class"
+net unconnected-(U1-B4-Pad8) kind unconnected
+part U1 field Value = U8 @ sch draw-30_symbols_per_pin_group.kicad_sch
+part U1 flag dnp = no @ sch draw-30_symbols_per_pin_group.kicad_sch
+part U1 flag exclude_from_sim = no @ sch draw-30_symbols_per_pin_group.kicad_sch
+part U1 flag in_bom = yes @ sch draw-30_symbols_per_pin_group.kicad_sch
+part U1 flag on_board = yes @ sch draw-30_symbols_per_pin_group.kicad_sch
+part U1 lib Device:U8 sheet / symbol Device:U8
+part U1 unit 1 sheet / uuid d3000000-0000-4000-8000-000000000009 line 22 at 76.2,76.2 rot 0
+part U1 value = text U8 @ sch draw-30_symbols_per_pin_group.kicad_sch note "from the Value field"
+pin U1 1 name A1 unit 1 net GND
+pin U1 1 type = passive @ sch draw-30_symbols_per_pin_group.kicad_sch
+pin U1 2 name A2 unit 1 net GND
+pin U1 2 type = passive @ sch draw-30_symbols_per_pin_group.kicad_sch
+pin U1 3 name A3 unit 1 net GND
+pin U1 3 type = passive @ sch draw-30_symbols_per_pin_group.kicad_sch
+pin U1 4 name A4 unit 1 net unconnected-(U1-A4-Pad4)
+pin U1 4 type = passive @ sch draw-30_symbols_per_pin_group.kicad_sch
+pin U1 5 name B1 unit 1 net GND
+pin U1 5 type = passive @ sch draw-30_symbols_per_pin_group.kicad_sch
+pin U1 6 name B2 unit 1 net GND
+pin U1 6 type = passive @ sch draw-30_symbols_per_pin_group.kicad_sch
+pin U1 7 name B3 unit 1 net unconnected-(U1-B3-Pad7)
+pin U1 7 type = passive @ sch draw-30_symbols_per_pin_group.kicad_sch
+pin U1 8 name B4 unit 1 net unconnected-(U1-B4-Pad8)
+pin U1 8 type = passive @ sch draw-30_symbols_per_pin_group.kicad_sch
+sheet / name "" file draw-30_symbols_per_pin_group.kicad_sch uuid /
+source file draw-30_symbols_per_pin_group.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:U8 field Reference U
+symbol Device:U8 field Value U8
+symbol Device:U8 hash 5792c0f9d167f5d9
+symbol Device:U8 pin 1 unit 1 body 1 name A1 type passive style line
+symbol Device:U8 pin 2 unit 1 body 1 name A2 type passive style line
+symbol Device:U8 pin 3 unit 1 body 1 name A3 type passive style line
+symbol Device:U8 pin 4 unit 1 body 1 name A4 type passive style line
+symbol Device:U8 pin 5 unit 1 body 1 name B1 type passive style line
+symbol Device:U8 pin 6 unit 1 body 1 name B2 type passive style line
+symbol Device:U8 pin 7 unit 1 body 1 name B3 type passive style line
+symbol Device:U8 pin 8 unit 1 body 1 name B4 type passive style line
+symbol Device:U8 units 1
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash aa8c3f475abe7609
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

@@ -163,4 +163,12 @@ mod tests {
         }
         assert_eq!(lower("Roughly, e.g. this one"), Vec::<String>::new());
     }
+
+    #[test]
+    fn fires_on_its_sheet() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw43, "draw-43_sentence_capitals"),
+            ["DRAW-43:item text box \"the first sentence. The ...\"|sheet /"]
+        );
+    }
 }

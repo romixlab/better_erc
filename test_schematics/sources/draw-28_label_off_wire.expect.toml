@@ -1,0 +1,49 @@
+# What better_erc finds on draw-28_label_off_wire.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board draw-28_label_off_wire"]
+
+[[finding]]
+check = "DRAW-28"
+subjects = ["item label LONGNAME", "sheet /"]
+
+[[finding]]
+check = "DRAW-28"
+subjects = ["item label OFF", "sheet /"]
+
+[[finding]]
+check = "DRAW-28"
+subjects = ["item label ONPIN", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item label ONPIN", "item wire of ONPIN", "sheet /"]
+
+[[finding]]
+check = "DRAW-41"
+subjects = ["item R1.1 pin", "sheet /"]
+
+[[finding]]
+check = "DRAW-41"
+subjects = ["item R2.1 pin", "sheet /"]
+
+[[finding]]
+check = "DRAW-41"
+subjects = ["item R3.1 pin", "sheet /"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /GOOD", "pin R1.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /LONGNAME", "pin R3.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /OFF", "pin R2.1"]
