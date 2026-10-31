@@ -1,10 +1,13 @@
 //! `DRAW-40` Power or tie wiring much longer than it needs, with a cheaper drawing at hand
 
-use super::{MM, location, nm, sheet_subject};
+use super::{
+    ALIGN_SNAP, ALIGN_WINDOW, CLEARANCE_PART, CLEARANCE_POWER, CLEARANCE_TEXT, MM, location, nm,
+    sheet_subject,
+};
 use crate::meta::*;
 use crate::{Ctx, Finding};
 use erc_analysis::power::{NameRole, read_name};
-use erc_analysis::scene::{PinRef, Scene, Tie, mm};
+use erc_analysis::scene::{Item, ItemKind, PinRef, Scene, Tie, mm};
 use erc_model::Pt;
 use erc_model::geometry::{Dir, DrawnPin, DrawnSymbol, Rect};
 use std::collections::BTreeMap;
@@ -95,6 +98,11 @@ static META: CheckMeta = CheckMeta {
         K_SIGNAL,
         MIN_SAVING,
         STEP,
+        CLEARANCE_PART,
+        CLEARANCE_POWER,
+        CLEARANCE_TEXT,
+        ALIGN_WINDOW,
+        ALIGN_SNAP,
     ],
 };
 
@@ -113,6 +121,13 @@ struct Weights {
     k_signal: f64,
     min_saving: f64,
     step: i64,
+    /// Margins a candidate's wires and symbol are kept out of, same as `DRAW-34`
+    clearance_part: i64,
+    clearance_power: i64,
+    clearance_text: i64,
+    /// Near-miss window and snap distance a candidate's symbol is kept out of, same as `DRAW-36`
+    align_window: i64,
+    align_snap: i64,
 }
 
 impl Weights {
@@ -131,6 +146,11 @@ impl Weights {
             k_signal: w(&K_SIGNAL),
             min_saving: w(&MIN_SAVING),
             step: nm(cx, &META, &STEP),
+            clearance_part: nm(cx, &META, &CLEARANCE_PART),
+            clearance_power: nm(cx, &META, &CLEARANCE_POWER),
+            clearance_text: nm(cx, &META, &CLEARANCE_TEXT),
+            align_window: nm(cx, &META, &ALIGN_WINDOW),
+            align_snap: nm(cx, &META, &ALIGN_SNAP),
         }
     }
 
@@ -147,6 +167,94 @@ impl Weights {
             ..self.clone()
         }
     }
+}
+
+/// Whether `item` is the tie itself (its own wires, pins, power symbol or labels) or a part it reaches: a
+/// candidate's wire touching its own part is never blocked by that part's body or pin stubs
+fn own_tie(scene: &Scene, tie: usize, item: &Item) -> bool {
+    item.tie == Some(tie)
+        || item
+            .owner
+            .is_some_and(|o| scene.ties[tie].pins.iter().any(|p| p.symbol == o))
+}
+
+/// The clearance margin `DRAW-34` gives an item's kind
+fn margin_for(kind: ItemKind, w: &Weights) -> i64 {
+    match kind {
+        ItemKind::Body | ItemKind::Pin | ItemKind::Sheet => w.clearance_part,
+        ItemKind::Power => w.clearance_power,
+        ItemKind::Wire | ItemKind::Bus => 0,
+        _ => w.clearance_text,
+    }
+}
+
+/// A rect moved by this much
+fn shift(r: Rect, dx: i64, dy: i64) -> Rect {
+    Rect::of(
+        Pt::new(r.min.x + dx, r.min.y + dy),
+        Pt::new(r.max.x + dx, r.max.y + dy),
+    )
+}
+
+/// Whether a box this big at `rect`, with its own margin `own`, falls short of its margin to anything else already
+/// drawn, outside the tie: `DRAW-34`'s own test, which also catches a literal overlap (`DRAW-7`, `DRAW-9`) as a gap
+/// of zero or less. Wires skip other wires: a crossing is scored, not blocked, and is tested by [`Site::blocked`]
+fn crowds(scene: &Scene, tie: usize, w: &Weights, rect: Rect, own: i64, skip_wires: bool) -> bool {
+    scene.items.iter().any(|item| {
+        if own_tie(scene, tie, item) || (skip_wires && item.kind.is_wire()) {
+            return false;
+        }
+        rect.grown(own)
+            .overlaps(item.rect.grown(margin_for(item.kind, w)))
+    })
+}
+
+/// Whether a power symbol placed with its pin at `at` (box `rect`) would read as a near miss (`DRAW-36`) against
+/// another one already on the sheet: off its row or column by more than zero and less than the snap distance,
+/// within the alignment window or on the side of a part this tie also reaches
+fn near_miss(scene: &Scene, tie: usize, w: &Weights, rect: Rect, at: Pt) -> bool {
+    let g = scene.geometry;
+    let sides_of = |t: usize| -> Vec<(usize, Dir)> {
+        scene.ties[t]
+            .pins
+            .iter()
+            .filter(|p| !g.symbols[p.symbol].power)
+            .map(|p| (p.symbol, g.symbols[p.symbol].pins[p.pin].outward))
+            .collect()
+    };
+    let my_sides = sides_of(tie);
+    for item in &scene.items {
+        if item.kind != ItemKind::Power || own_tie(scene, tie, item) {
+            continue;
+        }
+        let other_at = item
+            .owner
+            .and_then(|o| g.symbols[o].pins.first())
+            .map_or(item.rect.center(), |p| p.at);
+        let same_side = item
+            .tie
+            .is_some_and(|t| sides_of(t).iter().any(|s| my_sides.contains(s)));
+        for axis_y in [true, false] {
+            let (av, bv) = if axis_y {
+                (at.y, other_at.y)
+            } else {
+                (at.x, other_at.x)
+            };
+            let apart = if axis_y {
+                (rect.min.x - item.rect.max.x).max(item.rect.min.x - rect.max.x)
+            } else {
+                (rect.min.y - item.rect.max.y).max(item.rect.min.y - rect.max.y)
+            };
+            if apart < 0 || (apart > w.align_window && !same_side) {
+                continue;
+            }
+            let off = (av - bv).abs();
+            if off > 0 && off < w.align_snap {
+                return true;
+            }
+        }
+    }
+    false
 }
 
 /// A piece of a drawing: straight wire between two points
@@ -333,6 +441,27 @@ impl Site<'_, '_> {
         })
     }
 
+    /// Whether this wire would run too close to, or through, anything else already drawn: `DRAW-7`, `DRAW-9` and
+    /// `DRAW-34` on a wire's own margin of zero
+    fn crowded(&self, segs: &[Seg]) -> bool {
+        segs.iter()
+            .any(|s| crowds(self.scene, self.tie, self.w, Rect::of(s.0, s.1), 0, true))
+    }
+
+    /// Whether a power symbol the size of `template` (anchored at `template_at`), moved so its pin lands on
+    /// `at`, would crowd (`DRAW-34`) or near-miss (`DRAW-36`) anything else already drawn
+    fn symbol_blocked(&self, template: Rect, template_at: Pt, at: Pt) -> bool {
+        let rect = shift(template, at.x - template_at.x, at.y - template_at.y);
+        crowds(
+            self.scene,
+            self.tie,
+            self.w,
+            rect,
+            self.w.clearance_power,
+            false,
+        ) || near_miss(self.scene, self.tie, self.w, rect, at)
+    }
+
     /// Length and detour of a redraw with this much wire
     fn wire_cost(&self, wire: i64) -> f64 {
         let w = self.w;
@@ -342,13 +471,25 @@ impl Site<'_, '_> {
 }
 
 /// Each pin group straight down its own way to a symbol of its own, on the row of the tie's symbol
-fn straight_drops(site: &Site, gs: &[Group], to: Dir, row: Pt, rail: &str) -> Option<Redraw> {
+fn straight_drops(
+    site: &Site,
+    gs: &[Group],
+    to: Dir,
+    row: Pt,
+    rail: &str,
+    template: Option<(Rect, Pt)>,
+) -> Option<Redraw> {
     let w = site.w;
     let mut cost = w.symbol * (gs.len() - 1) as f64;
     let mut wire = 0;
     for g in gs {
         let (segs, bent) = g.drop_to(to, row, w.step)?;
-        if site.blocked(&segs) {
+        if site.blocked(&segs) || site.crowded(&segs) {
+            return None;
+        }
+        if let (Some((rect, at)), Some(&(_, end))) = (template, segs.last())
+            && site.symbol_blocked(rect, at, end)
+        {
             return None;
         }
         wire += length(&segs);
@@ -373,7 +514,10 @@ fn joined(site: &Site, gs: &[Group], target: Pt, into: Option<Dir>, rail: &str) 
         let from = if dist(a) <= dist(b) { a } else { b };
         let scored = |path: Vec<Seg>| {
             let bent = lead_kept(&path, g.side, into, w.step)?;
-            let blocked = site.blocked(&path) || site.blocked(&segs);
+            let blocked = site.blocked(&path)
+                || site.blocked(&segs)
+                || site.crowded(&path)
+                || site.crowded(&segs);
             let cost = w.bend * bent as f64 + crossings(scene, w, tie, &path);
             (!blocked).then_some((cost, path))
         };
@@ -486,6 +630,15 @@ fn judge(scene: &Scene, w: &Weights, t: usize) -> Option<(f64, Redraw, f64)> {
     let target = pin.map_or(gs[0].pins[0].at, |p| p.at);
     // A wire reaches a symbol against the way it leaves the symbol's pin
     let to = pin.map(|p| p.outward.opposite());
+    // The box of a power symbol a straight drop would place a copy of, to score it for DRAW-34 and DRAW-36
+    let template = power.map(|s| {
+        let shown = s
+            .fields
+            .iter()
+            .filter(|f| !f.hidden && !f.text.text.is_empty());
+        let rect = shown.fold(s.outline(), |r, f| r.union(f.text.bbox));
+        (rect, s.pins.first().map_or(s.at, |p| p.at))
+    });
     let site = Site {
         scene,
         w,
@@ -493,7 +646,7 @@ fn judge(scene: &Scene, w: &Weights, t: usize) -> Option<(f64, Redraw, f64)> {
         span,
     };
     let direct = joined(&site, &gs, target, to, rail);
-    let drop = to.and_then(|d| straight_drops(&site, &gs, d, target, rail));
+    let drop = to.and_then(|d| straight_drops(&site, &gs, d, target, rail, template));
     let best = [direct, drop]
         .into_iter()
         .flatten()
@@ -507,8 +660,10 @@ impl Check for Draw40 {
     }
 
     /// Scores a tie that runs longer than the detour limit, and the two ways to draw it again: pin groups dropped
-    /// to symbols of their own, or joined by L paths to the existing symbol. A suggestion only: the candidates
-    /// ignore parts that would have to move.
+    /// to symbols of their own, or joined by L paths to the existing symbol. A candidate that would run through,
+    /// or fall short of its margin to, anything already drawn (`DRAW-7`, `DRAW-9`, `DRAW-34`), or place a new
+    /// symbol as a near miss of another (`DRAW-36`), is dropped. A suggestion only: the candidates ignore parts
+    /// that would have to move.
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let w = Weights::of(cx);
         let mut out = Vec::new();
@@ -586,6 +741,26 @@ mod tests {
         assert_eq!(
             crate::testing::fingerprints(&super::Draw40, "draw-40_power_sideways"),
             ["DRAW-40:item wire of +5V (R1.1)|sheet /"]
+        );
+    }
+
+    /// A straight drop's own rail text would crowd the neighbour pin's rail label (`P2503#31oct-1104`,
+    /// `s10_b200a` U1020): no candidate survives, so no finding
+    #[test]
+    fn no_candidate_crowds_the_neighbour_pins_rail() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw40, "draw-40_power_text_clash"),
+            Vec::<String>::new()
+        );
+    }
+
+    /// A straight drop's own wire would run through another pin's label (`P2503#31oct-1104`, `s14_adg7421f`
+    /// U1513, FF): no candidate survives, so no finding
+    #[test]
+    fn no_candidate_runs_through_a_label() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Draw40, "draw-40_wire_through_label"),
+            Vec::<String>::new()
         );
     }
 }

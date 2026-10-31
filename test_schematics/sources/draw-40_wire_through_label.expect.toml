@@ -1,0 +1,21 @@
+# What better_erc finds on draw-40_wire_through_label.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3_LDO"]
+
+[[finding]]
+check = "DRAW-28"
+subjects = ["item label FF", "sheet /"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.1"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3_LDO"]

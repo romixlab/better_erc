@@ -1,4 +1,4 @@
-//! `NAME-13` Power net name not in the `+<voltage>_<source or group>` form
+//! `NAME-13` Power net name not in the `+<voltage>_<source or group>` form, or `+<name>_ADJ` for an adjustable rail
 
 use crate::meta::*;
 use crate::{Ctx, Finding};
@@ -18,12 +18,16 @@ static META: CheckMeta = CheckMeta {
     params: &[],
 };
 
-/// `+3V3_LDO`, `-5V_CP`, `+12V_IN`: a sign, the volts, `V` as the decimal point, `_`, a suffix
+/// `+3V3_LDO`, `-5V_CP`, `+12V_IN`: a sign, the volts, `V` as the decimal point, `_`, a suffix; or `+VIO_ADJ`, an
+/// adjustable rail named for itself instead of a voltage it doesn't have
 fn in_form(name: &str) -> bool {
     let base = name.rsplit('/').next().unwrap_or(name);
     let Some(rest) = base.strip_prefix(['+', '-']) else {
         return false;
     };
+    if let Some(adj_name) = rest.strip_suffix("_ADJ") {
+        return !adj_name.is_empty();
+    }
     let Some((volts, suffix)) = rest.split_once('_') else {
         return false;
     };
@@ -88,10 +92,19 @@ mod tests {
 
     #[test]
     fn name_form() {
-        for good in ["+3V3_LDO", "/Power/+1V8_REF", "-5V_CP", "+12V_IN"] {
+        for good in [
+            "+3V3_LDO",
+            "/Power/+1V8_REF",
+            "-5V_CP",
+            "+12V_IN",
+            "+VIO_ADJ",
+            "/Power/+VOUT_ADJ",
+        ] {
             assert!(in_form(good), "{good}");
         }
-        for bad in ["+3V3", "VCC", "V3V3", "3.3V_A", "VDD_LDO", "+3.3V_A"] {
+        for bad in [
+            "+3V3", "VCC", "V3V3", "3.3V_A", "VDD_LDO", "+3.3V_A", "+ADJ", "VIO_ADJ",
+        ] {
             assert!(!in_form(bad), "{bad}");
         }
     }

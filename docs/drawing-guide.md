@@ -293,10 +293,13 @@ Input on the left, the rails it makes to the right in falling voltage. Why: the 
 Connector at the edge its signals come from, its TVS, fuse or series resistor right next to it, between it and the
 rest. Why: the reviewer sees at once that every line passes its protection first. `DRAW-14`
 
-### ICs as the library drew them
+### Library orientation is the default
 
-Never mirror an IC or a multi-pin part; rotate two-pin parts freely; mirror only symmetric parts and transistors.
-Why: library symbols put inputs left and outputs right, and a mirrored IC runs the flow backwards. `DRAW-12`
+Draw an IC or a multi-pin part the way the library drew it. Rotate two-pin parts freely; mirror symmetric parts
+and transistors freely. Mirroring a multi-pin part, or placing it upside down, is still fine when it makes the
+signal flow read better, such as a level shifter whose line side faces the connector it serves. Why: library
+symbols put inputs left and outputs right, so the default keeps the flow readable; a hint only, never a warning,
+since the drawer can see the flow better than the tool. `DRAW-12`
 
 ### Small parts to a rail or ground stand vertical
 
@@ -316,7 +319,8 @@ axis reads as voltage. `DRAW-1`, `DRAW-2`
 **Rule.** A power net is named `+<voltage>_<group or source>`, the voltage with `V` as decimal point: `+3V3_LDO`,
 `+1V8_REF`, `+5V_USB`, `+12V_IN`, `+3V3_MCU`; negative rails `-5V_<source>`. The suffix says where the rail comes
 from (`LDO`, `BUCK`, `USB`, `IN`, `REF`) or which group it feeds (`MCU`, `ANA`, `ETH`). A plain `+3V3` is fine on
-a board with one 3.3 V rail. Grounds are `GND`, `AGND`, `PGND`, `GND_<group>`.
+a board with one 3.3 V rail. An adjustable rail has no fixed voltage to name, so it is named `+<name>_ADJ` instead,
+like `+VIO_ADJ`. Grounds are `GND`, `AGND`, `PGND`, `GND_<group>`.
 
 **Why.** The name is all a reader sees at a power symbol. Two 3.3 V rails both called `+3V3_x` show they are
 different nets with the same voltage, and the suffix says which regulator to look at; a name without the voltage
@@ -327,7 +331,7 @@ tools and KiCad's simulator parse as a voltage (`NAME-7`, `NAME-11`).
 
 ```
 bad:   VCC, V3V3, 3.3V_A, VDD_LDO
-good:  +3V3_LDO, +3V3_BUCK, +1V8_REF, +5V_USB, -5V_CP
+good:  +3V3_LDO, +3V3_BUCK, +1V8_REF, +5V_USB, -5V_CP, +VIO_ADJ
 ```
 
 **Source.** house (Roman, 31 Oct 2026). Check: `NAME-13`; `NAME-3` (no voltage in the name), `NAME-11` (negative

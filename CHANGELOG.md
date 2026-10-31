@@ -11,6 +11,20 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Fixed
+
+- `DRAW-40` candidates (a straight drop's new symbol, a direct path's wire) that would run through, or fall short
+  of their margin to, anything else already drawn (`DRAW-7`, `DRAW-9`, `DRAW-34`), or place a new symbol as a near
+  miss of another (`DRAW-36`), are dropped; a tie with no cheaper, clean candidate left reports nothing. Two test
+  schematics (`draw-40_power_text_clash`, `draw-40_wire_through_label`) cover the `io_protection` cases that found
+  it (`P2503#31oct-1104`).
+- `NAME-13` accepts an adjustable rail named `+<name>_ADJ` (`+VIO_ADJ`) in place of a voltage it doesn't have.
+
+### Changed
+
+- `DRAW-12` (library orientation) softened to a hint: mirroring, or an upside-down IC, is fine when it reads
+  better, such as a level shifter facing its line side at the connector; never a warning.
+
 ## [0.4.14] - 2026-10-31
 
 ### Added

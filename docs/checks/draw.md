@@ -167,12 +167,14 @@ Labels are the most read text on a sheet; vertical ones slow every reading, and 
 
 ## `DRAW-12` Symbol placed so its inputs face right and its outputs left (pin types as drawn, after rotation and mirror), against the sheet's left-to-right flow <a id="draw-12"></a>
 
-💡 suggestion · needs: the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-12)
+ℹ️ info · needs: the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-12)
 
 **Impl.** mid · depends on NET-7, NET-26
 
-A mirrored or rotated IC runs the flow backwards. Found from each pin's side after the placement transform and its
-electrical type: more inputs on the right than the left and more outputs on the left than the right.
+A hint, never a warning. Library orientation is the default. Mirroring, or even an upside-down IC, is fine when it
+makes the signal flow read better, such as a level shifter whose line side faces the connector it serves. Found
+from each pin's side after the placement transform and its electrical type: more inputs on the right than the left
+and more outputs on the left than the right.
 
 ## `DRAW-13` Hierarchical sheet symbol with input pins on its right side or output pins on its left <a id="draw-13"></a>
 

@@ -11,7 +11,7 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
   concern (text narrowed, never changed in meaning), the others get new numbers, and a `<!-- split ... -->` comment
   on the old entry names them.
 - **Severity** of the finding: 🛑 error (board won't work or gets damaged) · ⚠️ warning (risk or margin, depends
-  on the design) · 💡 suggestion (debug aids, tidiness, conventions).
+  on the design) · 💡 suggestion (debug aids, tidiness, conventions) · ℹ️ info (worth knowing, not a fix to make).
 - `≈` marks overlaps: merge when implementing.
 - A miss found at assembly or bring-up becomes a new check here, so the list grows from real failures. Entries
   born that way carry the board in a comment (`<!-- B153A -->`); the full story is in that board's change list.
@@ -655,7 +655,7 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="draw-9"></a>💡 `DRAW-9` Text overlapping other text, a symbol body or a wire (fields, labels, notes) · impl: hard (NET-26) · [📖](checks/draw.md#draw-9) <!-- 30 Oct 2026 -->
 - <a id="draw-10"></a>💡 `DRAW-10` Labels stacked next to each other but not aligned (anchors a grid step or two apart) · impl: mid (NET-21, NET-26) · [📖](checks/draw.md#draw-10) <!-- 30 Oct 2026 -->
 - <a id="draw-11"></a>💡 `DRAW-11` Net label written vertically where a horizontal wire stub would carry it · impl: mid (NET-21, NET-26) · [📖](checks/draw.md#draw-11) <!-- 30 Oct 2026 -->
-- <a id="draw-12"></a>💡 `DRAW-12` Symbol placed so its inputs face right and its outputs left (pin types as drawn, after rotation and mirror), against the sheet's left-to-right flow · impl: mid (NET-7, NET-26) · [📖](checks/draw.md#draw-12) <!-- 30 Oct 2026 -->
+- <a id="draw-12"></a>ℹ️ `DRAW-12` Symbol placed so its inputs face right and its outputs left (pin types as drawn, after rotation and mirror), against the sheet's left-to-right flow · impl: mid (NET-7, NET-26) · [📖](checks/draw.md#draw-12) <!-- 30 Oct 2026; info not warning, 31 Oct 2026, Roman -->
 - <a id="draw-13"></a>💡 `DRAW-13` Hierarchical sheet symbol with input pins on its right side or output pins on its left · impl: mid (NET-21, NET-26) · [📖](checks/draw.md#draw-13) <!-- 30 Oct 2026 -->
 - <a id="draw-14"></a>💡 `DRAW-14` Connector drawn in the middle of the circuit instead of at the sheet's edge, with its protection beside it · impl: mid (NET-19, NET-26) · [📖](checks/draw.md#draw-14) <!-- 30 Oct 2026 -->
 - <a id="draw-15"></a>💡 `DRAW-15` Decoupling capacitor drawn far from the power pin it serves, or on another sheet ≈ LAY-17 · impl: mid (NET-22, NET-26) · [📖](checks/draw.md#draw-15) <!-- 30 Oct 2026 -->

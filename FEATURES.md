@@ -339,7 +339,8 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - 🚧 `NAME-11` Negative rail with its sign from a marker only or none; negative supply pins on a rail read positive ·
   `name/name_11.rs`, `name-11_negative_rail_names`. Missing: rails a negative regulator feeds (power sources, `NET-5`)
 - ✅ `NAME-12` Unannotated designators, one designator placed twice for one unit · `name/name_12.rs`, `name-12_designators`
-- ✅ `NAME-13` Power net name not in the `+<voltage>_<source or group>` form · `name/name_13.rs`, `name-13_power_net_form`
+- ✅ `NAME-13` Power net name not in the `+<voltage>_<source or group>` form, an adjustable rail accepted as
+  `+<name>_ADJ` · `name/name_13.rs`, `name-13_power_net_form`
 - ✅ `DRV-5` N-channel FET inverter (source on ground, drain pulled up) with its gate on an IC output's net: no gate
   resistor · `drv/drv_5.rs`, `drv-5_inverter_gate_resistor`
 - ✅ `DRV-6` Two MOSFETs in series through a middle net of gate-drive passives only (ends no ground) with their body
@@ -539,7 +540,8 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   - 📋 `DRAW-37` Note box naming a part with no leader to it (candidates only)
   - 📋 `DRAW-38` Leader line crossing a wire, part, label or text
   - 📋 `DRAW-39` Group of related nets labelled in three or more places with no bus (`drawing.bus_hint.*`)
-  - ✅ `DRAW-40` Tie wiring much longer than needed where the routing cost finds a cheaper drawing (`drawing.route.*`)
+  - ✅ `DRAW-40` Tie wiring much longer than needed where the routing cost finds a cheaper drawing (`drawing.route.*`),
+    its candidates dropped when they would crowd or near-miss anything else drawn (`DRAW-7`, `DRAW-9`, `DRAW-34`, `DRAW-36`)
   - ✅ `DRAW-41` Wire bending right at a pin or power symbol (`drawing.pin_lead`)
   - ✅ `DRAW-42` Touching items too close in colour (`drawing.colour.pair_min`, `berc check --theme`)
   - ✅ `DRAW-43` Sentence starting with a lower-case letter
