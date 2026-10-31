@@ -604,12 +604,12 @@ same for both themes (net classes and library symbols are). Our set:
 
 | Item | Where it is set | Light (`vhrd.json`) | Dark (`vhrd_dark.json`) |
 |---|---|---|---|
-| wire | theme `wire` | `rgb(74, 74, 74)` | `rgb(168, 168, 168)` |
+| wire | theme `wire` | `rgb(90, 90, 90)` (ΔE 20.9 to the label text) | `rgb(154, 154, 154)` (ΔE 20.9) |
 | pin | theme `pin` | `rgb(150, 108, 0)` gold (ΔE 29.0 to the wire, 32.9 to the outline) | `rgb(232, 196, 82)` gold (ΔE 26.9, 43.7) |
 | ground wire | net class Ground | `rgb(0, 115, 30)` | same |
 | ground symbol | `vhrd_power:GND` | `rgb(60, 170, 24)` (ΔE 20.5 to its wire) | same |
 | power wire | net class Power | `rgb(175, 50, 10)` | same |
-| power symbol | `vhrd_power` supplies, `PWR_LOCAL` | `rgb(232, 113, 10)` (ΔE 22.9 to its wire) | same |
+| power symbol | `vhrd_power` supplies, `PWR_LOCAL`, `PWR_FLAG` | `rgb(232, 113, 10)` (ΔE 22.9 to its wire) | same |
 
 The pin is gold, clear of the wire, the symbol outline and the Critical box red; the symbol of a rail is the
 lighter member of its family and its wires the darker one, so the long runs stay calm and the symbols stand out. Why: where a pin and its wire are the

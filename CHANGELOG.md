@@ -18,6 +18,7 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 - `DRAW-40` text: candidates keep the pin lead, end on the tie's own row, stay off other nets' wires, and `PWR_FLAG` stubs are not part of the tie; a rail wire with one symbol and a symbol per part are both fine, the routing cost picks (Roman's call; P2503).
 - Drawing guide: the vhrd drawing sheet and its title block fields (comment 1 Drawn, 2 Checked, 4 Status, `VHRD_STAMP` passed by the render recipe) (Roman, 31 Oct 2026; P2503).
 - Drawing guide round 4 (Roman's review, 31 Oct 2026, P2503): note boxes are lists and tables (`DRAW-47`), leaders end on a 45° diagonal aimed at a small part's centre and stop short of its outline (`DRAW-46`), IBM Plex Sans as the default font (a user setting in KiCad 10), mixed paper sizes, gold pins.
+- Drawing guide: wires `rgb(90, 90, 90)` and `rgb(154, 154, 154)` apart from label text, `PWR_FLAG` from `vhrd_power` in the supply orange (Roman, 31 Oct 2026, `DRAW-42`; P2503).
 
 ## [0.4.12] - 2026-10-30
 
