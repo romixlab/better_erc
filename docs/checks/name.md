@@ -309,3 +309,20 @@ multi-unit part excepted).
 **Fix.** Annotate the whole schematic (KiCad's annotation tool), keeping existing numbers on later revisions.
 
 **References.** KiCad Eeschema "Annotation tool"; Wikipedia, Reference designator.
+
+## `NAME-13` Power net name not in the `+<voltage>_<source or group>` form <a id="name-13"></a>
+
+💡 suggestion · needs: net names, the power structure (`NET-5`) · [catalogue entry](../checks.md#name-13)
+
+**Impl.** mid · depends on NET-5
+
+**What it catches.** A power net that shares its voltage with another rail of the board and is not named
+`+<voltage>_<source or group>` with `V` as the decimal point (`+3V3_LDO`, `+3V3_BUCK`, `+1V8_REF`, `-5V_CP`). A board
+with a single rail of a voltage may keep the plain `+3V3`.
+
+**Why it matters.** At a power symbol the name is all the reader sees: the suffix tells two 3.3 V rails apart and
+says which regulator to look at; `VCC` or `V3V3` sends the reader to the power tree for every pin. House style
+(Roman, 31 Oct 2026); the [drawing guide](../drawing-guide.md#power-net-names-voltage_source) has the forms.
+
+**How to check.** Rails and their voltages from `NET-5`; group by voltage; in a group of two or more, each name must
+parse as sign, voltage with `V` as decimal point, `_`, and a suffix.

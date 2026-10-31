@@ -11,6 +11,10 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Changed
+
+- Drawing guide round 2 (Roman, 31 Oct 2026, P2503): the obvious rules shortened to the rule, a one-line reason and their check, in `docs/drawing-guide.md` and `docs/checks/draw.md`; the longer treatment kept for the rules that are not obvious. New rules: power net names `+<voltage>_<source or group>` (`NAME-13`); labels lying on their wire, left side left-justified and right side right-justified (KiCad 10 takes the side from justify) (`DRAW-28`); no pin on pin (`DRAW-29`); one power symbol per rail per part (`DRAW-30`); sections with a bold heading and a parameter box (`DRAW-31`); notes only in boxes of six kinds (TODO, Information, Caution, Debug, Critical, Layout) with exact colours on the VHRD theme, fonts and sizes (`DRAW-32`); a leader from a note to its part (`DRAW-37`, `DRAW-38`); KiCad tables instead of text lumps (`DRAW-33`); clearance margins as named settings `drawing.clearance.part`, `.power`, `.text` (`DRAW-34`); small parts to a rail or ground vertical (`DRAW-35`); power symbols and parts aligned (`DRAW-36`); simulation-only parts drawn apart. From the 30 Oct tidy feedback: label columns clustered by x (`DRAW-10`), fill and centring measured without the note boxes (`DRAW-16`, `DRAW-17`), the box-based overlap measure (`DRAW-9`), field angles relative to the symbol (`DRAW-8`). `DRAW-27` (hand-set colour) is off by default. Docs only.
+
 ## [0.4.12] - 2026-10-30
 
 ### Added

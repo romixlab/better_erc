@@ -641,6 +641,7 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="name-10"></a>💡 `NAME-10` Active-low signal without a marker in its name (`_N`, `#`, `~`): reviewers and LOGIC-8 cannot see the polarity · impl: easy (netlist (`NET-7` for pins whose names carry no marker)) · [📖](checks/name.md#name-10) <!-- 21 Oct 2026 -->
 - <a id="name-11"></a>💡 `NAME-11` Negative rail named without its sign (`5V_NEG` vs `-5V`), or with a sign the tool does not parse · impl: easy (`NET-5`) · [📖](checks/name.md#name-11) <!-- 21 Oct 2026 -->
 - <a id="name-12"></a>🛑 `NAME-12` Unannotated or duplicate reference designators · impl: easy (netlist) · [📖](checks/name.md#name-12) <!-- 21 Oct 2026 -->
+- <a id="name-13"></a>💡 `NAME-13` Power net name not in the `+<voltage>_<source or group>` form (`+3V3_LDO`, `+1V8_REF`) where the board has more than one rail of that voltage ≈ NAME-3 · impl: mid (`NET-5`) · [📖](checks/name.md#name-13) <!-- 31 Oct 2026, Roman -->
 
 ### ✏️ DRAW - Drawing style
 - <a id="draw-1"></a>💡 `DRAW-1` Ground symbol not pointing down (rotated or mirrored) · impl: mid (NET-21, NET-26) · [📖](checks/draw.md#draw-1) <!-- 30 Oct 2026 -->
@@ -669,7 +670,18 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="draw-24"></a>💡 `DRAW-24` Text smaller than 1.27 mm (fields, labels, pin names, notes): unreadable on a print of the sheet's paper size · impl: mid (NET-26) · [📖](checks/draw.md#draw-24) <!-- 30 Oct 2026 -->
 - <a id="draw-25"></a>💡 `DRAW-25` Hierarchical sheet without a meaningful name (`Sheet1`, `Untitled`), or two sheets with the same title · impl: mid (NET-26) · [📖](checks/draw.md#draw-25) <!-- 30 Oct 2026 -->
 - <a id="draw-26"></a>💡 `DRAW-26` Sheet with calculated parts (feedback divider, current-set resistor, filter, timing) and no note that gives the calculation or the reason · impl: judgement (NET-23, NET-26) · [📖](checks/draw.md#draw-26) <!-- 30 Oct 2026 -->
-- <a id="draw-27"></a>💡 `DRAW-27` Colour set by hand on wires, labels or text: it carries meaning a black and white print loses · impl: mid (NET-26) · [📖](checks/draw.md#draw-27) <!-- 30 Oct 2026 -->
+- <a id="draw-27"></a>💡 `DRAW-27` Colour set by hand on wires, labels or text: it carries meaning a black and white print loses · impl: mid (NET-26) · [📖](checks/draw.md#draw-27) <!-- 30 Oct 2026; off by default since 31 Oct 2026 (Roman): only for black and white PDFs -->
+- <a id="draw-28"></a>💡 `DRAW-28` Label not lying on its wire: text hanging off the stub's end, or justified against its side (left of a block left-justified, right of it right-justified) · impl: mid (NET-21, NET-26) · [📖](checks/draw.md#draw-28) <!-- 31 Oct 2026, Roman -->
+- <a id="draw-29"></a>💡 `DRAW-29` Pin joined directly to another pin, with no wire between them · impl: mid (NET-26) · [📖](checks/draw.md#draw-29) <!-- 31 Oct 2026, Roman -->
+- <a id="draw-30"></a>💡 `DRAW-30` Several power or ground symbols of one rail on the pins of one part, instead of the pins wired together to one symbol · impl: mid (NET-21, NET-26) · [📖](checks/draw.md#draw-30) <!-- 31 Oct 2026, Roman -->
+- <a id="draw-31"></a>💡 `DRAW-31` Section of a sheet without a heading naming its function · impl: judgement (NET-26) · [📖](checks/draw.md#draw-31) <!-- 31 Oct 2026, Roman -->
+- <a id="draw-32"></a>💡 `DRAW-32` Free-standing text, or a note box that is not one of the six kinds (TODO, Information, Caution, Debug, Critical, Layout) · impl: mid (NET-26) · [📖](checks/draw.md#draw-32) <!-- 31 Oct 2026, Roman -->
+- <a id="draw-33"></a>💡 `DRAW-33` Note laid out as a table in plain text (aligned columns, one `name: value` per line) · impl: judgement (NET-26) · [📖](checks/draw.md#draw-33) <!-- 31 Oct 2026, Roman -->
+- <a id="draw-34"></a>💡 `DRAW-34` Items closer than their clearance margins (symbol bodies, power symbols, fields, labels, note boxes) ≈ DRAW-9 · impl: hard (NET-26) · [📖](checks/draw.md#draw-34) <!-- 31 Oct 2026, Roman -->
+- <a id="draw-35"></a>💡 `DRAW-35` Two- to four-pin part tied to a supply or ground drawn horizontal · impl: mid (NET-5, NET-26) · [📖](checks/draw.md#draw-35) <!-- 31 Oct 2026, Roman -->
+- <a id="draw-36"></a>💡 `DRAW-36` Power symbols or parts in a row a grid step or two off line ≈ DRAW-10 · impl: mid (NET-26) · [📖](checks/draw.md#draw-36) <!-- 31 Oct 2026, Roman -->
+- <a id="draw-37"></a>💡 `DRAW-37` Note box that names a part or block and has no leader to it · impl: judgement (NET-26) · [📖](checks/draw.md#draw-37) <!-- 31 Oct 2026, Roman -->
+- <a id="draw-38"></a>💡 `DRAW-38` Leader line crossing a wire, a part, a label or text · impl: hard (NET-26) · [📖](checks/draw.md#draw-38) <!-- 31 Oct 2026, Roman -->
 
 ### 📚 LIB - Library, symbols and footprints
 - <a id="lib-1"></a>⚠️ `LIB-1` Symbol pin names differ from the same part elsewhere in the database · impl: mid (CFG-5, NET-7) · [📖](checks/lib.md#lib-1) <!-- CHK-78; split 21 Oct 2026: LIB-4, LIB-5 -->

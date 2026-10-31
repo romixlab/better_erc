@@ -167,7 +167,7 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - 📋 `NET-26` Drawing geometry: what the sheet looks like, beyond `NET-21`'s labels and flags: paper size and title
   block per sheet (title, date, revision, comments, text variables resolved), wires, buses and junctions with their
   ends, label and sheet pin angles, the position, angle, size, visibility and justification of every symbol field,
-  free text and text boxes, hand-set colours, sheet symbol boxes with their pin sides, and library symbol body extents
+  free text, text boxes, tables, groups and graphic lines with their font weight, stroke and colour, hand-set colours, sheet symbol boxes with their pin sides, and library symbol body extents
   and pin sides, so a placed symbol's outline and which way its pins face are known. The `DRAW` checks read it
   ([docs/drawing-guide.md](docs/drawing-guide.md))
 
@@ -214,11 +214,11 @@ the code lacks, `judgement` is not a rule. Counts on 23 Oct 2026:
 | `DBG` | 12 | 8 | 1 | 3 | 24 |
 | `TEST` | 4 | 1 | 2 | · | 7 |
 | `BOM` | 11 | 6 | · | 2 | 19 |
-| `NAME` | 10 | 2 | · | · | 12 |
+| `NAME` | 10 | 3 | · | · | 13 |
 | `LIB` | 3 | 12 | 2 | 1 | 18 |
-| `DRAW` | · | 24 | 2 | 1 | 27 |
+| `DRAW` | · | 30 | 4 | 4 | 38 |
 | `LAY` | · | 9 | 14 | 2 | 25 |
-| **all** | **139** | **360** | **72** | **20** | **591** |
+| **all** | **139** | **367** | **74** | **23** | **603** |
 
 The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per check under
 `erc_checks/src/<category>/`, each with its unit test and a test schematic with expectations
@@ -524,7 +524,18 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   - 📋 `DRAW-24` Text smaller than 1.27 mm
   - 📋 `DRAW-25` Sheet without a meaningful name, or two sheets with one title
   - 📋 `DRAW-26` Calculated parts without a note giving the calculation (candidates only)
-  - 📋 `DRAW-27` Colour set by hand on wires, labels or text
+  - 📋 `DRAW-27` Colour set by hand on wires, labels or text (off by default)
+  - 📋 `DRAW-28` Label not lying on its wire, or justified against its side
+  - 📋 `DRAW-29` Pin joined directly to another pin
+  - 📋 `DRAW-30` Several power symbols of one rail on the pins of one part
+  - 📋 `DRAW-31` Section without a heading (candidates only)
+  - 📋 `DRAW-32` Free-standing text, or a note box not of the six kinds
+  - 📋 `DRAW-33` Note laid out as a plain-text table (candidates only)
+  - 📋 `DRAW-34` Items closer than their clearance margins (`drawing.clearance.*`)
+  - 📋 `DRAW-35` Two- to four-pin part tied to a rail or ground drawn horizontal
+  - 📋 `DRAW-36` Power symbols or parts in a row a grid step or two off line
+  - 📋 `DRAW-37` Note box naming a part with no leader to it (candidates only)
+  - 📋 `DRAW-38` Leader line crossing a wire, part, label or text
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`
 - ✅ `DIAG-2` Every catalogue check reported as ran, not run (the missing need, why, and what would enable it) or
   planned; each check declares its needs, availability is worked out per board before the run from the analyses
