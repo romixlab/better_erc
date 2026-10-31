@@ -507,9 +507,14 @@ with other nets, crossings within one grid step of a pin end or junction, extra 
 candidates: each pin group dropped straight along its pin axis to a symbol of its own, and the pin groups joined
 by the shortest L-shaped path to the existing symbol, counting the crossings each would make with the wires
 already drawn. Power and ground ties weigh their bends and detours `drawing.route.k_power` / `k_ground` times; ties
-are read where a power symbol ends them, or among pins of one part tied without a label. Report the drawn cost and
+are read where a power symbol ends them, or among pins of one part tied without a label; `PWR_FLAG` stubs are not
+part of the tie. Candidates are drawn the way the guide asks: each starts with the pin lead (`drawing.pin_lead`,
+its bend counted) and enters the symbol along its axis with a lead; a straight drop ends level with the tie's own
+symbol, so it stays on the section's power or ground row; a candidate touching another net's wire is dropped. Report the drawn cost and
 the cheapest candidate with its cost ("straight drop from D2..D4 to a
 second GND: 16 instead of 19"). A suggestion only: the candidates ignore parts that would have to move.
+A bus (several parts joined on one horizontal power wire and one symbol, as on a clamp or LDO rail) is still
+reported against a straight drop per part: whether one symbol per bus or per part reads better is open (Roman).
 
 ## `DRAW-41` Wire bending right at a pin or a power symbol <a id="draw-41"></a>
 
