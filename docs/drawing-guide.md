@@ -77,11 +77,12 @@ good:  Low-pass filter              DC-DC 3V3
 ```
 
 Heading: free text, KiCad default font, **2.54 mm, bold**, theme colour, justified left bottom, 2.54 mm above the
-section's top edge. Parameter box: a KiCad text box, 1.27 mm normal text, stroke 0.1524 mm solid in the note grey
+section's top edge. Sections side by side share their heading row, and sections stacked share their left
+edge (`DRAW-45`); the gap between any two sections is at least `drawing.section_gap` (`DRAW-44`). Parameter box: a KiCad text box, 1.27 mm normal text, stroke 0.1524 mm solid in the note grey
 (`rgb(110, 110, 110)`), no fill, right under the heading. Heading and box are a KiCad group, so they move together.
 
-**Source.** house (Roman, 31 Oct 2026); EMA and Altium for blocks by function. Check: `DRAW-31` (sections without a
-heading, candidates).
+**Source.** house (Roman, 31 Oct 2026; second review: headings in one row, more gap); EMA and Altium for blocks by
+function. Check: `DRAW-31` (sections without a heading, candidates), `DRAW-44`, `DRAW-45`.
 
 ### The drawing is centred and fills the sheet
 
@@ -183,6 +184,15 @@ deliberate and fine. Select them and use **Align** (KiCad 10). Why: a step off r
 belongs together, while a clear offset reads as a different group. Source: house (Roman, 31 Oct 2026: `+3V3_LDO`
 and a GND on the same side of the TMUX1511 in different columns, a label start off its tie column). `DRAW-36`,
 `DRAW-10` (label columns)
+
+### Ladders: one row for ground, one for supplies, ports in columns
+
+Within a section, all ground symbols sit on one row, all supply symbols (and the PWR_FLAGs beside them) on one row,
+input labels or ports in one column on the left and output labels or ports in one column on the right; a ground
+drop or a supply riser is as long as it needs to be to reach its row. Sections side by side may share the rows.
+Why: the eye reads the section as a ladder between two rails, and a symbol out of its row stands out as the odd
+one. Source: house (Roman, 31 Oct 2026, s11b and s05 of io_protection). `DRAW-36` (per section: ground symbols,
+supplies, input ports, output ports)
 
 ### Room around everything: clearance margins
 
@@ -381,6 +391,12 @@ cheaper drawing wins, by a cost the guide fixes and better_erc scores:
 | extra symbol | `drawing.route.w_symbol` | 6 | per power or ground symbol beyond the first of that rail on the part |
 | detour | `drawing.route.w_detour` | 4 | per unit of (drawn length / Manhattan length − 1) of the tie |
 
+Power and ground ties weigh more than signals: their bends and detours count `drawing.route.k_power` and
+`drawing.route.k_ground` times (default 2 each, `drawing.route.k_signal` 1), and any bent power or ground tie is
+looked at, so a supply goes straight up from its pin (after the pin lead) and a ground straight down. A redraw must
+save at least `drawing.route.min_saving` (default 2) to be reported; the drop to the section's power or ground row
+([ladders](#ladders-one-row-for-ground-one-for-supplies-ports-in-columns)) is not a detour.
+
 The Manhattan length of a tie is the rectilinear distance it must cover at least (the half-perimeter of the box
 around its pins and symbol). So a straight drop to ground that crosses one stub costs less than a loop around the
 part, and a second ground symbol costs less than a long way round.
@@ -404,8 +420,8 @@ bad: around the part to the GND pin      good: straight down, across VDD, a seco
 cost: 12 grid + 2 bends + detour 3 = 19     cost: 4 grid + 1 bend + 1 crossing + 1 symbol = 16
 ```
 
-**Source.** house (Roman, 31 Oct 2026, the ties of the io_protection TMUX1511); the weights are new. Check:
-`DRAW-40`.
+**Source.** house (Roman, 31 Oct 2026, the ties of the io_protection TMUX1511; second review: the BAT54S rail ran
+sideways, power and ground weigh more); the weights are new. Check: `DRAW-40`.
 
 ### No stray wire pieces
 
@@ -509,11 +525,21 @@ Why: an unplaced unit leaves inputs floating and hides the rail. `LIB-14`, `LIB-
 ### Simulation-only parts are drawn apart and marked
 
 Ammeters (0 V sources), fault sources, switches and behavioural models that exist only for the simulator use their
-own symbols (an ammeter is `vhrd_sim:AMMETER`, a teal circle with an `A`, not a battery), sit together at the edge
+own symbols (an ammeter is `vhrd_sim:AMMETER`, a teal circle with an arrow from `+` to `-`, the direction of
+positive current, not a battery), sit together at the edge
 of their section or in a Debug box's area, and are excluded from the BOM (`in_bom no`). They stay on the board
 (`on_board yes`): the XML netlist drops off-board parts, and a simulation driver that maps references through it
 (spicejob) then loses them. Why: a reader must see at a glance which parts are the circuit and which are the test
 bench around it.
+
+### Fault cases in one table on the first page
+
+A project simulated case by case (spicejob) lists every case on its first sheet in one KiCad table: one row per case,
+named exactly as in `sim/*.toml` and the simulator output (`p5`, `n12`, `bfin`, ...), with the outside state (fault
+voltage, source and cable, plug-in time), the inside state (powered or not, pin hi-Z or driving, target present,
+other controls), what the case tests and which sheets run it (expected fails marked). Generate it
+(`spicejob cases DIR --format kicad-table`), do not type it. Why: sheets and simulation output then map one to one,
+and a reviewer sees what was tried before reading any result. Source: house (Roman, 31 Oct 2026, io_protection).
 
 ### Simulation directives grouped, each explained beside it
 

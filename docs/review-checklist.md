@@ -72,7 +72,8 @@ hand or by Claude on a netlist export.
   [[DRAW-38]](checks.md#draw-38), [[DRAW-33]](checks.md#draw-33) · room around parts and text, neighbours aligned exactly or clearly not, touching items in
   different colours, sentences capitalised [[DRAW-42]](checks.md#draw-42), [[DRAW-43]](checks.md#draw-43)
   [[DRAW-34]](checks.md#draw-34), [[DRAW-36]](checks.md#draw-36) · small parts to a rail or ground vertical
-  [[DRAW-35]](checks.md#draw-35) · a bus for a group of nets going to three or more places [[DRAW-39]](checks.md#draw-39)
+  [[DRAW-35]](checks.md#draw-35) · a bus for a group of nets going to three or more places [[DRAW-39]](checks.md#draw-39) · per section one ground row, one supply row, inputs left, outputs right; power straight up, ground
+  straight down; sections apart with their headings in one row · simulated cases in one table on the first page
 - *IO and defaults:* no floating inputs, none that float when a connector is empty [[IO-1]](checks.md#io-1),
   [[IO-2]](checks.md#io-2), [[IO-10]](checks.md#io-10) · enables and gates driven by MCU pins have a pull for the reset
   and unpowered state, output enables of registers and drivers pull to off [[IO-3]](checks.md#io-3),

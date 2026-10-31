@@ -33,6 +33,13 @@ project file (`CFG-2`); see [clearance margins](../drawing-guide.md#room-around-
 | `drawing.pin_lead` | 2.54 mm | straight wire at a pin or power symbol before the first bend (`DRAW-41`) |
 | `drawing.align.window` | 20.32 mm | neighbourhood within which items must align exactly (`DRAW-36`) |
 | `drawing.align.snap` | 5.08 mm | offsets below this (and above zero) are near misses (`DRAW-36`) |
+| `drawing.label.stub_extra` | 1.27 mm | stub a local label needs beyond its text length (`DRAW-28`) |
+| `drawing.heading_size` | 2.54 mm | text size of a section heading, bold (`DRAW-31`, `DRAW-32`) |
+| `drawing.group_heading_size` | 1.905 mm | text size of a group heading (a table's title, a group of directives), bold (`DRAW-32`) |
+| `drawing.note.colour_slack` | 8 | counts per RGB channel a note box colour may be off its kind's colour (`DRAW-32`) |
+| `drawing.route.k_power`, `.k_ground`, `.k_signal` | 2, 2, 1 | factor on the bends and detours of power, ground and signal ties (`DRAW-40`) |
+| `drawing.route.min_saving` | 2 | cost a redraw must save to be reported (`DRAW-40`) |
+| `drawing.route.step` | 2.54 mm | the grid step wire is counted in (`DRAW-40`) |
 | `drawing.colour.pair_min` | 20 | least CIEDE2000 difference between touching items (`DRAW-42`) |
 
 ## `DRAW-1` Ground symbol not pointing down (rotated or mirrored) <a id="draw-1"></a>
@@ -97,6 +104,8 @@ Overlapping and zero-length pieces make junctions nobody drew.
 **Impl.** hard · depends on NET-26
 
 A wire over a body looks like a pin connection; over text it makes both unreadable.
+
+**Scope.** A wire through a symbol body, a power symbol or a pin of another net; a wire over text (fields, labels, notes) is `DRAW-9`.
 
 ## `DRAW-8` Reference or value reading vertically: the fields of a rotated part turned with it instead of being placed horizontally <a id="draw-8"></a>
 
@@ -323,6 +332,8 @@ long as the text box plus one grid step. A label on a pin or a joint without a s
 
 **Fix.** Set the justification in the label's properties; lengthen the stub.
 
+**Scope.** Local labels only: a global or hierarchical label's flag always starts at the wire end. The stub must be as long as the text plus `drawing.label.stub_extra`.
+
 ## `DRAW-29` Pin joined directly to another pin, with no wire between them <a id="draw-29"></a>
 
 💡 suggestion · needs: the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-29)
@@ -331,6 +342,8 @@ long as the text box plus one grid step. A label on a pin or a joint without a s
 
 A pin-on-pin joint is invisible, cannot take a branch, and opens silently when a part is moved; at least one major
 grid step (2.54 mm) of wire goes between two pins.
+
+**Scope.** A power symbol on a pin is normal and not reported; two pins facing each other over less than `drawing.pin_lead` of wire count as joined.
 
 ## `DRAW-30` Several power or ground symbols of one rail on one pin group of a part, instead of the pins wired together to one symbol <a id="draw-30"></a>
 
@@ -349,6 +362,8 @@ ground pins to ground" once.
 **How to check.** Walk from each power symbol along its wires to the pins it reaches; count, per part and net, the
 symbols whose wire reaches only that part. Decoupling capacitors and other two-pin parts are not counted against
 the IC (they keep their own symbols).
+
+**Scope.** At most `DRAW-30.max_symbols_per_rail` (default 1) symbols of one rail per pin group of a part.
 
 ## `DRAW-31` Section of a sheet without a heading naming its function <a id="draw-31"></a>
 
@@ -383,6 +398,8 @@ instruction look the same. House style (Roman, 31 Oct 2026).
 **How to check.** Free text: not bold, or bold but neither 2.54 mm nor grouped with a text box. Boxes: the stroke
 colour against the six kinds' colours and the parameter box grey (within a few counts per channel), the heading
 word against the kind's name.
+
+**Scope.** Accepted outside a note box: section headings (`drawing.heading_size`, bold), group headings (`drawing.group_heading_size`, bold), titles (bold above 2.54 mm) and the captions in a sheet box.
 
 ## `DRAW-33` Note laid out as a table in plain text (aligned columns, one `name: value` per line) <a id="draw-33"></a>
 
@@ -424,6 +441,8 @@ A diode, TVS, resistor or capacitor with a pin on a rail or ground (a BAT54S cla
 shunt when it stands on the vertical voltage axis, and as a part in the signal path when it lies horizontal. Found
 from the direction of its rail or ground pins after the placement transform: pointing left or right is a finding.
 
+**Scope.** Discrete classes only (R, C, L, ferrite bead, diode, fuse) with up to `DRAW-35.max_pins` (default 4) pins, not ICs; a part between two rails with no ground (a series ferrite or shunt) may lie horizontal.
+
 ## `DRAW-36` Near-miss alignment <a id="draw-36"></a>
 
 ⚠️ warning · needs: the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-36)
@@ -434,7 +453,10 @@ from the direction of its rail or ground pins after the placement transform: poi
 wires, part body edges and centre lines) that are neighbours (on the same side of the same part, or within
 `drawing.align.window` of each other) and whose x (or y) differs by more than zero and less than
 `drawing.align.snap`. Each finding names the pair and the offset ("+3V3_LDO at x 152.4, GND at x 149.86: 2.54 mm").
-Larger offsets are deliberate and not reported.
+Larger offsets are deliberate and not reported. Within a section the ladders are compared on their own: its ground
+symbols, its supplies, its input ports and its output ports ([ladders](../drawing-guide.md#ladders-one-row-for-ground-one-for-supplies-ports-in-columns)).
+Wires that end on pins of one symbol are not compared (their pitch is the symbol's), and bodies of different size
+compare centres only (a shared pin line or edge clears them).
 
 ## `DRAW-37` Note box that names a part or block and has no leader to it <a id="draw-37"></a>
 
@@ -484,7 +506,9 @@ half-perimeter of the box around its pins and symbols), where a cheaper drawing 
 with other nets, crossings within one grid step of a pin end or junction, extra symbols, detour ratio). Score the
 candidates: each pin group dropped straight along its pin axis to a symbol of its own, and the pin groups joined
 by the shortest L-shaped path to the existing symbol, counting the crossings each would make with the wires
-already drawn. Report the drawn cost and the cheapest candidate with its cost ("straight drop from D2..D4 to a
+already drawn. Power and ground ties weigh their bends and detours `drawing.route.k_power` / `k_ground` times; ties
+are read where a power symbol ends them, or among pins of one part tied without a label. Report the drawn cost and
+the cheapest candidate with its cost ("straight drop from D2..D4 to a
 second GND: 16 instead of 19"). A suggestion only: the candidates ignore parts that would have to move.
 
 ## `DRAW-41` Wire bending right at a pin or a power symbol <a id="draw-41"></a>
@@ -496,7 +520,9 @@ second GND: 16 instead of 19"). A suggestion only: the candidates ignore parts t
 A wire leaves a pin, and enters a pin or a power symbol's pin, along that pin's axis for at least
 `drawing.pin_lead` (default one major grid step, 2.54 mm) before it bends: the pin's direction stays readable and
 the corner is not mistaken for a junction. Found from the wire segment that ends at the pin: shorter than the
-setting, or perpendicular to the pin's axis (the pin's direction after the symbol's rotation and mirror).
+setting, or perpendicular to the pin's axis (the pin's direction after the symbol's rotation and mirror). The pin's
+end point decides, whatever its length; a pin ending on the middle of a wire is a tee, not a bend (no finding),
+but a tee right at the pin tip counts.
 
 ## `DRAW-42` Touching items too close in colour <a id="draw-42"></a>
 
@@ -519,3 +545,5 @@ come from the KiCad colour settings named in the better_erc project file.
 The first word of a text item, text box or table cell, of each paragraph in it, and of each sentence after a full
 stop starts lower case (a line that continues a sentence from the line before is not a start). Skipped: lines starting with a net name or reference known on the sheet, a unit or value (`mA`, `20u`,
 `nX`), code (a `.` directive, `i(`, `v(`) or a parameter name followed by `:` or `=`.
+
+**Scope.** A single word (a table value, a case name) is no sentence.
