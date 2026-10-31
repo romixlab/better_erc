@@ -78,6 +78,10 @@ struct Liner<'s> {
 /// pin line clears the pair; pins off each other say nothing, a pin pitch is no near miss.
 const PIN_LINE: u8 = 3;
 
+/// The kind of line a body's centre gives. Bodies of different sizes cannot have both edges on one line, so an edge
+/// agreeing clears the pair but only their centres can miss.
+const CENTRE_LINE: u8 = 1;
+
 fn liners<'s>(scene: &'s Scene, axis: Axis) -> Vec<Liner<'s>> {
     let g = scene.geometry;
     let mut out = Vec::new();
@@ -105,7 +109,7 @@ fn liners<'s>(scene: &'s Scene, axis: Axis) -> Vec<Liner<'s>> {
             }
             K::Body => {
                 let r = item.rect;
-                let mut lines = vec![(0, r.min), (1, r.center()), (2, r.max)];
+                let mut lines = vec![(0, r.min), (CENTRE_LINE, r.center()), (2, r.max)];
                 let pins = item.owner.iter().flat_map(|o| &g.symbols[*o].pins);
                 lines.extend(pins.map(|p| (PIN_LINE, p.at)));
                 (Class::Part, lines)
@@ -123,6 +127,11 @@ fn liners<'s>(scene: &'s Scene, axis: Axis) -> Vec<Liner<'s>> {
 
 /// The smallest non-zero offset between two liners' lines, when no pair of their lines agrees exactly
 fn miss(axis: Axis, a: &Liner, b: &Liner, snap: i64) -> Option<(i64, i64, i64)> {
+    let span = |l: &Liner| match axis {
+        Axis::X => l.item.rect.width(),
+        Axis::Y => l.item.rect.height(),
+    };
+    let like = a.class != Class::Part || span(a) == span(b);
     let mut best = None;
     for (ka, pa) in &a.lines {
         for (_, pb) in b.lines.iter().filter(|(kb, _)| kb == ka) {
@@ -131,7 +140,8 @@ fn miss(axis: Axis, a: &Liner, b: &Liner, snap: i64) -> Option<(i64, i64, i64)> 
             if off == 0 {
                 return None;
             }
-            if *ka != PIN_LINE && off < snap && best.is_none_or(|(o, _, _)| off < o) {
+            let counts = *ka == CENTRE_LINE || (*ka != PIN_LINE && like);
+            if counts && off < snap && best.is_none_or(|(o, _, _)| off < o) {
                 best = Some((off, va, vb));
             }
         }
@@ -150,6 +160,20 @@ fn sides(scene: &Scene, item: &Item) -> Vec<(usize, erc_model::geometry::Dir)> {
         .filter(|p| !g.symbols[p.symbol].power)
         .map(|p| (p.symbol, g.symbols[p.symbol].pins[p.pin].outward))
         .collect()
+}
+
+/// Whether two wires both end on pins of one symbol: they sit at its pin pitch, nothing to line up
+fn one_symbol(scene: &Scene, a: &Item, b: &Item) -> bool {
+    let symbols = |i: &Item| {
+        let g = scene.geometry;
+        let tie = i.tie.map(|t| &scene.ties[t]);
+        let pins = tie.into_iter().flat_map(|t| &t.pins);
+        pins.filter(|p| !g.symbols[p.symbol].power)
+            .map(|p| p.symbol)
+            .collect::<Vec<_>>()
+    };
+    let (sa, sb) = (symbols(a), symbols(b));
+    sa.iter().any(|s| sb.contains(s))
 }
 
 impl Check for Draw36 {
@@ -176,6 +200,9 @@ impl Check for Draw36 {
                         }
                         let apart = axis.apart(a.item.rect, b.item.rect);
                         if apart < 0 {
+                            continue;
+                        }
+                        if a.class == Class::Wire && one_symbol(scene, a.item, b.item) {
                             continue;
                         }
                         let same_side = {

@@ -79,6 +79,11 @@ fn in_free_room(a: &Item, b: &Item) -> bool {
     inside(a, b) || inside(b, a)
 }
 
+/// Two text boxes side by side with a shared edge: one unit in two columns
+fn one_unit(a: &Item, b: &Item) -> bool {
+    a.kind == K::TextBox && b.kind == K::TextBox && a.rect.touches(b.rect)
+}
+
 /// Pairs of items by a test, each pair of things once; the wires of one tie count as one wire, keeping the piece
 /// with the largest overlap
 fn pairs<'s>(
@@ -140,7 +145,7 @@ pub(super) fn close<'s>(
     scene: &'s Scene,
 ) -> Vec<(&'s Item, &'s Item, i64)> {
     let mut found = pairs(scene, |a, b| {
-        if a.rect.overlaps(b.rect) || own(a, b) || tied(scene, a, b) {
+        if a.rect.overlaps(b.rect) || own(a, b) || tied(scene, a, b) || one_unit(a, b) {
             return None;
         }
         let (ma, mb) = (margin(cx, meta, a), margin(cx, meta, b));

@@ -2,7 +2,7 @@
 //! pins and labels that touch joined into [`Tie`]s. The geometry names things and links nothing, so this is where
 //! a sheet's file meets its [`SheetId`] and a wire learns what it is joined to.
 
-use erc_model::geometry::{DrawnSymbol, Rect, SheetGeometry};
+use erc_model::geometry::{Dir, DrawnPin, DrawnSymbol, Rect, Segment, SheetGeometry};
 use erc_model::{Board, Pt, SheetId};
 use std::collections::BTreeMap;
 
@@ -220,6 +220,62 @@ impl<'a> Scene<'a> {
     /// The tie's name: a label, a power symbol's net, else a pin
     pub fn tie_name(&self, tie: usize) -> String {
         tie_name(self.geometry, &self.ties[tie])
+    }
+
+    /// The item of a pin: its stub, or the power symbol for a power symbol's pin
+    pub fn pin_item(&self, pin: PinRef) -> Option<&Item> {
+        let s = &self.geometry.symbols[pin.symbol];
+        let name = format!("{}.{} pin", s.reference, s.pins[pin.pin].number);
+        let of_symbol = |i: &&Item| i.owner == Some(pin.symbol);
+        let mut own = self.items.iter().filter(of_symbol);
+        own.find(|i| {
+            if s.power {
+                i.kind == ItemKind::Power
+            } else {
+                i.kind == ItemKind::Pin && i.name == name
+            }
+        })
+    }
+
+    /// Every pin that can take a wire: a power symbol's hidden pin counts
+    pub fn pins(&self) -> impl Iterator<Item = (PinRef, &'a DrawnPin)> + 'a {
+        let g = self.geometry;
+        g.symbols.iter().enumerate().flat_map(|(symbol, s)| {
+            let live = s.pins.iter().enumerate();
+            live.filter(|(_, p)| s.power || !p.hidden)
+                .map(move |(pin, p)| (PinRef { symbol, pin }, p))
+        })
+    }
+
+    /// How far wire runs straight on from `from` in `dir`, over the wires that continue it: the end of the run
+    pub fn run_end(&self, from: Pt, dir: Dir) -> Pt {
+        let (dx, dy) = dir.step();
+        let beyond = |p: Pt, q: Pt| (q.x - p.x) * dx + (q.y - p.y) * dy;
+        let mut end = from;
+        loop {
+            let along = self
+                .geometry
+                .wires
+                .iter()
+                .filter(|w| !w.is_empty() && w.contains(end) && (w.a.x == w.b.x) == (dx == 0));
+            let next = along
+                .flat_map(|w| [w.a, w.b])
+                .filter(|q| beyond(end, *q) > 0)
+                .max_by_key(|q| beyond(end, *q));
+            match next {
+                Some(q) => end = q,
+                None => return end,
+            }
+        }
+    }
+
+    /// Whether a wire leaves `p` across `dir`: where a straight run ending there bends or branches
+    pub fn bends_at(&self, p: Pt, dir: Dir) -> bool {
+        let across = |w: &Segment| (w.a.x == w.b.x) == dir.is_horizontal();
+        let wires = self.geometry.wires.iter();
+        wires
+            .filter(|w| !w.is_empty())
+            .any(|w| w.contains(p) && across(w))
     }
 
     /// Whether the two items are in one group of the sheet

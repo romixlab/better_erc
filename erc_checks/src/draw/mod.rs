@@ -7,8 +7,15 @@ use erc_analysis::scene::{Item, Scene, mm};
 use erc_model::geometry::Rect;
 use erc_model::{Pt, Subject};
 
+mod draw_28;
+mod draw_29;
+mod draw_30;
+mod draw_32;
 mod draw_34;
+mod draw_35;
 mod draw_36;
+mod draw_41;
+mod draw_43;
 mod draw_7;
 mod draw_9;
 mod overlap;
@@ -50,6 +57,13 @@ pub(crate) const ALIGN_SNAP: Param = Param {
     doc: "offsets below this (and above zero) are near misses",
 };
 
+pub(crate) const PIN_LEAD: Param = Param {
+    name: "drawing.pin_lead",
+    default: 2.54,
+    unit: "mm",
+    doc: "straight wire at a pin or power symbol before the first bend",
+};
+
 /// A length setting in nanometres
 fn nm(cx: &Ctx, meta: &crate::CheckMeta, p: &Param) -> i64 {
     (cx.param(meta, p.name) * MM).round() as i64
@@ -75,6 +89,21 @@ fn location(scene: &Scene, item: &Item, p: Pt) -> Location {
         line: item.line,
         at: Some((p.x as f64 / MM, p.y as f64 / MM)),
     }
+}
+
+/// A finding on one item, at a point of it
+fn one<'c, 'a>(
+    cx: &'c Ctx<'a>,
+    meta: &'static crate::CheckMeta,
+    scene: &Scene,
+    item: &Item,
+    p: Pt,
+) -> crate::finding::FindingBuilder<'c, 'a> {
+    let sheet = sheet_subject(cx, scene);
+    cx.finding(meta)
+        .subject(sheet)
+        .item(sheet, item.name.clone())
+        .location(location(scene, item, p))
 }
 
 /// A point of the box to name for the item: its centre, or the part of a wire next to `near`
