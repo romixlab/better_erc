@@ -150,6 +150,9 @@ pub struct Board {
     pub net_classes: Vec<NetClass>,
     pub settings: ProjectSettings,
     pub layout: Option<Layout>,
+    /// The schematic drawing (`NET-26`); `None` for a source without one (a netlist, a PDF)
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub geometry: Option<crate::geometry::Geometry>,
 }
 
 /// A sheet instance in the hierarchy

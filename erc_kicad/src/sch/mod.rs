@@ -5,6 +5,8 @@
 
 pub(crate) mod bus;
 pub(crate) mod connect;
+pub(crate) mod font;
+pub(crate) mod geom;
 pub(crate) mod parse;
 
 use crate::notes::Notes;
@@ -218,6 +220,7 @@ pub fn kicad_of_format(format: u32) -> u32 {
 struct Loader<'a> {
     files: &'a dyn Files,
     sch: Vec<SchFile>,
+    geom: Vec<geom::RawSheet>,
     names: Vec<String>,
     index: HashMap<String, usize>,
     notes: Vec<ImportNote>,
@@ -253,6 +256,7 @@ impl Loader<'_> {
         let f = parse::read(root, &sexpr::Lines::of(&text), &mut notes);
         self.notes.extend(notes.into_vec());
         self.sch.push(f);
+        self.geom.push(geom::read(root, &sexpr::Lines::of(&text)));
         self.names.push(path.to_string());
         self.index.insert(path.to_string(), self.sch.len() - 1);
         Ok(self.sch.len() - 1)
@@ -270,6 +274,7 @@ pub fn read(
     let mut ld = Loader {
         files,
         sch: Vec::new(),
+        geom: Vec::new(),
         names: Vec::new(),
         index: HashMap::new(),
         notes: Vec::new(),
@@ -359,6 +364,7 @@ pub fn read(
         .to_string();
     let Loader {
         sch,
+        geom,
         names,
         notes: mut all_notes,
         ..
@@ -425,9 +431,26 @@ pub fn read(
         kicad,
         aliases: &aliases,
     });
-    let board = assemble(&sch, &names, &insts, &syms, &conn, &project, &mut notes);
+    let mut board = assemble(&sch, &names, &insts, &syms, &conn, &project, &mut notes);
+    board.geometry = Some(geometry(geom, &names, &insts, &syms));
     all_notes.extend(notes.into_vec());
     Ok((board, all_notes))
+}
+
+/// The drawing of each sheet file, by the first sheet instance of the file
+fn geometry(
+    raw: Vec<geom::RawSheet>,
+    names: &[String],
+    insts: &[Inst],
+    syms: &[Vec<SymRes>],
+) -> Geometry {
+    let mut sheets = Vec::new();
+    for (i, r) in raw.into_iter().enumerate() {
+        if let Some(first) = insts.iter().position(|inst| inst.file == i) {
+            sheets.push(geom::place(r, &syms[first], &names[i]));
+        }
+    }
+    Geometry { sheets }
 }
 
 /// The board from the files, instances and connectivity
