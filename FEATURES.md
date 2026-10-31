@@ -164,12 +164,13 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - 📋 `NET-25` Chains: the paths a quantity travels through the board's parts as ordered stages (signal paths from `NET-10`,
   the power tree from `NET-5`, reference outputs to reference inputs, clock sources through PLLs and buffers to clock
   inputs), each stage a part with its input and output pins and gain, for the board-wide grade checks (`ANA-24`, `ANA-25`)
-- 📋 `NET-26` Drawing geometry: what the sheet looks like, beyond `NET-21`'s labels and flags: paper size and title
+- ✅ `NET-26` Drawing geometry: what the sheet looks like, beyond `NET-21`'s labels and flags: paper size and title
   block per sheet (title, date, revision, comments, text variables resolved), wires, buses and junctions with their
   ends, label and sheet pin angles, the position, angle, size, visibility and justification of every symbol field,
   free text, text boxes, tables, groups and graphic lines with their font weight, stroke and colour, hand-set colours, sheet symbol boxes with their pin sides, and library symbol body extents
-  and pin sides, so a placed symbol's outline and which way its pins face are known. The `DRAW` checks read it
-  ([docs/drawing-guide.md](docs/drawing-guide.md))
+  and pin sides, so a placed symbol's outline and which way its pins face are known. Text boxes from KiCad's stroke font, compared
+  with `kicad-cli sch export svg`. Colour themes are not read yet. The `DRAW` checks read it
+  ([docs/drawing-guide.md](docs/drawing-guide.md)) · `erc_model/src/geometry.rs`, `erc_kicad/src/sch/{geom,font}.rs`
 
 ## Checks and diagnostics (`DIAG`)
 

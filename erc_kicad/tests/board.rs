@@ -81,7 +81,10 @@ fn boards_of_three_kicad_versions() {
         }
         let back = dump::read(&text).unwrap_or_else(|e| panic!("{main}: {e}"));
         assert_eq!(dump::write(&back), text, "{main}: dump, read, dump");
-        assert!(back == design, "{main}: read gives back the design");
+        assert!(
+            back == design.without_geometry(),
+            "{main}: read gives back the design"
+        );
         layouts.push(design.boards[0].layout.clone().expect("a layout"));
     }
     assert!(failed.is_empty(), "{failed:#?}");

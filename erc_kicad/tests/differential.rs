@@ -223,7 +223,7 @@ fn golden(root: &Path, name: &str, failed: &mut Vec<String>) {
 fn stable(design: &erc_model::Design, name: &str, failed: &mut Vec<String>) {
     let text = dump::write(design);
     match dump::read(&text) {
-        Ok(back) if dump::write(&back) == text && back == *design => {}
+        Ok(back) if dump::write(&back) == text && back == design.without_geometry() => {}
         Ok(_) => failed.push(format!("{name}: dump, read, dump is not stable")),
         Err(e) => failed.push(format!("{name}: the dump does not read back: {e}")),
     }

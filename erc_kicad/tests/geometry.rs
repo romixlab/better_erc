@@ -41,7 +41,13 @@ fn inks(svg: &str) -> Vec<Ink> {
         let mut points = Vec::new();
         for path in rest[..end].split("<path d=\"").skip(1) {
             let d = path.split('"').next().unwrap_or("");
-            points.extend(numbers(d).chunks_exact(2).map(|c| Pt::from_mm(c[0], c[1])));
+            points.extend(
+                numbers(d)
+                    .as_chunks::<2>()
+                    .0
+                    .iter()
+                    .map(|c| Pt::from_mm(c[0], c[1])),
+            );
         }
         if let Some(bbox) = Rect::around(points) {
             out.push(Ink {
@@ -114,8 +120,11 @@ fn apart(a: Rect, b: Rect) -> i64 {
     .unwrap()
 }
 
+/// How far a text is from KiCad's, the text, what it is, our box, KiCad's
+type Row = (i64, String, String, Rect, Rect);
+
 /// The worst texts of a sheet: (edge difference in nm, the text, what it is, ours, KiCad's); only single-line ones
-fn compare(dir: &Path, file: &str, out: &Path) -> Option<Vec<(i64, String, String, Rect, Rect)>> {
+fn compare(dir: &Path, file: &str, out: &Path) -> Option<Vec<Row>> {
     let export = Command::new("kicad-cli")
         .args(["sch", "export", "svg", "-e", "-n", "-o"])
         .arg(out)
@@ -155,8 +164,11 @@ fn fixtures() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures")
 }
 
-/// Glyph side bearings and descenders are the rest of the difference between the advance box and the ink
-const TOLERANCE: i64 = 1_000_000;
+/// The advance box and the ink differ by the glyphs' side bearings and descenders, which grow with the font: a
+/// share of the text height, with a floor for small text
+fn tolerance(ours: Rect) -> i64 {
+    (ours.width().min(ours.height()) * 45 / 100).max(600_000)
+}
 
 #[test]
 fn text_boxes_match_kicad_output() {
@@ -166,7 +178,7 @@ fn text_boxes_match_kicad_output() {
     let _ = std::fs::remove_dir_all(&out);
     let Some(rows) = rows else { return };
     assert!(rows.len() >= 300, "only {} texts compared", rows.len());
-    let off: Vec<_> = rows.iter().filter(|r| r.0 > TOLERANCE).collect();
+    let off: Vec<_> = rows.iter().filter(|r| r.0 > tolerance(r.3)).collect();
     assert!(off.is_empty(), "{off:#?}");
 }
 

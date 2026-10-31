@@ -11,6 +11,10 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- Drawing geometry (`NET-26`): `Board::geometry` holds per sheet file the paper, title block, placed symbols with body box, pins (direction, length, name and number boxes) and fields, labels, wires, buses, junctions, free text, text boxes, tables, groups and graphics. Text boxes use KiCad's stroke font metrics and are compared with `kicad-cli sch export svg`. The dump does not carry the geometry (`Design::without_geometry`).
+
 ## [0.4.13] - 2026-10-31
 
 ### Changed

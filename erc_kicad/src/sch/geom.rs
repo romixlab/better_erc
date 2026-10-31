@@ -23,7 +23,7 @@ const LABEL_TEXT_OFFSET: f64 = 0.4;
 const GLOBAL_LEAD_FLAT: f64 = 0.6;
 const GLOBAL_LEAD_ARROW: f64 = 1.35;
 /// Where a hierarchical label's text starts, over the text height
-const HIERARCHICAL_LEAD: f64 = 1.38;
+const HIERARCHICAL_LEAD: f64 = 1.3;
 /// How far KiCad lifts a free text with bottom justification: a fixed part and a part of the text height
 const TEXT_LIFT: i64 = 250_000;
 const TEXT_LIFT_RATIO: f64 = 0.13;
@@ -44,12 +44,15 @@ struct LibDrawing {
     extends: Option<String>,
     power: bool,
     units: u32,
-    graphics: Vec<(u32, u32, Vec<(i64, i64)>)>,
+    graphics: Vec<LibGraphic>,
     pins: Vec<LibPinDrawing>,
     /// `None`: names hidden
     name_offset: Option<i64>,
     numbers_shown: bool,
 }
+
+/// A library graphic: unit, body style and the points that bound it
+type LibGraphic = (u32, u32, Vec<(i64, i64)>);
 
 #[derive(Debug, Clone)]
 struct LibPinDrawing {
@@ -535,7 +538,7 @@ fn free_text(item: &Sexp, lines: &Lines) -> Option<DrawnText> {
     let e = effects(item);
     let mut at = point(a)?;
     let vertical = is_vertical(a.num(2).unwrap_or(0.0).round() as i32);
-    if !vertical && e.valign == VAlign::Bottom {
+    if e.valign == VAlign::Bottom {
         at.y -= TEXT_LIFT + (e.size.0 as f64 * TEXT_LIFT_RATIO) as i64;
     }
     let text = make_text(shown(item.arg(0).unwrap_or("")), at, vertical, &e);

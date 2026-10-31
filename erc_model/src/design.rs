@@ -97,6 +97,13 @@ impl Design {
     pub fn board(&self, id: BoardId) -> &Board {
         &self.boards[id.index()]
     }
+
+    /// The design as [`crate::dump`] carries it: the dump holds the facts of a board, not its drawing
+    pub fn without_geometry(&self) -> Design {
+        let mut d = self.clone();
+        d.boards.iter_mut().for_each(|b| b.geometry = None);
+        d
+    }
 }
 
 /// Two boards mated through a connector on each (from the project file)
