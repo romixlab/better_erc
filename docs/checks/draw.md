@@ -36,6 +36,9 @@ project file (`CFG-2`); see [clearance margins](../drawing-guide.md#room-around-
 | `drawing.label.stub_extra` | 1.27 mm | stub a local label needs beyond its text length (`DRAW-28`) |
 | `drawing.heading_size` | 2.54 mm | text size of a section heading, bold (`DRAW-31`, `DRAW-32`) |
 | `drawing.group_heading_size` | 1.905 mm | text size of a group heading (a table's title, a group of directives), bold (`DRAW-32`) |
+| `drawing.leader.clear` | 0.635 mm | gap from a leader's tip to the part's outline (`DRAW-46`) |
+| `drawing.note.item_words` | 15 | most words in a sentence of a note item (`DRAW-47`) |
+| `drawing.note.item_marks` | 3 | most `;`, `:` and `(` in one sentence of a note (`DRAW-47`) |
 | `drawing.note.colour_slack` | 8 | counts per RGB channel a note box colour may be off its kind's colour (`DRAW-32`) |
 | `drawing.route.k_power`, `.k_ground`, `.k_signal` | 2, 2, 1 | factor on the bends and detours of power, ground and signal ties (`DRAW-40`) |
 | `drawing.route.min_saving` | 2 | cost a redraw must save to be reported (`DRAW-40`) |
@@ -476,6 +479,28 @@ at that part or its block's rectangle.
 
 A leader drawn through things reads as a wire or hides what it crosses. Found as leader segments (dotted lines in
 the leader colour) against the item boxes at the top of this page, minus its own target and box.
+
+## `DRAW-46` Leader into a small part off its centre, not diagonal, or clipped by the outline <a id="draw-46"></a>
+
+💡 suggestion · needs: the schematic drawing (geometry), graphic lines · [catalogue entry](../checks.md#draw-46)
+
+**Impl.** mid · depends on NET-26
+
+Rule: [a note about a part points at it](../drawing-guide.md#a-note-about-a-part-points-at-it). For a leader ending
+at a small part (R, C, diode, TVS, up to 4 pins): the last segment must be a 45° diagonal, its line must pass through
+the centre of the body within one grid step, and the tip must stop `drawing.leader.clear` from the outline, not on or
+inside it. Leaders to a block's rectangle and to larger parts are out of scope.
+
+## `DRAW-47` Run-on note text <a id="draw-47"></a>
+
+💡 suggestion · needs: text boxes · [catalogue entry](../checks.md#draw-47)
+
+**Impl.** easy · depends on NET-26
+
+Rule: [note boxes are lists and tables](../drawing-guide.md#note-boxes-are-lists-and-tables-not-paragraphs). In a note
+box, a sentence longer than `drawing.note.item_words` words, or with more than `drawing.note.item_marks` of `;`, `:`
+and `(`. A sentence runs over line ends until a full stop or a new item. Skipped: SPICE directives, the explanation
+box beside them, and table cells.
 
 ## `DRAW-39` Group of related nets labelled in many places, with no bus <a id="draw-39"></a>
 

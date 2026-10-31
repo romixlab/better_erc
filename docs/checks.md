@@ -687,6 +687,8 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="draw-41"></a>💡 `DRAW-41` Wire bending right at a pin or power symbol: its first or last segment shorter than one major grid step, or across the pin's axis · impl: mid (NET-26) · [📖](checks/draw.md#draw-41) <!-- 31 Oct 2026, Roman -->
 - <a id="draw-42"></a>💡 `DRAW-42` Touching items too close in colour (a wire and its pin, power symbol or label) on the light or the dark theme · impl: mid (NET-26) · [📖](checks/draw.md#draw-42) <!-- 31 Oct 2026, Roman -->
 - <a id="draw-43"></a>💡 `DRAW-43` Sentence in a note, heading or table cell starting with a lower-case letter · impl: easy (NET-26) · [📖](checks/draw.md#draw-43) <!-- 31 Oct 2026, Roman -->
+- <a id="draw-46"></a>💡 `DRAW-46` Leader into a small part off its centre, not diagonal, or clipped by the outline · impl: mid (NET-26) · [📖](checks/draw.md#draw-46) <!-- 31 Oct 2026, Roman -->
+- <a id="draw-47"></a>💡 `DRAW-47` Run-on note text: long sentences or chains of `;`, `:`, `(` · impl: easy (NET-26) · [📖](checks/draw.md#draw-47) <!-- 31 Oct 2026, Roman -->
 
 ### 📚 LIB - Library, symbols and footprints
 - <a id="lib-1"></a>⚠️ `LIB-1` Symbol pin names differ from the same part elsewhere in the database · impl: mid (CFG-5, NET-7) · [📖](checks/lib.md#lib-1) <!-- CHK-78; split 21 Oct 2026: LIB-4, LIB-5 -->

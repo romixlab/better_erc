@@ -69,7 +69,8 @@ hand or by Claude on a netlist export.
   [[DRAW-30]](checks.md#draw-30), [[DRAW-40]](checks.md#draw-40) · power nets named `+3V3_LDO` [[NAME-13]](checks.md#name-13) · sections with a heading
   and key numbers, notes in boxes by kind with a leader to their part, tables not text lumps
   [[DRAW-31]](checks.md#draw-31), [[DRAW-32]](checks.md#draw-32), [[DRAW-37]](checks.md#draw-37),
-  [[DRAW-38]](checks.md#draw-38), [[DRAW-33]](checks.md#draw-33) · room around parts and text, neighbours aligned exactly or clearly not, touching items in
+  [[DRAW-38]](checks.md#draw-38), [[DRAW-46]](checks.md#draw-46), [[DRAW-33]](checks.md#draw-33), note boxes as lists,
+  not paragraphs [[DRAW-47]](checks.md#draw-47) · room around parts and text, neighbours aligned exactly or clearly not, touching items in
   different colours, sentences capitalised [[DRAW-42]](checks.md#draw-42), [[DRAW-43]](checks.md#draw-43)
   [[DRAW-34]](checks.md#draw-34), [[DRAW-36]](checks.md#draw-36) · small parts to a rail or ground vertical
   [[DRAW-35]](checks.md#draw-35) · a bus for a group of nets going to three or more places [[DRAW-39]](checks.md#draw-39) · per section one ground row, one supply row, inputs left, outputs right; power straight up, ground

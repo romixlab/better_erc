@@ -91,11 +91,13 @@ title block. Why: a circuit in one corner prints small and gets lost. `DRAW-16`,
 
 ### Title block on every sheet
 
-Title, revision, date and company on every sheet, the revision set once for the project and shown through
+Title, revision, date, paper size and company on every sheet, the revision set once for the project and shown through
 `${REVISION}`. Why: a printed page is read alone. `DRAW-19`, `DRAW-20`
 
 vhrd projects use the library drawing sheet (`${KICAD_USER_TEMPLATE_DIR}/vhrd_a3.kicad_wks` or `vhrd_a4`, referenced,
-not copied; the Vhrd Default template embeds it). It reads the title and date, comment 1 as Drawn, comment 2 as
+not copied; the Vhrd Default template embeds it). Paper is stored per sheet file, so a project may mix sizes: the index
+on A2 and the rest on A3 plots one page size per sheet, and `vhrd_a3` serves both (corners, title block and frame
+follow the page, its strip and zones reach A2, `${PAPER}` shows the size). It reads the title and date, comment 1 as Drawn, comment 2 as
 Checked, comment 4 as Status (`Draft`), and the project variables `PRODUCT_NAME`, `BOARD_NUMBER` and `VHRD_STAMP`
 (`not stamped` in the project; the render recipe passes `-D VHRD_STAMP="<git describe> · <date>"`, as KiCad does not
 expand a variable inside another). Notes about the sheet go in its Information box, not in the comments: the fields
@@ -147,8 +149,11 @@ Each box is a group of two items:
   kind's stroke, margins 0.95 mm with 3.2 mm at the top to leave room for the heading; width and height on the
   1.27 mm grid.
 
-KiCad's default stroke font is used everywhere (no `face`): it plots the same on every PC and in every PDF; the b125
-title font (Orbitron) stays on the front page logo.
+No item carries a `face`: everything uses the default font, so one setting changes the whole sheet. In KiCad 10 that
+setting is `appearance.default_font` in the user's `eeschema.json` (Preferences > Schematic Editor > Display Options >
+Default font), not a project setting: vhrd PCs set it to IBM Plex Sans, the brand font, and `kicad-cli` reads it too.
+A PC without it plots the stroke font, so boxes are sized for the wider stroke font; the b125 title font (Orbitron)
+stays on the front page logo.
 
 **Why.** Loose text has no owner and no weight: a reviewer cannot tell a design reason from a forgotten TODO or a
 layout instruction that must not be missed. A box by kind says at a glance what the text is and how much it
@@ -158,15 +163,39 @@ says, so a black and white print loses nothing ([colour](#colour-adds-never-carr
 **Source.** house (Roman, 31 Oct 2026; the b125 front page). Checks: `DRAW-32` (free text, or a box not of the six
 kinds).
 
+### Note boxes are lists and tables, not paragraphs
+
+**Rule.** A note box has a short lead line, then numbered or bulleted items, one fact each, in short complete
+sentences of at most `drawing.note.item_words` words (default 15). Parameters and part lists go in a table. Avoid
+chains of colons, semicolons and brackets: split them into items. Section parameter boxes are a small name and value
+table, or two or three short lines.
+
+**Why.** A stream of clauses is hard to read and harder to check; a list shows each fact and each gap.
+
+**Example.**
+
+```
+bad:  SLESD8D15C at the connector, R1213 680 R anti-surge, BAT54S: upper diode to a clamp bus
+      held at ~3.15 V by an ATL431 (self-powered by the fault, not tied to +3V3); R1215 100 R ...
+good: Donguru rev B proposal for a 12 V claim.
+      1. The fault itself powers the clamp bus.
+      2. The clamp bus is not tied to +3V3.
+```
+
+**Source.** house (Roman, 31 Oct 2026, round 4 review). `DRAW-47`, `DRAW-33`
+
 ### A note about a part points at it
 
 A note box that is about a particular part or block draws a leader to it: a dotted line in leader purple
 `rgb(142, 92, 205)` (4.6:1 on white, 4.2:1 on VHRD Dark), 0.1524 mm, with an arrowhead at the target, bent in
-orthogonal or 45° segments around wires, parts, labels and text, never through them. A block pointed at this way
+orthogonal or 45° segments around wires, parts, labels and text, never through them. The last segment into a small
+part (R, C, diode, TVS, 2 to 4 pins) is a 45° diagonal aimed at the centre of the body, and its tip stops
+`drawing.leader.clear` (default 0.635 mm) before the outline, so the head is never clipped by the part. A block pointed at this way
 gets its own rectangle (same purple, dotted, 0.1524 mm, no fill) around it. KiCad 10 has no arrowheads on lines:
 the head is a small filled triangle (a closed polyline, 1.27 mm long, 0.9 mm wide, filled with the stroke colour)
 grouped with the line and the box. Why: the reader sees which part a note is about without matching references
-by eye. `DRAW-37`, `DRAW-38`
+by eye, and a diagonal into the body reads better than a straight line ending beside it (Roman, 31 Oct 2026: D513
+good, D1212 clipped). `DRAW-37`, `DRAW-38`, `DRAW-46`
 
 ### Tables, not lumps of text
 
@@ -576,13 +605,13 @@ same for both themes (net classes and library symbols are). Our set:
 | Item | Where it is set | Light (`vhrd.json`) | Dark (`vhrd_dark.json`) |
 |---|---|---|---|
 | wire | theme `wire` | `rgb(74, 74, 74)` | `rgb(168, 168, 168)` |
-| pin | theme `pin` | `rgb(180, 20, 30)` (was `rgb(46, 46, 46)`, ΔE 9 to the wire) | `rgb(240, 100, 92)` (was `rgb(208, 208, 208)`, ΔE 10.5) |
+| pin | theme `pin` | `rgb(150, 108, 0)` gold (ΔE 29.0 to the wire, 32.9 to the outline) | `rgb(232, 196, 82)` gold (ΔE 26.9, 43.7) |
 | ground wire | net class Ground | `rgb(0, 115, 30)` | same |
 | ground symbol | `vhrd_power:GND` | `rgb(60, 170, 24)` (ΔE 20.5 to its wire) | same |
 | power wire | net class Power | `rgb(175, 50, 10)` | same |
 | power symbol | `vhrd_power` supplies, `PWR_LOCAL` | `rgb(232, 113, 10)` (ΔE 22.9 to its wire) | same |
 
-The pin takes the red family of the symbol outline, as in KiCad's own default theme; the symbol of a rail is the
+The pin is gold, clear of the wire, the symbol outline and the Critical box red; the symbol of a rail is the
 lighter member of its family and its wires the darker one, so the long runs stay calm and the symbols stand out. Why: where a pin and its wire are the
 same grey, the reader cannot see where the part ends, and a green ground symbol on a green wire melts into it.
 Source: house (Roman, 31 Oct 2026). `DRAW-42`
