@@ -94,6 +94,13 @@ title block. Why: a circuit in one corner prints small and gets lost. `DRAW-16`,
 Title, revision, date and company on every sheet, the revision set once for the project and shown through
 `${REVISION}`. Why: a printed page is read alone. `DRAW-19`, `DRAW-20`
 
+vhrd projects use the library drawing sheet (`${KICAD_USER_TEMPLATE_DIR}/vhrd_a3.kicad_wks` or `vhrd_a4`, referenced,
+not copied; the Vhrd Default template embeds it). It reads the title and date, comment 1 as Drawn, comment 2 as
+Checked, comment 4 as Status (`Draft`), and the project variables `PRODUCT_NAME`, `BOARD_NUMBER` and `VHRD_STAMP`
+(`not stamped` in the project; the render recipe passes `-D VHRD_STAMP="<git describe> · <date>"`, as KiCad does not
+expand a variable inside another). Notes about the sheet go in its Information box, not in the comments: the fields
+are one short line each. Source: house (Roman, 31 Oct 2026; io_protection).
+
 ### Sheet names say the function
 
 `USB-C input`, not `Sheet1`; the file named after the sheet; an index sheet first in a project of more than three or
