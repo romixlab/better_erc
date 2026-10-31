@@ -569,8 +569,13 @@ but a tee right at the pin tip counts.
 Rule: [neighbours in different colours](../drawing-guide.md#neighbours-in-different-colours). For each touching
 pair (a wire end on a pin, a wire on a power symbol's pin, a label on its wire), the effective colours (the item's
 own, else its net class colour, else the theme's) on the light and the dark theme, and their CIEDE2000 difference;
-below `drawing.colour.pair_min` (default 20) is a finding, reported once per colour pair with a count. The themes
-come from the KiCad colour settings named in the better_erc project file.
+below `drawing.colour.pair_min` (default 20) is a finding, reported per sheet and per theme, once per colour pair
+with a place count. A power symbol's colour is its library stroke colour, else the theme's `component_outline`.
+
+**Scope.** The themes are not in the project: give KiCad's `colors/*.json` with a repeatable `berc check --theme PATH`.
+Without one the check is reported as not run (`need colour-theme`). A label taking its net class colour is left out:
+KiCad draws it in its wire's class colour, so that pair is always ΔE 0 and only a hand-set colour would part them,
+which `DRAW-27` advises against.
 
 ## `DRAW-43` Sentence starting with a lower-case letter <a id="draw-43"></a>
 
