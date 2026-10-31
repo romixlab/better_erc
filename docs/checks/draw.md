@@ -26,6 +26,14 @@ project file (`CFG-2`); see [clearance margins](../drawing-guide.md#room-around-
 | `drawing.clearance.power` | 1.27 mm | margin around a power or ground symbol and its name |
 | `drawing.clearance.text` | 0.635 mm | margin around a field, a label, a pin name or number, a note box |
 | `drawing.section_gap` | 10 mm | gap that separates two sections (`DRAW-31`, `DRAW-16`) |
+| `drawing.bus_hint.places` | 3 | places each net of a group must reach before `DRAW-39` suggests a bus |
+| `drawing.bus_hint.members` | 4 | nets a group needs before `DRAW-39` suggests a bus |
+| `drawing.route.w_len`, `.w_bend`, `.w_cross`, `.w_cross_near`, `.w_symbol`, `.w_detour` | 1, 2, 4, 8, 6, 4 | the routing cost weights ([routing is a weighed compromise](../drawing-guide.md#routing-is-a-weighed-compromise)), `DRAW-40` |
+| `drawing.route.detour_max` | 1.5 | drawn length over Manhattan length of a tie above which `DRAW-40` looks for a cheaper drawing |
+| `drawing.pin_lead` | 2.54 mm | straight wire at a pin or power symbol before the first bend (`DRAW-41`) |
+| `drawing.align.window` | 20.32 mm | neighbourhood within which items must align exactly (`DRAW-36`) |
+| `drawing.align.snap` | 5.08 mm | offsets below this (and above zero) are near misses (`DRAW-36`) |
+| `drawing.colour.pair_min` | 20 | least CIEDE2000 difference between touching items (`DRAW-42`) |
 
 ## `DRAW-1` Ground symbol not pointing down (rotated or mirrored) <a id="draw-1"></a>
 
@@ -324,14 +332,16 @@ long as the text box plus one grid step. A label on a pin or a joint without a s
 A pin-on-pin joint is invisible, cannot take a branch, and opens silently when a part is moved; at least one major
 grid step (2.54 mm) of wire goes between two pins.
 
-## `DRAW-30` Several power or ground symbols of one rail on the pins of one part, instead of the pins wired together to one symbol <a id="draw-30"></a>
+## `DRAW-30` Several power or ground symbols of one rail on one pin group of a part, instead of the pins wired together to one symbol <a id="draw-30"></a>
 
 💡 suggestion · needs: the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-30)
 
 **Impl.** mid · depends on NET-21, NET-26
 
-**What it catches.** A part with more than `max_symbols_per_rail` (default 1) power or ground symbols of the same
-net attached to its pins, each directly or through a stub that touches no other part.
+**What it catches.** A pin group (pins of one net next to each other on one side of a part's body) with more than
+`max_symbols_per_rail` (default 1) power or ground symbols of that net attached, each directly or through a stub
+that touches no other part. Two groups of one part with a symbol each are fine: whether they should share one is
+the routing cost's call (`DRAW-40`).
 
 **Why it matters.** A row of identical ground symbols under one IC is noise; wiring the pins together says "all
 ground pins to ground" once.
@@ -414,14 +424,17 @@ A diode, TVS, resistor or capacitor with a pin on a rail or ground (a BAT54S cla
 shunt when it stands on the vertical voltage axis, and as a part in the signal path when it lies horizontal. Found
 from the direction of its rail or ground pins after the placement transform: pointing left or right is a finding.
 
-## `DRAW-36` Power symbols or parts in a row a grid step or two off line <a id="draw-36"></a>
+## `DRAW-36` Near-miss alignment <a id="draw-36"></a>
 
-💡 suggestion · needs: the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-36)
+⚠️ warning · needs: the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-36)
 
 **Impl.** mid · depends on NET-26
 
-Neighbouring ground symbols or parts in a row whose y (or column whose x) differs by one or two grid steps look
-careless; clustered like the label columns of `DRAW-10`.
+**What it catches.** Two alignable items (label anchors, power and ground symbol pins, vertical or horizontal tie
+wires, part body edges and centre lines) that are neighbours (on the same side of the same part, or within
+`drawing.align.window` of each other) and whose x (or y) differs by more than zero and less than
+`drawing.align.snap`. Each finding names the pair and the offset ("+3V3_LDO at x 152.4, GND at x 149.86: 2.54 mm").
+Larger offsets are deliberate and not reported.
 
 ## `DRAW-37` Note box that names a part or block and has no leader to it <a id="draw-37"></a>
 
@@ -441,3 +454,68 @@ at that part or its block's rectangle.
 
 A leader drawn through things reads as a wire or hides what it crosses. Found as leader segments (dotted lines in
 the leader colour) against the item boxes at the top of this page, minus its own target and box.
+
+## `DRAW-39` Group of related nets labelled in many places, with no bus <a id="draw-39"></a>
+
+💡 suggestion · needs: labels, wires and buses (drawing) · [catalogue entry](../checks.md#draw-39)
+
+**Impl.** mid · depends on NET-21, NET-26
+
+Rule: [buses for groups of signals that go to many places](../drawing-guide.md#buses-for-groups-of-signals-that-go-to-many-places).
+A dozen labels of one group scattered over a sheet make the reader collect the group by name; a bus says it once.
+Found as nets whose names share a stem with indices (`D0`..`D7`, `P0_3`, `DQ[n]`) or one prefix (`I2C1_SDA`,
+`I2C1_SCL`), at least `drawing.bus_hint.members` of them, each with labels or pins in at least
+`drawing.bus_hint.places` places (parts or label positions), none of them on a bus. Only a hint: a group whose
+members go to different places each is not a bus.
+
+## `DRAW-40` Power or tie wiring much longer than it needs, with a cheaper drawing at hand <a id="draw-40"></a>
+
+💡 suggestion · needs: the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-40)
+
+**Impl.** hard · depends on NET-26
+
+Rule: [routing is a weighed compromise](../drawing-guide.md#routing-is-a-weighed-compromise).
+
+**What it catches.** A tie (the wires of one power net, or of a few pins tied together, between its pins and its
+power symbols) whose drawn length is more than `drawing.route.detour_max` times its Manhattan length (the
+half-perimeter of the box around its pins and symbols), where a cheaper drawing exists by the routing cost.
+
+**How to check.** Score the drawn tie with the `drawing.route.*` weights (length in grid steps, bends, crossings
+with other nets, crossings within one grid step of a pin end or junction, extra symbols, detour ratio). Score the
+candidates: each pin group dropped straight along its pin axis to a symbol of its own, and the pin groups joined
+by the shortest L-shaped path to the existing symbol, counting the crossings each would make with the wires
+already drawn. Report the drawn cost and the cheapest candidate with its cost ("straight drop from D2..D4 to a
+second GND: 16 instead of 19"). A suggestion only: the candidates ignore parts that would have to move.
+
+## `DRAW-41` Wire bending right at a pin or a power symbol <a id="draw-41"></a>
+
+💡 suggestion · needs: the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-41)
+
+**Impl.** mid · depends on NET-26
+
+A wire leaves a pin, and enters a pin or a power symbol's pin, along that pin's axis for at least
+`drawing.pin_lead` (default one major grid step, 2.54 mm) before it bends: the pin's direction stays readable and
+the corner is not mistaken for a junction. Found from the wire segment that ends at the pin: shorter than the
+setting, or perpendicular to the pin's axis (the pin's direction after the symbol's rotation and mirror).
+
+## `DRAW-42` Touching items too close in colour <a id="draw-42"></a>
+
+💡 suggestion · needs: the schematic drawing, the project's net class colours, the colour theme · [catalogue entry](../checks.md#draw-42)
+
+**Impl.** mid · depends on NET-26
+
+Rule: [neighbours in different colours](../drawing-guide.md#neighbours-in-different-colours). For each touching
+pair (a wire end on a pin, a wire on a power symbol's pin, a label on its wire), the effective colours (the item's
+own, else its net class colour, else the theme's) on the light and the dark theme, and their CIEDE2000 difference;
+below `drawing.colour.pair_min` (default 20) is a finding, reported once per colour pair with a count. The themes
+come from the KiCad colour settings named in the better_erc project file.
+
+## `DRAW-43` Sentence starting with a lower-case letter <a id="draw-43"></a>
+
+💡 suggestion · needs: text, text boxes, table cells · [catalogue entry](../checks.md#draw-43)
+
+**Impl.** easy · depends on NET-26
+
+The first word of a text item, of each line of a text box or table cell, and of each sentence after `. ` starts
+lower case. Skipped: lines starting with a net name or reference known on the sheet, a unit or value (`mA`, `20u`,
+`nX`), code (a `.` directive, `i(`, `v(`) or a parameter name followed by `:` or `=`.

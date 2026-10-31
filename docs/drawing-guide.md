@@ -28,11 +28,11 @@ supply symbol. KiCad names follow KiCad 10.0; most of it holds for KiCad 8 and 9
 - [Signal flow](#signal-flow): left to right, connectors at the edge, symbol orientation, small parts to a rail
   vertical
 - [Power and ground](#power-and-ground): ground down, supplies up, power net names, one symbol per rail per part,
-  decoupling
+  the vhrd_power symbols and rail colours, decoupling
 - [Wires and junctions](#wires-and-junctions)
-- [Labels and hierarchy](#labels-and-hierarchy): labels lying on their wire, scopes, sheet pins, buses
+- [Labels and hierarchy](#labels-and-hierarchy): labels lying on their wire, scopes, sheet pins, buses for groups
 - [Text](#text): fields, sizes, overlaps
-- [Parts](#parts): unused pins, DNP, multi-unit parts, simulation-only parts
+- [Parts](#parts): unused pins, DNP, multi-unit parts, simulation-only parts and directives
 - [Colour, print and export](#colour-print-and-export)
 - [KiCad settings and shortcuts](#kicad-settings-and-shortcuts)
 - [What other tools automate](#what-other-tools-automate)
@@ -173,11 +173,16 @@ and every PDF. `DRAW-33`
 Symbols, wires, labels and sheet pins on 1.27 mm (50 mil); a finer grid only for text and graphics. Why: KiCad
 connects only coinciding points, and an item half a step off looks connected and is not. `DRAW-3`, `WIRE-3`
 
-### Neighbours line up
+### Neighbours line up exactly, or clearly not
 
-Labels in a column share their anchor x; power and ground symbols in a row share their y; parts in a row or column
-share their centre line. Select them and use **Align** (KiCad 10). Why: a step off reads as careless and hides what
-belongs together. `DRAW-10` (labels), `DRAW-36` (power symbols, parts)
+Alignable things near each other share a column (x) or a row (y) *exactly*: label anchors, power and ground
+symbols, the vertical wires of ties, part edges and centre lines. "Near" is on the same side of the same part, or
+within `drawing.align.window` (default 20.32 mm) of each other. An offset that is not zero but under
+`drawing.align.snap` (default 5.08 mm, two major grid steps) is a near miss and gets fixed; a larger offset is
+deliberate and fine. Select them and use **Align** (KiCad 10). Why: a step off reads as careless and hides what
+belongs together, while a clear offset reads as a different group. Source: house (Roman, 31 Oct 2026: `+3V3_LDO`
+and a GND on the same side of the TMUX1511 in different columns, a label start off its tie column). `DRAW-36`,
+`DRAW-10` (label columns)
 
 ### Room around everything: clearance margins
 
@@ -217,6 +222,14 @@ standard: AoE (space around symbols). Checks: `DRAW-34`, `DRAW-9`.
 
 Two pins meet through at least one major grid step (2.54 mm) of wire, never pin end on pin end. Why: a pin-on-pin
 joint is invisible, has nowhere to add a branch, and opens silently when one part is moved. `DRAW-29`
+
+### Straight out of a pin, straight into a power symbol
+
+A wire leaves a pin along the pin's own axis for at least one major grid step (2.54 mm) before its first bend, and
+enters a pin or a power or ground symbol the same way: no bend right at a pin end. Why: the direction of the pin
+and of the symbol stays readable, and a corner at a pin end is not mistaken for a junction. Source: house (Roman,
+31 Oct 2026, the VDD pin of the io_protection TMUX1511 bending straight up into `+3V3_LDO`). `DRAW-41`
+(`drawing.pin_lead`, default 2.54 mm)
 
 ## Signal flow
 
@@ -274,11 +287,14 @@ good:  +3V3_LDO, +3V3_BUCK, +1V8_REF, +5V_USB, -5V_CP
 **Source.** house (Roman, 31 Oct 2026). Check: `NAME-13`; `NAME-3` (no voltage in the name), `NAME-11` (negative
 rail without its sign).
 
-### One power symbol per rail per part
+### One power symbol per rail per pin group
 
 **Rule.** Several pins of one part on the same rail (the four GND pins of a connector, the VDD pins of an IC) are
 wired together with short stubs and reach that rail through one power or ground symbol, not one symbol per pin.
-Other parts keep their own symbols; a decoupling capacitor keeps its own.
+The unit is a *pin group*: pins of that rail next to each other on one side of the body. Two groups on different
+sides get a symbol each when one shared symbol would need a detour that costs more than the second symbol
+([routing is a weighed compromise](#routing-is-a-weighed-compromise)). Other parts keep their own symbols; a
+decoupling capacitor keeps its own.
 
 **Why.** Twenty ground symbols mashed under one IC are noise: the reader counts symbols instead of seeing that
 "all ground pins go to ground". One wire collecting the pins says it once and leaves room for the pins that matter.
@@ -294,12 +310,36 @@ bad:    GND ┤1   ├                  good:   ┌┤1   ├
 ```
 
 **Source.** house (Roman, 31 Oct 2026, on the io_protection TMUX1511 and its four grounded selects); new for the
-exception of decoupling. Check: `DRAW-30`.
+exception of decoupling. Checks: `DRAW-30`, `DRAW-40`.
 
 ### Power symbols, not long wires, to reach a rail
 
 Reach a rail through a power symbol at the part, not a wire across the sheet. Why: a rail wired across a sheet
 crosses every signal.
+
+### Power symbols from vhrd_power, rails coloured by net class
+
+**Rule.** Power and ground symbols come from our library `vhrd_power` (`~/git/kicad-library`): `GND` for ground
+and the board rails, `PWR_LOCAL` (a KiCad 10 *local* power symbol, its value is the net name) for a rail that must
+stay on its sheet: a simulation bench, a sheet that stands for a board of its own. The project's net classes colour
+the rails, not the symbols one by one:
+
+| Net class | Patterns | Wire colour | Symbol colour |
+|---|---|---|---|
+| Ground | `GND` | `rgb(60, 170, 24)` light green | `GND` in a darker green `rgb(0, 115, 30)` |
+| Power | `+*`, `*/+*` (a local rail is `/<sheet>/+3V3_LDO`) | `rgb(232, 113, 10)` orange | `PWR_LOCAL` in a burnt orange `rgb(175, 50, 10)` |
+
+The orange is the Debug box orange and the theme's voltage-probe colour. A symbol and its wires differ by more than
+`drawing.colour.pair_min` ([neighbours in different colours](#neighbours-in-different-colours)), and all four keep
+about 3:1 on both the white and the VHRD Dark background, since net class and library colours do not change with
+the theme.
+
+**Why.** A reader finds the rails of a sheet at a glance, and a power net named after the rule above
+([power net names](#power-net-names-voltage_source)) is coloured without anyone setting a colour by hand. The
+colour only repeats what the `+` in the name says ([colour](#colour-adds-never-carries-meaning-alone)). A local
+power symbol keeps the per-sheet rails of a bench apart without hierarchical labels.
+
+**Source.** house (Roman, 31 Oct 2026: the io_protection project's net classes, the `vhrd_power` symbols).
 
 ### Decoupling next to the pin it serves
 
@@ -325,6 +365,46 @@ place the eye jumps to the wrong wire.
 ### Wires never run through a symbol, a label or text
 
 Why: a wire over a body looks like a pin connection, over text it makes both unreadable. `DRAW-7`
+
+### Routing is a weighed compromise
+
+**Rule.** Where a tie can be drawn more than one way (pins to a power symbol, a few pins tied together), the
+cheaper drawing wins, by a cost the guide fixes and better_erc scores:
+
+| Term | Setting | Default | Counts |
+|---|---|---|---|
+| length | `drawing.route.w_len` | 1 | per major grid step (2.54 mm) of wire |
+| bend | `drawing.route.w_bend` | 2 | per bend |
+| crossing | `drawing.route.w_cross` | 4 | per crossing with another net: a crossing is worth about four grid steps of detour |
+| crossing near a pin or junction | `drawing.route.w_cross_near` | 8 | instead of `w_cross` when the crossing is within one grid step of a pin end or a junction, where it reads as a connection |
+| extra symbol | `drawing.route.w_symbol` | 6 | per power or ground symbol beyond the first of that rail on the part |
+| detour | `drawing.route.w_detour` | 4 | per unit of (drawn length / Manhattan length − 1) of the tie |
+
+The Manhattan length of a tie is the rectilinear distance it must cover at least (the half-perimeter of the box
+around its pins and symbol). So a straight drop to ground that crosses one stub costs less than a loop around the
+part, and a second ground symbol costs less than a long way round.
+
+**Why.** "Avoid crossings", "one symbol per part" and "short wires" pull against each other; stated as costs, the
+trade is made the same way on every sheet and by a tool, instead of by whichever rule the drawer remembered.
+
+**Example.** Grounded switch pins D2..D4 on the right of a part whose GND pin 7 is at the bottom left:
+
+```
+bad: around the part to the GND pin      good: straight down, across VDD, a second symbol
+  ┌──────┐                                 ┌──────┐
+  │   D2 ├──┐                              │   D2 ├──┐
+  │   D3 ├──┤                              │   D3 ├──┤
+  │   D4 ├──┤                              │   D4 ├──┤
+  │  VDD ├──│──── +3V3                     │  VDD ├──┼──── +3V3
+  │ GND  │  │                              │ GND  │  │
+  └──┬───┘  │                              └──┬───┘  ┴ GND
+     ├──────┘                                 ┴ GND
+     ┴ GND
+cost: 12 grid + 2 bends + detour 3 = 19     cost: 4 grid + 1 bend + 1 crossing + 1 symbol = 16
+```
+
+**Source.** house (Roman, 31 Oct 2026, the ties of the io_protection TMUX1511); the weights are new. Check:
+`DRAW-40`.
 
 ### No stray wire pieces
 
@@ -373,10 +453,14 @@ bad:          SEL ──────┤SEL1        good:  SEL──────�
 Inputs on the left edge of the sheet symbol, outputs on the right, power at the top. Why: the parent sheet reads as
 signal flow. `DRAW-13`
 
-### Buses for real groups only
+### Buses for groups of signals that go to many places
 
-A bus for signals that travel together, with an alias or `{...}` name and every entry labelled. Why: a bus of
-unrelated signals hides them. `WIRE-16`
+A group of related nets that each reach three or more places (an IO expander's port, an I2C or SPI bus shared by
+several parts, a parallel data bus, DDR) is drawn as a KiCad bus: a bus wire with entries, a vector name `D[0..7]`
+or a group name with an alias `{SDA SCL}`, every entry labelled. Signals that do not travel together get no bus.
+Why: one bus line says "these go together to all of these places" where a dozen scattered labels make the reader
+collect the group by name, and a bus of unrelated signals hides them. Source: house (Roman, 31 Oct 2026); KiCad
+bus aliases. `DRAW-39` (a hint), `WIRE-16`
 
 ## Text
 
@@ -393,8 +477,15 @@ with a tilted head and collides with wires first. `DRAW-8`, `DRAW-22`
 | fields, labels, pin names, note and parameter box bodies, table cells | 1.27 mm | normal |
 | note box headings | 1.27 mm | bold |
 | section headings | 2.54 mm | bold |
+| group headings inside a section (a block of parameters, a sub-circuit) | 1.905 mm | bold |
 
 Nothing below 1.27 mm. Why: 1.27 mm is the smallest that survives an A3 printed on A4. `DRAW-24`
+
+### Sentences start with a capital letter
+
+Prose in text boxes, notes, headings and table cells starts each sentence with a capital letter; a line that starts
+with a net or part name, a unit, a value or code (`.param`, `mA`, `i(V1290)`, `nX`) stays as it is. Why: a note
+reads as a sentence, not as a fragment cut from somewhere. Source: house (Roman, 31 Oct 2026). `DRAW-43`
 
 ### No text over text, a body or a wire
 
@@ -417,9 +508,20 @@ Why: an unplaced unit leaves inputs floating and hides the rail. `LIB-14`, `LIB-
 ### Simulation-only parts are drawn apart and marked
 
 Ammeters (0 V sources), fault sources, switches and behavioural models that exist only for the simulator use their
-own symbols (an ammeter is a circle with an `A`, not a battery), sit together at the edge of their section or in a
-Debug box's area, and are excluded from the board (`exclude_from_board`, `exclude_from_bom`). Why: a reader must see
-at a glance which parts are the circuit and which are the test bench around it.
+own symbols (an ammeter is `vhrd_sim:AMMETER`, a teal circle with an `A`, not a battery), sit together at the edge
+of their section or in a Debug box's area, and are excluded from the BOM (`in_bom no`). They stay on the board
+(`on_board yes`): the XML netlist drops off-board parts, and a simulation driver that maps references through it
+(spicejob) then loses them. Why: a reader must see at a glance which parts are the circuit and which are the test
+bench around it.
+
+### Simulation directives grouped, each explained beside it
+
+SPICE directives (`.param`, `.tran`, `.options`) are text boxes with *exclude from simulation* off, one box per
+group of meaning (fault source, target, rails, controls, timing) under a group heading, with a second box flush to
+its right that explains each line on the same line. KiCad reads directives from text and text boxes, not from table
+cells, so the explanation is a box beside it rather than a table column. Why: forty `.param` lines in one text
+block hide which parameters belong together, and an explanation in a separate block is matched line by line by
+eye. Source: house (Roman, 31 Oct 2026, the io_protection index sheet).
 
 ## Colour, print and export
 
@@ -427,6 +529,27 @@ at a glance which parts are the circuit and which are the test bench around it.
 
 Keep the theme's colours for wires, labels and text; hand-set colour only where a name or a heading already says the
 same (the note box kinds). Why: black and white prints, other themes and colour-blind readers lose colour. `DRAW-27`
+
+### Neighbours in different colours
+
+Every pair of items that touch is told apart at a glance: a wire and the pin it ends on, a wire and its power or
+ground symbol, a wire and its label. The two colours differ by at least `drawing.colour.pair_min` (CIEDE2000,
+default 20) on both the light and the dark theme, and each keeps 3:1 on its background where the colour is the
+same for both themes (net classes and library symbols are). Our set:
+
+| Item | Where it is set | Light (`vhrd.json`) | Dark (`vhrd_dark.json`) |
+|---|---|---|---|
+| wire | theme `wire` | `rgb(74, 74, 74)` | `rgb(168, 168, 168)` |
+| pin | theme `pin` | `rgb(180, 20, 30)` (was `rgb(46, 46, 46)`, ΔE 9 to the wire) | `rgb(240, 100, 92)` (was `rgb(208, 208, 208)`, ΔE 10.5) |
+| ground wire | net class Ground | `rgb(60, 170, 24)` | same |
+| ground symbol | `vhrd_power:GND` | `rgb(0, 115, 30)` (ΔE 20.5 to its wire) | same |
+| power wire | net class Power | `rgb(232, 113, 10)` | same |
+| power symbol | `vhrd_power:PWR_LOCAL` | `rgb(175, 50, 10)` (ΔE 22.9 to its wire) | same |
+
+The pin takes the red family of the symbol outline, as in KiCad's own default theme; the symbol of a rail is the
+darker, more saturated member of its family and its wires the lighter one. Why: where a pin and its wire are the
+same grey, the reader cannot see where the part ends, and a green ground symbol on a green wire melts into it.
+Source: house (Roman, 31 Oct 2026). `DRAW-42`
 
 ### Check the PDF before a review
 

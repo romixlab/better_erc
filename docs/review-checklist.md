@@ -64,13 +64,15 @@ hand or by Claude on a netlist export.
   [[DRAW-26]](checks.md#draw-26), [[DRAW-23]](checks.md#draw-23), [[DRAW-27]](checks.md#draw-27) · references shown
   [[DRAW-22]](checks.md#draw-22) · no wire through a part [[DRAW-7]](checks.md#draw-7), no stray wire pieces
   [[DRAW-6]](checks.md#draw-6) · labels lying on their wire, left side left-justified, right side right-justified
-  [[DRAW-28]](checks.md#draw-28) · no pin on pin [[DRAW-29]](checks.md#draw-29) · one power symbol per rail per part
-  [[DRAW-30]](checks.md#draw-30) · power nets named `+3V3_LDO` [[NAME-13]](checks.md#name-13) · sections with a heading
+  [[DRAW-28]](checks.md#draw-28) · no pin on pin, straight out of a pin before the first bend [[DRAW-29]](checks.md#draw-29),
+  [[DRAW-41]](checks.md#draw-41) · one power symbol per rail per pin group, ties drawn by the routing cost
+  [[DRAW-30]](checks.md#draw-30), [[DRAW-40]](checks.md#draw-40) · power nets named `+3V3_LDO` [[NAME-13]](checks.md#name-13) · sections with a heading
   and key numbers, notes in boxes by kind with a leader to their part, tables not text lumps
   [[DRAW-31]](checks.md#draw-31), [[DRAW-32]](checks.md#draw-32), [[DRAW-37]](checks.md#draw-37),
-  [[DRAW-38]](checks.md#draw-38), [[DRAW-33]](checks.md#draw-33) · room around parts and text, neighbours aligned
+  [[DRAW-38]](checks.md#draw-38), [[DRAW-33]](checks.md#draw-33) · room around parts and text, neighbours aligned exactly or clearly not, touching items in
+  different colours, sentences capitalised [[DRAW-42]](checks.md#draw-42), [[DRAW-43]](checks.md#draw-43)
   [[DRAW-34]](checks.md#draw-34), [[DRAW-36]](checks.md#draw-36) · small parts to a rail or ground vertical
-  [[DRAW-35]](checks.md#draw-35)
+  [[DRAW-35]](checks.md#draw-35) · a bus for a group of nets going to three or more places [[DRAW-39]](checks.md#draw-39)
 - *IO and defaults:* no floating inputs, none that float when a connector is empty [[IO-1]](checks.md#io-1),
   [[IO-2]](checks.md#io-2), [[IO-10]](checks.md#io-10) · enables and gates driven by MCU pins have a pull for the reset
   and unpowered state, output enables of registers and drivers pull to off [[IO-3]](checks.md#io-3),
