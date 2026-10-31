@@ -7,6 +7,7 @@ use erc_analysis::scene::{Item, Scene, mm};
 use erc_model::geometry::{Colour, Rect};
 use erc_model::{Pt, Subject};
 
+mod colour;
 mod draw_28;
 mod draw_29;
 mod draw_30;
@@ -16,6 +17,7 @@ mod draw_35;
 mod draw_36;
 mod draw_40;
 mod draw_41;
+mod draw_42;
 mod draw_43;
 mod draw_44;
 mod draw_45;

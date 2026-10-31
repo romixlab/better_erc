@@ -6,6 +6,15 @@ use std::path::Path;
 
 /// The fingerprints of what `check` finds on `test_schematics/sources/<schematic>.kicad_sch`, sorted
 pub fn fingerprints(check: &'static dyn Check, schematic: &str) -> Vec<String> {
+    fingerprints_with(check, schematic, &RunOptions::default())
+}
+
+/// [`fingerprints`] with these options
+pub fn fingerprints_with(
+    check: &'static dyn Check,
+    schematic: &str,
+    opts: &RunOptions,
+) -> Vec<String> {
     let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../test_schematics/sources");
     let imported = erc_kicad::project::read(
         &DirFiles(dir),
@@ -13,7 +22,7 @@ pub fn fingerprints(check: &'static dyn Check, schematic: &str) -> Vec<String> {
         &ImportOptions::default(),
     )
     .unwrap();
-    let report = run_with(&[check], &imported.design, &RunOptions::default()).unwrap();
+    let report = run_with(&[check], &imported.design, opts).unwrap();
     let mut f: Vec<String> = report
         .findings
         .iter()

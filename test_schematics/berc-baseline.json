@@ -20,8 +20,8 @@
     "infos": 0,
     "candidates": 0,
     "ran": 156,
-    "not_run": 0,
-    "planned": 456
+    "not_run": 1,
+    "planned": 455
   },
   "checks": [
     {
@@ -45,7 +45,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 119
+      "micros": 107
     },
     {
       "id": "PIN-4",
@@ -54,7 +54,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1
+      "micros": 2
     },
     {
       "id": "PIN-5",
@@ -186,7 +186,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 155
+      "micros": 162
     },
     {
       "id": "RAIL-6",
@@ -288,7 +288,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 206
+      "micros": 199
     },
     {
       "id": "RAIL-20",
@@ -346,7 +346,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 61
+      "micros": 59
     },
     {
       "id": "DEC-2",
@@ -392,7 +392,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7
+      "micros": 69
     },
     {
       "id": "DEC-8",
@@ -401,7 +401,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 18
+      "micros": 73
     },
     {
       "id": "DEC-9",
@@ -417,7 +417,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 107
+      "micros": 269
     },
     {
       "id": "DEC-11",
@@ -426,7 +426,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 11
+      "micros": 34
     },
     {
       "id": "DEC-12",
@@ -435,7 +435,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 10
+      "micros": 34
     },
     {
       "id": "DEC-13",
@@ -479,7 +479,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1
+      "micros": 4
     },
     {
       "id": "SEQ-6",
@@ -530,7 +530,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 4
+      "micros": 12
     },
     {
       "id": "GND-4",
@@ -560,7 +560,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 12
+      "micros": 42
     },
     {
       "id": "DRV-1",
@@ -597,7 +597,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 16
+      "micros": 44
     },
     {
       "id": "DRV-6",
@@ -606,7 +606,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 23
+      "micros": 59
     },
     {
       "id": "DRV-7",
@@ -615,7 +615,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 20
+      "micros": 26
     },
     {
       "id": "DRV-8",
@@ -631,7 +631,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7
+      "micros": 8
     },
     {
       "id": "DRV-10",
@@ -693,7 +693,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 12
+      "micros": 11
     },
     {
       "id": "DRV-18",
@@ -781,7 +781,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 272
+      "micros": 267
     },
     {
       "id": "SHORT-3",
@@ -790,7 +790,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 140
+      "micros": 146
     },
     {
       "id": "SHORT-4",
@@ -799,7 +799,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 123
+      "micros": 119
     },
     {
       "id": "SHORT-5",
@@ -808,7 +808,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 789
+      "micros": 2504
     },
     {
       "id": "SHORT-6",
@@ -817,7 +817,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 52
+      "micros": 50
     },
     {
       "id": "SHORT-7",
@@ -826,7 +826,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 534
+      "micros": 2991
     },
     {
       "id": "SHORT-8",
@@ -856,7 +856,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 61
+      "micros": 250
     },
     {
       "id": "SHORT-12",
@@ -865,7 +865,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 2347
+      "micros": 6666
     },
     {
       "id": "WIRE-1",
@@ -874,7 +874,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 510
+      "micros": 389
     },
     {
       "id": "WIRE-2",
@@ -883,7 +883,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 137
+      "micros": 139
     },
     {
       "id": "WIRE-3",
@@ -964,7 +964,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 96
+      "micros": 99
     },
     {
       "id": "WIRE-14",
@@ -973,7 +973,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 537
+      "micros": 546
     },
     {
       "id": "WIRE-15",
@@ -1087,7 +1087,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 115
+      "micros": 103
     },
     {
       "id": "LEAK-2",
@@ -1159,7 +1159,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 618
+      "micros": 589
     },
     {
       "id": "LVL-5",
@@ -1182,7 +1182,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 2253
+      "micros": 1699
     },
     {
       "id": "LVL-8",
@@ -1198,7 +1198,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 204
+      "micros": 39
     },
     {
       "id": "LVL-10",
@@ -1249,7 +1249,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 11,
-      "micros": 1291
+      "micros": 267
     },
     {
       "id": "IO-2",
@@ -1286,7 +1286,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 226
+      "micros": 218
     },
     {
       "id": "IO-7",
@@ -1295,7 +1295,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 7
     },
     {
       "id": "IO-8",
@@ -1304,7 +1304,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 448
+      "micros": 472
     },
     {
       "id": "IO-9",
@@ -1320,7 +1320,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 217
+      "micros": 214
     },
     {
       "id": "IO-11",
@@ -1359,7 +1359,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 2216
+      "micros": 440
     },
     {
       "id": "IO-16",
@@ -1368,7 +1368,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 434
+      "micros": 88
     },
     {
       "id": "IO-17",
@@ -1405,7 +1405,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 2386
+      "micros": 517
     },
     {
       "id": "LOGIC-4",
@@ -1435,7 +1435,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 476
+      "micros": 117
     },
     {
       "id": "LOGIC-8",
@@ -1444,7 +1444,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 643
+      "micros": 173
     },
     {
       "id": "MUX-1",
@@ -1595,7 +1595,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 10
+      "micros": 14
     },
     {
       "id": "CLK-4",
@@ -1611,7 +1611,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 419
+      "micros": 1323
     },
     {
       "id": "CLK-6",
@@ -1620,7 +1620,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 543
+      "micros": 400
     },
     {
       "id": "CLK-7",
@@ -1629,7 +1629,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 417
+      "micros": 440
     },
     {
       "id": "CLK-8",
@@ -1680,7 +1680,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 405
+      "micros": 393
     },
     {
       "id": "CLK-15",
@@ -1689,7 +1689,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 383
+      "micros": 387
     },
     {
       "id": "CLK-16",
@@ -1712,7 +1712,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 407
+      "micros": 402
     },
     {
       "id": "CLK-19",
@@ -1728,7 +1728,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 25
+      "micros": 21
     },
     {
       "id": "I2C-2",
@@ -1737,7 +1737,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 3,
-      "micros": 125
+      "micros": 94
     },
     {
       "id": "I2C-3",
@@ -1746,7 +1746,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 80
+      "micros": 59
     },
     {
       "id": "I2C-4",
@@ -1755,7 +1755,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 49
+      "micros": 46
     },
     {
       "id": "I2C-5",
@@ -1778,7 +1778,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 67
+      "micros": 74
     },
     {
       "id": "I2C-8",
@@ -1794,7 +1794,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 171
+      "micros": 172
     },
     {
       "id": "I2C-10",
@@ -1803,7 +1803,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 152
+      "micros": 155
     },
     {
       "id": "I2C-11",
@@ -1861,7 +1861,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 527
+      "micros": 24
     },
     {
       "id": "I2C-19",
@@ -1989,7 +1989,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 77
+      "micros": 12
     },
     {
       "id": "SER-15",
@@ -2082,7 +2082,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1658
+      "micros": 341
     },
     {
       "id": "ETH-4",
@@ -2168,7 +2168,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 109
+      "micros": 21
     },
     {
       "id": "MEM-2",
@@ -2184,7 +2184,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 89
+      "micros": 17
     },
     {
       "id": "MEM-4",
@@ -2237,7 +2237,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 9
     },
     {
       "id": "MEM-11",
@@ -2281,7 +2281,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 204
+      "micros": 210
     },
     {
       "id": "HS-5",
@@ -2304,7 +2304,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 9
     },
     {
       "id": "HS-8",
@@ -2320,7 +2320,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 7
     },
     {
       "id": "HS-10",
@@ -2364,7 +2364,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1122
+      "micros": 1140
     },
     {
       "id": "HS-16",
@@ -2466,7 +2466,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 12
+      "micros": 13
     },
     {
       "id": "USB-5",
@@ -2503,7 +2503,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 33
+      "micros": 34
     },
     {
       "id": "USB-10",
@@ -2595,7 +2595,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 104
+      "micros": 113
     },
     {
       "id": "CONN-3",
@@ -2701,7 +2701,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 10
+      "micros": 11
     },
     {
       "id": "CONN-17",
@@ -2754,7 +2754,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 10
     },
     {
       "id": "ANA-4",
@@ -2763,7 +2763,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 251
+      "micros": 256
     },
     {
       "id": "ANA-5",
@@ -2807,7 +2807,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 9
     },
     {
       "id": "ANA-11",
@@ -2892,7 +2892,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 7
     },
     {
       "id": "ANA-22",
@@ -2901,7 +2901,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 80
+      "micros": 81
     },
     {
       "id": "ANA-23",
@@ -3442,7 +3442,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1100
+      "micros": 1153
     },
     {
       "id": "DBG-2",
@@ -3451,7 +3451,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 192
+      "micros": 191
     },
     {
       "id": "DBG-3",
@@ -3460,7 +3460,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 35
+      "micros": 37
     },
     {
       "id": "DBG-4",
@@ -3469,7 +3469,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 35
+      "micros": 20
     },
     {
       "id": "DBG-5",
@@ -3492,7 +3492,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 560
+      "micros": 412
     },
     {
       "id": "DBG-8",
@@ -3501,7 +3501,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 446
+      "micros": 448
     },
     {
       "id": "DBG-9",
@@ -3517,7 +3517,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 40
+      "micros": 39
     },
     {
       "id": "DBG-11",
@@ -3526,7 +3526,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 452
+      "micros": 441
     },
     {
       "id": "DBG-12",
@@ -3549,7 +3549,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 189
+      "micros": 206
     },
     {
       "id": "DBG-15",
@@ -3565,7 +3565,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 18
+      "micros": 14
     },
     {
       "id": "DBG-17",
@@ -3574,7 +3574,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 365
+      "micros": 374
     },
     {
       "id": "DBG-18",
@@ -3583,7 +3583,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 14,
-      "micros": 643
+      "micros": 657
     },
     {
       "id": "DBG-19",
@@ -3634,7 +3634,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 20,
-      "micros": 625
+      "micros": 640
     },
     {
       "id": "TEST-2",
@@ -3643,7 +3643,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 46
+      "micros": 32
     },
     {
       "id": "TEST-3",
@@ -3659,7 +3659,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 62
+      "micros": 47
     },
     {
       "id": "TEST-5",
@@ -3668,7 +3668,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 28,
-      "micros": 1127
+      "micros": 831
     },
     {
       "id": "TEST-6",
@@ -3691,7 +3691,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 1498
+      "micros": 365
     },
     {
       "id": "BOM-2",
@@ -3707,7 +3707,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 416
+      "micros": 341
     },
     {
       "id": "BOM-4",
@@ -3716,7 +3716,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 12,
-      "micros": 410
+      "micros": 317
     },
     {
       "id": "BOM-5",
@@ -3725,7 +3725,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 606
+      "micros": 446
     },
     {
       "id": "BOM-6",
@@ -3734,7 +3734,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 590
+      "micros": 432
     },
     {
       "id": "BOM-7",
@@ -3750,7 +3750,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 11
+      "micros": 8
     },
     {
       "id": "BOM-9",
@@ -3759,7 +3759,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 535
+      "micros": 390
     },
     {
       "id": "BOM-10",
@@ -3768,7 +3768,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 39
+      "micros": 30
     },
     {
       "id": "BOM-11",
@@ -3777,7 +3777,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 25
+      "micros": 17
     },
     {
       "id": "BOM-12",
@@ -3800,7 +3800,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 167
+      "micros": 123
     },
     {
       "id": "BOM-15",
@@ -3823,7 +3823,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 116
+      "micros": 79
     },
     {
       "id": "BOM-18",
@@ -3846,7 +3846,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 108
+      "micros": 86
     },
     {
       "id": "NAME-2",
@@ -3855,7 +3855,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 78
+      "micros": 55
     },
     {
       "id": "NAME-3",
@@ -3871,7 +3871,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 330
+      "micros": 83
     },
     {
       "id": "NAME-5",
@@ -3880,7 +3880,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 548
+      "micros": 160
     },
     {
       "id": "NAME-6",
@@ -3889,7 +3889,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 358
+      "micros": 83
     },
     {
       "id": "NAME-7",
@@ -3898,7 +3898,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 2787
+      "micros": 2044
     },
     {
       "id": "NAME-8",
@@ -3914,7 +3914,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 282
+      "micros": 80
     },
     {
       "id": "NAME-10",
@@ -3923,7 +3923,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 84
+      "micros": 83
     },
     {
       "id": "NAME-11",
@@ -3932,7 +3932,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 185
+      "micros": 186
     },
     {
       "id": "NAME-12",
@@ -3950,7 +3950,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 2,
-      "micros": 15
+      "micros": 32
     },
     {
       "id": "DRAW-1",
@@ -4001,7 +4001,7 @@
       "tier": "hard",
       "status": "ran",
       "findings": 0,
-      "micros": 12533
+      "micros": 22534
     },
     {
       "id": "DRAW-8",
@@ -4017,7 +4017,7 @@
       "tier": "hard",
       "status": "ran",
       "findings": 6,
-      "micros": 13652
+      "micros": 38585
     },
     {
       "id": "DRAW-10",
@@ -4152,7 +4152,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 1,
-      "micros": 281
+      "micros": 286
     },
     {
       "id": "DRAW-29",
@@ -4161,7 +4161,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 1564
+      "micros": 1535
     },
     {
       "id": "DRAW-30",
@@ -4170,7 +4170,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 1088
+      "micros": 1269
     },
     {
       "id": "DRAW-31",
@@ -4186,7 +4186,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 21
+      "micros": 19
     },
     {
       "id": "DRAW-33",
@@ -4202,7 +4202,7 @@
       "tier": "hard",
       "status": "ran",
       "findings": 123,
-      "micros": 71792
+      "micros": 67867
     },
     {
       "id": "DRAW-35",
@@ -4211,7 +4211,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 158
+      "micros": 166
     },
     {
       "id": "DRAW-36",
@@ -4220,7 +4220,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 17,
-      "micros": 6316
+      "micros": 6364
     },
     {
       "id": "DRAW-37",
@@ -4250,7 +4250,7 @@
       "tier": "hard",
       "status": "ran",
       "findings": 2,
-      "micros": 3168
+      "micros": 6625
     },
     {
       "id": "DRAW-41",
@@ -4259,14 +4259,17 @@
       "tier": "mid",
       "status": "ran",
       "findings": 2,
-      "micros": 3440
+      "micros": 2651
     },
     {
       "id": "DRAW-42",
       "title": "Touching items too close in colour (a wire and its pin, power symbol or label) on the light or the dark theme",
       "severity": "suggestion",
       "tier": "mid",
-      "status": "planned"
+      "status": "not_run",
+      "check": "DRAW-42",
+      "need": "colour theme",
+      "hint": "no colour theme: pass KiCad's colors/*.json with --theme (the check needs: the schematic drawing, the project's net class colours, the colour theme)"
     },
     {
       "id": "DRAW-43",
@@ -4275,7 +4278,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 183
+      "micros": 3211
     },
     {
       "id": "DRAW-44",
@@ -4284,7 +4287,7 @@
       "tier": "hard",
       "status": "ran",
       "findings": 0,
-      "micros": 213
+      "micros": 522
     },
     {
       "id": "DRAW-45",
@@ -4293,7 +4296,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 213
+      "micros": 528
     },
     {
       "id": "DRAW-46",
@@ -4302,7 +4305,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 3
+      "micros": 2886
     },
     {
       "id": "DRAW-47",
@@ -4311,7 +4314,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 12
     },
     {
       "id": "LIB-1",
@@ -4334,7 +4337,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 11
+      "micros": 9
     },
     {
       "id": "LIB-4",
@@ -4422,7 +4425,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 740
+      "micros": 4917
     },
     {
       "id": "LIB-16",
@@ -25302,7 +25305,7 @@
     }
   ],
   "timing": {
-    "checks_micros": 80343,
-    "total_micros": 85143
+    "checks_micros": 76999,
+    "total_micros": 81775
   }
 }

@@ -104,7 +104,7 @@ to `~/.zshrc`, or `COMPLETE=fish berc | source` to `~/.config/fish/config.fish`.
 ```sh
 berc check PROJECT [--variant V] [--only CAT,ID] [--format text|json|sarif|md]
                    [--baseline report.json] [--fail-on error|warning|suggestion] [--require NEED]
-                   [--set NAME=VALUE]
+                   [--set NAME=VALUE] [--theme THEME.json]
 ```
 
 `PROJECT` is a directory with one design in it (its `.kicad_pro`) or a design file. Exit codes:

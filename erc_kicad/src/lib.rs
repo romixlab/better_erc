@@ -6,6 +6,7 @@
 //! - [`pcb`]: the board: footprints, pads, tracks, vias, zones, graphics, stackup.
 //! - [`pro`]: the project file: net classes, text variables, variants, ERC and DRC settings, bus aliases.
 //! - [`netlist`]: the KiCad netlist (`kicad-cli sch export netlist`), the oracle of the schematic importer.
+//! - [`theme`]: a KiCad colour theme (`colors/*.json`).
 //!
 //! Every element a reader does not know becomes an [`erc_model::ImportNote`], never a panic.
 //!
@@ -20,6 +21,7 @@ pub mod pro;
 pub mod project;
 pub mod sch;
 pub mod sexpr;
+pub mod theme;
 
 pub use netlist::NetlistImporter;
 pub use project::KicadImporter;

@@ -1,0 +1,69 @@
+# What better_erc finds on draw-42_touching_colours.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board draw-42_touching_colours"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DRAW-28"
+subjects = ["item label BLUE", "sheet /"]
+
+[[finding]]
+check = "DRAW-28"
+subjects = ["item label CLEAR", "sheet /"]
+
+[[finding]]
+check = "DRAW-28"
+subjects = ["item label INDIGO", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item label BLUE", "item wire of BLUE", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item label CLEAR", "item wire of CLEAR", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item label INDIGO", "item wire of INDIGO", "sheet /"]
+
+[[finding]]
+check = "DRAW-42"
+subjects = ["item Test theme: label rgb(0, 0, 194)", "item Test theme: wire rgb(0, 0, 180)", "sheet /"]
+
+[[finding]]
+check = "DRAW-42"
+subjects = ["item Test theme: pin rgb(150, 108, 0)", "item Test theme: wire rgb(150, 110, 10)", "sheet /"]
+
+[[finding]]
+check = "DRAW-42"
+subjects = ["item Test theme: power symbol rgb(60, 170, 24)", "item Test theme: wire rgb(50, 165, 30)", "sheet /"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board draw-42_touching_colours"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /BLUE", "pin R3.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /CLEAR", "pin R2.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /INDIGO", "pin R4.1"]

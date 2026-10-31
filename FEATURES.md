@@ -541,7 +541,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   - 📋 `DRAW-39` Group of related nets labelled in three or more places with no bus (`drawing.bus_hint.*`)
   - ✅ `DRAW-40` Tie wiring much longer than needed where the routing cost finds a cheaper drawing (`drawing.route.*`)
   - ✅ `DRAW-41` Wire bending right at a pin or power symbol (`drawing.pin_lead`)
-  - 📋 `DRAW-42` Touching items too close in colour (`drawing.colour.pair_min`)
+  - ✅ `DRAW-42` Touching items too close in colour (`drawing.colour.pair_min`, `berc check --theme`)
   - ✅ `DRAW-43` Sentence starting with a lower-case letter
   - ✅ `DRAW-44` Two sections of a sheet closer than the section gap (`drawing.section_gap`)
   - ✅ `DRAW-45` Section headings just off a shared row or column (`drawing.section.snap`)

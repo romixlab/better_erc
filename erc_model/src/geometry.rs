@@ -169,6 +169,53 @@ pub struct Colour {
     pub a: f32,
 }
 
+impl Colour {
+    /// A colour as KiCad's settings write it, `rgb(r, g, b)` or `rgba(r, g, b, a)`; `None` for another text and for
+    /// alpha 0, KiCad's "not set"
+    pub fn parse(text: &str) -> Option<Colour> {
+        let (head, rest) = text.trim().split_once('(')?;
+        let mut parts = rest.strip_suffix(')')?.split(',').map(str::trim);
+        let mut byte = || parts.next()?.parse::<u8>().ok();
+        let (r, g, b) = (byte()?, byte()?, byte()?);
+        let a = match (head, parts.next()) {
+            ("rgb", None) => 1.0,
+            ("rgba", Some(a)) => a.parse().ok()?,
+            _ => return None,
+        };
+        (a > 0.0).then_some(Colour { r, g, b, a })
+    }
+}
+
+impl std::fmt::Display for Colour {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "rgb({}, {}, {})", self.r, self.g, self.b)
+    }
+}
+
+/// What a KiCad colour theme gives the items a wire can touch; `None` for a key the file leaves out
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+pub struct Theme {
+    pub name: String,
+    pub wire: Option<Colour>,
+    pub pin: Option<Colour>,
+    pub label_local: Option<Colour>,
+    pub label_global: Option<Colour>,
+    pub label_hier: Option<Colour>,
+    pub component_outline: Option<Colour>,
+}
+
+impl Theme {
+    /// A label's colour; a directive label has its own theme key and no text to tell apart
+    pub fn label(&self, kind: LabelKind) -> Option<Colour> {
+        match kind {
+            LabelKind::Local => self.label_local,
+            LabelKind::Global => self.label_global,
+            LabelKind::Hierarchical => self.label_hier,
+            _ => None,
+        }
+    }
+}
+
 /// A text as drawn
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 pub struct Text {
@@ -250,6 +297,8 @@ pub struct DrawnSymbol {
     pub mirror: Option<char>,
     /// The library graphics as placed, pins left out; `None` for a symbol drawn with pins alone
     pub body: Option<Rect>,
+    /// The stroke colour the library graphics set; `None` for the theme's
+    pub colour: Option<Colour>,
     pub pins: Vec<DrawnPin>,
     pub fields: Vec<DrawnField>,
     pub uuid: String,

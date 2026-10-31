@@ -115,6 +115,9 @@ struct CheckArgs {
     /// A setting over its default, repeatable: `drawing.clearance.part=2`, `I2C-9.min_pull_up=1000`
     #[arg(long = "set", value_name = "NAME=VALUE")]
     set: Vec<String>,
+    /// A KiCad colour theme (`colors/*.json`), repeatable: what `DRAW-42` looks at the sheets on
+    #[arg(long, value_name = "THEME.json", value_hint = ValueHint::FilePath)]
+    theme: Vec<PathBuf>,
     #[arg(long, value_enum, default_value_t = Format::Text)]
     format: Format,
     /// A previous JSON report (`--format json`): findings are marked new or unchanged, the fixed ones listed, and
@@ -303,6 +306,16 @@ fn check(args: CheckArgs) -> ExitCode {
         if let Err(e) = done {
             error(&e);
             return ExitCode::from(CheckError::EXIT_CODE);
+        }
+    }
+    for path in &args.theme {
+        let read = std::fs::read_to_string(path).map_err(|e| e.to_string());
+        match read.and_then(|text| better_erc::kicad::theme::read(&text)) {
+            Ok(theme) => config.themes.push(theme),
+            Err(e) => {
+                error(&format!("--theme {}: {e}", path.display()));
+                return ExitCode::from(CheckError::EXIT_CODE);
+            }
         }
     }
     let opts = CheckOptions {

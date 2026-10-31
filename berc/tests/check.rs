@@ -642,3 +642,28 @@ fn set_changes_a_setting_and_refuses_an_unknown_one() {
     assert_eq!(code(&bad), 2);
     assert!(stderr(&bad).contains("drawing.nothing"), "{}", stderr(&bad));
 }
+
+/// `--theme` feeds `DRAW-42`; without one the report says the check did not run and why
+#[test]
+fn theme_runs_the_colour_check() {
+    let sheet = sources().join("draw-42_touching_colours.kicad_sch");
+    let sheet = sheet.to_str().unwrap();
+    let theme = sources().join("draw-42_touching_colours.theme.json");
+    let args = ["check", sheet, "--only", "DRAW-42", "--format", "json"];
+    let without = berc(&args);
+    assert!(json(&without)["findings"].as_array().unwrap().is_empty());
+    assert!(
+        stdout(&without).contains("no colour theme"),
+        "{}",
+        stdout(&without)
+    );
+    let themed = berc(&[&args[..], &["--theme", theme.to_str().unwrap()]].concat());
+    assert_eq!(json(&themed)["findings"].as_array().unwrap().len(), 3);
+    let bad = berc(&["check", sheet, "--theme", "no-such-theme.json"]);
+    assert_eq!(code(&bad), 2);
+    assert!(
+        stderr(&bad).contains("no-such-theme.json"),
+        "{}",
+        stderr(&bad)
+    );
+}

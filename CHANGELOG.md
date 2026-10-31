@@ -18,6 +18,7 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 - `berc check --set NAME=VALUE` sets a threshold for a run (`drawing.clearance.part=2`, `DRAW-30.max_symbols_per_rail=2`); an unknown name is refused.
 - Sections on a sheet, from their headings: `DRAW-44` (two sections closer than `drawing.section_gap`), `DRAW-45` (section headings just off a shared row or column), and `DRAW-36` now also names a section's ground symbols, supplies, input and output ports that form a ladder off their row or column. `DRAW-40` weighs bends and detours by net class (`drawing.route.k_power`, `.k_ground`, `.k_signal`) and looks at any bent power or ground tie, its candidates keep the pin lead and the symbol's row, stay off other nets' wires, and leave `PWR_FLAG` stubs out of the tie; `DRAW-41` also counts a tee right at the pin tip.
 - `DRAW-46` (a leader into a small part: 45 degree last segment, aimed at the body centre, tip clear of the outline along its line) and `DRAW-47` (run-on sentences in note boxes), with test schematics.
+- `DRAW-42` (touching items too close in colour, CIEDE2000 on each theme) with `berc check --theme THEME.json`, repeatable: KiCad colour themes come in by path, a new need `colour-theme` reports the check as not run without one. A label in its wire's net class colour is left out, since KiCad draws it that way. `DrawnSymbol::colour` holds the library stroke colour.
 
 ### Changed
 

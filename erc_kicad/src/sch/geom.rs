@@ -45,6 +45,8 @@ struct LibDrawing {
     power: bool,
     units: u32,
     graphics: Vec<LibGraphic>,
+    /// The first colour a graphic's stroke sets
+    colour: Option<Colour>,
     pins: Vec<LibPinDrawing>,
     /// `None`: names hidden
     name_offset: Option<i64>,
@@ -379,6 +381,7 @@ fn lib_drawing(s: &Sexp) -> LibDrawing {
                 Some("pin") => l.pins.push(lib_pin(g, unit, body)),
                 Some("rectangle" | "polyline" | "arc" | "bezier") => {
                     let pts = graphic_points(g);
+                    l.colour = l.colour.or(stroke(g).colour);
                     l.graphics
                         .push((unit, body, pts.iter().filter_map(lib_point).collect()));
                 }
@@ -387,6 +390,7 @@ fn lib_drawing(s: &Sexp) -> LibDrawing {
                         g.child("center").and_then(lib_point),
                         nm(g.child("radius"), 0),
                     ) {
+                        l.colour = l.colour.or(stroke(g).colour);
                         l.graphics
                             .push((unit, body, vec![(x - r, y - r), (x + r, y + r)]));
                     }
@@ -949,6 +953,7 @@ pub(crate) fn place(raw: RawSheet, res: &[SymRes], file: &str) -> SheetGeometry 
             rotation: s.rotation,
             mirror: s.mirror,
             body,
+            colour: base.colour,
             pins,
             fields,
             uuid: s.uuid.clone(),

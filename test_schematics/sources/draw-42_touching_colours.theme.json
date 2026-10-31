@@ -1,0 +1,11 @@
+{
+  "meta": { "name": "Test theme", "version": 5 },
+  "schematic": {
+    "component_outline": "rgb(200, 20, 28)",
+    "label_global": "rgb(113, 76, 166)",
+    "label_hier": "rgb(0, 128, 129)",
+    "label_local": "rgb(0, 0, 194)",
+    "pin": "rgb(150, 108, 0)",
+    "wire": "rgb(74, 74, 74)"
+  }
+}

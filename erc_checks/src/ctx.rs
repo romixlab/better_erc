@@ -7,6 +7,7 @@ use crate::meta::{CheckMeta, Need, Severity};
 use erc_analysis::drawing::Drawing;
 use erc_analysis::scene::Scene;
 use erc_analysis::{Feeds, I2cBuses, PartClasses, Power, Values};
+use erc_model::geometry::Theme;
 use erc_model::{Board, BoardId, Design, PartId, Provenance, VariantId, View};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
@@ -24,6 +25,9 @@ pub struct Config {
     pub params: BTreeMap<String, f64>,
     /// Check ids not to run
     pub disabled: BTreeSet<String>,
+    /// The colour themes the sheets are looked at on
+    #[serde(default)]
+    pub themes: Vec<Theme>,
 }
 
 impl Config {
@@ -145,6 +149,13 @@ impl Availability {
                     missing(
                         "no drawing geometry: import the .kicad_sch, not a netlist or a PDF (NET-26)",
                     )
+                }
+            }
+            Need::ColourTheme => {
+                if cx.themes().is_empty() {
+                    missing("no colour theme: pass KiCad's colors/*.json with --theme")
+                } else {
+                    Availability::Available
                 }
             }
             Need::Variant => {
@@ -323,6 +334,11 @@ impl<'a> Ctx<'a> {
     /// Whether a part is fitted in the variant checked
     pub fn fitted(&self, part: PartId) -> bool {
         self.view().fitted(part)
+    }
+
+    /// The colour themes given to the run (Need::ColourTheme)
+    pub fn themes(&self) -> &[Theme] {
+        &self.config.themes
     }
 
     /// A threshold: the project's value, else the check's default

@@ -121,6 +121,8 @@ pub enum Need {
     Drawing,
     /// The sheets as drawn: symbol boxes, wires, text extents (NET-26)
     Geometry,
+    /// KiCad colour themes given to the run (`DRAW-42`)
+    ColourTheme,
     /// What is fitted: DNP flags and variant overrides the design states
     Variant,
     /// Part data from the part database or mx3 (CFG-5)
@@ -148,6 +150,7 @@ impl Need {
             Need::Layout => "layout".into(),
             Need::Drawing => "schematic drawing".into(),
             Need::Geometry => "drawing geometry".into(),
+            Need::ColourTheme => "colour theme".into(),
             Need::Variant => "fitted parts".into(),
             Need::PartDb => "part data".into(),
             Need::Project(key) => format!("project file: {key}"),
@@ -172,6 +175,7 @@ impl Need {
         Need::Layout,
         Need::Drawing,
         Need::Geometry,
+        Need::ColourTheme,
         Need::Variant,
         Need::PartDb,
         Need::MultiBoard,
@@ -193,6 +197,7 @@ impl Need {
             Need::Layout => "layout".into(),
             Need::Drawing => "drawing".into(),
             Need::Geometry => "geometry".into(),
+            Need::ColourTheme => "colour-theme".into(),
             Need::Variant => "variant".into(),
             Need::PartDb => "part-db".into(),
             Need::Project(key) => format!("project:{key}"),
@@ -228,6 +233,7 @@ impl Need {
             Need::Layout => "the board file",
             Need::Drawing => "labels, no-connect flags, sheet pins",
             Need::Geometry => "the sheets as drawn: symbol boxes, wires, text extents (NET-26)",
+            Need::ColourTheme => "KiCad colour themes, given with --theme",
             Need::Variant => "DNP flags and variant overrides: what is fitted",
             Need::PartDb => "part data (CFG-5)",
             Need::Project(_) => "a key of the better_erc project file (CFG-2)",
