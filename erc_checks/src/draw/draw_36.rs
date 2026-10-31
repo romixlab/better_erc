@@ -69,9 +69,14 @@ enum Class {
 struct Liner<'s> {
     item: &'s Item,
     class: Class,
-    /// Where the lines come from: an anchor has one, a body its two edges and its centre, compared like with like
+    /// Where the lines come from: an anchor has one, a body its two edges, its centre and its pins, compared like
+    /// with like
     lines: Vec<(u8, Pt)>,
 }
+
+/// The kind of line a pin of a part gives. Parts of different sizes with pins on one line are lined up, so a shared
+/// pin line clears the pair; pins off each other say nothing, a pin pitch is no near miss.
+const PIN_LINE: u8 = 3;
 
 fn liners<'s>(scene: &'s Scene, axis: Axis) -> Vec<Liner<'s>> {
     let g = scene.geometry;
@@ -100,7 +105,10 @@ fn liners<'s>(scene: &'s Scene, axis: Axis) -> Vec<Liner<'s>> {
             }
             K::Body => {
                 let r = item.rect;
-                (Class::Part, vec![(0, r.min), (1, r.center()), (2, r.max)])
+                let mut lines = vec![(0, r.min), (1, r.center()), (2, r.max)];
+                let pins = item.owner.iter().flat_map(|o| &g.symbols[*o].pins);
+                lines.extend(pins.map(|p| (PIN_LINE, p.at)));
+                (Class::Part, lines)
             }
             _ => continue,
         };
@@ -123,7 +131,7 @@ fn miss(axis: Axis, a: &Liner, b: &Liner, snap: i64) -> Option<(i64, i64, i64)> 
             if off == 0 {
                 return None;
             }
-            if off < snap && best.is_none_or(|(o, _, _)| off < o) {
+            if *ka != PIN_LINE && off < snap && best.is_none_or(|(o, _, _)| off < o) {
                 best = Some((off, va, vb));
             }
         }
