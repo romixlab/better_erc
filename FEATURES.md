@@ -339,6 +339,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - 🚧 `NAME-11` Negative rail with its sign from a marker only or none; negative supply pins on a rail read positive ·
   `name/name_11.rs`, `name-11_negative_rail_names`. Missing: rails a negative regulator feeds (power sources, `NET-5`)
 - ✅ `NAME-12` Unannotated designators, one designator placed twice for one unit · `name/name_12.rs`, `name-12_designators`
+- ✅ `NAME-13` Power net name not in the `+<voltage>_<source or group>` form · `name/name_13.rs`, `name-13_power_net_form`
 - ✅ `DRV-5` N-channel FET inverter (source on ground, drain pulled up) with its gate on an IC output's net: no gate
   resistor · `drv/drv_5.rs`, `drv-5_inverter_gate_resistor`
 - ✅ `DRV-6` Two MOSFETs in series through a middle net of gate-drive passives only (ends no ground) with their body
@@ -542,6 +543,8 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   - ✅ `DRAW-41` Wire bending right at a pin or power symbol (`drawing.pin_lead`)
   - 📋 `DRAW-42` Touching items too close in colour (`drawing.colour.pair_min`)
   - ✅ `DRAW-43` Sentence starting with a lower-case letter
+  - ✅ `DRAW-44` Two sections of a sheet closer than the section gap (`drawing.section_gap`)
+  - ✅ `DRAW-45` Section headings just off a shared row or column (`drawing.section.snap`)
   - 📋 `DRAW-46` Leader into a small part off centre, not diagonal or clipped (`drawing.leader.clear`)
   - 📋 `DRAW-47` Run-on note text (`drawing.note.item_words`, `.item_marks`)
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`
