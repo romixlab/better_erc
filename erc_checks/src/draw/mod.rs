@@ -4,7 +4,7 @@
 use crate::meta::Param;
 use crate::{Ctx, Location};
 use erc_analysis::scene::{Item, Scene, mm};
-use erc_model::geometry::Rect;
+use erc_model::geometry::{Colour, Rect};
 use erc_model::{Pt, Subject};
 
 mod draw_28;
@@ -19,6 +19,8 @@ mod draw_41;
 mod draw_43;
 mod draw_44;
 mod draw_45;
+mod draw_46;
+mod draw_47;
 mod draw_7;
 mod draw_9;
 mod overlap;
@@ -81,6 +83,33 @@ pub(crate) const SECTION_REACH: Param = Param {
     unit: "mm",
     doc: "how far left of its heading a section's parts may stand",
 };
+
+pub(crate) const COLOUR_SLACK: Param = Param {
+    name: "drawing.note.colour_slack",
+    default: 8.0,
+    unit: "counts",
+    doc: "difference per colour channel a note box's or leader's stroke may have from its colour",
+};
+
+/// The words a simulator directive starts with, as in ngspice and KiCad's simulator
+const DIRECTIVES: &[&str] = &[
+    ".ac", ".control", ".csparam", ".dc", ".disto", ".end", ".endc", ".ends", ".four", ".func",
+    ".global", ".ic", ".include", ".lib", ".meas", ".measure", ".model", ".nodeset", ".noise",
+    ".op", ".options", ".option", ".param", ".plot", ".print", ".probe", ".pz", ".save", ".sens",
+    ".sp", ".step", ".subckt", ".temp", ".tf", ".title", ".tran",
+];
+
+/// Whether a text starts with a simulator directive
+fn is_directive(text: &str) -> bool {
+    let word = text.split_whitespace().next().unwrap_or("");
+    DIRECTIVES.contains(&word.to_lowercase().as_str())
+}
+
+/// Whether a colour is this one, within `slack` counts per channel
+fn near_colour(c: Colour, (r, g, b): (u8, u8, u8), slack: f64) -> bool {
+    let d = |x: u8, y: u8| (x as f64 - y as f64).abs() <= slack;
+    d(c.r, r) && d(c.g, g) && d(c.b, b)
+}
 
 /// A length setting in nanometres
 fn nm(cx: &Ctx, meta: &crate::CheckMeta, p: &Param) -> i64 {

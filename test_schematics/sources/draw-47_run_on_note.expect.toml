@@ -1,0 +1,49 @@
+# What better_erc finds on draw-47_run_on_note.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["part R1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \".param RSRC=1 RLOAD=2 RT...\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"A short lead line.\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"Chained: first (a); then...\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"This box explains the di...\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"This single sentence run...\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-47"
+subjects = ["item text box \"Chained: first (a); then...\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-47"
+subjects = ["item text box \"This single sentence run...\"", "sheet /"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board draw-47_run_on_note"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

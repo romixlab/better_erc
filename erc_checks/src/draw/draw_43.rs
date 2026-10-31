@@ -21,7 +21,7 @@ static META: CheckMeta = CheckMeta {
 };
 
 /// Words that end in a full stop inside a sentence
-const ABBREVIATIONS: &[&str] = &[
+pub(super) const ABBREVIATIONS: &[&str] = &[
     "e.g.", "i.e.", "vs.", "approx.", "etc.", "max.", "min.", "typ.", "cf.", "ca.", "no.", "nom.",
     "fig.", "ref.", "incl.", "excl.",
 ];

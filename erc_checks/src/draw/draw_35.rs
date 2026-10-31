@@ -28,7 +28,7 @@ static META: CheckMeta = CheckMeta {
 };
 
 /// Whether a part of this class stands on the voltage axis: discrete parts, whatever their pin count
-fn small_part(cx: &Ctx, s: &DrawnSymbol) -> bool {
+pub(super) fn small_part(cx: &Ctx, s: &DrawnSymbol) -> bool {
     let part = cx.board().part_by_designator(&s.reference);
     part.is_some_and(|p| {
         matches!(

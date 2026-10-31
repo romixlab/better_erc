@@ -1,0 +1,37 @@
+# What better_erc finds on draw-46_leader_aim.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board draw-46_leader_aim"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"Each leader points at a ...\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-46"
+subjects = ["item R2 body", "sheet /"]
+
+[[finding]]
+check = "DRAW-46"
+subjects = ["item R3 body", "sheet /"]
+
+[[finding]]
+check = "DRAW-46"
+subjects = ["item R4 body", "sheet /"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board draw-46_leader_aim"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

@@ -1,11 +1,11 @@
 //! `DRAW-32` Free-standing text, or a note box that is not one of the six kinds (TODO, Information, Caution, Debug,
 //! Critical, Layout)
 
-use super::{HEADING_SIZE, nm, one};
+use super::{COLOUR_SLACK, HEADING_SIZE, is_directive, near_colour, nm, one};
 use crate::meta::*;
 use crate::{Ctx, Finding};
 use erc_analysis::scene::{Item, ItemKind as K, Scene, mm};
-use erc_model::geometry::{Colour, DrawnTextBox, Text};
+use erc_model::geometry::{DrawnTextBox, Text};
 
 pub struct Draw32;
 
@@ -14,13 +14,6 @@ const GROUP_HEADING_SIZE: Param = Param {
     default: 1.905,
     unit: "mm",
     doc: "height of a group heading inside a section",
-};
-
-const COLOUR_SLACK: Param = Param {
-    name: "drawing.note.colour_slack",
-    default: 8.0,
-    unit: "counts",
-    doc: "difference per colour channel a note box's stroke may have from its kind",
 };
 
 static META: CheckMeta = CheckMeta {
@@ -47,24 +40,6 @@ const KINDS: [(&str, (u8, u8, u8)); 6] = [
 
 /// The grey of a parameter box's solid stroke
 const PARAMETER_BOX: (u8, u8, u8) = (110, 110, 110);
-
-/// The words a simulator directive starts with, as in ngspice and KiCad's simulator
-const DIRECTIVES: &[&str] = &[
-    ".ac", ".control", ".csparam", ".dc", ".disto", ".end", ".endc", ".ends", ".four", ".func",
-    ".global", ".ic", ".include", ".lib", ".meas", ".measure", ".model", ".nodeset", ".noise",
-    ".op", ".options", ".option", ".param", ".plot", ".print", ".probe", ".pz", ".save", ".sens",
-    ".sp", ".step", ".subckt", ".temp", ".tf", ".title", ".tran",
-];
-
-fn near(c: Colour, (r, g, b): (u8, u8, u8), slack: f64) -> bool {
-    let d = |x: u8, y: u8| (x as f64 - y as f64).abs() <= slack;
-    d(c.r, r) && d(c.g, g) && d(c.b, b)
-}
-
-fn is_directive(text: &str) -> bool {
-    let word = text.split_whitespace().next().unwrap_or("");
-    DIRECTIVES.contains(&word.to_lowercase().as_str())
-}
 
 /// What is wrong with a free text item, if anything
 fn free_text(scene: &Scene, item: &Item, t: &Text, heading: (i64, i64)) -> Option<String> {
@@ -100,12 +75,12 @@ fn free_text(scene: &Scene, item: &Item, t: &Text, heading: (i64, i64)) -> Optio
 fn note_box(scene: &Scene, item: &Item, b: &DrawnTextBox, slack: f64) -> Option<String> {
     let colour = b.stroke.colour;
     let solid = b.stroke.style == "solid";
-    if solid && colour.is_some_and(|c| near(c, PARAMETER_BOX, slack)) {
+    if solid && colour.is_some_and(|c| near_colour(c, PARAMETER_BOX, slack)) {
         return None;
     }
     let kind = KINDS
         .iter()
-        .find(|(_, k)| colour.is_some_and(|c| near(c, *k, slack)));
+        .find(|(_, k)| colour.is_some_and(|c| near_colour(c, *k, slack)));
     let Some((kind, _)) = kind else {
         return Some(format!("{} has no note kind's stroke colour", item.name));
     };

@@ -125,7 +125,9 @@ type Row = (i64, String, String, Rect, Rect);
 
 /// The worst texts of a sheet: (edge difference in nm, the text, what it is, ours, KiCad's); only single-line ones
 fn compare(dir: &Path, file: &str, out: &Path) -> Option<Vec<Row>> {
+    // An empty KiCad config: a default font set on this PC would plot outlines, not the stroke font
     let export = Command::new("kicad-cli")
+        .env("KICAD_CONFIG_HOME", out.join("config"))
         .args(["sch", "export", "svg", "-e", "-n", "-o"])
         .arg(out)
         .arg(dir.join(file))
