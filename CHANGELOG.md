@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.4.16] - 2026-11-03
+
 ### Fixed
 
 - `erc_kicad`'s differential test (`test_schematics_equal_kicad`) golden dumps for the `DRAW-40`
