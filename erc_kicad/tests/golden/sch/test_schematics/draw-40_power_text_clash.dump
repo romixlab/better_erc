@@ -1,0 +1,34 @@
+board draw-40_power_text_clash
+label / power +3V3_LDO at 96.52,22.86 net +3V3_LDO
+label / power +3V3_VIO at 81.28,25.4 net +3V3_VIO
+net +3V3_LDO class = Default @ sch draw-40_power_text_clash.kicad_sch note "effective net class"
+net +3V3_LDO kind power
+net +3V3_VIO class = Default @ sch draw-40_power_text_clash.kicad_sch note "effective net class"
+net +3V3_VIO kind power
+part U1 field Value = U9 @ sch draw-40_power_text_clash.kicad_sch
+part U1 flag dnp = no @ sch draw-40_power_text_clash.kicad_sch
+part U1 flag exclude_from_sim = no @ sch draw-40_power_text_clash.kicad_sch
+part U1 flag in_bom = yes @ sch draw-40_power_text_clash.kicad_sch
+part U1 flag on_board = yes @ sch draw-40_power_text_clash.kicad_sch
+part U1 lib Device:U9 sheet / symbol Device:U9
+part U1 unit 1 sheet / uuid d4100000-0000-4000-8000-000000000003 line 22 at 76.2,50.8 rot 0
+part U1 value = text U9 @ sch draw-40_power_text_clash.kicad_sch note "from the Value field"
+pin U1 1 name VCCA unit 1 net +3V3_LDO
+pin U1 1 type = passive @ sch draw-40_power_text_clash.kicad_sch
+pin U1 2 name VCCB unit 1 net +3V3_VIO
+pin U1 2 type = passive @ sch draw-40_power_text_clash.kicad_sch
+sheet / name "" file draw-40_power_text_clash.kicad_sch uuid /
+source file draw-40_power_text_clash.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:U9 field Reference U
+symbol Device:U9 field Value U9
+symbol Device:U9 hash d57448684d48085b
+symbol Device:U9 pin 1 unit 1 body 1 name VCCA type passive style line
+symbol Device:U9 pin 2 unit 1 body 1 name VCCB type passive style line
+symbol Device:U9 units 1
+symbol power:VDD field Reference "#PWR"
+symbol power:VDD field Value VDD
+symbol power:VDD hash 2662a930d7b940c5
+symbol power:VDD pin 1 unit 1 body 1 name VDD type power_in style line
+symbol power:VDD units 1 power global

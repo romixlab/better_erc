@@ -11,6 +11,11 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Fixed
+
+- `erc_kicad`'s differential test (`test_schematics_equal_kicad`) golden dumps for the `DRAW-40`
+  `power_text_clash` and `wire_through_label` test schematics, missing since they were added in d7033e3.
+
 ## [0.4.15] - 2026-10-31
 
 ### Changed

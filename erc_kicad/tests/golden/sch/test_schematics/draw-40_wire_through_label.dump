@@ -1,0 +1,31 @@
+board draw-40_wire_through_label
+label / local FF at 68.58,55.88 net /FF dangling
+label / power +3V3_LDO at 78.74,40.64 net +3V3_LDO
+net +3V3_LDO class = Default @ sch draw-40_wire_through_label.kicad_sch note "effective net class"
+net +3V3_LDO kind power
+net /FF class = Default @ sch draw-40_wire_through_label.kicad_sch note "effective net class"
+net /FF kind named
+part U1 field Value = U10 @ sch draw-40_wire_through_label.kicad_sch
+part U1 flag dnp = no @ sch draw-40_wire_through_label.kicad_sch
+part U1 flag exclude_from_sim = no @ sch draw-40_wire_through_label.kicad_sch
+part U1 flag in_bom = yes @ sch draw-40_wire_through_label.kicad_sch
+part U1 flag on_board = yes @ sch draw-40_wire_through_label.kicad_sch
+part U1 lib Device:U10 sheet / symbol Device:U10
+part U1 unit 1 sheet / uuid d4200000-0000-4000-8000-000000000002 line 22 at 60.96,60.96 rot 0
+part U1 value = text U10 @ sch draw-40_wire_through_label.kicad_sch note "from the Value field"
+pin U1 1 name VDD unit 1 net +3V3_LDO
+pin U1 1 type = passive @ sch draw-40_wire_through_label.kicad_sch
+sheet / name "" file draw-40_wire_through_label.kicad_sch uuid /
+source file draw-40_wire_through_label.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:U10 field Reference U
+symbol Device:U10 field Value U10
+symbol Device:U10 hash 82a20f9b111d83b8
+symbol Device:U10 pin 1 unit 1 body 1 name VDD type passive style line
+symbol Device:U10 units 1
+symbol power:VDD field Reference "#PWR"
+symbol power:VDD field Value VDD
+symbol power:VDD hash 2662a930d7b940c5
+symbol power:VDD pin 1 unit 1 body 1 name VDD type power_in style line
+symbol power:VDD units 1 power global
