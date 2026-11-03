@@ -160,6 +160,8 @@ References used throughout:
 - **VPG-INTRO**, **VPG-ESD**, **VPG-F106**, **VPG-TN110** · Vishay Foil Resistors, *Introduction to High Precision
   Resistor Industry* (49787), *Resistor Sensitivity to ESD* (63129), *Facts at a Glance #106* (noise, 49997), *Technical
   Note 110* (moisture, 63516); a foil vendor's comparisons. Mirrors at [xdevs.com/doc/VPG](https://xdevs.com/doc/VPG/)
+- **IEC-60195** · IEC 60195, *Method of measurement of current noise generated in fixed resistors*: the noise index in
+  µV/V per decade; MIL-STD-202 method 308 is the military equivalent.
 - **P-ERJS**, **P-ERJP** · Panasonic, *Anti-Sulfurated Thick Film Chip Resistors ERJ S / ERJ U* and *Anti-Surge Thick
   Film Chip Resistors ERJ P, PA, PM*.
   [ERJ-S](https://industrial.panasonic.com/cdbs/www-data/pdf/RDP0000/AOA0000C334.pdf),
@@ -854,32 +856,64 @@ CRHV, Yageo RV), more resistors in series, or a lower voltage per part.
 
 **References.** TT-VCR; V-CRHV; V-TNPV; V-BASICS.
 
-## `PAS-24` Thick-film resistor with DC across it in a low-noise analog path <a id="pas-24"></a>
+## `PAS-24` Resistor whose current noise exceeds its share of the noise budget <a id="pas-24"></a>
 
-💡 suggestion · needs: the resistor's role (low-noise analog with a DC voltage across it), its technology · [catalogue
-entry](../checks.md#pas-24)
+⚠️ warning · needs: the resistor's role and the part it serves, the DC voltage across it, its noise index (or its
+technology), the served part's own low-frequency noise · [catalogue entry](../checks.md#pas-24)
 
-**Impl.** mid · depends on NET-7, NET-23, NET-24, CFG-2
+**Impl.** mid · depends on NET-5, NET-7, NET-23, NET-24, CFG-2, CFG-5, CFG-7, CFG-8
 
-**What it catches.** Thick-film or carbon resistors with a DC voltage across them in a path where low-frequency noise
-matters: a reference divider, a sensor bias network, the feedback network of a low-noise preamplifier, an LDO's output
-divider on a low-noise rail.
+**What it catches.** A resistor with a DC voltage across it whose current noise (excess or 1/f noise: its noise index
+times that voltage) is more than its share of the noise of the part it serves: a reference divider, a sensor or bridge
+bias network, the feedback or gain network of a DC-coupled low-noise amplifier, an LDO's output divider on a low-noise
+rail, the input divider of a precision ADC. In practice it is thick film, carbon or metal oxide where thin film, metal
+film or foil was needed, but the check compares numbers, not technologies: a large low-value thick-film part in a
+relaxed circuit passes, and a high-value 0402 in front of a 24-bit ADC does not.
 
-**Why it matters.** Besides thermal noise, a resistor carrying DC adds current noise (excess, 1/f noise) proportional to
-the DC voltage. Vishay's overview gives thick film up to 10 µV/V against under 0.1 µV/V for metal film and less for
-foil; it grows with value and with smaller cases. In a low-noise reference path it can dominate the noise budget below a
-kilohertz.
+**Why it matters.** Besides thermal noise, a resistor carrying DC adds current noise proportional to that voltage. The
+resistance itself fluctuates, so a resistor that carries only an AC signal, with no DC across it, has thermal noise
+only, whatever its technology. The noise index (NI) is the excess noise per volt of DC over one decade of frequency, in
+µV/V or in dB (0 dB = 1 µV/V), measured per IEC 60195 or MIL-STD-202 method 308. Because the noise is 1/f, each decade
+adds the same power: over a band f1 to f2 the RMS excess noise is NI × V_DC × √(log10(f2 / f1)). The spread between
+technologies is large: Vishay's overview gives thick film up to 10 µV/V against under 0.1 µV/V for metal film and less
+for foil, and thick film gets worse with higher values and smaller cases. In a reference or a DC-coupled precision path
+it can dominate the noise budget below a kilohertz.
 
-**Example.** A 24-bit ADC's external reference set by a thick-film divider from a precision 5 V source: the ADC's
-low-frequency noise floor rises.
+**Example.** A 5 V precision source divided in half by two 100 kΩ 0402 thick-film resistors at 1 µV/V (0 dB, well inside
+the thick-film range) to make an ADC's 2.5 V reference. Each resistor has 2.5 V across it. Over the 0.1 to 10 Hz band
+(two decades) each makes 2.5 V × 1 µV/V × √2 ≈ 3.5 µVrms. The tap sees each through the divider ratio of ½, and the two
+add as a root sum of squares, so the tap gets about 2.5 µVrms, roughly 16 µVpp. That is several times the 0.1 to 10 Hz
+noise of a good reference, so the divider, not the reference, sets the ADC's low-frequency floor. Thin film at the 0.1
+µV/V bound gives a tenth of that.
 
-**How to check.** For resistors in roles `RefDivider`, `Bias` and `FeedbackDivider` on nets of an `Analog`, `Precision`
-or `Audio` class (or a regulator flagged low-noise in its part data), with a DC voltage across them, report thick-film
-and carbon technologies.
+**How to check.** For each resistor with a DC voltage across it:
 
-**Fix.** Thin-film or metal-film resistors (or foil for the lowest noise).
+1. **The voltage.** Take it from the rail voltages and the topology (`NET-5`: a divider's ratio, a bias network) or from
+   the project file (`CFG-2`). A resistor with no DC across it, such as a coupling or AC-only gain network, is skipped.
+2. **The noise index.** Take the part's own datasheet figure (`CFG-5`, mx3) first. Next comes the series table
+   (`CFG-7`), which gives NI by value and case for series that publish a curve. Last comes the technology's band from
+   `NET-24`, reported as an estimate.
+3. **The noise at the node.** Compute the RMS excess noise over the band and refer it to the node the served part sees,
+   through the divider or gain ratio. Excess noise of several resistors on one node adds as a root sum of squares.
+4. **The budget.** It comes from the served part, the same way accuracy budgets do (`passive_share`, above). The part's
+   own low-frequency noise comes from its part data and the class figure table (`CFG-8`): a reference's 0.1 to 10 Hz
+   noise, an op-amp's or ADC's input noise over its stated band. The budget is `passive_share` of that noise, in the
+   same band. Peak-to-peak figures are converted at 6.6 × RMS.
+5. **Fallback.** When the served part has no noise data, a board intent stands in. `precision` uses the 0.1 to 10 Hz
+   band, `audio` uses 20 Hz to 20 kHz, and the finding is an estimate. Without either, the check reports not run, with
+   the data that would decide it.
 
-**References.** V-BASICS; VPG-F106; VPG-INTRO.
+Report a resistor whose excess noise at the node exceeds the budget. The message gives the resistor's excess noise, its
+thermal noise over the same band (for scale), the budget and where the budget came from.
+
+**Fix.** Use thin-film or metal-film resistors, or foil for the lowest noise. Where a thick-film part must stay, lower
+the DC across it, use a larger case, or filter the node after the divider (a reference's NR or filter pin, an RC before
+a buffer).
+
+**Relation.** ≈ `ANA-24`: that check follows a chain across stages and treats a noisy resistor as one weak stage among
+others. This check judges the resistor against the one part it serves and runs without the chain analysis.
+
+**References.** V-BASICS; VPG-F106; VPG-INTRO; IEC-60195.
 
 ## `PAS-25` Current-sense shunt whose technology limits the accuracy <a id="pas-25"></a>
 

@@ -744,8 +744,8 @@ the data that would decide it.
 cleaner), or drop the precise part to the grade the chain can deliver (`ANA-25`).
 
 **Relation.** ≈ `PAS-40` and `BOM-19`: those judge the parts within one circuit block and keep firing there even when
-the board mixes grades on purpose; this check judges the chain across blocks. ≈ `PAS-2`, `PAS-22`, `RATE-1` where one
-passive is the weak stage.
+the board mixes grades on purpose; this check judges the chain across blocks. ≈ `PAS-2`, `PAS-22`, `PAS-24`, `RATE-1` where
+one passive is the weak stage.
 
 **References.** ADI MT-047 (op-amp noise, RSS of noise sources), MT-037 (offset and drift), MT-031 (ADC reference and
 its noise), MT-200 (clock jitter and ADC SNR), LT3045 datasheet (PSRR, post-regulating a switcher); catalogue `ANA-25`.

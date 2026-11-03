@@ -580,13 +580,14 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   (function, source current, accuracy) from which checks derive limits; generic pin profiles by name (`SET`, `SS`, `NR`,
   `RT`, `XIN`) marked as assumptions
 - 📋 `CFG-7` Series table: the meaning of a passive series (Murata GRM/GCM/GCJ, KEMET T491/T520, Panasonic EEE-FK/OS-CON,
-  ERJ-P/ERJ-S, Vishay CRCW/TNPW/WSL, Coilcraft XAL/MSS, ...) as TOML data in `mpn_decode`, shared with mx3: technology and
-  series-typical figures (leakage formula, derating, lifetime, TCR, pulse, anti-sulfur, AEC-Q200, termination, core,
-  shielding, Isat definition) with the datasheet each row came from
+  ERJ-P/ERJ-S, Vishay CRCW/TNPW/WSL, Coilcraft XAL/MSS, ...) as TOML data in `mpn_decode`, shared with mx3: technology
+  and series-typical figures (leakage formula, derating, lifetime, TCR, noise index by value and case, pulse,
+  anti-sulfur, AEC-Q200, termination, core, shielding, Isat definition) with the datasheet each row came from
 - 📋 `CFG-8` Class figure table: per part class (reference, op-amp, ADC, DAC, LDO, switcher, oscillator, PLL, clock
-  buffer, resistor, capacitor, ...) which figures it has (noise density, offset, drift, initial accuracy, bandwidth,
-  slew, jitter, PSRR, resolution, leakage), how each is referred through a stage and how stages combine on it (RSS for
-  noise and jitter, sum for offset and drift, minimum for bandwidth), and the grade bands per class, as TOML data
+  buffer, resistor, capacitor, ...) which figures it has (noise density, a resistor's current noise as noise index × DC,
+  offset, drift, initial accuracy, bandwidth, slew, jitter, PSRR, resolution, leakage), how each is referred through a
+  stage and how stages combine on it (RSS for noise and jitter, sum for offset and drift, minimum for bandwidth), and
+  the grade bands per class, as TOML data
 
 ## Reports and calculators (`RPT`)
 

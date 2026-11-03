@@ -3304,8 +3304,8 @@
     },
     {
       "id": "PAS-24",
-      "title": "Thick-film resistor with DC across it in a low-noise analog path (reference divider, sensor bias, preamp feedback): current noise",
-      "severity": "suggestion",
+      "title": "Resistor whose current noise (noise index × the DC across it) exceeds its share of the noise budget of the part it serves (reference divider, sensor or bridge bias, gain network of a DC-coupled amplifier): thick film, carbon or metal oxide where thin film was needed ≈ ANA-24",
+      "severity": "warning",
       "tier": "mid",
       "status": "planned"
     },
