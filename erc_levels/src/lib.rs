@@ -12,13 +12,32 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::sync::OnceLock;
 
+use exact_units::units::{Ampere, Farad, Kelvin, Ohm, Volt};
+use exact_units::{Dim, Fixed, Point, origins, prefix};
 use serde::Deserialize;
 
+mod de;
 mod expr;
 mod validate;
 
 pub use expr::{Expr, Limit};
 pub use validate::Problem;
+
+/// A voltage in volts.
+pub type Volts = Fixed<Volt, prefix::One, f64>;
+/// A current in amperes.
+pub type Amperes = Fixed<Ampere, prefix::One, f64>;
+/// A current in milliamperes, as test currents are given.
+pub type MilliAmperes = Fixed<Ampere, prefix::Milli, f64>;
+/// A resistance in ohms.
+pub type Ohms = Fixed<Ohm, prefix::One, f64>;
+/// A capacitance in farads.
+pub type Farads = Fixed<Farad, prefix::One, f64>;
+/// A temperature in degrees Celsius: a point on the Celsius scale, not an amount of kelvin.
+pub type DegC = Point<origins::Celsius, Fixed<Kelvin, prefix::One, f64>>;
+
+/// The supplies of a family at one corner, by name.
+pub type Env = BTreeMap<String, Volts>;
 
 /// The embedded database text.
 pub const BUILTIN_TOML: &str = include_str!("../data/signal_levels.toml");
@@ -100,8 +119,9 @@ pub struct Family {
     /// (`VREF = 0.5*VDDQ`). The first one is the family's main supply.
     #[serde(default)]
     pub supply: Vec<Supply>,
-    /// Ambient temperature range the values hold over, °C.
-    pub temp_c: Option<[f64; 2]>,
+    /// Ambient temperature range the values hold over.
+    #[serde(default, deserialize_with = "de::degc_range")]
+    pub temp_c: Option<[DegC; 2]>,
     /// Termination the levels assume.
     pub termination: Option<Termination>,
     /// The levels.
@@ -164,8 +184,9 @@ pub struct Supply {
 pub struct Termination {
     /// How it is terminated (`100 ohm across the pair`, `50 ohm to VCC-2 V`, `45 ohm to ground each line`).
     pub kind: String,
-    /// The resistance, Ω.
-    pub r_ohm: Option<f64>,
+    /// The resistance.
+    #[serde(default, deserialize_with = "de::fixed")]
+    pub r_ohm: Option<Ohms>,
     /// The voltage it terminates to, as a limit (`"VCC-2"`), where it ends at a rail.
     pub to: Option<Limit>,
     pub verified: bool,
@@ -193,14 +214,18 @@ pub struct Level {
     pub unit: Unit,
     /// The state or mode it applies to (`dominant`, `recessive`, `high-speed`, `mark`).
     pub state: Option<String>,
-    /// The supply this row is specified at, V (74HC at 2.0, 4.5 and 6.0 V).
-    pub vsupply: Option<f64>,
-    /// Output current of the test, mA, positive into the pin (JEDEC's sign: IOH is negative).
-    pub iout_ma: Option<f64>,
-    /// Temperature range of this row, °C, when it differs from the family's.
-    pub temp_c: Option<[f64; 2]>,
-    /// The one temperature this row is specified at, °C (ECL tables with 0, 25 and 85 °C columns).
-    pub t_c: Option<f64>,
+    /// The supply this row is specified at (74HC at 2.0, 4.5 and 6.0 V).
+    #[serde(default, deserialize_with = "de::fixed")]
+    pub vsupply: Option<Volts>,
+    /// Output current of the test, positive into the pin (JEDEC's sign: IOH is negative).
+    #[serde(default, deserialize_with = "de::fixed")]
+    pub iout_ma: Option<MilliAmperes>,
+    /// Temperature range of this row, when it differs from the family's.
+    #[serde(default, deserialize_with = "de::degc_range")]
+    pub temp_c: Option<[DegC; 2]>,
+    /// The one temperature this row is specified at (ECL tables with 0, 25 and 85 °C columns).
+    #[serde(default, deserialize_with = "de::degc")]
+    pub t_c: Option<DegC>,
     /// Other test conditions as printed (load, input voltage).
     pub cond: Option<String>,
     /// Read from the source document at the given location.
@@ -240,52 +265,60 @@ pub enum Unit {
     NanoF,
 }
 
-/// The physical dimension of a unit.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Dimension {
-    Voltage,
-    Current,
-    Resistance,
-    Capacitance,
-}
-
 impl Unit {
     /// Its dimension.
-    pub fn dimension(self) -> Dimension {
+    pub fn dim(self) -> Dim<'static> {
         use Unit::*;
         match self {
-            V | MilliV | Vppd | MilliVppd => Dimension::Voltage,
-            A | MilliA | MicroA | NanoA => Dimension::Current,
-            Ohm | KiloOhm => Dimension::Resistance,
-            PicoF | NanoF => Dimension::Capacitance,
+            V | MilliV | Vppd | MilliVppd => <Volt as exact_units::Unit>::DIM,
+            A | MilliA | MicroA | NanoA => <Ampere as exact_units::Unit>::DIM,
+            Ohm | KiloOhm => <exact_units::units::Ohm as exact_units::Unit>::DIM,
+            PicoF | NanoF => <Farad as exact_units::Unit>::DIM,
         }
     }
 
-    /// The factor to the SI base unit (V, A, Ω, F).
-    pub fn to_si(self) -> f64 {
+    /// The factor to its coherent SI unit (V, A, Ω, F).
+    pub fn factor(self) -> f64 {
         use Unit::*;
         match self {
             V | Vppd | A | Ohm => 1.0,
             MilliV | MilliVppd | MilliA => 1e-3,
             MicroA => 1e-6,
-            NanoA => 1e-9,
+            NanoA | NanoF => 1e-9,
             KiloOhm => 1e3,
             PicoF => 1e-12,
-            NanoF => 1e-9,
         }
     }
 }
 
-impl Dimension {
-    /// The dimension a parameter name implies by its first letter, if any.
-    pub fn of_param(param: &str) -> Option<Dimension> {
-        let p = param.trim_start_matches('d');
-        match p.chars().next()? {
-            'V' => Some(Dimension::Voltage),
-            'I' => Some(Dimension::Current),
-            'R' => Some(Dimension::Resistance),
-            'C' => Some(Dimension::Capacitance),
-            _ => None,
+/// The dimension a parameter name implies by its first letter (after a `d` for a change: `dVOD`), if any.
+pub fn param_dim(param: &str) -> Option<Dim<'static>> {
+    match param.trim_start_matches('d').chars().next()? {
+        'V' => Some(<Volt as exact_units::Unit>::DIM),
+        'I' => Some(<Ampere as exact_units::Unit>::DIM),
+        'R' => Some(<exact_units::units::Ohm as exact_units::Unit>::DIM),
+        'C' => Some(<Farad as exact_units::Unit>::DIM),
+        _ => None,
+    }
+}
+
+/// A limit with its unit, in the coherent SI unit of its dimension.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Quantity {
+    Voltage(Volts),
+    Current(Amperes),
+    Resistance(Ohms),
+    Capacitance(Farads),
+}
+
+impl Quantity {
+    /// The number in V, A, Ω or F.
+    pub fn si(self) -> f64 {
+        match self {
+            Quantity::Voltage(v) => v.get(),
+            Quantity::Current(v) => v.get(),
+            Quantity::Resistance(v) => v.get(),
+            Quantity::Capacitance(v) => v.get(),
         }
     }
 }
@@ -360,8 +393,8 @@ impl Database {
 impl Family {
     /// The supply values at a corner, by name, each evaluated with the ones before it. A supply without a
     /// value at that corner falls back to typ, then to the middle of min and max.
-    pub fn env(&self, corner: Corner) -> Result<BTreeMap<String, f64>, String> {
-        let mut env = BTreeMap::new();
+    pub fn env(&self, corner: Corner) -> Result<Env, String> {
+        let mut env = Env::new();
         for s in &self.supply {
             let v = s.at(corner, &env)?;
             env.insert(s.name.clone(), v);
@@ -377,7 +410,11 @@ impl Family {
 
 impl Supply {
     /// Its value at a corner.
-    pub fn at(&self, corner: Corner, env: &BTreeMap<String, f64>) -> Result<f64, String> {
+    pub fn at(&self, corner: Corner, env: &Env) -> Result<Volts, String> {
+        self.at_v(corner, env).map(Volts::new)
+    }
+
+    fn at_v(&self, corner: Corner, env: &Env) -> Result<f64, String> {
         let pick = match corner {
             Corner::Min => self.min.as_ref(),
             Corner::Typ => self.typ.as_ref(),
@@ -398,9 +435,45 @@ impl Supply {
 }
 
 impl Level {
-    /// Its limits in SI units at a supply corner: (min, typ, max).
-    pub fn si(&self, env: &BTreeMap<String, f64>) -> Result<[Option<f64>; 3], String> {
-        let f = self.unit.to_si();
+    /// Its limits at a supply corner, (min, typ, max), each with its unit.
+    pub fn limits(&self, env: &Env) -> Result<[Option<Quantity>; 3], String> {
+        let si = self.si(env)?;
+        let dim = self.unit.dim();
+        let q = |v: Option<f64>| {
+            v.map(|v| {
+                if dim == <Volt as exact_units::Unit>::DIM {
+                    Quantity::Voltage(Volts::new(v))
+                } else if dim == <Ampere as exact_units::Unit>::DIM {
+                    Quantity::Current(Amperes::new(v))
+                } else if dim == <Farad as exact_units::Unit>::DIM {
+                    Quantity::Capacitance(Farads::new(v))
+                } else {
+                    Quantity::Resistance(Ohms::new(v))
+                }
+            })
+        };
+        Ok(si.map(q))
+    }
+
+    /// Its limits as voltages, (min, typ, max); `None` for a level that is not a voltage.
+    pub fn volts(&self, env: &Env) -> Result<Option<[Option<Volts>; 3]>, String> {
+        if self.unit.dim() != <Volt as exact_units::Unit>::DIM {
+            return Ok(None);
+        }
+        Ok(Some(self.si(env)?.map(|v| v.map(Volts::new))))
+    }
+
+    /// Its limits as currents, (min, typ, max); `None` for a level that is not a current.
+    pub fn amperes(&self, env: &Env) -> Result<Option<[Option<Amperes>; 3]>, String> {
+        if self.unit.dim() != <Ampere as exact_units::Unit>::DIM {
+            return Ok(None);
+        }
+        Ok(Some(self.si(env)?.map(|v| v.map(Amperes::new))))
+    }
+
+    /// The limits as plain numbers in V, A, Ω or F.
+    pub(crate) fn si(&self, env: &Env) -> Result<[Option<f64>; 3], String> {
+        let f = self.unit.factor();
         let one = |l: &Option<Limit>| -> Result<Option<f64>, String> {
             l.as_ref()
                 .map(|l| l.eval(env).map(|v| if l.is_expr() { v } else { v * f }))

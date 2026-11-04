@@ -2,7 +2,7 @@
 
 use std::path::PathBuf;
 
-use erc_levels::{Corner, Database, FamilyKind};
+use erc_levels::{Corner, Database, FamilyKind, Quantity, Volts};
 
 #[test]
 fn builtin_parses_and_validates() {
@@ -43,11 +43,27 @@ fn every_family_has_a_source_and_every_level_a_way_to_it() {
 fn i2c_fast_mode_at_3v3() {
     let f = Database::builtin().get("i2c-fm").unwrap();
     let mut env = f.env(Corner::Typ).unwrap();
-    env.insert("VDD".into(), 3.3);
-    let vih = f.levels("VIH").next().unwrap().si(&env).unwrap();
-    assert!((vih[0].unwrap() - 2.31).abs() < 1e-9);
-    let ii = f.levels("II").next().unwrap().si(&env).unwrap();
-    assert!((ii[2].unwrap() - 10e-6).abs() < 1e-15, "uA scaled to A");
+    env.insert("VDD".into(), Volts::new(3.3));
+    let vih = f
+        .levels("VIH")
+        .next()
+        .unwrap()
+        .volts(&env)
+        .unwrap()
+        .unwrap();
+    assert!((vih[0].unwrap().get() - 2.31).abs() < 1e-9);
+    let ii = f.levels("II").next().unwrap();
+    assert!(
+        ii.volts(&env).unwrap().is_none(),
+        "a current is not a voltage"
+    );
+    let [_, _, max] = ii.limits(&env).unwrap();
+    let Some(Quantity::Current(max)) = max else {
+        panic!("{max:?}")
+    };
+    assert!((max.get() - 10e-6).abs() < 1e-15, "uA scaled to A");
+    let vol = f.levels("VOL").next().unwrap();
+    assert_eq!(vol.iout_ma.unwrap().get(), 3.0, "the test current in mA");
 }
 
 /// The extended set: each document with a library path is there, when the library is on this PC

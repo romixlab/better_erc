@@ -20,6 +20,9 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
   a typed loader (`Database::builtin`, limits as numbers or expressions of a supply like `0.7*VDD`), a validator
   run by the tests (known sources, min <= typ <= max at the supply corners, VIL < VIH, VOL < VOH, units per
   parameter), and `cargo run -p erc_levels --example validate -- FILE` to check a file before merging it.
+  Values come out as `exact_units` types (`Volts`, `Amperes`, `MilliAmperes`, `Ohms`, `Farads`, `DegC`; `Dim`
+  for a unit's dimension); `exact_units` is a git dependency (electrical and thermal units only, no further
+  dependencies).
   Using it in the level checks is `DIAG-7`.
 
 ## [0.4.18] - 2026-11-04

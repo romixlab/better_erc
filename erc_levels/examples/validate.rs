@@ -10,7 +10,11 @@ fn main() {
     let mut args: Vec<String> = std::env::args().skip(1).collect();
     let alone = args.iter().any(|a| a == "--alone");
     args.retain(|a| a != "--alone");
-    let mut text = if alone { String::new() } else { BUILTIN_TOML.to_string() };
+    let mut text = if alone {
+        String::new()
+    } else {
+        BUILTIN_TOML.to_string()
+    };
     for a in &args {
         text.push('\n');
         text.push_str(&std::fs::read_to_string(a).unwrap_or_else(|e| panic!("{a}: {e}")));
@@ -27,7 +31,11 @@ fn main() {
         println!("{p}");
     }
     let levels: usize = db.family.values().map(|f| f.level.len()).sum();
-    let verified: usize = db.family.values().map(|f| f.level.iter().filter(|l| l.verified).count()).sum();
+    let verified: usize = db
+        .family
+        .values()
+        .map(|f| f.level.iter().filter(|l| l.verified).count())
+        .sum();
     println!(
         "{} families, {} documents, {levels} levels ({verified} verified), {} problems",
         db.family.len(),

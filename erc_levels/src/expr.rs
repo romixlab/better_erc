@@ -1,10 +1,11 @@
 //! Limits: a plain number, or a linear expression of one supply (`"0.7*VDD"`, `"VDD-0.4"`, `"VREF+0.1"`).
 
-use std::collections::BTreeMap;
 use std::fmt;
 
 use serde::Deserialize;
 use serde::de::{self, Deserializer, Visitor};
+
+use crate::Env;
 
 /// A limit of a level or supply.
 #[derive(Debug, Clone, PartialEq)]
@@ -25,12 +26,12 @@ pub struct Expr {
 
 impl Limit {
     /// Its value, with the supplies in `env`.
-    pub fn eval(&self, env: &BTreeMap<String, f64>) -> Result<f64, String> {
+    pub fn eval(&self, env: &Env) -> Result<f64, String> {
         match self {
             Limit::Num(v) => Ok(*v),
             Limit::Expr(e) => env
                 .get(&e.var)
-                .map(|v| e.scale * v + e.offset)
+                .map(|v| e.scale * v.get() + e.offset)
                 .ok_or_else(|| format!("unknown supply {} in {e}", e.var)),
         }
     }
@@ -186,7 +187,7 @@ mod tests {
 
     #[test]
     fn evaluates_with_the_supplies() {
-        let env = BTreeMap::from([("VDD".to_string(), 3.3)]);
+        let env = Env::from([("VDD".to_string(), crate::Volts::new(3.3))]);
         let l = Limit::Expr(e("VDD-0.4"));
         assert!((l.eval(&env).unwrap() - 2.9).abs() < 1e-12);
         assert!(Limit::Expr(e("VCC")).eval(&env).is_err());

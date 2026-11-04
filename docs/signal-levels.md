@@ -5,6 +5,11 @@ range, the input thresholds, the output levels with the currents they are tested
 differential swing and common mode, termination. Level checks (`LVL-2`, `LVL-3`, `LVL-10`; `DIAG-7`) and
 simulations read their limits from it instead of numbers typed from memory.
 
+The loader hands out values as `exact_units` types: `Volts`, `Amperes`, `Ohms` and `Farads` are `Fixed<Volt,
+One, f64>` and so on, test currents are `MilliAmperes`, temperatures are `DegC` (a point on the Celsius scale), and
+a unit's dimension is an `exact_units::Dim`. `Level::limits` gives a row's min, typ and max as a `Quantity` of the
+right dimension, `Level::volts` and `Level::amperes` as voltages or currents.
+
 The data is one TOML file, [`erc_levels/data/signal_levels.toml`](../erc_levels/data/signal_levels.toml),
 embedded in the crate (`Database::builtin()`).
 

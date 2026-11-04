@@ -3,7 +3,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 
-use crate::{Corner, Database, Dimension, Family, FamilyKind, Level, Limit, Unit};
+use crate::{Corner, Database, Env, Family, FamilyKind, Level, Limit, Unit, param_dim};
 
 /// One thing wrong with the data.
 #[derive(Debug, Clone, PartialEq)]
@@ -96,7 +96,7 @@ fn family<'a>(
             p(format!("see: unknown family {s:?}"));
         }
     }
-    if let Some([a, b]) = f.temp_c
+    if let Some([a, b]) = f.temp_c.map(|r| r.map(|t| t.raw()))
         && a >= b
     {
         p(format!("temp_c {a}..{b} is not a range"));
@@ -156,7 +156,7 @@ fn family<'a>(
         }
     }
     if let Some(t) = &f.termination {
-        if t.r_ohm.is_some_and(|r| r <= 0.0) {
+        if t.r_ohm.is_some_and(|r| r.get() <= 0.0) {
             p("termination r_ohm must be positive".into());
         }
         if let Some(v) = t.to.as_ref().and_then(|l| l.var())
@@ -182,8 +182,8 @@ fn family<'a>(
         if l.min.is_none() && l.typ.is_none() && l.max.is_none() {
             p(format!("{what}: no min, typ or max"));
         }
-        match Dimension::of_param(&l.param) {
-            Some(d) if d != l.unit.dimension() => p(format!(
+        match param_dim(&l.param) {
+            Some(d) if d != l.unit.dim() => p(format!(
                 "{what}: unit {:?} does not fit the parameter",
                 l.unit
             )),
@@ -209,7 +209,7 @@ fn family<'a>(
                 }
             }
         }
-        if let Some([a, b]) = l.temp_c
+        if let Some([a, b]) = l.temp_c.map(|r| r.map(|t| t.raw()))
             && a >= b
         {
             p(format!("{what}: temp_c {a}..{b} is not a range"));
@@ -219,7 +219,7 @@ fn family<'a>(
         }
         for env in envs.iter().flatten() {
             let env = with_vsupply(f, l, env);
-            ordered(&what, &l.min, &l.typ, &l.max, l.unit.to_si(), &env, p);
+            ordered(&what, &l.min, &l.typ, &l.max, l.unit.factor(), &env, p);
         }
     }
 
@@ -293,26 +293,33 @@ fn verified(
 fn label(l: &Level) -> String {
     let mut s = l.param.clone();
     if let Some(v) = l.vsupply {
-        s += &format!(" @{v} V");
+        s += &format!(" @{} V", v.get());
     }
     if let Some(st) = &l.state {
         s += &format!(" ({st})");
     }
     if let Some(t) = l.t_c {
-        s += &format!(" at {t} °C");
+        s += &format!(" at {} °C", t.raw());
     }
     if let Some(i) = l.iout_ma {
-        s += &format!(" at {i} mA");
+        s += &format!(" at {} mA", i.get());
     }
     s
 }
 
 fn same_case(a: &Level, b: &Level) -> bool {
-    a.vsupply == b.vsupply && a.state == b.state && a.temp_c == b.temp_c && a.t_c == b.t_c
+    a.vsupply == b.vsupply
+        && a.state == b.state
+        && raw_range(a) == raw_range(b)
+        && a.t_c.map(|t| t.raw()) == b.t_c.map(|t| t.raw())
+}
+
+fn raw_range(l: &Level) -> Option<[f64; 2]> {
+    l.temp_c.map(|r| r.map(|t| t.raw()))
 }
 
 /// A row specified at one supply voltage evaluates the main supply's expressions there.
-fn with_vsupply(f: &Family, l: &Level, env: &BTreeMap<String, f64>) -> BTreeMap<String, f64> {
+fn with_vsupply(f: &Family, l: &Level, env: &Env) -> Env {
     let mut env = env.clone();
     if let (Some(v), Some(s)) = (l.vsupply, f.supply.first()) {
         env.insert(s.name.clone(), v);
@@ -320,10 +327,14 @@ fn with_vsupply(f: &Family, l: &Level, env: &BTreeMap<String, f64>) -> BTreeMap<
     env
 }
 
-fn si(l: &Level, lim: &Option<Limit>, env: &BTreeMap<String, f64>) -> Option<f64> {
+fn si(l: &Level, lim: &Option<Limit>, env: &Env) -> Option<f64> {
     let lim = lim.as_ref()?;
     let v = lim.eval(env).ok()?;
-    Some(if lim.is_expr() { v } else { v * l.unit.to_si() })
+    Some(if lim.is_expr() {
+        v
+    } else {
+        v * l.unit.factor()
+    })
 }
 
 fn ordered(
@@ -332,7 +343,7 @@ fn ordered(
     typ: &Option<Limit>,
     max: &Option<Limit>,
     factor: f64,
-    env: &BTreeMap<String, f64>,
+    env: &Env,
     p: &mut dyn FnMut(String),
 ) {
     let v = |l: &Option<Limit>| {

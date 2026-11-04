@@ -1284,6 +1284,7 @@ dependencies = [
 name = "erc_levels"
 version = "0.4.18"
 dependencies = [
+ "exact_units",
  "serde",
  "toml",
 ]
@@ -1330,6 +1331,11 @@ dependencies = [
  "event-listener",
  "pin-project-lite",
 ]
+
+[[package]]
+name = "exact_units"
+version = "0.1.0"
+source = "git+https://github.com/romixlab/exact_units?rev=1819d9f32275d003458e383383ff4808d7ea64b8#1819d9f32275d003458e383383ff4808d7ea64b8"
 
 [[package]]
 name = "fastrand"
