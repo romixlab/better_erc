@@ -14,7 +14,7 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 ### Added
 
 - `erc_levels`, the signal-level database (`NET-27`): `data/signal_levels.toml` with one table per logic family,
-  bus or differential standard and supply variant (supply range, input and output levels with their test
+  bus or differential standard and supply variant, 134 of them from 74 documents (supply range, input and output levels with their test
   currents, input currents, hysteresis, differential levels, termination), each value with the document it was
   read from (in the technical library, by section, table and page) and `verified = true` only when read there;
   a typed loader (`Database::builtin`, limits as numbers or expressions of a supply like `0.7*VDD`), a validator

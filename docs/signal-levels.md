@@ -13,6 +13,24 @@ right dimension, `Level::volts` and `Level::amperes` as voltages or currents.
 The data is one TOML file, [`erc_levels/data/signal_levels.toml`](../erc_levels/data/signal_levels.toml),
 embedded in the crate (`Database::builtin()`).
 
+## What it covers
+
+- **Logic families:** 74LS, 74ALS, 74F, 74HC, 74HCT, 74AC, 74ACT, 74LV-A, 74LVC, 74LVC1G, 74ALVC, 74AUP, 74AVC,
+  74AXC and 74AXP at each supply their datasheets specify, and CD4000B at 5, 10 and 15 V.
+- **JEDEC interface levels:** LVTTL and LVCMOS at 3.3, 2.5, 1.8, 1.5, 1.2 and 1.0 V (normal and wide range, with
+  the Schmitt-trigger tables), SSTL_3, SSTL_2, SSTL_18, SSTL_15, SSTL_135, SSTL_125, DDR4 command/address, POD12,
+  HSTL at 1.8, 1.5 and 1.2 V, HSUL_12, GTL and GTL+.
+- **Buses:** I²C (Standard-mode, Fast-mode, Fast-mode Plus, Hs-mode, Ultra Fast-mode), SMBus 3.3 (low and high
+  power), I3C (through a target's datasheet), 1-Wire, RS-232, RS-422, RS-485, CAN (classic, FD and SIC), LIN, SD
+  (3.3 V and UHS-I 1.8 V), MIPI D-PHY, and SPI, UART, JTAG and SWD as interfaces without levels of their own.
+- **Differential logic and clocks:** LVDS, M-LVDS (Type 1 and 2), sub-LVDS, SLVS-400, LVPECL, PECL, ECL 10K,
+  10KH, 100K and 100EP, CML, HCSL and LP-HCSL.
+- **Serial links:** USB 2.0 (low, full and high speed), USB 3.2 SuperSpeed, USB Type-C CC, USB PD BMC, Ethernet
+  MII, 10BASE-T, 100BASE-TX, 1000BASE-T, 100BASE-T1 and 10BASE-T1S, HDMI TMDS, DisplayPort, PCIe Gen1 to Gen3.
+
+`cargo run -p erc_levels --example validate` prints how many families, documents and levels there are, and how
+many of the levels are verified.
+
 ## Where the numbers come from
 
 Every family names a source document, and every value says whether it was read there:
