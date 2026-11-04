@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.4.19] - 2026-11-04
+
 ### Added
 
 - `erc_levels`, the signal-level database (`NET-27`): `data/signal_levels.toml` with one table per logic family,
