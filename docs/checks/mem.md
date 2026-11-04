@@ -9,7 +9,7 @@ References used throughout:
 
 - **SD PLS** · SD Association, *Physical Layer Simplified Specification*, Ver. 9.10 (December 2023). The SD bus
   standard (pull-ups, card detect, signal voltage switch, power-up). Listed on the simplified specifications page;
-  the PDF sits behind a click-through licence (page fetched through `tpm fetch`). [sdcard.org/downloads/pls](https://www.sdcard.org/downloads/pls/)
+  the PDF sits behind a click-through licence (page fetched through a headless browser). [sdcard.org/downloads/pls](https://www.sdcard.org/downloads/pls/)
 - **JESD84-B51** · JEDEC, *Embedded MultiMediaCard (e•MMC) Electrical Standard (5.1)*. The eMMC standard (VCC,
   VCCQ, RST_n and its `RST_n_FUNCTION` register).
 - **JESD79-3, JESD79-4** · JEDEC, *DDR3 SDRAM Standard* and *DDR4 SDRAM Standard*. Pin functions, ZQ, VREF,
@@ -18,10 +18,10 @@ References used throughout:
   ZQ, reset, VREF tolerance, VTT termination and which pins may be swapped; section and table numbers below refer
   to it. [ti.com/lit/pdf/sprabi1](https://www.ti.com/lit/pdf/sprabi1)
 - **AN5692** · ST, *DDR memory routing guidelines for STM32MP13x product lines*, Rev 1 (January 2023). A compact
-  schematic checklist for DDR3/3L and LPDDR2/3 (fetched 21 Oct 2026 through `tpm fetch`, st.com refuses plain HTTP
+  schematic checklist for DDR3/3L and LPDDR2/3 (fetched 21 Oct 2026 through a headless browser, st.com refuses plain HTTP
   clients). [st.com AN5692](https://www.st.com/resource/en/application_note/an5692-ddr-memory-routing-guidelines-for-stm32mp13x-product-lines--stmicroelectronics.pdf)
 - **AN5200** · ST, *Getting started with the STM32H7 MCU SDMMC host controller*, Rev 3 (June 2025). VDDMMC, the
-  UHS-I voltage switch transceiver (fetched through `tpm fetch`).
+  UHS-I voltage switch transceiver (fetched through a headless browser).
   [st.com AN5200](https://www.st.com/resource/en/application_note/an5200-getting-started-with-stm32h7-mcu-sdmmc-host-controller-stmicroelectronics.pdf)
 - **ESP-IDF SD pull-ups** · Espressif, *SD Pull-up Requirements*, ESP-IDF Programming Guide v6.1.
   [docs.espressif.com](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/peripherals/sd_pullup_requirements.html)
@@ -29,7 +29,7 @@ References used throughout:
   /WP, /HOLD, /RESET and the Quad Enable bit.
   [winbond.com](https://www.winbond.com/resource-files/w25q128jv%20revf%2003272018%20plus.pdf)
 - **CAT24C256** · onsemi, *EEPROM Serial 256-Kb I2C*, Rev. 16 (February 2022). An EEPROM whose WP pin has an
-  internal pull-down (fetched through `tpm fetch`). [onsemi.com](https://www.onsemi.com/pdf/datasheet/cat24c256-d.pdf)
+  internal pull-down (fetched through a headless browser). [onsemi.com](https://www.onsemi.com/pdf/datasheet/cat24c256-d.pdf)
 - **MEM2061** · GCT, *MEM2061 Micro SD Memory Card Connector, 1.88mm Profile* (drawing). The micro-SD socket of
   B125A, with its card-detect switch circuit. [gct.co/files/drawings/mem2061.pdf](https://gct.co/files/drawings/mem2061.pdf)
 - **RP2350 HW design** · Raspberry Pi, *Hardware design with RP2350*, release 3 (2026). Chapter 3, the QSPI flash.

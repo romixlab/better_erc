@@ -4,9 +4,9 @@ default:
 
 # erc_kicad's differential test exports the test schematics with kicad-cli first (skipped without KiCad).
 
-# The tests. `just test`: all of them (test-all), the run of the `tpm land` gate. `just test --changed`: only the
-# workspace crates changed against main and the crates that depend on them (tpm test changed), what a session runs
-# before tpm work ready.
+# The tests. `just test`: all of them (test-all), the same run the landing gate does. `just test --changed`: only
+# the workspace crates changed against main and the crates that depend on them, a quick local check before
+# landing.
 test *flags:
     if [ "{{flags}}" = "--changed" ]; then tpm test changed -- cargo nextest run --workspace; else {{just_executable()}} test-all {{flags}}; fi
 
@@ -54,12 +54,12 @@ netlists:
 # Build the better_erc app and the berc command line tool and install them on this PC
 install:
     cargo build --profile deploy --locked -p better_erc_app -p berc
-    # With tpm on PATH: tpm install (kept-releases stack, one copy on PATH); otherwise: cargo install
+    # With our release tool on PATH, it installs them (one copy on PATH, kept-releases stack); otherwise cargo install.
     if command -v tpm >/dev/null; then tpm install target/deploy/better_erc target/deploy/berc; else cargo install --locked --force --path better_erc_app && cargo install --locked --path berc; fi
 
 # Refuses on local changes (names them, never discards them). No systemd units.
 
-# Bring this PC up to main: pull --ff-only, install, check both --versions against main (works without tpm)
+# Bring this PC up to main: pull --ff-only, install, check both --versions against main (works without the release tool)
 deploy:
     #!/usr/bin/env bash
     set -eu

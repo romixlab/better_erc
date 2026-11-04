@@ -94,14 +94,14 @@ title block. Why: a circuit in one corner prints small and gets lost. `DRAW-16`,
 Title, revision, date, paper size and company on every sheet, the revision set once for the project and shown through
 `${REVISION}`. Why: a printed page is read alone. `DRAW-19`, `DRAW-20`
 
-vhrd projects use the library drawing sheet (`${KICAD_USER_TEMPLATE_DIR}/vhrd_a3.kicad_wks` or `vhrd_a4`, referenced,
-not copied; the Vhrd Default template embeds it). Paper is stored per sheet file, so a project may mix sizes: the index
+VHRD projects use the library drawing sheet (`${KICAD_USER_TEMPLATE_DIR}/vhrd_a3.kicad_wks` or `vhrd_a4`, referenced,
+not copied; the VHRD Default template embeds it). Paper is stored per sheet file, so a project may mix sizes: the index
 on A2 and the rest on A3 plots one page size per sheet, and `vhrd_a3` serves both (corners, title block and frame
 follow the page, its strip and zones reach A2, `${PAPER}` shows the size). It reads the title and date, comment 1 as Drawn, comment 2 as
 Checked, comment 4 as Status (`Draft`), and the project variables `PRODUCT_NAME`, `BOARD_NUMBER` and `VHRD_STAMP`
 (`not stamped` in the project; the render recipe passes `-D VHRD_STAMP="<git describe> · <date>"`, as KiCad does not
 expand a variable inside another). Notes about the sheet go in its Information box, not in the comments: the fields
-are one short line each. Source: house (Roman, 31 Oct 2026; io_protection).
+are one short line each. Source: house (Roman, 31 Oct 2026; a real board).
 
 ### Sheet names say the function
 
@@ -151,7 +151,7 @@ Each box is a group of two items:
 
 No item carries a `face`: everything uses the default font, so one setting changes the whole sheet. In KiCad 10 that
 setting is `appearance.default_font` in the user's `eeschema.json` (Preferences > Schematic Editor > Display Options >
-Default font), not a project setting: vhrd PCs set it to IBM Plex Sans, the brand font, and `kicad-cli` reads it too.
+Default font), not a project setting: our PCs set it to IBM Plex Sans, the brand font, and `kicad-cli` reads it too.
 A PC without it plots the stroke font, so boxes are sized for the wider stroke font; the b125 title font (Orbitron)
 stays on the front page logo.
 
@@ -227,7 +227,7 @@ Within a section, all ground symbols sit on one row, all supply symbols (and the
 input labels or ports in one column on the left and output labels or ports in one column on the right; a ground
 drop or a supply riser is as long as it needs to be to reach its row. Sections side by side may share the rows.
 Why: the eye reads the section as a ladder between two rails, and a symbol out of its row stands out as the odd
-one. Source: house (Roman, 31 Oct 2026, s11b and s05 of io_protection). `DRAW-36` (per section: ground symbols,
+one. Source: house (Roman, 31 Oct 2026, two sheets of a real board). `DRAW-36` (per section: ground symbols,
 supplies, input ports, output ports)
 
 ### Room around everything: clearance margins
@@ -236,7 +236,7 @@ supplies, input ports, output ports)
 symbols, fields and labels. Between sections the gap is bigger ([sections](#sections-with-a-heading-key-numbers-under-it)).
 
 **Why.** A sheet where every gap is the minimum reads as one block, and a field 0.3 mm from the next part's pin is
-read as belonging to it. Dense sheets (our io_protection sheets) look tidy at the editor's zoom and become a puzzle
+read as belonging to it. Dense sheets (our own denser real boards) look tidy at the editor's zoom and become a puzzle
 at page width.
 
 **Settings.** The margins are named drawing settings with defaults, used by every spacing check (`DRAW-9`,
@@ -261,7 +261,7 @@ bad:    +3V3 ┬                      good:        ┬ +3V3
               beside a series part)
 ```
 
-**Source.** new (Roman, 31 Oct 2026: io_protection is too dense, make it configurable, do not overdo the default);
+**Source.** new (Roman, 31 Oct 2026: a dense real board was too crowded, make it configurable, do not overdo the default);
 standard: AoE (space around symbols). Checks: `DRAW-34`, `DRAW-9`.
 
 ### Pins never join pins
@@ -274,7 +274,7 @@ joint is invisible, has nowhere to add a branch, and opens silently when one par
 A wire leaves a pin along the pin's own axis for at least one major grid step (2.54 mm) before its first bend, and
 enters a pin or a power or ground symbol the same way: no bend right at a pin end. Why: the direction of the pin
 and of the symbol stays readable, and a corner at a pin end is not mistaken for a junction. Source: house (Roman,
-31 Oct 2026, the VDD pin of the io_protection TMUX1511 bending straight up into `+3V3_LDO`). `DRAW-41`
+31 Oct 2026, the VDD pin of a real board's TMUX1511 bending straight up into `+3V3_LDO`). `DRAW-41`
 (`drawing.pin_lead`, default 2.54 mm)
 
 ## Signal flow
@@ -361,7 +361,7 @@ bad:    GND ┤1   ├                  good:   ┌┤1   ├
         GND ┤3   ├                          ┴ GND
 ```
 
-**Source.** house (Roman, 31 Oct 2026, on the io_protection TMUX1511 and its four grounded selects; third review:
+**Source.** house (Roman, 31 Oct 2026, on a real board's TMUX1511 and its four grounded selects; third review:
 a rail wire or a symbol per part, let the cost decide); new for the exception of decoupling. Checks: `DRAW-30`, `DRAW-40`.
 
 ### Power symbols, not long wires, to reach a rail
@@ -371,7 +371,7 @@ crosses every signal.
 
 ### Power symbols from vhrd_power, rails coloured by net class
 
-**Rule.** Power and ground symbols come from our library `vhrd_power` (`~/git/kicad-library`): `GND` for ground
+**Rule.** Power and ground symbols come from our `kicad-library` repo's `vhrd_power` library: `GND` for ground
 and the board rails, `PWR_LOCAL` (a KiCad 10 *local* power symbol, its value is the net name) for a rail that must
 stay on its sheet: a simulation bench, a sheet that stands for a board of its own. The project's net classes colour
 the rails, not the symbols one by one:
@@ -392,7 +392,7 @@ the theme.
 colour only repeats what the `+` in the name says ([colour](#colour-adds-never-carries-meaning-alone)). A local
 power symbol keeps the per-sheet rails of a bench apart without hierarchical labels.
 
-**Source.** house (Roman, 31 Oct 2026: the io_protection project's net classes, the `vhrd_power` symbols).
+**Source.** house (Roman, 31 Oct 2026: a real board project's net classes, the `vhrd_power` symbols).
 
 ### Decoupling next to the pin it serves
 
@@ -462,7 +462,7 @@ bad: around the part to the GND pin      good: straight down, across VDD, a seco
 cost: 12 grid + 2 bends + detour 3 = 19     cost: 4 grid + 1 bend + 1 crossing + 1 symbol = 16
 ```
 
-**Source.** house (Roman, 31 Oct 2026, the ties of the io_protection TMUX1511; second review: the BAT54S rail ran
+**Source.** house (Roman, 31 Oct 2026, the ties of a real board's TMUX1511; second review: the BAT54S rail ran
 sideways, power and ground weigh more); the weights are new. Check: `DRAW-40`.
 
 ### No stray wire pieces
@@ -581,7 +581,7 @@ named exactly as in `sim/*.toml` and the simulator output (`p5`, `n12`, `bfin`, 
 voltage, source and cable, plug-in time), the inside state (powered or not, pin hi-Z or driving, target present,
 other controls), what the case tests and which sheets run it (expected fails marked). Generate it
 (`spicejob cases DIR --format kicad-table`), do not type it. Why: sheets and simulation output then map one to one,
-and a reviewer sees what was tried before reading any result. Source: house (Roman, 31 Oct 2026, io_protection).
+and a reviewer sees what was tried before reading any result. Source: house (Roman, 31 Oct 2026, a real board).
 
 ### Simulation directives grouped, each explained beside it
 
@@ -590,7 +590,7 @@ group of meaning (fault source, target, rails, controls, timing) under a group h
 its right that explains each line on the same line. KiCad reads directives from text and text boxes, not from table
 cells, so the explanation is a box beside it rather than a table column. Why: forty `.param` lines in one text
 block hide which parameters belong together, and an explanation in a separate block is matched line by line by
-eye. Source: house (Roman, 31 Oct 2026, the io_protection index sheet).
+eye. Source: house (Roman, 31 Oct 2026, a real board's index sheet).
 
 ## Colour, print and export
 

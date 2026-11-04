@@ -9,7 +9,7 @@ References used throughout:
 
 - **MT-031** · Analog Devices, *Grounding Data Converters and Solving the Mystery of "AGND" and "DGND"*, tutorial
   MT-031 (Rev. A, October 2008): ground planes, star ground, separating analog and digital ground planes, AGND and DGND
-  pins (fetched through `tpm fetch`, analog.com refuses plain clients).
+  pins (fetched through a headless browser, analog.com refuses plain clients).
   [analog.com MT-031.pdf](https://www.analog.com/media/en/training-seminars/tutorials/MT-031.pdf)
 - **SLYT499 / SLYT512** · S. Pithadia, S. More, TI, *Grounding in mixed-signal systems demystified*, Part 1 and Part 2,
   Analog Applications Journal (1Q and 2Q 2013): split vs partitioned planes, signals crossing a split.

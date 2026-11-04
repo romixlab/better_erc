@@ -16,11 +16,11 @@ References used throughout:
 - **SLUA887** · TI, *Bootstrap Circuitry Selection for Half-Bridge Configurations*, SLUA887A (2018, rev. 2023).
   [ti.com/lit/an/slua887](https://www.ti.com/lit/an/slua887/slua887.pdf)
 - **AN11158** · Nexperia, *Understanding power MOSFET data sheet parameters*, Rev. 7.0 (2025; fetched through
-  `tpm fetch`). [assets.nexperia.com/documents/application-note/AN11158.pdf](https://assets.nexperia.com/documents/application-note/AN11158.pdf)
-- **AN11160** · Nexperia, *Designing RC snubbers*, Rev. 3.1 (2024; fetched through `tpm fetch`).
+  a headless browser). [assets.nexperia.com/documents/application-note/AN11158.pdf](https://assets.nexperia.com/documents/application-note/AN11158.pdf)
+- **AN11160** · Nexperia, *Designing RC snubbers*, Rev. 3.1 (2024; fetched through a headless browser).
   [assets.nexperia.com/documents/application-note/AN11160.pdf](https://assets.nexperia.com/documents/application-note/AN11160.pdf)
 - **Toshiba gate drive** · Toshiba, *MOSFET Gate Drive Circuit*, application note (2018; fetched through
-  `tpm fetch`). [toshiba.semicon-storage.com](https://toshiba.semicon-storage.com/info/docget.jsp?did=59460)
+  a headless browser). [toshiba.semicon-storage.com](https://toshiba.semicon-storage.com/info/docget.jsp?did=59460)
 - **AN2007-04** · Infineon, *How to calculate and minimize the dead time requirement for IGBTs properly*, AN2007-04
   V1.0 (2007; Mouser's copy of the English edition). [mouser.com/pdfDocs](https://www.mouser.com/pdfDocs/Infineon-Deadtime_calculation_for_IGBT_modules-ApplicationNotes-v01_00-EN.pdf)
 - **SLVAE57** · TI, *Basics of Ideal Diodes*, SLVAE57B (2021). [ti.com/lit/an/slvae57](https://www.ti.com/lit/an/slvae57/slvae57.pdf)
@@ -29,11 +29,11 @@ References used throughout:
 - **SLVA139** · TI, *Reverse Current/Battery Protection Circuits*, SLVA139 (2003).
   [ti.com/lit/an/slva139](https://www.ti.com/lit/an/slva139/slva139.pdf)
 - **AN10909** · Nexperia, *Low VCEsat transistors in medium power load switch applications*, Rev. 2 (2013; fetched
-  through `tpm fetch`). [assets.nexperia.com/documents/application-note/AN10909.pdf](https://assets.nexperia.com/documents/application-note/AN10909.pdf)
+  through a headless browser). [assets.nexperia.com/documents/application-note/AN10909.pdf](https://assets.nexperia.com/documents/application-note/AN10909.pdf)
 - **SN6501** · TI, *SN6501 Transformer Driver for Isolated Power Supplies*, SLLSEA0I (2012, rev. 2021).
   [ti.com/lit/ds/symlink/sn6501.pdf](https://www.ti.com/lit/ds/symlink/sn6501.pdf)
 - **TE coil suppression** · TE Connectivity, *Relay Coil Suppression with DC Relays* (application note, web page;
-  fetched through `tpm fetch`). [te.com](https://www.te.com/en/products/relays-and-contactors/electromechanical-relays/intersection/relay-coil-suppression-dc-relays.html)
+  fetched through a headless browser). [te.com](https://www.te.com/en/products/relays-and-contactors/electromechanical-relays/intersection/relay-coil-suppression-dc-relays.html)
 - **Wikipedia** · *Flyback diode*, *Snubber*, *H-bridge*, *Flyback converter*, *LED circuit*: readable overviews.
   [en.wikipedia.org/wiki/Flyback_diode](https://en.wikipedia.org/wiki/Flyback_diode)
 - **AoE3** · Horowitz & Hill, *The Art of Electronics*, 3rd ed. (Cambridge, 2015), chapter 2 (bipolar transistors),

@@ -161,7 +161,7 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - 📋 `NET-24` Passive technology per part: technology (MLCC class and dielectric, wet aluminium, polymer, tantalum, film,
   thick or thin film, foil, wirewound, core material and shielding) and the passive parameter vocabulary (leakage, ESR,
   ripple, lifetime, TCR, VCR, pulse, anti-sulfur, termination, safety class, Isat with its definition, Irms with its
-  rise, SRF) resolved as facts from mx3, the parts repo, the MPN's series (`CFG-7`), the symbol's fields, the
+  rise, SRF) resolved as facts from the lab's part store, the MPN's series (`CFG-7`), the symbol's fields, the
   description and the footprint (`Assumed`); a constrained role without technology data is not run, never a pass
 - 📋 `NET-25` Chains: the paths a quantity travels through the board's parts as ordered stages (signal paths from `NET-10`,
   the power tree from `NET-5`, reference outputs to reference inputs, clock sources through PLLs and buffers to clock
@@ -594,7 +594,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   (function, source current, accuracy) from which checks derive limits; generic pin profiles by name (`SET`, `SS`, `NR`,
   `RT`, `XIN`) marked as assumptions
 - 📋 `CFG-7` Series table: the meaning of a passive series (Murata GRM/GCM/GCJ, KEMET T491/T520, Panasonic EEE-FK/OS-CON,
-  ERJ-P/ERJ-S, Vishay CRCW/TNPW/WSL, Coilcraft XAL/MSS, ...) as TOML data in `mpn_decode`, shared with mx3: technology
+  ERJ-P/ERJ-S, Vishay CRCW/TNPW/WSL, Coilcraft XAL/MSS, ...) as TOML data in `mpn_decode`, shared with the lab's part store: technology
   and series-typical figures (leakage formula, derating, lifetime, TCR, noise index by value and case, pulse,
   anti-sulfur, AEC-Q200, termination, core, shielding, Isat definition) with the datasheet each row came from
 - 📋 `CFG-8` Class figure table: per part class (reference, op-amp, ADC, DAC, LDO, switcher, oscillator, PLL, clock

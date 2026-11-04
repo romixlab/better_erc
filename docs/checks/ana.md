@@ -13,7 +13,7 @@ yet, `judgement` needs a person (better_erc can at most list candidates). The ID
 References used throughout:
 
 - **AN2834** · ST, *How to optimize the ADC accuracy in the STM32 MCUs*, AN2834 Rev 10 (October 2024). Section
-  numbers below refer to it (fetched 22 Oct 2026 through `tpm fetch`, st.com refuses plain HTTP clients).
+  numbers below refer to it (fetched 22 Oct 2026 through a headless browser, st.com refuses plain HTTP clients).
   [st.com/resource/en/application_note/an2834](https://www.st.com/resource/en/application_note/an2834-how-to-get-the-best-adc-accuracy-in-stm32-microcontrollers-stmicroelectronics.pdf)
 - **DS13560** · ST, *STM32G0B1xB/xC/xE* datasheet, DS13560 Rev 6 (February 2026): the MCU of B153A.
   [st.com/resource/en/datasheet/stm32g0b1ce.pdf](https://www.st.com/resource/en/datasheet/stm32g0b1ce.pdf)
@@ -34,7 +34,7 @@ References used throughout:
   Phase-Reversal and Input Over-Voltage Protection*, MT-038 *Op Amp Input Bias Current*, MT-068 *Difference and
   Current Sense Amplifiers*. URLs follow one pattern,
   [analog.com/media/en/training-seminars/tutorials/MT-035.pdf](https://www.analog.com/media/en/training-seminars/tutorials/MT-035.pdf)
-  (each fetched through `tpm fetch`):
+  (each fetched through a headless browser):
   [MT-002](https://www.analog.com/media/en/training-seminars/tutorials/MT-002.pdf),
   [MT-031](https://www.analog.com/media/en/training-seminars/tutorials/MT-031.pdf),
   [MT-036](https://www.analog.com/media/en/training-seminars/tutorials/MT-036.pdf),
@@ -731,7 +731,7 @@ checks do not see, because each part is fine on its own.
 buffer sets the reference's accuracy a hundred times over.
 
 **How to check.** No pair-specific rules. For each chain from `NET-25`, take each stage's figures from part data
-(`CFG-5`, mx3; datasheet maxima, typicals marked as such) and the class figure table (`CFG-8`), which says which figures
+(`CFG-5`, the lab's part store; datasheet maxima, typicals marked as such) and the class figure table (`CFG-8`), which says which figures
 a part class has, how each is referred through a stage (gain, attenuation by PSRR) and how stages combine on it (root
 sum of squares for noise and jitter, sum for offset, initial error and drift in the worst case, minimum for bandwidth).
 Refer every stage's contribution to one point (the chain's sink input) and report a stage whose contribution exceeds
@@ -771,7 +771,7 @@ times larger.
 
 **How to check.** As `ANA-24`, on the same chains and figures; report a part whose contribution is negligible on every
 figure it is graded on, naming the stage that sets the chain's total. Only parts the data marks as a precision or
-premium grade of their class (`CFG-8`: the grade figures per class, or mx3 alternatives in the same family) are
+premium grade of their class (`CFG-8`: the grade figures per class, or part-store alternatives in the same family) are
 reported; without that, nothing is said (an estimate is not enough to call something waste).
 
 **Fix.** A general grade of the same family, or raise the stage that limits the chain if the precision is wanted.

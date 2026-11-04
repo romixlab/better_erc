@@ -23,11 +23,11 @@ References used throughout:
   [jlcpcb.com/capabilities/pcb-capabilities](https://jlcpcb.com/capabilities/pcb-capabilities)
 - **SLUA271** · TI, *QFN and SON PCB Attachment*, Rev. C (2023): land patterns, stencil design for exposed pads.
   [ti.com/lit/an/slua271](https://www.ti.com/lit/an/slua271/slua271.pdf)
-- **MT-101** · Analog Devices, *Decoupling Techniques*, tutorial MT-101 (fetched through `tpm fetch`, analog.com refuses
+- **MT-101** · Analog Devices, *Decoupling Techniques*, tutorial MT-101 (fetched through a headless browser, analog.com refuses
   plain HTTP clients).
   [analog.com/.../MT-101.pdf](https://www.analog.com/media/en/training-seminars/tutorials/MT-101.pdf)
 - **AN2867** · ST, *Guidelines for oscillator design on STM8AF/AL/S and STM32 MCUs/MPUs*, Rev. 24 (February 2026),
-  fetched through `tpm fetch`. [st.com
+  fetched through a headless browser. [st.com
   AN2867](https://www.st.com/resource/en/application_note/an2867-guidelines-for-oscillator-design-on-stm8afals-and-stm32-mcusmpus-stmicroelectronics.pdf)
 - **ESP32 HW guide** · Espressif, *ESP32 Hardware Design Guidelines*, "PCB Layout Design".
   [docs.espressif.com/.../pcb-layout-design.html](https://docs.espressif.com/projects/esp-hardware-design-guidelines/en/latest/esp32/pcb-layout-design.html)

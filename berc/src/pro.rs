@@ -363,8 +363,8 @@ mod tests {
         );
     }
 
-    /// The exact omarchy-m1 case: a plain re-save reordered the designator set KiCad keeps as a comma string;
-    /// both orders must render identically
+    /// The exact case hit on one of our PCs: a plain re-save reordered the designator set KiCad keeps as a comma
+    /// string; both orders must render identically
     #[test]
     fn used_designators_order_does_not_matter() {
         let before = "J105,NT1701,M1901,R1701-1704,R1706,R1711-1715,R1803-1804,H101-102,H1901-1902,\

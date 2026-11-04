@@ -10,7 +10,7 @@ severity and wording; this page is the commentary.
 References used throughout:
 
 - **UM10204** · NXP, *I²C-bus specification and user manual*, Rev. 7.0 (October 2021). The bus standard; section and table numbers
-  below refer to it (fetched 21 Oct 2026 through `tpm fetch`, nxp.com refuses plain HTTP clients). [nxp.com/docs/en/user-guide/UM10204.pdf](https://www.nxp.com/docs/en/user-guide/UM10204.pdf)
+  below refer to it (fetched 21 Oct 2026 through a headless browser, nxp.com refuses plain HTTP clients). [nxp.com/docs/en/user-guide/UM10204.pdf](https://www.nxp.com/docs/en/user-guide/UM10204.pdf)
 - **SLVA689** · TI, *I2C Bus Pullup Resistor Calculation* (2015). [ti.com/lit/an/slva689](https://www.ti.com/lit/an/slva689/slva689.pdf)
 - **SLVA704** · TI, *Understanding the I2C Bus* (2015). [ti.com/lit/an/slva704](https://www.ti.com/lit/an/slva704/slva704.pdf)
 - **SCPA054** · TI, *Why, When, and How to use I2C Buffers* (2018). [ti.com/lit/an/scpa054](https://www.ti.com/lit/an/scpa054/scpa054.pdf)
@@ -280,7 +280,7 @@ Ioff, isolators).
 pull-ups from the same rail (`I2C-18`, `I2C-19`), or keep it powered.
 
 **References.** SCPA054 §3 (bus isolation, hot-swap); UM10204 §3.1.16 (bus clear, which does *not* help here);
-catalogue `BKF-2` for the general backfeed case; P2623 "I2C in the wild" §1.
+catalogue `BKF-2` for the general backfeed case; our "I2C in the wild" notes §1.
 
 ## `I2C-12` SMBus device on an I2C bus <a id="i2c-12"></a>
 
@@ -332,7 +332,7 @@ whose output low exceeds any device's VIL on that side, is a finding.
 or use incremental-offset / level-shifting buffers that are designed to chain (TCA9617B class).
 
 **References.** SCPA054 §2 (buffer types, static vs incremental offset); TI TCA9517 datasheet §8.3 ("B-side
-cannot be used in series with devices that use static voltage offset"); P2623 "I2C in the wild" §5.
+cannot be used in series with devices that use static voltage offset"); our "I2C in the wild" notes §5.
 
 ## `I2C-14` Push-pull auto-direction shifter on I2C <a id="i2c-14"></a>
 
@@ -427,7 +427,7 @@ boards appear at 0x49.
 **Fix.** Tie each strap to GND or VDD directly, or through a resistor if a GPIO shares it; note the resulting
 address in the schematic.
 
-**References.** UM10204 §3.1.11; the device datasheets (address pin section); P2623 "I2C in the wild" §2.
+**References.** UM10204 §3.1.11; the device datasheets (address pin section); our "I2C in the wild" notes §2.
 
 ## `I2C-18` Bus segment without its own pull-ups <a id="i2c-18"></a>
 
@@ -502,7 +502,7 @@ bad readings until the bus is slowed to 50 kHz or moved to a software I2C with s
 an interrupt line instead).
 
 **References.** UM10204 §3.1.9 (clock stretching); Advamation, "Raspberry Pi I2C clock-stretching bug"
-(advamation.com/knowhow/raspberrypi/rpi-i2c-bug.html); P2623 "I2C in the wild" §2.
+(advamation.com/knowhow/raspberrypi/rpi-i2c-bug.html); our "I2C in the wild" notes §2.
 
 ## `I2C-21` Bus capacitance over 400 pF <a id="i2c-21"></a>
 

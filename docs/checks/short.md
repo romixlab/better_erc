@@ -16,7 +16,7 @@ References used throughout:
 - **SCBA004** · TI, *Implications of Slow or Floating CMOS Inputs*, SCBA004E (1994, rev. 2021).
   [ti.com/lit/pdf/scba004](https://www.ti.com/lit/pdf/scba004)
 - **Toshiba unused inputs** · Toshiba, *Handling of Unused Input Pins* (CMOS logic usage considerations,
-  e-learning; fetched through `tpm fetch`).
+  e-learning; fetched through a headless browser).
   [toshiba.semicon-storage.com](https://toshiba.semicon-storage.com/us/semiconductor/knowledge/e-learning/cmos-logic-usage-considerations/usage-1.html)
 - **SSZB130** · TI, *System-Level ESD Protection Guide*, SSZB130E (2025). [ti.com/lit/pdf/sszb130](https://www.ti.com/lit/pdf/sszb130)
 - **ROHM TVS** · ROHM, *Selection Method and Usage of TVS Diodes*, 66AN046E Rev. 001 (2023).

@@ -15,8 +15,8 @@ References used throughout:
   IEC 60063, *Preferred number series for resistors and capacitors*, by title.
   [en.wikipedia.org/wiki/E_series_of_preferred_numbers](https://en.wikipedia.org/wiki/E_series_of_preferred_numbers)
 - **Yageo RC_L** · Yageo, *General purpose chip resistors RC_L series*, product specification V.11 (May 2020),
-  "Ordering information - global part number" (an MPN that encodes size, tolerance and value; fetched through `tpm
-  fetch`, Mouser refuses plain HTTP clients).
+  "Ordering information - global part number" (an MPN that encodes size, tolerance and value; fetched through a
+  headless browser, Mouser refuses plain HTTP clients).
   [mouser.com PYu_RC_Group_51_RoHS_L_11](https://www.mouser.com/datasheet/2/447/PYu_RC_Group_51_RoHS_L_11-1984063.pdf)
 - **EPCI DC bias** · T. Zednicek, EPCI, *High CV MLCC DC/AC bias ageing capacitance loss explained* (2019).
   [epci.eu](https://epci.eu/wp-content/uploads/2019/10/HIGH-CV-MLCC-DCAC-BIAS-AGEING-CAPACITANCE-LOSS-EXPLAINED.pdf)
@@ -339,8 +339,8 @@ or placement file built from the base DNP flags instead of a variant.
 netlist, an older BOM export, an importer) see neither variant correctly: they list parts that no variant fits, or
 miss parts every variant fits. The assembler builds what the file says.
 
-**Example.** B153A has Main and Plus variants; R211/R212 are DNP in both, but the old BOM CSV and the mx3 import
-showed them placed. Its hub U301 still carries 18 alternate MPNs mixing the 2-port USB2512B and the 4-port USB2514B in
+**Example.** B153A has Main and Plus variants; R211/R212 are DNP in both, but the old BOM CSV and the parts-store
+import showed them placed. Its hub U301 still carries 18 alternate MPNs mixing the 2-port USB2512B and the 4-port USB2514B in
 one line, so a variant BOM could get the wrong hub; the change list asks for per-variant MPNs and per-variant BOM
 exports.
 

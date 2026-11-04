@@ -744,8 +744,8 @@ mod tests {
         );
     }
 
-    /// A straight drop's own rail text would crowd the neighbour pin's rail label (`P2503#31oct-1104`,
-    /// `s10_b200a` U1020): no candidate survives, so no finding
+    /// A straight drop's own rail text would crowd the neighbour pin's rail label (`s10_b200a` U1020): no
+    /// candidate survives, so no finding
     #[test]
     fn no_candidate_crowds_the_neighbour_pins_rail() {
         assert_eq!(
@@ -754,8 +754,8 @@ mod tests {
         );
     }
 
-    /// A straight drop's own wire would run through another pin's label (`P2503#31oct-1104`, `s14_adg7421f`
-    /// U1513, FF): no candidate survives, so no finding
+    /// A straight drop's own wire would run through another pin's label (`s14_adg7421f` U1513, FF): no
+    /// candidate survives, so no finding
     #[test]
     fn no_candidate_runs_through_a_label() {
         assert_eq!(

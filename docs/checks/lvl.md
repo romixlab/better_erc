@@ -315,7 +315,7 @@ rail; more than about 70 pF and the one-shot times out before the edge completes
 
 **Example.** B153A routes the target's SWD over the Type-C SBU lines through a TXS0102 (U203). Into B129A's 10 kΩ SWCLK
 pull-down and its 200 Ω + 5V6 zener protection, SWCLK highs reached only 2.3-2.5 V at 1 MHz and about 2.0 V at 4 MHz,
-and SWDIO highs ramped over microseconds (P2625 bench, 12-13 Oct 2026). The rev B plan is a direction-controlled
+and SWDIO highs ramped over microseconds (our bench tests, 12-13 Oct 2026). The rev B plan is a direction-controlled
 2T45-class translator per line.
 
 **How to check.** For every TXS-class part (`NET-7`), follow each channel's output side to its loads (`NET-10`): a

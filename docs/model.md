@@ -64,7 +64,7 @@ No attribute is a bare value. A field, a part value, a DNP flag, a pin's electri
 
 - `source` is a `Provenance`: a schematic sheet file, the KiCad project file, the board file, a pick-and-place file, a netlist, a
   schematic PDF (`Pdf { file, confidence }`: read from its bookmarks, bound by position, or traced from its drawing),
-  the better_erc project file, the part database, mx3, the vendor, a datasheet, a distributor, an unreviewed LLM extraction, a person
+  the better_erc project file, the part database, the lab's part store, the vendor, a datasheet, a distributor, an unreviewed LLM extraction, a person
   (`Manual`), an analysis rule (`Derived`) or a default (`Assumed`).
 - `rank` orders sources; each kind has a default (manual 1000, project file 900, design files and a PDF's bookmarks
   800, a PDF's facts reconstructed by position or geometry 750, vendor 700,

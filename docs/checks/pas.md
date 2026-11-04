@@ -13,7 +13,7 @@ lists candidates). The IDs after "depends on" are [FEATURES.md](../../FEATURES.m
 
 How the PAS checks work, in short. Every passive gets a **technology** with its parameters (MLCC class 1 or 2 and the
 dielectric, wet aluminium, polymer, tantalum, film, thick or thin film, foil, wirewound, ferrite or powder core,
-shielding) as facts with provenance: from the part data by MPN (`CFG-5`, mx3), from the MPN's series through the series
+shielding) as facts with provenance: from the part data by MPN (`CFG-5`, the lab's part store), from the MPN's series through the series
 table (`CFG-7`), from the symbol's `Dielectric` and value fields, from the description, and last from the footprint
 (`Assumed`). Every passive also gets a **role** (`NET-23`): what the pin it hangs on is for (a current-set pin,
 soft-start, timing, crystal, noise reduction), what the topology says (an integrator, a coupling capacitor, a snubber, a
@@ -759,7 +759,7 @@ and it is cheapest to choose at design time.
 **Example.** An automotive CAN node with GRM capacitors throughout: the customer's PPAP asks for AEC-Q200 evidence on
 every passive.
 
-**How to check.** Report passives whose series is not AEC-Q200 (series table, mx3 `aec_q200`): a warning on a board
+**How to check.** Report passives whose series is not AEC-Q200 (series table, part-store `aec_q200`): a warning on a board
 whose intent is `automotive`, a suggestion on one whose intent is `industrial` or harsh (`vibration`, an `ambient`
 beyond −40 to 85 °C), nothing on other boards, and not run on a board that states no intent.
 
@@ -890,7 +890,7 @@ noise of a good reference, so the divider, not the reference, sets the ADC's low
 
 1. **The voltage.** Take it from the rail voltages and the topology (`NET-5`: a divider's ratio, a bias network) or from
    the project file (`CFG-2`). A resistor with no DC across it, such as a coupling or AC-only gain network, is skipped.
-2. **The noise index.** Take the part's own datasheet figure (`CFG-5`, mx3) first. Next comes the series table
+2. **The noise index.** Take the part's own datasheet figure (`CFG-5`, the lab's part store) first. Next comes the series table
    (`CFG-7`), which gives NI by value and case for series that publish a curve. Last comes the technology's band from
    `NET-24`, reported as an estimate.
 3. **The noise at the node.** Compute the RMS excess noise over the band and refer it to the node the served part sees,

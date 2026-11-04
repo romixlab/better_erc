@@ -125,7 +125,7 @@ pub enum Need {
     ColourTheme,
     /// What is fitted: DNP flags and variant overrides the design states
     Variant,
-    /// Part data from the part database or mx3 (CFG-5)
+    /// Part data from the part database or the lab's part store (CFG-5)
     PartDb,
     /// A key of the better_erc project file (CFG-2)
     Project(&'static str),

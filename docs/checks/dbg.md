@@ -16,10 +16,10 @@ References used throughout:
   pin 19 5V-Supply). [kb.segger.com/20-pin_J-Link_Connector](https://kb.segger.com/20-pin_J-Link_Connector)
 - **SEGGER 9-pin** · SEGGER Knowledge Base, *9-pin JTAG/SWD connector* (the 10-pin Cortex-M header, 1.27 mm).
   [kb.segger.com/9-pin_JTAG/SWD_connector](https://kb.segger.com/9-pin_JTAG/SWD_connector)
-- **AN4989** · ST, *Introduction to debug toolbox for STM32 MCUs* (fetched 21 Oct 2026 through `tpm fetch`, st.com
+- **AN4989** · ST, *Introduction to debug toolbox for STM32 MCUs* (fetched 21 Oct 2026 through a headless browser, st.com
   refuses plain HTTP clients). §4.1 SWD/JTAG pinout, §4.2 Reset and connection mode, §7.2 Printf via UART, §7.3
   Printf via SWO/SWV. [st.com AN4989](https://www.st.com/resource/en/application_note/an4989-stm32-microcontroller-debug-toolbox-stmicroelectronics.pdf)
-- **AN5096** · ST, *Getting started with STM32G0 MCUs hardware development*, Rev 4 (fetched through `tpm fetch`).
+- **AN5096** · ST, *Getting started with STM32G0 MCUs hardware development*, Rev 4 (fetched through a headless browser).
   §1.2.2 Programmable voltage detector (PVD), §4.3 Pinout and debug port pins.
   [st.com AN5096](https://www.st.com/resource/en/application_note/an5096-getting-started-with-stm32g0-series-hardware-development-stmicroelectronics.pdf)
 - **XJTAG DFT** · XJTAG, *Design for Test (DFT) Guidelines for improving JTAG testability* (TAP pull-ups and
@@ -28,7 +28,7 @@ References used throughout:
 - **RP2350 HW** · Raspberry Pi, *Hardware design with RP2350*, §5.3 Debug connector.
   [datasheets.raspberrypi.com/rp2350/hardware-design-with-rp2350.pdf](https://datasheets.raspberrypi.com/rp2350/hardware-design-with-rp2350.pdf)
 - **UM10204** · NXP, *I²C-bus specification and user manual*, Rev. 7.0 (October 2021), §3.1.16 Bus clear (fetched
-  through `tpm fetch`). [nxp.com/docs/en/user-guide/UM10204.pdf](https://www.nxp.com/docs/en/user-guide/UM10204.pdf)
+  through a headless browser). [nxp.com/docs/en/user-guide/UM10204.pdf](https://www.nxp.com/docs/en/user-guide/UM10204.pdf)
 - **Wikipedia, JTAG** · a readable overview of the TAP signals and boundary scan.
   [en.wikipedia.org/wiki/JTAG](https://en.wikipedia.org/wiki/JTAG)
 - **IEEE 1149.1** · *IEEE Standard for Test Access Port and Boundary-Scan Architecture* (the JTAG standard), by title.

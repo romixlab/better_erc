@@ -30,10 +30,10 @@ References used throughout:
   with true load disconnect. [ti.com/lit/ds/symlink/tps61099.pdf](https://www.ti.com/lit/ds/symlink/tps61099.pdf)
 - **LT3080** · Analog Devices (Linear), *LT3080 Adjustable 1.1A Single Resistor Low Dropout Regulator*, rev. C:
   output capacitance and DC bias (Figure 2), paralleling devices (Figure 4; fetched 21 Oct 2026 through
-  `tpm fetch`, analog.com refuses plain HTTP clients).
+  a headless browser, analog.com refuses plain HTTP clients).
   [analog.com/…/3080fc.pdf](https://www.analog.com/media/en/technical-documentation/data-sheets/3080fc.pdf)
 - **AN2834** · ST, *How to optimize the ADC accuracy in the STM32 MCUs*, Rev 10 (October 2024; fetched through
-  `tpm fetch`). Reference noise and decoupling (§3.2.1-§3.2.3, §4.2.1).
+  a headless browser). Reference noise and decoupling (§3.2.1-§3.2.3, §4.2.1).
   [st.com/…/an2834](https://www.st.com/resource/en/application_note/an2834-how-to-get-the-best-adc-accuracy-in-stm32-microcontrollers-stmicroelectronics.pdf)
 - **RP2350** · Raspberry Pi, *RP2350 Datasheet* (build 1 Oct 2026), §6.1.5 ADC supply, §12.4.3.7 Supply; and
   *Hardware design with RP2350* (build 20 Aug 2026), §2.1. B200A's MCU.

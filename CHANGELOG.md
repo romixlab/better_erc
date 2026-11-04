@@ -24,6 +24,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `just netlists` keeps its picture markers (`test_schematics/generated_pictures_cache`) in git: a test picture is
   drawn again only when its schematic changes, not on a fresh clone or another PC, so a newer kicad-cli no longer
   rewrites every SVG.
+- docs: internal references removed
 
 ### Fixed
 
@@ -89,8 +90,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `DRAW-40` candidates (a straight drop's new symbol, a direct path's wire) that would run through, or fall short
   of their margin to, anything else already drawn (`DRAW-7`, `DRAW-9`, `DRAW-34`), or place a new symbol as a near
   miss of another (`DRAW-36`), are dropped; a tie with no cheaper, clean candidate left reports nothing. Two test
-  schematics (`draw-40_power_text_clash`, `draw-40_wire_through_label`) cover the `io_protection` cases that found
-  it (`P2503#31oct-1104`).
+  schematics (`draw-40_power_text_clash`, `draw-40_wire_through_label`) cover the real-board cases that found
+  it.
 - `NAME-13` accepts an adjustable rail named `+<name>_ADJ` (`+VIO_ADJ`) in place of a voltage it doesn't have.
 
 ## [0.4.14] - 2026-10-31
@@ -112,12 +113,12 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Changed
 
-- Drawing guide round 2 (Roman, 31 Oct 2026, P2503): the obvious rules shortened to the rule, a one-line reason and their check, in `docs/drawing-guide.md` and `docs/checks/draw.md`; the longer treatment kept for the rules that are not obvious. New rules: power net names `+<voltage>_<source or group>` (`NAME-13`); labels lying on their wire, left side left-justified and right side right-justified (KiCad 10 takes the side from justify) (`DRAW-28`); no pin on pin (`DRAW-29`); one power symbol per rail per part (`DRAW-30`); sections with a bold heading and a parameter box (`DRAW-31`); notes only in boxes of six kinds (TODO, Information, Caution, Debug, Critical, Layout) with exact colours on the VHRD theme, fonts and sizes (`DRAW-32`); a leader from a note to its part (`DRAW-37`, `DRAW-38`); KiCad tables instead of text lumps (`DRAW-33`); clearance margins as named settings `drawing.clearance.part`, `.power`, `.text` (`DRAW-34`); small parts to a rail or ground vertical (`DRAW-35`); power symbols and parts aligned (`DRAW-36`); simulation-only parts drawn apart. From the 30 Oct tidy feedback: label columns clustered by x (`DRAW-10`), fill and centring measured without the note boxes (`DRAW-16`, `DRAW-17`), the box-based overlap measure (`DRAW-9`), field angles relative to the symbol (`DRAW-8`). `DRAW-27` (hand-set colour) is off by default. Then: the `vhrd_power` symbols (`GND`, the KiCad 10 local `PWR_LOCAL`) and the rail colours by net class (Ground green, Power orange for `+*`); simulation-only parts as `vhrd_sim:AMMETER`, out of the BOM but kept on the board for the XML netlist; SPICE directives as text boxes grouped by meaning with their explanation beside them; group headings at 1.905 mm; a bus for a group of related nets going to three or more places, with the hint `DRAW-39` and its settings `drawing.bus_hint.places` and `.members`; routing as a weighed compromise, a cost per grid step, bend, crossing (more near a pin or junction), extra symbol and detour with named weights `drawing.route.*`, scored by `DRAW-40`, and one power symbol per pin group rather than per part (`DRAW-30`); a straight lead of one major grid step out of a pin and into a power symbol (`DRAW-41`, `drawing.pin_lead`); alignment as a near-miss rule, exact within a neighbourhood or clearly apart (`DRAW-36`, now a warning, `drawing.align.window` and `.snap`); touching items told apart by colour, a CIEDE2000 minimum on both themes, with our pin, ground and power colours (`DRAW-42`, `drawing.colour.pair_min`); sentences start with a capital letter (`DRAW-43`). Docs only.
-- Drawing guide round 3 (Roman's review, 31 Oct 2026, P2503): ladders per section (one ground row, one supply row, inputs left, outputs right; `DRAW-36` compares them per section); sections apart with their headings in one row (`DRAW-44`, `DRAW-45`); power and ground ties weigh more than signals, so supplies go straight up and grounds straight down (`drawing.route.k_power`, `.k_ground`, `.k_signal`, `.min_saving`, `.step`, `DRAW-40`); the pin end decides `DRAW-41`, a tee is no bend; the ammeter symbol shows an arrow from + to -; the simulated fault cases in one generated table on the first page. The scope of `DRAW-7`, `-28`, `-29`, `-30`, `-32`, `-35`, `-43` as implemented, and their settings (`drawing.label.stub_extra`, `drawing.heading_size`, `drawing.group_heading_size`, `drawing.note.colour_slack`). Docs only.
-- `DRAW-40` text: candidates keep the pin lead, end on the tie's own row, stay off other nets' wires, and `PWR_FLAG` stubs are not part of the tie; a rail wire with one symbol and a symbol per part are both fine, the routing cost picks (Roman's call; P2503).
-- Drawing guide: the vhrd drawing sheet and its title block fields (comment 1 Drawn, 2 Checked, 4 Status, `VHRD_STAMP` passed by the render recipe) (Roman, 31 Oct 2026; P2503).
-- Drawing guide round 4 (Roman's review, 31 Oct 2026, P2503): note boxes are lists and tables (`DRAW-47`), leaders end on a 45° diagonal aimed at a small part's centre and stop short of its outline (`DRAW-46`), IBM Plex Sans as the default font (a user setting in KiCad 10), mixed paper sizes, gold pins.
-- Drawing guide: wires `rgb(90, 90, 90)` and `rgb(154, 154, 154)` apart from label text, `PWR_FLAG` from `vhrd_power` in the supply orange (Roman, 31 Oct 2026, `DRAW-42`; P2503).
+- Drawing guide round 2 (Roman, 31 Oct 2026): the obvious rules shortened to the rule, a one-line reason and their check, in `docs/drawing-guide.md` and `docs/checks/draw.md`; the longer treatment kept for the rules that are not obvious. New rules: power net names `+<voltage>_<source or group>` (`NAME-13`); labels lying on their wire, left side left-justified and right side right-justified (KiCad 10 takes the side from justify) (`DRAW-28`); no pin on pin (`DRAW-29`); one power symbol per rail per part (`DRAW-30`); sections with a bold heading and a parameter box (`DRAW-31`); notes only in boxes of six kinds (TODO, Information, Caution, Debug, Critical, Layout) with exact colours on the VHRD theme, fonts and sizes (`DRAW-32`); a leader from a note to its part (`DRAW-37`, `DRAW-38`); KiCad tables instead of text lumps (`DRAW-33`); clearance margins as named settings `drawing.clearance.part`, `.power`, `.text` (`DRAW-34`); small parts to a rail or ground vertical (`DRAW-35`); power symbols and parts aligned (`DRAW-36`); simulation-only parts drawn apart. From the 30 Oct tidy feedback: label columns clustered by x (`DRAW-10`), fill and centring measured without the note boxes (`DRAW-16`, `DRAW-17`), the box-based overlap measure (`DRAW-9`), field angles relative to the symbol (`DRAW-8`). `DRAW-27` (hand-set colour) is off by default. Then: the `vhrd_power` symbols (`GND`, the KiCad 10 local `PWR_LOCAL`) and the rail colours by net class (Ground green, Power orange for `+*`); simulation-only parts as `vhrd_sim:AMMETER`, out of the BOM but kept on the board for the XML netlist; SPICE directives as text boxes grouped by meaning with their explanation beside them; group headings at 1.905 mm; a bus for a group of related nets going to three or more places, with the hint `DRAW-39` and its settings `drawing.bus_hint.places` and `.members`; routing as a weighed compromise, a cost per grid step, bend, crossing (more near a pin or junction), extra symbol and detour with named weights `drawing.route.*`, scored by `DRAW-40`, and one power symbol per pin group rather than per part (`DRAW-30`); a straight lead of one major grid step out of a pin and into a power symbol (`DRAW-41`, `drawing.pin_lead`); alignment as a near-miss rule, exact within a neighbourhood or clearly apart (`DRAW-36`, now a warning, `drawing.align.window` and `.snap`); touching items told apart by colour, a CIEDE2000 minimum on both themes, with our pin, ground and power colours (`DRAW-42`, `drawing.colour.pair_min`); sentences start with a capital letter (`DRAW-43`). Docs only.
+- Drawing guide round 3 (Roman's review, 31 Oct 2026): ladders per section (one ground row, one supply row, inputs left, outputs right; `DRAW-36` compares them per section); sections apart with their headings in one row (`DRAW-44`, `DRAW-45`); power and ground ties weigh more than signals, so supplies go straight up and grounds straight down (`drawing.route.k_power`, `.k_ground`, `.k_signal`, `.min_saving`, `.step`, `DRAW-40`); the pin end decides `DRAW-41`, a tee is no bend; the ammeter symbol shows an arrow from + to -; the simulated fault cases in one generated table on the first page. The scope of `DRAW-7`, `-28`, `-29`, `-30`, `-32`, `-35`, `-43` as implemented, and their settings (`drawing.label.stub_extra`, `drawing.heading_size`, `drawing.group_heading_size`, `drawing.note.colour_slack`). Docs only.
+- `DRAW-40` text: candidates keep the pin lead, end on the tie's own row, stay off other nets' wires, and `PWR_FLAG` stubs are not part of the tie; a rail wire with one symbol and a symbol per part are both fine, the routing cost picks (Roman's call).
+- Drawing guide: the VHRD drawing sheet and its title block fields (comment 1 Drawn, 2 Checked, 4 Status, `VHRD_STAMP` passed by the render recipe) (Roman, 31 Oct 2026).
+- Drawing guide round 4 (Roman's review, 31 Oct 2026): note boxes are lists and tables (`DRAW-47`), leaders end on a 45° diagonal aimed at a small part's centre and stop short of its outline (`DRAW-46`), IBM Plex Sans as the default font (a user setting in KiCad 10), mixed paper sizes, gold pins.
+- Drawing guide: wires `rgb(90, 90, 90)` and `rgb(154, 154, 154)` apart from label text, `PWR_FLAG` from `vhrd_power` in the supply orange (Roman, 31 Oct 2026, `DRAW-42`).
 
 ## [0.4.12] - 2026-10-30
 
@@ -129,7 +130,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
-- Check catalogue: a new category `PAS` (passive selection, `PAS-1..41`) for a capacitor, resistor, inductor, bead or choke whose technology is wrong for where it sits (leakage on SET, REF and soft-start pins, class 2 ceramics in timing, signal and low-noise roles, piezo and singing parts, output capacitor technology vs compensation, flex cracking, sulfur, pulse and safety class, precision resistor drift and voltage coefficient, shunt technology, saturation type, core loss, shielding, SRF, beads and chokes), and `RATE-25..31` (ripple current, electrolytic life, resistor pulse energy, inductor RMS current, jumper current, film dV/dt, series balancing), with the detail page `docs/checks/pas.md`, the RATE sections and the review checklist. The data they need is planned as `NET-23` (passive roles), `NET-24` (passive technology), `CFG-6` (selection constraints in the part database), `CFG-7` (series table) and `RPT-26` (passive calculators). Intent (vibration, audio, automotive, precision, industrial, environment, ambient, life) is per board with no defaults: checks that need it report not run without it; accuracy budgets come from the parts: each passive may add a quarter (`passive_share`) of the error of the part it serves (250 nA of SET leakage on an LT3045), `PAS-40` flags a precision circuit mixing grades and `PAS-41` precision parts where none is needed; PAS-9 and PAS-20 rise to warnings on audio and automotive boards. `BOM-19` reports the odd one out within a circuit block (case size, mount type, series, dielectric, tolerance among siblings of one role), building on `BOM-3`'s board-wide mixes; `ANA-24` (weakest link along a signal, reference, power or clock chain wastes a precise part) and `ANA-25` (over-specified part the chain cannot use) judge whole chains with figures from part data combined by a class figure table, planned as `NET-25` (chains) and `CFG-8` (class figures); the block checks stay separate (≈). Docs only, from the P2503 passive-selection design note.
+- Check catalogue: a new category `PAS` (passive selection, `PAS-1..41`) for a capacitor, resistor, inductor, bead or choke whose technology is wrong for where it sits (leakage on SET, REF and soft-start pins, class 2 ceramics in timing, signal and low-noise roles, piezo and singing parts, output capacitor technology vs compensation, flex cracking, sulfur, pulse and safety class, precision resistor drift and voltage coefficient, shunt technology, saturation type, core loss, shielding, SRF, beads and chokes), and `RATE-25..31` (ripple current, electrolytic life, resistor pulse energy, inductor RMS current, jumper current, film dV/dt, series balancing), with the detail page `docs/checks/pas.md`, the RATE sections and the review checklist. The data they need is planned as `NET-23` (passive roles), `NET-24` (passive technology), `CFG-6` (selection constraints in the part database), `CFG-7` (series table) and `RPT-26` (passive calculators). Intent (vibration, audio, automotive, precision, industrial, environment, ambient, life) is per board with no defaults: checks that need it report not run without it; accuracy budgets come from the parts: each passive may add a quarter (`passive_share`) of the error of the part it serves (250 nA of SET leakage on an LT3045), `PAS-40` flags a precision circuit mixing grades and `PAS-41` precision parts where none is needed; PAS-9 and PAS-20 rise to warnings on audio and automotive boards. `BOM-19` reports the odd one out within a circuit block (case size, mount type, series, dielectric, tolerance among siblings of one role), building on `BOM-3`'s board-wide mixes; `ANA-24` (weakest link along a signal, reference, power or clock chain wastes a precise part) and `ANA-25` (over-specified part the chain cannot use) judge whole chains with figures from part data combined by a class figure table, planned as `NET-25` (chains) and `CFG-8` (class figures); the block checks stay separate (≈). Docs only, from the passive-selection design note.
 
 ## [0.4.10] - 2026-10-23
 
@@ -142,13 +143,13 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
-- `just test --changed` runs only the workspace crates changed against main and their dependents (`tpm test changed`, nextest's `rdeps()`); plain `just test` runs everything, as `just test-all` does (tpm ops#22oct-2049).
+- `just test --changed` runs only the workspace crates changed against main and their dependents (nextest's `rdeps()`); plain `just test` runs everything, as `just test-all` does.
 
 ## [0.4.8] - 2026-10-22
 
 ### Changed
 
-- `just install` builds with `--profile deploy` and installs `better_erc` and `berc` through `tpm install` when tpm is there (each once on PATH, kept releases in `~/.local/bin`), else through `cargo install`; `better_erc --version` shows version, git sha and commit time (as berc does); `just deploy` checks both `--version`s against main's short sha. The README names `cargo install` for users without tpm.
+- `just install` builds with `--profile deploy` and installs `better_erc` and `berc` through our release tool when it is there (each once on PATH, kept releases locally), else through `cargo install`; `better_erc --version` shows version, git sha and commit time (as berc does); `just deploy` checks both `--version`s against main's short sha. The README names `cargo install` for users without that tool.
 
 ### Fixed
 
@@ -486,7 +487,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
   (`RAIL-4` fixed regulator voltage vs net, `RAIL-5` rail without a source, `MUX-4` GPIO on an NRST pin, `IO-12`
   output enables without a pull, `IO-13` peripheral reset held by a resetting controller, `BOM-12` value vs MPN,
   `LIB-6` footprint vs MPN package, `LVL-11` TXS-class shifters on push-pull lines, `SEQ-6` hard turn-on into a
-  capacitive load, `USB-7`/`USB-8` CC resistor sources and roles, among others), and the P2623 I2C-in-the-wild
+  capacitive load, `USB-7`/`USB-8` CC resistor sources and roles, among others), and the I2C-in-the-wild
   notes became `I2C-11`..`I2C-22`. New rule "one check, one concern": 22 lumped entries were split, the old ID
   keeping its first concern and the rest taking new numbers (`PIN-1` → `PIN-4`..`PIN-6`, `I2C-1` → `I2C-9`,
   `I2C-10`, `SER-1` → `SER-7`, `SER-8`, ...), each marked with a `split` comment. The review checklist follows
@@ -542,11 +543,11 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
-- `docs/checks.md`: the check catalogue (IDs like `PIN-1`, `I2C-3`, severity, overlaps), moved here from the tpm
-  repo so it ships with the public code. `docs/review-checklist.md`: the condensed schematic review checklist,
-  each ID linking back to its catalogue entry. README, FEATURES.md and CLAUDE.md now point here instead of tpm;
-  wording scrubbed of internal project names, board names and tools (the IO-9 and LOGIC-5 examples, an I2C-8
-  bench note, and two other asides) for a public repo.
+- `docs/checks.md`: the check catalogue (IDs like `PIN-1`, `I2C-3`, severity, overlaps), moved here from our
+  internal notes so it ships with the public code. `docs/review-checklist.md`: the condensed schematic review
+  checklist, each ID linking back to its catalogue entry. README, FEATURES.md and CLAUDE.md now point here
+  instead of our internal notes; wording scrubbed of internal project names, board names and tools (the IO-9 and
+  LOGIC-5 examples, an I2C-8 bench note, and two other asides) for a public repo.
 
 ## [0.3.1] - 2026-10-17
 
@@ -566,8 +567,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `justfile install` also installs `berc` (`cargo install --locked --path berc`), and `deploy` checks
   `berc --version` instead of only `better_erc` being on PATH.
 - `berc --version` labels its timestamp `commit` instead of `built`, and that timestamp is now the commit's own
-  time instead of the build clock's, like `tpm_cli`'s `build.rs` - so it doesn't change between rebuilds of the
-  same commit, and a worktree build no longer looks stale to cargo.
+  time instead of the build clock's, the way another of our CLIs already does it in its `build.rs` - so it doesn't
+  change between rebuilds of the same commit, and a worktree build no longer looks stale to cargo.
 
 ### Fixed
 
@@ -604,7 +605,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
   labels, footprints and their pad nets, design rules), not UUIDs, coordinates and reordering; `--with-geometry`
   adds positions; `berc --version` shows the git SHA and build time. Setup in README "Readable git diffs" (TOOL-3)
 - `FEATURES.md` tracker with stable area IDs (IMP, NET, DIAG, CFG, RPT, VIEW, APP, TOOL, GEN, BIZ); `CLAUDE.md`
-  points at it and at the check catalogue in tpm (`ideas/P2503-better-erc/rules.md`)
+  points at it and at the check catalogue
 - This changelog
 - `justfile` with the standard recipes `test`, `lint`, `install` and `deploy` (pull --ff-only, refuses on local
   changes, install); documented in CLAUDE.md

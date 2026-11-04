@@ -17,14 +17,14 @@ References used throughout:
 - **LM74700-Q1** · TI, *Low IQ Reverse Battery Protection Ideal Diode Controller* datasheet, SNOSD17G (2020): TVS
   selection and ORing. [ti.com/lit/ds/symlink/lm74700-q1](https://www.ti.com/lit/ds/symlink/lm74700-q1.pdf)
 - **Fuseology** · Littelfuse, *Fuseology Selection Guide: Fuse Characteristics, Terms and Consideration Factors*
-  (fetched 21 Oct 2026 through `tpm fetch`, littelfuse.com refuses plain HTTP clients): the eleven "Selection
+  (fetched 21 Oct 2026 through a headless browser, littelfuse.com refuses plain HTTP clients): the eleven "Selection
   Factors", derating, I²t, and the PTC terms.
   [littelfuse.com](https://www.littelfuse.com/~/media/electronics/product_catalogs/littelfuse_fuseology_selection_guide.pdf.pdf)
-- **SMF** · Littelfuse, *TVS Diodes SMF Series, Surface Mount 200 W* datasheet (fetched through `tpm fetch`): the
+- **SMF** · Littelfuse, *TVS Diodes SMF Series, Surface Mount 200 W* datasheet (fetched through a headless browser): the
   standoff, breakdown and clamping table quoted below.
   [littelfuse.com](https://www.littelfuse.com/assetdocs/tvs-diodes-smf-datasheet?assetguid=7eb8a5b6-bdd0-4561-8f19-0c3cc6f9b2af)
 - **AN88** · Linear Technology (now ADI), Application Note 88, *Ceramic Input Capacitors Can Cause Overvoltage
-  Transients* (2001) (fetched through `tpm fetch`).
+  Transients* (2001) (fetched through a headless browser).
   [analog.com](https://www.analog.com/media/en/technical-documentation/application-notes/an88f.pdf)
 - **SNVA538** · National Semiconductor (TI), *Input Filter Design for Switching Power Supplies*.
   [ti.com/lit/an/snva538](https://www.ti.com/lit/an/snva538/snva538.pdf)

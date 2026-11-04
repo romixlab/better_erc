@@ -10,10 +10,10 @@ References used throughout:
 - **RP2350** · Raspberry Pi, *RP2350 Datasheet* (build 01/10/2026), Appendix D "Errata".
   [datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)
 - **ES0340** · ST, *STM32F101xC/D/E, STM32F103xC/D/E device errata*, ES0340 Rev 17 (2022); the medium-density
-  parts (STM32F103x8/B) have the same erratum in ES096 Rev 15 §2.8.7 (fetched 21 Oct 2026 through `tpm fetch`).
+  parts (STM32F103x8/B) have the same erratum in ES096 Rev 15 §2.8.7 (fetched 21 Oct 2026 through a headless browser).
   [st.com/resource/en/errata_sheet/es0340](https://www.st.com/resource/en/errata_sheet/es0340-stm32f101xcde-stm32f103xcde-device-errata-stmicroelectronics.pdf),
   [es096](https://www.st.com/resource/en/errata_sheet/es096-stm32f101x8b-stm32f102x8b-and-stm32f103x8b-mediumdensity-device-limitations-stmicroelectronics.pdf)
-- **RM0008** · ST, *STM32F101xx ... STM32F107xx reference manual*, RM0008 Rev 21 (2021; fetched through `tpm fetch`).
+- **RM0008** · ST, *STM32F101xx ... STM32F107xx reference manual*, RM0008 Rev 21 (2021; fetched through a headless browser).
   [st.com/resource/en/reference_manual/rm0008](https://www.st.com/resource/en/reference_manual/rm0008-stm32f101xx-stm32f102xx-stm32f103xx-stm32f105xx-and-stm32f107xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
 - **Advamation** · Advamation, *Raspberry Pi I2C clock-stretching bug* (BCM2835).
   [advamation.com/knowhow/raspberrypi/rpi-i2c-bug.html](https://www.advamation.com/knowhow/raspberrypi/rpi-i2c-bug.html)

@@ -15,7 +15,7 @@ References used throughout:
 - **SPRACP4** · TI, *Jacinto7 AM6x, TDA4x, and DRA8x High-Speed Interface Design Guidelines*, SPRACP4A (June 2024).
   USB, DisplayPort, PCIe and MIPI D-PHY schematics and rules in §3.1-3.4. [ti.com/lit/pdf/spracp4](https://www.ti.com/lit/pdf/spracp4)
 - **AN4879** · ST, *Introduction to USB hardware and PCB guidelines using STM32 MCUs*, Rev 12 (June 2026). Fetched
-  through `tpm fetch`, st.com refuses plain HTTP clients.
+  through a headless browser, st.com refuses plain HTTP clients.
   [st.com AN4879](https://www.st.com/resource/en/application_note/an4879-usb-hardware-and-pcb-guidelines-using-stm32-mcus-stmicroelectronics.pdf)
 - **RP2350 HW** · Raspberry Pi, *Hardware design with RP2350*, release 3 (August 2026).
   [datasheets.raspberrypi.com](https://datasheets.raspberrypi.com/rp2350/hardware-design-with-rp2350.pdf)

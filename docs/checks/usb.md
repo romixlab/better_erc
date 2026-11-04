@@ -20,7 +20,7 @@ References used throughout:
 - **Micro-USB** · USB-IF, *Micro-USB Cables and Connectors Specification*, Rev. 1.01 (April 2007), in the same USB
   2.0 zip.
 - **AN4879** · ST, *Introduction to USB hardware and PCB guidelines using STM32 MCUs*, Rev 12 (June 2026), fetched
-  through `tpm fetch` (st.com refuses plain HTTP clients).
+  through a headless browser (st.com refuses plain HTTP clients).
   [st.com/resource/en/application_note/an4879](https://www.st.com/resource/en/application_note/an4879-usb-hardware-and-pcb-guidelines-using-stm32-mcus-stmicroelectronics.pdf)
 - **AN5225** · ST, *Introduction to USB Type-C® Power Delivery for STM32 MCUs and MPUs*, Rev 7 (June 2023).
   [st.com/resource/en/application_note/an5225](https://www.st.com/resource/en/application_note/an5225-usb-typec-power-delivery-using-stm32-mcus-and-mpus-stmicroelectronics.pdf)
@@ -163,7 +163,7 @@ VBUS droops by no more than 330 mV and the other ports on the hub stay up. A lar
 host's bulk at attach: the host's port droops, other devices on the same hub reset or disconnect, and an
 over-current limit may trip. More bulk is allowed only behind a soft-start or a current limit.
 
-**Example.** On the P2625 bench, B153A switched its plug VBUS hard onto a B129A with more than 110 µF on its input:
+**Example.** On our bench, B153A switched its plug VBUS hard onto a B129A with more than 110 µF on its input:
 the dongle's own supply dipped and the hub reset. A 10 Ω in series in the wire cured it; the rev B change list asks
 for a soft start on that switch. The same B129A plugged into a laptop port droops the laptop's port in the same
 way.
@@ -569,4 +569,4 @@ puts on that connector (SBU, SuperSpeed pins, D+/D−) and with the project's li
 **References.** Type-C Table 3-4 (full 24-pin assignment), Table 3-5 (USB 2.0-only support, unused contacts not
 connected); GCT, *USB4105 - USB 2.0 Connector Type C Horizontal Receptacle* [gct.co/connector/usb4105](https://gct.co/connector/usb4105)
 and *USB4125 - USB Charging Connector Type C Horizontal Receptacle* [gct.co/connector/usb4125](https://gct.co/connector/usb4125)
-(fetched through `tpm fetch`); Wikipedia, USB-C "Receptacles".
+(fetched through a headless browser); Wikipedia, USB-C "Receptacles".

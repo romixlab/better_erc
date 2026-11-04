@@ -29,8 +29,8 @@ pub enum Provenance {
     ProjectFile { file: String, key: String },
     /// An entry of the part database
     PartDb { file: String, entry: String },
-    /// mx3, the lab's part store, by its part id
-    Mx3 { part: String },
+    /// The lab's part store, by its part id
+    Store { part: String },
     /// The part vendor's own data (tables, configurators)
     Vendor { name: String },
     /// A datasheet read by a person or by a reviewed extraction
@@ -64,7 +64,7 @@ impl Provenance {
             } => Rank::DESIGN,
             Provenance::Pdf { .. } => Rank::RECONSTRUCTED,
             Provenance::Vendor { .. } => Rank::VENDOR,
-            Provenance::Mx3 { .. } | Provenance::PartDb { .. } | Provenance::Datasheet { .. } => {
+            Provenance::Store { .. } | Provenance::PartDb { .. } | Provenance::Datasheet { .. } => {
                 Rank::DATASHEET
             }
             Provenance::Distributor { .. } => Rank::DISTRIBUTOR,
@@ -95,7 +95,7 @@ impl Provenance {
             Provenance::KicadProject { .. } => "pro",
             Provenance::ProjectFile { .. } => "project",
             Provenance::PartDb { .. } => "partdb",
-            Provenance::Mx3 { .. } => "mx3",
+            Provenance::Store { .. } => "store",
             Provenance::Vendor { .. } => "vendor",
             Provenance::Datasheet { .. } => "datasheet",
             Provenance::Distributor { .. } => "distributor",
@@ -117,7 +117,7 @@ impl Provenance {
             Provenance::Pdf { file, confidence } => vec![file, confidence.name()],
             Provenance::ProjectFile { file, key } => vec![file, key],
             Provenance::PartDb { file, entry } => vec![file, entry],
-            Provenance::Mx3 { part } => vec![part],
+            Provenance::Store { part } => vec![part],
             Provenance::Vendor { name } | Provenance::Distributor { name } => vec![name],
             Provenance::Datasheet { doc } => vec![doc],
             Provenance::Llm { model } => vec![model],
@@ -150,7 +150,7 @@ impl Provenance {
                 file: a(0)?,
                 entry: a(1)?,
             },
-            "mx3" if one => Provenance::Mx3 { part: a(0)? },
+            "store" if one => Provenance::Store { part: a(0)? },
             "vendor" if one => Provenance::Vendor { name: a(0)? },
             "datasheet" if one => Provenance::Datasheet { doc: a(0)? },
             "distributor" if one => Provenance::Distributor { name: a(0)? },
@@ -220,7 +220,7 @@ impl Rank {
     pub const RECONSTRUCTED: Rank = Rank(750);
     /// The vendor's own data
     pub const VENDOR: Rank = Rank(700);
-    /// Datasheet-derived (a person, a reviewed extraction, the part database, mx3)
+    /// Datasheet-derived (a person, a reviewed extraction, the part database, the lab's part store)
     pub const DATASHEET: Rank = Rank(600);
     /// Distributors
     pub const DISTRIBUTOR: Rank = Rank(500);

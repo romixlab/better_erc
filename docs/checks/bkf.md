@@ -20,7 +20,7 @@ References used throughout:
 - **SLAA689** · TI, *ESD Diode Current Specification*, SLAA689B (2015, rev. 2021).
   [ti.com/lit/pdf/slaa689](https://www.ti.com/lit/pdf/slaa689)
 - **AN10441** · NXP, *Level shifting techniques in I²C-bus design*, Rev. 2 (2020). nxp.com no longer serves it at
-  its old address; fetched from Mouser's copy through `tpm fetch`. [mouser.com/pdfDocs/AN10441.pdf](https://www.mouser.com/pdfDocs/AN10441.pdf)
+  its old address; fetched from Mouser's copy through a headless browser. [mouser.com/pdfDocs/AN10441.pdf](https://www.mouser.com/pdfDocs/AN10441.pdf)
 - **TXS0102** · TI, *TXS0102 2-Bit Bidirectional Voltage-Level Translator for Open-Drain and Push-Pull
   Applications*, SCES640L (2007, rev. 2026). [ti.com/lit/ds/symlink/txs0102.pdf](https://www.ti.com/lit/ds/symlink/txs0102.pdf)
 - **SLUA962** · TI, *Methods to Eliminate Damage Caused by Reverse Current in Synchronous Buck Converters*, SLUA962
@@ -30,7 +30,7 @@ References used throughout:
 - **TPS7A02** · TI, *TPS7A02 datasheet*, SBVS277C (2022). [ti.com/lit/ds/symlink/tps7a02.pdf](https://www.ti.com/lit/ds/symlink/tps7a02.pdf)
 - **SLVAE57** · TI, *Basics of Ideal Diodes*, SLVAE57B (2021). [ti.com/lit/an/slvae57](https://www.ti.com/lit/an/slvae57/slvae57.pdf)
 - **AN4899** · ST, *Guidelines for GPIO hardware settings and low-power consumption on STM32 MCUs*, AN4899 Rev 4
-  (2026; fetched through `tpm fetch`). [st.com/resource/en/application_note/an4899](https://www.st.com/resource/en/application_note/an4899-stm32-microcontroller-gpio-configuration-for-hardware-settings-and-lowpower-consumption-stmicroelectronics.pdf)
+  (2026; fetched through a headless browser). [st.com/resource/en/application_note/an4899](https://www.st.com/resource/en/application_note/an4899-stm32-microcontroller-gpio-configuration-for-hardware-settings-and-lowpower-consumption-stmicroelectronics.pdf)
 - **USB 2.0** · USB-IF, *Universal Serial Bus Specification*, Revision 2.0 (`usb_20.pdf` in the specification zip).
   [usb.org/document-library/usb-20-specification](https://www.usb.org/document-library/usb-20-specification)
 

@@ -19,7 +19,7 @@ References used throughout:
   connection at the connector), §2.2 (EMI from ESD onto adjacent traces), §2.4 (ground schemes).
   [ti.com/lit/an/slva680a](https://www.ti.com/lit/an/slva680a/slva680a.pdf)
 - **DS13560** · ST, *STM32G0B1xB/xC/xE datasheet*, Rev 6 (February 2026), Table 22 (current characteristics:
-  injected current per pin and in total). Our B153A MCU; fetched through `tpm fetch`.
+  injected current per pin and in total). Our B153A MCU; fetched through a headless browser.
   [st.com/resource/en/datasheet/stm32g0b1cb.pdf](https://www.st.com/resource/en/datasheet/stm32g0b1cb.pdf)
 - **Cortex-M Debug Connectors** · Arm / Keil, overview of the 10-pin Cortex Debug, 20-pin Cortex Debug+ETM,
   legacy 20-pin IDC JTAG and 38-pin Mictor pinouts.

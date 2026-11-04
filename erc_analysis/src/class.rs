@@ -22,9 +22,9 @@ use serde::{Deserialize, Serialize};
 
 pub use erc_model::PartClass;
 
-/// A source of part classes ranked above the schematic's own: the part database by MPN (CFG-5), mx3
+/// A source of part classes ranked above the schematic's own: the part database by MPN (CFG-5), the lab's part store
 pub trait ClassSource {
-    /// The class of `part`, with its provenance (`Provenance::PartDb`, `Provenance::Mx3`), or `None` when the
+    /// The class of `part`, with its provenance (`Provenance::PartDb`, `Provenance::Store`), or `None` when the
     /// source does not know the part
     fn class(&self, board: &Board, part: PartId) -> Option<Fact<PartClass>>;
 }

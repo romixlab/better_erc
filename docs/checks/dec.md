@@ -8,17 +8,17 @@ source of truth for ID, severity and wording; this page is the commentary.
 References used throughout:
 
 - **MT-101** · Analog Devices, *Decoupling Techniques*, tutorial MT-101 (Rev. 0, March 2009). Capacitor parasitics,
-  capacitor types, local decoupling, LC resonance with ferrites (fetched through `tpm fetch`, analog.com refuses plain
+  capacitor types, local decoupling, LC resonance with ferrites (fetched through a headless browser, analog.com refuses plain
   clients). [analog.com MT-101.pdf](https://www.analog.com/media/en/training-seminars/tutorials/MT-101.pdf)
 - **Ferrite Beads Demystified** · J. Eco, A. Limjoco, Analog Devices, *Analog Dialogue* 50-02 (February 2016): bead
-  model, DC bias current, LC resonance and damping (fetched through `tpm fetch`).
+  model, DC bias current, LC resonance and damping (fetched through a headless browser).
   [analog.com ferrite-beads-demystified.pdf](https://www.analog.com/media/en/analog-dialogue/volume-50/number-1/articles/ferrite-beads-demystified.pdf)
 - **AN4488** · ST, *Getting started with STM32F4xxxx MCU hardware development*, Rev 7 (October 2018); §2.2 power
   supply schemes (VCAP), §8.3 power supply decoupling, §9.3 "MCU does not work properly" (fetched through
-  `tpm fetch`).
+  a headless browser).
   [st.com AN4488](https://www.st.com/resource/en/application_note/an4488-getting-started-with-stm32f4xxxx-mcu-hardware-development-stmicroelectronics.pdf)
 - **AN2586** · ST, *Getting started with STM32F10xxx hardware development*, Rev 8 (December 2022); §6.4 decoupling
-  (fetched through `tpm fetch`).
+  (fetched through a headless browser).
   [st.com AN2586](https://www.st.com/resource/en/application_note/an2586-getting-started-with-stm32f10xxx-hardware-development-stmicroelectronics.pdf)
 - **DS00001692C** · Microchip, *USB251xB/xBi USB 2.0 Hi-Speed Hub Controller* datasheet, rev C (2015); Table 3-2 pin
   descriptions (CRFILT, PLLFILT, RBIAS).

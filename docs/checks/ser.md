@@ -25,7 +25,7 @@ References used throughout:
 - **SN65HVD230** · TI, *SN65HVD23x 3.3-V CAN Bus Transceivers*, SLOS346O (April 2018). A classic 1 Mbit/s
   transceiver with an RS mode pin. [ti.com/lit/ds/symlink/sn65hvd230.pdf](https://www.ti.com/lit/ds/symlink/sn65hvd230.pdf)
 - **ADM3050E** · Analog Devices, *5.7kV rms, Signal Isolated, Basic CAN FD Transceiver*, data sheet rev. D (fetched
-  21 Oct 2026 through `tpm fetch`, analog.com refuses plain HTTP clients). The isolated transceiver on B125 and
+  21 Oct 2026 through a headless browser, analog.com refuses plain HTTP clients). The isolated transceiver on B125 and
   B135. [analog.com/…/adm3050e.pdf](https://www.analog.com/media/en/technical-documentation/data-sheets/adm3050e.pdf)
 - **THVD1450** · TI, *THVD14xx 3.3-V to 5-V RS-485 Transceivers*, SLLSEY3E (May 2019). A modern RS-485
   transceiver with built-in failsafe. [ti.com/lit/ds/symlink/thvd1450.pdf](https://www.ti.com/lit/ds/symlink/thvd1450.pdf)
@@ -36,12 +36,12 @@ References used throughout:
 - **W25Q128JV** · Winbond, *W25Q128JV 3V 128M-bit serial flash memory with dual/quad SPI*, revision M (December
   2024). [winbond.com/resource-files/W25Q128JV RevM 12242024 Plus.pdf](https://www.winbond.com/resource-files/W25Q128JV%20RevM%2012242024%20Plus.pdf)
 - **DS18B20** · Maxim Integrated (Analog Devices), *DS18B20 Programmable Resolution 1-Wire Digital Thermometer*,
-  19-7487 rev. 6 (July 2019; fetched through `tpm fetch`).
+  19-7487 rev. 6 (July 2019; fetched through a headless browser).
   [analog.com/…/DS18B20.pdf](https://www.analog.com/media/en/technical-documentation/data-sheets/DS18B20.pdf)
-- **CP2102N** · Silicon Labs, *CP2102N Data Sheet*, rev. 1.5 (fetched through `tpm fetch`).
+- **CP2102N** · Silicon Labs, *CP2102N Data Sheet*, rev. 1.5 (fetched through a headless browser).
   [silabs.com/…/cp2102n-datasheet.pdf](https://www.silabs.com/documents/public/data-sheets/cp2102n-datasheet.pdf)
 - **AN2606** · ST, *Introduction to system memory boot mode on STM32 MCUs*, rev. 70 (February 2026; fetched through
-  `tpm fetch`). Which pins the ROM bootloader drives.
+  a headless browser). Which pins the ROM bootloader drives.
   [st.com/…/an2606….pdf](https://www.st.com/resource/en/application_note/an2606-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf)
 - **esptool boot mode** · Espressif, *Boot Mode Selection* (esptool docs, ESP32), "Automatic Bootloader".
   [docs.espressif.com/…/boot-mode-selection.html](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html)

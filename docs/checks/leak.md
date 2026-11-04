@@ -11,7 +11,7 @@ easily eaten by one resistor. On mains or USB-powered boards most findings are r
 References used throughout:
 
 - **AN4899** · ST, *Guidelines for GPIO hardware settings and low-power consumption on STM32 MCUs*, AN4899 Rev 4
-  (May 2026; fetched 21 Oct 2026 through `tpm fetch`, st.com refuses plain HTTP clients).
+  (May 2026; fetched 21 Oct 2026 through a headless browser, st.com refuses plain HTTP clients).
   [st.com/resource/en/application_note/an4899](https://www.st.com/resource/en/application_note/an4899-stm32-microcontroller-gpio-configuration-for-hardware-settings-and-lowpower-consumption-stmicroelectronics.pdf)
 - **Microchip analog TB** · Microchip, *Analog Applications in 8-bit PIC and AVR Microcontrollers* (technical brief,
   online docs), section 5 "Measure Power Supplies and Batteries".
@@ -19,7 +19,7 @@ References used throughout:
 - **SLAA689** · TI, *ESD Diode Current Specification*, SLAA689B (2015, rev. 2021).
   [ti.com/lit/pdf/slaa689](https://www.ti.com/lit/pdf/slaa689)
 - **RM0008** · ST, *STM32F101xx, STM32F102xx, STM32F103xx, STM32F105xx and STM32F107xx reference manual*, RM0008
-  Rev 21 (2021; fetched through `tpm fetch`). [st.com/resource/en/reference_manual/rm0008](https://www.st.com/resource/en/reference_manual/rm0008-stm32f101xx-stm32f102xx-stm32f103xx-stm32f105xx-and-stm32f107xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
+  Rev 21 (2021; fetched through a headless browser). [st.com/resource/en/reference_manual/rm0008](https://www.st.com/resource/en/reference_manual/rm0008-stm32f101xx-stm32f102xx-stm32f103xx-stm32f105xx-and-stm32f107xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
 - **SCBA004** · TI, *Implications of Slow or Floating CMOS Inputs*, SCBA004E (1994, rev. 2021).
   [ti.com/lit/pdf/scba004](https://www.ti.com/lit/pdf/scba004)
 - **Wikipedia** · *Voltage divider*, *LED circuit*: readable overviews.

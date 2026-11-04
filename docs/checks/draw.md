@@ -14,7 +14,7 @@ symbol and text extents must be computed, `judgement` where better_erc can only 
 **Boxes.** Several checks compare item boxes: a symbol's body with its pins (from the library graphics, placed by its
 rotation and mirror), a field's or label's text box (from font size, text length, justification and the angle
 relative to its symbol), a power symbol with its name, a note box, a wire as a thin box. A prototype of this
-measure (Python, run on the io_protection sheets) is kept with the P2503 house-style notes; it is the reference for
+measure (Python, run on a real board's sheets) is kept with our house-style notes; it is the reference for
 `NET-26`.
 
 **Drawing settings.** The spacing checks share named settings with defaults, set per project in its better_erc
@@ -432,8 +432,8 @@ or more lines of `name: value` or `name = value`, or runs of two or more spaces 
 apart, a field less than 1.905 mm from another part, two labels less than 1.27 mm apart.
 
 **Why it matters.** A sheet where every gap is the minimum reads as one block, and a field close to the next part is
-read as belonging to it. The margins are settings because how much air a sheet needs is taste: Roman's io_protection
-sheets were too dense at zero, the defaults stay small.
+read as belonging to it. The margins are settings because how much air a sheet needs is taste: Roman's own dense
+real-board sheets were too dense at zero, the defaults stay small.
 
 **Example.** A `+3V3` power symbol on a one-step stub beside a series resistor: its name lies 0.5 mm from the
 resistor's body.

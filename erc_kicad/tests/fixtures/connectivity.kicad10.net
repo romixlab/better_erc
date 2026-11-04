@@ -1,7 +1,7 @@
 (export
 	(version "E")
 	(design
-		(source "/home/roman/git/.wt/core-model/better_erc/erc_kicad/tests/fixtures/connectivity.kicad_sch")
+		(source "/w/erc_kicad/tests/fixtures/connectivity.kicad_sch")
 		(date "2026-10-22T10:30:51")
 		(tool "Eeschema 10.0.6")
 		(sheet

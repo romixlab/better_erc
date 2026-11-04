@@ -16,7 +16,7 @@ References used throughout:
 - **NINA-W10 DS** · u-blox, *NINA-W10 series data sheet*, UBX-17065507 R17 (May 2025).
   [content.u-blox.com](https://content.u-blox.com/sites/default/files/NINA-W10_DataSheet_UBX-17065507.pdf)
 - **SX1261/2 DS** · Semtech, *SX1261/2 Datasheet*, Rev 2.2 (December 2024), linked from the product page
-  (fetched 21 Oct 2026 through `tpm fetch`, semtech.com refuses plain HTTP clients).
+  (fetched 21 Oct 2026 through a headless browser, semtech.com refuses plain HTTP clients).
   [semtech.com/products/wireless-rf/lora-connect/sx1262](https://www.semtech.com/products/wireless-rf/lora-connect/sx1262)
 - **MAX-M10S IM** · u-blox, *MAX-M10S Integration manual*, UBX-20053088 R05 (April 2026). Active antenna supply
   and supervisor.
