@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.4.17] - 2026-11-04
+
 ### Fixed
 
 - `berc textconv` on a `.kicad_pro`: the fold-count comment (`# N settings at KiCad's default or empty, folded:
