@@ -11,6 +11,15 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Changed
+
+- README "Readable git diffs": no longer recommends `diff.kicad.cachetextconv`. `berc textconv` is fast enough
+  (0.12 s on a 17 MB `.kicad_pcb`, 8 ms on the largest `.kicad_sch` of a real hardware repository) that caching it
+  isn't worth the staleness: git's cache is per blob and per textconv command, and a `berc` upgrade keeps the same
+  command, so old blobs keep showing their old cached text until the command changes or the notes ref is cleared.
+  Kept a short note for anyone who turns `cachetextconv` on anyway: clear `refs/notes/textconv/kicad` after every
+  upgrade that changes the output (`TOOL-3`).
+
 ## [0.4.17] - 2026-11-04
 
 ### Fixed

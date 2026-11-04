@@ -78,7 +78,6 @@ Readable diffs of a KiCad project in git, once per machine and once per reposito
 
 ```sh
 git config --global diff.kicad.textconv "berc textconv"
-git config --global diff.kicad.cachetextconv true
 printf '*.kicad_sch diff=kicad\n*.kicad_pcb diff=kicad\n*.kicad_pro diff=kicad\n' >> .gitattributes
 git diff   # changed parts, values, nets and settings instead of raw s-expressions
 ```
@@ -201,18 +200,19 @@ And how to convert them, once per machine:
 
 ```sh
 git config --global diff.kicad.textconv "berc textconv"
-git config --global diff.kicad.cachetextconv true
 ```
 
-`cachetextconv` keeps the converted text in git notes (`refs/notes/textconv/kicad`), so `git log -p` over a long
-history converts each file version only once. `git diff --stat` and `--numstat` still count raw lines; that is
-git, not berc. To see the raw diff once, pass `--no-textconv`.
+No `diff.kicad.cachetextconv`: `berc textconv` is fast enough that caching it isn't worth the staleness it buys
+(0.12 s on a 17 MB `.kicad_pcb`, 8 ms on the largest `.kicad_sch` of a real hardware repository). `cachetextconv`
+would keep the converted text in git notes (`refs/notes/textconv/kicad`), per blob and per textconv command: git
+stores the command as the cache's validity and drops the cache when the configured command differs. A `berc`
+upgrade keeps the same command, so after one that changes the output format, old blobs keep showing their old
+(but still cached) text until the command changes or the notes ref is cleared.
+`git diff --stat` and `--numstat` still count raw lines; that is git, not berc. To see the raw diff once, pass
+`--no-textconv`.
 
-The cache is keyed only by the blob's hash, not by which berc version produced the note: after a `berc` upgrade
-that changes the output format, old blobs keep showing their old (but still cached) textconv text until the note
-is dropped. There's no fix for this inside berc - git never calls textconv again for a blob it already has a
-note for, no matter what the command would print now - so after an upgrade that changes output, clear it once
-per clone:
+Turning `cachetextconv` on anyway (a very large repository, a slow disk): clear the cache once per clone after
+every `berc` upgrade that changes textconv's output:
 
 ```sh
 git update-ref -d refs/notes/textconv/kicad
