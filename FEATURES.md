@@ -677,8 +677,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - 📋 `TOOL-2` Schematic vs layout match (catalogue `LAY-1`)
 - ✅ `TOOL-3` Readable git diffs: `berc textconv` prints a `.kicad_sch` / `.kicad_pcb` as sorted text without UUIDs
   or coordinates (`--with-geometry` adds them), and a `.kicad_pro` as dotted-path settings with named lists and
-  KiCad-default-looking settings folded per section (`--all` shows them), for git's `diff.kicad.textconv` ·
-  `berc/src/sch.rs`, `pcb.rs`, `pro.rs`, README "Readable git diffs"
+  KiCad-default-looking settings folded per section, the fold line itself carrying no count so a newer KiCad's
+  extra defaults don't move it (`--all` shows them); a few comma-joined settings KiCad rebuilds from a set, not a
+  sequence (`schematic.used_designators`), are sorted naturally so a plain re-save alone never reorders them;
+  for git's `diff.kicad.textconv` · `berc/src/sch.rs`, `pcb.rs`, `pro.rs`, README "Readable git diffs"
 - ✅ `TOOL-4` `berc` CLI basics: `--version` with version, git SHA (`-dirty`) and commit time (`berc/build.rs`); shell
   completion for bash, zsh and fish (`COMPLETE=bash berc`, file paths completed), told in `--help`; colour in help
   and errors only on a terminal and never with `NO_COLOR`; `textconv` output always plain (git colours the diff).

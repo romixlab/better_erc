@@ -91,15 +91,15 @@ board.design_settings.via_dimensions.1.diameter = 0.5
 board.design_settings.via_dimensions.1.drill = 0.25
 board.design_settings.via_dimensions.2.diameter = 0.6
 board.design_settings.via_dimensions.2.drill = 0.3
-# 124 settings at KiCad's default or empty, folded: board.* (--all shows them)
-# 1 setting at KiCad's default or empty, folded: boards.* (--all shows them)
-# 3 settings at KiCad's default or empty, folded: component_class_settings.* (--all shows them)
-# 1 setting at KiCad's default or empty, folded: cvpcb.* (--all shows them)
+# settings at KiCad's default or empty, folded: board.* (--all shows them)
+# settings at KiCad's default or empty, folded: boards.* (--all shows them)
+# settings at KiCad's default or empty, folded: component_class_settings.* (--all shows them)
+# settings at KiCad's default or empty, folded: cvpcb.* (--all shows them)
 erc.rule_severities.conflicting_netclasses = error
 erc.rule_severities.global_label_dangling = warning
 erc.rule_severities.simulation_model_issue = error
-# 48 settings at KiCad's default or empty, folded: erc.* (--all shows them)
-# 2 settings at KiCad's default or empty, folded: libraries.* (--all shows them)
+# settings at KiCad's default or empty, folded: erc.* (--all shows them)
+# settings at KiCad's default or empty, folded: libraries.* (--all shows them)
 meta.version = 3
 net_settings.classes.D90.bus_width = 12
 net_settings.classes.D90.clearance = 0.15
@@ -133,9 +133,9 @@ net_settings.netclass_assignments./USB_N = [D90]
 net_settings.netclass_assignments./USB_P = [D90]
 net_settings.netclass_patterns.0.netclass = D90
 net_settings.netclass_patterns.0.pattern = USB_*
-# 6 settings at KiCad's default or empty, folded: net_settings.* (--all shows them)
+# settings at KiCad's default or empty, folded: net_settings.* (--all shows them)
 pcbnew.last_paths.step = ../../../kicad-library/3dmodels/modules/cannify_micro.step
-# 9 settings at KiCad's default or empty, folded: pcbnew.* (--all shows them)
+# settings at KiCad's default or empty, folded: pcbnew.* (--all shows them)
 schematic.bom_fmt_settings.field_delimiter = ,
 schematic.bom_fmt_settings.name = CSV
 schematic.bom_fmt_settings.ref_delimiter = ,
@@ -204,7 +204,7 @@ schematic.spice_external_command = "spice \"%I\""
 schematic.spice_model_current_sheet_as_root = true
 schematic.subpart_first_id = 65
 schematic.top_level_sheets.cannify_micro.filename = cannify_micro.kicad_sch
-# 59 settings at KiCad's default or empty, folded: schematic.* (--all shows them)
+# settings at KiCad's default or empty, folded: schematic.* (--all shows them)
 sheets = [Root]
-# 1 setting at KiCad's default or empty, folded: text_variables.* (--all shows them)
-# 2 settings at KiCad's default or empty, folded: tuning_profiles.* (--all shows them)
+# settings at KiCad's default or empty, folded: text_variables.* (--all shows them)
+# settings at KiCad's default or empty, folded: tuning_profiles.* (--all shows them)

@@ -11,6 +11,14 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Fixed
+
+- `berc textconv` on a `.kicad_pro`: the fold-count comment (`# N settings at KiCad's default or empty, folded:
+  ...`) no longer carries a number, so a newer KiCad writing a few more settings at their default doesn't show as
+  a change by itself; `schematic.used_designators` (and other comma-joined settings KiCad rebuilds from a set,
+  not a sequence) is sorted naturally before printing, so a plain re-save that only reordered it no longer shows
+  as a change either (`TOOL-3`).
+
 ## [0.4.16] - 2026-11-03
 
 ### Fixed

@@ -9,9 +9,15 @@
 //! anything not in that table, when its value is JSON's own "nothing here" (`false`, `0`, `0.0`, `""`, `[]`,
 //! `{}`, `null`) - a cheap approximation for the rest of the schema, not a real default check: an untabled
 //! setting that is genuinely and meaningfully `0` (a net class `priority`, say) folds too. `--all` always
-//! shows every line, folded or not.
+//! shows every line, folded or not. The fold summary itself never shows a count: a newer KiCad writing a few
+//! more settings at their default shouldn't move the line (`--all` shows the real content if that's wanted).
+//!
+//! A handful of settings are a comma-joined list KiCad rebuilds from a set or map, not a sequence, so a plain
+//! re-save alone can reorder them (`UNORDERED_LISTS`); those are sorted (natural order: prefix, then number)
+//! before printing. Everything else keeps the order the file itself writes, since for most lists - a track
+//! width table, the ERC conflict matrix, a layer stack - position is the content.
 
-use crate::common::{Options, q, sort_natural};
+use crate::common::{Options, natural_cmp, q, sort_natural};
 use crate::pro_defaults;
 use serde_json::Value;
 use std::collections::HashMap;
@@ -56,14 +62,28 @@ pub fn render(root: &Value, opts: Options) -> String {
             out.push('\n');
         }
         if !opts.show_defaults && folded > 0 {
-            let s = if folded == 1 { "" } else { "s" };
             let _ = writeln!(
                 out,
-                "# {folded} setting{s} at KiCad's default or empty, folded: {k}.* (--all shows them)"
+                "# settings at KiCad's default or empty, folded: {k}.* (--all shows them)"
             );
         }
     }
     out
+}
+
+/// Paths whose value is a comma-joined set, not a sequence: KiCad rebuilds them from an internal map or set,
+/// so the same members can print in a different order after a plain re-save with no real change. Never add a
+/// path here whose order is itself meaningful (a layer stack, a sheet order where it matters).
+const UNORDERED_LISTS: &[&str] = &["schematic.used_designators"];
+
+/// `UNORDERED_LISTS` entries sorted in natural order (prefix, then number), comma-joined again
+fn sorted_list(s: &str) -> String {
+    if s.is_empty() {
+        return String::new();
+    }
+    let mut parts: Vec<&str> = s.split(',').collect();
+    parts.sort_by(|a, b| natural_cmp(a, b));
+    parts.join(",")
 }
 
 fn walk(
@@ -97,6 +117,14 @@ fn walk(
         }
         Value::Array(items) if items.is_empty() => push_leaf(path, "[]", true, opts, lines, folded),
         Value::Array(items) => walk_array(path, items, opts, defaults, lines, folded),
+        Value::String(s) if UNORDERED_LISTS.contains(&path) => push_leaf(
+            path,
+            &q(&sorted_list(s)),
+            !known_not_default && is_zero_scalar(v),
+            opts,
+            lines,
+            folded,
+        ),
         _ => push_leaf(
             path,
             &compact_scalar(v),
@@ -250,7 +278,7 @@ mod tests {
         let out = render(&v, Options::default());
         assert_eq!(
             out,
-            "board.b = 1\n# 1 setting at KiCad's default or empty, folded: board.* (--all shows them)\nmeta.version = 1\n"
+            "board.b = 1\n# settings at KiCad's default or empty, folded: board.* (--all shows them)\nmeta.version = 1\n"
         );
         let all = render(
             &v,
@@ -306,7 +334,7 @@ mod tests {
         let out = render(&v, Options::default());
         assert_eq!(
             out,
-            "meta.version = 1\n# 1 setting at KiCad's default or empty, folded: schematic.* (--all shows them)\n"
+            "meta.version = 1\n# settings at KiCad's default or empty, folded: schematic.* (--all shows them)\n"
         );
 
         // A project that disabled it is real content, not folded
@@ -331,7 +359,46 @@ mod tests {
         let out = render(&v, Options::default());
         assert_eq!(
             out,
-            "# 1 setting at KiCad's default or empty, folded: erc.* (--all shows them)\nmeta.version = 1\n"
+            "# settings at KiCad's default or empty, folded: erc.* (--all shows them)\nmeta.version = 1\n"
+        );
+    }
+
+    /// The exact omarchy-m1 case: a plain re-save reordered the designator set KiCad keeps as a comma string;
+    /// both orders must render identically
+    #[test]
+    fn used_designators_order_does_not_matter() {
+        let before = "J105,NT1701,M1901,R1701-1704,R1706,R1711-1715,R1803-1804,H101-102,H1901-1902,\
+D1701-1703,D1708,D1710-1712,#PWR101,#PWR103,#PWR105,#PWR109,#PWR1702-1710,#PWR1712,#PWR1720-1728,\
+#PWR1814-1815,#PWR1901,Q1701-1709,Q1801,E1702,E1704-1705,V1901-1911";
+        let after = "#PWR101,#PWR103,#PWR105,#PWR109,#PWR1702-1710,#PWR1712,#PWR1720-1728,#PWR1814-1815,\
+#PWR1901,D1701-1703,D1708,D1710-1712,E1702,E1704-1705,H101-102,H1901-1902,J105,M1901,NT1701,Q1701-1709,\
+Q1801,R1701-1704,R1706,R1711-1715,R1803-1804,V1901-1911";
+        let render_with = |designators: &str| {
+            let v: Value = serde_json::json!({
+                "meta": {"filename": "x", "version": 1},
+                "schematic": {"used_designators": designators},
+            });
+            render(&v, Options::default())
+        };
+        assert_eq!(render_with(before), render_with(after));
+        assert!(render_with(before).contains("schematic.used_designators = #PWR101,"));
+    }
+
+    /// A newer KiCad writing a few extra settings at their default must not move the fold-count line: only
+    /// the real content (an actual non-default setting) should show as a diff
+    #[test]
+    fn fold_line_is_stable_across_a_default_count_change() {
+        let fewer: Value = serde_json::from_str(
+            r#"{"meta": {"filename": "x", "version": 1}, "board": {"a": false}}"#,
+        )
+        .unwrap();
+        let more: Value = serde_json::from_str(
+            r#"{"meta": {"filename": "x", "version": 1}, "board": {"a": false, "b": false, "c": {}}}"#,
+        )
+        .unwrap();
+        assert_eq!(
+            render(&fewer, Options::default()),
+            render(&more, Options::default())
         );
     }
 }
