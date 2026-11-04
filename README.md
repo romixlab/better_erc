@@ -41,6 +41,9 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
   (and Altium or OrCAD files picked one by one) and shows its findings with their explanations and the checks that
   did not run, and tabs for nets (power rails, grounds and switching nodes from names and pin types), I2C buses,
   style findings and inputs.
+- **Signal levels** (crate `erc_levels`): a database of the levels logic families, buses and differential
+  standards define (74xx and CD4000, JEDEC LVCMOS/SSTL/HSTL, I2C, RS-485, CAN, LVDS, ECL, USB, Ethernet and more),
+  every number with the document, table and page it was read from. See [docs/signal-levels.md](docs/signal-levels.md).
 - **The library** (crate `better_erc`): all of the above for Rust code in one dependency.
 
 ## Documentation
@@ -53,6 +56,8 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 - [docs/drawing-guide.md](docs/drawing-guide.md): how to draw a sheet that reads at a glance (signal flow, power and
   ground, grid, labels, text, title block, KiCad shortcuts), each rule with its reason and source, and our own sheets
   measured against it; the `DRAW` checks automate part of it.
+- [docs/signal-levels.md](docs/signal-levels.md): the signal-level database: its format, where each number comes
+  from, what `verified` means, and how to add a family.
 - [docs/review-checklist.md](docs/review-checklist.md): a condensed schematic review checklist that groups those
   IDs for a review pass.
 - [FEATURES.md](FEATURES.md): what the code does today and what is planned, item by item.

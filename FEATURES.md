@@ -30,6 +30,8 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   as JSON and text, the embedded catalogue ([docs/engine.md](docs/engine.md))
 - `erc_import`: the importer registry, and the Altium, OrCAD and PnP importers into the board model
   ([docs/model.md](docs/model.md))
+- `erc_levels`: the signal-level database: logic families, buses and differential standards with their levels,
+  each value with the document it was read from ([docs/signal-levels.md](docs/signal-levels.md))
 - `better_erc`: the library: the crates above re-exported, the run entry and report types at the top, `diff`
   (`TOOL-6`)
 - `better_erc_app`: egui/eframe desktop app (`egui_tiles` tabs), binary `better_erc`
@@ -171,6 +173,13 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   and pin sides, so a placed symbol's outline and which way its pins face are known. Text boxes from KiCad's stroke font, compared
   with `kicad-cli sch export svg`. Colour themes are not read yet. The `DRAW` checks read it
   ([docs/drawing-guide.md](docs/drawing-guide.md)) · `erc_model/src/geometry.rs`, `erc_kicad/src/sch/{geom,font}.rs`
+
+- ✅ `NET-27` Signal-level database: what each logic family, bus and differential standard defines (supply range,
+  VIH/VIL, VOH/VOL with their test currents, input currents, hysteresis, differential VOD/VOS/VTH/VIC, termination,
+  temperature), one table per standard and supply variant, each value with its source document in the technical
+  library (section, table, page) and `verified` only when read there; a typed loader with a validator (sources,
+  min <= typ <= max at the supply corners, VIL < VIH, VOL < VOH, units per parameter) · `erc_levels/data/signal_levels.toml`,
+  `erc_levels/src`, [docs/signal-levels.md](docs/signal-levels.md)
 
 ## Checks and diagnostics (`DIAG`)
 
@@ -564,6 +573,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   hand-written not-run assertions (a subset); one test runs the engine on all of them, and fails on a schematic without
   expectations or a check no schematic shows firing (`BLESS=1` rewrites the findings, keeps the not-run blocks) ·
   `erc_checks/tests/schematics.rs`
+
+- 📋 `DIAG-7` Level checks from the signal-level database (`NET-27`): `LVL-2` (a driver's VOH/VOL against the
+  receiver's VIH/VIL across families and rails), `LVL-3` (I2C thresholds that make a translator unnecessary) and
+  `LVL-10` (a driver's high above the receiver's limit), keyed by the family a pin's part or net class names
 
 ## Configuration and waivers (`CFG`)
 
