@@ -13,20 +13,23 @@
 #   name, group            display name; the family the variants belong to
 #   kind                   single-ended | open-drain | differential | bus | no-levels
 #   standard               the standard's own name and number
-#   source = { doc, loc }  the default source of every value below; loc: section, table, page
+#   source = { doc, loc }  the default source of every value below; loc: section, table, page. Pages are
+#                          the PDF's own page numbers (the first page of the file is p. 1), which can
+#                          differ from the number printed on the page
 #   temp_c = [lo, hi]      ambient range the values hold over
 #   supply = [ { name, min, typ, max, verified, loc, doc, note }, ... ]
 #                          supplies and references in order; the first is the main supply; later ones
 #                          may refer to earlier ones (VREF = "0.5*VDDQ")
-#   termination = { kind, r_ohm, to, verified, loc, note }
-#   level = [ { param, min, typ, max, unit, state, vsupply, iout_ma, temp_c, cond, verified, doc, loc,
+#   termination = { kind, r_ohm, to, verified, doc, loc, note }
+#   level = [ { param, min, typ, max, unit, state, vsupply, iout_ma, temp_c, t_c, cond, verified, doc, loc,
 #               note, desc }, ... ]
 #   see                    related families; notes: free text
 #
 # A limit is a number in the row's unit, or a linear expression of a supply in volts: "0.7*VDD",
 # "VDD-0.4", "VCC-1.025", "VREF+0.1" (unit must then be V). iout_ma is the output test current with
 # JEDEC's sign: positive into the pin, so an IOH test is negative. vsupply: the main supply the row is
-# specified at. Units: V mV Vppd mVppd A mA uA nA ohm kohm pF.
+# specified at; t_c: the one temperature it is specified at. Units: V mV Vppd mVppd A mA uA nA ohm
+# kohm pF nF.
 #
 # verified = true only when the number was read from the named document at the named location. Anything
 # from memory, a secondary source or an inference stays verified = false with a note saying why.

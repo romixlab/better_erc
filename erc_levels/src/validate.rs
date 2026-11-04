@@ -164,8 +164,11 @@ fn family<'a>(
         {
             p(format!("termination to {v}, which is not a supply"));
         }
+        if let Some(d) = &t.doc {
+            doc_ok(d, used, p);
+        }
         if t.verified {
-            verified(db, f, None, t.loc.as_deref(), "termination", p);
+            verified(db, f, t.doc.as_deref(), t.loc.as_deref(), "termination", p);
         }
     }
 
@@ -295,6 +298,9 @@ fn label(l: &Level) -> String {
     if let Some(st) = &l.state {
         s += &format!(" ({st})");
     }
+    if let Some(t) = l.t_c {
+        s += &format!(" at {t} °C");
+    }
     if let Some(i) = l.iout_ma {
         s += &format!(" at {i} mA");
     }
@@ -302,7 +308,7 @@ fn label(l: &Level) -> String {
 }
 
 fn same_case(a: &Level, b: &Level) -> bool {
-    a.vsupply == b.vsupply && a.state == b.state && a.temp_c == b.temp_c
+    a.vsupply == b.vsupply && a.state == b.state && a.temp_c == b.temp_c && a.t_c == b.t_c
 }
 
 /// A row specified at one supply voltage evaluates the main supply's expressions there.

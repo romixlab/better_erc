@@ -169,6 +169,8 @@ pub struct Termination {
     /// The voltage it terminates to, as a limit (`"VCC-2"`), where it ends at a rail.
     pub to: Option<Limit>,
     pub verified: bool,
+    /// Another document than the family's.
+    pub doc: Option<String>,
     pub loc: Option<String>,
     pub note: Option<String>,
 }
@@ -197,6 +199,8 @@ pub struct Level {
     pub iout_ma: Option<f64>,
     /// Temperature range of this row, °C, when it differs from the family's.
     pub temp_c: Option<[f64; 2]>,
+    /// The one temperature this row is specified at, °C (ECL tables with 0, 25 and 85 °C columns).
+    pub t_c: Option<f64>,
     /// Other test conditions as printed (load, input voltage).
     pub cond: Option<String>,
     /// Read from the source document at the given location.
@@ -232,6 +236,8 @@ pub enum Unit {
     KiloOhm,
     #[serde(rename = "pF")]
     PicoF,
+    #[serde(rename = "nF")]
+    NanoF,
 }
 
 /// The physical dimension of a unit.
@@ -251,7 +257,7 @@ impl Unit {
             V | MilliV | Vppd | MilliVppd => Dimension::Voltage,
             A | MilliA | MicroA | NanoA => Dimension::Current,
             Ohm | KiloOhm => Dimension::Resistance,
-            PicoF => Dimension::Capacitance,
+            PicoF | NanoF => Dimension::Capacitance,
         }
     }
 
@@ -265,6 +271,7 @@ impl Unit {
             NanoA => 1e-9,
             KiloOhm => 1e3,
             PicoF => 1e-12,
+            NanoF => 1e-9,
         }
     }
 }

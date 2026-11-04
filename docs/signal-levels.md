@@ -48,11 +48,14 @@ level = [
 - One table per standard and supply variant: `74lvc-3v3` and `74lvc-1v8` are separate families of group `74LVC`.
 - `supply` lists the supplies and references in order; the first is the main one. A later one may refer to an
   earlier one (`VREF = "0.5*VDDQ"`, a termination voltage `"VCC-2"`).
-- A limit is a number in the row's `unit` (V, mV, Vppd, mVppd, A, mA, uA, nA, ohm, kohm, pF), or a linear
+- A limit is a number in the row's `unit` (V, mV, Vppd, mVppd, A, mA, uA, nA, ohm, kohm, pF, nF), or a linear
   expression of a supply in volts: `"0.7*VDD"`, `"VDD-0.4"`, `"VCC-1.025"`, `"VREF+0.1"`.
 - `iout_ma` is the output test current with JEDEC's sign, positive into the pin: an `IOH` test is negative.
   `vsupply` is the supply a row is specified at (74HC's thresholds at 2.0, 4.5 and 6.0 V). `temp_c` narrows a
-  row to a temperature range, `state` to a bus state or mode (`dominant`, `recessive`, `high-speed`).
+  row to a temperature range, `t_c` to the one temperature it is given at (ECL's 0, 25 and 85 °C columns),
+  `state` to a bus state or mode (`dominant`, `recessive`, `high-speed`).
+- `loc` gives pages as the PDF's own page numbers (the file's first page is p. 1), which can differ from the
+  number printed on the page.
 - Parameter names: single-ended `VIH VIL VT+ VT- VHYS VOH VOL IIH IIL II IOZ IOH IOL IOS CI`, differential
   `VOD dVOD VOS dVOS VTH VTL VID VIC VCM RIN RTERM`. Any other name needs a `desc`; its first letter gives its
   dimension.
