@@ -1,0 +1,165 @@
+# Signal-level database of better_erc (crate erc_levels): what each logic family, bus and differential
+# standard defines for its levels, each value with the document it was read from.
+#
+# Format (schema 1):
+#
+# [docs.ID]                one source document; ID is used by `source.doc` and `doc`
+#   title, publisher, number, rev, date, url
+#   library                the file in the technical library, relative to ~/sync; absent: not fetched
+#   kind                   standard | harmonised-standard | appnote | datasheet
+#   substitute_for         the standard a substitute stands in for (JEITA for JEDEC, a transceiver for TIA-485)
+#
+# [family.ID]              one family or standard in one supply variant (74lvc-3v3, 74lvc-1v8)
+#   name, group            display name; the family the variants belong to
+#   kind                   single-ended | open-drain | differential | bus | no-levels
+#   standard               the standard's own name and number
+#   source = { doc, loc }  the default source of every value below; loc: section, table, page
+#   temp_c = [lo, hi]      ambient range the values hold over
+#   supply = [ { name, min, typ, max, verified, loc, doc, note }, ... ]
+#                          supplies and references in order; the first is the main supply; later ones
+#                          may refer to earlier ones (VREF = "0.5*VDDQ")
+#   termination = { kind, r_ohm, to, verified, loc, note }
+#   level = [ { param, min, typ, max, unit, state, vsupply, iout_ma, temp_c, cond, verified, doc, loc,
+#               note, desc }, ... ]
+#   see                    related families; notes: free text
+#
+# A limit is a number in the row's unit, or a linear expression of a supply in volts: "0.7*VDD",
+# "VDD-0.4", "VCC-1.025", "VREF+0.1" (unit must then be V). iout_ma is the output test current with
+# JEDEC's sign: positive into the pin, so an IOH test is negative. vsupply: the main supply the row is
+# specified at. Units: V mV Vppd mVppd A mA uA nA ohm kohm pF.
+#
+# verified = true only when the number was read from the named document at the named location. Anything
+# from memory, a secondary source or an inference stays verified = false with a note saying why.
+#
+# Parameters: VIH VIL VT+ VT- VHYS VOH VOL IIH IIL II IOZ IOH IOL IOS CI; differential VOD dVOD VOS dVOS
+# VTH VTL VID VIC VCM RIN RTERM; others need a desc (their first letter gives the dimension).
+
+schema = 1
+
+# ---------------------------------------------------------------------------------------------------------
+# Documents
+# ---------------------------------------------------------------------------------------------------------
+
+[docs.UM10204]
+title = "I2C-bus specification and user manual"
+publisher = "NXP"
+number = "UM10204"
+rev = "7.0"
+date = "2021-10-01"
+url = "https://www.nxp.com/docs/en/user-guide/UM10204.pdf"
+library = "design/Standards/UM10204.pdf"
+kind = "standard"
+
+# ---------------------------------------------------------------------------------------------------------
+# I2C (UM10204)
+# ---------------------------------------------------------------------------------------------------------
+
+[family.i2c-sm]
+name = "I²C Standard-mode (100 kbit/s)"
+group = "I2C"
+kind = "open-drain"
+standard = "UM10204 Rev. 7.0, Standard-mode"
+source = { doc = "UM10204", loc = "Table 10, p. 43" }
+supply = [
+  { name = "VDD", min = 1.65, max = 5.5, verified = false, note = "UM10204 sets no VDD range: it splits VOL at VDD = 2 V and caps VIH at VDD(max)+0.5 V or 5.5 V (Table 10 note 2); 1.65 V is the lowest VDD of common parts" },
+]
+level = [
+  { param = "VIL", min = -0.5, max = "0.3*VDD", unit = "V", verified = true, note = "some legacy Standard-mode parts have fixed VIL = 1.5 V, VIH = 3.0 V (note 1)" },
+  { param = "VIH", min = "0.7*VDD", max = "VDD+0.5", unit = "V", verified = true, note = "max: VDD(max)+0.5 V or 5.5 V, whichever is lower (note 2)" },
+  { param = "VOL", min = 0.0, max = 0.4, unit = "V", iout_ma = 3.0, cond = "VDD > 2 V, open drain", verified = true },
+  { param = "IOL", min = 3.0, unit = "mA", cond = "VOL = 0.4 V", verified = true },
+  { param = "II", min = -10.0, max = 10.0, unit = "uA", cond = "0.1*VDD < VI < 0.9*VDDmax", verified = true },
+  { param = "CI", max = 10.0, unit = "pF", verified = true },
+  { param = "VnL", desc = "noise margin at the LOW level, each device incl. hysteresis", min = "0.1*VDD", unit = "V", verified = true, loc = "Table 11, p. 44" },
+  { param = "VnH", desc = "noise margin at the HIGH level, each device incl. hysteresis", min = "0.2*VDD", unit = "V", verified = true, loc = "Table 11, p. 44" },
+]
+notes = "Standard-mode requires no input hysteresis (Vhys is n/a) and defines no VOL for VDD <= 2 V. Bus capacitance up to 400 pF (Table 11)."
+
+[family.i2c-fm]
+name = "I²C Fast-mode (400 kbit/s)"
+group = "I2C"
+kind = "open-drain"
+standard = "UM10204 Rev. 7.0, Fast-mode"
+source = { doc = "UM10204", loc = "Table 10, p. 43" }
+supply = [
+  { name = "VDD", min = 1.65, max = 5.5, verified = false, note = "UM10204 sets no VDD range (see i2c-sm)" },
+]
+level = [
+  { param = "VIL", min = -0.5, max = "0.3*VDD", unit = "V", verified = true },
+  { param = "VIH", min = "0.7*VDD", max = "VDD+0.5", unit = "V", verified = true, note = "max: VDD(max)+0.5 V or 5.5 V, whichever is lower" },
+  { param = "VHYS", min = "0.05*VDD", unit = "V", verified = true },
+  { param = "VOL", min = 0.0, max = 0.4, unit = "V", iout_ma = 3.0, cond = "VDD > 2 V, open drain", verified = true },
+  { param = "VOL", min = 0.0, max = "0.2*VDD", unit = "V", iout_ma = 2.0, cond = "VDD <= 2 V, open drain", verified = true },
+  { param = "IOL", min = 3.0, unit = "mA", cond = "VOL = 0.4 V", verified = true },
+  { param = "IOL", min = 6.0, unit = "mA", cond = "VOL = 0.6 V; needed to drive 400 pF at 400 kHz (note 4)", verified = true },
+  { param = "II", min = -10.0, max = 10.0, unit = "uA", cond = "0.1*VDD < VI < 0.9*VDDmax", verified = true },
+  { param = "CI", max = 10.0, unit = "pF", verified = true },
+  { param = "VnL", desc = "noise margin at the LOW level", min = "0.1*VDD", unit = "V", verified = true, loc = "Table 11, p. 44" },
+  { param = "VnH", desc = "noise margin at the HIGH level", min = "0.2*VDD", unit = "V", verified = true, loc = "Table 11, p. 44" },
+]
+notes = "Inputs filter spikes below 50 ns. An unpowered Fast-mode device must not load the bus (note 9). Bus capacitance up to 400 pF."
+
+[family.i2c-fmp]
+name = "I²C Fast-mode Plus (1 Mbit/s)"
+group = "I2C"
+kind = "open-drain"
+standard = "UM10204 Rev. 7.0, Fast-mode Plus"
+source = { doc = "UM10204", loc = "Table 10, p. 43" }
+supply = [
+  { name = "VDD", min = 1.65, max = 5.5, verified = false, note = "UM10204 sets no VDD range (see i2c-sm)" },
+]
+level = [
+  { param = "VIL", min = -0.5, max = "0.3*VDD", unit = "V", verified = true },
+  { param = "VIH", min = "0.7*VDD", max = "VDD+0.5", unit = "V", verified = true, note = "max: VDD(max)+0.5 V or 5.5 V, whichever is lower" },
+  { param = "VHYS", min = "0.05*VDD", unit = "V", verified = true },
+  { param = "VOL", min = 0.0, max = 0.4, unit = "V", iout_ma = 3.0, cond = "VDD > 2 V, open drain", verified = true },
+  { param = "VOL", min = 0.0, max = "0.2*VDD", unit = "V", iout_ma = 2.0, cond = "VDD <= 2 V, open drain", verified = true },
+  { param = "IOL", min = 20.0, unit = "mA", cond = "VOL = 0.4 V", verified = true },
+  { param = "II", min = -10.0, max = 10.0, unit = "uA", cond = "0.1*VDD < VI < 0.9*VDDmax", verified = true },
+  { param = "CI", max = 10.0, unit = "pF", verified = true },
+  { param = "VnL", desc = "noise margin at the LOW level", min = "0.1*VDD", unit = "V", verified = true, loc = "Table 11, p. 44" },
+  { param = "VnH", desc = "noise margin at the HIGH level", min = "0.2*VDD", unit = "V", verified = true, loc = "Table 11, p. 44" },
+]
+notes = "Bus capacitance up to 550 pF (Table 11). The VOL at 3 mA is the same as Fast-mode; the 20 mA IOL is what Fm+ adds."
+
+[family.i2c-hs]
+name = "I²C High-speed mode (3.4 Mbit/s)"
+group = "I2C"
+kind = "open-drain"
+standard = "UM10204 Rev. 7.0, Hs-mode"
+source = { doc = "UM10204", loc = "Table 12, p. 46" }
+supply = [
+  { name = "VDD", min = 1.65, max = 5.5, verified = false, note = "UM10204 sets no VDD range (see i2c-sm)" },
+]
+level = [
+  { param = "VIL", min = -0.5, max = "0.3*VDD", unit = "V", verified = true },
+  { param = "VIH", min = "0.7*VDD", max = "VDD+0.5", unit = "V", verified = true },
+  { param = "VHYS", min = "0.1*VDD", unit = "V", verified = true },
+  { param = "VOL", min = 0.0, max = 0.4, unit = "V", iout_ma = 3.0, cond = "VDD > 2 V, SDAH, SDA, SCLH", verified = true },
+  { param = "VOL", min = 0.0, max = "0.2*VDD", unit = "V", iout_ma = 3.0, cond = "VDD <= 2 V", verified = true },
+  { param = "ICS", desc = "pull-up current of the SCLH current source, SCLH between 0.3*VDD and 0.7*VDD", min = 3.0, max = 12.0, unit = "mA", verified = true },
+  { param = "II", max = 10.0, unit = "uA", cond = "VI between 0.1*VDD and 0.9*VDD", verified = true },
+  { param = "CI", max = 10.0, unit = "pF", verified = true },
+]
+notes = "Hs-mode needs twice the Fast-mode hysteresis (0.1*VDD). The controller drives SCLH with a current-source pull-up; the VOL at VDD <= 2 V is specified at 3 mA here, unlike Fast-mode's 2 mA."
+
+[family.i2c-ufm]
+name = "I²C Ultra Fast-mode (5 Mbit/s, unidirectional, push-pull)"
+group = "I2C"
+kind = "single-ended"
+standard = "UM10204 Rev. 7.0, Ultra Fast-mode"
+source = { doc = "UM10204", loc = "Table 14, p. 48" }
+supply = [
+  { name = "VDD", min = 2.0, max = 5.5, verified = false, note = "VOL and VOH are only given for VDD > 2 V; no VDD range in UM10204" },
+]
+level = [
+  { param = "VIL", min = -0.5, max = "0.3*VDD", unit = "V", verified = true },
+  { param = "VIH", min = "0.7*VDD", unit = "V", verified = true, note = "max: VDD(max)+0.5 V or 5.5 V, whichever is lower (note 2)" },
+  { param = "VHYS", min = "0.05*VDD", unit = "V", verified = true },
+  { param = "VOL", min = 0.0, max = 0.4, unit = "V", iout_ma = 4.0, cond = "VDD > 2 V", verified = true },
+  { param = "VOH", min = "VDD-0.4", unit = "V", iout_ma = -4.0, cond = "VDD > 2 V", verified = true },
+  { param = "II", min = -1.0, max = 1.0, unit = "uA", vsupply = 3.6, cond = "leakage IL", verified = true },
+  { param = "II", min = -10.0, max = 10.0, unit = "uA", vsupply = 5.5, cond = "leakage IL", verified = true },
+  { param = "CI", max = 10.0, unit = "pF", verified = true },
+]
+notes = "UFm is push-pull and write-only (USDA, USCL), no acknowledge; it is not I²C-compatible on the same wires."

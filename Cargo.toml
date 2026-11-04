@@ -20,6 +20,7 @@ members = [
     "erc_checks",
     "erc_import",
     "erc_kicad",
+    "erc_levels",
     "erc_model",
     "test_schematics/generate_netlists",
 ]

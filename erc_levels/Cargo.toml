@@ -1,0 +1,12 @@
+[package]
+name = "erc_levels"
+description = "better_erc signal-level database: logic families, buses and differential standards with their levels and sources"
+authors.workspace = true
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+include = ["**/*.rs", "Cargo.toml", "data/*.toml"]
+
+[dependencies]
+serde = { version = "1.0", default-features = false, features = ["std", "derive"] }
+toml = { version = "1", default-features = false, features = ["std", "parse", "serde"] }
