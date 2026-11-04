@@ -11,6 +11,8 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+## [0.4.18] - 2026-11-04
+
 ### Changed
 
 - README "Readable git diffs": no longer recommends `diff.kicad.cachetextconv`. `berc textconv` is fast enough
