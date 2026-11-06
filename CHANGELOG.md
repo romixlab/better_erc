@@ -19,6 +19,12 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
   (`checks.LIB-19.strict = 1`) also reports grouped and hidden no-connect pins, as suggestions. Test schematic
   `lib-19_hidden_pins`.
 
+### Changed
+
+- `just netlists` keeps its picture markers (`test_schematics/generated_pictures_cache`) in git: a test picture is
+  drawn again only when its schematic changes, not on a fresh clone or another PC, so a newer kicad-cli no longer
+  rewrites every SVG.
+
 ## [0.4.19] - 2026-11-04
 
 ### Added
