@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 Feature tracker: [FEATURES.md](FEATURES.md). Changes: [CHANGELOG.md](CHANGELOG.md), one entry per work commit,
-with a workspace version bump (docs-only commits skip the bump). The check catalogue (IDs like `I2C-3`) lives in
+under `[Unreleased]`; work commits never touch the version, `tpm land` writes it. The check catalogue (IDs like `I2C-3`) lives in
 this repo: [docs/checks.md](docs/checks.md), with a condensed [schematic review checklist](docs/review-checklist.md)
 alongside it. New checks go there first, then into FEATURES.md when code exists.
 
