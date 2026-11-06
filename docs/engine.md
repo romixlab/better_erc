@@ -358,6 +358,7 @@ of the threshold it used.
 | `BOM-17` | one MPN on parts with different values | `bom-17_mpn_values` |
 | `LIB-14` | a unit of a multi-unit symbol not placed, with the pins that float | `lib-14_unplaced_units`, `io-1_inputs` |
 | `LIB-15` | an IC whose symbol has no pin typed or named power | `lib-15_no_power_pins`, `io-1_inputs` |
+| `LIB-19` | a hidden pin with no visible pin of the same name (or a pad name) on its net; `strict`: every hidden pin | `lib-19_hidden_pins` |
 | `MUX-1` | an I2C, SPI, USB or CAN net on a pin named for another signal of its interface; two UART TX (or RX without TX) on one net | `mux-1_swapped_signals` |
 | `LOGIC-3` | one driver on `fan_out` inputs or more (`clock_fan_out` for a clock) | `logic-3_fan_out` |
 | `LOGIC-7` | a net driven only by open-collector (or open-emitter) pins with no pull-up (pull-down) | `logic-7_open_drain` |

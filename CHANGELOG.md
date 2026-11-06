@@ -11,6 +11,14 @@ patch for fixes) and moves `[Unreleased]` under the new version. Nothing has bee
 
 ## [Unreleased]
 
+### Added
+
+- `LIB-19` (check): a hidden symbol pin that is not grouped with a visible pin of the same meaning. A pin hidden on the
+  net of visible pins with other names (an N.C. pin under GND) or with no visible pin of its part on its net (a supply
+  pin joined by name) is a warning; grounds and the pad grouped under one GND pin pass. The `strict` setting
+  (`checks.LIB-19.strict = 1`) also reports grouped and hidden no-connect pins, as suggestions. Test schematic
+  `lib-19_hidden_pins`.
+
 ## [0.4.19] - 2026-11-04
 
 ### Added

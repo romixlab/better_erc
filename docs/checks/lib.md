@@ -560,3 +560,41 @@ drawing.
 layout 1:1 and place the real part on it before ordering.
 
 **References.** KLC F4.1 (datasheet recommendations take priority), F4.2 (pin 1 at the top left); IPC-7351B.
+
+## `LIB-19` Hidden pin not grouped with a pin of the same meaning <a id="lib-19"></a>
+
+⚠️ warning · needs: the schematic (symbol pins marked hidden) · [catalogue entry](../checks.md#lib-19)
+
+**Impl.** easy · depends on netlist
+
+**What it catches.** A hidden pin of a placed part that is not grouped with a visible pin of the same meaning:
+
+1. A hidden pin on the net of visible pins of the part that mean something else, such as an N.C. or a signal pin
+   stacked under a GND pin.
+2. A hidden pin with no visible pin of the part on its net. It joins a net by its name alone, or connects to nothing.
+
+Pins of the same meaning may be grouped: extra GND pins and the exposed pad hidden under one visible GND pin pass. The
+`strict` setting reports those too, and hidden no-connect pins.
+
+**Why it matters.** A hidden pin ties a function to a net that nobody sees on the sheet. When the hidden pin means the
+same as the visible one (another GND), nothing is lost. When it means something else, the symbol has made a design
+decision that the schematic never shows, and it breaks when a part with the same pinout is fitted in its place.
+
+**Example.** KiCad's stock TPD6S300A symbol hides pins 16 and 17 under GND. They are N.C. on the TPD6S300A, and the
+datasheet says to ground them. On the pin-to-pin TPD8S300A they are the D4 and D3 ESD channels. A board that fits the
+TPD8S300A grounds two ESD channels and nobody can see why on the sheet. (That symbol names the two pins `GND`, so the
+check cannot tell them from real grounds; it catches the same symbol with the pins named `NC`.)
+
+**How to check.** From the netlist: for each hidden pin of a fitted part, the visible pins of the same part on its
+net. A visible pin of the same name, or the hidden pin named as the pad (`EP`, `EPAD`, `PAD`, `TAB`, `PADDLE`,
+`THERMAL`), groups it. Visible pins of other names mean it is hidden under something else. No visible pin means it is
+alone. A hidden pin typed no-connect on no net is left alone. better_erc (`erc_checks/src/lib/lib_19.rs`) reports the
+mixed and the lone pins as warnings. With `strict` set to 1 (`checks.LIB-19.strict` in the project file) it also
+reports the grouped and the no-connect pins, as suggestions.
+
+**Fix.** Draw the pin visibly in the symbol and wire it on the sheet. Pins that differ between alternate parts get a
+name that says both (`NC/D3`). Group only pins of the same meaning under one.
+
+**References.** KLC S4.6 (hidden pins); KiCad Schematic Editor manual, "Hidden Power Pins"
+([docs.kicad.org/9.0/en/eeschema](https://docs.kicad.org/9.0/en/eeschema/eeschema.html#hidden-power-pins)); `WIRE-10`
+for hidden power pins joined by name.

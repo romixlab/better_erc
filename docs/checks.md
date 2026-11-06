@@ -711,6 +711,7 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="lib-16"></a>🛑 `LIB-16` Symbol pin without a footprint pad, pad without a pin, or a pin mapped to a pad twice · impl: mid (TOOL-3, IMP-1) · [📖](checks/lib.md#lib-16) <!-- 21 Oct 2026 -->
 - <a id="lib-17"></a>⚠️ `LIB-17` Placed symbol differs from its library copy, or its footprint link is broken or fails the symbol's footprint filter · impl: mid (TOOL-3) · [📖](checks/lib.md#lib-17) <!-- 21 Oct 2026 -->
 - <a id="lib-18"></a>🛑 `LIB-18` Footprint built from a bottom-view drawing: the pinout is mirrored (regulators, transistors and connectors most often) · impl: judgement (TOOL-3) · [📖](checks/lib.md#lib-18) <!-- 21 Oct 2026 -->
+- <a id="lib-19"></a>⚠️ `LIB-19` Hidden symbol pin that is not grouped with a visible pin of the same meaning (an N.C. or a signal pin hidden under GND, a supply pin joining its net by name); strict: every hidden pin ≈ WIRE-10 · impl: easy (netlist) · [📖](checks/lib.md#lib-19) <!-- 6 Nov 2026; TPD6S300A pins 16 / 17 -->
 
 ## Layout
 

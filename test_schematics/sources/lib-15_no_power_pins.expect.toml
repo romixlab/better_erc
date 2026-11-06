@@ -57,6 +57,14 @@ check = "LIB-15"
 subjects = ["part U1"]
 
 [[finding]]
+check = "LIB-19"
+subjects = ["net GND", "part U4", "pin U4.3"]
+
+[[finding]]
+check = "LIB-19"
+subjects = ["net VCC", "part U4", "pin U4.5"]
+
+[[finding]]
 check = "NAME-7"
 subjects = ["board lib-15_no_power_pins"]
 
