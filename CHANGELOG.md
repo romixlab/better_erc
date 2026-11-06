@@ -5,9 +5,9 @@ All notable changes to better_erc are recorded here, newest first. The format fo
 status of every feature; this file only records what changed. IDs in parentheses (`IMP-4`, `I2C-3`) refer to
 FEATURES.md and the check catalogue.
 
-All crates share one version (`[workspace.package]`). Every commit with real work bumps it (minor for features,
-patch for fixes) and moves `[Unreleased]` under the new version. Nothing has been tagged yet. History up to
-0.1.0 is grouped by month; it was backfilled on 6 Oct 2026 from the git history.
+All crates share one version (`[workspace.package]`). Work commits add their entries under `[Unreleased]` and
+never touch the version; the landing turns `[Unreleased]` into the new version's section. History up to 0.1.0 is
+grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
