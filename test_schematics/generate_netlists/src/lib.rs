@@ -2,7 +2,9 @@
 //! `test_schematics/generated_netlists`, gitignored) and SVG pictures (`generated_pictures`, committed) with
 //! kicad-cli. Tests call [`get_netlist_path`], which exports the netlists first, once per test process, and leaves
 //! the tracked pictures alone; `just netlists` ([`generate_netlists`]) exports the pictures too, the one way they
-//! change. Which pictures are current is remembered in `generated_pictures_cache` (gitignored).
+//! change. Which pictures are current is remembered in `generated_pictures_cache` (committed, one empty marker per
+//! schematic and content hash): a picture is drawn again only when its schematic changes, never for a new kicad-cli
+//! or a fresh clone.
 
 pub mod project;
 
@@ -182,6 +184,6 @@ fn get_parent_folder(folder_name: &str) -> io::Result<PathBuf> {
         ))?
         .to_path_buf();
     path.push(folder_name);
-    fs::create_dir_all(&path)?; // generated_netlists and generated_pictures_cache are gitignored, missing on a fresh clone
+    fs::create_dir_all(&path)?; // generated_netlists is gitignored, missing on a fresh clone
     fs::canonicalize(path)
 }
