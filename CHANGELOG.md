@@ -30,6 +30,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `erc_kicad::pcb::read` fills each footprint's `pads` with the ids of its own pads, in file order. It left the
   list empty, so a layout read on its own (without a schematic to link it to) had pads that named their footprint
   but footprints that listed no pads; the linked board was not affected (`IMP-14`).
+- The differential test's golden dump of the `lib-19_hidden_pins` test schematic is committed: the `LIB-19` work
+  added the schematic without it, so `just test` failed on a clean checkout.
 
 ## [0.4.19] - 2026-11-04
 
