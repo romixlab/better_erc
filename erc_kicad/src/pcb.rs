@@ -308,6 +308,7 @@ impl Reader<'_> {
             net_tie_pad_groups: Vec::new(),
             models: Vec::new(),
         };
+        let first_pad = self.lay.pads.len();
         let mut ctx = format!("footprint {}", fp.lib_id);
         for item in s.args().iter().skip(1) {
             let Some(head) = item.head() else {
@@ -423,6 +424,10 @@ impl Reader<'_> {
                 _ => self.notes.unknown(&ctx, item),
             }
         }
+        // Every pad pushed while reading this footprint is one of its own, in file order
+        fp.pads = (first_pad..self.lay.pads.len())
+            .map(PadId::from_index)
+            .collect();
         self.lay.footprints.push(fp);
     }
 
@@ -773,5 +778,48 @@ mod tests {
         assert_eq!(lay.pads[1].net_name.as_deref(), Some("VCC"));
         assert_eq!(lay.tracks[0].net_name.as_deref(), Some("GND"));
         assert_eq!(lay.vias[0].net_name, None);
+    }
+
+    #[test]
+    fn footprints_list_their_pads_in_file_order() {
+        let text = r#"(kicad_pcb (version 20240108) (net 0 "") (net 1 "GND")
+            (footprint "R" (layer "F.Cu") (at 10 10)
+              (property "Reference" "R1" (at 0 -1.5 0) (layer "F.SilkS"))
+              (pad "2" smd rect (at 0.8 0) (size 0.8 0.9) (layers "F.Cu"))
+              (pad "1" smd rect (at -0.8 0) (size 0.8 0.9) (layers "F.Cu") (net 1 "GND")))
+            (footprint "MH" (layer "F.Cu") (at 30 10)
+              (property "Reference" "H1" (at 0 -3 0) (layer "F.SilkS")))
+            (segment (start 0 0) (end 1 0) (width 0.2) (layer "F.Cu") (net 1))
+            (footprint "U" (layer "B.Cu") (at 20 10)
+              (property "Reference" "U1" (at 0 -2 0) (layer "B.SilkS"))
+              (pad "1" smd rect (at -1 0) (size 0.5 0.5) (layers "B.Cu"))
+              (pad "EP" smd rect (at 0 0) (size 1 1) (layers "B.Cu") (net 1 "GND"))
+              (pad "" np_thru_hole circle (at 1 0) (size 0.5 0.5) (drill 0.5) (layers "*.Cu"))))"#;
+        let (lay, notes) = read(text, "b.kicad_pcb").unwrap();
+        assert!(notes.is_empty(), "{notes:?}");
+        assert_eq!(lay.pads.len(), 5);
+        let numbers = |f: &Footprint| -> Vec<&str> {
+            f.pads
+                .iter()
+                .map(|id| lay.pad(*id).number.as_str())
+                .collect()
+        };
+        let refs: Vec<&str> = lay
+            .footprints
+            .iter()
+            .map(|f| f.reference.as_str())
+            .collect();
+        assert_eq!(refs, ["R1", "H1", "U1"]);
+        assert_eq!(numbers(&lay.footprints[0]), ["2", "1"]);
+        assert!(lay.footprints[1].pads.is_empty());
+        assert_eq!(numbers(&lay.footprints[2]), ["1", "EP", ""]);
+        // Each footprint's list is exactly the pads that point back at it, in file order
+        for (i, f) in lay.footprints.iter().enumerate() {
+            let back: Vec<PadId> = (0..lay.pads.len())
+                .map(PadId::from_index)
+                .filter(|id| lay.pad(*id).footprint == FootprintId::from_index(i))
+                .collect();
+            assert_eq!(f.pads, back, "footprint {}", f.reference);
+        }
     }
 }

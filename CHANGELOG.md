@@ -25,6 +25,12 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
   drawn again only when its schematic changes, not on a fresh clone or another PC, so a newer kicad-cli no longer
   rewrites every SVG.
 
+### Fixed
+
+- `erc_kicad::pcb::read` fills each footprint's `pads` with the ids of its own pads, in file order. It left the
+  list empty, so a layout read on its own (without a schematic to link it to) had pads that named their footprint
+  but footprints that listed no pads; the linked board was not affected (`IMP-14`).
+
 ## [0.4.19] - 2026-11-04
 
 ### Added
