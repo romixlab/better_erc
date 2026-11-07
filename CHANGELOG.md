@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.20] - 2026-11-07
+
 ### Added
 
 - `LIB-19` (check): a hidden symbol pin that is not grouped with a visible pin of the same meaning. A pin hidden on the
