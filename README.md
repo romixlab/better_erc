@@ -383,7 +383,7 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    the pads they are.
    Scroll zooms at the pointer; the right or middle button pans; Page Up and Page Down turn pages. A help line
    under the canvas names the keys.
-5. **Measure and write notes**: a bar above the canvas shows the four modes, each with its key, the one on highlighted
+5. **Measure and write notes**: a bar above the canvas shows the modes, each with its key, the one on highlighted
    and named first in the help line: Move (M: the mouse moves the footprint), Scale (R: the ruler that sets the
    scale), Measure PDF (E: the ruler on the drawing's lines, snapping as the scale's does) and Measure footprint (G:
    the ruler on the footprint, its ends snapping to the pads' centres and, on rect and roundrect pads, to the middle
@@ -398,7 +398,20 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    --json` by default) that prints a JSON list of `{"path", "value", "doc_no", "doc_rev"}`: by its document number and
    revision where they are known (`` `tpm d DS13560 rev6` ``, which still finds it after a rename or a move), else by
    the words that open it, else by its file. The next note's measurements count from M1 again.
-6. **Accept** (A): when the footprint matches the drawing, Accept writes its review hash into the symbol: the library
+6. **Select and save as DXF**: Select (V), the fifth mode, picks pieces of the datasheet's drawing as the PDF draws
+   them: a line, a polyline, an arc or curve, a closed shape. A click picks the piece under the pointer (inside a
+   filled shape counts), again drops it; a click on nothing drops them all. A drag selects what lies wholly inside
+   its box; Shift adds to the selection. The pieces selected are drawn over the page in cyan, the one a click would
+   pick in a lighter cyan. Save DXF (W, the button under the mode bar, or the pie) writes them as a DXF beside the
+   notes file, `<symbol>-p<page>-<n>.dxf`, and appends `` DXF `Rev_Mixed-p2-1.dxf` `` to the note, so the note links
+   to it. The DXF is in the footprint's millimetres: the page's points go through the scale and back through the
+   footprint's placement (origin, rotation, bottom view), so KiCad's footprint editor, File → Import → Graphics at
+   0, 0, drops the drawing in place over the pads (DXF's Y points up; the import turns it over). It is R12 ASCII
+   (LINE, ARC, CIRCLE, POLYLINE) with a few comment lines naming the symbol, the footprint and the page, so an agent
+   reads it as text too. Curves become arcs and circles where they follow a circle within the DXF curve tolerance (a
+   setting, 0.005 mm), any other curve becomes straight pieces within it. Save stays disabled, saying why, until
+   something is selected, the scale is set on the page shown and a footprint is shown.
+7. **Accept** (A): when the footprint matches the drawing, Accept writes its review hash into the symbol: the library
    symbol and, for a symbol from a project's list, the schematic's copies too (as `berc fp accept --symbol` does).
    It asks first, showing what its dry run would write: each file, the field, the old and the new value. Enter (or
    Write) writes; Esc (or Cancel) writes nothing. It warns, per file and naming the lock file, when KiCad may
@@ -427,9 +440,9 @@ libspnav), so the device is not needed to build or run it.
 - **Hold a button**: a pie menu opens at the pointer. Move out across its outer circle, or click, to do the action
   under the pointer; while the button is held, back through the middle and out again does the next one. The left
   button's ring has the page and the ruler (full width, zoom on a ruler end, type the length, the dimension's
-  number, back to Move, measure the PDF, next and previous page, invert the page); the right one's the footprint
-  (turn 90°, bottom view, blink, copper/mask/paste, measure the footprint); both buttons together Accept, Next to
-  review and Write a note. Every slot names its
+  number, back to Move, measure the PDF, select the drawing, next and previous page, invert the page); the right
+  one's the footprint (turn 90°, bottom view, blink, copper/mask/paste, measure the footprint); both buttons together
+  Accept, Next to review, Write a note and Save the selection as DXF. Every slot names its
   action and its key (`Turn 90° · T`); a slot that can't be used now is drawn muted and says why under the menu
   ("No ruler yet: R lays one, or the left button's tap"). While Accept's question is open, the left tap writes
   and the right one cancels.
@@ -451,7 +464,8 @@ from egui's own font.
 The settings (blink rate, the opacity, blend mode and colours at first, whether the page is inverted at first,
 the page search words, the finest drawing scale, the font folders, the library search command, the library name
 command and the notes file, how far Z zooms in, whether the ruler snaps level, how near its ends snap to the
-drawing's lines, and the keys F, M, R, E, G, Z, S, D, T, X, B, C, I, P, A, N and Enter by name in
+drawing's lines, the DXF curve tolerance, and the keys F, M, R, E, G, Z, S, D, T, X, B, C, I, P, A, N, Enter, V and W
+by name in
 `[footprint_review.keys]`; a file that still has M for the bottom view takes X for it) are in
 `~/.config/better_erc/config.toml` (`$XDG_CONFIG_HOME`, or the file `$BERC_CONFIG` names), section
 `[footprint_review]`, and the SpaceMouse's mapping in `[spacemouse]`; the tab's Settings shows and saves them. Each step of a review

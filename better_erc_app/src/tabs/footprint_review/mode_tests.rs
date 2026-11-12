@@ -56,6 +56,16 @@ fn key(h: &mut H, k: egui::Key) {
     h.run();
 }
 
+/// A primary click on the canvas at `a` (screen): pressed and let go without moving
+fn click(h: &mut H, a: egui::Pos2) {
+    h.hover_at(a);
+    h.run();
+    h.drag_at(a);
+    h.run();
+    h.drop_at(a);
+    h.run();
+}
+
 /// A primary drag on the canvas from `a` to `b` (screen)
 fn drag(h: &mut H, a: egui::Pos2, b: egui::Pos2) {
     h.hover_at(a);
@@ -86,6 +96,7 @@ fn every_mode_has_a_way_back_to_move() {
             Tool::Scale,
             Tool::MeasurePdf,
             Tool::MeasureFootprint,
+            Tool::Select,
         ] {
             let k = h.state().keys();
             let key = match m {
@@ -93,6 +104,7 @@ fn every_mode_has_a_way_back_to_move() {
                 Tool::Scale => k.ruler,
                 Tool::MeasurePdf => k.measure_pdf,
                 Tool::MeasureFootprint => k.measure_footprint,
+                Tool::Select => k.select,
             };
             let label = format!("{} · {}", m.name(), key_name(key));
             let node = h.get_by_label(&label);
@@ -122,6 +134,7 @@ fn every_mode_has_a_way_back_to_move() {
     for (k, t) in [
         (egui::Key::E, Tool::MeasurePdf),
         (egui::Key::G, Tool::MeasureFootprint),
+        (egui::Key::V, Tool::Select),
     ] {
         key(&mut h, k);
         assert_eq!(h.state().tool, t);
@@ -363,5 +376,181 @@ fn a_note_with_a_measurement_into_the_notes_file() {
         1,
         "the library asked once per datasheet"
     );
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// A land pattern page for the Select mode: a dimension line, a circle, a pad and a line far off, in points (y
+/// down); at 0.02 mm per point with the footprint's origin at (150, 300) the line is 2 mm long at y -2 mm, the
+/// circle 0.5 mm round at (0, -1) mm, the pad 0.4 x 0.2 mm
+fn drawing(dir: &Path) -> PathBuf {
+    use super::testpdf::{TestPage, circle, write};
+    let page = TestPage {
+        texts: vec![(50.0, 60.0, 14.0, "Recommended land pattern".into())],
+        lines: vec![[100.0, 200.0, 200.0, 200.0], [10.0, 380.0, 40.0, 380.0]],
+        rects: vec![[120.0, 320.0, 20.0, 10.0]],
+        curves: vec![circle([150.0, 250.0], 25.0)],
+        ..Default::default()
+    };
+    let file = dir.join("SELECT-PART.pdf");
+    std::fs::write(&file, write([300.0, 400.0], &[page])).unwrap();
+    file
+}
+
+/// Select, as a person does it: V into the mode; a click picks the line (again drops it, and picks it back), Shift
+/// and a box add the circle and the pad, the line far off stays out; W saves them as a DXF beside the notes file
+/// and names it in the note. Read back, the DXF is R12 in the footprint's mm, Y up: the line, the circle and the
+/// pad where the drawing has them; turned 90°, the footprint's frame turns with it. Save says why it can't before
+/// anything is selected and without a scale.
+#[test]
+fn select_the_drawing_and_save_it_as_dxf() {
+    use super::dxf::{Entity, read};
+    let dir = scratch("select");
+    let pdf = drawing(&dir);
+    let lib = super::tests::symbol_library(&dir, &pdf);
+    let mut h = super::tests::harness("fp mode select");
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &lib);
+    h.run();
+    h.get_by_label("Rev:Mixed").click();
+    h.run();
+    h.run();
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    {
+        let st = h.state_mut();
+        assert_eq!(st.page, 0);
+        st.scale = Some(Scale {
+            mm_per_point: 0.02,
+            page: 0,
+            mm: 2.0,
+            note: None,
+        });
+        st.zoom = 2.0;
+        st.pan = [0.0, 0.0];
+        st.place = Placement {
+            origin: [150.0, 300.0],
+            ..Default::default()
+        };
+    }
+    h.run();
+    key(&mut h, egui::Key::V);
+    assert_eq!(h.state().tool, Tool::Select);
+    assert!(h.state().help_line().starts_with("Mode Select:"));
+    assert!(
+        h.state()
+            .dxf_blocker()
+            .is_some_and(|w| w.starts_with("select pieces of the drawing first")),
+        "{:?}",
+        h.state().dxf_blocker()
+    );
+    let prims = h.state().page_prims().to_vec();
+    let find = |want: [f64; 4]| {
+        prims
+            .iter()
+            .position(|p| {
+                let b = p.bbox();
+                [b.x0, b.y0, b.x1, b.y1]
+                    .iter()
+                    .zip(want)
+                    .all(|(a, b)| (a - b).abs() < 0.01)
+            })
+            .unwrap_or_else(|| panic!("{want:?} in {prims:#?}"))
+    };
+    let line = find([100.0, 200.0, 200.0, 200.0]);
+    let round = find([125.0, 225.0, 175.0, 275.0]);
+    let pad = find([120.0, 320.0, 140.0, 330.0]);
+    // A click near the line picks it, again drops it, once more picks it
+    let at = screen(&h, [150.0, 201.5]);
+    for want in [vec![line], vec![], vec![line]] {
+        click(&mut h, at);
+        assert_eq!(h.state().selection(), want.as_slice());
+    }
+    // Shift and a box round the circle and the pad: added, the far line not
+    h.event(egui::Event::ModifiersChanged(egui::Modifiers::SHIFT));
+    let (from, to) = (screen(&h, [110.0, 215.0]), screen(&h, [190.0, 345.0]));
+    drag(&mut h, from, to);
+    h.event(egui::Event::ModifiersChanged(egui::Modifiers::NONE));
+    h.run();
+    let mut want = vec![line, round, pad];
+    want.sort_unstable();
+    assert_eq!(h.state().selection(), want.as_slice());
+    h.get_by_label("3 selected");
+    // Without a scale Save says why
+    let scale = h.state_mut().scale.take();
+    assert!(
+        h.state()
+            .dxf_blocker()
+            .is_some_and(|w| w.starts_with("set the drawing's scale first")),
+        "{:?}",
+        h.state().dxf_blocker()
+    );
+    h.state_mut().scale = scale;
+    // W saves it beside the notes file, named in the note
+    key(&mut h, egui::Key::W);
+    let file = dir.join("Rev_Mixed-p1-1.dxf");
+    assert_eq!(h.state().rt.dxf_written, Some(Ok(file.clone())));
+    assert_eq!(h.state().rt.note, "DXF `Rev_Mixed-p1-1.dxf` ");
+    let text = std::fs::read_to_string(&file).unwrap();
+    for line in [
+        "999\nsymbol Rev:Mixed\n",
+        "999\nfootprint Test:Mixed_Pads\n",
+    ] {
+        assert!(text.contains(line), "{line:?} in {text}");
+    }
+    let (version, es) = read(&text).unwrap();
+    assert_eq!(version, "AC1009");
+    let near = |a: [f64; 2], b: [f64; 2]| (a[0] - b[0]).abs() < 1e-3 && (a[1] - b[1]).abs() < 1e-3;
+    let has_line = |es: &[Entity], a: [f64; 2], b: [f64; 2]| {
+        es.iter().any(|e| {
+            matches!(e, Entity::Line { a: p, b: q } if (near(*p, a) && near(*q, b)) || (near(*p, b) && near(*q, a)))
+        })
+    };
+    assert_eq!(es.len(), 3, "{es:#?}");
+    assert!(has_line(&es, [-1.0, 2.0], [1.0, 2.0]), "{es:#?}");
+    assert!(
+        es.iter().any(|e| matches!(e, Entity::Circle { c, r } if near(*c, [0.0, 1.0]) && (r - 0.5).abs() < 1e-3)),
+        "{es:#?}"
+    );
+    let pad_corners = es
+        .iter()
+        .find_map(|e| match e {
+            Entity::Polyline {
+                points,
+                closed: true,
+            } => Some(points.clone()),
+            _ => None,
+        })
+        .expect("the pad, a closed polyline");
+    assert_eq!(pad_corners.len(), 4, "{pad_corners:?}");
+    for c in [[-0.6, -0.4], [-0.2, -0.4], [-0.2, -0.6], [-0.6, -0.6]] {
+        assert!(
+            pad_corners.iter().any(|p| near(*p, c)),
+            "{c:?} in {pad_corners:?}"
+        );
+    }
+    // Turned 90°: the footprint's +X points up the page, so the line across the page is upright in the DXF
+    key(&mut h, egui::Key::T);
+    assert_eq!(h.state().place.rotation, 90.0);
+    key(&mut h, egui::Key::W);
+    let file2 = dir.join("Rev_Mixed-p1-2.dxf");
+    assert_eq!(h.state().rt.dxf_written, Some(Ok(file2.clone())));
+    assert_eq!(
+        h.state().rt.note,
+        "DXF `Rev_Mixed-p1-1.dxf` DXF `Rev_Mixed-p1-2.dxf` "
+    );
+    let (_, es) = read(&std::fs::read_to_string(&file2).unwrap()).unwrap();
+    assert!(has_line(&es, [2.0, 1.0], [2.0, -1.0]), "{es:#?}");
+    assert!(
+        es.iter()
+            .any(|e| matches!(e, Entity::Circle { c, .. } if near(*c, [1.0, 0.0]))),
+        "{es:#?}"
+    );
+    // A click on nothing drops the selection; Esc back to Move
+    let empty = screen(&h, [250.0, 100.0]);
+    click(&mut h, empty);
+    assert!(h.state().selection().is_empty());
+    key(&mut h, egui::Key::Escape);
+    assert_eq!(h.state().tool, Tool::Move);
     std::fs::remove_dir_all(&dir).unwrap();
 }

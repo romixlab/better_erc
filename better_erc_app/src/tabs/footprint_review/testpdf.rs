@@ -9,6 +9,25 @@ pub struct TestPage {
     pub rects: Vec<[f32; 4]>,
     /// Line segments as `lines` with their width, points
     pub wide: Vec<([f32; 4], f32)>,
+    /// Stroked paths of cubic Béziers: a start (x, y) and each curve's two control points and end (six numbers);
+    /// closed when `true`
+    pub curves: Vec<([f32; 2], Vec<[f32; 6]>, bool)>,
+}
+
+/// A circle as PDFs draw one, for [`TestPage::curves`]: four Béziers, centre and radius in points, y down
+pub fn circle(c: [f32; 2], r: f32) -> ([f32; 2], Vec<[f32; 6]>, bool) {
+    let k = 0.552_284_8 * r;
+    let [x, y] = c;
+    (
+        [x + r, y],
+        vec![
+            [x + r, y - k, x + k, y - r, x, y - r],
+            [x - k, y - r, x - r, y - k, x - r, y],
+            [x - r, y + k, x - k, y + r, x, y + r],
+            [x + k, y + r, x + r, y + k, x + r, y],
+        ],
+        true,
+    )
 }
 
 /// The bytes of a PDF with `pages`, each `size` points (width, height), text in Helvetica
@@ -32,6 +51,13 @@ pub fn write(size: [f32; 2], pages: &[TestPage]) -> Vec<u8> {
         }
         for ([x1, y1, x2, y2], width) in &p.wide {
             c += &format!("{width} w {x1} {} m {x2} {} l S\n", h - y1, h - y2);
+        }
+        for ([x0, y0], curves, closed) in &p.curves {
+            c += &format!("0.5 w {x0} {} m\n", h - y0);
+            for [x1, y1, x2, y2, x3, y3] in curves {
+                c += &format!("{x1} {} {x2} {} {x3} {} c\n", h - y1, h - y2, h - y3);
+            }
+            c += if *closed { "h S\n" } else { "S\n" };
         }
         for (x, y, s, t) in &p.texts {
             let t = t

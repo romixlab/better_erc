@@ -11,6 +11,19 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `VIEW-22`: Footprint review, select the drawing and save it as DXF. Select (V) is the fifth mode, on the mode bar,
+  in the help line and in the left pie ring: a click picks a piece the PDF draws (a line, polyline, arc or curve, or
+  closed shape, kept with its curves; inside a filled shape counts) and again drops it, a drag selects what is wholly
+  inside its box, Shift adds; the selection is drawn in cyan. Save DXF (W, the button under the mode bar, the
+  pie's both-buttons ring) writes it beside the notes file as `<symbol>-p<page>-<n>.dxf`, in the footprint's mm
+  through the scale and the footprint's placement, so KiCad's footprint editor imports it at 0, 0 over the pads, and
+  appends ``DXF `name` `` to the note. The DXF is R12 ASCII written by the app (LINE, ARC, CIRCLE, POLYLINE, comment
+  lines on where it came from); Béziers that follow a circle become arcs and circles, others polylines within
+  `dxf_tolerance_mm` (0.005 by default). Save is disabled with the reason until something is selected, the scale is
+  set on the page and a footprint is shown. New keys `select` and `save_dxf` in `[footprint_review.keys]`.
+
 ## [0.4.37] - 2026-11-12
 
 ### Added

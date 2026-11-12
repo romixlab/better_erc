@@ -278,7 +278,7 @@ fn every_slot_names_its_action_and_key() {
                 .flat_map(|r| r.iter().flatten()),
         )
         .collect();
-    assert_eq!(slots.len(), 2 + 9 + 5 + 3);
+    assert_eq!(slots.len(), 2 + 10 + 5 + 4);
     for s in &slots {
         let (name, key) = s.label.split_once(" · ").expect(&s.label);
         assert!(!name.is_empty() && !key.is_empty(), "{}", s.label);

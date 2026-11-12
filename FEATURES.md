@@ -724,6 +724,14 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   d DS13560 rev6`: number and revision, else the words that open it, else the file; the name command a setting, `tpm
   lib open --json`), the page, the time and the text; the measuring rulers' `M1 = 1.234 mm` go into the note
   (`VIEW-19`) · `better_erc_app/src/tabs/footprint_review/notes.rs`, `mode_tests.rs`
+- ✅ `VIEW-22` Footprint review, select and save as DXF: a fifth mode, Select (V), picks the PDF's own pieces (each
+  subpath: line, polyline, arc or curve, closed shape; a click toggles one, inside a filled shape counts, a drag
+  selects by box, Shift adds), drawn highlighted; Save DXF (W, a button, a pie slot) writes them as R12 ASCII (LINE,
+  ARC, CIRCLE, POLYLINE, written here) in the footprint's mm, its origin and rotation the footprint's placement, so
+  KiCad's Import Graphics at 0, 0 drops it over the pads; Béziers on a circle become arcs and circles, others
+  polylines within a tolerance (a setting); the file `<symbol>-p<page>-<n>.dxf` beside the notes file, its name
+  appended to the note; disabled with why until there is a selection, a scale on the page and a footprint (`VIEW-19`,
+  `VIEW-21`) · `better_erc_app/src/tabs/footprint_review/prims.rs`, `dxf.rs`, `mode_tests.rs`
 - 🚧 `VIEW-20` Footprint review on a SpaceMouse, through spacenavd (vhrd_egui `ve_spacemouse`, pure Rust): the puck
   pans the page in screen points (one speed at every zoom) and zooms the view about the pointer, or moves the
   footprint (`P` switches); a tap of the left button lays the ruler, of the right one switches what the puck

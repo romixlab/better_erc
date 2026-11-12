@@ -4,6 +4,7 @@
 //! points (1/72 inch), y down, as the page is shown.
 
 use super::geometry::{PageGeometry, Seg, Word};
+use super::prims::Prim;
 use hayro::hayro_interpret::font::{FontData, FontQuery, StandardFont};
 use hayro::hayro_interpret::hayro_cmap::BfString;
 use hayro::hayro_interpret::util::TransformExt;
@@ -491,6 +492,9 @@ fn page_text<'a>(
 /// The most line pieces kept of a page, so a page of hatching or outlined text stays small
 const MAX_SEGS: usize = 200_000;
 
+/// The most pieces kept of a page for the Select mode, for the same reason
+const MAX_PRIMS: usize = 100_000;
+
 /// A filled rectangle at most this wide (points) and three times as long is a line, as some drawings draw them
 const THIN_RECT: f64 = 2.0;
 
@@ -596,6 +600,19 @@ impl<'a> Device<'a> for PageDevice {
             DrawMode::Invisible => return,
         };
         let scale = t.determinant().abs().sqrt();
+        let width = stroke.map_or(0.0, |w| w as f64 * scale) as f32;
+        // Each subpath as a piece to select, curves and all, in page points
+        let mut piece = BezPath::new();
+        let piece_done = |dev: &mut Self, piece: &mut BezPath| {
+            let p = std::mem::take(piece);
+            if p.elements().len() > 1 && dev.geometry.prims.len() < MAX_PRIMS {
+                dev.geometry.prims.push(Prim {
+                    path: p,
+                    filled: fill,
+                    width,
+                });
+            }
+        };
         // Each subpath: its points while it has only straight lines, the stroked ones kept as they come
         let mut sub: Vec<Point> = Vec::new();
         let mut straight = true;
@@ -630,10 +647,12 @@ impl<'a> Device<'a> for PageDevice {
             match *el {
                 PathEl::MoveTo(p) => {
                     flush(self, &mut sub, straight);
+                    piece_done(self, &mut piece);
                     straight = true;
                     start = t * p;
                     at = start;
                     sub.push(at);
+                    piece.move_to(at);
                 }
                 PathEl::LineTo(p) => {
                     let q = t * p;
@@ -642,21 +661,31 @@ impl<'a> Device<'a> for PageDevice {
                     }
                     at = q;
                     sub.push(q);
+                    piece.line_to(q);
                 }
-                PathEl::QuadTo(_, p) | PathEl::CurveTo(_, _, p) => {
+                PathEl::QuadTo(c, p) => {
                     straight = false;
                     at = t * p;
                     sub.push(at);
+                    piece.quad_to(t * c, at);
+                }
+                PathEl::CurveTo(c1, c2, p) => {
+                    straight = false;
+                    at = t * p;
+                    sub.push(at);
+                    piece.curve_to(t * c1, t * c2, at);
                 }
                 PathEl::ClosePath => {
                     if let Some(w) = stroke {
                         self.seg(at, start, w as f64 * scale);
                     }
                     at = start;
+                    piece.close_path();
                 }
             }
         }
         flush(self, &mut sub, straight);
+        piece_done(self, &mut piece);
     }
     fn push_clip_path(&mut self, _: &ClipPath) {}
     fn push_transparency_group(&mut self, _: f32, _: Option<SoftMask<'a>>, _: BlendMode) {}
@@ -783,6 +812,7 @@ mod tests {
             lines: vec![[100.0, 200.0, 200.0, 200.0]],
             wide: vec![([100.0, 150.0, 100.0, 250.0], 2.0)],
             rects: vec![[150.0, 100.0, 50.0, 0.8], [20.0, 20.0, 40.0, 20.0]],
+            ..Default::default()
         };
         std::fs::write(&file, write([300.0, 400.0], &[page])).unwrap();
         let ctx = egui::Context::default();

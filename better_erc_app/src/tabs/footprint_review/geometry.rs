@@ -28,11 +28,12 @@ impl Word {
     }
 }
 
-/// A page's lines and words
+/// A page's lines and words, and the pieces it draws ([`super::prims`])
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct PageGeometry {
     pub segs: Vec<Seg>,
     pub words: Vec<Word>,
+    pub prims: Vec<super::prims::Prim>,
 }
 
 /// What a ruler end snapped to
@@ -322,6 +323,7 @@ mod tests {
                     max: [316.0, 203.0],
                 },
             ],
+            prims: Vec::new(),
         }
     }
 
@@ -341,6 +343,7 @@ mod tests {
                 seg([50.0, 0.0], [50.0, 100.0]),
             ],
             words: Vec::new(),
+            prims: Vec::new(),
         };
         let s = g2.snap([52.0, 48.0], 5.0, false).unwrap();
         assert_eq!((s.at, s.kind), ([50.0, 50.0], SnapKind::Crossing));
@@ -369,6 +372,7 @@ mod tests {
                 width: 6.0,
             }],
             words: Vec::new(),
+            prims: Vec::new(),
         };
         let s = g.snap([50.0, 107.0], 5.0, false).unwrap();
         assert_eq!(s.at, [50.0, 100.0], "the centre line");
@@ -390,6 +394,7 @@ mod tests {
                 seg([150.0, 170.0], [250.0, 170.0]),
             ],
             words: Vec::new(),
+            prims: Vec::new(),
         };
         let s = g.snap([204.0, 174.5], 5.0, true).unwrap();
         assert_eq!((s.at, s.kind), ([200.0, 170.0], SnapKind::Line));

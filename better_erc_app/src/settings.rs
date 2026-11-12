@@ -56,6 +56,9 @@ pub struct FootprintReviewSettings {
     pub line_snap_px: f32,
     /// Whether the page is shown inverted (white-ish on black) at first
     pub invert: bool,
+    /// How closely the DXF follows the drawing's curves, mm: a curve within it of a circle is an arc, any other is
+    /// made of straight pieces within it
+    pub dxf_tolerance_mm: f64,
     /// The canvas' keys, by egui's key names (`F`, `Space`, `F5`, ...)
     pub keys: Keys,
 }
@@ -101,6 +104,11 @@ pub struct Keys {
     pub next: String,
     /// The review note field takes the keyboard; Enter there adds the note to the notes file
     pub note: String,
+    /// The Select mode: a click picks a line, arc or shape of the drawing, a drag those in its box; again: back to
+    /// Move
+    pub select: String,
+    /// Saves the pieces selected as a DXF in the footprint's mm beside the notes file, named in the note
+    pub save_dxf: String,
 }
 
 impl Default for Keys {
@@ -123,6 +131,8 @@ impl Default for Keys {
             accept: "A".into(),
             next: "N".into(),
             note: "Enter".into(),
+            select: "V".into(),
+            save_dxf: "W".into(),
         }
     }
 }
@@ -268,6 +278,7 @@ impl Default for FootprintReviewSettings {
             ruler_snap: true,
             line_snap_px: 10.0,
             invert: false,
+            dxf_tolerance_mm: 0.005,
             keys: Keys::default(),
         }
     }

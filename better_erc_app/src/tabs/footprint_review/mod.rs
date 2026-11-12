@@ -34,12 +34,14 @@ use std::sync::Arc;
 use std::sync::mpsc::Receiver;
 
 pub mod blend;
+mod dxf;
 mod geometry;
 #[cfg(test)]
 mod mode_tests;
 mod notes;
 mod outline;
 mod pdf;
+mod prims;
 mod puck;
 #[cfg(test)]
 mod testpdf;
@@ -48,6 +50,9 @@ mod tests;
 
 /// Around the page
 const CANVAS_BACKGROUND: Color32 = Color32::from_gray(60);
+
+/// The drawing's pieces selected, and the box that selects them
+const SELECT_COLOUR: Color32 = Color32::from_rgb(0, 200, 255);
 
 /// What the ruler snaps to, and the dimension's number found for it
 const SNAP_COLOUR: Color32 = Color32::from_rgb(255, 160, 0);
@@ -134,6 +139,8 @@ pub enum Tool {
     /// The ruler on the footprint's pads (centres, and the middles of a rectangular pad's sides), measuring: its
     /// length goes into the review note
     MeasureFootprint,
+    /// Picks the drawing's lines, arcs, curves and shapes, to save them as a DXF in the footprint's mm (VIEW-22)
+    Select,
 }
 
 impl Tool {
@@ -143,12 +150,13 @@ impl Tool {
             Tool::Scale => "Scale",
             Tool::MeasurePdf => "Measure PDF",
             Tool::MeasureFootprint => "Measure footprint",
+            Tool::Select => "Select",
         }
     }
 
     /// A ruler mode: the primary drag lays the ruler
     pub fn ruler(self) -> bool {
-        self != Tool::Move
+        !matches!(self, Tool::Move | Tool::Select)
     }
 
     /// A measuring mode: the ruler's length goes into the review note
@@ -170,6 +178,10 @@ impl Tool {
             Tool::MeasureFootprint => {
                 "the ruler on the pads' centres and side middles measures the footprint; its length goes into the \
                  review note"
+            }
+            Tool::Select => {
+                "a click picks a line, arc or shape of the drawing (again: drops it), a drag the ones inside its box \
+                 (Shift adds); Save writes them as a DXF in the footprint's mm and names it in the note"
             }
         }
     }
@@ -473,6 +485,17 @@ struct Runtime {
     measured: Option<Measured>,
     /// How many measurements the note has had: the next is M(n+1)
     measure_count: usize,
+    /// The drawing's pieces selected (indices into the page's [`geometry::PageGeometry::prims`], sorted), on
+    /// [`Runtime::selected_page`] of the datasheet open
+    selected: Vec<usize>,
+    selected_page: usize,
+    /// The piece a click would pick, under the pointer in the Select mode
+    select_hover: Option<usize>,
+    /// Where the Select mode's box drag started, page points, and where the pointer is
+    select_box: Option<[f32; 2]>,
+    select_box_end: Option<[f32; 2]>,
+    /// Where the last DXF went, or why it did not
+    dxf_written: Option<Result<PathBuf, String>>,
     /// The review note being written
     note: String,
     /// The note field takes the keyboard on the next frame (the note key)
@@ -561,6 +584,12 @@ impl Default for Runtime {
             fp_snaps: Vec::new(),
             measured: None,
             measure_count: 0,
+            selected: Vec::new(),
+            selected_page: 0,
+            select_hover: None,
+            select_box: None,
+            select_box_end: None,
+            dxf_written: None,
             note: String::new(),
             focus_note: false,
             note_written: None,
@@ -1180,6 +1209,7 @@ impl FootprintReview {
         self.ruler = None;
         self.scale = None;
         self.rt.accepted = None;
+        self.clear_selection();
     }
 
     pub fn open_datasheet(&mut self, ctx: &egui::Context, path: &Path) {
@@ -1196,6 +1226,7 @@ impl FootprintReview {
         self.rt.accepted = None;
         self.ruler = None;
         self.scale = None;
+        self.clear_selection();
         self.usage("datasheet");
     }
 
@@ -1720,7 +1751,7 @@ impl FootprintReview {
         let n = key_name;
         format!(
             "Mode {}: {} move · {} ruler, setting the scale · {} measure the PDF · {} measure the footprint · \
-             a mode's key again, {} or Esc: back to Move\n\
+             {} select the drawing, {} saves it as DXF · a mode's key again, {} or Esc: back to Move\n\
              {} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back · \
              {} type the ruler's length, Enter sets the scale · {} the dimension's number sets it · \
              {} · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
@@ -1732,6 +1763,8 @@ impl FootprintReview {
             n(k.ruler),
             n(k.measure_pdf),
             n(k.measure_footprint),
+            n(k.select),
+            n(k.save_dxf),
             n(k.move_tool),
             n(k.full_width),
             n(k.ruler),
@@ -1771,6 +1804,7 @@ impl FootprintReview {
         let what = match self.tool {
             Tool::MeasurePdf => "Measuring the PDF",
             Tool::MeasureFootprint => "Measuring the footprint",
+            Tool::Select => return Some(self.select_hint()),
             Tool::Move | Tool::Scale => "Ruler",
         };
         if self.rt.ruler_placing {
@@ -2729,6 +2763,17 @@ impl FootprintReview {
                          Alt held: free",
                     );
                     ui.end_row();
+                    ui.label("DXF curve tolerance, mm");
+                    ui.add(
+                        DragValue::new(&mut s.dxf_tolerance_mm)
+                            .range(0.0001..=0.5)
+                            .speed(0.001),
+                    )
+                    .on_hover_text(
+                        "a curve of the drawing within this of a circle is an arc in the DXF, any other is made of \
+                         straight pieces within it",
+                    );
+                    ui.end_row();
                 });
                 ui.label("Keys over the canvas, by name (F, Space, F5, …)");
                 Grid::new("fp keys grid").num_columns(2).show(ui, |ui| {
@@ -2751,6 +2796,8 @@ impl FootprintReview {
                         ("Accept", &mut k.accept),
                         ("Next to review", &mut k.next),
                         ("Write a review note", &mut k.note),
+                        ("Select the drawing's lines", &mut k.select),
+                        ("Save the selection as DXF", &mut k.save_dxf),
                     ] {
                         ui.label(what);
                         let ok = egui::Key::from_name(name.trim()).is_some();
@@ -2885,6 +2932,11 @@ impl FootprintReview {
                     k.measure_footprint,
                     (!fp).then_some("no footprint shown: pick a symbol"),
                 ),
+                (
+                    Tool::Select,
+                    k.select,
+                    (!pdf).then_some("open the datasheet first: the pieces are its drawing's"),
+                ),
             ] {
                 let text = format!("{} · {}", t.name(), key_name(key));
                 let r = ui.add_enabled(
@@ -2907,6 +2959,9 @@ impl FootprintReview {
         });
         if let Some(t) = pick {
             self.tool_key(t);
+        }
+        if self.tool == Tool::Select || !self.selection().is_empty() {
+            self.dxf_bar(ui);
         }
     }
 
@@ -3024,16 +3079,9 @@ impl FootprintReview {
         })
     }
 
-    /// The note into the notes file with what it is about; the field emptied for the next, whose measurements
-    /// count from M1 again
-    fn add_note(&mut self) {
-        if self.note_blocker().is_some() {
-            return;
-        }
-        let (Some(file), Some(s)) = (self.notes_file(), self.rt.sourced.as_ref()) else {
-            return;
-        };
-        // As the symbol's Footprint field names it; a footprint alone by its own name
+    /// The footprint shown as the symbol's Footprint field names it; a footprint alone by its own name
+    fn footprint_name(&self) -> Option<String> {
+        let s = self.rt.sourced.as_ref()?;
         let field = self.rt.target.as_ref().and_then(|t| {
             let rows = &self.rt.symbols.as_ref()?.rows;
             rows.iter()
@@ -3041,10 +3089,21 @@ impl FootprintReview {
                 .footprint
                 .clone()
         });
-        let footprint = field.unwrap_or_else(|| match &s.source {
+        Some(field.unwrap_or_else(|| match &s.source {
             FootprintSource::Library { lib_id, .. } => lib_id.clone(),
             _ => s.lib_id().to_string(),
-        });
+        }))
+    }
+
+    /// The note into the notes file with what it is about; the field emptied for the next, whose measurements
+    /// count from M1 again
+    fn add_note(&mut self) {
+        if self.note_blocker().is_some() {
+            return;
+        }
+        let (Some(file), Some(footprint)) = (self.notes_file(), self.footprint_name()) else {
+            return;
+        };
         let datasheet = self.datasheet_name();
         let when = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
@@ -3068,6 +3127,287 @@ impl FootprintReview {
             self.usage("note");
         }
         self.rt.note_written = Some(written);
+    }
+
+    /// The drawing's pieces on the page shown
+    fn page_prims(&self) -> &[prims::Prim] {
+        self.rt
+            .pdf
+            .as_ref()
+            .and_then(|p| p.geometry(self.page))
+            .map_or(&[], |g| g.prims.as_slice())
+    }
+
+    /// The pieces selected on the page shown
+    fn selection(&self) -> &[usize] {
+        if self.rt.selected_page == self.page {
+            &self.rt.selected
+        } else {
+            &[]
+        }
+    }
+
+    /// Nothing selected, as on a datasheet just opened
+    fn clear_selection(&mut self) {
+        self.rt.selected.clear();
+        self.rt.select_hover = None;
+        self.rt.select_box = None;
+        self.rt.select_box_end = None;
+    }
+
+    /// How near (page points) a click picks a piece: the line snap's pixels, at least 6, at the view's zoom
+    fn select_reach(&self) -> f32 {
+        self.rt.settings.line_snap_px.max(6.0) / self.zoom
+    }
+
+    /// A click in the Select mode at `p` (page points): the piece there in or out of the selection; on nothing,
+    /// the selection dropped unless `add` (Shift held)
+    fn select_click(&mut self, p: [f32; 2], add: bool) {
+        if self.rt.selected_page != self.page {
+            self.clear_selection();
+            self.rt.selected_page = self.page;
+        }
+        match prims::pick(self.page_prims(), p, self.select_reach()) {
+            Some(i) => match self.rt.selected.binary_search(&i) {
+                Ok(at) => {
+                    self.rt.selected.remove(at);
+                }
+                Err(at) => self.rt.selected.insert(at, i),
+            },
+            None if !add => self.rt.selected.clear(),
+            None => {}
+        }
+        self.usage("select click");
+    }
+
+    /// A box from `a` to `b` (page points) let go: the pieces wholly inside it are the selection, or are added to
+    /// it with `add` (Shift held)
+    fn select_in_box(&mut self, a: [f32; 2], b: [f32; 2], add: bool) {
+        if self.rt.selected_page != self.page || !add {
+            self.rt.selected.clear();
+            self.rt.selected_page = self.page;
+        }
+        let mut inside = prims::in_box(self.page_prims(), a, b);
+        inside.extend_from_slice(&self.rt.selected);
+        inside.sort_unstable();
+        inside.dedup();
+        self.rt.selected = inside;
+        self.usage("select box");
+    }
+
+    /// What the Select mode waits for
+    fn select_hint(&self) -> String {
+        let k = self.keys();
+        let n = self.selection().len();
+        if self.rt.select_box.is_some() {
+            return "Select: let go to pick what is wholly inside the box (Shift: added to the selection)".into();
+        }
+        let save = match self.dxf_blocker() {
+            None => format!("{} saves the {n} as DXF", key_name(k.save_dxf)),
+            Some(why) => format!("Save: {why}"),
+        };
+        format!(
+            "Select: click a line, arc or shape (again: drops it) · drag a box around some · Shift adds · {n} \
+             selected · {save}"
+        )
+    }
+
+    /// Why the selection can't be saved as DXF now, when it can't
+    fn dxf_blocker(&self) -> Option<String> {
+        let k = self.keys();
+        if self.selection().is_empty() {
+            return Some(format!(
+                "select pieces of the drawing first (Select, {})",
+                key_name(k.select)
+            ));
+        }
+        if self.rt.sourced.is_none() {
+            return Some("no footprint shown: pick a symbol first, the DXF is in its frame".into());
+        }
+        match &self.scale {
+            None => {
+                return Some(format!(
+                    "set the drawing's scale first (Scale, {}): the DXF is in mm",
+                    key_name(k.ruler)
+                ));
+            }
+            Some(s) if s.page != self.page => {
+                return Some(format!(
+                    "the scale was set on page {}: set it again on this page, the DXF is in mm",
+                    s.page + 1
+                ));
+            }
+            Some(_) => {}
+        }
+        if self.notes_file().is_none() {
+            return Some(format!(
+                "no project or library to put the DXF beside: give the notes file \"{}\" a path of its own in \
+                 Settings",
+                self.rt.settings.notes_file
+            ));
+        }
+        None
+    }
+
+    /// The next DXF's file: beside the notes file, `<symbol>-p<page>-<n>.dxf`, the first n not taken
+    fn dxf_file(&self) -> Option<PathBuf> {
+        let dir = self.notes_file()?.parent()?.to_path_buf();
+        let name = match (&self.rt.target, &self.rt.sourced) {
+            (Some(t), _) => t.symbol.clone(),
+            (None, Some(s)) => s.lib_id().to_string(),
+            (None, None) => return None,
+        };
+        let stem: String = name
+            .chars()
+            .map(|c| {
+                if c.is_alphanumeric() || matches!(c, '-' | '_' | '.' | '+') {
+                    c
+                } else {
+                    '_'
+                }
+            })
+            .collect();
+        (1..)
+            .map(|n| dir.join(format!("{stem}-p{}-{n}.dxf", self.page + 1)))
+            .find(|f| !f.exists())
+    }
+
+    /// The selection as a DXF in the footprint's mm (through the scale and the footprint's placement) beside the
+    /// notes file; its name goes into the note
+    fn save_dxf(&mut self) {
+        if self.dxf_blocker().is_some() {
+            return;
+        }
+        let Some(file) = self.dxf_file() else { return };
+        let to = dxf::ToFootprint {
+            origin: [self.place.origin[0] as f64, self.place.origin[1] as f64],
+            rotation: self.place.rotation as f64,
+            mirror: self.place.mirror,
+            mm_per_point: self.mm_per_point(),
+        };
+        let all = self.page_prims();
+        let picked: Vec<&prims::Prim> = self
+            .selection()
+            .iter()
+            .filter_map(|&i| all.get(i))
+            .collect();
+        let entities = dxf::entities(&picked, &to, self.rt.settings.dxf_tolerance_mm);
+        let footprint = self.footprint_name().unwrap_or_default();
+        let mut comments = vec![format!(
+            "better_erc footprint review: {} pieces of the datasheet drawing",
+            picked.len()
+        )];
+        if let Some(t) = &self.rt.target {
+            comments.push(format!("symbol {}", t.symbol));
+        }
+        comments.push(format!("footprint {footprint}"));
+        if let Some(d) = &self.datasheet {
+            comments.push(format!(
+                "datasheet {}, page {}",
+                file_name(d),
+                self.page + 1
+            ));
+        }
+        comments.push(format!(
+            "mm in the footprint's frame, its origin at 0,0, Y up (KiCad: Import Graphics at 0,0); {:.6} mm per PDF \
+             point",
+            to.mm_per_point
+        ));
+        let text = dxf::write(&entities, &comments);
+        let written = std::fs::write(&file, text)
+            .map(|()| file.clone())
+            .map_err(|e| format!("can't write {}: {e}", file.display()));
+        if written.is_ok() {
+            let name = file_name(&file);
+            let note = self.rt.note.trim_end().to_string();
+            let add = format!("DXF `{name}`");
+            self.rt.note = if note.is_empty() {
+                format!("{add} ")
+            } else {
+                format!("{note} {add} ")
+            };
+            self.usage("dxf");
+        }
+        self.rt.dxf_written = Some(written);
+    }
+
+    /// Under the mode bar while selecting or with a selection: how many, Save and Clear, and where the last DXF
+    /// went
+    fn dxf_bar(&mut self, ui: &mut Ui) {
+        let k = self.keys();
+        let n = self.selection().len();
+        let (mut save, mut clear) = (false, false);
+        ui.horizontal(|ui| {
+            ui.label(format!("{n} selected"));
+            let why = self.dxf_blocker();
+            let b = ui.add_enabled(
+                why.is_none(),
+                Button::new(format!("Save DXF · {}", key_name(k.save_dxf))),
+            );
+            let b = match &why {
+                Some(w) => b.on_disabled_hover_text(w),
+                None => b.on_hover_text(format!(
+                    "the selection in the footprint's mm, its origin at 0,0, as {}; its name goes into the note",
+                    self.dxf_file()
+                        .map_or(String::new(), |f| f.display().to_string())
+                )),
+            };
+            save = b.clicked();
+            clear = ui
+                .add_enabled(n > 0, Button::new("Clear"))
+                .on_disabled_hover_text("nothing selected")
+                .clicked();
+            match &self.rt.dxf_written {
+                Some(Ok(f)) => {
+                    ui.label(format!("saved {}", file_name(f)))
+                        .on_hover_text(f.display().to_string());
+                }
+                Some(Err(e)) => {
+                    ui.colored_label(Color32::RED, e);
+                }
+                None => {}
+            }
+        });
+        if save {
+            self.save_dxf();
+        }
+        if clear {
+            self.clear_selection();
+        }
+    }
+
+    /// The selection over the page, and the piece a click would pick
+    fn draw_selection(&self, painter: &egui::Painter, canvas: Rect) {
+        let all = self.page_prims();
+        let tol = prims::screen_tolerance(self.zoom);
+        let draw = |i: usize, stroke: Stroke| {
+            if let Some(p) = all.get(i) {
+                let pts: Vec<Pos2> = p
+                    .polyline(tol)
+                    .into_iter()
+                    .map(|q| self.to_screen(canvas, q))
+                    .collect();
+                painter.add(Shape::line(pts, stroke));
+            }
+        };
+        for &i in self.selection() {
+            draw(i, Stroke::new(2.5, SELECT_COLOUR));
+        }
+        if self.tool == Tool::Select
+            && let Some(i) = self.rt.select_hover
+        {
+            draw(i, Stroke::new(2.0, SELECT_COLOUR.gamma_multiply(0.5)));
+        }
+        if let (Some(a), Some(b)) = (self.rt.select_box, self.rt.select_box_end) {
+            let r = Rect::from_two_pos(self.to_screen(canvas, a), self.to_screen(canvas, b));
+            painter.rect_filled(r, 0.0, SELECT_COLOUR.gamma_multiply(0.1));
+            painter.rect_stroke(
+                r,
+                0.0,
+                Stroke::new(1.0, SELECT_COLOUR),
+                egui::StrokeKind::Inside,
+            );
+        }
     }
 
     fn canvas(&mut self, ui: &mut Ui) {
@@ -3230,6 +3570,16 @@ impl FootprintReview {
                     self.place.origin[0] += d.x;
                     self.place.origin[1] += d.y;
                 }
+                Tool::Select => {
+                    if resp.drag_started() {
+                        let start = resp
+                            .interact_pointer_pos()
+                            .map(|s| s - resp.drag_delta())
+                            .unwrap_or_default();
+                        self.rt.select_box = Some(self.to_page(canvas, start));
+                    }
+                    self.rt.select_box_end = pointer_page;
+                }
                 Tool::Scale | Tool::MeasurePdf | Tool::MeasureFootprint => {
                     if let Some(p) = pointer_page {
                         if resp.drag_started() {
@@ -3259,6 +3609,29 @@ impl FootprintReview {
                     }
                 }
             }
+        }
+        // The Select mode: a box let go selects what is in it, a click the piece at the pointer
+        if self.tool == Tool::Select {
+            if resp.drag_stopped()
+                && let (Some(a), Some(b)) = (
+                    self.rt.select_box.take(),
+                    pointer_page.or(self.rt.select_box_end),
+                )
+            {
+                self.rt.select_box_end = None;
+                self.select_in_box(a, b, free);
+            } else if resp.clicked()
+                && let Some(p) = pointer_page
+            {
+                self.select_click(p, free);
+            }
+            self.rt.select_hover = hover_page
+                .filter(|_| self.rt.select_box.is_none())
+                .and_then(|p| prims::pick(self.page_prims(), p, self.select_reach()));
+        } else {
+            self.rt.select_box = None;
+            self.rt.select_box_end = None;
+            self.rt.select_hover = None;
         }
         if resp.drag_stopped() {
             self.rt.ruler_end = None;
@@ -3312,6 +3685,8 @@ impl FootprintReview {
                     accept: pressed(km.accept),
                     next: pressed(km.next),
                     note: pressed(km.note),
+                    select: pressed(km.select),
+                    save_dxf: pressed(km.save_dxf),
                 };
                 (p, i.modifiers.shift)
             });
@@ -3350,6 +3725,8 @@ impl FootprintReview {
                 (p.accept, Action::Accept),
                 (p.next, Action::NextToReview),
                 (p.note, Action::Note),
+                (p.select, Action::Mode(Tool::Select)),
+                (p.save_dxf, Action::SaveDxf),
             ] {
                 if on {
                     self.act(&ctx, action, hover_page, shift, lines);
@@ -3375,6 +3752,7 @@ impl FootprintReview {
             let page = rect.zip(self.page_image(&ctx, invert));
             self.draw_footprint(&painter, canvas, page, ui.id());
         }
+        self.draw_selection(&painter, canvas);
         // The ruler
         if let Some([a, b]) = self.ruler {
             let (sa, sb) = (self.to_screen(canvas, a), self.to_screen(canvas, b));
@@ -3759,6 +4137,8 @@ struct KeyMap {
     accept: Option<egui::Key>,
     next: Option<egui::Key>,
     note: Option<egui::Key>,
+    select: Option<egui::Key>,
+    save_dxf: Option<egui::Key>,
 }
 
 impl From<&Keys> for KeyMap {
@@ -3782,6 +4162,8 @@ impl From<&Keys> for KeyMap {
             accept: key(&k.accept),
             next: key(&k.next),
             note: key(&k.note),
+            select: key(&k.select),
+            save_dxf: key(&k.save_dxf),
         }
     }
 }
@@ -3812,6 +4194,8 @@ struct Pressed {
     accept: bool,
     next: bool,
     note: bool,
+    select: bool,
+    save_dxf: bool,
 }
 
 /// The ruler's line and label colours in a mode: blue setting the scale, orange measuring the drawing, green
@@ -3830,6 +4214,8 @@ fn ruler_colours(t: Tool) -> (Color32, Color32) {
             Color32::from_rgb(40, 200, 90),
             Color32::from_rgb(20, 130, 60),
         ),
+        // No ruler of its own: the scale's is shown
+        Tool::Select => ruler_colours(Tool::Scale),
     }
 }
 

@@ -38,6 +38,8 @@ pub enum Action {
     NextToReview,
     /// The review note field takes the keyboard
     Note,
+    /// The pieces selected as a DXF beside the notes file
+    SaveDxf,
     /// Accept's question answered: write, or nothing
     Write,
     Cancel,
@@ -300,6 +302,16 @@ impl FootprintReview {
                     icons::RULER,
                     Mode(Tool::MeasurePdf),
                 ))),
+                Some(datasheet(slot(
+                    if self.tool == Tool::Select {
+                        "Stop selecting"
+                    } else {
+                        "Select the drawing"
+                    },
+                    short_key(k.select),
+                    icons::CURSOR_CLICK,
+                    Mode(Tool::Select),
+                ))),
                 Some(
                     datasheet(slot(
                         "Next page",
@@ -393,6 +405,18 @@ impl FootprintReview {
                     icons::NOTE_PENCIL,
                     Note,
                 ))),
+                Some(
+                    slot(
+                        "Save the selection as DXF",
+                        short_key(k.save_dxf),
+                        icons::FLOPPY_DISK,
+                        SaveDxf,
+                    )
+                    .disabled_if(
+                        self.dxf_blocker().is_some(),
+                        self.dxf_blocker().unwrap_or_default(),
+                    ),
+                ),
             ],
             free_hint: String::new(),
             ..Default::default()
@@ -482,6 +506,7 @@ impl FootprintReview {
                 self.rt.focus_note = true;
                 self.usage("note key");
             }
+            Action::SaveDxf => self.save_dxf(),
             Action::Write => self.confirmed(ctx, true),
             Action::Cancel => self.confirmed(ctx, false),
         }
