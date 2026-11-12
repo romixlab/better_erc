@@ -215,6 +215,58 @@ struct SymbolList {
     filter: String,
 }
 
+/// Accept's question before it writes: what its dry run would write where, and whether KiCad may overwrite that
+struct Confirm {
+    review: Review,
+    target: Target,
+    run: AcceptRun,
+    /// Why KiCad may overwrite the change on its next save, one line each
+    warnings: Vec<String>,
+}
+
+/// Why KiCad may overwrite what `run` writes: a file it would change has KiCad's lock file beside it (open in an
+/// editor there), or, without one, KiCad runs (`running`) and may have the schematic or the library open
+fn kicad_warnings(run: &AcceptRun, running: bool) -> Vec<String> {
+    let mut out = Vec::new();
+    let mut unlocked = false;
+    for w in run
+        .symbols
+        .iter()
+        .flat_map(|a| &a.files)
+        .filter(|w| w.changed)
+    {
+        let name = file_name(&w.file);
+        let lock = w.file.with_file_name(format!("~{name}.lck"));
+        if lock.exists() {
+            out.push(format!(
+                "{name} is open in KiCad (its lock file ~{name}.lck): KiCad's next save of it overwrites the \
+                 change; close it there first"
+            ));
+        } else {
+            unlocked = true;
+        }
+    }
+    if unlocked && running {
+        out.push(
+            "KiCad is running: should it have this schematic or symbol library open, its next save there \
+             overwrites the change; close them there first, or reopen them after writing"
+                .into(),
+        );
+    }
+    out
+}
+
+/// Whether a KiCad process (the project manager or the schematic editor) runs on this computer
+fn kicad_running() -> bool {
+    let Ok(dir) = std::fs::read_dir("/proc") else {
+        return false;
+    };
+    dir.flatten().any(|e| {
+        std::fs::read_to_string(e.path().join("comm"))
+            .is_ok_and(|c| matches!(c.trim(), "kicad" | "eeschema"))
+    })
+}
+
 /// The library symbol under review: Accept writes the review hash into it
 #[derive(Clone, Debug)]
 struct Target {
@@ -286,6 +338,10 @@ struct Runtime {
     /// The page is fitted to the view's width on the next frame
     fit_width: bool,
     accepted: Option<String>,
+    /// Accept waits for its confirmation
+    confirm: Option<Confirm>,
+    /// Whether KiCad runs (a fake in tests)
+    kicad_running: fn() -> bool,
     /// The symbol list open
     symbols: Option<SymbolList>,
     /// The symbol under review, whose footprint is shown; none: a footprint opened alone, a preview
@@ -343,6 +399,8 @@ impl Default for Runtime {
             typing_mm: false,
             fit_width: false,
             accepted: None,
+            confirm: None,
+            kicad_running,
             symbols: None,
             target: None,
             symbol_note: None,
@@ -382,10 +440,73 @@ impl TabUi for FootprintReview {
                 ScrollArea::vertical().show(ui, |ui| self.controls(ui));
             });
         self.canvas(ui);
+        self.confirm_ui(ui.ctx(), id);
     }
 }
 
 impl FootprintReview {
+    /// Accept's confirmation, when it waits for one: each file, the field, its old and new value; Enter writes, Esc
+    /// or Cancel writes nothing
+    fn confirm_ui(&mut self, ctx: &egui::Context, id: Id) {
+        let Some(c) = &self.rt.confirm else { return };
+        let mut answer = None;
+        let modal = egui::Modal::new(id.with("confirm accept")).show(ctx, |ui| {
+            ui.set_max_width(640.0);
+            ui.heading("Write the review hash?");
+            ui.label(format!(
+                "Accepting {} writes its review hash into these files:",
+                c.review.lib_id
+            ));
+            for a in &c.run.symbols {
+                ui.label(RichText::new(&a.symbol).strong());
+                Grid::new(("confirm files", &a.symbol))
+                    .num_columns(3)
+                    .striped(true)
+                    .show(ui, |ui| {
+                        for w in &a.files {
+                            let kind = match w.source {
+                                HashSource::Library => "library",
+                                HashSource::Schematic => "schematic copy",
+                            };
+                            ui.label(format!("{} ({kind})", file_name(&w.file)))
+                                .on_hover_text(w.file.display().to_string());
+                            ui.label(&c.run.field);
+                            let change = match (&w.old, w.changed) {
+                                (_, false) => format!("{}, already", a.hash),
+                                (None, true) => format!("(none) → {}", a.hash),
+                                (Some(old), true) => format!("{old} → {}", a.hash),
+                            };
+                            ui.label(RichText::new(change).monospace());
+                            ui.end_row();
+                        }
+                    });
+                if let Some(n) = &a.library_note {
+                    ui.colored_label(Color32::ORANGE, format!("Library symbol not written: {n}"));
+                }
+            }
+            for w in &c.warnings {
+                ui.colored_label(Color32::from_rgb(230, 140, 0), format!("⚠ {w}"));
+            }
+            ui.horizontal(|ui| {
+                if ui.button("Write (Enter)").clicked() {
+                    answer = Some(true);
+                }
+                if ui.button("Cancel (Esc)").clicked() {
+                    answer = Some(false);
+                }
+            });
+            if ui.input(|i| i.key_pressed(egui::Key::Enter)) {
+                answer = Some(true);
+            }
+        });
+        if modal.should_close() {
+            answer.get_or_insert(false);
+        }
+        if let Some(write) = answer {
+            self.confirmed(ctx, write);
+        }
+    }
+
     /// A review tab with these settings, recording usage through `usage` (tests)
     #[cfg(test)]
     pub fn with(settings: FootprintReviewSettings, usage: Usage) -> FootprintReview {
@@ -394,6 +515,8 @@ impl FootprintReview {
         r.rt.usage = usage;
         // No global library tables: the test's own only
         r.rt.config = None;
+        // Not this computer's KiCad
+        r.rt.kicad_running = || false;
         r
     }
 
@@ -957,8 +1080,45 @@ impl FootprintReview {
         }
     }
 
+    /// Accept: the review recorded and its hash copied; for a symbol, first the question whether to write it there,
+    /// with the dry run's files (when the dry run fails, the review is recorded with why nothing was written)
     fn accept(&mut self, ctx: &egui::Context) {
-        let Some(s) = &self.rt.sourced else { return };
+        let Some(review) = self.review() else { return };
+        let Some(target) = self.rt.target.clone() else {
+            self.finish_accept(ctx, review, None);
+            return;
+        };
+        match self.write(&target, &review.hash, true) {
+            Ok(run) => {
+                let warnings = kicad_warnings(&run, (self.rt.kicad_running)());
+                self.rt.confirm = Some(Confirm {
+                    review,
+                    target,
+                    run,
+                    warnings,
+                });
+                self.usage("confirm");
+            }
+            Err(e) => self.finish_accept(ctx, review, Some(Err(e))),
+        }
+    }
+
+    /// The confirmation's answer: write (Enter), or nothing at all (Esc)
+    fn confirmed(&mut self, ctx: &egui::Context, write: bool) {
+        let Some(c) = self.rt.confirm.take() else {
+            return;
+        };
+        if write {
+            let written = self.write(&c.target, &c.review.hash, false);
+            self.finish_accept(ctx, c.review, Some(written));
+        } else {
+            self.usage("cancel");
+        }
+    }
+
+    /// The review of what is shown now
+    fn review(&self) -> Option<Review> {
+        let s = self.rt.sourced.as_ref()?;
         let now = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .map_or(0, |d| d.as_secs());
@@ -971,10 +1131,19 @@ impl FootprintReview {
             mm_per_point: self.mm_per_point(),
             when: now,
         };
+        Some(review)
+    }
+
+    /// The review accepted: its hash copied and kept, with what was written into the symbol
+    fn finish_accept(
+        &mut self,
+        ctx: &egui::Context,
+        review: Review,
+        written: Option<Result<AcceptRun, String>>,
+    ) {
         ctx.copy_text(review.hash.clone());
         self.rt.accepted = Some(review.hash.clone());
-        // Into the symbol: the library's and, for a project's symbol, the schematic's copies
-        self.rt.written = self.rt.target.clone().map(|t| self.write(&t, &review.hash));
+        self.rt.written = written;
         if matches!(self.rt.written, Some(Ok(_))) {
             self.usage("write");
             self.reviewed(&review.hash);
@@ -983,8 +1152,8 @@ impl FootprintReview {
         self.usage("accept");
     }
 
-    /// Writes `hash` into the symbol under review
-    fn write(&self, t: &Target, hash: &str) -> Result<AcceptRun, String> {
+    /// Writes `hash` into the symbol under review; `dry_run` says what it would write
+    fn write(&self, t: &Target, hash: &str, dry_run: bool) -> Result<AcceptRun, String> {
         match &t.from {
             SymbolsFrom::Project(p) => {
                 let config = self.rt.config.clone();
@@ -995,13 +1164,13 @@ impl FootprintReview {
                         hash: hash.to_string(),
                     },
                     &mut |dir| SymbolLibraries::new(dir, config.as_deref()),
-                    false,
+                    dry_run,
                 )
             }
             SymbolsFrom::Library { project, .. } => {
                 let search = self.library_search_for(&t.from);
                 let (mut syms, _) = search.open(project).map_err(|e| e.to_string())?;
-                better_erc::fp::accept_library(&mut syms, &t.symbol, hash, false)
+                better_erc::fp::accept_library(&mut syms, &t.symbol, hash, dry_run)
             }
         }
         .map_err(|e| e.to_string())
@@ -1293,10 +1462,11 @@ impl FootprintReview {
                     ..
                 }) => resp.on_hover_text(format!(
                     "Writes the review hash into the {FIELD} field of {symbol}: the library symbol and the \
-                     schematic's copies; copies it too"
+                     schematic's copies, after showing what it writes where; copies it too"
                 )),
                 Some(t) => resp.on_hover_text(format!(
-                    "Writes the review hash into the {FIELD} field of library symbol {}; copies it too",
+                    "Writes the review hash into the {FIELD} field of library symbol {}, after showing what it \
+                     writes where; copies it too",
                     t.symbol
                 )),
                 None => resp,

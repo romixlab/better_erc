@@ -224,9 +224,15 @@ fn review_a_symbol_from_its_library() {
     let st = h.state();
     assert!(st.place.origin[0] > origin[0]);
     assert_eq!((st.place.rotation, st.place.mirror), (90.0, true));
-    // Accept writes the review hash into the library symbol
+    // Accept shows what it writes where, and writes the review hash into the library symbol once confirmed
     assert!(!disabled(&h, ACCEPT));
     button(&h, ACCEPT).click();
+    h.run();
+    h.get_by_label("Write the review hash?");
+    h.get_by_label("Rev.kicad_sym (library)");
+    h.get_by_label(&format!("(none) → {want_hash}"));
+    assert!(h.state().rt.accepted.is_none(), "nothing accepted yet");
+    button(&h, "Write (Enter)").click();
     h.run();
     assert_eq!(h.state().rt.accepted.as_deref(), Some(want_hash.as_str()));
     h.get_by_label(&format!("Accepted. {FIELD} = {want_hash} (copied)"));
@@ -671,7 +677,31 @@ fn accept_writes_into_the_symbols() {
     });
     h.run();
     let hash = h.state().rt.sourced.as_ref().unwrap().hash.clone();
+    let files = ["Rev.kicad_sym", "rev.kicad_sch"].map(|f| dir.join(f));
+    let before = files.clone().map(|f| std::fs::read_to_string(f).unwrap());
+    // Accept asks first: each file, the field, old and new value; Esc writes nothing
     button(&h, ACCEPT).click();
+    h.run();
+    h.get_by_label("Rev.kicad_sym (library)");
+    h.get_by_label("rev.kicad_sch (schematic copy)");
+    assert_eq!(h.get_all_by_label(&format!("(none) → {hash}")).count(), 2);
+    assert!(h.query_by_label_contains("open in KiCad").is_none());
+    h.key_press(egui::Key::Escape);
+    h.run();
+    assert!(h.state().rt.confirm.is_none());
+    assert!(h.state().rt.accepted.is_none() && h.state().rt.written.is_none());
+    assert_eq!(
+        before,
+        files.clone().map(|f| std::fs::read_to_string(f).unwrap())
+    );
+    // The schematic open in KiCad (its lock file), KiCad running: both said; Enter writes
+    std::fs::write(dir.join("~rev.kicad_sch.lck"), "").unwrap();
+    h.state_mut().rt.kicad_running = || true;
+    button(&h, ACCEPT).click();
+    h.run();
+    h.get_by_label_contains("rev.kicad_sch is open in KiCad (its lock file ~rev.kicad_sch.lck)");
+    h.get_by_label_contains("KiCad is running");
+    h.key_press(egui::Key::Enter);
     h.run();
     assert!(
         matches!(h.state().rt.written, Some(Ok(_))),
@@ -804,34 +834,42 @@ fn mask_and_paste_layers_show() {
         (Kind::Paste, [-1.4, -0.9], colors.paste),
     ];
     // Whether a pixel within one point of `at` has colour `want`
-    let near = |h: &Harness<'_, FootprintReview>, img: &image::RgbaImage, at: [f64; 2], want: Rgb| {
-        let st = h.state();
-        let p = st.to_screen(st.rt.canvas, st.fp_to_page(at));
-        let ppp = h.ctx.pixels_per_point();
-        let (x, y) = ((p.x * ppp) as i64, (p.y * ppp) as i64);
-        (-2..=2).any(|dx| {
-            (-2..=2).any(|dy| {
-                let px = img.get_pixel((x + dx) as u32, (y + dy) as u32).0;
-                px.iter().zip(want.0).all(|(g, w)| g.abs_diff(w) <= 24)
+    let near =
+        |h: &Harness<'_, FootprintReview>, img: &image::RgbaImage, at: [f64; 2], want: Rgb| {
+            let st = h.state();
+            let p = st.to_screen(st.rt.canvas, st.fp_to_page(at));
+            let ppp = h.ctx.pixels_per_point();
+            let (x, y) = ((p.x * ppp) as i64, (p.y * ppp) as i64);
+            (-2..=2).any(|dx| {
+                (-2..=2).any(|dy| {
+                    let px = img.get_pixel((x + dx) as u32, (y + dy) as u32).0;
+                    px.iter().zip(want.0).all(|(g, w)| g.abs_diff(w) <= 24)
+                })
             })
-        })
-    };
+        };
     for kind in [Kind::Mask, Kind::Paste] {
         let img = h.render().unwrap();
         for (k, at, want) in probes {
             if k == kind {
-                assert!(!near(&h, &img, at, want), "{kind:?} at {at:?} hidden at first");
+                assert!(
+                    !near(&h, &img, at, want),
+                    "{kind:?} at {at:?} hidden at first"
+                );
             }
         }
         h.get_by_label(kind.name()).click();
         h.run();
         let img = h.render().unwrap();
         if let Some(p) = std::env::var_os("BERC_FP_SNAPSHOT") {
-            img.save(Path::new(&p).with_extension(format!("{}.png", kind.name()))).unwrap();
+            img.save(Path::new(&p).with_extension(format!("{}.png", kind.name())))
+                .unwrap();
         }
         for (k, at, want) in probes {
             if k == kind {
-                assert!(near(&h, &img, at, want), "{kind:?} at {at:?} drawn once ticked");
+                assert!(
+                    near(&h, &img, at, want),
+                    "{kind:?} at {at:?} drawn once ticked"
+                );
             }
         }
         h.get_by_label(kind.name()).click();
@@ -978,7 +1016,12 @@ fn ruler_by_keys() {
     assert_eq!(h.state().rt.ruler_focus, None);
     assert!((h.state().zoom - zoom).abs() < 1e-3);
     assert!(h.state().rt.typing_mm, "the length field has the keyboard");
-    assert!(h.state().ruler_hint().unwrap().contains("Enter sets the scale"));
+    assert!(
+        h.state()
+            .ruler_hint()
+            .unwrap()
+            .contains("Enter sets the scale")
+    );
     h.event(egui::Event::Text("2.00".into()));
     h.key_press(egui::Key::Enter);
     h.run();

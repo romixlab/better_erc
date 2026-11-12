@@ -362,7 +362,10 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    Page Down turn pages. A help line under the canvas names the keys.
 5. **Accept**: when the footprint matches the drawing, Accept writes its review hash into the symbol: the library
    symbol and, for a symbol from a project's list, the schematic's copies too (as `berc fp accept --symbol` does).
-   It lists the files written, or says why it wrote nothing, copies the hash to the clipboard and keeps the review
+   It asks first, showing what its dry run would write: each file, the field, the old and the new value. Enter (or
+   Write) writes; Esc (or Cancel) writes nothing. It warns when KiCad may overwrite the change on its next save: a
+   file with KiCad's lock file beside it (`~name.kicad_sch.lck`, open in an editor there), or KiCad running at all.
+   Once written, it lists the files written, or says why it wrote nothing, copies the hash to the clipboard and keeps the review
    (symbol's footprint, hash, datasheet, page, scale) in the tab's list. Accept stays disabled, saying why, until a
    symbol with a footprint is picked, a datasheet is open and the scale is set on the page shown.
 

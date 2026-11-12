@@ -17,6 +17,13 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
   the ruler's length field, scrolls it into sight and gives it the keyboard; Enter sets the scale and the footprint
   is the one to move again. The ruler step by keys is F, R, R, Z, Z, S, the length, Enter.
 
+### Changed
+
+- `VIEW-19`: Accept in the Footprint review tab asks before it writes into the library symbol and the schematic's
+  copies: a dialog shows its dry run, each file with the field and its old and new value; Enter writes, Esc writes
+  nothing. It warns when KiCad may overwrite the change on its next save: a file with KiCad's lock file beside it
+  (`~rev.kicad_sch.lck`), or a KiCad process running.
+
 ### Fixed
 
 - `VIEW-19`: the Footprint review tab shows the mask openings and paste apertures it was asked to: they were drawn
