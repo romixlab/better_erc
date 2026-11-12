@@ -881,3 +881,64 @@ fn ruler_by_keys() {
     }
     std::fs::remove_dir_all(&dir).unwrap();
 }
+
+/// A part without a Datasheet field: the library search runs for its part number and the first datasheet it finds
+/// opens by itself, shown in the found panel as the one open
+#[test]
+fn library_search_opens_the_first_hit() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-search-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let pdf = datasheet(&dir);
+    footprint_table(&dir);
+    let lib = dir.join("Rev.kicad_sym");
+    std::fs::write(
+        &lib,
+        format!(
+            "(kicad_symbol_lib (version 20231120) (generator \"kicad_symbol_editor\")\n{})\n",
+            symbol_text(
+                "Sot",
+                &[("Footprint", "Test:Asym_SOT"), ("MPN", "TEST-PART")]
+            ),
+        ),
+    )
+    .unwrap();
+    // A library search that finds the test datasheet for any words: `sh -c SCRIPT PDF WORDS...`
+    let settings = FootprintReviewSettings {
+        font_dirs: Vec::new(),
+        library_search: vec![
+            "sh".into(),
+            "-c".into(),
+            "printf '[{\"path\": \"%s\"}]' \"$0\"".into(),
+            pdf.display().to_string(),
+        ],
+        ..Default::default()
+    };
+    let mut cx = Context::new();
+    let mut h = Harness::builder()
+        .with_size(vec2(1200.0, 1400.0))
+        .build_ui_state(
+            move |ui, state: &mut FootprintReview| state.ui(ui, &mut cx, Id::new("fp search")),
+            FootprintReview::with(settings, Arc::new(|_: &str| {})),
+        );
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &lib);
+    h.run();
+    h.get_by_label("Rev:Sot").click();
+    h.run();
+    h.run();
+    assert_eq!(h.state().rt.query, "TEST-PART");
+    // Wait for the search's answer, then hand it back as the tab would get it
+    let rx = h.state_mut().rt.searching.take().expect("the search runs");
+    let reply = rx.recv().unwrap();
+    let (tx, rx) = std::sync::mpsc::channel();
+    tx.send(reply).unwrap();
+    h.state_mut().rt.searching = Some(rx);
+    h.run();
+    h.run();
+    assert_eq!(h.state().datasheet.as_deref(), Some(pdf.as_path()));
+    h.get_by_label("Found in the library (1), the first opens by itself:");
+    h.get_by_label("📄 TEST-PART.pdf  (open)");
+    std::fs::remove_dir_all(&dir).unwrap();
+}

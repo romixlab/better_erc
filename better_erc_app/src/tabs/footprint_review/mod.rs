@@ -480,11 +480,7 @@ impl FootprintReview {
                 && let Some(Ok(hits)) = &self.rt.search_result
                 && let Some(first) = hits.first().cloned()
             {
-                self.open_datasheet(ctx, &first.path);
-                if let Some(page) = first.page.filter(|p| *p > 0) {
-                    self.page = page - 1;
-                    self.rt.auto_page = false;
-                }
+                self.open_hit(ctx, &first);
             }
         }
     }
@@ -813,6 +809,15 @@ impl FootprintReview {
         let ds = self.rt.sourced.as_ref()?.field("Datasheet")?;
         let p = PathBuf::from(ds.strip_prefix("file://").unwrap_or(ds));
         p.is_file().then_some(p)
+    }
+
+    /// Opens a datasheet the library search found, at the page it names (1-based), else the page search's
+    fn open_hit(&mut self, ctx: &egui::Context, hit: &LibraryHit) {
+        self.open_datasheet(ctx, &hit.path);
+        if let Some(page) = hit.page.filter(|p| *p > 0) {
+            self.page = page - 1;
+            self.rt.auto_page = false;
+        }
     }
 
     /// No datasheet open: the page, the ruler and the scale go with it
@@ -1640,33 +1645,62 @@ impl FootprintReview {
                 ui.label("The library has nothing for that");
             }
             Some(Ok(hits)) => {
-                for h in hits {
-                    let name = h
-                        .path
-                        .file_name()
-                        .map(|f| f.to_string_lossy().into_owned())
-                        .unwrap_or_default();
-                    let dir = h
-                        .path
-                        .parent()
-                        .map(|d| d.display().to_string())
-                        .unwrap_or_default();
-                    if ui
-                        .selectable_label(self.datasheet.as_ref() == Some(&h.path), &name)
-                        .on_hover_text(dir)
-                        .clicked()
-                    {
-                        open = Some(h.path.clone());
-                    }
-                }
+                // A panel of its own, so the found datasheets don't hide among the other controls
+                let accent = Color32::from_rgb(0, 110, 200);
+                egui::Frame::group(ui.style())
+                    .stroke(Stroke::new(1.5, accent))
+                    .fill(accent.gamma_multiply(0.12))
+                    .show(ui, |ui| {
+                        ui.label(
+                            RichText::new(format!(
+                                "Found in the library ({}), the first opens by itself:",
+                                hits.len()
+                            ))
+                            .strong(),
+                        );
+                        for h in hits {
+                            let name = h
+                                .path
+                                .file_name()
+                                .map(|f| f.to_string_lossy().into_owned())
+                                .unwrap_or_default();
+                            let dir = h
+                                .path
+                                .parent()
+                                .map(|d| d.display().to_string())
+                                .unwrap_or_default();
+                            let is_open = self.datasheet.as_ref() == Some(&h.path);
+                            let page = h.page.map_or(String::new(), |p| format!("  p.{p}"));
+                            let text = RichText::new(format!(
+                                "📄 {name}{page}{}",
+                                if is_open { "  (open)" } else { "" }
+                            ))
+                            .color(Color32::WHITE)
+                            .strong();
+                            let b = Button::new(text)
+                                .fill(if is_open {
+                                    accent
+                                } else {
+                                    accent.gamma_multiply(0.6)
+                                })
+                                .truncate();
+                            if ui
+                                .add_sized(vec2(ui.available_width(), 22.0), b)
+                                .on_hover_text(format!("Open it\n{dir}"))
+                                .clicked()
+                            {
+                                open = Some(h.clone());
+                            }
+                        }
+                    });
             }
             Some(Err(e)) => {
                 ui.colored_label(Color32::RED, e);
             }
             None => {}
         }
-        if let Some(p) = open {
-            self.open_datasheet(ctx, &p);
+        if let Some(h) = open {
+            self.open_hit(ctx, &h);
         }
         // The open datasheet and its pages
         let Some(pdf) = &self.rt.pdf else { return };
