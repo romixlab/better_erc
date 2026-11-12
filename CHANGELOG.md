@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.31] - 2026-11-12
+
 ### Added
 
 - `VIEW-19`: `S` on the Footprint review canvas (setting `keys.scale`) goes back from a ruler end to the view, empties
