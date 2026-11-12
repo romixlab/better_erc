@@ -231,6 +231,9 @@ struct BoardList {
     filter: String,
 }
 
+/// A library search: the datasheets it finds for the search words
+type Searcher = Arc<dyn Fn(&[String]) -> Result<Vec<LibraryHit>, String> + Send + Sync>;
+
 /// The library search's hits and the query that found them, or why it failed
 type SearchReply = Result<(Vec<LibraryHit>, String), String>;
 
@@ -304,6 +307,8 @@ struct Runtime {
     want_search: bool,
     /// The library search running was started for a part just picked: its first hit opens by itself
     auto_open: bool,
+    /// The library search in place of the settings' command (tests)
+    searcher: Option<Searcher>,
 }
 
 impl Default for Runtime {
@@ -348,6 +353,7 @@ impl Default for Runtime {
             canvas: Rect::NOTHING,
             want_search: false,
             auto_open: false,
+            searcher: None,
         }
     }
 }
@@ -859,7 +865,12 @@ impl FootprintReview {
             .map(|q| q.split_whitespace().map(String::from).collect::<Vec<_>>())
             .filter(|w| !w.is_empty())
             .collect();
-        if cmd.is_empty() || queries.is_empty() || find_program(&cmd[0]).is_none() {
+        let search: Searcher = match &self.rt.searcher {
+            Some(f) => f.clone(),
+            None if cmd.is_empty() || find_program(&cmd[0]).is_none() => return,
+            None => Arc::new(move |words: &[String]| run_library_search(&cmd, words)),
+        };
+        if queries.is_empty() {
             return;
         }
         let (tx, rx) = std::sync::mpsc::channel();
@@ -867,7 +878,7 @@ impl FootprintReview {
         std::thread::spawn(move || {
             let mut r = Ok((Vec::new(), String::new()));
             for words in &queries {
-                r = run_library_search(&cmd, words).map(|hits| (hits, words.join(" ")));
+                r = search(words).map(|hits| (hits, words.join(" ")));
                 if r.as_ref().is_ok_and(|(hits, _)| !hits.is_empty()) {
                     break;
                 }
@@ -1604,7 +1615,9 @@ impl FootprintReview {
         });
         // Library search
         let cmd = self.rt.settings.library_search.clone();
-        let blocker = if cmd.is_empty() {
+        let blocker = if self.rt.searcher.is_some() {
+            None
+        } else if cmd.is_empty() {
             Some("no library search command is set (Settings)".to_string())
         } else if find_program(&cmd[0]).is_none() {
             Some(format!(

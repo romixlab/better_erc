@@ -919,40 +919,41 @@ fn library_search_opens_the_first_hit() {
         ),
     )
     .unwrap();
-    // A library search that finds the test datasheet for any words: `sh -c SCRIPT PDF WORDS...`
-    let settings = FootprintReviewSettings {
-        font_dirs: Vec::new(),
-        library_search: vec![
-            "sh".into(),
-            "-c".into(),
-            "printf '[{\"path\": \"%s\"}]' \"$0\"".into(),
-            pdf.display().to_string(),
-        ],
-        ..Default::default()
+    // A library search of the test's own, in the process: the test datasheet for any words, the words kept
+    let asked: Arc<Mutex<Vec<String>>> = Arc::default();
+    let searcher: Searcher = {
+        let (pdf, asked) = (pdf.clone(), asked.clone());
+        Arc::new(move |words: &[String]| {
+            asked.lock().unwrap().push(words.join(" "));
+            Ok(vec![LibraryHit {
+                path: pdf.clone(),
+                page: None,
+            }])
+        })
     };
-    let mut cx = Context::new();
-    let mut h = Harness::builder()
-        .with_size(vec2(1200.0, 1400.0))
-        .build_ui_state(
-            move |ui, state: &mut FootprintReview| state.ui(ui, &mut cx, Id::new("fp search")),
-            FootprintReview::with(settings, Arc::new(|_: &str| {})),
-        );
+    let mut h = harness("fp search");
+    h.state_mut().rt.searcher = Some(searcher);
     h.run();
     let ctx = h.ctx.clone();
     h.state_mut().open_path(&ctx, &lib);
     h.run();
     h.get_by_label("Rev:Sot").click();
     h.run();
-    h.run();
     assert_eq!(h.state().rt.query, "TEST-PART");
-    // Wait for the search's answer, then hand it back as the tab would get it
-    let rx = h.state_mut().rt.searching.take().expect("the search runs");
-    let reply = rx.recv().unwrap();
-    let (tx, rx) = std::sync::mpsc::channel();
-    tx.send(reply).unwrap();
-    h.state_mut().rt.searching = Some(rx);
+    // Until the search has answered and the tab has taken the answer: the search thread may answer within a run
+    // or after it, so wait on its reply when it is still out
+    while let Some(rx) = h.state_mut().rt.searching.take() {
+        let reply = rx.recv().expect("the search answers");
+        let (tx, rx) = std::sync::mpsc::channel();
+        tx.send(reply).unwrap();
+        h.state_mut().rt.searching = Some(rx);
+        h.run();
+    }
     h.run();
-    h.run();
+    assert_eq!(
+        asked.lock().unwrap().first().map(String::as_str),
+        Some("TEST-PART")
+    );
     assert_eq!(h.state().datasheet.as_deref(), Some(pdf.as_path()));
     h.get_by_label("Found in the library (1), the first opens by itself:");
     h.get_by_label("📄 TEST-PART.pdf  (open)");
