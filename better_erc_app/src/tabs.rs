@@ -18,7 +18,7 @@ pub enum Tab {
     I2C(i2c::I2C),
     Style(style::Style),
     Inputs(inputs::Inputs),
-    FootprintReview(footprint_review::FootprintReview),
+    FootprintReview(Box<footprint_review::FootprintReview>),
 }
 
 /// The colour a finding of this severity is shown in

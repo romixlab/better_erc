@@ -682,8 +682,17 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   coloured, voltages / currents / frequency shown (derived or entered), approve or reject, comments by audience
   (to/from firmware, mechanics, EE)
 - 📋 `VIEW-18` Highlight the selected net in KiCad, or in the browser for Altium 365
-- 🚧 `VIEW-19` Footprint review tab: schematic vs layout footprint consistency; empty placeholder so far
-  (needs the `fp-check` session's work in `erc_kicad`/`erc_model`/`berc`) · `tabs/footprint_review.rs`
+- ✅ `VIEW-19` Footprint review tab: a library footprint drawn over its datasheet drawing, Accept gives the review
+  hash (`TOOL-8`). The footprint through `fp::FootprintSource`: a `.kicad_mod`, or a footprint picked from a board
+  (one row per library footprint), reviewed from its library file through `fp-lib-table` with the board copy
+  compared, else the board copy. The datasheet from the `Datasheet` field's file, a local library search command
+  (queries from the datasheet file name, a part name in its URL, the `Mpn` fields, the value), or a file picker;
+  read and drawn by hayro (pure Rust) on its own thread, the PDF standard fonts from Liberation or egui's font; a
+  page search by words finds the land pattern page. Scale by a ruler along a dimension (or the page's own
+  `SCALE: 20X`), footprint moved, turned, mirrored, opacity, blink, layers shown; Accept disabled with its reason
+  until the scale is set on the page shown, copies the hash, keeps the review. Settings in `config.toml`
+  (`[footprint_review]`), usage signals `app fp-review ...` · `better_erc_app/src/tabs/footprint_review/`,
+  `better_erc_app/src/settings.rs`
 
 ## App (`APP`)
 

@@ -3,6 +3,7 @@
 mod context;
 mod main_window;
 pub mod prelude;
+pub mod settings;
 mod tabs;
 mod windows;
 

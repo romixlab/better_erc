@@ -43,7 +43,8 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 - **The app** (`better_erc`, egui, crate `better_erc_app`): an import tab that opens any design the registry reads
   (and Altium or OrCAD files picked one by one) and shows its findings with their explanations and the checks that
   did not run, and tabs for nets (power rails, grounds and switching nodes from names and pin types), I2C buses,
-  style findings and inputs.
+  style findings and inputs; a footprint review tab that draws a library footprint over its datasheet drawing and
+  gives the review hash (see [Reviewing in the app](#reviewing-in-the-app)).
 - **Signal levels** (crate `erc_levels`): a database of the levels logic families, buses and differential
   standards define (74xx and CD4000, JEDEC LVCMOS/SSTL/HSTL, I2C, RS-485, CAN, LVDS, ECL, USB, Ethernet and more),
   every number with the document, table and page it was read from. See [docs/signal-levels.md](docs/signal-levels.md).
@@ -220,6 +221,40 @@ footprint is one of:
 A schematic copy that holds a different hash than the library is reported as well: the schematic was not updated
 from the library. The exit code is 0 when every footprint is ok or board-only and every copy up to date, 1 otherwise, 2 when the
 project can't be read.
+
+### Reviewing in the app
+
+The app's Footprint review tab does the review itself: it draws the footprint over the datasheet's drawing, and
+Accept gives the hash for the `Footprint_Review` field.
+
+1. **Open a footprint**: a library footprint (`.kicad_mod`), or a board (`.kicad_pcb`) to pick from. A board lists
+   one row per library footprint with the references that use it. A picked footprint is reviewed from its library
+   file, found through the project's or the global `fp-lib-table`; the tab says whether the board copy is the same.
+   Where the library file is not found, the board copy is reviewed.
+2. **Open the datasheet**: the footprint's `Datasheet` field when it names a local file, a local document library
+   search, or Open PDF. The library search runs a command (a setting) with the datasheet's file name, a part name
+   in its web address, the `Mpn` fields or the value, until one finds something. The command prints a JSON list of
+   `{"path": ..., "page": ...}`. The page search then goes to the page with the land pattern, found by words such as
+   "recommended land pattern" (a setting); the pages it found are listed to pick from.
+3. **Set the scale**: pick Ruler and drag along a dimension of the drawing (drag an end to adjust it), type its
+   length and Set scale. A page that states its own scale (`SCALE: 20X`) offers it as a button; check it with the
+   ruler.
+4. **Lay the footprint on the drawing**: drag it (Move footprint), nudge it with the arrow keys (Shift: ten times
+   as far), turn it with R or ⟲ 90° or by an angle, mirror it with M for a drawing seen from below. Opacity, Blink
+   (B) and the layers shown (pads, courtyard, fab, silk, copper, mask, paste) help to see both. Scroll zooms at the
+   pointer; the right or middle button pans; Page Up and Page Down turn pages.
+5. **Accept**: when the footprint matches the drawing, Accept copies its review hash to the clipboard and keeps the
+   review (footprint, hash, datasheet, page, scale) in the tab's list. Accept stays disabled, saying why, until a
+   footprint and a datasheet are open and the scale is set on the page shown.
+
+PDFs are read and drawn by [hayro](https://github.com/LaurenzV/hayro), in pure Rust, on a thread of its own. The
+PDF standard fonts that a datasheet uses without embedding them come from the Liberation fonts when installed, else
+from egui's own font.
+
+The settings (blink rate, the opacity at first, the page search words, the finest drawing scale, the font folders,
+the library search command) are in `~/.config/better_erc/config.toml` (`$XDG_CONFIG_HOME`, or the file
+`$BERC_CONFIG` names), section `[footprint_review]`; the tab's Settings shows and saves them. Each step of a review
+is recorded in berc's usage record (`app fp-review accept`, ...), which `berc usage` counts in its `app` column.
 
 ## Development
 

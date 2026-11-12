@@ -18,6 +18,16 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
   `fp-lib-table` (`erc_kicad::libtable`). `read` gives the footprint in its own frame, its review hash and its fields;
   `hash_file` (`berc fp hash`) goes through it. The usage record moved into `better_erc::usage`, so the app writes
   its steps into the same file as berc; `berc usage` counts them in an `app` column.
+- `VIEW-19`: the app's Footprint review tab, no longer a placeholder: a library footprint drawn over its datasheet
+  drawing. Open a `.kicad_mod`, or a board to pick a footprint from (reviewed from its library file through
+  `fp-lib-table`, the board copy compared; else the board copy). The datasheet from the `Datasheet` field's file, a
+  local library search command, or Open PDF; PDFs are read and drawn by hayro (pure Rust, no default features) on a
+  thread of their own, and a page search goes to the land pattern page. The drawing's scale is set with a ruler
+  along a dimension (or the page's `SCALE: 20X`); the footprint is moved, turned, mirrored, half see-through or
+  blinking, layers shown or hidden. Accept copies the footprint's review hash for the symbol's `Footprint_Review`
+  field and keeps the review; it says why while it can't be used. The app's settings file
+  (`~/.config/better_erc/config.toml`, `[footprint_review]`): blink rate, opacity at first, page search words,
+  finest drawing scale, font folders, library search command. A kittest test drives the review on a PDF it writes.
 
 ## [0.4.24] - 2026-11-12
 
