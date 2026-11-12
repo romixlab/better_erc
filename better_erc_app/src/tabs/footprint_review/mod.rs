@@ -1520,7 +1520,9 @@ impl FootprintReview {
                             });
                             set = enter;
                             cancel = esc;
-                            if !set && !cancel {
+                            // Only when it lacks the keyboard: each request interrupts the input method, which on
+                            // Wayland loses what was typed and wakes the next frame
+                            if !set && !cancel && !r.has_focus() {
                                 r.request_focus();
                             }
                         });

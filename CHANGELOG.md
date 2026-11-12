@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Fixed
+
+- `VIEW-19`: Footprint review, the S length box took no typing and kept the app busy while it was open (0.4.33-0.4.36). It asked for the keyboard on every frame, and in egui each such request interrupts the input method: on Wayland egui-winit switched the input method off and on every frame, which lost what was typed and woke the next frame. The box now takes the keyboard once. The kittest of 0.4.33 typed through plain text events, which no input method touches; the new test types through input method events and fails when a frame interrupts them.
+
 ## [0.4.36] - 2026-11-12
 
 ### Changed

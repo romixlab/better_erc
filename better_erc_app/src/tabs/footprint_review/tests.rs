@@ -1342,6 +1342,63 @@ fn ruler_length_box() {
     std::fs::remove_dir_all(&dir).unwrap();
 }
 
+/// The length box typed into through an input method, as on Wayland: the box takes the keyboard once and leaves the
+/// input method alone after that. A frame that asks to interrupt the composition makes egui-winit switch the input
+/// method off and on again: what was typed is lost, and the input method's answer wakes the next frame, which asks
+/// again (0.4.33-0.4.36: the box asked for the keyboard on every frame, so typing did nothing and the app spun).
+#[test]
+fn length_box_leaves_the_input_method_alone() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-length-ime-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let pdf = datasheet(&dir);
+    let mut h = harness("fp length ime");
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &footprint());
+    h.state_mut().open_datasheet(&ctx, &pdf);
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    h.state_mut().ruler = Some([[100.0, 200.0], [200.0, 200.0]]);
+    h.hover_at(h.state().rt.canvas.center());
+    h.run();
+    h.key_press(egui::Key::S);
+    h.run();
+    assert!(h.state().rt.length_box);
+    // Settled: the field has the keyboard and the input method is on
+    let interrupts = |h: &Harness<'_, FootprintReview>| {
+        h.output()
+            .platform_output
+            .ime
+            .is_some_and(|i| i.should_interrupt_composition)
+    };
+    let ime_on = |h: &Harness<'_, FootprintReview>| h.output().platform_output.ime.is_some();
+    assert!(ime_on(&h), "the length field asks for the input method");
+    for frame in 0..3 {
+        h.step();
+        assert!(!interrupts(&h), "frame {frame} interrupts the input method");
+    }
+    for part in ["1", ".", "6"] {
+        h.event(egui::Event::Ime(egui::ImeEvent::Preedit {
+            text: part.into(),
+            active_range_chars: None,
+        }));
+        h.step();
+        assert!(!interrupts(&h), "typing {part} interrupts the input method");
+        h.event(egui::Event::Ime(egui::ImeEvent::Commit(part.into())));
+        h.step();
+        assert!(!interrupts(&h), "{part} committed interrupts the input method");
+    }
+    h.run();
+    assert_eq!(h.state().rt.ruler_mm, "1.6");
+    h.key_press(egui::Key::Enter);
+    h.run();
+    let scale = h.state().scale.clone().expect("the scale is set");
+    assert!((scale.mm_per_point - 0.016).abs() < 1e-6, "{scale:?}");
+    assert!(!h.state().rt.length_box);
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
 /// The ruler snaps level: the left end of a horizontal ruler dragged diagonally goes where it is dragged and the
 /// other end takes its Y; Shift held lets the end go at any angle, the other staying
 #[test]
