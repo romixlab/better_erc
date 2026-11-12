@@ -231,8 +231,8 @@ impl FootprintReview {
             ))),
             center_right: Some(slot(
                 match self.puck {
-                    PuckMoves::Page => "Puck moves the footprint",
-                    PuckMoves::Footprint => "Puck moves the page",
+                    PuckMoves::Page => "Move footprint",
+                    PuckMoves::Footprint => "Move page",
                 },
                 short_key(k.puck),
                 icons::ARROWS_OUT_CARDINAL,
