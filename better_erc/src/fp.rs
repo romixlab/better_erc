@@ -1,5 +1,5 @@
 //! Footprint review on disk, the library side of `berc fp`: the review hash ([`erc_model::fphash`]) of a library
-//! footprint file or of a footprint as placed on a board ([`hash_file`]).
+//! footprint file or of a footprint as placed on a board ([`hash_file`]), read through one [`FootprintSource`].
 
 use erc_kicad::footprint;
 use erc_model::layout::{FootprintId, Layout};
@@ -51,6 +51,8 @@ pub enum FpError {
     ReferenceOnLibrary(PathBuf),
     /// Neither a `.kicad_mod` nor a `.kicad_pcb`
     NotFootprint(PathBuf),
+    /// A footprint named by its `Lib:Name` that the footprint library tables don't give
+    Library(String, erc_kicad::libtable::LibError),
 }
 
 impl FpError {
@@ -81,6 +83,7 @@ impl fmt::Display for FpError {
                 "{}: neither a library footprint (.kicad_mod) nor a board (.kicad_pcb)",
                 p.display()
             ),
+            FpError::Library(lib_id, e) => write!(f, "footprint {lib_id}: {e}"),
         }
     }
 }
@@ -107,25 +110,134 @@ pub fn read_library(path: &Path) -> Result<LocalFootprint, FpError> {
 
 /// The review hash of a library footprint file (`reference` `None`), or of the footprint `reference` on a board
 pub fn hash_file(path: &Path, reference: Option<&str>) -> Result<Hashed, FpError> {
-    let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
-    match (ext, reference) {
-        ("kicad_mod", None) => Ok(Hashed::of(path, None, &read_library(path)?)),
-        ("kicad_mod", Some(_)) => Err(FpError::ReferenceOnLibrary(path.to_path_buf())),
-        ("kicad_pcb", None) => Err(FpError::NeedReference(path.to_path_buf())),
-        ("kicad_pcb", Some(r)) => {
-            let lay = read_board(path)?;
-            let i = lay
-                .footprints
-                .iter()
-                .position(|f| f.reference == r)
-                .ok_or_else(|| FpError::NoFootprint {
-                    board: path.to_path_buf(),
-                    reference: r.to_string(),
-                })?;
-            let local = lay.local_footprint(FootprintId::from_index(i));
-            Ok(Hashed::of(path, Some(r.to_string()), &local))
+    let source = FootprintSource::from_path(path, reference)?;
+    let s = source.read()?;
+    Ok(Hashed::of(path, reference.map(String::from), &s.footprint))
+}
+
+/// Where a footprint to review comes from. Every way of getting a footprint goes through [`FootprintSource::read`],
+/// so a review does not care which one it was.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+pub enum FootprintSource {
+    /// A library footprint file (`.kicad_mod`)
+    File(PathBuf),
+    /// The copy of a library footprint placed on a board, by its reference
+    Board { board: PathBuf, reference: String },
+    /// A library footprint by its `Lib:Name`, found through the footprint library tables (`fp-lib-table`) of the
+    /// project in `project` and the global one in KiCad's configuration directory `config`
+    /// ([`kicad_config_dir`])
+    Library {
+        lib_id: String,
+        project: PathBuf,
+        config: Option<PathBuf>,
+    },
+}
+
+/// A footprint read from its [`FootprintSource`], in its own frame, with its review hash
+#[derive(Clone, Debug, PartialEq)]
+pub struct Sourced {
+    pub source: FootprintSource,
+    pub footprint: LocalFootprint,
+    /// `fp1:` and 16 hex digits
+    pub hash: String,
+    /// The footprint's fields (`Datasheet`, the `Footprint_Review` a board copy took over from its symbol, ...),
+    /// those with a value
+    pub fields: Vec<(String, String)>,
+}
+
+impl Sourced {
+    fn new(source: FootprintSource, footprint: LocalFootprint) -> Sourced {
+        let fields = footprint
+            .footprint
+            .fields
+            .iter()
+            .filter_map(|f| Some((f.name.clone(), f.value.get()?.clone())))
+            .filter(|(_, v)| !v.trim().is_empty())
+            .collect();
+        Sourced {
+            source,
+            hash: fphash::hash(&footprint),
+            footprint,
+            fields,
         }
-        _ => Err(FpError::NotFootprint(path.to_path_buf())),
+    }
+
+    /// Footprint `i` of a board already read from `board`
+    pub fn from_board(board: &Path, lay: &Layout, i: FootprintId) -> Sourced {
+        let source = FootprintSource::Board {
+            board: board.to_path_buf(),
+            reference: lay.footprints[i.index()].reference.clone(),
+        };
+        Sourced::new(source, lay.local_footprint(i))
+    }
+
+    /// A field's value, when the footprint has it
+    pub fn field(&self, name: &str) -> Option<&str> {
+        field_of(&self.fields, name)
+    }
+
+    /// The footprint's library id: `Lib:Name` for a board copy, the footprint's name for a library file
+    pub fn lib_id(&self) -> &str {
+        &self.footprint.footprint.lib_id
+    }
+}
+
+impl FootprintSource {
+    /// A `.kicad_mod` file (no reference), or the footprint `reference` on a `.kicad_pcb`
+    pub fn from_path(path: &Path, reference: Option<&str>) -> Result<FootprintSource, FpError> {
+        let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
+        match (ext, reference) {
+            ("kicad_mod", None) => Ok(FootprintSource::File(path.to_path_buf())),
+            ("kicad_mod", Some(_)) => Err(FpError::ReferenceOnLibrary(path.to_path_buf())),
+            ("kicad_pcb", None) => Err(FpError::NeedReference(path.to_path_buf())),
+            ("kicad_pcb", Some(r)) => Ok(FootprintSource::Board {
+                board: path.to_path_buf(),
+                reference: r.to_string(),
+            }),
+            _ => Err(FpError::NotFootprint(path.to_path_buf())),
+        }
+    }
+
+    /// Reads the footprint and takes its review hash
+    pub fn read(&self) -> Result<Sourced, FpError> {
+        match self {
+            FootprintSource::File(path) => Ok(Sourced::new(self.clone(), read_library(path)?)),
+            FootprintSource::Board { board, reference } => {
+                let lay = read_board(board)?;
+                let i = lay
+                    .footprints
+                    .iter()
+                    .position(|f| &f.reference == reference)
+                    .ok_or_else(|| FpError::NoFootprint {
+                        board: board.clone(),
+                        reference: reference.clone(),
+                    })?;
+                Ok(Sourced::from_board(board, &lay, FootprintId::from_index(i)))
+            }
+            FootprintSource::Library {
+                lib_id,
+                project,
+                config,
+            } => {
+                let mut libs =
+                    erc_kicad::libtable::FootprintLibraries::new(project, config.as_deref());
+                let found = libs
+                    .footprint(lib_id)
+                    .map_err(|e| FpError::Library(lib_id.clone(), e))?;
+                Ok(Sourced::new(self.clone(), found.footprint.clone()))
+            }
+        }
+    }
+
+    /// A short line for the person: the file, or the board and reference, or the library id
+    pub fn describe(&self) -> String {
+        match self {
+            FootprintSource::File(p) => p.display().to_string(),
+            FootprintSource::Board { board, reference } => {
+                format!("{reference} on {}", board.display())
+            }
+            FootprintSource::Library { lib_id, .. } => format!("{lib_id} (library)"),
+        }
     }
 }
 
@@ -532,5 +644,59 @@ impl FpCheck {
         }
         out.push('\n');
         out
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn fixtures() -> PathBuf {
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("../erc_kicad/tests/fixtures/footprints")
+    }
+
+    /// The library file and a board copy of it give the same footprint hash through one source API; a library id
+    /// reads the same through the project's fp-lib-table
+    #[test]
+    fn sources() {
+        let file = FootprintSource::File(fixtures().join("Test.pretty/Asym_SOT.kicad_mod"))
+            .read()
+            .unwrap();
+        let lay = read_board(&fixtures().join("placed.kicad_pcb")).unwrap();
+        let i = lay
+            .footprints
+            .iter()
+            .position(|f| f.lib_id.ends_with("Asym_SOT"))
+            .unwrap();
+        let reference = lay.footprints[i].reference.clone();
+        let board =
+            FootprintSource::from_path(&fixtures().join("placed.kicad_pcb"), Some(&reference))
+                .unwrap()
+                .read()
+                .unwrap();
+        assert_eq!(file.hash, board.hash);
+        assert_eq!(board.lib_id(), lay.footprints[i].lib_id);
+        assert!(matches!(board.source, FootprintSource::Board { .. }));
+        // By library id through a project's fp-lib-table: the same footprint; a library the table lacks says so
+        let dir = std::env::temp_dir().join(format!("berc-fp-source-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::write(
+            dir.join("fp-lib-table"),
+            format!(
+                "(fp_lib_table (version 7)\n  (lib (name \"Test\")(type \"KiCad\")(uri \"{}\")(options \"\")(descr \"\"))\n)\n",
+                fixtures().join("Test.pretty").display()
+            ),
+        )
+        .unwrap();
+        let lib = |lib_id: &str| FootprintSource::Library {
+            lib_id: lib_id.into(),
+            project: dir.clone(),
+            config: None,
+        };
+        assert_eq!(lib("Test:Asym_SOT").read().unwrap().hash, file.hash);
+        let e = lib("Other:Asym_SOT").read().unwrap_err();
+        assert!(matches!(e, FpError::Library(..)));
+        assert!(e.to_string().contains("fp-lib-table"), "{e}");
+        std::fs::remove_dir_all(&dir).unwrap();
     }
 }

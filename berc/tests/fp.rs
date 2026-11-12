@@ -425,8 +425,16 @@ fn usage_is_recorded_per_command_and_flag() {
         sigs,
         ["fp hash", "fp hash", "fp hash --canonical", "fp check"]
     );
+    // The app writes its steps into the same record, counted in a column of their own
+    std::fs::write(&file, lines + "0\tapp fp-review accept\tapp\n").unwrap();
     let summary = stdout(&run(&["usage"]));
     assert!(summary.contains("fp hash --canonical"), "{summary}");
+    assert!(
+        summary
+            .lines()
+            .any(|l| l.starts_with("app fp-review accept ") && l.ends_with("  0       0     1")),
+        "{summary}"
+    );
     assert!(
         summary
             .lines()

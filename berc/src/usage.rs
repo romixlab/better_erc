@@ -3,14 +3,13 @@
 //! removed. Local and cheap: a short line appended to a file, nothing sent anywhere; a write that fails never fails
 //! the command. Shell completion is not recorded.
 //!
-//! The file is `$BERC_USAGE_FILE`, else `$XDG_STATE_HOME/berc/usage.tsv`, else `~/.local/state/berc/usage.tsv`.
-//! Each line: the time (Unix seconds), the signal and where it ran from (`terminal` when stdin is a terminal, else
-//! `script`), separated by tabs. `BERC_USAGE=off` records nothing. `berc usage` sums the file per signal.
+//! The record itself, its file and its lines are [`better_erc::usage`], shared with the better_erc app: a run from
+//! a terminal (stdin is one) is `terminal`, else `script`; the app's steps are `app`. `berc usage` sums the file
+//! per signal.
 
 use clap::ArgMatches;
 use std::collections::BTreeMap;
-use std::io::{IsTerminal, Write};
-use std::path::PathBuf;
+use std::io::IsTerminal;
 
 /// Flags that are features of their own, recorded beside their command: `check --baseline`
 const MEANINGFUL_FLAGS: &[&str] = &[
@@ -74,51 +73,22 @@ pub fn known(cmd: &clap::Command) -> Vec<String> {
     out
 }
 
-pub fn file() -> Option<PathBuf> {
-    if let Some(p) = std::env::var_os("BERC_USAGE_FILE") {
-        return Some(p.into());
-    }
-    let state = std::env::var_os("XDG_STATE_HOME")
-        .map(PathBuf::from)
-        .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".local/state")))?;
-    Some(state.join("berc/usage.tsv"))
-}
+pub use better_erc::usage::file;
 
-fn off() -> bool {
-    std::env::var("BERC_USAGE").is_ok_and(|v| v == "off")
-}
-
+/// Records a run's signals, from a `terminal` when stdin is one, else from a `script`
 pub fn record(signals: &[String]) {
-    if off() {
-        return;
-    }
-    let Some(path) = file() else { return };
-    let now = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .map_or(0, |d| d.as_secs());
     let from = if std::io::stdin().is_terminal() {
         "terminal"
     } else {
         "script"
     };
-    let lines: String = signals
-        .iter()
-        .map(|s| format!("{now}\t{s}\t{from}\n"))
-        .collect();
-    let _ = path.parent().map(std::fs::create_dir_all);
-    if let Ok(mut f) = std::fs::OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open(&path)
-    {
-        let _ = f.write_all(lines.as_bytes());
-    }
+    better_erc::usage::record(signals, from);
 }
 
 /// Runs per signal from the record, every known signal listed (0 for the unused), then any others the record has
 pub fn summary(known: &[String]) -> String {
-    let mut counts: BTreeMap<String, (u64, u64)> =
-        known.iter().map(|k| (k.clone(), (0, 0))).collect();
+    let mut counts: BTreeMap<String, [u64; 3]> =
+        known.iter().map(|k| (k.clone(), [0; 3])).collect();
     let text = file()
         .and_then(|p| std::fs::read_to_string(p).ok())
         .unwrap_or_default();
@@ -128,22 +98,22 @@ pub fn summary(known: &[String]) -> String {
             continue;
         };
         let c = counts.entry(sig.to_string()).or_default();
-        if from == Some("terminal") {
-            c.0 += 1;
-        } else {
-            c.1 += 1;
+        match from {
+            Some("terminal") => c[0] += 1,
+            Some("app") => c[2] += 1,
+            _ => c[1] += 1,
         }
     }
     let width = counts.keys().map(String::len).max().unwrap_or(0);
     let mut out = format!(
-        "{:<width$}  {:>8}  {:>6}\n",
-        "command", "terminal", "script"
+        "{:<width$}  {:>8}  {:>6}  {:>4}\n",
+        "command", "terminal", "script", "app"
     );
-    for (sig, (t, s)) in &counts {
-        out += &format!("{sig:<width$}  {t:>8}  {s:>6}\n");
+    for (sig, [t, s, a]) in &counts {
+        out += &format!("{sig:<width$}  {t:>8}  {s:>6}  {a:>4}\n");
     }
     match file() {
-        Some(p) if off() => {
+        Some(p) if better_erc::usage::off() => {
             out += &format!("from {} (recording is off: BERC_USAGE=off)\n", p.display())
         }
         Some(p) => out += &format!("from {}\n", p.display()),

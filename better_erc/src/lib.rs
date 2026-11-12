@@ -34,6 +34,7 @@ pub use erc_model as model;
 
 pub mod diff;
 pub mod fp;
+pub mod usage;
 
 pub use erc_checks::{
     Availability, BaselineState, CheckError, CheckInfo, CheckOptions, CheckRun, CheckState,

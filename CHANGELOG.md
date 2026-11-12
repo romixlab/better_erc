@@ -11,6 +11,14 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `TOOL-8`: `better_erc::fp::FootprintSource`, one way to get a footprint to review: a `.kicad_mod` file, a board
+  copy (`BOARD.kicad_pcb` and a reference), or a library id (`Lib:Name`) through the project's and the global
+  `fp-lib-table` (`erc_kicad::libtable`). `read` gives the footprint in its own frame, its review hash and its fields;
+  `hash_file` (`berc fp hash`) goes through it. The usage record moved into `better_erc::usage`, so the app writes
+  its steps into the same file as berc; `berc usage` counts them in an `app` column.
+
 ## [0.4.24] - 2026-11-12
 
 ### Added
