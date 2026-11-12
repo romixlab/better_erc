@@ -11,6 +11,20 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Fixed
+
+- `VIEW-19`: Footprint review tab, the copper, mask and paste views show only what the board makes on that layer,
+  each filled in its one colour: Copper the pads' copper, copper graphics and vias (red), Mask the mask openings
+  only (pink), Paste the paste apertures only (gray). Before, the pads were drawn in every view and the mask and
+  paste shapes were outlines over them. Holes and pad numbers stay over every view. Back pads follow the same
+  views behind their checkbox; the Pads and Vias checkboxes are gone.
+
+### Removed
+
+- `VIEW-19`: Footprint review tab, the colour presets and pickers; every colour is a setting
+  (`[footprint_review.colors]`), whose `pads`, `back_pads` and `vias` are gone (copper, mask and paste colour
+  both sides).
+
 ## [0.4.32] - 2026-11-12
 
 ### Added

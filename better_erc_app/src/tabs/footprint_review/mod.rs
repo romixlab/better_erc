@@ -41,20 +41,12 @@ mod tests;
 /// Around the page
 const CANVAS_BACKGROUND: Color32 = Color32::from_gray(60);
 
-/// Copper, mask and paste: shown one at a time (a radio choice, not toggles that stack), each a fixed colour
-/// (no picker in the tab: a datasheet page is white, so the colour says what is shown)
-const RADIO_KINDS: [Kind; 3] = [Kind::Copper, Kind::Mask, Kind::Paste];
+/// The views: what the board makes on copper, mask or paste, one shown at a time (a radio choice, not toggles that
+/// stack), each filled in its own colour (a setting, no picker in the tab: the colour says what is shown)
+const VIEWS: [Kind; 3] = [Kind::Copper, Kind::Mask, Kind::Paste];
 
-/// The pads' colour presets: name and colour
-const PAD_PRESETS: [(&str, [u8; 3]); 7] = [
-    ("Red", [220, 30, 30]),
-    ("Green", [0, 170, 60]),
-    ("Blue", [30, 90, 230]),
-    ("Cyan", [0, 190, 210]),
-    ("Magenta", [220, 0, 200]),
-    ("Black", [0, 0, 0]),
-    ("White: with Difference, a match goes dark", [255, 255, 255]),
-];
+/// The back side's checkbox: the pads' copper, mask openings and paste apertures on the back, in the view picked
+const BACK: &str = "Back pads";
 
 /// Millimetres per PDF point at the PDF's own scale (1:1)
 const MM_PER_POINT: f64 = 25.4 / 72.0;
@@ -169,14 +161,13 @@ pub struct FootprintReview {
     ruler: Option<[[f32; 2]; 2]>,
     scale: Option<Scale>,
     opacity: Option<f32>,
-    /// The blend mode and colours chosen here; none: the settings' defaults
+    /// The blend mode chosen here; none: the settings' default
     blend: Option<BlendMode>,
-    colors: Option<LayerColors>,
     blink: bool,
     /// The page inverted (white-ish on black); none: the settings' default
     invert: Option<bool>,
     hidden: Vec<String>,
-    /// Which of copper, mask or paste is shown (the three shown one at a time, see [`RADIO_KINDS`])
+    /// Which of copper, mask or paste is shown (the three views shown one at a time, see [`VIEWS`])
     cu_shown: Kind,
     tool: Tool,
     reviews: Vec<Review>,
@@ -200,12 +191,11 @@ impl Default for FootprintReview {
             scale: None,
             opacity: None,
             blend: None,
-            colors: None,
             blink: false,
             invert: None,
-            hidden: Kind::ALL
+            hidden: Kind::OWN
                 .iter()
-                .filter(|k| !RADIO_KINDS.contains(k) && !k.shown_at_first())
+                .filter(|k| !k.shown_at_first())
                 .map(|k| k.name().to_string())
                 .collect(),
             cu_shown: Kind::Copper,
@@ -1054,7 +1044,7 @@ impl FootprintReview {
     }
 
     fn layer_colors(&self) -> &LayerColors {
-        self.colors.as_ref().unwrap_or(&self.rt.settings.colors)
+        &self.rt.settings.colors
     }
 
     /// Whether the page is shown inverted (white-ish on black)
@@ -1064,11 +1054,8 @@ impl FootprintReview {
 
     /// Cycles which of copper, mask or paste is shown, in that order
     fn cycle_cu_layer(&mut self) {
-        let i = RADIO_KINDS
-            .iter()
-            .position(|k| *k == self.cu_shown)
-            .unwrap_or(0);
-        self.cu_shown = RADIO_KINDS[(i + 1) % RADIO_KINDS.len()];
+        let i = VIEWS.iter().position(|k| *k == self.cu_shown).unwrap_or(0);
+        self.cu_shown = VIEWS[(i + 1) % VIEWS.len()];
         self.usage("layer");
     }
 
@@ -2261,56 +2248,9 @@ impl FootprintReview {
             self.blend = Some(mode);
             self.usage(&format!("blend {}", mode.name().to_lowercase()));
         }
-        // Colours: presets for the pads, a picker per layer group
-        let mut colors = self.layer_colors().clone();
+        // Copper, mask and paste: one view at a time, each in its own colour (Settings)
         ui.horizontal_wrapped(|ui| {
-            ui.label("Pads");
-            for (name, rgb) in PAD_PRESETS {
-                let c = Color32::from_rgb(rgb[0], rgb[1], rgb[2]);
-                let (rect, r) = ui.allocate_exact_size(vec2(16.0, 16.0), Sense::click());
-                ui.painter().rect_filled(rect, 2.0, c);
-                let selected = colors.pads.0 == rgb;
-                ui.painter().rect_stroke(
-                    rect,
-                    2.0,
-                    Stroke::new(
-                        if selected { 2.0 } else { 1.0 },
-                        ui.visuals().strong_text_color(),
-                    ),
-                    egui::StrokeKind::Outside,
-                );
-                if r.on_hover_text(name).clicked() {
-                    colors.pads = Rgb(rgb);
-                }
-            }
-            colour_button(ui, &mut colors.pads, "Pads: any colour");
-        });
-        egui::CollapsingHeader::new("Colours of the other layers")
-            .id_salt("layer colours")
-            .default_open(false)
-            .show(ui, |ui| {
-                Grid::new("layer colours grid")
-                    .num_columns(2)
-                    .show(ui, |ui| {
-                        for k in Kind::ALL {
-                            if k == Kind::Pad || RADIO_KINDS.contains(&k) {
-                                continue;
-                            }
-                            ui.label(k.name());
-                            colour_button(ui, layer_colour_mut(&mut colors, k), k.name());
-                            ui.end_row();
-                        }
-                    });
-                if ui.button("Colours from the settings").clicked() {
-                    colors = self.rt.settings.colors.clone();
-                }
-            });
-        if &colors != self.layer_colors() {
-            self.colors = Some(colors);
-        }
-        // Copper, mask and paste: one at a time, each its own fixed colour (Settings)
-        ui.horizontal_wrapped(|ui| {
-            for k in RADIO_KINDS {
+            for k in VIEWS {
                 if ui
                     .add(Button::selectable(self.cu_shown == k, k.name()))
                     .clicked()
@@ -2321,15 +2261,12 @@ impl FootprintReview {
             ui.label(RichText::new(format!("({} cycles)", key_name(self.keys().cu_layer))).weak());
         });
         ui.horizontal_wrapped(|ui| {
-            for k in Kind::ALL {
-                if RADIO_KINDS.contains(&k) {
-                    continue;
-                }
-                let mut shown = !self.hidden.iter().any(|h| h == k.name());
-                if ui.checkbox(&mut shown, k.name()).changed() {
-                    self.hidden.retain(|h| h != k.name());
+            for name in std::iter::once(BACK).chain(Kind::OWN.map(Kind::name)) {
+                let mut shown = self.group_shown(name);
+                if ui.checkbox(&mut shown, name).changed() {
+                    self.hidden.retain(|h| h != name);
                     if !shown {
-                        self.hidden.push(k.name().to_string());
+                        self.hidden.push(name.to_string());
                     }
                 }
             }
@@ -2793,18 +2730,27 @@ impl FootprintReview {
         }
     }
 
-    /// Whether `k` is drawn: copper, mask and paste by the radio choice, the others by their checkbox
-    fn kind_shown(&self, k: Kind) -> bool {
-        if RADIO_KINDS.contains(&k) {
-            k == self.cu_shown
-        } else {
-            !self.hidden.iter().any(|h| h == k.name())
+    /// Whether a group with a checkbox (the back side, courtyard, fab, silk, board edge) is shown
+    fn group_shown(&self, name: &str) -> bool {
+        !self.hidden.iter().any(|h| h == name)
+    }
+
+    /// Whether `item` is drawn: copper, mask and paste by the view picked, the back side's also by its checkbox, the
+    /// others by their checkbox; holes and pad numbers over every view
+    fn item_shown(&self, item: &Item) -> bool {
+        match (item, item.kind()) {
+            (Item::Number { back, .. }, _) => !back || self.group_shown(BACK),
+            (_, None) => true,
+            (_, Some(k)) => match k.view() {
+                Some(v) => v == self.cu_shown && (!k.back() || self.group_shown(BACK)),
+                None => self.group_shown(k.name()),
+            },
         }
     }
 
-    /// What of the footprint is drawn: the items of the kinds shown
+    /// What of the footprint is drawn: the items shown
     fn shown_items(&self) -> impl Iterator<Item = &Item> {
-        self.rt.items.iter().filter(|i| self.kind_shown(i.kind()))
+        self.rt.items.iter().filter(|i| self.item_shown(i))
     }
 
     /// Draws the footprint: by egui's painter in the normal mode, else by the blend pass over `page` (its rectangle
@@ -2833,7 +2779,7 @@ impl FootprintReview {
         // The blend pass gets the shapes at full colour; the shader mixes them in by the opacity
         let mut blended: Vec<Shape> = Vec::new();
         for item in self.shown_items() {
-            let c = colour(item.kind());
+            let c = item.kind().map_or(Color32::WHITE, colour);
             match item {
                 Item::Area { points, convex, .. } => {
                     let pts: Vec<Pos2> = points.iter().map(|p| screen(*p)).collect();
@@ -2855,8 +2801,11 @@ impl FootprintReview {
                     ..
                 } => {
                     let pts: Vec<Pos2> = points.iter().map(|p| screen(*p)).collect();
-                    // An opening lies on its pad's edge or inside it: thick enough to stand out on the pad
-                    let least = if matches!(item.kind(), Kind::Mask | Kind::Paste) {
+                    // A mask or paste line: thick enough to read on the page
+                    let least = if matches!(
+                        item.kind().and_then(Kind::view),
+                        Some(Kind::Mask | Kind::Paste)
+                    ) {
                         2.0
                     } else {
                         1.0
@@ -2908,7 +2857,7 @@ impl FootprintReview {
                         );
                     }
                 }
-                Item::Number { at, text, size } => {
+                Item::Number { at, text, size, .. } => {
                     let h = (*size as f32 * px_per_mm * 0.5).min(18.0);
                     if h >= 7.0 {
                         painter.text(
@@ -3038,51 +2987,21 @@ fn blend_hint(m: BlendMode) -> &'static str {
         }
         BlendMode::Screen => "The inverse of multiply: light shapes stay light",
         BlendMode::Difference => {
-            "The difference of page and footprint: with white pads, white paper under them goes black and the \
-             drawing's pads show light where the footprint misses them"
+            "The difference of page and footprint: with white copper (Settings), white paper under it goes black and \
+             the drawing's pads show light where the footprint misses them"
         }
     }
 }
 
 fn layer_colour(c: &LayerColors, k: Kind) -> Rgb {
     match k {
-        Kind::Pad => c.pads,
-        Kind::BackPad => c.back_pads,
-        Kind::Via => c.vias,
+        Kind::Copper | Kind::BackCopper => c.copper,
+        Kind::Mask | Kind::BackMask => c.mask,
+        Kind::Paste | Kind::BackPaste => c.paste,
         Kind::Courtyard => c.courtyard,
         Kind::Fab => c.fab,
         Kind::Silk => c.silk,
-        Kind::Copper => c.copper,
-        Kind::Mask => c.mask,
-        Kind::Paste => c.paste,
         Kind::Edge => c.edge,
-    }
-}
-
-fn layer_colour_mut(c: &mut LayerColors, k: Kind) -> &mut Rgb {
-    match k {
-        Kind::Pad => &mut c.pads,
-        Kind::BackPad => &mut c.back_pads,
-        Kind::Via => &mut c.vias,
-        Kind::Courtyard => &mut c.courtyard,
-        Kind::Fab => &mut c.fab,
-        Kind::Silk => &mut c.silk,
-        Kind::Copper => &mut c.copper,
-        Kind::Mask => &mut c.mask,
-        Kind::Paste => &mut c.paste,
-        Kind::Edge => &mut c.edge,
-    }
-}
-
-/// egui's colour picker for an [`Rgb`]
-fn colour_button(ui: &mut Ui, c: &mut Rgb, hover: &str) {
-    let mut v = c.0;
-    if ui
-        .color_edit_button_srgb(&mut v)
-        .on_hover_text(hover)
-        .changed()
-    {
-        *c = Rgb(v);
     }
 }
 

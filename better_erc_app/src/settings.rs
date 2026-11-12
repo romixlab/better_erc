@@ -155,15 +155,12 @@ impl<'de> Deserialize<'de> for Rgb {
     }
 }
 
-/// The footprint's colour per layer group. Copper, mask and paste are shown one at a time (not a picker in the
-/// tab: a datasheet page is white, so each keeps a colour that reads clearly on it, changed here only)
+/// The footprint's colour per layer group, set here only (no picker in the tab). Copper, mask and paste are the
+/// views shown one at a time, each everything of its layer filled in its one colour, the back side's too; a datasheet
+/// page is white, so each keeps a colour that reads clearly on it (white copper suits the Difference blend)
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct LayerColors {
-    pub pads: Rgb,
-    pub back_pads: Rgb,
-    /// Vias in the package (thermal vias)
-    pub vias: Rgb,
     pub courtyard: Rgb,
     pub fab: Rgb,
     pub silk: Rgb,
@@ -176,9 +173,6 @@ pub struct LayerColors {
 impl Default for LayerColors {
     fn default() -> Self {
         LayerColors {
-            pads: Rgb([220, 30, 30]),
-            back_pads: Rgb([30, 80, 230]),
-            vias: Rgb([0, 150, 150]),
             courtyard: Rgb([230, 0, 230]),
             fab: Rgb([170, 140, 0]),
             silk: Rgb([60, 60, 60]),
@@ -308,18 +302,18 @@ mod tests {
         assert!(Settings::parse("[footprint_review]\nblink_hz = \"fast\"\n").is_err());
         // Blend mode and colours by name and #rrggbb
         let s = Settings::parse(
-            "[footprint_review]\nblend = \"difference\"\n[footprint_review.colors]\npads = \"#FFFFFF\"\n",
+            "[footprint_review]\nblend = \"difference\"\n[footprint_review.colors]\ncopper = \"#FFFFFF\"\n",
         )
         .unwrap();
         assert_eq!(s.footprint_review.blend, BlendMode::Difference);
-        assert_eq!(s.footprint_review.colors.pads, Rgb([255, 255, 255]));
+        assert_eq!(s.footprint_review.colors.copper, Rgb([255, 255, 255]));
         assert_eq!(s.footprint_review.colors.fab, LayerColors::default().fab);
         assert!(
-            s.to_toml().contains("pads = \"#ffffff\""),
+            s.to_toml().contains("copper = \"#ffffff\""),
             "{}",
             s.to_toml()
         );
-        assert!(Settings::parse("[footprint_review.colors]\npads = \"red\"\n").is_err());
+        assert!(Settings::parse("[footprint_review.colors]\ncopper = \"red\"\n").is_err());
         // Keys by name, the rest their defaults
         let s = Settings::parse("[footprint_review.keys]\nrotate = \"Space\"\n").unwrap();
         assert_eq!(s.footprint_review.keys.rotate, "Space");

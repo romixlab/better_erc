@@ -389,7 +389,7 @@ fn real_board() {
     if let Ok(show) = std::env::var("BERC_FP_SHOW") {
         let show: Vec<&str> = show.split(',').collect();
         h.state_mut().hidden.retain(|k| !show.contains(&k.as_str()));
-        if let Some(k) = RADIO_KINDS.into_iter().find(|k| show.contains(&k.name())) {
+        if let Some(k) = VIEWS.into_iter().find(|k| show.contains(&k.name())) {
             h.state_mut().cu_shown = k;
         }
     }
@@ -543,10 +543,7 @@ fn blend_modes_mix_with_the_page() {
         |h: &mut Harness<'_, FootprintReview>, mode: BlendMode, rgb: [u8; 3], at: [f32; 2]| {
             let st = h.state_mut();
             st.blend = Some(mode);
-            st.colors = Some(LayerColors {
-                pads: Rgb(rgb),
-                ..Default::default()
-            });
+            st.rt.settings.colors.copper = Rgb(rgb);
             place(st, at);
             h.run();
             let st = h.state();
@@ -885,6 +882,151 @@ fn mask_and_paste_shown_one_at_a_time() {
     std::fs::remove_dir_all(&dir).unwrap();
 }
 
+
+/// A review of the WQFN-20 land pattern in `dir` over the test datasheet's land pattern page: 3 mm of footprint
+/// over 100 points of blank paper below the drawing, opaque, 400 px across in the view
+fn wqfn_review(name: &'static str, dir: &Path) -> Harness<'static, FootprintReview> {
+    let _ = std::fs::remove_dir_all(dir);
+    std::fs::create_dir_all(dir).unwrap();
+    let pdf = datasheet(dir);
+    let mut h = harness(name);
+    h.run();
+    let ctx = h.ctx.clone();
+    let fp = wqfn_footprint(dir);
+    h.state_mut().open_path(&ctx, &fp);
+    h.state_mut().open_datasheet(&ctx, &pdf);
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    let st = h.state_mut();
+    st.scale = Some(Scale {
+        mm_per_point: 0.03,
+        page: 1,
+        mm: 2.0,
+        note: None,
+    });
+    st.opacity = Some(1.0);
+    st.place.origin = [150.0, 320.0];
+    st.zoom = 4.0;
+    st.pan = [-308.0, -988.0];
+    h.run();
+    h
+}
+
+/// The view picked (Copper, Mask or Paste by its button) and rendered, saved when `BERC_FP_SNAPSHOT` names a file
+fn render_view(h: &mut Harness<'_, FootprintReview>, view: Kind) -> image::RgbaImage {
+    h.get_by_label(view.name()).click();
+    h.run();
+    let img = h.render().unwrap();
+    if let Some(p) = std::env::var_os("BERC_FP_SNAPSHOT") {
+        img.save(Path::new(&p).with_extension(format!("{}.png", view.name())))
+            .unwrap();
+    }
+    img
+}
+
+/// The rendered pixel at footprint point `at` (mm)
+fn pixel_at(h: &Harness<'_, FootprintReview>, img: &image::RgbaImage, at: [f64; 2]) -> [u8; 3] {
+    let st = h.state();
+    let p = st.to_screen(st.rt.canvas, st.fp_to_page(at));
+    let ppp = h.ctx.pixels_per_point();
+    let px = img.get_pixel((p.x * ppp) as u32, (p.y * ppp) as u32).0;
+    [px[0], px[1], px[2]]
+}
+
+/// The rendered pixels over the footprint's land pattern (3.2 mm square around its middle)
+fn footprint_pixels(h: &Harness<'_, FootprintReview>, img: &image::RgbaImage) -> Vec<[u8; 3]> {
+    let st = h.state();
+    let ppp = h.ctx.pixels_per_point();
+    let corner = |at: [f64; 2]| {
+        let p = st.to_screen(st.rt.canvas, st.fp_to_page(at));
+        ((p.x * ppp) as u32, (p.y * ppp) as u32)
+    };
+    let ((x0, y0), (x1, y1)) = (corner([-1.6, -1.6]), corner([1.6, 1.6]));
+    let mut out = Vec::new();
+    for y in y0..y1 {
+        for x in x0..x1 {
+            let px = img.get_pixel(x, y).0;
+            out.push([px[0], px[1], px[2]]);
+        }
+    }
+    out
+}
+
+fn same_colour(got: [u8; 3], want: Rgb) -> bool {
+    got.iter().zip(want.0).all(|(g, w)| g.abs_diff(w) <= 24)
+}
+
+/// Paste gray: a neutral gray near the paste colour (not the page's anti-aliased red edges, which are not neutral)
+fn paste_gray(got: [u8; 3], paste: Rgb) -> bool {
+    let spread = got.iter().max().unwrap() - got.iter().min().unwrap();
+    spread <= 6 && got.iter().zip(paste.0).all(|(g, w)| g.abs_diff(w) <= 12)
+}
+
+/// Some points inside the land pattern's pads (mm), away from the holes and the pad numbers: pin 1 beside its
+/// number, pin 11, the exposed pad inside a paste window and between the vias
+const INSIDE_PADS: [[f64; 2]; 4] = [[-1.65, -0.8], [1.65, 0.8], [-0.425, -0.425], [0.3, 0.3]];
+
+/// The Paste view shows the paste apertures alone, filled gray: between the exposed pad's four paste windows
+/// the page shows, not a pad
+#[test]
+fn paste_view_shows_only_the_apertures() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-paste-{}", std::process::id()));
+    let mut h = wqfn_review("fp paste", &dir);
+    let colors = LayerColors::default();
+    let img = render_view(&mut h, Kind::Paste);
+    // Between the windows, on the exposed pad's copper: the page's white paper
+    for at in [[0.0, 0.425], [-0.425, 0.0]] {
+        let got = pixel_at(&h, &img, at);
+        assert!(got.iter().all(|c| *c >= 225), "the page at {at:?}: {got:?}");
+    }
+    // Inside a window and inside pin 1's aperture: filled gray
+    for at in [[-0.425, -0.425], [0.3, 0.3], [-1.65, -0.8]] {
+        let got = pixel_at(&h, &img, at);
+        assert!(paste_gray(got, colors.paste), "paste at {at:?}: {got:?}");
+    }
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// The Mask view shows the mask openings alone, filled pink: no pixel over the land pattern has the copper colour
+#[test]
+fn mask_view_shows_only_the_openings() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-mask-view-{}", std::process::id()));
+    let mut h = wqfn_review("fp mask view", &dir);
+    let colors = LayerColors::default();
+    let img = render_view(&mut h, Kind::Mask);
+    let red = footprint_pixels(&h, &img)
+        .into_iter()
+        .filter(|p| same_colour(*p, colors.copper))
+        .count();
+    assert_eq!(red, 0, "pixels in the copper colour in the Mask view");
+    for at in INSIDE_PADS {
+        let got = pixel_at(&h, &img, at);
+        assert!(same_colour(got, colors.mask), "mask at {at:?}: {got:?}");
+    }
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// The Copper view shows the copper alone in the copper colour (front and back pads, vias): no pink or gray pixel
+/// over the land pattern
+#[test]
+fn copper_view_is_copper_alone() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-copper-{}", std::process::id()));
+    let mut h = wqfn_review("fp copper", &dir);
+    let colors = LayerColors::default();
+    let img = render_view(&mut h, Kind::Copper);
+    let other = footprint_pixels(&h, &img)
+        .into_iter()
+        .filter(|p| same_colour(*p, colors.mask) || paste_gray(*p, colors.paste))
+        .count();
+    assert_eq!(other, 0, "pink or gray pixels in the Copper view");
+    for at in INSIDE_PADS {
+        let got = pixel_at(&h, &img, at);
+        assert!(same_colour(got, colors.copper), "copper at {at:?}: {got:?}");
+    }
+    std::fs::remove_dir_all(&dir).unwrap();
+}
 /// Invert page (I) inverts the page's own colours, not the footprint's: a blank spot goes from near white to
 /// near black and back; the default comes from the settings
 #[test]

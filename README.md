@@ -351,18 +351,20 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    as far), turn it with T or ⟲ 90° or by an angle, mirror it with M for a drawing seen from below. Opacity, Blink
    (B) and Invert page (I, white-ish on black, for a dark drawing or just to see differently; the default is a
    setting) help to see both, and so does the blend mode: Normal (the footprint over the page by its opacity),
-   Multiply (the drawing's lines stay dark through it), Screen, or Difference: with white pads, white paper under
-   a pad goes black, so a footprint that covers the drawing's pads exactly leaves no light edge, and a pad that
+   Multiply (the drawing's lines stay dark through it), Screen, or Difference: with white copper (a setting),
+   white paper under a pad goes black, so a footprint that covers the drawing's pads exactly leaves no light edge, and a pad that
    misses shows light (inverting the page keeps these meanings: Difference still reads the same, now on black).
-   The layers shown: Pads, Back pads, Vias, Courtyard, Fab, Silk and Board edge each on their own, with a colour
-   (presets for the pads, a picker for the rest); Copper graphics, Mask and Paste are shown one at a time instead
-   of stacking (a radio choice, C cycles through them), each a fixed colour that says what is shown (copper red,
-   mask pink, paste gray) — a datasheet page is white, so these three have no picker in the tab, only a setting.
-   Mask and Paste show each pad's mask opening and paste aperture as outlines drawn over the pads, by the pad's
-   margins, else the footprint's, else the open board's design settings (`pad_to_mask_clearance`,
-   `pad_to_paste_clearance` and its ratio) for a footprint of that board or its project's libraries. A package's
-   vias (round plated pads without a number of their own, such as thermal vias in an exposed pad; KiCad has no
-   vias in footprints) are drawn as rings with their holes; they are in the review hash as the pads they are.
+   Three views show what the board makes on one layer, one view at a time (a radio choice, C cycles through
+   them), each filled in its one colour: Copper (the pads' copper, the copper graphics and the package's vias,
+   red), Mask (the mask openings only: each pad's by its margin, and the mask graphics, pink) and Paste (the paste
+   apertures only, such as the windows of a split exposed pad, gray). The pads are not drawn outside the Copper
+   view; holes and pad numbers are drawn over every view. The margins are the pad's, else the footprint's, else
+   the open board's design settings (`pad_to_mask_clearance`, `pad_to_paste_clearance` and its ratio) for a
+   footprint of that board or its project's libraries. Back pads (the back side in the same views), Courtyard,
+   Fab, Silk and Board edge are shown or hidden each by its checkbox. The colours are settings only, with no
+   picker in the tab. A package's vias (round plated pads without a number of their own, such as thermal vias in
+   an exposed pad; KiCad has no vias in footprints) are copper with their holes; they are in the review hash as
+   the pads they are.
    Scroll zooms at the pointer; the right or middle button pans; Page Up and Page Down turn pages. A help line
    under the canvas names the keys.
 5. **Accept**: when the footprint matches the drawing, Accept writes its review hash into the symbol: the library

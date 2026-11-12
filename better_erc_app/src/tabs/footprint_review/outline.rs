@@ -1,68 +1,73 @@
-//! A footprint as shapes to draw over a datasheet: every pad's outline as a polygon, its drill, and the graphics of
-//! the layers a review compares (courtyard, fab, silk, copper, mask, paste, board edge), in millimetres in the
-//! footprint's own frame (x right, y down, as KiCad draws it). Each pad's mask opening and paste aperture are drawn
-//! as outlines of the mask and paste layers; vias in a package (KiCad draws them as round plated pads, thermal vias
-//! in an exposed pad) as rings of their own.
+//! A footprint as shapes to draw over a datasheet: per pad what the board makes of it on each layer (its copper,
+//! its mask opening and its paste aperture, by its margins, on each side it is on), its drill and number, and the
+//! graphics of the layers a review compares (courtyard, fab, silk, copper, mask, paste, board edge), in millimetres
+//! in the footprint's own frame (x right, y down, as KiCad draws it). Vias in a package (KiCad draws them as round
+//! plated pads, thermal vias in an exposed pad) are copper with a hole, no number.
 
 use better_erc::model::LocalFootprint;
 use better_erc::model::layout::{Geom, Pad, Pt, Shape};
 use serde::{Deserialize, Serialize};
 use std::f64::consts::PI;
 
-/// What a shape belongs to: each of the others shown or hidden on its own, Copper, Mask and Paste one at a time
-/// (see `RADIO_KINDS` in `mod.rs`)
+/// What a shape belongs to. Copper, mask and paste are the three views, one shown at a time (see `VIEWS` in
+/// `mod.rs`): each is what the board makes on that layer, the back side's the same behind its checkbox. The others
+/// are shown or hidden each on its own.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum Kind {
-    Pad,
-    /// A pad on the back copper only
-    BackPad,
-    /// A via in the package: a round plated pad without a number of its own (see [`is_via`])
-    Via,
+    /// The front copper: the pads, the copper graphics and zones, the package's vias (see [`is_via`])
+    Copper,
+    /// The front mask openings: each pad's by its margin, and the mask graphics
+    Mask,
+    /// The front paste apertures: each pad's by its margins (the windows of a split exposed pad are pads of their
+    /// own), and the paste graphics
+    Paste,
+    /// The back side's copper, mask openings and paste apertures, of the pads on the back
+    BackCopper,
+    BackMask,
+    BackPaste,
     Courtyard,
     Fab,
     Silk,
-    Copper,
-    Mask,
-    Paste,
     Edge,
 }
 
 impl Kind {
-    pub const ALL: [Kind; 10] = [
-        Kind::Pad,
-        Kind::BackPad,
-        Kind::Via,
-        Kind::Courtyard,
-        Kind::Fab,
-        Kind::Silk,
-        Kind::Copper,
-        Kind::Mask,
-        Kind::Paste,
-        Kind::Edge,
-    ];
+    /// The groups with a checkbox of their own
+    pub const OWN: [Kind; 4] = [Kind::Courtyard, Kind::Fab, Kind::Silk, Kind::Edge];
 
     pub fn name(self) -> &'static str {
         match self {
-            Kind::Pad => "Pads",
-            Kind::BackPad => "Back pads",
-            Kind::Via => "Vias",
+            Kind::Copper => "Copper",
+            Kind::Mask => "Mask",
+            Kind::Paste => "Paste",
+            Kind::BackCopper => "Back copper",
+            Kind::BackMask => "Back mask",
+            Kind::BackPaste => "Back paste",
             Kind::Courtyard => "Courtyard",
             Kind::Fab => "Fab",
             Kind::Silk => "Silk",
-            Kind::Copper => "Copper graphics",
-            Kind::Mask => "Mask",
-            Kind::Paste => "Paste",
             Kind::Edge => "Board edge",
         }
     }
 
-    /// Shown by its own checkbox when a footprint is opened (not Copper, Mask or Paste: their checkbox is a
-    /// radio choice, its first pick fixed, see `RADIO_KINDS`)
+    /// The view (copper, mask or paste) it is shown in, either side; none for the groups of their own
+    pub fn view(self) -> Option<Kind> {
+        match self {
+            Kind::Copper | Kind::BackCopper => Some(Kind::Copper),
+            Kind::Mask | Kind::BackMask => Some(Kind::Mask),
+            Kind::Paste | Kind::BackPaste => Some(Kind::Paste),
+            _ => None,
+        }
+    }
+
+    /// On the back side
+    pub fn back(self) -> bool {
+        matches!(self, Kind::BackCopper | Kind::BackMask | Kind::BackPaste)
+    }
+
+    /// Of its own group, shown when a footprint is opened
     pub fn shown_at_first(self) -> bool {
-        matches!(
-            self,
-            Kind::Pad | Kind::BackPad | Kind::Via | Kind::Courtyard | Kind::Fab
-        )
+        matches!(self, Kind::Courtyard | Kind::Fab)
     }
 
     fn of_layer(layer: &str) -> Option<Kind> {
@@ -99,22 +104,23 @@ pub enum Item {
         closed: bool,
         width: f64,
     },
-    /// A drill hole of a pad or a via
-    Hole {
-        kind: Kind,
-        center: P,
-        size: P,
-        rotation: f64,
+    /// A drill hole of a pad or a via: drawn over every view
+    Hole { center: P, size: P, rotation: f64 },
+    /// A pad's number at its middle: drawn over every view, a back pad's with the back side
+    Number {
+        at: P,
+        text: String,
+        size: f64,
+        back: bool,
     },
-    /// A pad's number at its middle
-    Number { at: P, text: String, size: f64 },
 }
 
 impl Item {
-    pub fn kind(&self) -> Kind {
+    /// What it belongs to; none for a hole or a number, drawn over every view
+    pub fn kind(&self) -> Option<Kind> {
         match self {
-            Item::Area { kind, .. } | Item::Line { kind, .. } | Item::Hole { kind, .. } => *kind,
-            Item::Number { .. } => Kind::Pad,
+            Item::Area { kind, .. } | Item::Line { kind, .. } => Some(*kind),
+            Item::Hole { .. } | Item::Number { .. } => None,
         }
     }
 
@@ -375,12 +381,12 @@ impl Margins {
     }
 }
 
-/// Everything of `f` to draw, pads after the graphics, the pads' mask openings and paste apertures last: an
-/// opening is about the size of its pad and would vanish under the pad's fill. `board` gives the margins of pads
-/// that set none (all zero for a footprint reviewed without a board).
+/// Everything of `f` to draw: the graphics, then per pad its copper, mask opening and paste aperture on each side
+/// it is on, then the holes and numbers over all. `board` gives the margins of pads that set none (all zero for a
+/// footprint reviewed without a board).
 pub fn items(f: &LocalFootprint, board: Margins) -> Vec<Item> {
     let mut out = Vec::new();
-    let mut openings = Vec::new();
+    let mut over = Vec::new();
     for g in &f.footprint.graphics {
         // Only the front and the board edge: a library footprint draws on the front
         if g.layer.starts_with("B.") {
@@ -410,7 +416,7 @@ pub fn items(f: &LocalFootprint, board: Margins) -> Vec<Item> {
         };
         let on = |layer: &str| {
             let any = format!("*.{}", layer.split_once('.').map_or(layer, |(_, l)| l));
-            pad.layers.iter().any(|l| l == layer || *l == any)
+            pad.layers.iter().any(|l| l == layer || *l == any || (layer.ends_with(".Cu") && l == "F&B.Cu"))
         };
         // The mask opening and the paste aperture, by the pad's margins, else the footprint's
         let small = len(pad.size.x.min(pad.size.y));
@@ -427,69 +433,49 @@ pub fn items(f: &LocalFootprint, board: Margins) -> Vec<Item> {
                 .or(st.solder_paste_ratio)
                 .unwrap_or(board.paste_ratio)
                 * small;
+        let via = is_via(pad, &f.pads);
         for (layer, kind, grow) in [
+            ("F.Cu", Kind::Copper, 0.0),
+            ("B.Cu", Kind::BackCopper, 0.0),
             ("F.Mask", Kind::Mask, mask),
+            ("B.Mask", Kind::BackMask, mask),
             ("F.Paste", Kind::Paste, paste),
+            ("B.Paste", Kind::BackPaste, paste),
         ] {
-            if on(layer) {
-                let (shape, _) = pad_shape(pad, grow);
-                openings.push(Item::Line {
-                    kind,
-                    points: shape.into_iter().map(place).collect(),
-                    closed: true,
-                    width: 0.0,
-                });
+            // A via is copper through the board: drawn once, with the front
+            if !on(layer) || (via && kind == Kind::BackCopper) {
+                continue;
             }
-        }
-        let front = on("F.Cu") || pad.layers.iter().any(|l| l == "F&B.Cu");
-        let back = pad.layers.iter().any(|l| l == "B.Cu");
-        if is_via(pad, &f.pads) {
-            let (ring, _) = pad_shape(pad, 0.0);
-            out.push(Item::Line {
-                kind: Kind::Via,
-                points: ring.into_iter().map(place).collect(),
-                closed: true,
-                width: 0.0,
-            });
-            if let Some(d) = pad.drill {
-                out.push(Item::Hole {
-                    kind: Kind::Via,
-                    center: at,
-                    size: [len(d.x), len(d.x)],
-                    rotation: 0.0,
-                });
-            }
-            continue;
-        }
-        if front || back {
-            let kind = if front { Kind::Pad } else { Kind::BackPad };
-            let (shape, convex) = pad_shape(pad, 0.0);
+            let (shape, convex) = pad_shape(pad, grow);
             out.push(Item::Area {
                 kind,
                 points: shape.into_iter().map(place).collect(),
                 convex,
             });
-            for prim in &pad.primitives {
-                out.push(shape_item(kind, prim, place));
+            if matches!(kind, Kind::Copper | Kind::BackCopper) {
+                for prim in &pad.primitives {
+                    out.push(shape_item(kind, prim, place));
+                }
             }
         }
         if let Some(d) = pad.drill {
-            out.push(Item::Hole {
-                kind: Kind::Pad,
+            over.push(Item::Hole {
                 center: at,
-                size: [len(d.x), len(if d.y > 0 { d.y } else { d.x })],
-                rotation: pad.rotation,
+                size: [len(d.x), len(if d.y > 0 && !via { d.y } else { d.x })],
+                rotation: if via { 0.0 } else { pad.rotation },
             });
         }
-        if !pad.number.is_empty() && (front || back) {
-            out.push(Item::Number {
+        let (front, back) = (on("F.Cu"), on("B.Cu"));
+        if !via && !pad.number.is_empty() && (front || back) {
+            over.push(Item::Number {
                 at: place(pad.details.drill_offset.map_or([0.0, 0.0], mm)),
                 text: pad.number.clone(),
                 size: len(pad.size.x.min(pad.size.y)),
+                back: !front,
             });
         }
     }
-    out.extend(openings);
+    out.extend(over);
     out
 }
 
@@ -561,8 +547,9 @@ mod tests {
         );
     }
 
-    /// Thermal vias in an exposed pad (round plated pads numbered as the pad) are drawn as vias: a ring and a hole
-    /// of their own kind, no number; a plated pin with a number of its own stays a pad
+    /// Thermal vias in an exposed pad (round plated pads numbered as the pad) are drawn as vias: front copper and a
+    /// hole, no number and no back copper of their own; a plated pin with a number of its own stays a pad, its copper
+    /// on both sides
     #[test]
     fn package_vias_are_vias() {
         let mut f = fixture("Asym_SOT.kicad_mod");
@@ -572,14 +559,28 @@ mod tests {
         via.size = Pt::new(600_000, 600_000);
         via.drill = Some(Pt::new(300_000, 300_000));
         via.layers = vec!["*.Cu".into()];
+        via.at = Pt::new(5_000_000, 0);
         let mut pin = via.clone();
         pin.number = "99".into();
+        pin.at = Pt::new(-5_000_000, 0);
         f.pads.push(via.clone());
         f.pads.push(pin.clone());
         assert!(is_via(&via, &f.pads) && !is_via(&pin, &f.pads));
         let items = items(&f, Margins::default());
-        let of = |k: Kind| items.iter().filter(|i| i.kind() == k).count();
-        assert_eq!(of(Kind::Via), 2, "a ring and a hole");
+        let at = |i: &Item, p: &Pad| {
+            let (lo, hi) = extent(std::slice::from_ref(i)).unwrap();
+            let c = mm(p.at);
+            ((lo[0] + hi[0]) / 2.0 - c[0]).abs() < 1e-6 && ((lo[1] + hi[1]) / 2.0 - c[1]).abs() < 1e-6
+        };
+        let of = |p: &Pad, k: Option<Kind>| items.iter().filter(|i| i.kind() == k && at(i, p)).count();
+        assert_eq!(of(&via, Some(Kind::Copper)), 1, "the via's copper");
+        assert_eq!(of(&via, Some(Kind::BackCopper)), 0, "drawn once, with the front");
+        assert_eq!(of(&pin, Some(Kind::BackCopper)), 1, "the pin's back copper");
+        assert!(
+            items
+                .iter()
+                .any(|i| matches!(i, Item::Hole { center, .. } if *center == mm(via.at)))
+        );
         assert!(
             items
                 .iter()
@@ -612,7 +613,7 @@ mod tests {
         let span = |k: Kind| {
             let pts: Vec<P> = items
                 .iter()
-                .filter(|i| i.kind() == k)
+                .filter(|i| i.kind() == Some(k))
                 .flat_map(Item::points)
                 .collect();
             pts.iter().map(|p| p[0]).fold(f64::MIN, f64::max)
@@ -655,7 +656,7 @@ mod tests {
         let span = |f: &LocalFootprint, k: Kind| {
             let pts: Vec<P> = items(f, board)
                 .iter()
-                .filter(|i| i.kind() == k)
+                .filter(|i| i.kind() == Some(k))
                 .flat_map(Item::points)
                 .collect();
             pts.iter().map(|p| p[0]).fold(f64::MIN, f64::max)
@@ -665,10 +666,12 @@ mod tests {
         assert!((span(&f, Kind::Paste) - 0.76).abs() < 1e-9);
         f.pads[0].solder_mask_margin = Some(0);
         assert!((span(&f, Kind::Mask) - 1.0).abs() < 1e-9);
-        // The openings come after the pads, drawn on top of them
-        let all = items(&f, board);
-        let pad = all.iter().position(|i| i.kind() == Kind::Pad).unwrap();
-        let mask = all.iter().position(|i| i.kind() == Kind::Mask).unwrap();
-        assert!(mask > pad);
+        // The openings are filled, as the pads' copper is
+        let openings: Vec<Item> = items(&f, board)
+            .into_iter()
+            .filter(|i| matches!(i.kind(), Some(Kind::Mask | Kind::Paste)))
+            .collect();
+        assert_eq!(openings.len(), 2);
+        assert!(openings.iter().all(|i| matches!(i, Item::Area { .. })));
     }
 }

@@ -695,10 +695,11 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   page search by words finds the land pattern page. Scale by a ruler along a dimension (or the page's own
   `SCALE: 20X`), footprint moved, turned, mirrored, opacity, blink, blend mode (normal, multiply, screen,
   difference: a wgpu shader reading the page), the page itself invertible (white-ish on black, `I`, a setting for
-  the default too). Pads, back pads, vias, courtyard, fab, silk and board edge shown or hidden each on its own;
-  copper graphics, mask and paste shown one at a time (a radio choice, `C` cycles through them), each a fixed
-  colour (copper red, mask pink, paste gray, a setting only: no picker, since a datasheet page is white); the
-  pads keep colour presets and a picker. Accept disabled with its reason
+  the default too). Three views, one at a time (a radio choice, `C` cycles through them), each what the board
+  makes on that layer filled in its one colour: copper (pads, copper graphics, vias; red), mask (the openings
+  only; pink), paste (the apertures only; gray); holes and pad numbers over every view; back pads (the back
+  side in the same views), courtyard, fab, silk and board edge each by its checkbox; colours are settings only,
+  no picker in the tab. Accept disabled with its reason
   until a symbol with a footprint is picked and the scale is set on the page shown, asks first with its dry run
   (each file, field, old and new value; Enter writes, Esc not; a warning on KiCad's lock file or KiCad running),
   writes the hash into the
