@@ -4,7 +4,10 @@ use crate::tabs::Tab;
 impl Default for State {
     fn default() -> Self {
         let mut tiles = egui_tiles::Tiles::default();
-        let tabs = vec![tiles.insert_pane(Tab::PcbDataImport(Default::default()))];
+        let tabs = vec![
+            tiles.insert_pane(Tab::PcbDataImport(Default::default())),
+            tiles.insert_pane(Tab::FootprintReview(Default::default())),
+        ];
         let root = tiles.insert_tab_tile(tabs);
         let open_tabs = egui_tiles::Tree::new("main_window_tile_tree", root, tiles);
 

@@ -17,16 +17,16 @@ all-features = true
 targets = ["x86_64-unknown-linux-gnu", "wasm32-unknown-unknown"]
 
 [dependencies]
-egui = "0.31"
-eframe = { version = "0.31", default-features = false, features = [
+egui = "0.36"
+eframe = { version = "0.36", default-features = false, features = [
     #"accesskit", # Make egui compatible with screen readers. NOTE: adds a lot of dependencies.
     "default_fonts", # Embed the default egui fonts.
-    "glow", # Use the glow rendering backend. Alternative: "wgpu".
+    "wgpu", # Use the wgpu rendering backend (vhrd_egui stack), alternative: "glow".
     "persistence", # Enable restoring app state when restarting the app.
     "wayland", # To support Linux (and CI)
 ] }
-egui-phosphor = { version = "0.9", features = ["fill"] }
-egui_tiles = "0.12"
+egui-phosphor = { version = "0.14", features = ["fill"] }
+egui_tiles = "0.17"
 rfd = "0.15"
 
 strum = { version = "0.27", features = ["derive"] }

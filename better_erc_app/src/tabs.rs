@@ -2,6 +2,7 @@ use crate::prelude::*;
 use egui_tiles::{SimplificationOptions, Tile, TileId, Tiles, UiResponse};
 use std::fmt::Debug;
 
+mod footprint_review;
 mod i2c;
 mod inputs;
 pub mod nets;
@@ -17,6 +18,7 @@ pub enum Tab {
     I2C(i2c::I2C),
     Style(style::Style),
     Inputs(inputs::Inputs),
+    FootprintReview(footprint_review::FootprintReview),
 }
 
 /// The colour a finding of this severity is shown in
@@ -45,6 +47,7 @@ impl Tab {
                 Tab::I2C(t) => t.ui(ui, cx, id),
                 Tab::Style(t) => t.ui(ui, cx, id),
                 Tab::Inputs(t) => t.ui(ui, cx, id),
+                Tab::FootprintReview(t) => t.ui(ui, cx, id),
             });
         // if dragged {
         //     UiResponse::DragStarted
@@ -61,6 +64,7 @@ impl Tab {
             Tab::I2C(t) => t.init(cx),
             Tab::Style(t) => t.init(cx),
             Tab::Inputs(t) => t.init(cx),
+            Tab::FootprintReview(t) => t.init(cx),
         }
     }
 
@@ -91,6 +95,7 @@ impl Default for TreeBehavior {
                 prune_single_child_containers: true,
                 all_panes_must_have_tabs: true,
                 join_nested_linear_containers: true,
+                flatten_tabs_in_tabs: false,
             },
             tab_bar_height: 20.0,
             gap_width: 2.0,

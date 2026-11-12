@@ -49,6 +49,7 @@ impl BetterErcApp {
                         TabKind::I2C => Tab::I2C(Default::default()),
                         TabKind::Style => Tab::Style(Default::default()),
                         TabKind::Inputs => Tab::Inputs(Default::default()),
+                        TabKind::FootprintReview => Tab::FootprintReview(Default::default()),
                     }
                     .tap_mut(|t| t.init(&self.cx));
 

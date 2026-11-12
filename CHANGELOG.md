@@ -11,6 +11,21 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `VIEW-19` Footprint review tab, empty for now: a place for the schematic-vs-layout footprint review this and
+  the `fp-check` session's companion work in `erc_kicad`/`erc_model`/`berc` will fill in.
+
+### Changed
+
+- `better_erc_app` onto the vhrd_egui stack: `egui`/`eframe` 0.31 → 0.36 (wgpu renderer instead of glow),
+  `egui_tiles` 0.12 → 0.17, `egui-phosphor` 0.9 → 0.14 (`APP-1`). `eframe::App::update` became `App::ui`
+  (the given `Ui` has no panel/background, so the body wraps its panels in it instead of a `Context`);
+  `egui::SidePanel`/`TopBottomPanel` merged into `egui::Panel::{left,top,...}`; `egui::menu::bar` became
+  `egui::MenuBar::new().ui(...)`; `ui.close_menu()` became `ui.close()`;
+  `egui_tiles::SimplificationOptions` gained `flatten_tabs_in_tabs`. The existing tabs (`VIEW-1..4`,
+  `PcbDataImport`) needed no changes beyond that; none had to be dropped.
+
 ## [0.4.20] - 2026-11-07
 
 ### Added

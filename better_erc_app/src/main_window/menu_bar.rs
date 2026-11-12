@@ -19,7 +19,7 @@ impl BetterErcApp {
                 .toggle_value(&mut self.state.debug_window_shown, "Debug")
                 .changed()
             {
-                ui.close_menu();
+                ui.close();
             }
         });
 

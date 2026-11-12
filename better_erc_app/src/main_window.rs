@@ -4,7 +4,7 @@ mod side_panel;
 
 use crate::prelude::*;
 use crate::tabs::{Tab, TreeBehavior};
-use egui::{SidePanel, Window};
+use egui::{Panel, Window};
 use egui_tiles::Tile;
 
 pub struct BetterErcApp {
@@ -63,27 +63,27 @@ impl BetterErcApp {
 }
 
 impl eframe::App for BetterErcApp {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
-            egui::menu::bar(ui, |ui| {
-                self.menu_bar(ctx, ui);
+    fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
+        let ctx = ui.ctx().clone();
+
+        Panel::top("top_panel").show(ui, |ui| {
+            egui::MenuBar::new().ui(ui, |ui| {
+                self.menu_bar(&ctx, ui);
             });
         });
 
-        SidePanel::left("side_panel")
-            .resizable(true)
-            .show(ctx, |ui| {
-                ScrollArea::vertical().show(ui, |ui| {
-                    self.side_panel(ui);
-                });
+        Panel::left("side_panel").resizable(true).show(ui, |ui| {
+            ScrollArea::vertical().show(ui, |ui| {
+                self.side_panel(ui);
             });
+        });
 
         if self.state.debug_window_shown {
             Window::new("Debug")
                 .open(&mut self.state.debug_window_shown)
                 .collapsible(true)
                 .scroll([true, true])
-                .show(ctx, |ui| {
+                .show(&ctx, |ui| {
                     crate::windows::debug::DebugWindow {}.ui(
                         &mut self.state.tabs,
                         &mut self.state.tabs_behavior,
@@ -92,7 +92,7 @@ impl eframe::App for BetterErcApp {
                 });
         }
 
-        egui::CentralPanel::default().show(ctx, |ui| {
+        egui::CentralPanel::default().show(ui, |ui| {
             self.state.tabs.ui(&mut self.state.tabs_behavior, ui);
         });
     }

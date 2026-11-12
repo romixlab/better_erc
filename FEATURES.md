@@ -673,10 +673,13 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   coloured, voltages / currents / frequency shown (derived or entered), approve or reject, comments by audience
   (to/from firmware, mechanics, EE)
 - 📋 `VIEW-18` Highlight the selected net in KiCad, or in the browser for Altium 365
+- 🚧 `VIEW-19` Footprint review tab: schematic vs layout footprint consistency; empty placeholder so far
+  (needs the `fp-check` session's work in `erc_kicad`/`erc_model`/`berc`) · `tabs/footprint_review.rs`
 
 ## App (`APP`)
 
-- ✅ `APP-1` egui app with tiles, tabs shown and hidden from the side panel, menu bar, debug window · `better_erc_app/src`
+- ✅ `APP-1` egui app with tiles, tabs shown and hidden from the side panel, menu bar, debug window; on the
+  vhrd_egui stack (egui/eframe 0.36, wgpu renderer) since P2503 · `better_erc_app/src`
 - 📋 `APP-2` Sidebar with view switching; netlist load and watch status in a status bar
 - 📋 `APP-3` `better_erc --version` with version, git SHA and commit time like `berc` (the app has no command line
   options at all yet), so `just deploy` can check the installed app and not only that it is on PATH
