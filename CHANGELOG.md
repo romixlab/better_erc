@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.37] - 2026-11-12
+
 ### Added
 
 - `VIEW-21`: Footprint review notes without leaving the tab. A note field sits above the canvas; Enter over the canvas
