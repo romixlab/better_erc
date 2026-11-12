@@ -1270,6 +1270,19 @@ mod tests {
         std::fs::remove_dir_all(&dir).unwrap();
     }
 
+    /// Review hashes are written into symbols: a footprint that did not change keeps its `fp1:` hash byte for byte,
+    /// also now that a package's vias are drawn as vias (they are pads, in the hash as they always were)
+    #[test]
+    fn written_hashes_stay() {
+        for (name, want) in [
+            ("Asym_SOT.kicad_mod", "fp1:34265c0d8697c34e"),
+            ("Mixed_Pads.kicad_mod", "fp1:f460b103cd5189b2"),
+        ] {
+            let got = hash_file(&fixtures().join("Test.pretty").join(name), None).unwrap();
+            assert_eq!(got.hash, want, "{name}:\n{}", got.canonical.join("\n"));
+        }
+    }
+
     /// A symbol picked from a library, no project: accept_library writes the hash into its file alone, and
     /// check_libraries then finds it ok; a bad hash or a symbol the library lacks writes nothing
     #[test]

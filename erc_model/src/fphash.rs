@@ -584,6 +584,56 @@ mod tests {
         assert_eq!(hash(&g), hash(&sample()));
     }
 
+    /// A footprint without vias keeps the hash it had before vias were looked at (hashes are written into symbols)
+    #[test]
+    fn hash_without_vias_stays() {
+        assert_eq!(hash(&sample()), "fp1:a5158b65d05aa955");
+    }
+
+    /// A package's vias (KiCad has none in footprints: they are round plated pads, often numbered as the exposed pad
+    /// they cool) are in the canonical text: one more, or one moved or resized, changes the hash
+    #[test]
+    fn package_vias_are_covered() {
+        let mut f = sample();
+        let mut via = pad(
+            "1",
+            "circle",
+            Pt::from_mm(0.0, 0.0),
+            0.0,
+            Pt::from_mm(0.6, 0.6),
+        );
+        via.kind = "thru_hole".into();
+        via.drill = Some(Pt::from_mm(0.3, 0.3));
+        via.layers = vec!["*.Cu".into()];
+        via.property = Some("pad_prop_heatsink".into());
+        f.pads.push(via);
+        let lines = canonical(&f);
+        assert!(
+            lines.contains(
+                &"pad 1 thru_hole circle at 0,0 rot 0 size 0.6,0.6 drill 0.3,0.3 layers *.Cu prop pad_prop_heatsink"
+                    .to_string()
+            ),
+            "{lines:#?}"
+        );
+        let with = hash(&f);
+        assert_ne!(with, hash(&sample()));
+        type Change = Box<dyn Fn(&mut Pad)>;
+        let changes: Vec<(&str, Change)> = vec![
+            ("moved", Box::new(|p| p.at.x += 100_000)),
+            (
+                "drill",
+                Box::new(|p| p.drill = Some(Pt::from_mm(0.25, 0.25))),
+            ),
+            ("ring", Box::new(|p| p.size = Pt::from_mm(0.5, 0.5))),
+            ("tented", Box::new(|p| p.layers.push("F.Mask".into()))),
+        ];
+        for (what, change) in changes {
+            let mut g = f.clone();
+            change(g.pads.last_mut().unwrap());
+            assert_ne!(hash(&g), with, "{what}");
+        }
+    }
+
     #[test]
     fn polygons_from_any_corner_either_way() {
         let ps = [

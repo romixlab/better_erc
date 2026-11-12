@@ -11,6 +11,14 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `VIEW-19`: the Footprint review tab draws a package's vias as vias: a ring and its hole, of their own layer group
+  (Vias, its own colour `colors.vias`), without the number they share with the exposed pad. KiCad has no vias in
+  footprints; a package's vias are round plated pads with no number, a heatsink mark or the number of a surface
+  pad, and are in the review hash as pads, as they always were: hashes already written stay valid, pinned by tests
+  (`fp1` of the test footprints, and of a footprint without vias, byte for byte).
+
 ### Fixed
 
 - `VIEW-19`: the Footprint review tab's Mask and Paste layers show each pad's mask opening and paste aperture (by

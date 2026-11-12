@@ -526,4 +526,73 @@ mod tests {
             "through the middle point: {a:?}"
         );
     }
+
+    /// Thermal vias in an exposed pad (round plated pads numbered as the pad) are drawn as vias: a ring and a hole
+    /// of their own kind, no number; a plated pin with a number of its own stays a pad
+    #[test]
+    fn package_vias_are_vias() {
+        let mut f = fixture("Asym_SOT.kicad_mod");
+        let mut via = f.pads[0].clone();
+        via.kind = "thru_hole".into();
+        via.shape = "circle".into();
+        via.size = Pt::new(600_000, 600_000);
+        via.drill = Some(Pt::new(300_000, 300_000));
+        via.layers = vec!["*.Cu".into()];
+        let mut pin = via.clone();
+        pin.number = "99".into();
+        f.pads.push(via.clone());
+        f.pads.push(pin.clone());
+        assert!(is_via(&via, &f.pads) && !is_via(&pin, &f.pads));
+        let items = items(&f);
+        let of = |k: Kind| items.iter().filter(|i| i.kind() == k).count();
+        assert_eq!(of(Kind::Via), 2, "a ring and a hole");
+        assert!(
+            items
+                .iter()
+                .any(|i| matches!(i, Item::Number { text, .. } if text == "99"))
+        );
+        let numbers = items
+            .iter()
+            .filter(|i| matches!(i, Item::Number { text, .. } if *text == via.number))
+            .count();
+        assert_eq!(
+            numbers, 1,
+            "the via has no number: only the pad it shares it with"
+        );
+    }
+
+    /// The mask opening grows by the margin, the paste aperture shrinks by a negative one
+    #[test]
+    fn mask_and_paste_by_their_margins() {
+        let mut f = fixture("Asym_SOT.kicad_mod");
+        f.pads.truncate(1);
+        let p = &mut f.pads[0];
+        p.shape = "rect".into();
+        p.rotation = 0.0;
+        p.at = Pt::default();
+        p.size = Pt::new(1_000_000, 1_000_000);
+        p.layers = vec!["F.Cu".into(), "F.Mask".into(), "F.Paste".into()];
+        p.solder_mask_margin = Some(100_000);
+        p.solder_paste_margin = Some(-100_000);
+        let items = items(&f);
+        let span = |k: Kind| {
+            let pts: Vec<P> = items
+                .iter()
+                .filter(|i| i.kind() == k)
+                .flat_map(Item::points)
+                .collect();
+            pts.iter().map(|p| p[0]).fold(f64::MIN, f64::max)
+                - pts.iter().map(|p| p[0]).fold(f64::MAX, f64::min)
+        };
+        assert!(
+            (span(Kind::Mask) - 1.2).abs() < 1e-9,
+            "{}",
+            span(Kind::Mask)
+        );
+        assert!(
+            (span(Kind::Paste) - 0.8).abs() < 1e-9,
+            "{}",
+            span(Kind::Paste)
+        );
+    }
 }
