@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.21] - 2026-11-12
+
 ### Added
 
 - `VIEW-19` Footprint review tab, empty for now: a place for the schematic-vs-layout footprint review this and
