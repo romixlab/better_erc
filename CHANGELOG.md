@@ -11,6 +11,19 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `TOOL-8`: `berc fp check --lib LIB` checks every symbol of a symbol library against the review hash of the library
+  footprint its `Footprint` field names, before any board uses it: ok, changed, unreviewed, missing (the footprint is
+  not found, with the reason), refused (a hash on a symbol without a footprint), other version, malformed, and no
+  footprint (listed last, not a failure). `LIB` is a `.kicad_sym`, a `.kicad_symdir`, a folder of them or a
+  `sym-lib-table` nickname, repeatable; `--footprints DIR` adds `.pretty` libraries searched before the
+  `fp-lib-table`. Text and JSON, exit 1 on anything but ok and no footprint; `--lib` completes the table's nicknames
+  and paths, and `fp check --lib` and `--footprints` are usage signals. In the library:
+  `better_erc::fp::check_libraries`, and `erc_kicad::libtable::SymbolLibrary` (one `.kicad_sym` or `.kicad_symdir`:
+  its symbol names, a symbol's fields, also where a directory library's file is not named after its symbol),
+  `SymbolLibraries::library`, `FootprintLibraries::add_first` and `erc_kicad::symlib::symbol_names`.
+
 ## [0.4.25] - 2026-11-12
 
 ### Added

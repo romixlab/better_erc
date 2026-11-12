@@ -9,6 +9,20 @@ pub fn symbol_fields(text: &str, name: &str) -> Option<Vec<(String, String)>> {
     resolve_fields(name, |_| Some(text.to_string()))
 }
 
+/// The names of the symbols a `.kicad_sym` file defines (its top-level symbols, not their units), in file order;
+/// `None` when it is no symbol library
+pub fn symbol_names(text: &str) -> Option<Vec<String>> {
+    let parsed = sexpr::parse(text).ok()?;
+    let root = parsed
+        .iter()
+        .find(|r| r.head() == Some("kicad_symbol_lib"))?;
+    Some(
+        root.children("symbol")
+            .filter_map(|s| s.arg(0).map(str::to_string))
+            .collect(),
+    )
+}
+
 /// The fields of symbol `name`, climbing `extends` chains across files: `read(n)` the text of a `.kicad_sym` file
 /// that may define symbol `n` (a whole flat library, or one symbol directory's `n.kicad_sym`), `None` when there
 /// is none to read. `None` overall when `name` itself can't be read or found; a parent that can't be is just the
@@ -78,6 +92,8 @@ mod tests {
         assert_eq!(get("Footprint"), Some("Pkg:SOT-23"));
         assert_eq!(get("Value"), Some("X"));
         assert!(symbol_fields(t, "Missing").is_none());
+        assert_eq!(symbol_names(t).unwrap(), ["Base", "Derived"]);
+        assert!(symbol_names("(kicad_sch)").is_none());
     }
 
     #[test]

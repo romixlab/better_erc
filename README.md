@@ -38,7 +38,8 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 - **`berc diff --nets A B`**: the nets of any two designs (a schematic, a netlist, an Altium export, a Smart PDF)
   compared as the pins each net connects, whatever their names: renamed, removed and added nets.
 - **`berc fp`**: footprint review. `berc fp hash` prints a footprint's review hash, the same for a library file and
-  every board copy of it; `berc fp check` checks every board footprint against the hash on its library symbol. See
+  every board copy of it; `berc fp check` checks every board footprint against the hash on its library symbol, and
+  `berc fp check --lib` every symbol of a symbol library against its library footprint. See
   [Footprint review](#footprint-review).
 - **The app** (`better_erc`, egui, crate `better_erc_app`): an import tab that opens any design the registry reads
   (and Altium or OrCAD files picked one by one) and shows its findings with their explanations and the checks that
@@ -221,6 +222,36 @@ footprint is one of:
 A schematic copy that holds a different hash than the library is reported as well: the schematic was not updated
 from the library. The exit code is 0 when every footprint is ok or board-only and every copy up to date, 1 otherwise, 2 when the
 project can't be read.
+
+### Checking a symbol library
+
+`berc fp check --lib` checks a symbol library itself, before any board uses it: each symbol against the library
+footprint its `Footprint` field names.
+
+```sh
+berc fp check --lib symbols/Lib.kicad_symdir --footprints footprints
+berc fp check --lib symbols --footprints footprints   # every library in the folder
+berc fp check --lib Device hw/board                   # a nickname from hw/board's or the global sym-lib-table
+```
+
+`--lib` takes a `.kicad_sym` file, a KiCad 9+ `.kicad_symdir` directory, a folder of them, or a nickname from the
+`sym-lib-table`; it can be given more than once. A library given as a path is named by its file name
+(`Lib.kicad_symdir` is `Lib`). The footprints are found through `--footprints` (a `.pretty` directory or a folder of
+them, each named by its folder name, searched first), then the project's and the global `fp-lib-table`; the project is
+the directory given, `.` by default. Each symbol is one of:
+
+| Status | Meaning |
+|---|---|
+| ok | the footprint is the one reviewed |
+| changed | the footprint differs from the one reviewed: review it again |
+| unreviewed | the symbol has no review hash; the line shows the hash to put there once reviewed |
+| missing | the footprint the symbol names is not found; the line says why |
+| refused | the symbol has a review hash but sets no footprint, so the hash reviews nothing |
+| other version, malformed | the field holds a hash of another version, or no hash at all |
+| no footprint | the symbol sets no footprint and has no hash (a generic part, a power symbol): listed last, not a failure |
+
+A derived symbol (`extends`) has its parent's footprint and hash unless it sets its own. The exit code is 0 when every
+symbol is ok or has no footprint, 1 otherwise, 2 when a library can't be read.
 
 ### Reviewing in the app
 

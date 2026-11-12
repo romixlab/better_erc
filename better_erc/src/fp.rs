@@ -8,6 +8,12 @@ use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::path::{Path, PathBuf};
 
+mod library;
+pub use library::{
+    CheckedLibrary, LibCheck, LibCheckError, LibCheckOptions, SymbolEntry, SymbolStatus,
+    check_libraries,
+};
+
 /// A footprint's review hash and the canonical text it is taken over
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Hashed {

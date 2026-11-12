@@ -20,6 +20,8 @@ const MEANINGFUL_FLAGS: &[&str] = &[
     "nets",
     "canonical",
     "with_geometry",
+    "lib",
+    "footprints",
 ];
 
 /// The signals of a run: the subcommand path, then one per meaningful flag given on the command line

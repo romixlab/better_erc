@@ -744,10 +744,13 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   symbol (the `.kicad_sym` through the project's or global `sym-lib-table`, else the schematic's copy): ok, changed,
   unreviewed, refused (the symbol sets no footprint), no symbol, other version, malformed, board-only (no symbol and
   marked board-only: listed last under its own heading, not a failure), and a schematic copy older than the library;
-  text and JSON, exit 1 on anything but ok and board-only; every `berc` run recorded in a local usage file
-  (`berc usage`). The hash is put on the symbol by hand for now (`berc fp hash`); the writer is a later task ·
-  `erc_model/src/fphash.rs`, `erc_kicad/src/symlib.rs`, `better_erc/src/fp.rs`, `berc/src/usage.rs`,
-  `berc/tests/fp.rs`, README "Footprint review"
+  text and JSON, exit 1 on anything but ok and board-only. `berc fp check --lib LIB` checks every symbol of a symbol
+  library (a `.kicad_sym`, a `.kicad_symdir`, a folder of them, or a `sym-lib-table` nickname) against the library
+  footprint its `Footprint` field names (`--footprints DIR`, then the `fp-lib-table`): ok, changed, unreviewed,
+  missing, refused, other version, malformed, no footprint (not a failure); every `berc` run recorded in a local
+  usage file (`berc usage`). The hash is put on the symbol by hand for now (`berc fp hash`); the writer is a later
+  task · `erc_model/src/fphash.rs`, `erc_kicad/src/symlib.rs`, `erc_kicad/src/libtable.rs`, `better_erc/src/fp.rs`,
+  `better_erc/src/fp/library.rs`, `berc/src/usage.rs`, `berc/tests/fp.rs`, README "Footprint review"
 
 ## Code generation (`GEN`)
 

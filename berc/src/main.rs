@@ -3,7 +3,7 @@ use better_erc::model::placecmp::{Origin, PlaceOptions};
 use better_erc::{CheckError, CheckOptions, Need, RunOptions, RunState, Severity, Stage, Tier};
 use clap::builder::styling::Styles;
 use clap::{CommandFactory, FromArgMatches, Parser, Subcommand, ValueEnum, ValueHint};
-use clap_complete::engine::ArgValueCandidates;
+use clap_complete::engine::{ArgValueCandidates, ArgValueCompleter};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
@@ -37,12 +37,17 @@ const FP_HASH_AFTER_HELP: &str = "Exit codes: 0 hashed, 2 usage or read error.\n
 berc fp hash Lib.pretty/SOT-23.kicad_mod\n  berc fp hash board.kicad_pcb U3 --canonical";
 
 /// Exit codes of `berc fp check`, under its --help
-const FP_CHECK_AFTER_HELP: &str = "Exit codes: 0 every footprint ok, 1 any other status or a schematic copy older \
-than its library, 2 usage or read error.\n\nStatuses: ok, changed (the footprint differs from the one reviewed), \
-unreviewed (no hash on the symbol), refused (the symbol sets no footprint, so a review means nothing), no symbol \
-(a footprint without a schematic symbol, not marked board-only), other version, malformed. Board-only footprints \
-without a symbol (logos, mounting holes) are listed last under their own heading and don't fail the run.\n\nExamples:\n  berc fp check\n  \
-berc fp check hw/board --format json";
+const FP_CHECK_AFTER_HELP: &str = "Exit codes: 0 every footprint ok (with --lib: every symbol ok or without \
+a footprint), 1 any other status or a schematic copy older than its library, 2 usage or read error.\n\nStatuses: ok, \
+changed (the footprint differs from the one reviewed), unreviewed (no hash on the symbol), refused (the symbol sets \
+no footprint, so a review means nothing), no symbol (a footprint without a schematic symbol, not marked board-only), \
+other version, malformed. Board-only footprints without a symbol (logos, mounting holes) are listed last under their \
+own heading and don't fail the run.\n\nWith --lib, each symbol of the library is checked against the footprint its \
+Footprint field names, read through --footprints and the fp-lib-table: ok, changed, unreviewed, missing (the \
+footprint is not found), refused (a hash on a symbol without a footprint), other version, malformed. Symbols without \
+a footprint and without a hash are listed last and don't fail the run.\n\nExamples:\n  berc fp check\n  \
+berc fp check hw/board --format json\n  berc fp check --lib symbols/Lib.kicad_symdir --footprints footprints\n  \
+berc fp check --lib symbols --footprints footprints";
 
 /// better_erc command line tools
 ///
@@ -144,21 +149,34 @@ enum FpCommand {
         #[arg(long, value_enum, default_value_t = ListFormat::Text)]
         format: ListFormat,
     },
-    /// Check every footprint of a board against the review hash on its library symbol
+    /// Check every footprint of a board against the review hash on its library symbol, or every symbol of a library
     ///
     /// Each board footprint's review hash (as `berc fp hash` prints it) is compared with the `Footprint_Review`
     /// field of its symbol's library symbol: in the .kicad_sym found through the project's or the global
     /// sym-lib-table, else in the schematic's copy of it. A schematic copy that holds another hash than the library
     /// is reported too: the schematic was not updated from the library.
+    ///
+    /// With --lib, the symbols of a symbol library instead: each against the library footprint its `Footprint`
+    /// field names, so a library is checked before any board uses it.
     #[command(after_help = FP_CHECK_AFTER_HELP)]
     Check(FpCheckArgs),
 }
 
 #[derive(clap::Args)]
 struct FpCheckArgs {
-    /// The KiCad project: a directory, its .kicad_pro, .kicad_sch or .kicad_pcb
+    /// The KiCad project: a directory, its .kicad_pro, .kicad_sch or .kicad_pcb. With --lib, the directory whose
+    /// sym-lib-table and fp-lib-table are read besides the global ones
     #[arg(value_hint = ValueHint::AnyPath, default_value = ".")]
     project: PathBuf,
+    /// Check every symbol of this symbol library instead of a board, repeatable: a .kicad_sym, a .kicad_symdir, a
+    /// folder of them, or a nickname in the sym-lib-table
+    #[arg(long, value_name = "LIB",
+          add = ArgValueCompleter::new(complete::symbol_libraries))]
+    lib: Vec<String>,
+    /// With --lib: a footprint library (.pretty) or a folder of them, searched before the fp-lib-table, each by
+    /// its folder name; repeatable
+    #[arg(long, value_name = "DIR", value_hint = ValueHint::DirPath, requires = "lib")]
+    footprints: Vec<PathBuf>,
     #[arg(long, value_enum, default_value_t = ListFormat::Text)]
     format: ListFormat,
 }
@@ -543,6 +561,9 @@ fn fp_hash(file: &Path, reference: Option<&str>, canonical: bool, format: ListFo
 
 fn fp_check(args: &FpCheckArgs) -> ExitCode {
     use better_erc::fp::{FpCheckError, SymbolLibraries, kicad_config_dir};
+    if !args.lib.is_empty() {
+        return fp_check_libraries(args);
+    }
     let spinner = progress::Delayed::start();
     spinner.set(format!("reading {}", args.project.display()));
     let config = kicad_config_dir();
@@ -563,6 +584,35 @@ fn fp_check(args: &FpCheckArgs) -> ExitCode {
         &run.to_json(),
         run.is_ok(),
     )
+}
+
+fn fp_check_libraries(args: &FpCheckArgs) -> ExitCode {
+    use better_erc::fp::{LibCheckError, LibCheckOptions, kicad_config_dir};
+    let project = if args.project.is_file() {
+        args.project
+            .parent()
+            .unwrap_or(Path::new("."))
+            .to_path_buf()
+    } else {
+        args.project.clone()
+    };
+    let opts = LibCheckOptions {
+        libraries: args.lib.clone(),
+        project,
+        config: kicad_config_dir(),
+        footprints: args.footprints.clone(),
+    };
+    let spinner = progress::Delayed::start();
+    spinner.set(format!("reading {}", args.lib.join(", ")));
+    let run = better_erc::fp::check_libraries(&opts);
+    spinner.finish();
+    match run {
+        Ok(r) => show_diff(args.format, &r.to_text_color(), &r.to_json(), r.is_ok()),
+        Err(e) => {
+            error(&e.to_string());
+            ExitCode::from(LibCheckError::EXIT_CODE)
+        }
+    }
 }
 
 fn check_error(e: &CheckError) -> ExitCode {

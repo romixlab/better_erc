@@ -416,6 +416,7 @@ fn usage_is_recorded_per_command_and_flag() {
     run(&["fp", "hash", path(&lib)]);
     run(&["fp", "hash", path(&lib), "--canonical"]);
     run(&["fp", "check", path(&dir)]);
+    run(&["fp", "check", "--lib", "X", "--footprints", path(&dir)]);
     let lines = std::fs::read_to_string(&file).unwrap();
     let sigs: Vec<&str> = lines
         .lines()
@@ -423,12 +424,21 @@ fn usage_is_recorded_per_command_and_flag() {
         .collect();
     assert_eq!(
         sigs,
-        ["fp hash", "fp hash", "fp hash --canonical", "fp check"]
+        [
+            "fp hash",
+            "fp hash",
+            "fp hash --canonical",
+            "fp check",
+            "fp check",
+            "fp check --lib",
+            "fp check --footprints"
+        ]
     );
     // The app writes its steps into the same record, counted in a column of their own
     std::fs::write(&file, lines + "0\tapp fp-review accept\tapp\n").unwrap();
     let summary = stdout(&run(&["usage"]));
     assert!(summary.contains("fp hash --canonical"), "{summary}");
+    assert!(summary.contains("fp check --lib"), "{summary}");
     assert!(
         summary
             .lines()
@@ -441,5 +451,221 @@ fn usage_is_recorded_per_command_and_flag() {
             .any(|l| l.starts_with("textconv ") && l.ends_with(" 0")),
         "{summary}"
     );
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// A one-symbol `.kicad_sym` file as KiCad writes into a `.kicad_symdir`
+fn symdir_file(symbol: &str) -> String {
+    format!("(kicad_symbol_lib (version 20241209) (generator \"kicad_symbol_editor\")\n{symbol})\n")
+}
+
+/// A symbol library to check: a `.kicad_symdir` with a symbol of each status (one derived, one whose file name is
+/// not its name), a flat `.kicad_sym` beside it, the footprints from the fixtures' `Test.pretty`
+fn symbol_library(dir: &Path) -> (String, String) {
+    let (sot, mixed) = (library_hash("Asym_SOT"), library_hash("Mixed_Pads"));
+    let lib = dir.join("symbols/Rev.kicad_symdir");
+    std::fs::create_dir_all(&lib).unwrap();
+    let write = |file: &str, symbol: String| {
+        std::fs::write(lib.join(format!("{file}.kicad_sym")), symdir_file(&symbol)).unwrap()
+    };
+    write("Ok", lib_symbol("Ok", "Test:Asym_SOT", Some(&sot)));
+    write(
+        "Changed",
+        lib_symbol("Changed", "Test:Asym_SOT", Some(&mixed)),
+    );
+    write(
+        "Unreviewed",
+        lib_symbol("Unreviewed", "Test:Mixed_Pads", None),
+    );
+    write("Missing", lib_symbol("Missing", "Test:Nope", Some(&sot)));
+    write("Refused", lib_symbol("Refused", "", Some(&sot)));
+    write("Generic", lib_symbol("Generic", "", None));
+    write(
+        "Future",
+        lib_symbol("Future", "Test:Asym_SOT", Some("fp2:ab")),
+    );
+    write(
+        "Child",
+        r#"(symbol "Child" (extends "Ok") (property "Value" "Child" (at 0 0 0) (effects (font (size 1.27 1.27)))))"#
+            .into(),
+    );
+    write(
+        "Odd_Name",
+        lib_symbol("Odd/Name", "Test:Asym_SOT", Some(&sot)),
+    );
+    let flat = format!(
+        "(kicad_symbol_lib (version 20241209)\n{}\n{})\n",
+        lib_symbol("A", "Test:Asym_SOT", Some(&sot)),
+        lib_symbol("B", "", None)
+    );
+    std::fs::write(dir.join("symbols/Flat.kicad_sym"), flat).unwrap();
+    (sot, mixed)
+}
+
+#[test]
+fn check_a_symbol_library() {
+    let dir = scratch("lib");
+    let (sot, mixed) = symbol_library(&dir);
+    let lib = dir.join("symbols/Rev.kicad_symdir");
+    let out = fp_check(
+        &dir,
+        &[
+            "--lib",
+            path(&lib),
+            "--footprints",
+            path(&fixtures()),
+            "--format",
+            "json",
+        ],
+    );
+    assert_eq!(out.status.code(), Some(1), "{out:?}");
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    assert_eq!(v["libraries"][0]["nickname"], "Rev");
+    assert_eq!(v["libraries"][0]["symbols"], 9);
+    let syms = v["symbols"].as_array().unwrap();
+    let get = |s: &str| {
+        syms.iter()
+            .find(|e| e["symbol"] == format!("Rev:{s}"))
+            .unwrap_or_else(|| panic!("{s}: {syms:?}"))
+    };
+    let status = |s: &str| get(s)["status"].as_str().unwrap().to_string();
+    assert_eq!(status("Ok"), "ok");
+    assert_eq!(status("Child"), "ok", "the parent's footprint and hash");
+    assert_eq!(status("Odd/Name"), "ok");
+    assert_eq!(status("Changed"), "changed");
+    assert_eq!(get("Changed")["hash"], sot.as_str());
+    assert_eq!(get("Changed")["stored"], mixed.as_str());
+    assert_eq!(status("Unreviewed"), "unreviewed");
+    assert_eq!(get("Unreviewed")["hash"], mixed.as_str());
+    assert_eq!(status("Missing"), "missing");
+    assert!(
+        get("Missing")["note"]
+            .as_str()
+            .unwrap()
+            .contains("no footprint Nope"),
+        "{:?}",
+        get("Missing")
+    );
+    assert_eq!(status("Refused"), "refused");
+    assert_eq!(status("Generic"), "no-footprint");
+    assert_eq!(status("Future"), "other-version");
+    assert!(
+        get("Ok")["footprint_file"]
+            .as_str()
+            .unwrap()
+            .ends_with("Test.pretty/Asym_SOT.kicad_mod")
+    );
+
+    // Text: one line per symbol, the symbols without a footprint last under their heading, a summary
+    let out = fp_check(
+        &dir,
+        &["--lib", path(&lib), "--footprints", path(&fixtures())],
+    );
+    let text = stdout(&out);
+    let lines: Vec<&str> = text.lines().collect();
+    assert!(
+        lines
+            .iter()
+            .any(|l| l.starts_with("unreviewed    Rev:Unreviewed") && l.contains("hash now fp1:")),
+        "{text}"
+    );
+    let heading = lines
+        .iter()
+        .position(|l| l.starts_with("symbols without a footprint"))
+        .unwrap();
+    assert!(
+        lines[heading + 1].starts_with("no footprint  Rev:Generic"),
+        "{text}"
+    );
+    assert!(lines.iter().all(|l| !l.ends_with(' ')), "{text:?}");
+    assert!(
+        lines.last().unwrap().ends_with(
+            "9 symbols: 3 ok, 1 changed, 1 unreviewed, 1 missing, 1 refused, 1 other version, 1 no footprint"
+        ),
+        "{text}"
+    );
+
+    // Without --footprints the footprints come through the project's fp-lib-table
+    std::fs::write(
+        dir.join("fp-lib-table"),
+        format!(
+            "(fp_lib_table (version 7)\n  (lib (name \"Test\")(type \"KiCad\")(uri \"{}\")(options \"\")(descr \"\")))\n",
+            fixtures().join("Test.pretty").display()
+        ),
+    )
+    .unwrap();
+    let out = fp_check(&dir, &["--lib", path(&lib), "--format", "json"]);
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let ok = v["symbols"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|e| e["status"] == "ok")
+        .count();
+    assert_eq!(ok, 3, "{v}");
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+#[test]
+fn check_libraries_by_folder_and_nickname() {
+    let dir = scratch("libs");
+    symbol_library(&dir);
+    // A folder: every library in it, in name order
+    let out = fp_check(
+        &dir,
+        &[
+            "--lib",
+            path(&dir.join("symbols")),
+            "--footprints",
+            path(&fixtures().join("Test.pretty")),
+            "--format",
+            "json",
+        ],
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let nicks: Vec<&str> = v["libraries"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|l| l["nickname"].as_str().unwrap())
+        .collect();
+    assert_eq!(nicks, ["Flat", "Rev"]);
+    assert_eq!(v["symbols"][0]["symbol"], "Flat:A");
+    assert_eq!(v["symbols"][0]["status"], "ok");
+    assert_eq!(v["symbols"][1]["status"], "no-footprint");
+
+    // A nickname through the project's sym-lib-table, which names the library its own way; all ok exits 0
+    std::fs::write(
+        dir.join("sym-lib-table"),
+        "(sym_lib_table (version 7)\n  (lib (name \"MyFlat\")(type \"KiCad\")(uri \"${KIPRJMOD}/symbols/Flat.kicad_sym\")(options \"\")(descr \"\")))\n",
+    )
+    .unwrap();
+    let out = fp_check(
+        &dir,
+        &["--lib", "MyFlat", "--footprints", path(&fixtures())],
+    );
+    assert_eq!(out.status.code(), Some(0), "{out:?}");
+    let text = stdout(&out);
+    assert!(text.starts_with("ok            MyFlat:A"), "{text}");
+
+    // What is no library exits 2 and says why
+    for (args, says) in [
+        (vec!["--lib", "Nope"], "library Nope is in no sym-lib-table"),
+        (
+            vec!["--lib", path(&fixtures())],
+            "no symbol library (.kicad_sym, .kicad_symdir) in it",
+        ),
+        (
+            vec!["--lib", "MyFlat", "--footprints", path(&dir)],
+            "no footprint library (.pretty)",
+        ),
+    ] {
+        let out = fp_check(&dir, &args);
+        assert_eq!(out.status.code(), Some(2), "{args:?}");
+        let err = String::from_utf8(out.stderr).unwrap();
+        assert!(err.contains(says), "{args:?}: {err}");
+    }
+    let out = fp_check(&dir, &["--footprints", path(&fixtures())]);
+    assert_eq!(out.status.code(), Some(2), "--footprints needs --lib");
     std::fs::remove_dir_all(&dir).unwrap();
 }

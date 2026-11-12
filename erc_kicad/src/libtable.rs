@@ -283,6 +283,20 @@ impl LibTables {
         self.kind
     }
 
+    /// Library `nick` at `path`, searched before every table's (a library given on the command line)
+    pub fn add_first(&mut self, nick: &str, path: &Path) {
+        self.entries.insert(
+            0,
+            LibEntry {
+                name: nick.to_string(),
+                kind: "KiCad".into(),
+                uri: path.to_string_lossy().into_owned(),
+                descr: String::new(),
+                disabled: false,
+            },
+        );
+    }
+
     pub fn vars(&self) -> &KicadVars {
         &self.vars
     }
@@ -364,11 +378,119 @@ fn split_id(lib_id: &str) -> Result<(&str, &str), LibError> {
         .ok_or_else(|| LibError::NoNickname(lib_id.to_string()))
 }
 
+/// One symbol library on disk: a `.kicad_sym` file, or a KiCad 9+ `.kicad_symdir` directory with one `.kicad_sym`
+/// per symbol named after it. Every file is read once.
+#[derive(Clone, Debug)]
+pub struct SymbolLibrary {
+    path: PathBuf,
+    /// The text of each file read, `None` for one that can't be
+    files: HashMap<PathBuf, Option<String>>,
+}
+
+impl SymbolLibrary {
+    /// The library at `path`, not read yet
+    pub fn new(path: &Path) -> SymbolLibrary {
+        SymbolLibrary {
+            path: path.to_path_buf(),
+            files: HashMap::new(),
+        }
+    }
+
+    pub fn path(&self) -> &Path {
+        &self.path
+    }
+
+    /// A directory library (`.kicad_symdir`)
+    pub fn is_dir(&self) -> bool {
+        self.path.extension().is_some_and(|e| e == "kicad_symdir")
+    }
+
+    /// The nickname KiCad gives the library by default: its file or directory name without the extension
+    pub fn default_nickname(&self) -> String {
+        self.path
+            .file_stem()
+            .map_or_else(String::new, |s| s.to_string_lossy().into_owned())
+    }
+
+    fn text(&mut self, path: &Path) -> Option<String> {
+        self.files
+            .entry(path.to_path_buf())
+            .or_insert_with(|| std::fs::read_to_string(path).ok())
+            .clone()
+    }
+
+    /// The names of the library's symbols, sorted; `None` when it can't be read or is no symbol library
+    pub fn names(&mut self) -> Option<Vec<String>> {
+        let mut names = Vec::new();
+        if self.is_dir() {
+            let mut files: Vec<PathBuf> = std::fs::read_dir(&self.path)
+                .ok()?
+                .filter_map(|e| Some(e.ok()?.path()))
+                .filter(|p| p.extension().is_some_and(|e| e == "kicad_sym"))
+                .collect();
+            files.sort();
+            for f in files {
+                if let Some(n) = self.text(&f).and_then(|t| crate::symlib::symbol_names(&t)) {
+                    names.extend(n);
+                }
+            }
+        } else {
+            let path = self.path.clone();
+            names = crate::symlib::symbol_names(&self.text(&path)?)?;
+        }
+        names.sort_by(|a, b| erc_model::natural_cmp(a, b));
+        names.dedup();
+        Some(names)
+    }
+
+    /// The fields of symbol `name`, a derived symbol's on top of its parent's ([`crate::symlib::resolve_fields`])
+    pub fn fields(&mut self, name: &str) -> Result<Vec<(String, String)>, LibError> {
+        let not_found = |path: &Path| LibError::NotFound {
+            name: format!("symbol {name}"),
+            path: path.to_path_buf(),
+        };
+        let nick = self.default_nickname();
+        let unreadable = |path: &Path| LibError::Unreadable {
+            nick: nick.clone(),
+            path: path.to_path_buf(),
+        };
+        let path = self.path.clone();
+        if self.is_dir() {
+            if !path.is_dir() {
+                return Err(unreadable(&path));
+            }
+            // `Name.kicad_sym`, else the file that defines it (a name KiCad escaped for the file system)
+            let read = |n: &str| {
+                let named = path.join(format!("{n}.kicad_sym"));
+                if named.is_file() {
+                    return self.text(&named);
+                }
+                let mut files: Vec<PathBuf> = std::fs::read_dir(&path)
+                    .ok()?
+                    .filter_map(|e| Some(e.ok()?.path()))
+                    .filter(|p| p.extension().is_some_and(|e| e == "kicad_sym"))
+                    .collect();
+                files.sort();
+                files.into_iter().find_map(|f| {
+                    let text = self.text(&f)?;
+                    crate::symlib::symbol_names(&text)?
+                        .iter()
+                        .any(|s| s == n)
+                        .then_some(text)
+                })
+            };
+            return crate::symlib::resolve_fields(name, read).ok_or_else(|| not_found(&path));
+        }
+        let text = self.text(&path).ok_or_else(|| unreadable(&path))?;
+        crate::symlib::symbol_fields(&text, name).ok_or_else(|| not_found(&path))
+    }
+}
+
 /// The symbol libraries of a project: the fields of a library symbol by its `Lib:Name`
 #[derive(Clone, Debug)]
 pub struct SymbolLibraries {
     tables: LibTables,
-    files: HashMap<PathBuf, Option<String>>,
+    libraries: HashMap<PathBuf, SymbolLibrary>,
 }
 
 impl SymbolLibraries {
@@ -376,7 +498,7 @@ impl SymbolLibraries {
     pub fn new(dir: &Path, config: Option<&Path>) -> SymbolLibraries {
         SymbolLibraries {
             tables: LibTables::new(LibKind::Symbol, dir, config),
-            files: HashMap::new(),
+            libraries: HashMap::new(),
         }
     }
 
@@ -384,39 +506,26 @@ impl SymbolLibraries {
         &self.tables
     }
 
+    /// Library `nick`, through the tables
+    pub fn library(&mut self, nick: &str) -> Result<&mut SymbolLibrary, LibError> {
+        let path = self.tables.path(nick)?;
+        Ok(self
+            .libraries
+            .entry(path.clone())
+            .or_insert_with(|| SymbolLibrary::new(&path)))
+    }
+
     /// The fields of library symbol `lib_id` (`Lib:Name`), a derived symbol's on top of its parent's
     pub fn fields(&mut self, lib_id: &str) -> Result<Vec<(String, String)>, LibError> {
         let (nick, name) = split_id(lib_id)?;
-        let path = self.tables.path(nick)?;
-        let not_found = |path: &Path| LibError::NotFound {
-            name: format!("symbol {name}"),
-            path: path.to_path_buf(),
-        };
-        let unreadable = |path: &Path| LibError::Unreadable {
-            nick: nick.to_string(),
-            path: path.to_path_buf(),
-        };
-        let files = &mut self.files;
-        // KiCad 9+ directory symbol libraries (`.kicad_symdir`): one `.kicad_sym` per symbol, named after it
-        if path.extension().is_some_and(|e| e == "kicad_symdir") {
-            if !path.is_dir() {
-                return Err(unreadable(&path));
-            }
-            let read = |n: &str| {
-                let p = path.join(format!("{n}.kicad_sym"));
-                files
-                    .entry(p.clone())
-                    .or_insert_with(|| std::fs::read_to_string(&p).ok())
-                    .clone()
-            };
-            return crate::symlib::resolve_fields(name, read).ok_or_else(|| not_found(&path));
-        }
-        let text = files
-            .entry(path.clone())
-            .or_insert_with(|| std::fs::read_to_string(&path).ok())
-            .as_deref()
-            .ok_or_else(|| unreadable(&path))?;
-        crate::symlib::symbol_fields(text, name).ok_or_else(|| not_found(&path))
+        let lib = self.library(nick)?;
+        lib.fields(name).map_err(|e| match e {
+            LibError::Unreadable { path, .. } => LibError::Unreadable {
+                nick: nick.to_string(),
+                path,
+            },
+            e => e,
+        })
     }
 }
 
@@ -449,6 +558,13 @@ impl FootprintLibraries {
 
     pub fn tables(&self) -> &LibTables {
         &self.tables
+    }
+
+    /// The `.pretty` directory `path` as library `nick`, searched before the tables
+    pub fn add_first(&mut self, nick: &str, path: &Path) {
+        self.tables.add_first(nick, path);
+        self.read
+            .retain(|id, _| !id.starts_with(&format!("{nick}:")));
     }
 
     /// The `.kicad_mod` file of `lib_id` (`Lib:Name`): `Name.kicad_mod` in the library's `.pretty` directory; not
@@ -550,5 +666,38 @@ mod tests {
         assert_eq!(libs[0].descr, "first");
         assert!(!libs[1].disabled);
         assert_eq!(libs[1].kind, "Legacy");
+    }
+
+    /// A directory library lists the symbols of its files and finds one whose file is not named after it; a flat
+    /// file lists its top-level symbols
+    #[test]
+    fn symbol_library_names_and_fields() {
+        let dir = std::env::temp_dir().join(format!("erc-symlib-{}", std::process::id()));
+        let symdir = dir.join("Lib.kicad_symdir");
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&symdir).unwrap();
+        let file = |name: &str, extra: &str| {
+            format!(
+                "(kicad_symbol_lib (version 20241209)\n  (symbol \"{name}\" {extra} (property \"Value\" \"{name}\") (symbol \"{name}_1_1\")))\n"
+            )
+        };
+        std::fs::write(symdir.join("B.kicad_sym"), file("B", "")).unwrap();
+        std::fs::write(symdir.join("A_B.kicad_sym"), file("A/B", "(extends \"B\")")).unwrap();
+        std::fs::write(symdir.join("notes.txt"), "not a symbol").unwrap();
+        let mut lib = SymbolLibrary::new(&symdir);
+        assert_eq!(lib.default_nickname(), "Lib");
+        assert_eq!(lib.names().unwrap(), ["A/B", "B"]);
+        let f = lib.fields("A/B").unwrap();
+        assert!(f.contains(&("Value".into(), "A/B".into())), "{f:?}");
+        assert!(matches!(lib.fields("C"), Err(LibError::NotFound { .. })));
+        let flat = dir.join("Flat.kicad_sym");
+        std::fs::write(&flat, file("Z", "")).unwrap();
+        assert_eq!(SymbolLibrary::new(&flat).names().unwrap(), ["Z"]);
+        assert!(
+            SymbolLibrary::new(&dir.join("None.kicad_sym"))
+                .names()
+                .is_none()
+        );
+        std::fs::remove_dir_all(&dir).unwrap();
     }
 }

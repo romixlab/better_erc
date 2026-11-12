@@ -73,3 +73,24 @@ pub fn board_references() -> Vec<CompletionCandidate> {
         .map(|(r, lib)| CompletionCandidate::new(r).help(Some(lib.into())))
         .collect()
 }
+
+/// The symbol libraries of the sym-lib-table in the current directory and the global one, by nickname, and the
+/// paths that start with `current` (`berc fp check --lib`)
+pub fn symbol_libraries(current: &std::ffi::OsStr) -> Vec<CompletionCandidate> {
+    use clap_complete::engine::{PathCompleter, ValueCompleter};
+    let config = better_erc::fp::kicad_config_dir();
+    let libs = better_erc::kicad::libtable::LibTables::new(
+        better_erc::kicad::libtable::LibKind::Symbol,
+        std::path::Path::new("."),
+        config.as_deref(),
+    );
+    let prefix = current.to_string_lossy();
+    let mut out: Vec<CompletionCandidate> = libs
+        .libraries()
+        .into_iter()
+        .filter(|e| e.name.starts_with(prefix.as_ref()))
+        .map(|e| CompletionCandidate::new(&e.name).help(Some(e.uri.clone().into())))
+        .collect();
+    out.extend(PathCompleter::any().complete(current));
+    out
+}
