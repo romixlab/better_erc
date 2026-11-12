@@ -343,11 +343,18 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
 3. **Set the scale**: R with the pointer at one end of a dimension of the drawing, R again at the other (or pick
    Ruler and drag along it). The ruler snaps level: horizontal or vertical by the larger of its dx and dy, an end
    dragged goes where it is dragged and the other end follows on that axis (Shift held, or the setting off: any
-   angle). Z zooms in on the first end, where a click or a drag puts it exactly; Z again on the
-   other end. S goes back to the view and asks the length in a box in the middle of the canvas, the number typed
+   angle). Its ends snap to the drawing's own lines, read from the PDF's vector paths: within 10 screen pixels (a
+   setting, 0 for never) to a line's end or two lines crossing, else onto the nearest line's centre; on a level
+   ruler each coordinate on its own, so on a horizontal ruler an end takes the X of the extension line beside it
+   and the Y of a line along it. Thin filled rectangles count as lines, and the edges of other filled shapes (a
+   pad drawn filled) as lines too. Where an end would snap shows at the pointer before it is placed: the lines in
+   orange, a square on an end, a cross on a crossing, a ring on a line. Alt held leaves an end where the pointer
+   is. Z zooms in on the first end, where a click or a drag puts it exactly; Z again on the
+   other end. The number the dimension prints between the ruler's ends, read from the page's text, is outlined
+   and offered as a chip beside the ruler's length (`2.00 mm · D`): D or a click on it sets the scale from it. S goes back to the view and asks the length in a box in the middle of the canvas, the number typed
    shown large in mm: type the length and Enter sets the scale, Esc leaves the box without one (the side panel's
    field and Set scale do the same by mouse); Z a third time does what S does. The keys of the
-   whole step: F, R, R, Z, Z, S, the length, Enter. A page
+   whole step: F, R, R, Z, Z, S, the length, Enter; with the snap and the dimension's number, often F, R, R, D. A page
    that states its own scale (`SCALE: 20X`) offers it as a button; check it with the ruler. Once the scale is set,
    the tool is Move footprint again.
 4. **Lay the footprint on the drawing**: drag it (Move footprint), nudge it with the arrow keys (Shift: ten times
@@ -394,7 +401,8 @@ from egui's own font.
 
 The settings (blink rate, the opacity, blend mode and colours at first, whether the page is inverted at first,
 the page search words, the finest drawing scale, the font folders, the library search command, how far Z zooms
-in, whether the ruler snaps level, and the keys F, R, Z, S, T, M, B, C and I by name in `[footprint_review.keys]`) are in
+in, whether the ruler snaps level, how near its ends snap to the drawing's lines, and the keys F, R, Z, S, D, T, M,
+B, C and I by name in `[footprint_review.keys]`) are in
 `~/.config/better_erc/config.toml` (`$XDG_CONFIG_HOME`, or the file `$BERC_CONFIG` names), section
 `[footprint_review]`; the tab's Settings shows and saves them. Each step of a review
 is recorded in berc's usage record (`app fp-review accept`, `app fp-review write`, ...), which `berc usage` counts in its `app` column.

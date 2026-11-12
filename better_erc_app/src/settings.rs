@@ -40,6 +40,9 @@ pub struct FootprintReviewSettings {
     /// The ruler snaps level, horizontal or vertical (an end moved, the other follows on that axis); Shift held
     /// frees it for any angle
     pub ruler_snap: bool,
+    /// How near (screen pixels) a ruler end snaps to the drawing's lines: a line's end, two lines crossing, else
+    /// onto the line; 0: never. Alt held lets it go free of them.
+    pub line_snap_px: f32,
     /// Whether the page is shown inverted (white-ish on black) at first
     pub invert: bool,
     /// The canvas' keys, by egui's key names (`F`, `Space`, `F5`, ...)
@@ -59,6 +62,8 @@ pub struct Keys {
     pub ruler_zoom: String,
     /// The ruler's length typed in: the length field takes the keyboard, Enter sets the scale
     pub scale: String,
+    /// The number the dimension prints between the ruler's ends sets the scale
+    pub dimension: String,
     /// Turn the footprint by 90°
     pub rotate: String,
     /// Bottom view: the footprint mirrored
@@ -78,6 +83,7 @@ impl Default for Keys {
             ruler: "R".into(),
             ruler_zoom: "Z".into(),
             scale: "S".into(),
+            dimension: "D".into(),
             rotate: "T".into(),
             mirror: "M".into(),
             blink: "B".into(),
@@ -222,6 +228,7 @@ impl Default for FootprintReviewSettings {
             colors: LayerColors::default(),
             ruler_zoom: 8.0,
             ruler_snap: true,
+            line_snap_px: 10.0,
             invert: false,
             keys: Keys::default(),
         }

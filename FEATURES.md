@@ -693,7 +693,9 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   (queries from the datasheet file name, a part name in its URL, the `Mpn` fields, the value), or a file picker;
   read and drawn by hayro (pure Rust) on its own thread, the PDF standard fonts from Liberation or egui's font; a
   page search by words finds the land pattern page. Scale by a ruler along a dimension (or the page's own
-  `SCALE: 20X`), footprint moved, turned, mirrored, opacity, blink, blend mode (normal, multiply, screen,
+  `SCALE: 20X`), its ends snapping to the drawing's lines from the PDF's vector paths (line ends, crossings, onto a
+  line; each coordinate on its own on a level ruler; Alt: free), the dimension's number between its ends offered
+  as a chip (`D`), footprint moved, turned, mirrored, opacity, blink, blend mode (normal, multiply, screen,
   difference: a wgpu shader reading the page), the page itself invertible (white-ish on black, `I`, a setting for
   the default too). Three views, one at a time (a radio choice, `C` cycles through them), each what the board
   makes on that layer filled in its one colour: copper (pads, copper graphics, vias; red), mask (the openings

@@ -1,18 +1,20 @@
 //! A datasheet PDF for the footprint review, read and drawn by hayro (pure Rust) on a thread of its own: the page
 //! sizes first, then one picture of the page asked for at a time, and the text of every page for the page search
-//! while nothing is asked. Page coordinates are PDF points (1/72 inch), y down, as the page is shown.
+//! while nothing is asked, with its lines and words for the ruler ([`PageGeometry`]). Page coordinates are PDF
+//! points (1/72 inch), y down, as the page is shown.
 
+use super::geometry::{PageGeometry, Seg, Word};
 use hayro::hayro_interpret::font::{FontData, FontQuery, StandardFont};
 use hayro::hayro_interpret::hayro_cmap::BfString;
 use hayro::hayro_interpret::util::TransformExt;
 use hayro::hayro_interpret::{
     BlendMode, ClipPath, Context as HayroContext, Device, DrawMode, DrawProps, Image,
-    ImageDrawProps, InterpreterCache, InterpreterSettings, SoftMask, font::GlyphRun,
+    ImageDrawProps, InterpreterCache, InterpreterSettings, SoftMask, font::Glyph, font::GlyphRun,
     interpret_page,
 };
 use hayro::hayro_syntax::Pdf;
 use hayro::hayro_syntax::page::Page;
-use hayro::kurbo::{BezPath, Rect};
+use hayro::kurbo::{Affine, BezPath, PathEl, Point, Rect, Shape};
 use hayro::vello_cpu::color::palette::css::WHITE;
 use hayro::{PixmapSettings, RenderCache, RenderSettings};
 use std::path::{Path, PathBuf};
@@ -29,10 +31,11 @@ enum Reply {
         page: usize,
         image: egui::ColorImage,
     },
-    /// A page's text, for the page search
+    /// A page's text, for the page search, and its lines and words, for the ruler
     Text {
         page: usize,
         text: String,
+        geometry: Arc<PageGeometry>,
     },
     /// Nothing left to do until something is asked
     Idle,
@@ -70,6 +73,8 @@ pub struct PdfDoc {
     pub error: Option<String>,
     /// Each page's text once read, `None` until then
     pub texts: Vec<Option<String>>,
+    /// Each page's lines and words once read, `None` until then
+    pub geometry: Vec<Option<Arc<PageGeometry>>>,
     pub picture: Option<Picture>,
     inverted: Option<Inverted>,
     /// The page and scale asked for last, so a picture is asked once
@@ -149,6 +154,7 @@ impl PdfDoc {
             pages: None,
             error: None,
             texts: Vec::new(),
+            geometry: Vec::new(),
             picture: None,
             inverted: None,
             asked: None,
@@ -185,6 +191,7 @@ impl PdfDoc {
         match r {
             Reply::Opened(pages) => {
                 self.texts = vec![None; pages.len()];
+                self.geometry = vec![None; pages.len()];
                 self.pages = Some(pages);
             }
             Reply::Failed(e) => self.error = Some(e),
@@ -204,9 +211,16 @@ impl PdfDoc {
                     generation,
                 });
             }
-            Reply::Text { page, text } => {
+            Reply::Text {
+                page,
+                text,
+                geometry,
+            } => {
                 if let Some(t) = self.texts.get_mut(page) {
                     *t = Some(text);
+                }
+                if let Some(g) = self.geometry.get_mut(page) {
+                    *g = Some(geometry);
                 }
             }
             Reply::Idle => {}
@@ -236,6 +250,11 @@ impl PdfDoc {
         self.asked = Some((page, scale));
         self.idle = false;
         let _ = self.requests.send((page, scale));
+    }
+
+    /// A page's lines and words, once read
+    pub fn geometry(&self, page: usize) -> Option<&PageGeometry> {
+        self.geometry.get(page)?.as_deref()
     }
 
     /// Every page's text has been read
@@ -390,11 +409,12 @@ fn reader(
             let image = draw(p, &cache, &settings, scale);
             Reply::Picture { page, image }
         } else if next_text < pages.len() {
-            let text = page_text(&pages[next_text], &text_cache, &settings);
+            let (text, geometry) = page_text(&pages[next_text], &text_cache, &settings);
             next_text += 1;
             Reply::Text {
                 page: next_text - 1,
                 text,
+                geometry: Arc::new(geometry),
             }
         } else {
             if replies.send(Reply::Idle).is_err() {
@@ -434,13 +454,13 @@ fn draw<'a>(
     egui::ColorImage::from_rgba_premultiplied(size, pixmap.data_as_u8_slice())
 }
 
-/// The text of a page, for the page search
+/// The text of a page, for the page search, and its lines and words, for the ruler
 fn page_text<'a>(
     p: &Page<'a>,
     cache: &InterpreterCache<'a>,
     settings: &InterpreterSettings,
-) -> String {
-    let mut device = TextDevice::default();
+) -> (String, PageGeometry) {
+    let mut device = PageDevice::default();
     let (w, h) = p.render_dimensions();
     let mut cx = HayroContext::new(
         p.initial_transform(true).to_kurbo(),
@@ -450,27 +470,214 @@ fn page_text<'a>(
         settings.clone(),
     );
     interpret_page(p, &mut cx, &mut device);
-    device.text
+    device.word_done();
+    (device.text, device.geometry)
 }
 
-/// Collects a page's text: the glyphs' characters, a line break between runs
+/// The most line pieces kept of a page, so a page of hatching or outlined text stays small
+const MAX_SEGS: usize = 200_000;
+
+/// A filled rectangle at most this wide (points) and three times as long is a line, as some drawings draw them
+const THIN_RECT: f64 = 2.0;
+
+/// Collects a page's text (the glyphs' characters, a line break between runs), the straight pieces of its lines
+/// (stroked paths' centre lines with their width, thin filled rectangles' centre lines, other filled shapes'
+/// edges) and its words with the boxes of their glyphs' ink, in page points
 #[derive(Default)]
-struct TextDevice {
+struct PageDevice {
     text: String,
+    geometry: PageGeometry,
+    /// The word being read: its text, box, and its last glyph's box, writing direction and em size
+    word: Option<WordAcc>,
 }
 
-impl<'a> Device<'a> for TextDevice {
-    fn draw_path(&mut self, _: &BezPath, _: DrawProps<'a>, _: &DrawMode) {}
-    fn push_clip_path(&mut self, _: &ClipPath) {}
-    fn push_transparency_group(&mut self, _: f32, _: Option<SoftMask<'a>>, _: BlendMode) {}
-    fn draw_glyph_run(&mut self, run: &GlyphRun<'_, 'a>, _: DrawProps<'a>, _: &DrawMode) {
-        for g in run.glyphs() {
-            match g.as_unicode() {
-                Some(BfString::Char(c)) => self.text.push(c),
-                Some(BfString::String(s)) => self.text.push_str(&s),
-                None => {}
+struct WordAcc {
+    text: String,
+    bbox: Rect,
+    /// Where the next glyph of the word starts: the last one's origin moved on by its advance
+    pen: Point,
+    dir: [f64; 2],
+    em: f64,
+}
+
+impl PageDevice {
+    fn seg(&mut self, a: Point, b: Point, width: f64) {
+        if self.geometry.segs.len() < MAX_SEGS && a.distance(b) > 1e-3 {
+            self.geometry.segs.push(Seg {
+                a: [a.x as f32, a.y as f32],
+                b: [b.x as f32, b.y as f32],
+                width: width as f32,
+            });
+        }
+    }
+
+    /// The word being read is complete
+    fn word_done(&mut self) {
+        if let Some(w) = self.word.take() {
+            self.geometry.words.push(Word {
+                text: w.text,
+                min: [w.bbox.x0 as f32, w.bbox.y0 as f32],
+                max: [w.bbox.x1 as f32, w.bbox.y1 as f32],
+            });
+        }
+    }
+
+    /// A glyph `c`: its ink's box on the page, its origin and where the next glyph starts (`pen`), its writing
+    /// direction and em size. It goes on the word being read when it starts where that word's last glyph ended,
+    /// else starts a word; a glyph without ink (a space) ends one.
+    fn glyph(
+        &mut self,
+        c: &str,
+        bbox: Option<Rect>,
+        origin: Point,
+        pen: Point,
+        dir: [f64; 2],
+        em: f64,
+    ) {
+        let Some(bbox) = bbox.filter(|_| !c.trim().is_empty()) else {
+            self.word_done();
+            return;
+        };
+        let follows = self
+            .word
+            .as_ref()
+            .is_some_and(|w| dir == w.dir && origin.distance(w.pen) < 0.15 * w.em.max(em));
+        if !follows {
+            self.word_done();
+            self.word = Some(WordAcc {
+                text: String::new(),
+                bbox,
+                pen,
+                dir,
+                em,
+            });
+        }
+        let w = self.word.as_mut().expect("a word");
+        w.text.push_str(c);
+        w.bbox = w.bbox.union(bbox);
+        w.pen = pen;
+    }
+}
+
+/// The corners of a closed path of straight lines that is a rectangle (any angle), when it is one
+fn rect_corners(pts: &[Point]) -> Option<[Point; 4]> {
+    let pts = match pts {
+        [a, .., z] if pts.len() == 5 && a.distance(*z) < 1e-6 => &pts[..4],
+        _ => pts,
+    };
+    let [p0, p1, p2, p3] = <[Point; 4]>::try_from(pts).ok()?;
+    let (e0, e1, e2, e3) = (p1 - p0, p2 - p1, p3 - p2, p0 - p3);
+    let tol = 1e-3 * (e0.hypot() + e1.hypot()).max(1e-6);
+    let square = e0.dot(e1).abs() <= tol * e0.hypot().max(e1.hypot());
+    ((e0 + e2).hypot() <= tol && (e1 + e3).hypot() <= tol && square).then_some([p0, p1, p2, p3])
+}
+
+impl<'a> Device<'a> for PageDevice {
+    fn draw_path(&mut self, path: &BezPath, props: DrawProps<'a>, mode: &DrawMode) {
+        let t: Affine = props.transform;
+        let (fill, stroke) = match mode {
+            DrawMode::Fill(_) => (true, None),
+            DrawMode::Stroke(s) => (false, Some(s.line_width)),
+            DrawMode::FillAndStroke(_, s) => (true, Some(s.line_width)),
+            DrawMode::Invisible => return,
+        };
+        let scale = t.determinant().abs().sqrt();
+        // Each subpath: its points while it has only straight lines, the stroked ones kept as they come
+        let mut sub: Vec<Point> = Vec::new();
+        let mut straight = true;
+        let mut start = Point::ZERO;
+        let mut at = Point::ZERO;
+        let flush = |dev: &mut Self, sub: &mut Vec<Point>, straight: bool| {
+            if fill && stroke.is_none() && straight && sub.len() >= 3 {
+                match rect_corners(sub) {
+                    Some([p0, p1, p2, p3])
+                        if {
+                            let (a, b) = (p0.distance(p1), p1.distance(p2));
+                            a.min(b) <= THIN_RECT && a.max(b) >= 3.0 * a.min(b)
+                        } =>
+                    {
+                        let (a, b) = (p0.distance(p1), p1.distance(p2));
+                        if a >= b {
+                            dev.seg(p0.midpoint(p3), p1.midpoint(p2), b);
+                        } else {
+                            dev.seg(p0.midpoint(p1), p3.midpoint(p2), a);
+                        }
+                    }
+                    _ => {
+                        for i in 0..sub.len() {
+                            dev.seg(sub[i], sub[(i + 1) % sub.len()], 0.0);
+                        }
+                    }
+                }
+            }
+            sub.clear();
+        };
+        for el in path.elements() {
+            match *el {
+                PathEl::MoveTo(p) => {
+                    flush(self, &mut sub, straight);
+                    straight = true;
+                    start = t * p;
+                    at = start;
+                    sub.push(at);
+                }
+                PathEl::LineTo(p) => {
+                    let q = t * p;
+                    if let Some(w) = stroke {
+                        self.seg(at, q, w as f64 * scale);
+                    }
+                    at = q;
+                    sub.push(q);
+                }
+                PathEl::QuadTo(_, p) | PathEl::CurveTo(_, _, p) => {
+                    straight = false;
+                    at = t * p;
+                    sub.push(at);
+                }
+                PathEl::ClosePath => {
+                    if let Some(w) = stroke {
+                        self.seg(at, start, w as f64 * scale);
+                    }
+                    at = start;
+                }
             }
         }
+        flush(self, &mut sub, straight);
+    }
+    fn push_clip_path(&mut self, _: &ClipPath) {}
+    fn push_transparency_group(&mut self, _: f32, _: Option<SoftMask<'a>>, _: BlendMode) {}
+    fn draw_glyph_run(&mut self, run: &GlyphRun<'_, 'a>, props: DrawProps<'a>, _: &DrawMode) {
+        for g in run.glyphs() {
+            let c = match g.as_unicode() {
+                Some(BfString::Char(c)) => c.to_string(),
+                Some(BfString::String(s)) => s.to_string(),
+                None => String::new(),
+            };
+            self.text.push_str(&c);
+            let t = props.transform * g.transform();
+            let [a, b, _, _, _, _] = t.as_coeffs();
+            let len = a.hypot(b).max(1e-12);
+            // Outlines are in units of 1/1000 em
+            let em = t.determinant().abs().sqrt() * 1000.0;
+            let (ink, advance) = match &**g {
+                Glyph::Outline(o) => {
+                    let r = o.outline().bounding_box();
+                    ((r.area() > 0.0).then_some(r), o.advance_width())
+                }
+                Glyph::Type3(_) => (None, None),
+            };
+            // Without its advance, the next glyph starts where this one's ink ends
+            let advance = advance.map_or_else(|| ink.map_or(0.0, |r| r.x1), f64::from);
+            self.glyph(
+                &c,
+                ink.map(|r| t.transform_rect_bbox(r)),
+                t * Point::ZERO,
+                t * Point::new(advance, 0.0),
+                [a / len, b / len],
+                em,
+            );
+        }
+        // A word may go on in the next run (a number shown in pieces); the next glyph's place decides
         self.text.push('\n');
     }
     fn draw_image(&mut self, _: Image<'a, '_>, _: ImageDrawProps<'a>) {}
@@ -503,6 +710,7 @@ mod tests {
                 ],
                 lines: vec![[100.0, 100.0, 200.0, 100.0]],
                 rects: vec![[100.0, 120.0, 20.0, 10.0]],
+                ..Default::default()
             },
             TestPage::default(),
         ];
@@ -538,6 +746,66 @@ mod tests {
                 }
             ]
         );
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
+
+    /// A page's lines and words from the PDF's own paths and glyphs: stroked lines' centre lines with their
+    /// widths, a thin filled rectangle as the line it draws, a large one as its edges; words split at spaces, a
+    /// number shown in two pieces read as one word
+    #[test]
+    fn lines_and_words() {
+        let dir = std::env::temp_dir().join(format!("berc-pdf-geom-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let file = dir.join("g.pdf");
+        let text = |x: f32, y: f32, t: &str| (x, y, 10.0, t.to_string());
+        let page = TestPage {
+            texts: vec![
+                text(140.0, 190.0, "2.00"),
+                text(50.0, 300.0, "4X 0.50"),
+                // 1.27 in two pieces, the second right after the first
+                text(200.0, 300.0, "1"),
+                text(205.56, 300.0, ".27"),
+            ],
+            lines: vec![[100.0, 200.0, 200.0, 200.0]],
+            wide: vec![([100.0, 150.0, 100.0, 250.0], 2.0)],
+            rects: vec![[150.0, 100.0, 50.0, 0.8], [20.0, 20.0, 40.0, 20.0]],
+        };
+        std::fs::write(&file, write([300.0, 400.0], &[page])).unwrap();
+        let ctx = egui::Context::default();
+        let mut doc = PdfDoc::open(&ctx, &file, &[]);
+        doc.wait_idle(&ctx);
+        let g = doc.geometry(0).expect("the page's lines and words").clone();
+        let has = |a: [f32; 2], b: [f32; 2], w: f32| {
+            g.segs.iter().any(|s| {
+                let close = |p: [f32; 2], q: [f32; 2]| {
+                    (p[0] - q[0]).abs() < 0.01 && (p[1] - q[1]).abs() < 0.01
+                };
+                ((close(s.a, a) && close(s.b, b)) || (close(s.a, b) && close(s.b, a)))
+                    && (s.width - w).abs() < 0.01
+            })
+        };
+        assert!(has([100.0, 200.0], [200.0, 200.0], 0.5), "{:?}", g.segs);
+        assert!(has([100.0, 150.0], [100.0, 250.0], 2.0), "{:?}", g.segs);
+        assert!(
+            has([150.0, 100.4], [200.0, 100.4], 0.8),
+            "a thin rectangle is a line: {:?}",
+            g.segs
+        );
+        assert!(
+            has([20.0, 20.0], [60.0, 20.0], 0.0),
+            "a large one its edges: {:?}",
+            g.segs
+        );
+        assert_eq!(g.segs.len(), 3 + 4, "{:?}", g.segs);
+        let words: Vec<&str> = g.words.iter().map(|w| w.text.as_str()).collect();
+        assert_eq!(words, ["2.00", "4X", "0.50", "1.27"]);
+        let two = &g.words[0];
+        // The ink of 10 point digits whose baseline is at y 190
+        assert!(two.min[0] >= 140.0 && two.min[0] < 141.5, "{two:?}");
+        assert!(two.max[1] <= 190.5 && two.max[1] > 189.0, "{two:?}");
+        assert!(two.min[1] > 181.0 && two.min[1] < 184.0, "{two:?}");
+        let n = g.dimension_number([100.0, 200.0], [200.0, 200.0]).unwrap();
+        assert_eq!(n.value, 2.0);
         std::fs::remove_dir_all(&dir).unwrap();
     }
 }
@@ -578,5 +846,27 @@ mod real {
         ]
         .map(String::from);
         eprintln!("{:?}", doc.find_pages(&words));
+        // Each page's lines and words, and the numbers among them
+        let page = std::env::var("BERC_PDF_PAGE")
+            .ok()
+            .and_then(|p| p.parse::<usize>().ok());
+        for (i, g) in doc.geometry.iter().enumerate() {
+            let Some(g) = g else { continue };
+            if page.is_some_and(|p| p != i) {
+                continue;
+            }
+            let numbers: Vec<&str> = g
+                .words
+                .iter()
+                .filter(|w| super::super::geometry::length_number(&w.text).is_some())
+                .map(|w| w.text.as_str())
+                .take(40)
+                .collect();
+            eprintln!(
+                "page {i}: {} lines, {} words, numbers {numbers:?}",
+                g.segs.len(),
+                g.words.len()
+            );
+        }
     }
 }

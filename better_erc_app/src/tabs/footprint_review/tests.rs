@@ -38,6 +38,7 @@ fn datasheet(dir: &Path) -> PathBuf {
                 [200.0, 195.0, 200.0, 205.0],
             ],
             rects: vec![[100.0, 220.0, 40.0, 20.0], [160.0, 220.0, 40.0, 20.0]],
+            ..Default::default()
         },
         TestPage {
             texts: vec![text(50.0, 60.0, 12.0, "Package dimensions")],
@@ -1171,6 +1172,8 @@ fn ruler_by_keys() {
     std::fs::create_dir_all(&dir).unwrap();
     let pdf = datasheet(&dir);
     let mut h = harness("fp keys");
+    // The keys alone: the ends go where the pointer is, not to the drawing's lines
+    h.state_mut().rt.settings.line_snap_px = 0.0;
     h.run();
     let ctx = h.ctx.clone();
     h.state_mut().open_path(&ctx, &footprint());
@@ -1258,6 +1261,7 @@ fn ruler_by_keys() {
         "R ruler",
         "Z zoom on a ruler end",
         "S type the ruler's length",
+        "D the dimension's number sets it",
         "T turn 90°",
     ] {
         assert!(st.help_line().contains(k), "{k}: {}", st.help_line());
@@ -1390,6 +1394,93 @@ fn ruler_snaps_level() {
         h.state()
             .help_line()
             .contains("the ruler snaps level, Shift: any angle")
+    );
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// The ruler snaps to the drawing's lines: over the dimension's corner the target shows before R; R there puts the
+/// first end on the corner exactly, and the other, a few points off the far corner, goes onto it; the number the
+/// dimension prints is offered as a chip, and D sets the scale from it, as does a click on the chip. Alt held
+/// leaves an end where the pointer is.
+#[test]
+fn ruler_snaps_to_the_drawing() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-lines-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let pdf = datasheet(&dir);
+    let mut h = harness("fp lines");
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_datasheet(&ctx, &pdf);
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    assert_eq!(h.state().page, 1);
+    // 2 screen points per page point: the snap's 10 pixels reach 5 points
+    h.state_mut().zoom = 2.0;
+    h.state_mut().pan = [0.0, 0.0];
+    h.state_mut().tool = Tool::Ruler;
+    h.run();
+    let screen = |h: &Harness<'_, FootprintReview>, p: [f32; 2]| {
+        let st = h.state();
+        st.to_screen(st.rt.canvas, p)
+    };
+    let (a, b) = ([100.0, 200.0], [200.0, 200.0]);
+    h.hover_at(screen(&h, [a[0] + 3.0, a[1] - 2.0]));
+    h.run();
+    let snap = h
+        .state()
+        .rt
+        .snap
+        .clone()
+        .expect("the target shows before R");
+    assert_eq!(snap.at, a);
+    h.key_press(egui::Key::R);
+    h.run();
+    h.hover_at(screen(&h, [b[0] - 3.0, b[1] + 2.0]));
+    h.run();
+    assert_eq!(
+        h.state().ruler.unwrap()[1],
+        b,
+        "the other end follows onto the corner"
+    );
+    if let Some(p) = std::env::var_os("BERC_FP_SNAPSHOT") {
+        h.render().unwrap().save(p).unwrap();
+    }
+    h.key_press(egui::Key::R);
+    h.run();
+    assert_eq!(h.state().ruler, Some([a, b]));
+    // The dimension's number: D sets the scale from it
+    assert_eq!(h.state().dimension_number().unwrap().text, "2.00");
+    h.key_press(egui::Key::D);
+    h.run();
+    let scale = h.state().scale.clone().expect("the scale is set");
+    assert!((scale.mm_per_point - 0.02).abs() < 1e-6, "{scale:?}");
+    assert_eq!(scale.mm, 2.0);
+    assert_eq!(h.state().tool, Tool::Move);
+    // A click on the chip does the same
+    h.state_mut().scale = None;
+    h.run();
+    h.get_by_label("2.00 mm · D").click();
+    h.run();
+    assert!(h.state().scale.is_some(), "the chip sets the scale");
+    // Alt: the end where the pointer is
+    h.state_mut().tool = Tool::Ruler;
+    let off = [a[0] + 3.0, a[1] - 2.0];
+    h.event(egui::Event::ModifiersChanged(egui::Modifiers::ALT));
+    h.hover_at(screen(&h, off));
+    h.run();
+    assert!(h.state().rt.snap.is_none(), "no target with Alt");
+    h.key_press(egui::Key::R);
+    h.run();
+    let first = h.state().ruler.unwrap()[0];
+    assert!(
+        (first[0] - off[0]).abs() < 0.01 && (first[1] - off[1]).abs() < 0.01,
+        "{first:?}"
+    );
+    assert!(
+        h.state()
+            .help_line()
+            .contains("its ends snap to the drawing's lines, Alt: free")
     );
     std::fs::remove_dir_all(&dir).unwrap();
 }

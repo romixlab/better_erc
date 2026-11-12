@@ -7,6 +7,8 @@ pub struct TestPage {
     pub lines: Vec<[f32; 4]>,
     /// Filled rectangles (x, y from the top, width, height)
     pub rects: Vec<[f32; 4]>,
+    /// Line segments as `lines` with their width, points
+    pub wide: Vec<([f32; 4], f32)>,
 }
 
 /// The bytes of a PDF with `pages`, each `size` points (width, height), text in Helvetica
@@ -27,6 +29,9 @@ pub fn write(size: [f32; 2], pages: &[TestPage]) -> Vec<u8> {
         c += "0 0 0 RG 0.5 w\n";
         for [x1, y1, x2, y2] in &p.lines {
             c += &format!("{x1} {} m {x2} {} l S\n", h - y1, h - y2);
+        }
+        for ([x1, y1, x2, y2], width) in &p.wide {
+            c += &format!("{width} w {x1} {} m {x2} {} l S\n", h - y1, h - y2);
         }
         for (x, y, s, t) in &p.texts {
             let t = t

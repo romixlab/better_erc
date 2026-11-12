@@ -24,6 +24,7 @@ use better_erc::fp::{
 };
 use better_erc::model::layout::{FootprintId, Layout};
 use egui::{Align2, FontId, Pos2, Rect, Shape, Stroke, pos2, vec2};
+use geometry::{DimNumber, Snap, SnapKind};
 use outline::{Item, Kind};
 use pdf::{PageHit, PdfDoc};
 use std::path::{Path, PathBuf};
@@ -31,6 +32,7 @@ use std::sync::Arc;
 use std::sync::mpsc::Receiver;
 
 pub mod blend;
+mod geometry;
 mod outline;
 mod pdf;
 #[cfg(test)]
@@ -40,6 +42,9 @@ mod tests;
 
 /// Around the page
 const CANVAS_BACKGROUND: Color32 = Color32::from_gray(60);
+
+/// What the ruler snaps to, and the dimension's number found for it
+const SNAP_COLOUR: Color32 = Color32::from_rgb(255, 160, 0);
 
 /// The views: what the board makes on copper, mask or paste, one shown at a time (a radio choice, not toggles that
 /// stack), each filled in its own colour (a setting, no picker in the tab: the colour says what is shown)
@@ -380,6 +385,8 @@ struct Runtime {
     ruler_placing: bool,
     /// The ruler end zoomed in on: a click or a drag places it at the pointer
     ruler_focus: Option<usize>,
+    /// Where a ruler end snaps to the drawing's lines this frame, shown at the pointer before it is let go
+    snap: Option<Snap>,
     /// The view (zoom, pan) from before zooming in on a ruler end
     overview: Option<(f32, [f32; 2])>,
     /// The ruler's length asked in a box in the middle of the canvas (the scale key), the number typed shown large
@@ -446,6 +453,7 @@ impl Default for Runtime {
             ruler_placing: false,
             ruler_anchor: None,
             ruler_focus: None,
+            snap: None,
             overview: None,
             length_box: false,
             typing_mm: false,
@@ -1322,17 +1330,18 @@ impl FootprintReview {
         }
     }
 
-    /// The ruler key: the first end at the pointer (`at`, page points), the other following it; pressed again, the
-    /// other end stays where the pointer is
-    fn ruler_key(&mut self, at: [f32; 2], free: bool) {
+    /// The ruler key: the first end at the pointer (`at`, page points; snapped to the drawing's lines unless
+    /// `lines` is false), the other following it; pressed again, the other end stays where the pointer is
+    fn ruler_key(&mut self, at: [f32; 2], free: bool, lines: bool) {
         if self.rt.ruler_placing && self.ruler.is_some() {
-            self.move_ruler_end(1, at, free);
+            self.move_ruler_end(1, at, free, lines);
             self.rt.ruler_placing = false;
             self.rt.ruler_anchor = None;
             return;
         }
         self.ruler_done();
         self.tool = Tool::Ruler;
+        let at = self.start_point(at, lines);
         self.ruler = Some([at, at]);
         self.rt.ruler_anchor = Some(at);
         self.rt.ruler_placing = true;
@@ -1341,9 +1350,13 @@ impl FootprintReview {
 
     /// Ruler end `i` to `p` (page points). Snapped (the setting, unless `free`: Shift held), the ruler stays level:
     /// the other end follows on its axis, taking `p`'s Y on a horizontal ruler and its X on a vertical one. The axis
-    /// is the ruler's own, or while a new ruler is laid, the larger of dx and dy from its first end.
-    fn move_ruler_end(&mut self, i: usize, p: [f32; 2], free: bool) {
+    /// is the ruler's own, or while a new ruler is laid, the larger of dx and dy from its first end. With `lines`
+    /// (Alt not held), `p` first snaps to the drawing's lines ([`Self::line_snap`]), each coordinate on its own on
+    /// a level ruler.
+    fn move_ruler_end(&mut self, i: usize, p: [f32; 2], free: bool, lines: bool) {
         let snap = self.rt.settings.ruler_snap && !free;
+        self.rt.snap = if lines { self.line_snap(p, snap) } else { None };
+        let p = self.rt.snap.as_ref().map_or(p, |s| s.at);
         let anchor = self.rt.ruler_anchor;
         let Some(r) = &mut self.ruler else { return };
         let o = 1 - i;
@@ -1362,6 +1375,44 @@ impl FootprintReview {
         } else if let Some(a) = anchor {
             r[o] = a;
         }
+    }
+
+    /// Where a ruler end at `p` (page points) snaps to the current page's lines, within the setting's pixels at
+    /// the view's zoom; `level`: each coordinate on its own ([`geometry::PageGeometry::snap`])
+    fn line_snap(&self, p: [f32; 2], level: bool) -> Option<Snap> {
+        let g = self.rt.pdf.as_ref()?.geometry(self.page)?;
+        g.snap(p, self.rt.settings.line_snap_px / self.zoom, level)
+    }
+
+    /// A new ruler's first end at `p`: snapped to the drawing's lines with `lines`, shown so
+    fn start_point(&mut self, p: [f32; 2], lines: bool) -> [f32; 2] {
+        self.rt.snap = if lines {
+            self.line_snap(p, false)
+        } else {
+            None
+        };
+        self.rt.snap.as_ref().map_or(p, |s| s.at)
+    }
+
+    /// The number the dimension prints between the ruler's ends, on the current page
+    fn dimension_number(&self) -> Option<DimNumber> {
+        let [a, b] = self.ruler?;
+        self.rt
+            .pdf
+            .as_ref()?
+            .geometry(self.page)?
+            .dimension_number(a, b)
+    }
+
+    /// The dimension's number sets the scale from the ruler: the dimension key or a click on its chip
+    fn use_dimension_number(&mut self) {
+        let Some(n) = self.dimension_number() else {
+            return;
+        };
+        self.rt.ruler_mm = n.text.replace(',', ".");
+        self.rt.length_box = false;
+        self.set_scale_from_ruler();
+        self.usage("dimension number");
     }
 
     /// The ruler zoom key: in on the first end, then on the other, then back to the view before, the length field
@@ -1461,17 +1512,24 @@ impl FootprintReview {
         let n = key_name;
         format!(
             "{} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back · \
-             {} type the ruler's length, Enter sets the scale · Esc ends the ruler step · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
+             {} type the ruler's length, Enter sets the scale · {} the dimension's number sets it · Esc ends the ruler step · \
+             {} · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
              arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans",
             n(k.full_width),
             n(k.ruler),
             n(k.ruler),
             n(k.ruler_zoom),
             n(k.scale),
+            n(k.dimension),
             if self.rt.settings.ruler_snap {
                 "the ruler snaps level, Shift: any angle"
             } else {
                 "the ruler at any angle (Settings: snap)"
+            },
+            if self.rt.settings.line_snap_px > 0.0 {
+                "its ends snap to the drawing's lines, Alt: free"
+            } else {
+                "its ends free of the drawing's lines (Settings: snap)"
             },
             n(k.rotate),
             n(k.mirror),
@@ -2429,6 +2487,17 @@ impl FootprintReview {
                     ui.checkbox(&mut s.ruler_snap, "")
                         .on_hover_text("horizontal or vertical; Shift held: any angle");
                     ui.end_row();
+                    ui.label("Ruler snaps to lines, px");
+                    ui.add(
+                        DragValue::new(&mut s.line_snap_px)
+                            .range(0.0..=50.0)
+                            .speed(0.2),
+                    )
+                    .on_hover_text(
+                        "a line's end, two lines crossing, else onto the line, this near on screen; 0: never; \
+                         Alt held: free",
+                    );
+                    ui.end_row();
                 });
                 ui.label("Keys over the canvas, by name (F, Space, F5, …)");
                 Grid::new("fp keys grid").num_columns(2).show(ui, |ui| {
@@ -2438,6 +2507,7 @@ impl FootprintReview {
                         ("Ruler: one end, then the other", &mut k.ruler),
                         ("Zoom on a ruler end, the other, back", &mut k.ruler_zoom),
                         ("Type the ruler's length", &mut k.scale),
+                        ("The dimension's number sets the scale", &mut k.dimension),
                         ("Turn 90°", &mut k.rotate),
                         ("Bottom view", &mut k.mirror),
                         ("Blink", &mut k.blink),
@@ -2664,13 +2734,14 @@ impl FootprintReview {
         let pointer_page = resp.interact_pointer_pos().map(|p| self.to_page(canvas, p));
         let hover_page = resp.hover_pos().map(|p| self.to_page(canvas, p));
         // The ruler key's other end follows the pointer; a click leaves it there
-        // Shift: the ruler at any angle, not snapped level
-        let free = ui.input(|i| i.modifiers.shift);
+        // Shift: the ruler at any angle, not snapped level; Alt: free of the drawing's lines
+        let (free, lines) = ui.input(|i| (i.modifiers.shift, !i.modifiers.alt));
+        self.rt.snap = None;
         if self.rt.ruler_placing
             && self.ruler.is_some()
             && let Some(p) = hover_page
         {
-            self.move_ruler_end(1, p, free);
+            self.move_ruler_end(1, p, free, lines);
             if resp.clicked() {
                 self.rt.ruler_placing = false;
                 self.rt.ruler_anchor = None;
@@ -2684,7 +2755,7 @@ impl FootprintReview {
             pointer_page,
         ) && (resp.clicked() || resp.dragged_by(egui::PointerButton::Primary))
         {
-            self.move_ruler_end(i, p, free);
+            self.move_ruler_end(i, p, free, lines);
         } else if resp.dragged_by(egui::PointerButton::Primary) {
             match self.tool {
                 Tool::Move => {
@@ -2707,7 +2778,7 @@ impl FootprintReview {
                             match near {
                                 Some(i) => self.rt.ruler_end = Some(i),
                                 None => {
-                                    let s = self.to_page(canvas, start);
+                                    let s = self.start_point(self.to_page(canvas, start), lines);
                                     self.ruler = Some([s, s]);
                                     self.rt.ruler_anchor = Some(s);
                                     self.rt.ruler_end = Some(1);
@@ -2715,7 +2786,7 @@ impl FootprintReview {
                             }
                         }
                         if let Some(i) = self.rt.ruler_end {
-                            self.move_ruler_end(i, p, free);
+                            self.move_ruler_end(i, p, free, lines);
                         }
                     }
                 }
@@ -2726,6 +2797,15 @@ impl FootprintReview {
             if !self.rt.ruler_placing {
                 self.rt.ruler_anchor = None;
             }
+        }
+        // Before an end is placed: where it would snap, at the pointer
+        if self.tool == Tool::Ruler
+            && self.rt.snap.is_none()
+            && !resp.dragged_by(egui::PointerButton::Primary)
+            && lines
+            && let Some(p) = hover_page
+        {
+            self.rt.snap = self.line_snap(p, false);
         }
         // Keys while the pointer is over the canvas
         if resp.hovered() && !ctx.egui_wants_keyboard_input() {
@@ -2744,6 +2824,7 @@ impl FootprintReview {
                     ruler: pressed(km.ruler),
                     ruler_zoom: pressed(km.ruler_zoom),
                     scale: pressed(km.scale),
+                    dimension: pressed(km.dimension),
                     rotate: pressed(km.rotate),
                     mirror: pressed(km.mirror),
                     blink: pressed(km.blink),
@@ -2801,13 +2882,16 @@ impl FootprintReview {
             if p.ruler
                 && let Some(at) = hover_page
             {
-                self.ruler_key(at, shift);
+                self.ruler_key(at, shift, lines);
             }
             if p.ruler_zoom {
                 self.ruler_zoom_key(canvas);
             }
             if p.scale {
                 self.scale_key();
+            }
+            if p.dimension {
+                self.use_dimension_number();
             }
         }
         // The footprint
@@ -2848,7 +2932,9 @@ impl FootprintReview {
                 .expand(2.0);
             painter.rect_filled(r, 2.0, Color32::from_rgb(0, 90, 180));
             painter.galley(r.min + vec2(2.0, 2.0), galley, Color32::WHITE);
+            self.dimension_chip(ui, &painter, canvas, r);
         }
+        self.draw_snap(&painter, canvas);
         if self.rt.length_box {
             self.length_box(&ctx, canvas, ui.id());
         }
@@ -2867,6 +2953,77 @@ impl FootprintReview {
             painter.rect_filled(r, 3.0, bg);
             painter.galley(r.min + vec2(4.0, 2.0), galley, Color32::WHITE);
             y = r.min.y - 2.0;
+        }
+    }
+
+    /// Where a ruler end snaps, at the pointer: the lines it snaps to drawn over, a square on a line's end, a cross
+    /// where two lines cross, a ring on a line
+    fn draw_snap(&self, painter: &egui::Painter, canvas: Rect) {
+        let Some(snap) = &self.rt.snap else { return };
+        let geometry = self.rt.pdf.as_ref().and_then(|p| p.geometry(self.page));
+        let stroke = Stroke::new(1.5, SNAP_COLOUR);
+        if let Some(g) = geometry {
+            for s in snap.segs.iter().filter_map(|&i| g.segs.get(i)) {
+                let w = (s.width * self.zoom).max(1.5);
+                painter.line_segment(
+                    [self.to_screen(canvas, s.a), self.to_screen(canvas, s.b)],
+                    Stroke::new(w, SNAP_COLOUR.gamma_multiply(0.6)),
+                );
+            }
+        }
+        let at = self.to_screen(canvas, snap.at);
+        match snap.kind {
+            SnapKind::End => {
+                painter.rect_stroke(
+                    Rect::from_center_size(at, vec2(9.0, 9.0)),
+                    0.0,
+                    stroke,
+                    egui::StrokeKind::Middle,
+                );
+            }
+            SnapKind::Crossing => {
+                for d in [vec2(5.0, 5.0), vec2(5.0, -5.0)] {
+                    painter.line_segment([at - d, at + d], stroke);
+                }
+            }
+            SnapKind::Line => {
+                painter.circle_stroke(at, 4.5, stroke);
+            }
+        }
+    }
+
+    /// The dimension's number between the ruler's ends, as a chip beside the ruler's own label (`label`, on
+    /// screen) with its key; a click or the key sets the scale from it. Its box on the page is outlined.
+    fn dimension_chip(&mut self, ui: &Ui, painter: &egui::Painter, canvas: Rect, label: Rect) {
+        let Some(n) = self.dimension_number() else {
+            return;
+        };
+        let word = Rect::from_two_pos(self.to_screen(canvas, n.min), self.to_screen(canvas, n.max))
+            .expand(2.0);
+        painter.rect_stroke(
+            word,
+            2.0,
+            Stroke::new(1.0, SNAP_COLOUR),
+            egui::StrokeKind::Outside,
+        );
+        let text = format!("{} mm · {}", n.text, key_name(self.keys().dimension));
+        let galley = painter.layout_no_wrap(text.clone(), FontId::monospace(13.0), Color32::BLACK);
+        let r = Align2::LEFT_CENTER
+            .anchor_size(label.right_center() + vec2(6.0, 0.0), galley.size())
+            .expand(2.0);
+        let resp = ui
+            .interact(r, ui.id().with("dimension chip"), Sense::click())
+            .on_hover_text("the number the drawing prints for this dimension: sets the scale");
+        resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, true, &text));
+        let bg = if resp.hovered() {
+            Color32::from_rgb(255, 200, 80)
+        } else {
+            SNAP_COLOUR
+        };
+        painter.rect_filled(r, 2.0, bg);
+        painter.galley(r.min + vec2(2.0, 2.0), galley, Color32::BLACK);
+        if resp.clicked() {
+            self.use_dimension_number();
         }
     }
 
@@ -3051,6 +3208,7 @@ struct KeyMap {
     ruler: Option<egui::Key>,
     ruler_zoom: Option<egui::Key>,
     scale: Option<egui::Key>,
+    dimension: Option<egui::Key>,
     rotate: Option<egui::Key>,
     mirror: Option<egui::Key>,
     blink: Option<egui::Key>,
@@ -3066,6 +3224,7 @@ impl From<&Keys> for KeyMap {
             ruler: key(&k.ruler),
             ruler_zoom: key(&k.ruler_zoom),
             scale: key(&k.scale),
+            dimension: key(&k.dimension),
             rotate: key(&k.rotate),
             mirror: key(&k.mirror),
             blink: key(&k.blink),
@@ -3088,6 +3247,7 @@ struct Pressed {
     ruler: bool,
     ruler_zoom: bool,
     scale: bool,
+    dimension: bool,
     rotate: bool,
     mirror: bool,
     blink: bool,

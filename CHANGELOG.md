@@ -11,6 +11,18 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `VIEW-19`: Footprint review tab, the ruler's ends snap to the drawing's own lines, read from the PDF's vector
+  paths (stroked lines' centre lines and widths, thin filled rectangles as lines, other filled shapes' edges): a
+  line's end or two lines crossing within `[footprint_review] line_snap_px` (10 screen pixels; 0: never), else onto
+  the nearest line. On a level ruler each coordinate snaps on its own, so on a horizontal ruler an end takes the X
+  of the extension line beside it. The target shows at the pointer before the end is placed; Alt held leaves the
+  end free. The number the dimension prints between the ruler's ends, read from the page's glyphs (a number shown
+  in pieces read as one word), is outlined and offered as a chip beside the ruler's length; D
+  (`[footprint_review.keys] dimension`) or a click on it sets the scale, and S still asks for another number. Both
+  named in the help line.
+
 ## [0.4.33] - 2026-11-12
 
 ### Added
