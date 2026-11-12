@@ -3,7 +3,7 @@
 //! `Footprint` field names, as `berc fp check --lib` checks it.
 
 use super::library::check_symbol;
-use super::{FIELD, FpCheckError, LibrarySearch, Opened, SymbolStatus, field_of};
+use super::{FIELD, FpCheckError, LibrarySearch, Opened, SymbolStatus};
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
@@ -33,13 +33,7 @@ pub struct TodoEntry {
 impl TodoEntry {
     /// The footprint needs a review: never reviewed, changed since, or a hash berc can't compare
     pub fn needs_review(&self) -> bool {
-        matches!(
-            self.status,
-            SymbolStatus::Changed
-                | SymbolStatus::OtherVersion
-                | SymbolStatus::Malformed
-                | SymbolStatus::Unreviewed
-        )
+        self.status.needs_review()
     }
 
     /// Nothing to do: reviewed and unchanged, or no footprint to review
@@ -100,14 +94,7 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
         .map(|(lib_id, mut references)| {
             references.sort_by(|a, b| erc_model::natural_cmp(a, b));
             references.dedup();
-            let fields = syms.fields(&lib_id);
-            let datasheet = fields
-                .as_deref()
-                .ok()
-                .and_then(|f| field_of(f, "Datasheet"))
-                .filter(|d| *d != "~")
-                .map(String::from);
-            let e = check_symbol(&lib_id, fields, fps);
+            let e = check_symbol(&lib_id, syms.fields(&lib_id), fps);
             TodoEntry {
                 symbol: e.symbol,
                 status: e.status,
@@ -115,7 +102,7 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
                 footprint_file: e.footprint_file,
                 hash: e.hash,
                 stored: e.stored,
-                datasheet,
+                datasheet: e.datasheet,
                 references,
                 note: e.note,
             }

@@ -683,18 +683,21 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   coloured, voltages / currents / frequency shown (derived or entered), approve or reject, comments by audience
   (to/from firmware, mechanics, EE)
 - 📋 `VIEW-18` Highlight the selected net in KiCad, or in the browser for Altium 365
-- ✅ `VIEW-19` Footprint review tab: a library footprint drawn over its datasheet drawing, Accept gives the review
-  hash (`TOOL-8`). The footprint through `fp::FootprintSource`: a `.kicad_mod`, or a footprint picked from a board
-  (one row per library footprint), reviewed from its library file through `fp-lib-table` with the board copy
-  compared, else the board copy. The datasheet from the `Datasheet` field's file, a local library search command
+- ✅ `VIEW-19` Footprint review tab: a library symbol's footprint drawn over its datasheet drawing, Accept writes
+  the review hash into the symbol (`TOOL-8`, `TOOL-9`). The symbol from a board's or project's list (`fp::todo`,
+  those to review first, Next to review) or a symbol library (`.kicad_sym`, `.kicad_symdir`, a `sym-lib-table`
+  nickname), each row with its status; its footprint the library footprint its `Footprint` field names, a symbol
+  without one or not found refused with the reason. A `.kicad_mod` alone or a board footprint is a preview,
+  Accept disabled with the reason; a board footprint is compared with its library file. The datasheet from the
+  symbol's `Datasheet` field's file, a local library search command
   (queries from the datasheet file name, a part name in its URL, the `Mpn` fields, the value), or a file picker;
   read and drawn by hayro (pure Rust) on its own thread, the PDF standard fonts from Liberation or egui's font; a
   page search by words finds the land pattern page. Scale by a ruler along a dimension (or the page's own
   `SCALE: 20X`), footprint moved, turned, mirrored, opacity, blink, colour per layer group, blend mode (normal,
   multiply, screen, difference: a wgpu shader reading the page), layers shown; Accept disabled with its reason
-  until the scale is set on the page shown, copies the hash, keeps the review, and for a footprint picked from a
-  board writes the hash into the symbols of the footprints placed with it (`TOOL-9`'s `fp::accept`), listing the
-  files written or why nothing was. Settings in `config.toml`
+  until a symbol with a footprint is picked and the scale is set on the page shown, writes the hash into the
+  library symbol (and a project's schematic copies, `fp::accept` / `fp::accept_library`), copies it, keeps the
+  review, listing the files written or why nothing was. Settings in `config.toml`
   (`[footprint_review]`), usage signals `app fp-review ...` · `better_erc_app/src/tabs/footprint_review/`,
   `better_erc_app/src/settings.rs`
 

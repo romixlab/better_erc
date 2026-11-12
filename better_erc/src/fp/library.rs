@@ -32,6 +32,17 @@ pub enum SymbolStatus {
 }
 
 impl SymbolStatus {
+    /// The footprint needs a review: never reviewed, changed since, or a hash berc can't compare
+    pub fn needs_review(self) -> bool {
+        matches!(
+            self,
+            SymbolStatus::Changed
+                | SymbolStatus::OtherVersion
+                | SymbolStatus::Malformed
+                | SymbolStatus::Unreviewed
+        )
+    }
+
     pub fn name(self) -> &'static str {
         match self {
             SymbolStatus::Ok => "ok",
@@ -71,6 +82,9 @@ pub struct SymbolEntry {
     pub stored: Option<String>,
     /// The `.kicad_mod` read
     pub footprint_file: Option<PathBuf>,
+    /// The symbol's `Datasheet` field, what the footprint is reviewed against
+    #[serde(default)]
+    pub datasheet: Option<String>,
     /// Why the footprint or the symbol could not be read
     pub note: Option<String>,
 }
@@ -315,6 +329,7 @@ pub(super) fn check_symbol(
         hash: None,
         stored: None,
         footprint_file: None,
+        datasheet: None,
         note: None,
     };
     let fields = match fields {
@@ -326,6 +341,9 @@ pub(super) fn check_symbol(
         }
     };
     e.footprint = field_of(&fields, "Footprint").map(String::from);
+    e.datasheet = field_of(&fields, "Datasheet")
+        .filter(|d| *d != "~")
+        .map(String::from);
     e.stored = field_of(&fields, FIELD).map(String::from);
     let Some(footprint) = e.footprint.clone() else {
         if e.stored.is_some() {

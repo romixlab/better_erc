@@ -951,8 +951,6 @@ pub fn accept(
         return Err(AcceptError::NotKicad(path.to_path_buf()));
     }
     let board = project.imported.design.boards.first();
-    // The library symbols to write, each with its hash and the references it came from, with theirs
-    type Wanted = (String, String, Vec<(String, String)>);
     let mut wanted: Vec<Wanted> = Vec::new();
     match what {
         AcceptWhat::Symbol { symbol, hash } => {
@@ -1045,6 +1043,35 @@ pub fn accept(
         }
     }
     let mut libs = libs(&project.dir);
+    write_hashes(wanted, &sheets, &mut libs, dry_run)
+}
+
+/// The library symbols to write, each with its hash and the references it came from, with theirs
+type Wanted = (String, String, Vec<(String, String)>);
+
+/// Writes the review hash `hash` into library symbol `symbol` (`Lib:Name`) found through `libs`, without a project:
+/// a symbol picked from a library, before any schematic uses it. Like [`accept`], every other byte of the file is
+/// kept; `dry_run` writes nothing.
+pub fn accept_library(
+    libs: &mut SymbolLibraries,
+    symbol: &str,
+    hash: &str,
+    dry_run: bool,
+) -> Result<AcceptRun, AcceptError> {
+    if !fphash::is_hash(hash.trim()) {
+        return Err(AcceptError::BadHash(hash.to_string()));
+    }
+    let wanted = vec![(symbol.to_string(), hash.trim().to_string(), Vec::new())];
+    write_hashes(wanted, &[], libs, dry_run)
+}
+
+/// Writes each wanted hash into its library symbol through `libs` and into the copies in `sheets`
+fn write_hashes(
+    wanted: Vec<Wanted>,
+    sheets: &[PathBuf],
+    libs: &mut SymbolLibraries,
+    dry_run: bool,
+) -> Result<AcceptRun, AcceptError> {
     // Every edit first, by file: one file can hold several symbols
     let mut texts: Vec<(PathBuf, String, String)> = Vec::new();
     let mut edit =
@@ -1085,7 +1112,7 @@ pub fn accept(
             },
             Err(why) => Some(why.to_string()),
         };
-        for sheet in &sheets {
+        for sheet in sheets {
             if let Some(mut w) = edit(sheet, &symbol, &hash)? {
                 w.source = HashSource::Schematic;
                 files.push(w);
@@ -1240,6 +1267,53 @@ mod tests {
         let e = lib("Other:Asym_SOT").read().unwrap_err();
         assert!(matches!(e, FpError::Library(..)));
         assert!(e.to_string().contains("fp-lib-table"), "{e}");
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
+
+    /// A symbol picked from a library, no project: accept_library writes the hash into its file alone, and
+    /// check_libraries then finds it ok; a bad hash or a symbol the library lacks writes nothing
+    #[test]
+    fn accept_into_a_library() {
+        let dir = std::env::temp_dir().join(format!("berc-fp-acceptlib-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let lib = dir.join("Rev.kicad_sym");
+        std::fs::write(
+            &lib,
+            "(kicad_symbol_lib (version 20231120) (generator \"kicad_symbol_editor\")\n  (symbol \"Asym\" (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Asym_SOT\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (property \"Datasheet\" \"~\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))))\n",
+        )
+        .unwrap();
+        let search = LibrarySearch {
+            config: None,
+            symbols: vec![lib.clone()],
+            footprints: vec![fixtures().join("Test.pretty")],
+        };
+        let check = || {
+            check_libraries(&LibCheckOptions {
+                libraries: vec![lib.display().to_string()],
+                project: dir.clone(),
+                search: search.clone(),
+            })
+            .unwrap()
+        };
+        let before = check();
+        assert_eq!(before.symbols[0].status, SymbolStatus::Unreviewed);
+        assert_eq!(before.symbols[0].datasheet, None, "~ is no datasheet");
+        let hash = before.symbols[0].hash.clone().unwrap();
+        let (mut syms, _) = search.open(&dir).unwrap();
+        assert!(matches!(
+            accept_library(&mut syms, "Rev:Asym", "fp1:nothex", false),
+            Err(AcceptError::BadHash(_))
+        ));
+        assert!(matches!(
+            accept_library(&mut syms, "Rev:Other", &hash, false),
+            Err(AcceptError::Nowhere { .. })
+        ));
+        let run = accept_library(&mut syms, "Rev:Asym", &hash, false).unwrap();
+        assert_eq!(run.symbols[0].files.len(), 1);
+        assert_eq!(run.symbols[0].files[0].file, lib);
+        assert!(run.symbols[0].files[0].changed);
+        assert_eq!(check().symbols[0].status, SymbolStatus::Ok);
         std::fs::remove_dir_all(&dir).unwrap();
     }
 }

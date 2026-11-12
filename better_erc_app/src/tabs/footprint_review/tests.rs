@@ -1,5 +1,6 @@
-//! The review driven through the UI as a person would: a footprint file, a datasheet PDF the test writes, the page
-//! search, the ruler, Accept
+//! The review driven through the UI as a person would: a library symbol from a library the test writes, its
+//! footprint and its datasheet PDF (written by the test too) following it, the page search, the ruler, Accept
+//! writing the review hash into the symbol; a footprint opened alone as a preview that can't be accepted
 
 use super::testpdf::{TestPage, write};
 use super::*;
@@ -50,6 +51,62 @@ fn datasheet(dir: &Path) -> PathBuf {
 
 const ACCEPT: &str = "Accept: the footprint matches the drawing";
 
+const PREVIEW: &str = "a footprint opened alone is a preview: there is no symbol to put the review hash on; pick \
+                       its symbol from a library or a board's list";
+
+/// The test footprints' library, Test.pretty, by a `fp-lib-table` in `dir`
+fn footprint_table(dir: &Path) {
+    let pretty = footprint().parent().unwrap().to_path_buf();
+    std::fs::write(
+        dir.join("fp-lib-table"),
+        format!(
+            "(fp_lib_table (version 7)\n  (lib (name \"Test\")(type \"KiCad\")(uri \"{}\")(options \"\")(descr \"\")))\n",
+            pretty.display()
+        ),
+    )
+    .unwrap();
+}
+
+/// A library symbol in KiCad's layout, with these extra properties
+fn symbol_text(name: &str, props: &[(&str, &str)]) -> String {
+    let mut out = format!(
+        "  (symbol \"{name}\" (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n"
+    );
+    for (k, v) in props {
+        out.push_str(&format!(
+            "    (property \"{k}\" \"{v}\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))\n"
+        ));
+    }
+    out.push_str(&format!(
+        "    (symbol \"{name}_1_1\" (pin passive line (at 0 0 0) (length 1.27) (name \"A\" (effects (font (size 1.27 1.27)))) (number \"1\" (effects (font (size 1.27 1.27)))))))\n"
+    ));
+    out
+}
+
+/// A symbol library in `dir`, `Rev.kicad_sym`: `Mixed` with footprint Test:Mixed_Pads and the datasheet `pdf`,
+/// `Generic` without a footprint; the footprints through a `fp-lib-table` beside it
+fn symbol_library(dir: &Path, pdf: &Path) -> PathBuf {
+    footprint_table(dir);
+    let lib = dir.join("Rev.kicad_sym");
+    std::fs::write(
+        &lib,
+        format!(
+            "(kicad_symbol_lib (version 20231120) (generator \"kicad_symbol_editor\")\n{}{})\n",
+            symbol_text(
+                "Mixed",
+                &[
+                    ("Footprint", "Test:Mixed_Pads"),
+                    ("Datasheet", &pdf.display().to_string()),
+                    ("MPN", "TEST-PART"),
+                ]
+            ),
+            symbol_text("Generic", &[("Datasheet", "~")]),
+        ),
+    )
+    .unwrap();
+    lib
+}
+
 fn disabled(h: &Harness<'_, FootprintReview>, label: &str) -> bool {
     use egui_kittest::kittest::NodeT;
     h.get_by_label(label).accesskit_node().is_disabled()
@@ -59,11 +116,16 @@ fn button<'a>(h: &'a Harness<'_, FootprintReview>, label: &'a str) -> egui_kitte
     h.get_by_label(label)
 }
 
+/// A symbol picked from a symbol library: its footprint and its datasheet follow, the page search finds the land
+/// pattern, the ruler sets the scale, Accept writes the review hash into the library symbol; a symbol without a
+/// footprint is refused with the reason
 #[test]
-fn review_a_footprint_over_its_datasheet() {
+fn review_a_symbol_from_its_library() {
     let dir = std::env::temp_dir().join(format!("berc-fp-review-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
     std::fs::create_dir_all(&dir).unwrap();
     let pdf = datasheet(&dir);
+    let lib = symbol_library(&dir, &pdf);
     let signals: Arc<Mutex<Vec<String>>> = Arc::default();
     let s = signals.clone();
     let usage: Usage = Arc::new(move |sig: &str| s.lock().unwrap().push(sig.to_string()));
@@ -74,20 +136,30 @@ fn review_a_footprint_over_its_datasheet() {
     };
     let mut cx = Context::new();
     let mut h = Harness::builder()
-        .with_size(vec2(1200.0, 800.0))
+        .with_size(vec2(1200.0, 1400.0))
         .build_ui_state(
             move |ui, state: &mut FootprintReview| state.ui(ui, &mut cx, Id::new("fp test")),
             FootprintReview::with(settings, usage),
         );
     h.run();
-    // The file pickers are the system's: open what they would give
+    // The file picker is the system's: open what it would give
     let ctx = h.ctx.clone();
-    h.state_mut().open_path(&ctx, &footprint());
-    h.state_mut().open_datasheet(&ctx, &pdf);
+    h.state_mut().open_path(&ctx, &lib);
+    h.run();
+    h.get_by_label("2 symbols in Rev, 1 to review");
+    // Nothing picked yet: Accept says to pick a symbol
+    assert!(disabled(&h, ACCEPT));
+    h.get_by_label("pick a symbol first: its footprint and datasheet follow");
+    // The symbol: its footprint follows, and its datasheet from its Datasheet field
+    h.get_by_label("Rev:Mixed").click();
+    h.run();
+    h.run();
+    assert_eq!(h.state().datasheet.as_deref(), Some(pdf.as_path()));
     h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
     h.run();
     let want_hash = better_erc::fp::hash_file(&footprint(), None).unwrap().hash;
     assert_eq!(h.state().rt.sourced.as_ref().unwrap().hash, want_hash);
+    h.get_by_label("Test:Mixed_Pads");
     // The page search goes to the land pattern page
     assert_eq!(h.state().page, 1, "{:?}", h.state().rt.page_hits);
     h.get_by_label("page 2 of 3");
@@ -147,18 +219,58 @@ fn review_a_footprint_over_its_datasheet() {
     let st = h.state();
     assert!(st.place.origin[0] > origin[0]);
     assert_eq!((st.place.rotation, st.place.mirror), (90.0, true));
-    // Accept gives the review hash
+    // Accept writes the review hash into the library symbol
     assert!(!disabled(&h, ACCEPT));
     button(&h, ACCEPT).click();
     h.run();
     assert_eq!(h.state().rt.accepted.as_deref(), Some(want_hash.as_str()));
     h.get_by_label(&format!("Accepted. {FIELD} = {want_hash} (copied)"));
+    assert!(
+        matches!(h.state().rt.written, Some(Ok(_))),
+        "{:?}",
+        h.state().rt.written
+    );
+    h.get_by_label("Rev:Mixed: written into");
+    h.get_by_label("  Rev.kicad_sym (library)");
+    let text = std::fs::read_to_string(&lib).unwrap();
+    assert!(
+        text.contains(&format!("(property \"Footprint_Review\" \"{want_hash}\"")),
+        "{text}"
+    );
     let r = &h.state().reviews[0];
     assert_eq!((r.page, r.hash.as_str()), (2, want_hash.as_str()));
     assert_eq!(r.datasheet.as_deref(), Some(pdf.as_path()));
+    // berc fp check --lib agrees, and the list says so without reading the library again
+    let check = better_erc::fp::check_libraries(&LibCheckOptions {
+        libraries: vec![lib.display().to_string()],
+        project: dir.clone(),
+        search: LibrarySearch::default(),
+    })
+    .unwrap();
+    let mixed = check
+        .symbols
+        .iter()
+        .find(|e| e.symbol == "Rev:Mixed")
+        .unwrap();
+    assert_eq!(mixed.status, SymbolStatus::Ok);
+    h.get_by_label(&format!("{want_hash}, the same: reviewed"));
+    assert_eq!(
+        h.state().rt.symbols.as_ref().unwrap().rows[1].status,
+        SymbolStatus::Ok
+    );
+    // Nothing else needs a review
+    assert!(disabled(&h, "Next to review ▶"));
+    // A symbol without a footprint: refused, with the reason
+    h.get_by_label("Rev:Generic").click();
+    h.run();
+    let why = "Rev:Generic sets no footprint (its Footprint field is empty): nothing to review, and no review \
+               hash to give it";
+    assert!(disabled(&h, ACCEPT));
+    assert_eq!(h.state().accept_blocker().as_deref(), Some(why));
+    assert!(h.state().rt.items.is_empty());
     // Each step records its usage signal
     let got = signals.lock().unwrap().clone();
-    for want in ["footprint", "datasheet", "scale", "accept"] {
+    for want in ["library", "symbol", "datasheet", "scale", "accept", "write"] {
         assert!(
             got.contains(&format!("app fp-review {want}")),
             "{want}: {got:?}"
@@ -171,9 +283,48 @@ fn review_a_footprint_over_its_datasheet() {
     std::fs::remove_dir_all(&dir).unwrap();
 }
 
-/// A real board: BERC_FP_BOARD names a .kicad_pcb, BERC_FP_REF the footprint to pick (default: the first with a
-/// Datasheet field); the library search runs with the default command when it is on PATH. Not run without them.
-/// BERC_FP_BLEND picks a blend mode.
+/// A footprint opened alone is a preview: drawn over the datasheet, but Accept is off with the reason
+#[test]
+fn a_footprint_alone_is_a_preview() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-preview-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let pdf = datasheet(&dir);
+    let settings = FootprintReviewSettings {
+        font_dirs: Vec::new(),
+        library_search: Vec::new(),
+        ..Default::default()
+    };
+    let mut cx = Context::new();
+    let mut h = Harness::builder()
+        .with_size(vec2(1200.0, 1400.0))
+        .build_ui_state(
+            move |ui, state: &mut FootprintReview| state.ui(ui, &mut cx, Id::new("fp preview")),
+            FootprintReview::with(settings, Arc::new(|_: &str| {})),
+        );
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &footprint());
+    h.state_mut().open_datasheet(&ctx, &pdf);
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    let page = h.state().page;
+    h.state_mut().scale = Some(Scale {
+        mm_per_point: 0.02,
+        page,
+        mm: 2.0,
+        note: None,
+    });
+    h.run();
+    assert!(!h.state().rt.items.is_empty());
+    h.get_by_label("Preview: no symbol to write the review hash into");
+    assert!(disabled(&h, ACCEPT));
+    h.get_by_label(PREVIEW);
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// A real board: BERC_FP_BOARD names a KiCad project or board, BERC_FP_SYMBOL the library symbol to review
+/// (default: the first in the list to review); the library search runs with the default command when it is on
+/// PATH. Not run without them. BERC_FP_BLEND picks a blend mode.
 #[test]
 fn real_board() {
     let Some(board) = std::env::var_os("BERC_FP_BOARD") else {
@@ -198,9 +349,13 @@ fn real_board() {
             rs.clone(),
         ));
     }
+    let mut review =
+        FootprintReview::with(FootprintReviewSettings::default(), Arc::new(|_: &str| {}));
+    // The real board's libraries: this PC's global tables too
+    review.rt.config = better_erc::fp::kicad_config_dir();
     let mut h = b.build_ui_state(
         move |ui, state: &mut FootprintReview| state.ui(ui, &mut cx, Id::new("fp real")),
-        FootprintReview::with(FootprintReviewSettings::default(), Arc::new(|_: &str| {})),
+        review,
     );
     if let Some(rs) = &rs {
         blend::register(&h.ctx, rs, 1, None);
@@ -209,26 +364,31 @@ fn real_board() {
     h.run();
     let ctx = h.ctx.clone();
     h.state_mut().open_path(&ctx, Path::new(&board));
-    let want = std::env::var("BERC_FP_REF").ok();
+    let want = std::env::var("BERC_FP_SYMBOL").ok();
     let i = {
-        let b = h.state().rt.board.as_ref().expect("the board opened");
-        b.layout
-            .footprints
+        let l = h
+            .state()
+            .rt
+            .symbols
+            .as_ref()
+            .expect("the symbol list opened");
+        eprintln!("{}", l.title);
+        l.rows
             .iter()
-            .position(|f| match &want {
-                Some(r) => &f.reference == r,
-                None => better_erc::model::field_value(&f.fields, "Datasheet")
-                    .is_some_and(|d| d.starts_with("http")),
+            .position(|r| match &want {
+                Some(s) => &r.symbol == s,
+                None => r.needs_review(),
             })
-            .expect("such a footprint")
+            .expect("such a symbol")
     };
-    h.state_mut().pick(i);
+    h.state_mut().select_symbol(i, true);
     h.run();
     eprintln!(
-        "{:?} / {:?} / {:?}",
+        "{:?} / {:?} / {:?} / accept: {:?}",
         h.state().rt.sourced.as_ref().map(|s| s.source.describe()),
-        h.state().rt.board_note,
-        h.state().rt.error
+        h.state().rt.symbol_note,
+        h.state().rt.error,
+        h.state().accept_blocker()
     );
     eprintln!("query {:?}", h.state().rt.query);
     eprintln!("queries {:?}", h.state().rt.queries);
@@ -305,7 +465,7 @@ fn blend_modes_mix_with_the_page() {
     );
     let mut cx = Context::new();
     let mut h = Harness::builder()
-        .with_size(vec2(1200.0, 800.0))
+        .with_size(vec2(1200.0, 1400.0))
         .renderer(egui_kittest::wgpu::WgpuTestRenderer::from_render_state(
             rs.clone(),
         ))
@@ -419,6 +579,7 @@ fn project(dir: &Path) -> PathBuf {
     )
     .unwrap();
     std::fs::write(dir.join("rev.kicad_pro"), "{}\n").unwrap();
+    footprint_table(dir);
     std::fs::write(
         dir.join("Rev.kicad_sym"),
         format!(
@@ -435,8 +596,9 @@ fn project(dir: &Path) -> PathBuf {
     board
 }
 
-/// A footprint picked from a board: Accept writes its review hash into the symbol of its footprints, in the
-/// library and in the schematic's copy, and `berc fp check` then finds them ok
+/// A symbol from a board's list: Accept writes its footprint's review hash into the library symbol and the
+/// schematic's copy, and `berc fp check` then finds the board's footprints ok; the board's own footprint list is a
+/// preview
 #[test]
 fn accept_writes_into_the_symbols() {
     let dir = std::env::temp_dir().join(format!("berc-fp-write-{}", std::process::id()));
@@ -454,7 +616,7 @@ fn accept_writes_into_the_symbols() {
     };
     let mut cx = Context::new();
     let mut h = Harness::builder()
-        .with_size(vec2(1200.0, 800.0))
+        .with_size(vec2(1200.0, 1400.0))
         .build_ui_state(
             move |ui, state: &mut FootprintReview| state.ui(ui, &mut cx, Id::new("fp write")),
             FootprintReview::with(settings, usage),
@@ -463,18 +625,19 @@ fn accept_writes_into_the_symbols() {
     let ctx = h.ctx.clone();
     h.state_mut().open_path(&ctx, &board);
     h.run();
-    // The board list's row of Mixed_Pads
+    h.get_by_label("1 library symbols on rev.kicad_pcb, 1 to review");
+    // A board footprint from the preview list: Accept is off
+    h.get_by_label_contains("library footprints on rev.kicad_pcb (preview)")
+        .click();
+    h.run();
     h.get_by_label("Mixed_Pads  (U7, U8, U9, U10, U11, U12)")
         .click();
     h.run();
-    assert_eq!(
-        h.state().rt.picked.as_ref().map(|p| p.1.clone()),
-        Some(
-            ["U7", "U8", "U9", "U10", "U11", "U12"]
-                .map(String::from)
-                .to_vec()
-        )
-    );
+    assert!(h.state().rt.target.is_none());
+    // The symbol the board's footprints come from
+    h.get_by_label("Rev:Mixed").click();
+    h.run();
+    h.get_by_label("U7, U8, U9, U10, U11, U12");
     h.state_mut().open_datasheet(&ctx, &pdf);
     h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
     h.run();

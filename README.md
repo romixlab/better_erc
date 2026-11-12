@@ -45,8 +45,8 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 - **The app** (`better_erc`, egui, crate `better_erc_app`): an import tab that opens any design the registry reads
   (and Altium or OrCAD files picked one by one) and shows its findings with their explanations and the checks that
   did not run, and tabs for nets (power rails, grounds and switching nodes from names and pin types), I2C buses,
-  style findings and inputs; a footprint review tab that draws a library footprint over its datasheet drawing and
-  gives the review hash (see [Reviewing in the app](#reviewing-in-the-app)).
+  style findings and inputs; a footprint review tab that draws a library symbol's footprint over its datasheet
+  drawing and writes the review hash into the symbol (see [Reviewing in the app](#reviewing-in-the-app)).
 - **Signal levels** (crate `erc_levels`): a database of the levels logic families, buses and differential
   standards define (74xx and CD4000, JEDEC LVCMOS/SSTL/HSTL, I2C, RS-485, CAN, LVDS, ECL, USB, Ethernet and more),
   every number with the document, table and page it was read from. See [docs/signal-levels.md](docs/signal-levels.md).
@@ -322,14 +322,18 @@ symbol is ok or has no footprint, 1 otherwise, 2 when a library can't be read.
 
 ### Reviewing in the app
 
-The app's Footprint review tab does the review itself: it draws the footprint over the datasheet's drawing, and
-Accept writes the hash into the `Footprint_Review` field of its symbols.
+The app's Footprint review tab does the review itself: it starts from a library symbol, since the symbol is what a
+schematic places and what holds the hash, draws the footprint its `Footprint` field names over the datasheet's
+drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
 
-1. **Open a footprint**: a library footprint (`.kicad_mod`), or a board (`.kicad_pcb`) to pick from. A board lists
-   one row per library footprint with the references that use it. A picked footprint is reviewed from its library
-   file, found through the project's or the global `fp-lib-table`; the tab says whether the board copy is the same.
-   Where the library file is not found, the board copy is reviewed.
-2. **Open the datasheet**: the footprint's `Datasheet` field when it names a local file, a local document library
+1. **Pick a symbol**: open a board or project (`.kicad_pcb`, `.kicad_pro`, `.kicad_sch`) for the library symbols
+   its board uses, as `berc fp todo` lists them, those to review first; or a symbol library (a `.kicad_sym`, a
+   `.kicad_symdir` folder, or a nickname from the `sym-lib-table`s) for its symbols. Each row shows the symbol's
+   status (unreviewed, changed, ok, missing, no footprint). Picking one opens the library footprint its `Footprint`
+   field names, found through the project's or the global `fp-lib-table`. A symbol that sets no footprint, or whose
+   symbol or footprint is not found, is refused with the reason. Next to review steps to the next symbol that
+   needs one.
+2. **Open the datasheet**: the symbol's `Datasheet` field when it names a local file, a local document library
    search, or Open PDF. The library search runs a command (a setting) with the datasheet's file name, a part name
    in its web address, the `Mpn` fields or the value, until one finds something. The command prints a JSON list of
    `{"path": ..., "page": ...}`. The page search then goes to the page with the land pattern, found by words such as
@@ -345,14 +349,15 @@ Accept writes the hash into the `Footprint_Review` field of its symbols.
    white paper under a pad goes black, so a footprint that covers the drawing's pads exactly leaves no light edge,
    and a pad that misses shows light. Scroll zooms at the pointer; the right or middle button pans; Page Up and
    Page Down turn pages.
-5. **Accept**: when the footprint matches the drawing, Accept writes its review hash into the symbols of the board's
-   footprints placed with it (their library symbols and the schematic's copies, as `berc fp accept` does) and lists
-   the files written, or says why it wrote nothing. The reviewed hash is the library file's: a board copy that
-   differs from it shows as changed in `berc fp check` until the board is updated from the library. A footprint
-   opened from a `.kicad_mod` has no board to tell its symbols, so Accept only copies the hash then. Accept copies
-   the hash to the clipboard in both cases and keeps the review (footprint, hash, datasheet, page, scale) in the
-   tab's list. Accept stays disabled, saying why, until a footprint and a datasheet are open and the scale is set on
-   the page shown.
+5. **Accept**: when the footprint matches the drawing, Accept writes its review hash into the symbol: the library
+   symbol and, for a symbol from a project's list, the schematic's copies too (as `berc fp accept --symbol` does).
+   It lists the files written, or says why it wrote nothing, copies the hash to the clipboard and keeps the review
+   (symbol's footprint, hash, datasheet, page, scale) in the tab's list. Accept stays disabled, saying why, until a
+   symbol with a footprint is picked, a datasheet is open and the scale is set on the page shown.
+
+A footprint opened alone (Open a footprint alone, a `.kicad_mod`) or picked from a board's footprint list is a
+preview: it is drawn over the datasheet the same way, but there is no symbol to put the hash on, so Accept is
+disabled and says so. For a board footprint the tab says whether the board copy is the same as its library file.
 
 PDFs are read and drawn by [hayro](https://github.com/LaurenzV/hayro), in pure Rust, on a thread of its own. The
 blend modes other than Normal are a wgpu shader that reads the page's own pixel under the footprint. The

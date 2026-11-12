@@ -1,18 +1,22 @@
-//! Footprint review (VIEW-19): a library footprint drawn over its datasheet drawing. The drawing's scale is set
-//! with a ruler along one of its dimensions; the footprint is moved, turned and mirrored onto the drawing, shown
-//! half see-through or blinking; when it matches, Accept gives its review hash (`fp1:`, [`better_erc::fp`]) for the
-//! symbol's `Footprint_Review` field.
+//! Footprint review (VIEW-19): a library symbol's footprint drawn over its datasheet drawing. The drawing's scale
+//! is set with a ruler along one of its dimensions; the footprint is moved, turned and mirrored onto the drawing,
+//! shown half see-through or blinking; when it matches, Accept writes its review hash (`fp1:`, [`better_erc::fp`])
+//! into the symbol's `Footprint_Review` field.
 //!
-//! The footprint comes through [`FootprintSource`]: a `.kicad_mod` file, a footprint picked from a board (its
-//! library file through the project's `fp-lib-table` when found, else the board copy), or a library id. The
-//! datasheet comes from the footprint's `Datasheet` field when that is a file, a local library search (a
-//! setting), or a file picker; the page search finds the land pattern page by words that are a setting too.
+//! The review starts from a library symbol, since the symbol is what a schematic places and what holds the hash:
+//! picked from a symbol library (a `.kicad_sym`, a `.kicad_symdir`, a nickname in the `sym-lib-table`s), or from
+//! a board's list of the library symbols it uses ([`better_erc::fp::todo`]), stepping through those to review.
+//! The footprint is the library footprint the symbol's `Footprint` field names, the datasheet the file its
+//! `Datasheet` field names, else a local library search (a setting), else a file picker; the page search finds the
+//! land pattern page by words that are a setting too. A footprint opened alone (a `.kicad_mod`, a board's copy) is
+//! a preview: there is no symbol to write the hash into, so Accept is off and says so.
 
 use crate::prelude::*;
 use crate::settings::{BlendMode, FootprintReviewSettings, LayerColors, Rgb, Settings};
 use crate::tabs::TabUi;
 use better_erc::fp::{
-    AcceptRun, AcceptWhat, FIELD, FootprintSource, HashSource, Sourced, SymbolLibraries,
+    AcceptRun, AcceptWhat, FIELD, FootprintSource, HashSource, LibCheckOptions, LibrarySearch,
+    Sourced, SymbolLibraries, SymbolStatus, TodoEntry,
 };
 use better_erc::model::layout::{FootprintId, Layout};
 use egui::{Align2, FontId, Pos2, Rect, Shape, Stroke, pos2, vec2};
@@ -112,11 +116,38 @@ pub enum Tool {
     Ruler,
 }
 
+/// Where the list of symbols to review comes from
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub enum SymbolsFrom {
+    /// The library symbols a KiCad project's board uses (its directory, `.kicad_pro`, `.kicad_sch` or
+    /// `.kicad_pcb`), as `berc fp todo` lists them
+    Project(PathBuf),
+    /// A symbol library: a `.kicad_sym`, a `.kicad_symdir`, or a nickname in the `sym-lib-table`s of `project`
+    /// and the global one; footprints found through `project`'s and the global `fp-lib-table`
+    Library { library: String, project: PathBuf },
+}
+
+impl SymbolsFrom {
+    /// The directory whose library tables are read
+    fn dir(&self) -> PathBuf {
+        match self {
+            SymbolsFrom::Project(p) if p.is_dir() => p.clone(),
+            SymbolsFrom::Project(p) => p.parent().unwrap_or(Path::new(".")).to_path_buf(),
+            SymbolsFrom::Library { project, .. } => project.clone(),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize)]
 #[serde(default)]
 pub struct FootprintReview {
+    /// The symbol list open
+    symbols_from: Option<SymbolsFrom>,
+    /// The library symbol under review (`Lib:Name`)
+    symbol: Option<String>,
+    /// A footprint opened alone, a preview (no symbol under review)
     source: Option<FootprintSource>,
-    /// A board opened to pick footprints from
+    /// A board opened to preview its footprints from
     board: Option<PathBuf>,
     datasheet: Option<PathBuf>,
     /// 0-based
@@ -144,6 +175,8 @@ pub struct FootprintReview {
 impl Default for FootprintReview {
     fn default() -> Self {
         FootprintReview {
+            symbols_from: None,
+            symbol: None,
             source: None,
             board: None,
             datasheet: None,
@@ -167,6 +200,22 @@ impl Default for FootprintReview {
             rt: Runtime::default(),
         }
     }
+}
+
+/// The library symbols to review, one row each
+struct SymbolList {
+    from: SymbolsFrom,
+    /// A line on where they come from
+    title: String,
+    rows: Vec<TodoEntry>,
+    filter: String,
+}
+
+/// The library symbol under review: Accept writes the review hash into it
+#[derive(Clone, Debug)]
+struct Target {
+    symbol: String,
+    from: SymbolsFrom,
 }
 
 /// A board's footprints, one row per library footprint
@@ -218,9 +267,17 @@ struct Runtime {
     /// Which end of the ruler a drag moves
     ruler_end: Option<usize>,
     accepted: Option<String>,
-    /// The footprint was picked from a board: the board and the references placed with it, whose symbols Accept
-    /// writes the review hash into
-    picked: Option<(PathBuf, Vec<String>)>,
+    /// The symbol list open
+    symbols: Option<SymbolList>,
+    /// The symbol under review, whose footprint is shown; none: a footprint opened alone, a preview
+    target: Option<Target>,
+    /// Why the symbol under review has no footprint to show (it sets none, or it was not found)
+    symbol_note: Option<String>,
+    /// KiCad's configuration directory, for the global library tables ([`better_erc::fp::kicad_config_dir`])
+    config: Option<PathBuf>,
+    /// The symbol libraries the tables name: the directory they were read for, and the nicknames
+    tables: Option<(PathBuf, Vec<String>)>,
+    tables_filter: String,
     /// What Accept wrote into the symbols, or why it could not
     written: Option<Result<AcceptRun, String>>,
     /// The settings as text being edited: page search words and font folders one per line, the search command
@@ -257,7 +314,12 @@ impl Default for Runtime {
             ruler_mm: String::new(),
             ruler_end: None,
             accepted: None,
-            picked: None,
+            symbols: None,
+            target: None,
+            symbol_note: None,
+            config: better_erc::fp::kicad_config_dir(),
+            tables: None,
+            tables_filter: String::new(),
             written: None,
             words_text: String::new(),
             fonts_text: String::new(),
@@ -299,6 +361,8 @@ impl FootprintReview {
         let mut r = FootprintReview::default();
         r.set_settings(settings);
         r.rt.usage = usage;
+        // No global library tables: the test's own only
+        r.rt.config = None;
         r
     }
 
@@ -329,7 +393,14 @@ impl FootprintReview {
         {
             self.open_board(&b);
         }
-        if let Some(s) = self.source.clone() {
+        if let Some(from) = self.symbols_from.clone() {
+            self.open_symbols(from);
+        }
+        if let Some(sym) = self.symbol.clone() {
+            if let Some(i) = self.symbol_row(&sym) {
+                self.select_symbol(i, false);
+            }
+        } else if let Some(s) = self.source.clone() {
             self.load(s, false);
         }
         if let Some(d) = self.datasheet.clone()
@@ -378,16 +449,210 @@ impl FootprintReview {
         }
     }
 
-    /// Opens a footprint file, or a board to pick footprints from
+    /// Opens what `path` is: a KiCad project (its directory, `.kicad_pro`, `.kicad_sch`, `.kicad_pcb`) for the
+    /// library symbols its board uses, a symbol library (`.kicad_sym`, `.kicad_symdir`) for its symbols, or a
+    /// footprint file alone, as a preview
     pub fn open_path(&mut self, ctx: &egui::Context, path: &Path) {
         let _ = ctx;
-        if path.extension().is_some_and(|e| e == "kicad_pcb") {
-            self.open_board(path);
-            self.usage("board");
-        } else {
-            self.load(FootprintSource::File(path.to_path_buf()), true);
-            self.usage("footprint");
-            self.rt.want_search = true;
+        let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
+        match ext {
+            "kicad_sym" | "kicad_symdir" => {
+                self.open_symbols(SymbolsFrom::Library {
+                    library: path.display().to_string(),
+                    project: path.parent().unwrap_or(Path::new(".")).to_path_buf(),
+                });
+                self.usage("library");
+            }
+            "kicad_mod" => {
+                self.load(FootprintSource::File(path.to_path_buf()), true);
+                self.usage("footprint");
+                self.rt.want_search = true;
+            }
+            _ => {
+                self.open_symbols(SymbolsFrom::Project(path.to_path_buf()));
+                self.usage("project");
+            }
+        }
+    }
+
+    /// The search for libraries: the project's tables and, outside tests, the global ones; a library opened by
+    /// path is searched first
+    fn library_search_for(&self, from: &SymbolsFrom) -> LibrarySearch {
+        let mut s = LibrarySearch {
+            config: self.rt.config.clone(),
+            ..LibrarySearch::default()
+        };
+        if let SymbolsFrom::Library { library, .. } = from
+            && Path::new(library).exists()
+        {
+            s.symbols.push(PathBuf::from(library));
+        }
+        s
+    }
+
+    /// Opens the list of library symbols to review, and for a project the board's footprints to preview
+    fn open_symbols(&mut self, from: SymbolsFrom) {
+        let search = self.library_search_for(&from);
+        let list = match &from {
+            SymbolsFrom::Project(p) => better_erc::fp::todo(p, &search)
+                .map(|t| {
+                    let title = format!(
+                        "{} library symbols on {}, {} to review",
+                        t.symbols.len(),
+                        file_name(&t.board),
+                        t.to_review().count()
+                    );
+                    (title, t.symbols, Some(t.board))
+                })
+                .map_err(|e| e.to_string()),
+            SymbolsFrom::Library { library, project } => {
+                better_erc::fp::check_libraries(&LibCheckOptions {
+                    libraries: vec![library.clone()],
+                    project: project.clone(),
+                    search,
+                })
+                .map(|c| {
+                    let rows: Vec<TodoEntry> = c
+                        .symbols
+                        .into_iter()
+                        .map(|e| TodoEntry {
+                            symbol: e.symbol,
+                            status: e.status,
+                            footprint: e.footprint,
+                            footprint_file: e.footprint_file,
+                            hash: e.hash,
+                            stored: e.stored,
+                            datasheet: e.datasheet,
+                            references: Vec::new(),
+                            note: e.note,
+                        })
+                        .collect();
+                    let names: Vec<String> =
+                        c.libraries.iter().map(|l| l.nickname.clone()).collect();
+                    let title = format!(
+                        "{} symbols in {}, {} to review",
+                        rows.len(),
+                        names.join(", "),
+                        rows.iter().filter(|r| r.needs_review()).count()
+                    );
+                    (title, rows, None)
+                })
+                .map_err(|e| e.to_string())
+            }
+        };
+        match list {
+            Ok((title, rows, board)) => {
+                self.symbols_from = Some(from.clone());
+                self.rt.symbols = Some(SymbolList {
+                    from,
+                    title,
+                    rows,
+                    filter: String::new(),
+                });
+                self.rt.error = None;
+                if let Some(b) = board {
+                    self.open_board(&b);
+                }
+            }
+            Err(e) => self.rt.error = Some(e),
+        }
+    }
+
+    fn symbol_row(&self, symbol: &str) -> Option<usize> {
+        self.rt
+            .symbols
+            .as_ref()?
+            .rows
+            .iter()
+            .position(|r| r.symbol == symbol)
+    }
+
+    /// The row after the current one that needs a review, from the top again at the end
+    fn next_to_review(&self) -> Option<usize> {
+        let rows = &self.rt.symbols.as_ref()?.rows;
+        let at = self
+            .rt
+            .target
+            .as_ref()
+            .and_then(|t| self.symbol_row(&t.symbol));
+        let start = at.map_or(0, |i| i + 1);
+        (0..rows.len())
+            .map(|k| (start + k) % rows.len())
+            .find(|i| Some(*i) != at && rows[*i].needs_review())
+    }
+
+    /// Puts row `i` of the symbol list under review: its footprint from its `Footprint` field, its datasheet from
+    /// its `Datasheet` field (`fresh`: looked for again), or the reason it has no footprint to review
+    fn select_symbol(&mut self, i: usize, fresh: bool) {
+        let Some(list) = &self.rt.symbols else { return };
+        let row = list.rows[i].clone();
+        let from = list.from.clone();
+        self.symbol = Some(row.symbol.clone());
+        self.source = None;
+        self.rt.board_note = None;
+        self.rt.target = Some(Target {
+            symbol: row.symbol.clone(),
+            from: from.clone(),
+        });
+        self.rt.symbol_note = None;
+        self.rt.accepted = None;
+        self.rt.written = None;
+        let no_footprint = |why: String| (None, Some(why));
+        let (sourced, note) = match (&row.footprint, &row.footprint_file) {
+            (None, _) if row.status == SymbolStatus::Missing => no_footprint(format!(
+                "the library symbol was not found: {}",
+                row.note.as_deref().unwrap_or("")
+            )),
+            (None, _) => no_footprint(format!(
+                "{} sets no footprint (its Footprint field is empty): nothing to review, and no review hash to \
+                 give it",
+                row.symbol
+            )),
+            (Some(fp), None) => no_footprint(format!(
+                "its footprint {fp} was not found: {}",
+                row.note.as_deref().unwrap_or("no such library footprint")
+            )),
+            (Some(_), Some(file)) => match FootprintSource::File(file.clone()).read() {
+                Ok(s) => (Some(s), None),
+                Err(e) => no_footprint(e.to_string()),
+            },
+        };
+        match sourced {
+            Some(mut s) => {
+                // The symbol's fields first (Datasheet, part numbers, Footprint_Review), then the footprint's
+                let search = self.library_search_for(&from);
+                let mut fields = search
+                    .open(&from.dir())
+                    .ok()
+                    .and_then(|(mut syms, _)| syms.fields(&row.symbol).ok())
+                    .unwrap_or_else(|| {
+                        row.datasheet
+                            .iter()
+                            .map(|d| ("Datasheet".to_string(), d.clone()))
+                            .collect()
+                    });
+                fields.retain(|(k, v)| {
+                    !v.trim().is_empty() && !(k == "Datasheet" && v.trim() == "~")
+                });
+                for (k, v) in std::mem::take(&mut s.fields) {
+                    if !fields.iter().any(|f| f.0 == k) {
+                        fields.push((k, v));
+                    }
+                }
+                s.fields = fields;
+                self.set_sourced(s, fresh);
+                if fresh {
+                    self.rt.want_search = true;
+                }
+            }
+            None => {
+                self.rt.symbol_note = note;
+                self.rt.sourced = None;
+                self.rt.items.clear();
+            }
+        }
+        if fresh {
+            self.usage("symbol");
         }
     }
 
@@ -418,7 +683,8 @@ impl FootprintReview {
         }
     }
 
-    /// Picks footprint `i` of the open board: its library file when the project's tables give it, else the board copy
+    /// Picks footprint `i` of the open board to preview: its library file when the project's tables give it, else
+    /// the board copy
     fn pick(&mut self, i: usize) {
         let Some(b) = &self.rt.board else { return };
         let copy = Sourced::from_board(&b.path, &b.layout, FootprintId::from_index(i));
@@ -426,7 +692,7 @@ impl FootprintReview {
         let library = FootprintSource::Library {
             lib_id: copy.lib_id().to_string(),
             project,
-            config: better_erc::fp::kicad_config_dir(),
+            config: self.rt.config.clone(),
         };
         let (reviewed, note) = match library.read() {
             Ok(lib) => {
@@ -458,17 +724,12 @@ impl FootprintReview {
                 reviewed.fields.push((k, v));
             }
         }
-        let refs = b
-            .groups
-            .iter()
-            .find(|g| g.0 == b.layout.footprints[i].lib_id)
-            .map(|g| g.1.clone())
-            .unwrap_or_default();
-        let board = b.path.clone();
         self.source = Some(reviewed.source.clone());
+        self.symbol = None;
+        self.rt.target = None;
+        self.rt.symbol_note = None;
         self.set_sourced(reviewed, true);
         self.rt.board_note = Some(note);
-        self.rt.picked = Some((board, refs));
         self.usage("pick");
         self.rt.want_search = true;
     }
@@ -477,9 +738,11 @@ impl FootprintReview {
         match source.read() {
             Ok(s) => {
                 self.source = Some(source);
+                self.symbol = None;
+                self.rt.target = None;
+                self.rt.symbol_note = None;
                 self.set_sourced(s, fresh);
                 self.rt.board_note = None;
-                self.rt.picked = None;
             }
             Err(e) => {
                 self.rt.error = Some(e.to_string());
@@ -580,7 +843,17 @@ impl FootprintReview {
     /// Why Accept can't be used now, when it can't
     fn accept_blocker(&self) -> Option<String> {
         if self.rt.sourced.is_none() {
-            return Some("open a footprint first".into());
+            return Some(match (&self.rt.target, &self.rt.symbol_note) {
+                (Some(_), Some(n)) => n.clone(),
+                _ => "pick a symbol first: its footprint and datasheet follow".into(),
+            });
+        }
+        if self.rt.target.is_none() {
+            return Some(
+                "a footprint opened alone is a preview: there is no symbol to put the review hash on; pick its \
+                 symbol from a library or a board's list"
+                    .into(),
+            );
         }
         if self.rt.pdf.as_ref().is_none_or(|p| p.page_count() == 0) {
             return Some("open the datasheet first".into());
@@ -611,25 +884,60 @@ impl FootprintReview {
         };
         ctx.copy_text(review.hash.clone());
         self.rt.accepted = Some(review.hash.clone());
-        // Picked from a board: into the symbols of its footprints, library and schematic
-        self.rt.written = self.rt.picked.as_ref().map(|(board, refs)| {
-            let config = better_erc::fp::kicad_config_dir();
-            better_erc::fp::accept(
-                board,
-                &AcceptWhat::Reviewed {
-                    references: refs.clone(),
-                    hash: review.hash.clone(),
-                },
-                &mut |dir| SymbolLibraries::new(dir, config.as_deref()),
-                false,
-            )
-            .map_err(|e| e.to_string())
-        });
+        // Into the symbol: the library's and, for a project's symbol, the schematic's copies
+        self.rt.written = self.rt.target.clone().map(|t| self.write(&t, &review.hash));
         if matches!(self.rt.written, Some(Ok(_))) {
             self.usage("write");
+            self.reviewed(&review.hash);
         }
         self.reviews.push(review);
         self.usage("accept");
+    }
+
+    /// Writes `hash` into the symbol under review
+    fn write(&self, t: &Target, hash: &str) -> Result<AcceptRun, String> {
+        match &t.from {
+            SymbolsFrom::Project(p) => {
+                let config = self.rt.config.clone();
+                better_erc::fp::accept(
+                    p,
+                    &AcceptWhat::Symbol {
+                        symbol: t.symbol.clone(),
+                        hash: hash.to_string(),
+                    },
+                    &mut |dir| SymbolLibraries::new(dir, config.as_deref()),
+                    false,
+                )
+            }
+            SymbolsFrom::Library { project, .. } => {
+                let search = self.library_search_for(&t.from);
+                let (mut syms, _) = search.open(project).map_err(|e| e.to_string())?;
+                better_erc::fp::accept_library(&mut syms, &t.symbol, hash, false)
+            }
+        }
+        .map_err(|e| e.to_string())
+    }
+
+    /// The symbol under review holds `hash` now: its row and fields say so
+    fn reviewed(&mut self, hash: &str) {
+        let Some(t) = &self.rt.target else { return };
+        if let Some(row) = self
+            .rt
+            .symbols
+            .as_mut()
+            .and_then(|l| l.rows.iter_mut().find(|r| r.symbol == t.symbol))
+        {
+            row.stored = Some(hash.to_string());
+            if row.hash.as_deref() == Some(hash) {
+                row.status = SymbolStatus::Ok;
+            }
+        }
+        if let Some(s) = &mut self.rt.sourced {
+            match s.fields.iter_mut().find(|f| f.0 == FIELD) {
+                Some(f) => f.1 = hash.to_string(),
+                None => s.fields.push((FIELD.to_string(), hash.to_string())),
+            }
+        }
     }
 
     fn set_scale_from_ruler(&mut self) {
@@ -653,15 +961,33 @@ impl FootprintReview {
 
     fn controls(&mut self, ui: &mut Ui) {
         let ctx = ui.ctx().clone();
-        ui.heading("Footprint");
+        ui.heading("Symbol");
         ui.horizontal_wrapped(|ui| {
             if ui
-                .button("Open footprint or board…")
-                .on_hover_text("A library footprint (.kicad_mod), or a board (.kicad_pcb) to pick its footprints from")
+                .button("Open board or project…")
+                .on_hover_text("A KiCad project (.kicad_pro, .kicad_sch, .kicad_pcb): the library symbols its board uses")
                 .clicked()
                 && let Some(p) = rfd::FileDialog::new()
-                    .add_filter("KiCad footprint or board", &["kicad_mod", "kicad_pcb"])
+                    .add_filter("KiCad project", &["kicad_pro", "kicad_sch", "kicad_pcb"])
                     .pick_file()
+            {
+                self.open_path(&ctx, &p);
+            }
+            if ui
+                .button("Open symbol library…")
+                .on_hover_text("A .kicad_sym file: its symbols")
+                .clicked()
+                && let Some(p) = rfd::FileDialog::new()
+                    .add_filter("KiCad symbol library", &["kicad_sym"])
+                    .pick_file()
+            {
+                self.open_path(&ctx, &p);
+            }
+            if ui
+                .button("Open symbol folder…")
+                .on_hover_text("A .kicad_symdir directory (KiCad 9 and later): its symbols")
+                .clicked()
+                && let Some(p) = rfd::FileDialog::new().pick_folder()
             {
                 self.open_path(&ctx, &p);
             }
@@ -669,8 +995,32 @@ impl FootprintReview {
         if let Some(e) = &self.rt.error {
             ui.colored_label(Color32::RED, e);
         }
+        self.table_libraries(ui);
+        self.symbol_list(ui);
+        self.symbol_info(ui);
+
+        ui.separator();
+        ui.heading("Footprint");
+        if ui
+            .button("Open a footprint alone (preview)…")
+            .on_hover_text(
+                "A library footprint (.kicad_mod) to look at over a datasheet; Accept needs a symbol to write into",
+            )
+            .clicked()
+            && let Some(p) = rfd::FileDialog::new()
+                .add_filter("KiCad footprint", &["kicad_mod"])
+                .pick_file()
+        {
+            self.open_path(&ctx, &p);
+        }
         self.board_list(ui);
         if let Some(s) = &self.rt.sourced {
+            if self.rt.target.is_none() {
+                ui.colored_label(
+                    Color32::ORANGE,
+                    "Preview: no symbol to write the review hash into",
+                );
+            }
             Grid::new("fp").num_columns(2).show(ui, |ui| {
                 ui.label("Footprint");
                 ui.label(RichText::new(s.lib_id()).strong());
@@ -682,7 +1032,9 @@ impl FootprintReview {
                 ui.label("Review hash");
                 ui.label(RichText::new(&s.hash).monospace());
                 ui.end_row();
-                if let Some(stored) = s.field(FIELD) {
+                if let Some(stored) = s.field(FIELD)
+                    && self.rt.target.is_some()
+                {
                     ui.label(FIELD);
                     if stored == s.hash {
                         ui.colored_label(Color32::GREEN, format!("{stored}, the same: reviewed"));
@@ -721,16 +1073,20 @@ impl FootprintReview {
         );
         let resp = match &blocker {
             Some(why) => resp.on_disabled_hover_text(why),
-            None => match &self.rt.picked {
-                Some((_, refs)) => resp.on_hover_text(format!(
-                    "Writes the review hash into the {FIELD} field of the symbols of {}: their library symbols \
-                     and the schematic's copies; copies it too",
-                    refs.join(", ")
+            None => match &self.rt.target {
+                Some(Target {
+                    symbol,
+                    from: SymbolsFrom::Project(_),
+                    ..
+                }) => resp.on_hover_text(format!(
+                    "Writes the review hash into the {FIELD} field of {symbol}: the library symbol and the \
+                     schematic's copies; copies it too"
                 )),
-                None => resp.on_hover_text(format!(
-                    "Copies the review hash for the symbol's {FIELD} field (a footprint picked from a board is \
-                     written into its symbols)"
+                Some(t) => resp.on_hover_text(format!(
+                    "Writes the review hash into the {FIELD} field of library symbol {}; copies it too",
+                    t.symbol
                 )),
+                None => resp,
             },
         };
         if let Some(why) = &blocker {
@@ -782,6 +1138,25 @@ impl FootprintReview {
             }
             None => {}
         }
+        if self.rt.symbols.is_some() {
+            let next = self.next_to_review();
+            let b = ui.add_enabled(next.is_some(), Button::new("Next to review ▶"));
+            let b = match next {
+                Some(i) => b.on_hover_text(
+                    self.rt
+                        .symbols
+                        .as_ref()
+                        .map_or(String::new(), |l| l.rows[i].symbol.clone()),
+                ),
+                None => b.on_disabled_hover_text("no other symbol in the list needs a review"),
+            };
+            if b.clicked()
+                && let Some(i) = next
+            {
+                self.select_symbol(i, true);
+                self.usage("next");
+            }
+        }
         let n = self.reviews.len();
         egui::CollapsingHeader::new(format!("Accepted reviews ({n})"))
             .id_salt("reviews")
@@ -805,12 +1180,175 @@ impl FootprintReview {
         self.settings_controls(ui);
     }
 
+    /// The symbol libraries the tables name, to open one
+    fn table_libraries(&mut self, ui: &mut Ui) {
+        let dir = self
+            .rt
+            .symbols
+            .as_ref()
+            .map_or_else(|| PathBuf::from("."), |l| l.from.dir());
+        let mut open = None;
+        egui::CollapsingHeader::new("Symbol libraries in the tables")
+            .id_salt("table libraries")
+            .default_open(false)
+            .show(ui, |ui| {
+                if self.rt.tables.as_ref().is_none_or(|t| t.0 != dir) {
+                    let libs = SymbolLibraries::new(&dir, self.rt.config.as_deref());
+                    let names = libs
+                        .tables()
+                        .libraries()
+                        .iter()
+                        .map(|e| e.name.clone())
+                        .collect();
+                    self.rt.tables = Some((dir.clone(), names));
+                }
+                let names = &self.rt.tables.as_ref().expect("read above").1;
+                if names.is_empty() {
+                    ui.label(
+                        RichText::new("no sym-lib-table here or in KiCad's configuration")
+                            .small()
+                            .weak(),
+                    );
+                    return;
+                }
+                ui.add(
+                    TextEdit::singleline(&mut self.rt.tables_filter).hint_text("filter: nickname"),
+                );
+                let f = self.rt.tables_filter.to_lowercase();
+                ScrollArea::vertical()
+                    .id_salt("table libraries list")
+                    .max_height(160.0)
+                    .show(ui, |ui| {
+                        for n in names {
+                            if (f.is_empty() || n.to_lowercase().contains(&f))
+                                && ui.selectable_label(false, n).clicked()
+                            {
+                                open = Some(n.clone());
+                            }
+                        }
+                    });
+            });
+        if let Some(n) = open {
+            self.open_symbols(SymbolsFrom::Library {
+                library: n,
+                project: dir,
+            });
+            self.usage("library");
+        }
+    }
+
+    /// The symbols to review, coloured by what each needs
+    fn symbol_list(&mut self, ui: &mut Ui) {
+        let mut picked = None;
+        let current = self.rt.target.as_ref().map(|t| t.symbol.clone());
+        let Some(l) = &mut self.rt.symbols else {
+            ui.label(
+                RichText::new(
+                    "Open a board or a symbol library: the review is of a library symbol, which holds the hash",
+                )
+                .small()
+                .weak(),
+            );
+            return;
+        };
+        egui::CollapsingHeader::new(&l.title)
+            .id_salt("symbols")
+            .default_open(true)
+            .show(ui, |ui| {
+                ui.add(
+                    TextEdit::singleline(&mut l.filter)
+                        .hint_text("filter: symbol, footprint or reference"),
+                );
+                let f = l.filter.to_lowercase();
+                ScrollArea::vertical()
+                    .id_salt("symbol rows")
+                    .max_height(260.0)
+                    .show(ui, |ui| {
+                        for (i, r) in l.rows.iter().enumerate() {
+                            let hit = |t: &str| t.to_lowercase().contains(&f);
+                            if !f.is_empty()
+                                && !hit(&r.symbol)
+                                && !r.footprint.as_deref().is_some_and(hit)
+                                && !r.references.iter().any(|x| hit(x))
+                            {
+                                continue;
+                            }
+                            ui.horizontal(|ui| {
+                                ui.add_sized(
+                                    vec2(86.0, 14.0),
+                                    Label::new(
+                                        RichText::new(r.status.name())
+                                            .small()
+                                            .color(status_colour(r.status)),
+                                    ),
+                                );
+                                let selected = current.as_deref() == Some(r.symbol.as_str());
+                                let mut hover = r.symbol.clone();
+                                if let Some(fp) = &r.footprint {
+                                    hover.push_str(&format!("\nFootprint {fp}"));
+                                }
+                                if !r.references.is_empty() {
+                                    hover.push_str(&format!("\non {}", r.references.join(", ")));
+                                }
+                                if let Some(n) = &r.note {
+                                    hover.push_str(&format!("\n{n}"));
+                                }
+                                if ui
+                                    .add(Button::selectable(selected, &r.symbol).truncate())
+                                    .on_hover_text(hover)
+                                    .clicked()
+                                {
+                                    picked = Some(i);
+                                }
+                            });
+                        }
+                    });
+            });
+        if let Some(i) = picked {
+            self.select_symbol(i, true);
+        }
+    }
+
+    /// The symbol under review: its footprint and datasheet fields, or why it has no footprint to review
+    fn symbol_info(&self, ui: &mut Ui) {
+        let Some(t) = &self.rt.target else { return };
+        let row = self
+            .symbol_row(&t.symbol)
+            .map(|i| &self.rt.symbols.as_ref().expect("a row").rows[i]);
+        Grid::new("symbol").num_columns(2).show(ui, |ui| {
+            ui.label("Symbol");
+            ui.label(RichText::new(&t.symbol).strong());
+            ui.end_row();
+            if let Some(r) = row {
+                ui.label("Status");
+                ui.colored_label(status_colour(r.status), r.status.name());
+                ui.end_row();
+                ui.label("Footprint");
+                ui.label(r.footprint.as_deref().unwrap_or("(none)"));
+                ui.end_row();
+                if let Some(d) = &r.datasheet {
+                    ui.label("Datasheet");
+                    ui.add(Label::new(d).truncate()).on_hover_text(d);
+                    ui.end_row();
+                }
+                if !r.references.is_empty() {
+                    ui.label("On the board");
+                    ui.add(Label::new(r.references.join(", ")).truncate());
+                    ui.end_row();
+                }
+            }
+        });
+        if let Some(n) = &self.rt.symbol_note {
+            ui.colored_label(Color32::ORANGE, n);
+        }
+    }
+
     fn board_list(&mut self, ui: &mut Ui) {
         let mut picked = None;
         let current = self.rt.sourced.as_ref().map(|s| s.lib_id().to_string());
         let Some(b) = &mut self.rt.board else { return };
         let title = format!(
-            "{} library footprints on {}",
+            "{} library footprints on {} (preview)",
             b.groups.len(),
             b.path
                 .file_name()
@@ -819,7 +1357,7 @@ impl FootprintReview {
         );
         egui::CollapsingHeader::new(title)
             .id_salt("board footprints")
-            .default_open(true)
+            .default_open(false)
             .show(ui, |ui| {
                 ui.add(
                     TextEdit::singleline(&mut b.filter)
@@ -1441,9 +1979,13 @@ impl FootprintReview {
             }
         } else {
             painter.text(
-                canvas.center(),
+                canvas.center() - vec2(0.0, 40.0),
                 Align2::CENTER_CENTER,
-                "Open a footprint and its datasheet (left)",
+                if self.rt.sourced.is_some() {
+                    "Open its datasheet (left): the Datasheet field's file, the library search or a PDF"
+                } else {
+                    "Pick a symbol (left): its footprint and datasheet follow"
+                },
                 FontId::proportional(16.0),
                 Color32::LIGHT_GRAY,
             );
@@ -1724,6 +2266,25 @@ impl FootprintReview {
         painter.line_segment([o - vec2(6.0, 0.0), o + vec2(6.0, 0.0)], s);
         painter.line_segment([o - vec2(0.0, 6.0), o + vec2(0.0, 6.0)], s);
     }
+}
+
+fn status_colour(s: SymbolStatus) -> Color32 {
+    match s {
+        SymbolStatus::Ok => Color32::from_rgb(0, 170, 60),
+        SymbolStatus::Changed | SymbolStatus::Malformed | SymbolStatus::Missing => {
+            Color32::from_rgb(220, 50, 50)
+        }
+        SymbolStatus::Unreviewed | SymbolStatus::OtherVersion => Color32::from_rgb(230, 140, 0),
+        SymbolStatus::Refused => Color32::from_rgb(0, 160, 190),
+        SymbolStatus::NoFootprint => Color32::GRAY,
+    }
+}
+
+fn file_name(p: &Path) -> String {
+    p.file_name().map_or_else(
+        || p.display().to_string(),
+        |f| f.to_string_lossy().into_owned(),
+    )
 }
 
 fn blend_hint(m: BlendMode) -> &'static str {
