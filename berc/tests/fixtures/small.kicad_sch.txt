@@ -44,7 +44,9 @@ wire x2
 
 # library symbols (3)
 lib Amp:Dual  d8429137
-lib Device:R  79d70b7a
+lib Device:R  0ab76669
+  Footprint_Review=fp1:0123456789abcdef
+  Reference=R
 lib power:GND  a2c37d0e
 
 # other (2)

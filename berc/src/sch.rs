@@ -2,7 +2,8 @@
 //! symbols and no-connects counted, labels, text, tables, drawing counts and library symbol hashes.
 
 use crate::common::{
-    Counted, Options, Out, SortKey, at_of, compact, hash, natural_cmp, q, quote, sort_natural,
+    Counted, Options, Out, SortKey, at_of, compact, compact_skip, hash, natural_cmp, q, quote,
+    sort_natural,
 };
 use crate::sexpr::Sexp;
 use std::collections::{BTreeMap, HashMap};
@@ -59,15 +60,7 @@ pub fn render(root: &Sexp, opts: Options) -> String {
             "title_block" => title_block(item, &mut title),
             "lib_symbols" => {
                 for s in item.children("symbol") {
-                    let name = s.arg(0).unwrap_or("?");
-                    let hash = hash(&compact(
-                        s,
-                        Options {
-                            with_geometry: true,
-                            ..opts
-                        },
-                    ));
-                    library.push(format!("lib {}  {hash}", q(name)));
+                    library.push(lib_symbol(s, opts));
                 }
             }
             "symbol" => {
@@ -235,6 +228,29 @@ fn fields_of(item: &Sexp, skip: &[&str]) -> Vec<(String, String)> {
 
 fn field_line(name: &str, value: &str) -> String {
     format!("{}={}", q(name), q(value))
+}
+
+/// A library symbol cached in `lib_symbols`: its fields (`Footprint_Review` written by `berc fp accept`,
+/// `Datasheet`, `Footprint`, ...) as readable lines, so a review or a field edit shows what changed instead of
+/// an opaque hash; a hash for the rest (pins, graphics, sub-symbols, flags) so those stay diff-sized, not line
+/// by line
+fn lib_symbol(s: &Sexp, opts: Options) -> String {
+    let name = s.arg(0).unwrap_or("?");
+    let geometry_hash = hash(&compact_skip(
+        s,
+        Options {
+            with_geometry: true,
+            ..opts
+        },
+        &["property"],
+    ));
+    let mut lines = vec![format!("lib {}  {geometry_hash}", q(name))];
+    lines.extend(
+        fields_of(s, &[])
+            .iter()
+            .map(|(n, v)| format!("  {}", field_line(n, v))),
+    );
+    lines.join("\n")
 }
 
 struct Symbol {
@@ -714,6 +730,35 @@ mod tests {
     fn render_str(text: &str) -> String {
         let v = parse(text).unwrap();
         render(&v[0], Options::default())
+    }
+
+    /// A library symbol's fields show as readable lines - in particular `Footprint_Review`, written by `berc fp
+    /// accept` - instead of folding into the symbol's hash; the hash (pins and sub-symbols) is unmoved by a field
+    /// edit, so accepting a review is a one-line diff, not a changed hash to take on faith
+    #[test]
+    fn lib_symbol_fields_are_readable() {
+        let sym = |review: &str| {
+            format!(
+                r#"(kicad_sch (lib_symbols (symbol "Device:R"
+                    (property "Reference" "R" (at 0 0 0))
+                    {review}
+                    (symbol "R_1_1" (pin passive line (at 0 3.81 270) (length 1.27) (name "~") (number "1"))))))"#
+            )
+        };
+        let before = render_str(&sym(""));
+        let after = render_str(&sym(
+            r#"(property "Footprint_Review" "fp1:0123456789abcdef" (at 0 0 0))"#,
+        ));
+        assert!(before.contains("  Reference=R\n"), "{before}");
+        assert!(!before.contains("Footprint_Review"), "{before}");
+        assert!(
+            after.contains("  Footprint_Review=fp1:0123456789abcdef\n"),
+            "{after}"
+        );
+        fn hash_of(out: &str) -> &str {
+            out.lines().find(|l| l.starts_with("lib ")).unwrap()
+        }
+        assert_eq!(hash_of(&before), hash_of(&after), "{before}\n{after}");
     }
 
     #[test]

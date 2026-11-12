@@ -97,12 +97,18 @@ fn trim_zeros(d: &[u8]) -> &[u8] {
 
 /// One-line form of any expression, without uuids and styling, and without positions unless asked for
 pub fn compact(e: &Sexp, opts: Options) -> String {
+    compact_skip(e, opts, &[])
+}
+
+/// Like [`compact`], also leaving out children whose head is in `skip` (a library symbol's `property` fields,
+/// shown readably instead; see [`crate::sch`])
+pub fn compact_skip(e: &Sexp, opts: Options, skip: &[&str]) -> String {
     let mut out = String::new();
-    compact_into(e, opts, &mut out);
+    compact_into(e, opts, skip, &mut out);
     out
 }
 
-fn compact_into(e: &Sexp, opts: Options, out: &mut String) {
+fn compact_into(e: &Sexp, opts: Options, skip: &[&str], out: &mut String) {
     match e {
         Sexp::Atom(a) if a.starts_with('|') => {
             let _ = write!(out, "<{} bytes, hash {}>", a.len(), hash(a));
@@ -114,7 +120,9 @@ fn compact_into(e: &Sexp, opts: Options, out: &mut String) {
             let mut first = true;
             for item in items {
                 if let Some(h) = item.head()
-                    && (DROP_ALWAYS.contains(&h) || (!opts.with_geometry && GEOMETRY.contains(&h)))
+                    && (DROP_ALWAYS.contains(&h)
+                        || skip.contains(&h)
+                        || (!opts.with_geometry && GEOMETRY.contains(&h)))
                 {
                     continue;
                 }
@@ -122,7 +130,7 @@ fn compact_into(e: &Sexp, opts: Options, out: &mut String) {
                     out.push(' ');
                 }
                 first = false;
-                compact_into(item, opts, out);
+                compact_into(item, opts, skip, out);
             }
             out.push(')');
         }

@@ -273,6 +273,12 @@ the library's `.kicad_sym` (or the symbol's file in a `.kicad_symdir`), found th
 `sym-lib-table`, and the copy of the symbol in every schematic sheet's `lib_symbols`, so `berc fp check` finds both
 up to date. A library that is not found is named in the output, and only the schematic copies are written.
 
+The `sym-lib-table` lookup follows the library wherever it actually lives, even for a project copied somewhere else
+to try `accept` on: running it against a scratch copy of a project still writes into the real library the table
+points at, not a copy of it, `--symbol`/`--hash` included. To try `accept` without touching the library in place,
+copy the library too and rewrite the copied project's `sym-lib-table` (or the global one in KiCad's configuration
+directory) to point at that copy.
+
 Only the field is written. Every other byte of each file stays as it was, so the file's diff is the one field. A
 field that is there gets its new value; a new field goes after the symbol's own fields, hidden, laid out as the
 KiCad version that wrote the file lays it out (checked against kicad-cli in the tests). KiCad 8, 9 and 10 files are
@@ -461,6 +467,12 @@ items written in a new order on every save, and - for the project file - dozens 
 added the moment a newer KiCad opens and saves an older project. `berc textconv` turns one KiCad file into sorted,
 line-oriented text (one fact per line, no UUIDs, no coordinates), and git can diff that instead. The stored files
 don't change; `git diff`, `git log -p`, `git show` and lazygit all show the readable form.
+
+A `.kicad_sch`'s cached library symbols (`lib_symbols`) print their fields - `Datasheet`, `Footprint`,
+`Footprint_Review`, ... - as their own `Name=value` lines, a hash underneath for the rest of the symbol (pins,
+graphics, sub-symbols). `berc fp accept` (see [Accepting a review](#accepting-a-review)) writes the
+`Footprint_Review` field into every sheet's `lib_symbols` copy, so this is what turns an accepted review into a
+one-line diff instead of a changed hash taken on faith.
 
 With `berc` installed (see [Install](#install)), tell git which files to convert, in the repo with the KiCad
 files (`.gitattributes`, committed, or `.git/info/attributes` for yourself only):

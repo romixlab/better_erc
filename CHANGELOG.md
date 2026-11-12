@@ -11,6 +11,14 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Changed
+
+- `berc textconv` (`TOOL-3`): a `.kicad_sch`'s `lib_symbols` now print each library symbol's fields (`Datasheet`,
+  `Footprint`, `Footprint_Review`, ...) as readable `Name=value` lines instead of folding them into the symbol's
+  opaque hash, which now covers only its pins, graphics and sub-symbols. Accepting a footprint review (`berc fp
+  accept`, `TOOL-9`) writes `Footprint_Review` into the schematic's copy of the library symbol, so this is the
+  change that turns that accept into a one-line, readable diff instead of a changed hash taken on faith.
+
 ## [0.4.35] - 2026-11-12
 
 ### Added
