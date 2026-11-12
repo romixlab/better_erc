@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.22] - 2026-11-12
+
 ### Added
 
 - `TOOL-8`: `berc fp check [PROJECT]` checks every footprint of a KiCad board against the review hash in the
@@ -24,14 +26,12 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `berc usage`: every `berc` run appends its command and its feature flags to a local usage file
   (`$BERC_USAGE_FILE`, else `$XDG_STATE_HOME/berc/usage.tsv`); `berc usage` sums it per command, unused ones at 0.
   `BERC_USAGE=off` records nothing. Nothing is sent anywhere.
-
 - `TOOL-8`: the footprint review hash (`erc_model::fphash`): `fp1:` and 16 hex digits over a canonical text of what a
   footprint review checks (pads, copper, mask, paste, courtyard and board-edge graphics, zones and keepouts,
   clearance and mask settings), the same for a library file and every board copy of it, unchanged by silk, texts,
   re-saves, reordering and placement. `berc fp hash FILE.kicad_mod` or `berc fp hash BOARD.kicad_pcb REF` prints it;
   `--canonical` adds the text, `--format json`; board references complete in the shell. `fphash::compare` tells a
   stored hash the same, changed, made by another version or malformed.
-
 - `IMP-17`: `erc_kicad::footprint::read` reads a library footprint (`.kicad_mod`) into the footprint and pad types
   the board reader fills, in the footprint's own frame (`erc_model::LocalFootprint`). `Layout::local_footprint`
   brings a board footprint back to that frame: position and rotation undone, a footprint on the back flipped to the
