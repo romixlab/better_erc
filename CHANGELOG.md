@@ -11,6 +11,14 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Fixed
+
+- `VIEW-19`: the Footprint review tab's Mask and Paste layers show each pad's mask opening and paste aperture (by
+  the pad's margins, else the footprint's); before, they drew only mask and paste graphics, which most footprints
+  have none of, so ticking them changed nothing.
+- `VIEW-19`: picking another part while a datasheet is open opens the new part's datasheet, or closes the old one
+  when the part has none (the library search may still find it); before, the last part's PDF stayed open.
+
 ## [0.4.29] - 2026-11-12
 
 ### Added

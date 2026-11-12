@@ -288,6 +288,8 @@ struct Runtime {
     canvas: Rect,
     /// A footprint was just opened: find its datasheet (the Datasheet field's file, else the library search)
     want_search: bool,
+    /// The library search running was started for a part just picked: its first hit opens by itself
+    auto_open: bool,
 }
 
 impl Default for Runtime {
@@ -326,6 +328,7 @@ impl Default for Runtime {
             search_text: String::new(),
             canvas: Rect::NOTHING,
             want_search: false,
+            auto_open: false,
         }
     }
 }
@@ -416,10 +419,16 @@ impl FootprintReview {
 
     fn poll(&mut self, ctx: &egui::Context) {
         if std::mem::take(&mut self.rt.want_search) {
+            // A search still running for the last part has nothing for this one
+            self.rt.searching = None;
             match self.datasheet_file() {
                 Some(f) if self.datasheet.as_ref() != Some(&f) => self.open_datasheet(ctx, &f),
                 Some(_) => {}
-                None => self.library_search(ctx, true),
+                None => {
+                    // Not the last part's datasheet: the library search may find this one's
+                    self.close_datasheet();
+                    self.library_search(ctx, true);
+                }
             }
         }
         if let Some(pdf) = &mut self.rt.pdf {
@@ -446,6 +455,18 @@ impl FootprintReview {
                 hits
             }));
             self.rt.searching = None;
+            // The search for a part just picked: its first hit opens by itself
+            if std::mem::take(&mut self.rt.auto_open)
+                && self.rt.pdf.is_none()
+                && let Some(Ok(hits)) = &self.rt.search_result
+                && let Some(first) = hits.first().cloned()
+            {
+                self.open_datasheet(ctx, &first.path);
+                if let Some(page) = first.page.filter(|p| *p > 0) {
+                    self.page = page - 1;
+                    self.rt.auto_page = false;
+                }
+            }
         }
     }
 
@@ -775,7 +796,22 @@ impl FootprintReview {
         p.is_file().then_some(p)
     }
 
+    /// No datasheet open: the page, the ruler and the scale go with it
+    fn close_datasheet(&mut self) {
+        self.rt.pdf = None;
+        self.datasheet = None;
+        self.page = 0;
+        self.rt.page_hits = None;
+        self.rt.auto_page = false;
+        self.ruler = None;
+        self.scale = None;
+        self.rt.accepted = None;
+    }
+
     pub fn open_datasheet(&mut self, ctx: &egui::Context, path: &Path) {
+        // A datasheet opened by hand is the one to show: no search for another
+        self.rt.want_search = false;
+        self.rt.auto_open = false;
         self.rt.pdf = Some(PdfDoc::open(ctx, path, &self.rt.settings.font_dirs));
         self.datasheet = Some(path.to_path_buf());
         self.page = 0;
@@ -820,6 +856,7 @@ impl FootprintReview {
         });
         self.rt.searching = Some(rx);
         self.rt.search_result = None;
+        self.rt.auto_open = auto;
         self.usage(if auto {
             "library-search auto"
         } else {
@@ -2124,6 +2161,14 @@ impl FootprintReview {
         }
     }
 
+    /// What of the footprint is drawn: the items of the kinds not hidden
+    fn shown_items(&self) -> impl Iterator<Item = &Item> {
+        self.rt
+            .items
+            .iter()
+            .filter(|i| !self.hidden.iter().any(|h| h == i.kind().name()))
+    }
+
     /// Draws the footprint: by egui's painter in the normal mode, else by the blend pass over `page` (its rectangle
     /// on screen and its picture); holes, pad numbers and the origin by the painter on top
     fn draw_footprint(
@@ -2149,10 +2194,7 @@ impl FootprintReview {
         let screen = |p: outline::P| self.to_screen(canvas, self.fp_to_page(p));
         // The blend pass gets the shapes at full colour; the shader mixes them in by the opacity
         let mut blended: Vec<Shape> = Vec::new();
-        for item in &self.rt.items {
-            if self.hidden.iter().any(|h| h == item.kind().name()) {
-                continue;
-            }
+        for item in self.shown_items() {
             let c = colour(item.kind());
             match item {
                 Item::Area { points, convex, .. } => {
@@ -2196,6 +2238,7 @@ impl FootprintReview {
                     center,
                     size,
                     rotation,
+                    ..
                 } => {
                     let c0 = screen(*center);
                     let r = (size[0].min(size[1]) as f32) * px_per_mm / 2.0;
@@ -2305,6 +2348,7 @@ fn layer_colour(c: &LayerColors, k: Kind) -> Rgb {
     match k {
         Kind::Pad => c.pads,
         Kind::BackPad => c.back_pads,
+        Kind::Via => c.vias,
         Kind::Courtyard => c.courtyard,
         Kind::Fab => c.fab,
         Kind::Silk => c.silk,
@@ -2319,6 +2363,7 @@ fn layer_colour_mut(c: &mut LayerColors, k: Kind) -> &mut Rgb {
     match k {
         Kind::Pad => &mut c.pads,
         Kind::BackPad => &mut c.back_pads,
+        Kind::Via => &mut c.vias,
         Kind::Courtyard => &mut c.courtyard,
         Kind::Fab => &mut c.fab,
         Kind::Silk => &mut c.silk,

@@ -1,6 +1,8 @@
 //! A footprint as shapes to draw over a datasheet: every pad's outline as a polygon, its drill, and the graphics of
 //! the layers a review compares (courtyard, fab, silk, copper, mask, paste, board edge), in millimetres in the
-//! footprint's own frame (x right, y down, as KiCad draws it).
+//! footprint's own frame (x right, y down, as KiCad draws it). Each pad's mask opening and paste aperture are drawn
+//! as outlines of the mask and paste layers; vias in a package (KiCad draws them as round plated pads, thermal vias
+//! in an exposed pad) as rings of their own.
 
 use better_erc::model::LocalFootprint;
 use better_erc::model::layout::{Geom, Pad, Pt, Shape};
@@ -12,6 +14,8 @@ pub enum Kind {
     Pad,
     /// A pad on the back copper only
     BackPad,
+    /// A via in the package: a round plated pad without a number of its own (see [`is_via`])
+    Via,
     Courtyard,
     Fab,
     Silk,
@@ -22,9 +26,10 @@ pub enum Kind {
 }
 
 impl Kind {
-    pub const ALL: [Kind; 9] = [
+    pub const ALL: [Kind; 10] = [
         Kind::Pad,
         Kind::BackPad,
+        Kind::Via,
         Kind::Courtyard,
         Kind::Fab,
         Kind::Silk,
@@ -38,6 +43,7 @@ impl Kind {
         match self {
             Kind::Pad => "Pads",
             Kind::BackPad => "Back pads",
+            Kind::Via => "Vias",
             Kind::Courtyard => "Courtyard",
             Kind::Fab => "Fab",
             Kind::Silk => "Silk",
@@ -52,7 +58,7 @@ impl Kind {
     pub fn shown_at_first(self) -> bool {
         matches!(
             self,
-            Kind::Pad | Kind::BackPad | Kind::Courtyard | Kind::Fab | Kind::Copper
+            Kind::Pad | Kind::BackPad | Kind::Via | Kind::Courtyard | Kind::Fab | Kind::Copper
         )
     }
 
@@ -90,8 +96,13 @@ pub enum Item {
         closed: bool,
         width: f64,
     },
-    /// A drill hole
-    Hole { center: P, size: P, rotation: f64 },
+    /// A drill hole of a pad or a via
+    Hole {
+        kind: Kind,
+        center: P,
+        size: P,
+        rotation: f64,
+    },
     /// A pad's number at its middle
     Number { at: P, text: String, size: f64 },
 }
@@ -99,8 +110,8 @@ pub enum Item {
 impl Item {
     pub fn kind(&self) -> Kind {
         match self {
-            Item::Area { kind, .. } | Item::Line { kind, .. } => *kind,
-            Item::Hole { .. } | Item::Number { .. } => Kind::Pad,
+            Item::Area { kind, .. } | Item::Line { kind, .. } | Item::Hole { kind, .. } => *kind,
+            Item::Number { .. } => Kind::Pad,
         }
     }
 
@@ -185,17 +196,28 @@ fn rect_points(w: f64, h: f64, radius: f64, chamfer: [f64; 4]) -> Vec<P> {
     out
 }
 
-/// A pad's copper outline in the pad's own frame (unrotated, about its drill), and whether it is convex
-fn pad_shape(pad: &Pad) -> (Vec<P>, bool) {
-    let (w, h) = (len(pad.size.x), len(pad.size.y));
+/// A pad's copper outline in the pad's own frame (unrotated, about its drill), grown by `grow` mm on every side
+/// (shrunk when negative: a mask or paste margin), and whether it is convex
+fn pad_shape(pad: &Pad, grow: f64) -> (Vec<P>, bool) {
+    let small0 = len(pad.size.x.min(pad.size.y));
+    // Never shrunk past nothing
+    let g = grow.max(-small0 / 2.0 + 1e-3);
+    let (w, h) = (len(pad.size.x) + 2.0 * g, len(pad.size.y) + 2.0 * g);
     let small = w.min(h);
     let d = &pad.details;
+    // Corners grow round by the margin and shrink sharp, as KiCad draws a margin
+    let rounded = |r: f64| (r + g).max(0.0);
     let mut points = match pad.shape.as_str() {
         "circle" => circle_points([0.0, 0.0], w / 2.0),
         "oval" => rect_points(w, h, small / 2.0, [0.0; 4]),
-        "roundrect" => rect_points(w, h, d.roundrect_rratio.unwrap_or(0.25) * small, [0.0; 4]),
+        "roundrect" => rect_points(
+            w,
+            h,
+            rounded(d.roundrect_rratio.unwrap_or(0.25) * small0),
+            [0.0; 4],
+        ),
         "chamfered_rect" => {
-            let k = d.chamfer_ratio.unwrap_or(0.0) * small;
+            let k = d.chamfer_ratio.unwrap_or(0.0) * small0;
             let corner = |name: &str| {
                 if d.chamfer.iter().any(|c| c == name) {
                     k
@@ -209,7 +231,12 @@ fn pad_shape(pad: &Pad) -> (Vec<P>, bool) {
                 corner("bottom_right"),
                 corner("bottom_left"),
             ];
-            rect_points(w, h, d.roundrect_rratio.unwrap_or(0.0) * small, chamfer)
+            rect_points(
+                w,
+                h,
+                rounded(d.roundrect_rratio.unwrap_or(0.0) * small0),
+                chamfer,
+            )
         }
         "trapezoid" => {
             // KiCad: delta x narrows the right side's height, delta y the bottom side's width
@@ -226,9 +253,9 @@ fn pad_shape(pad: &Pad) -> (Vec<P>, bool) {
         }
         "custom" => match d.anchor.as_deref() {
             Some("circle") => circle_points([0.0, 0.0], w / 2.0),
-            _ => rect_points(w, h, 0.0, [0.0; 4]),
+            _ => rect_points(w, h, rounded(0.0), [0.0; 4]),
         },
-        _ => rect_points(w, h, 0.0, [0.0; 4]),
+        _ => rect_points(w, h, rounded(0.0), [0.0; 4]),
     };
     if let Some(o) = d.drill_offset {
         for p in &mut points {
@@ -341,20 +368,69 @@ pub fn items(f: &LocalFootprint) -> Vec<Item> {
             });
         }
     }
+    let st = &f.footprint.settings;
     for pad in &f.pads {
         let at = mm(pad.at);
         let place = |p: P| {
             let r = rotate(p, pad.rotation);
             [r[0] + at[0], r[1] + at[1]]
         };
-        let front = pad
-            .layers
-            .iter()
-            .any(|l| l == "F.Cu" || l == "*.Cu" || l == "F&B.Cu");
+        let on = |layer: &str| {
+            let any = format!("*.{}", layer.split_once('.').map_or(layer, |(_, l)| l));
+            pad.layers.iter().any(|l| l == layer || *l == any)
+        };
+        // The mask opening and the paste aperture, by the pad's margins, else the footprint's
+        let small = len(pad.size.x.min(pad.size.y));
+        let mask = len(pad
+            .solder_mask_margin
+            .or(st.solder_mask_margin)
+            .unwrap_or(0));
+        let paste = len(pad
+            .solder_paste_margin
+            .or(st.solder_paste_margin)
+            .unwrap_or(0))
+            + pad
+                .solder_paste_ratio
+                .or(st.solder_paste_ratio)
+                .unwrap_or(0.0)
+                * small;
+        for (layer, kind, grow) in [
+            ("F.Mask", Kind::Mask, mask),
+            ("F.Paste", Kind::Paste, paste),
+        ] {
+            if on(layer) {
+                let (shape, _) = pad_shape(pad, grow);
+                out.push(Item::Line {
+                    kind,
+                    points: shape.into_iter().map(place).collect(),
+                    closed: true,
+                    width: 0.0,
+                });
+            }
+        }
+        let front = on("F.Cu") || pad.layers.iter().any(|l| l == "F&B.Cu");
         let back = pad.layers.iter().any(|l| l == "B.Cu");
+        if is_via(pad, &f.pads) {
+            let (ring, _) = pad_shape(pad, 0.0);
+            out.push(Item::Line {
+                kind: Kind::Via,
+                points: ring.into_iter().map(place).collect(),
+                closed: true,
+                width: 0.0,
+            });
+            if let Some(d) = pad.drill {
+                out.push(Item::Hole {
+                    kind: Kind::Via,
+                    center: at,
+                    size: [len(d.x), len(d.x)],
+                    rotation: 0.0,
+                });
+            }
+            continue;
+        }
         if front || back {
             let kind = if front { Kind::Pad } else { Kind::BackPad };
-            let (shape, convex) = pad_shape(pad);
+            let (shape, convex) = pad_shape(pad, 0.0);
             out.push(Item::Area {
                 kind,
                 points: shape.into_iter().map(place).collect(),
@@ -366,6 +442,7 @@ pub fn items(f: &LocalFootprint) -> Vec<Item> {
         }
         if let Some(d) = pad.drill {
             out.push(Item::Hole {
+                kind: Kind::Pad,
                 center: at,
                 size: [len(d.x), len(if d.y > 0 { d.y } else { d.x })],
                 rotation: pad.rotation,
@@ -380,6 +457,21 @@ pub fn items(f: &LocalFootprint) -> Vec<Item> {
         }
     }
     out
+}
+
+/// Whether `pad` is a via in the package: a round plated hole through all copper, either without a number, marked
+/// as a heatsink, or sharing its number with a surface pad (a thermal via of an exposed pad). KiCad 10 has no vias
+/// in footprints; a package's vias are such pads, and they are in the review hash as pads.
+pub fn is_via(pad: &Pad, pads: &[Pad]) -> bool {
+    pad.kind == "thru_hole"
+        && pad.shape == "circle"
+        && pad.drill.is_some()
+        && pad.layers.iter().any(|l| l == "*.Cu" || l == "F&B.Cu")
+        && (pad.number.is_empty()
+            || pad.property.as_deref() == Some("pad_prop_heatsink")
+            || pads
+                .iter()
+                .any(|o| o.kind == "smd" && o.number == pad.number))
 }
 
 /// The smallest and largest corner of everything in `items`, mm

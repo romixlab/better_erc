@@ -677,3 +677,107 @@ fn accept_writes_into_the_symbols() {
     );
     std::fs::remove_dir_all(&dir).unwrap();
 }
+
+/// A harness on a review tab without fonts or library search
+fn harness(name: &'static str) -> Harness<'static, FootprintReview> {
+    let settings = FootprintReviewSettings {
+        font_dirs: Vec::new(),
+        library_search: Vec::new(),
+        ..Default::default()
+    };
+    let mut cx = Context::new();
+    Harness::builder()
+        .with_size(vec2(1200.0, 1400.0))
+        .build_ui_state(
+            move |ui, state: &mut FootprintReview| state.ui(ui, &mut cx, Id::new(name)),
+            FootprintReview::with(settings, Arc::new(|_: &str| {})),
+        )
+}
+
+/// The kinds of what the canvas draws now
+fn drawn_kinds(h: &Harness<'_, FootprintReview>) -> Vec<Kind> {
+    h.state().shown_items().map(Item::kind).collect()
+}
+
+/// Ticking Mask or Paste draws the pads' mask and paste openings (the footprint has no mask or paste graphics of
+/// its own), and unticking hides them again
+#[test]
+fn mask_and_paste_layers_show() {
+    let mut h = harness("fp mask");
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &footprint());
+    h.run();
+    for kind in [Kind::Mask, Kind::Paste] {
+        assert!(!drawn_kinds(&h).contains(&kind), "{kind:?} hidden at first");
+        h.get_by_label(kind.name()).click();
+        h.run();
+        assert!(
+            drawn_kinds(&h).contains(&kind),
+            "{kind:?} shown once ticked"
+        );
+        h.get_by_label(kind.name()).click();
+        h.run();
+        assert!(!drawn_kinds(&h).contains(&kind), "{kind:?} hidden again");
+    }
+}
+
+/// Another part picked while a datasheet is open: its own datasheet opens, and a part without one leaves no
+/// datasheet open (not the last part's)
+#[test]
+fn another_part_another_datasheet() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-switch-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let pdf = datasheet(&dir);
+    let other = dir.join("OTHER-PART.pdf");
+    std::fs::copy(&pdf, &other).unwrap();
+    footprint_table(&dir);
+    let lib = dir.join("Rev.kicad_sym");
+    std::fs::write(
+        &lib,
+        format!(
+            "(kicad_symbol_lib (version 20231120) (generator \"kicad_symbol_editor\")\n{}{}{})\n",
+            symbol_text(
+                "Mixed",
+                &[
+                    ("Footprint", "Test:Mixed_Pads"),
+                    ("Datasheet", &pdf.display().to_string())
+                ]
+            ),
+            symbol_text(
+                "Other",
+                &[
+                    ("Footprint", "Test:Mixed_Pads"),
+                    ("Datasheet", &other.display().to_string())
+                ]
+            ),
+            symbol_text("Sot", &[("Footprint", "Test:Asym_SOT")]),
+        ),
+    )
+    .unwrap();
+    let mut h = harness("fp switch");
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &lib);
+    h.run();
+    h.get_by_label("Rev:Mixed").click();
+    h.run();
+    h.run();
+    assert_eq!(h.state().datasheet.as_deref(), Some(pdf.as_path()));
+    assert!(h.state().rt.pdf.as_ref().is_some_and(|p| p.path == pdf));
+    h.get_by_label("Rev:Other").click();
+    h.run();
+    h.run();
+    assert_eq!(h.state().datasheet.as_deref(), Some(other.as_path()));
+    assert!(h.state().rt.pdf.as_ref().is_some_and(|p| p.path == other));
+    h.get_by_label("Rev:Sot").click();
+    h.run();
+    h.run();
+    assert_eq!(h.state().datasheet, None);
+    assert!(
+        h.state().rt.pdf.is_none(),
+        "the last part's datasheet is closed"
+    );
+    std::fs::remove_dir_all(&dir).unwrap();
+}

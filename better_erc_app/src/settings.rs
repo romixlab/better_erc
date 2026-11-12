@@ -113,6 +113,8 @@ impl<'de> Deserialize<'de> for Rgb {
 pub struct LayerColors {
     pub pads: Rgb,
     pub back_pads: Rgb,
+    /// Vias in the package (thermal vias)
+    pub vias: Rgb,
     pub courtyard: Rgb,
     pub fab: Rgb,
     pub silk: Rgb,
@@ -127,6 +129,7 @@ impl Default for LayerColors {
         LayerColors {
             pads: Rgb([220, 30, 30]),
             back_pads: Rgb([30, 80, 230]),
+            vias: Rgb([0, 150, 150]),
             courtyard: Rgb([230, 0, 230]),
             fab: Rgb([170, 140, 0]),
             silk: Rgb([60, 60, 60]),
