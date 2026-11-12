@@ -693,8 +693,12 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   (queries from the datasheet file name, a part name in its URL, the `Mpn` fields, the value), or a file picker;
   read and drawn by hayro (pure Rust) on its own thread, the PDF standard fonts from Liberation or egui's font; a
   page search by words finds the land pattern page. Scale by a ruler along a dimension (or the page's own
-  `SCALE: 20X`), footprint moved, turned, mirrored, opacity, blink, colour per layer group, blend mode (normal,
-  multiply, screen, difference: a wgpu shader reading the page), layers shown; Accept disabled with its reason
+  `SCALE: 20X`), footprint moved, turned, mirrored, opacity, blink, blend mode (normal, multiply, screen,
+  difference: a wgpu shader reading the page), the page itself invertible (white-ish on black, `I`, a setting for
+  the default too). Pads, back pads, vias, courtyard, fab, silk and board edge shown or hidden each on its own;
+  copper graphics, mask and paste shown one at a time (a radio choice, `C` cycles through them), each a fixed
+  colour (copper red, mask pink, paste gray, a setting only: no picker, since a datasheet page is white); the
+  pads keep colour presets and a picker. Accept disabled with its reason
   until a symbol with a footprint is picked and the scale is set on the page shown, asks first with its dry run
   (each file, field, old and new value; Enter writes, Esc not; a warning on KiCad's lock file or KiCad running),
   writes the hash into the
@@ -702,7 +706,8 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   review, listing the files written or why nothing was. Found datasheets in a panel of their own, the first
   opening by itself; another part opens its own datasheet or closes the last one. Keys for each step, each a
   setting and named in a help line: F full width, R the ruler at one end and the other, Z zoom on each ruler end
-  to place it exactly and back to type its length, T turn, M mirror, B blink; the tool goes back to Move once the
+  to place it exactly and back to type its length, T turn, M mirror, B blink, C copper/mask/paste, I invert; the
+  tool goes back to Move once the
   scale is set. Mask and paste openings of each pad drawn by their margins; a package's vias (round plated pads,
   thermal vias) drawn as vias, in the hash as pads. Settings in `config.toml`
   (`[footprint_review]`), usage signals `app fp-review ...` · `better_erc_app/src/tabs/footprint_review/`,

@@ -336,7 +336,8 @@ fn a_footprint_alone_is_a_preview() {
 /// A real board: BERC_FP_BOARD names a KiCad project or board, BERC_FP_SYMBOL the library symbol to review
 /// (default: the first in the list to review); the library search runs with the default command when it is on
 /// PATH. Not run without them. BERC_FP_BLEND picks a blend mode; BERC_FP_PICK a board footprint by reference to
-/// preview instead of a symbol; BERC_FP_SHOW layer groups to show too (`Mask,Paste`).
+/// preview instead of a symbol; BERC_FP_SHOW layer groups to show too (`Mask` or `Paste` picks it as the one of
+/// copper/mask/paste shown); BERC_FP_INVERT inverts the page.
 #[test]
 fn real_board() {
     let Some(board) = std::env::var_os("BERC_FP_BOARD") else {
@@ -388,6 +389,12 @@ fn real_board() {
     if let Ok(show) = std::env::var("BERC_FP_SHOW") {
         let show: Vec<&str> = show.split(',').collect();
         h.state_mut().hidden.retain(|k| !show.contains(&k.as_str()));
+        if let Some(k) = RADIO_KINDS.into_iter().find(|k| show.contains(&k.name())) {
+            h.state_mut().cu_shown = k;
+        }
+    }
+    if std::env::var_os("BERC_FP_INVERT").is_some() {
+        h.state_mut().invert = Some(true);
     }
     let i = {
         let l = h
@@ -793,10 +800,11 @@ fn wqfn_footprint(dir: &Path) -> PathBuf {
     file
 }
 
-/// Ticking Mask or Paste draws the pads' mask openings and paste apertures on screen, over the pads: checked on the
-/// rendered pixels of a real land pattern, opaque, where an opening under its pad would not show at all
+/// Picking Mask or Paste (the radio choice over copper, mask and paste) draws the pads' mask openings or paste
+/// apertures on screen, over the pads, one at a time: checked on the rendered pixels of a real land pattern,
+/// opaque, where an opening under its pad would not show at all
 #[test]
-fn mask_and_paste_layers_show() {
+fn mask_and_paste_shown_one_at_a_time() {
     let dir = std::env::temp_dir().join(format!("berc-fp-mask-{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&dir);
     std::fs::create_dir_all(&dir).unwrap();
@@ -847,16 +855,12 @@ fn mask_and_paste_layers_show() {
                 })
             })
         };
+    // At first (Copper picked): neither mask nor paste openings show
+    let img = h.render().unwrap();
+    for (k, at, want) in probes {
+        assert!(!near(&h, &img, at, want), "{k:?} at {at:?} hidden at first");
+    }
     for kind in [Kind::Mask, Kind::Paste] {
-        let img = h.render().unwrap();
-        for (k, at, want) in probes {
-            if k == kind {
-                assert!(
-                    !near(&h, &img, at, want),
-                    "{kind:?} at {at:?} hidden at first"
-                );
-            }
-        }
         h.get_by_label(kind.name()).click();
         h.run();
         let img = h.render().unwrap();
@@ -868,19 +872,57 @@ fn mask_and_paste_layers_show() {
             if k == kind {
                 assert!(
                     near(&h, &img, at, want),
-                    "{kind:?} at {at:?} drawn once ticked"
+                    "{kind:?} at {at:?} shown once picked"
+                );
+            } else {
+                assert!(
+                    !near(&h, &img, at, want),
+                    "{k:?} at {at:?} hidden while {kind:?} is the one picked"
                 );
             }
         }
-        h.get_by_label(kind.name()).click();
-        h.run();
-        let img = h.render().unwrap();
-        for (k, at, want) in probes {
-            if k == kind {
-                assert!(!near(&h, &img, at, want), "{kind:?} at {at:?} hidden again");
-            }
-        }
     }
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// Invert page (I) inverts the page's own colours, not the footprint's: a blank spot goes from near white to
+/// near black and back; the default comes from the settings
+#[test]
+fn invert_flips_the_page() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-invert-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let pdf = datasheet(&dir);
+    let mut h = harness("fp invert");
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_datasheet(&ctx, &pdf);
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    assert!(!h.state().page_inverted(), "off by default");
+    // A blank corner of the land pattern page (bottom left, far from its text, dimension and rects)
+    let ppp = h.ctx.pixels_per_point();
+    let st = h.state();
+    let at = st.to_screen(st.rt.canvas, [20.0, 380.0]);
+    let at = pos2(at.x * ppp, at.y * ppp);
+    let near = |img: &image::RgbaImage, want: u8| {
+        let px = img.get_pixel(at.x as u32, at.y as u32).0;
+        px[..3].iter().all(|g| g.abs_diff(want) <= 24)
+    };
+    let img = h.render().unwrap();
+    assert!(near(&img, 255), "white before inverting");
+    h.get_by_label("Invert page").click();
+    h.run();
+    assert!(h.state().page_inverted());
+    let img = h.render().unwrap();
+    assert!(near(&img, 0), "black once inverted");
+    h.get_by_label("Invert page").click();
+    h.run();
+    assert!(!h.state().page_inverted());
+    let img = h.render().unwrap();
+    assert!(near(&img, 255), "white again");
     std::fs::remove_dir_all(&dir).unwrap();
 }
 

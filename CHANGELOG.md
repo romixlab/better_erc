@@ -11,6 +11,18 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `VIEW-19`: Footprint review tab, the page can be shown inverted (white-ish on black), `I` to toggle (setting
+  `keys.invert`); the default is a setting too (`[footprint_review] invert`).
+
+### Changed
+
+- `VIEW-19`: Footprint review tab, copper graphics, mask and paste are shown one at a time (a radio choice, `C`
+  cycles through them), not independent toggles that stack; each keeps a fixed colour (copper red, mask pink,
+  paste gray) in `[footprint_review.colors]`, with no picker in the tab (a datasheet page is white, so the
+  colour says what is shown).
+
 ## [0.4.31] - 2026-11-12
 
 ### Added

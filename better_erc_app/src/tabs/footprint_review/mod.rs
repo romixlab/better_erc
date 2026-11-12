@@ -41,6 +41,10 @@ mod tests;
 /// Around the page
 const CANVAS_BACKGROUND: Color32 = Color32::from_gray(60);
 
+/// Copper, mask and paste: shown one at a time (a radio choice, not toggles that stack), each a fixed colour
+/// (no picker in the tab: a datasheet page is white, so the colour says what is shown)
+const RADIO_KINDS: [Kind; 3] = [Kind::Copper, Kind::Mask, Kind::Paste];
+
 /// The pads' colour presets: name and colour
 const PAD_PRESETS: [(&str, [u8; 3]); 7] = [
     ("Red", [220, 30, 30]),
@@ -169,7 +173,11 @@ pub struct FootprintReview {
     blend: Option<BlendMode>,
     colors: Option<LayerColors>,
     blink: bool,
+    /// The page inverted (white-ish on black); none: the settings' default
+    invert: Option<bool>,
     hidden: Vec<String>,
+    /// Which of copper, mask or paste is shown (the three shown one at a time, see [`RADIO_KINDS`])
+    cu_shown: Kind,
     tool: Tool,
     reviews: Vec<Review>,
     #[serde(skip)]
@@ -194,11 +202,13 @@ impl Default for FootprintReview {
             blend: None,
             colors: None,
             blink: false,
+            invert: None,
             hidden: Kind::ALL
                 .iter()
-                .filter(|k| !k.shown_at_first())
+                .filter(|k| !RADIO_KINDS.contains(k) && !k.shown_at_first())
                 .map(|k| k.name().to_string())
                 .collect(),
+            cu_shown: Kind::Copper,
             tool: Tool::Move,
             reviews: Vec::new(),
             rt: Runtime::default(),
@@ -1047,6 +1057,44 @@ impl FootprintReview {
         self.colors.as_ref().unwrap_or(&self.rt.settings.colors)
     }
 
+    /// Whether the page is shown inverted (white-ish on black)
+    fn page_inverted(&self) -> bool {
+        self.invert.unwrap_or(self.rt.settings.invert)
+    }
+
+    /// Cycles which of copper, mask or paste is shown, in that order
+    fn cycle_cu_layer(&mut self) {
+        let i = RADIO_KINDS
+            .iter()
+            .position(|k| *k == self.cu_shown)
+            .unwrap_or(0);
+        self.cu_shown = RADIO_KINDS[(i + 1) % RADIO_KINDS.len()];
+        self.usage("layer");
+    }
+
+    /// The current page's picture for the blend pass, inverted when asked (the picture's colours, not the
+    /// footprint's); none while a different page's picture is still loading
+    fn page_image(&mut self, ctx: &egui::Context, invert: bool) -> Option<blend::PageImage> {
+        let page = self.page;
+        let pdf = self.rt.pdf.as_mut()?;
+        if pdf.picture.as_ref()?.page != page {
+            return None;
+        }
+        if invert {
+            let (image, _, generation) = pdf.inverted(ctx)?;
+            Some(blend::PageImage {
+                generation,
+                image: image.clone(),
+            })
+        } else {
+            let pic = pdf.picture.as_ref()?;
+            Some(blend::PageImage {
+                generation: pic.generation,
+                image: pic.image.clone(),
+            })
+        }
+    }
+
     /// Millimetres per page point: the scale set with the ruler, else the PDF's own
     fn mm_per_point(&self) -> f64 {
         self.scale.as_ref().map_or(MM_PER_POINT, |s| s.mm_per_point)
@@ -1301,8 +1349,8 @@ impl FootprintReview {
         let n = key_name;
         format!(
             "{} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back · \
-             {} type the ruler's length, Enter sets the scale · Esc ends the ruler step\n{} turn 90° · {} bottom view · {} blink · arrows nudge (Shift: 10×) · \
-             PgUp/PgDn page · wheel zoom · right or middle drag pans",
+             {} type the ruler's length, Enter sets the scale · Esc ends the ruler step\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
+             arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans",
             n(k.full_width),
             n(k.ruler),
             n(k.ruler),
@@ -1311,6 +1359,8 @@ impl FootprintReview {
             n(k.rotate),
             n(k.mirror),
             n(k.blink),
+            n(k.cu_layer),
+            n(k.invert),
         )
     }
 
@@ -2162,6 +2212,18 @@ impl FootprintReview {
                     "Mirrored, as seen from below; {}",
                     key_name(self.keys().mirror)
                 ));
+            let mut invert = self.page_inverted();
+            if ui
+                .checkbox(&mut invert, "Invert page")
+                .on_hover_text(format!(
+                    "White-ish on black; {}",
+                    key_name(self.keys().invert)
+                ))
+                .changed()
+            {
+                self.invert = Some(invert);
+                self.usage("invert");
+            }
         });
         ui.horizontal(|ui| {
             ui.label("Angle");
@@ -2231,7 +2293,7 @@ impl FootprintReview {
                     .num_columns(2)
                     .show(ui, |ui| {
                         for k in Kind::ALL {
-                            if k == Kind::Pad {
+                            if k == Kind::Pad || RADIO_KINDS.contains(&k) {
                                 continue;
                             }
                             ui.label(k.name());
@@ -2246,8 +2308,23 @@ impl FootprintReview {
         if &colors != self.layer_colors() {
             self.colors = Some(colors);
         }
+        // Copper, mask and paste: one at a time, each its own fixed colour (Settings)
+        ui.horizontal_wrapped(|ui| {
+            for k in RADIO_KINDS {
+                if ui
+                    .add(Button::selectable(self.cu_shown == k, k.name()))
+                    .clicked()
+                {
+                    self.cu_shown = k;
+                }
+            }
+            ui.label(RichText::new(format!("({} cycles)", key_name(self.keys().cu_layer))).weak());
+        });
         ui.horizontal_wrapped(|ui| {
             for k in Kind::ALL {
+                if RADIO_KINDS.contains(&k) {
+                    continue;
+                }
                 let mut shown = !self.hidden.iter().any(|h| h == k.name());
                 if ui.checkbox(&mut shown, k.name()).changed() {
                     self.hidden.retain(|h| h != k.name());
@@ -2298,6 +2375,8 @@ impl FootprintReview {
                         ("Turn 90°", &mut k.rotate),
                         ("Bottom view", &mut k.mirror),
                         ("Blink", &mut k.blink),
+                        ("Cycles copper/mask/paste", &mut k.cu_layer),
+                        ("Invert the page", &mut k.invert),
                     ] {
                         ui.label(what);
                         let ok = egui::Key::from_name(name.trim()).is_some();
@@ -2458,7 +2537,8 @@ impl FootprintReview {
             self.pan[0] += d.x;
             self.pan[1] += d.y;
         }
-        // The page
+        // The page, inverted (white-ish on black) when asked: the picture's colours, not the footprint's
+        let invert = self.page_inverted();
         if let (Some(pdf), Some([w, h])) = (&mut self.rt.pdf, page_size) {
             let ppp = ctx.pixels_per_point();
             let want = (self.zoom * ppp)
@@ -2472,23 +2552,32 @@ impl FootprintReview {
                 canvas.min + vec2(self.pan[0], self.pan[1]),
                 vec2(w, h) * self.zoom,
             );
+            let inverted_tex: Option<egui::TextureId> = invert
+                .then(|| pdf.inverted(&ctx).map(|(_, id, _)| id))
+                .flatten();
             match &pdf.picture {
                 Some(pic) if pic.page == self.page => {
+                    let tex = inverted_tex.unwrap_or(pic.texture.id());
                     painter.image(
-                        pic.texture.id(),
+                        tex,
                         rect,
                         Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)),
                         Color32::WHITE,
                     );
                 }
                 _ => {
-                    painter.rect_filled(rect, 0.0, Color32::WHITE);
+                    let (bg, fg) = if invert {
+                        (Color32::from_gray(15), Color32::DARK_GRAY)
+                    } else {
+                        (Color32::WHITE, Color32::GRAY)
+                    };
+                    painter.rect_filled(rect, 0.0, bg);
                     painter.text(
                         rect.center(),
                         Align2::CENTER_CENTER,
                         "drawing the page…",
                         FontId::proportional(14.0),
-                        Color32::GRAY,
+                        fg,
                     );
                 }
             }
@@ -2584,6 +2673,8 @@ impl FootprintReview {
                     rotate: pressed(km.rotate),
                     mirror: pressed(km.mirror),
                     blink: pressed(km.blink),
+                    cu_layer: pressed(km.cu_layer),
+                    invert: pressed(km.invert),
                 };
                 (p, i.modifiers.shift)
             });
@@ -2619,6 +2710,13 @@ impl FootprintReview {
             if p.blink {
                 self.blink = !self.blink;
             }
+            if p.cu_layer {
+                self.cycle_cu_layer();
+            }
+            if p.invert {
+                self.invert = Some(!self.page_inverted());
+                self.usage("invert");
+            }
             if p.full_width {
                 self.rt.fit_width = true;
                 self.usage("full width");
@@ -2648,22 +2746,13 @@ impl FootprintReview {
             true
         };
         if shown && !self.rt.items.is_empty() {
-            let page = page_size.and_then(|[w, h]| {
-                let pic = self.rt.pdf.as_ref()?.picture.as_ref()?;
-                (pic.page == self.page).then(|| {
-                    let rect = Rect::from_min_size(
-                        canvas.min + vec2(self.pan[0], self.pan[1]),
-                        vec2(w, h) * self.zoom,
-                    );
-                    (
-                        rect,
-                        blend::PageImage {
-                            generation: pic.generation,
-                            image: pic.image.clone(),
-                        },
-                    )
-                })
+            let rect = page_size.map(|[w, h]| {
+                Rect::from_min_size(
+                    canvas.min + vec2(self.pan[0], self.pan[1]),
+                    vec2(w, h) * self.zoom,
+                )
             });
+            let page = rect.zip(self.page_image(&ctx, invert));
             self.draw_footprint(&painter, canvas, page, ui.id());
         }
         // The ruler
@@ -2704,12 +2793,18 @@ impl FootprintReview {
         }
     }
 
-    /// What of the footprint is drawn: the items of the kinds not hidden
+    /// Whether `k` is drawn: copper, mask and paste by the radio choice, the others by their checkbox
+    fn kind_shown(&self, k: Kind) -> bool {
+        if RADIO_KINDS.contains(&k) {
+            k == self.cu_shown
+        } else {
+            !self.hidden.iter().any(|h| h == k.name())
+        }
+    }
+
+    /// What of the footprint is drawn: the items of the kinds shown
     fn shown_items(&self) -> impl Iterator<Item = &Item> {
-        self.rt
-            .items
-            .iter()
-            .filter(|i| !self.hidden.iter().any(|h| h == i.kind().name()))
+        self.rt.items.iter().filter(|i| self.kind_shown(i.kind()))
     }
 
     /// Draws the footprint: by egui's painter in the normal mode, else by the blend pass over `page` (its rectangle
@@ -2870,6 +2965,8 @@ struct KeyMap {
     rotate: Option<egui::Key>,
     mirror: Option<egui::Key>,
     blink: Option<egui::Key>,
+    cu_layer: Option<egui::Key>,
+    invert: Option<egui::Key>,
 }
 
 impl From<&Keys> for KeyMap {
@@ -2883,6 +2980,8 @@ impl From<&Keys> for KeyMap {
             rotate: key(&k.rotate),
             mirror: key(&k.mirror),
             blink: key(&k.blink),
+            cu_layer: key(&k.cu_layer),
+            invert: key(&k.invert),
         }
     }
 }
@@ -2903,6 +3002,8 @@ struct Pressed {
     rotate: bool,
     mirror: bool,
     blink: bool,
+    cu_layer: bool,
+    invert: bool,
 }
 
 /// A key as the help shows it; a setting that names no key shows so

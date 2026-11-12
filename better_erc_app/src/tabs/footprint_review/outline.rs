@@ -6,10 +6,12 @@
 
 use better_erc::model::LocalFootprint;
 use better_erc::model::layout::{Geom, Pad, Pt, Shape};
+use serde::{Deserialize, Serialize};
 use std::f64::consts::PI;
 
-/// What a shape belongs to, each shown or hidden on its own
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
+/// What a shape belongs to: each of the others shown or hidden on its own, Copper, Mask and Paste one at a time
+/// (see `RADIO_KINDS` in `mod.rs`)
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum Kind {
     Pad,
     /// A pad on the back copper only
@@ -54,11 +56,12 @@ impl Kind {
         }
     }
 
-    /// Shown when a footprint is opened
+    /// Shown by its own checkbox when a footprint is opened (not Copper, Mask or Paste: their checkbox is a
+    /// radio choice, its first pick fixed, see `RADIO_KINDS`)
     pub fn shown_at_first(self) -> bool {
         matches!(
             self,
-            Kind::Pad | Kind::BackPad | Kind::Via | Kind::Courtyard | Kind::Fab | Kind::Copper
+            Kind::Pad | Kind::BackPad | Kind::Via | Kind::Courtyard | Kind::Fab
         )
     }
 

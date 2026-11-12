@@ -46,6 +46,22 @@ pub struct Picture {
     pub generation: u64,
 }
 
+/// A unique generation for a picture or its inverted copy, so the blend pass' texture cache re-uploads only when
+/// what it reads has changed
+fn next_generation() -> u64 {
+    static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+    NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+}
+
+/// The current picture with its colours inverted (white-ish on black), computed once per picture and cached
+struct Inverted {
+    /// The picture's own generation this was computed from
+    source: u64,
+    generation: u64,
+    image: Arc<egui::ColorImage>,
+    texture: egui::TextureHandle,
+}
+
 /// A PDF file open for the review
 pub struct PdfDoc {
     pub path: PathBuf,
@@ -55,6 +71,7 @@ pub struct PdfDoc {
     /// Each page's text once read, `None` until then
     pub texts: Vec<Option<String>>,
     pub picture: Option<Picture>,
+    inverted: Option<Inverted>,
     /// The page and scale asked for last, so a picture is asked once
     asked: Option<(usize, f32)>,
     requests: Sender<(usize, f32)>,
@@ -133,6 +150,7 @@ impl PdfDoc {
             error: None,
             texts: Vec::new(),
             picture: None,
+            inverted: None,
             asked: None,
             requests: req_tx,
             replies: rep_rx,
@@ -178,8 +196,7 @@ impl PdfDoc {
                     egui::TextureOptions::LINEAR,
                 );
                 // Unique across documents: the blend pass uploads a picture again when this changes
-                static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
-                let generation = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                let generation = next_generation();
                 self.picture = Some(Picture {
                     page,
                     texture,
@@ -224,6 +241,49 @@ impl PdfDoc {
     /// Every page's text has been read
     pub fn texts_done(&self) -> bool {
         self.pages.is_some() && self.texts.iter().all(Option::is_some)
+    }
+
+    /// The current picture with its colours inverted (white-ish on black), its own generation (for the blend
+    /// pass' texture cache) and the texture id egui draws; computed once per picture and cached, none without one
+    pub fn inverted(
+        &mut self,
+        ctx: &egui::Context,
+    ) -> Option<(&Arc<egui::ColorImage>, egui::TextureId, u64)> {
+        let pic = self.picture.as_ref()?;
+        if self.inverted.as_ref().map(|i| i.source) != Some(pic.generation) {
+            let pixels = pic
+                .image
+                .pixels
+                .iter()
+                .map(|c| {
+                    egui::Color32::from_rgba_premultiplied(
+                        255 - c.r(),
+                        255 - c.g(),
+                        255 - c.b(),
+                        c.a(),
+                    )
+                })
+                .collect();
+            let image = Arc::new(egui::ColorImage {
+                size: pic.image.size,
+                source_size: pic.image.source_size,
+                pixels,
+            });
+            let texture = ctx.load_texture(
+                format!("pdf page {} inverted", pic.page),
+                image.clone(),
+                egui::TextureOptions::LINEAR,
+            );
+            self.inverted = Some(Inverted {
+                source: pic.generation,
+                generation: next_generation(),
+                image,
+                texture,
+            });
+        }
+        self.inverted
+            .as_ref()
+            .map(|i| (&i.image, i.texture.id(), i.generation))
     }
 
     /// The pages whose text has any of `words`, best first: by how many of them it has, then by the place of the

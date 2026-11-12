@@ -33,10 +33,13 @@ pub struct FootprintReviewSettings {
     pub library_search: Vec<String>,
     /// How the footprint is mixed with the page at first: `normal`, `multiply`, `screen` or `difference`
     pub blend: BlendMode,
-    /// The footprint's colours at first, per layer group, `#rrggbb`
+    /// The footprint's colours at first, per layer group, `#rrggbb`. Copper, mask and paste have no picker in
+    /// the tab (one is shown at a time, each a fixed colour): change them here
     pub colors: LayerColors,
     /// How much closer the ruler key zooms in on a ruler end than the view it starts from
     pub ruler_zoom: f32,
+    /// Whether the page is shown inverted (white-ish on black) at first
+    pub invert: bool,
     /// The canvas' keys, by egui's key names (`F`, `Space`, `F5`, ...)
     pub keys: Keys,
 }
@@ -60,6 +63,10 @@ pub struct Keys {
     pub mirror: String,
     /// Blink the footprint on and off
     pub blink: String,
+    /// Cycles which of copper, mask or paste is shown (the three shown one at a time)
+    pub cu_layer: String,
+    /// Inverts the page (white-ish on black)
+    pub invert: String,
 }
 
 impl Default for Keys {
@@ -72,6 +79,8 @@ impl Default for Keys {
             rotate: "T".into(),
             mirror: "M".into(),
             blink: "B".into(),
+            cu_layer: "C".into(),
+            invert: "I".into(),
         }
     }
 }
@@ -146,7 +155,8 @@ impl<'de> Deserialize<'de> for Rgb {
     }
 }
 
-/// The footprint's colour per layer group
+/// The footprint's colour per layer group. Copper, mask and paste are shown one at a time (not a picker in the
+/// tab: a datasheet page is white, so each keeps a colour that reads clearly on it, changed here only)
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct LayerColors {
@@ -172,9 +182,9 @@ impl Default for LayerColors {
             courtyard: Rgb([230, 0, 230]),
             fab: Rgb([170, 140, 0]),
             silk: Rgb([60, 60, 60]),
-            copper: Rgb([200, 60, 0]),
-            mask: Rgb([120, 0, 160]),
-            paste: Rgb([110, 110, 110]),
+            copper: Rgb([210, 30, 30]),
+            mask: Rgb([230, 120, 180]),
+            paste: Rgb([130, 130, 130]),
             edge: Rgb([200, 180, 0]),
         }
     }
@@ -215,6 +225,7 @@ impl Default for FootprintReviewSettings {
             blend: BlendMode::Normal,
             colors: LayerColors::default(),
             ruler_zoom: 8.0,
+            invert: false,
             keys: Keys::default(),
         }
     }
