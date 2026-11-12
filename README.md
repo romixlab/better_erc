@@ -38,8 +38,9 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 - **`berc diff --nets A B`**: the nets of any two designs (a schematic, a netlist, an Altium export, a Smart PDF)
   compared as the pins each net connects, whatever their names: renamed, removed and added nets.
 - **`berc fp`**: footprint review. `berc fp hash` prints a footprint's review hash, the same for a library file and
-  every board copy of it; `berc fp check` checks every board footprint against the hash on its library symbol, and
-  `berc fp check --lib` every symbol of a symbol library against its library footprint. See
+  every board copy of it; `berc fp check` checks every board footprint against the hash on its library symbol (and
+  against its library footprint), `berc fp check --lib` every symbol of a symbol library against its library
+  footprint, and `berc fp todo` lists the library symbols a board uses that need a review. See
   [Footprint review](#footprint-review).
 - **The app** (`better_erc`, egui, crate `better_erc_app`): an import tab that opens any design the registry reads
   (and Altium or OrCAD files picked one by one) and shows its findings with their explanations and the checks that
@@ -220,7 +221,40 @@ footprint is one of:
 | other version, malformed | the field holds a hash of another version, or no hash at all |
 
 A schematic copy that holds a different hash than the library is reported as well: the schematic was not updated
-from the library. The exit code is 0 when every footprint is ok or board-only and every copy up to date, 1 otherwise, 2 when the
+from the library. So is a board copy that differs from its library footprint (the footprint the board names, found
+through `--footprints` and the `fp-lib-table`; a board footprint without a library nickname is looked up by its
+symbol's `Footprint` field): the line shows both hashes, and the board was not updated from the library. Footprints
+that could not be compared are summed up once per reason below the list. `--symbols DIR` adds symbol libraries (a
+`.kicad_sym`, a `.kicad_symdir` or a folder of them, each named by its file name) searched before the
+`sym-lib-table`, and `--footprints DIR` footprint libraries searched before the `fp-lib-table`, for a PC without
+KiCad's global tables:
+
+```sh
+berc fp check hw/board --symbols ~/kicad-library/symbols --footprints ~/kicad-library/footprints
+```
+
+The exit code is 0 when every footprint is ok or board-only and every copy up to date, 1 otherwise, 2 when the
+project can't be read.
+
+### What to review for a board
+
+`berc fp todo` lists the library symbols a board's footprints come from, once each, and what each needs. The review
+is of the library: each symbol is checked as `berc fp check --lib` checks it, against the library footprint its
+`Footprint` field names, so a symbol reviewed once is done for every board that uses it.
+
+```sh
+berc fp todo                       # the KiCad project in this directory
+berc fp todo hw/board --symbols ~/kicad-library/symbols --footprints ~/kicad-library/footprints
+berc fp todo hw/board --format json
+```
+
+The symbols to review come first, in the order to step through them: changed (reviewed before, the footprint moved
+on), other version, malformed, unreviewed; by symbol within each. Each line shows the footprint, the hash it gets once
+reviewed and the board references that use it. Below them, under their own heading, the symbols that can't be
+reviewed until fixed: missing (the library symbol or its footprint is not found, the line says why) and refused. The
+ok ones and those without a footprint are counted; `--all` lists them too. `--format json` always holds every symbol
+with its footprint file, the hash now and the `Datasheet` field, for the app's review tab and scripts; the library
+call is `better_erc::fp::todo`. The exit code is 0 when there is nothing to review or fix, 1 otherwise, 2 when the
 project can't be read.
 
 ### Checking a symbol library

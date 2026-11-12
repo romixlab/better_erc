@@ -9,10 +9,12 @@ use std::fmt;
 use std::path::{Path, PathBuf};
 
 mod library;
+mod todo;
 pub use library::{
-    CheckedLibrary, LibCheck, LibCheckError, LibCheckOptions, SymbolEntry, SymbolStatus,
-    check_libraries,
+    CheckedLibrary, LibCheck, LibCheckError, LibCheckOptions, LibrarySearch, SymbolEntry,
+    SymbolStatus, check_libraries,
 };
+pub use todo::{FpTodo, TodoEntry, todo};
 
 /// A footprint's review hash and the canonical text it is taken over
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -253,7 +255,7 @@ impl FootprintSource {
 /// The library symbol field that holds a footprint's review hash
 pub const FIELD: &str = "Footprint_Review";
 
-pub use erc_kicad::libtable::{SymbolLibraries, kicad_config_dir};
+pub use erc_kicad::libtable::{FootprintLibraries, SymbolLibraries, kicad_config_dir};
 
 /// What `berc fp check` found for one board footprint
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -336,12 +338,24 @@ pub struct FpEntry {
     pub copy_differs: bool,
     /// Why the library symbol was not found, when it was not
     pub library_note: Option<String>,
+    /// The library footprint this board copy is compared with: the board's `Lib:Name`, else (a board footprint
+    /// without a library nickname) the symbol's `Footprint` field
+    pub library_footprint: Option<String>,
+    /// The review hash of that library footprint, when it was found
+    pub library_footprint_hash: Option<String>,
+    /// The board copy differs from its library footprint: the board was not updated from the library
+    pub board_differs: bool,
+    /// Why the library footprint was not found, when it was not
+    pub footprint_note: Option<String>,
 }
 
 impl FpEntry {
-    /// Ok, with the schematic's copy agreeing with the library, or a board-only footprint
+    /// Ok, with the schematic's copy agreeing with the library and the board copy with its library footprint, or
+    /// a board-only footprint
     pub fn is_ok(&self) -> bool {
-        matches!(self.status, FpStatus::Ok | FpStatus::BoardOnly) && !self.copy_differs
+        matches!(self.status, FpStatus::Ok | FpStatus::BoardOnly)
+            && !self.copy_differs
+            && !self.board_differs
     }
 }
 
@@ -362,6 +376,8 @@ pub enum FpCheckError {
     Open(crate::CheckError),
     /// Not a KiCad project, or one without a board
     NoBoard(PathBuf),
+    /// A library given by path that is none
+    Libraries(LibCheckError),
 }
 
 impl FpCheckError {
@@ -377,6 +393,7 @@ impl fmt::Display for FpCheckError {
                 "{}: no KiCad board (.kicad_pcb) beside a schematic to check",
                 p.display()
             ),
+            FpCheckError::Libraries(e) => e.fmt(f),
         }
     }
 }
@@ -391,26 +408,59 @@ fn field_of<'a>(fields: &'a [(String, String)], name: &str) -> Option<&'a str> {
         .filter(|v| !v.is_empty())
 }
 
-/// Checks every footprint of the KiCad project at `path` (a directory, its `.kicad_pro`, `.kicad_sch` or
-/// `.kicad_pcb`) against the review hash on its symbol, read through `libs` ([`SymbolLibraries::new`] for the
-/// project's directory) or, where the library is not found, from the schematic's copy
-pub fn check(
-    path: &Path,
-    libs: &mut dyn FnMut(&Path) -> SymbolLibraries,
-) -> Result<FpCheck, FpCheckError> {
-    let project = crate::Project::open(path).map_err(FpCheckError::Open)?;
-    let no_board = || FpCheckError::NoBoard(path.to_path_buf());
-    if project.importer != "kicad" {
-        return Err(no_board());
+/// The KiCad project at `path` (a directory, its `.kicad_pro`, `.kicad_sch` or `.kicad_pcb`), its board and
+/// layout, and its libraries through `search`
+struct Opened {
+    project: crate::Project,
+    syms: SymbolLibraries,
+    fps: FootprintLibraries,
+}
+
+impl Opened {
+    fn open(path: &Path, search: &LibrarySearch) -> Result<Opened, FpCheckError> {
+        let project = crate::Project::open(path).map_err(FpCheckError::Open)?;
+        let has_layout = project.importer == "kicad"
+            && project
+                .imported
+                .design
+                .boards
+                .first()
+                .is_some_and(|b| b.layout.is_some());
+        if !has_layout {
+            return Err(FpCheckError::NoBoard(path.to_path_buf()));
+        }
+        let (syms, fps) = search.open(&project.dir).map_err(FpCheckError::Libraries)?;
+        Ok(Opened { project, syms, fps })
     }
-    let board = project
-        .imported
-        .design
-        .boards
-        .first()
-        .ok_or_else(no_board)?;
-    let lay = board.layout.as_ref().ok_or_else(no_board)?;
-    let mut libs = libs(&project.dir);
+}
+
+/// The `Lib:Name` a board footprint is compared with in the footprint libraries: its own when it names a library,
+/// else its symbol's `Footprint` field
+fn library_footprint(board_lib_id: &str, symbol_footprint: Option<&str>) -> Option<String> {
+    [Some(board_lib_id), symbol_footprint]
+        .into_iter()
+        .flatten()
+        .map(str::trim)
+        .find(|id| {
+            id.split_once(':')
+                .is_some_and(|(l, n)| !l.is_empty() && !n.is_empty())
+        })
+        .map(String::from)
+}
+
+/// Checks every footprint of the KiCad project at `path` (a directory, its `.kicad_pro`, `.kicad_sch` or
+/// `.kicad_pcb`) against the review hash on its symbol, read from the library symbol found through `search` and the
+/// project's tables or, where the library is not found, from the schematic's copy; and each board copy against its
+/// library footprint
+pub fn check(path: &Path, search: &LibrarySearch) -> Result<FpCheck, FpCheckError> {
+    let mut opened = Opened::open(path, search)?;
+    let Opened {
+        project,
+        syms: libs,
+        fps,
+    } = &mut opened;
+    let board = &project.imported.design.boards[0];
+    let lay = board.layout.as_ref().expect("checked in open");
     let mut footprints = Vec::new();
     for (i, f) in lay.footprints.iter().enumerate() {
         let hash = fphash::hash(&lay.local_footprint(FootprintId::from_index(i)));
@@ -426,11 +476,16 @@ pub fn check(
             schematic_hash: None,
             copy_differs: false,
             library_note: None,
+            library_footprint: None,
+            library_footprint_hash: None,
+            board_differs: false,
+            footprint_note: None,
         };
         let Some(part) = f.part.map(|p| board.part(p)) else {
             if f.attrs.board_only {
                 e.status = FpStatus::BoardOnly;
             }
+            compare_with_library(&mut e, None, fps);
             footprints.push(e);
             continue;
         };
@@ -459,6 +514,7 @@ pub fn check(
             .field("Footprint")
             .or_else(|| copy.and_then(|s| field_of(&s.fields, "Footprint")))
             .or_else(|| lib_fields.as_deref().and_then(|f| field_of(f, "Footprint")));
+        compare_with_library(&mut e, footprint_field, fps);
         e.status = if footprint_field.is_none_or(|v| v.trim().is_empty()) {
             FpStatus::Refused
         } else {
@@ -483,6 +539,30 @@ pub fn check(
         field: FIELD.to_string(),
         footprints,
     })
+}
+
+/// The board copy in `e` against its library footprint, read through `fps`
+fn compare_with_library(
+    e: &mut FpEntry,
+    symbol_footprint: Option<&str>,
+    fps: &mut FootprintLibraries,
+) {
+    e.library_footprint = library_footprint(&e.footprint, symbol_footprint);
+    let Some(id) = &e.library_footprint else {
+        e.footprint_note = Some(format!(
+            "footprint {} names no library, and its symbol none either",
+            e.footprint
+        ));
+        return;
+    };
+    match fps.footprint(id) {
+        Ok(found) => {
+            let lib_hash = fphash::hash(&found.footprint);
+            e.board_differs = lib_hash != e.hash;
+            e.library_footprint_hash = Some(lib_hash);
+        }
+        Err(why) => e.footprint_note = Some(why.to_string()),
+    }
 }
 
 impl FpCheck {
@@ -604,26 +684,42 @@ impl FpCheck {
                     e.library_hash.as_deref().unwrap_or("no hash"),
                 );
             }
+            if e.board_differs {
+                let warn = AnsiColor::Yellow.on_default();
+                let _ = write!(
+                    out,
+                    "\n{:13} {:width$} {warn}the board copy has {}, library footprint {} has {}: update the board \
+                     from the library{warn:#}",
+                    "",
+                    "",
+                    e.hash,
+                    e.library_footprint.as_deref().unwrap_or(""),
+                    e.library_footprint_hash.as_deref().unwrap_or(""),
+                );
+            }
             out.push('\n');
         }
-        // Why libraries were not found, once each: their symbols' hashes came from the schematic's copies
-        let mut notes: Vec<(&str, usize)> = Vec::new();
-        for why in self
+        // Why libraries were not found, once each: their symbols' hashes came from the schematic's copies, and their
+        // board copies were not compared with a library footprint
+        let symbol_notes = self
             .footprints
             .iter()
             .filter(|e| e.source == Some(HashSource::Schematic))
-            .filter_map(|e| e.library_note.as_deref())
-        {
-            match notes.iter_mut().find(|(w, _)| *w == why) {
-                Some(n) => n.1 += 1,
-                None => notes.push((why, 1)),
-            }
-        }
-        notes.sort();
-        for (why, n) in notes {
+            .filter_map(|e| e.library_note.as_deref());
+        for (why, n) in once_each(symbol_notes) {
             let _ = writeln!(
                 out,
                 "{dim}read from the schematic's copy ({n} footprints): {why}{dim:#}"
+            );
+        }
+        let footprint_notes = self
+            .footprints
+            .iter()
+            .filter_map(|e| e.footprint_note.as_deref());
+        for (why, n) in once_each(footprint_notes) {
+            let _ = writeln!(
+                out,
+                "{dim}not compared with a library footprint ({n} footprints): {why}{dim:#}"
             );
         }
         let counts: Vec<String> = self
@@ -648,9 +744,29 @@ impl FpCheck {
                 "; {stale} with a schematic copy older than the library"
             );
         }
+        let differs = self.footprints.iter().filter(|e| e.board_differs).count();
+        if differs > 0 {
+            let _ = write!(
+                out,
+                "; {differs} board copies differ from their library footprint"
+            );
+        }
         out.push('\n');
         out
     }
+}
+
+/// Each distinct line once, with how often it came, sorted
+fn once_each<'a>(lines: impl Iterator<Item = &'a str>) -> Vec<(&'a str, usize)> {
+    let mut out: Vec<(&str, usize)> = Vec::new();
+    for l in lines {
+        match out.iter_mut().find(|(w, _)| *w == l) {
+            Some(n) => n.1 += 1,
+            None => out.push((l, 1)),
+        }
+    }
+    out.sort();
+    out
 }
 
 #[cfg(test)]

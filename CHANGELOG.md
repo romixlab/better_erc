@@ -11,6 +11,28 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `TOOL-8`: `berc fp todo [PROJECT]` lists the library symbols a board's footprints come from, once each with the
+  references that use them, checked against their library footprint as `fp check --lib` checks a library: those to
+  review first in review order (changed, other version, malformed, unreviewed; by symbol), then those that can't be
+  reviewed until fixed (missing, refused), then ok and no footprint (counted, `--all` lists them). Text and JSON (every
+  symbol with its footprint file, the hash to write and the `Datasheet` field), exit 1 when anything is left. In the
+  library: `better_erc::fp::todo` returning `FpTodo`, whose `to_review()` is the review tab's steps.
+- `TOOL-8`: `berc fp check` compares each board copy with its library footprint (the board's `Lib:Name`, else its
+  symbol's `Footprint` field, through `--footprints` and the `fp-lib-table`) and reports a copy that differs, both
+  hashes shown: the board was not updated from the library. It fails the run like a stale schematic copy; footprints
+  that could not be compared are summed up once per reason. New JSON fields `library_footprint`,
+  `library_footprint_hash`, `board_differs`, `footprint_note`.
+- `berc fp check` and `fp todo` take `--symbols DIR` (symbol libraries searched before the `sym-lib-table`) and
+  `--footprints DIR`, which no longer needs `--lib`; `fp todo` and `--symbols` are usage signals.
+
+### Changed
+
+- `better_erc::fp::check` takes a `LibrarySearch` (KiCad's configuration directory and libraries by path) instead of a
+  closure making `SymbolLibraries`; `LibCheckOptions` holds one in place of `config` and `footprints`. New
+  `erc_kicad::libtable::SymbolLibraries::add_first`.
+
 ## [0.4.26] - 2026-11-12
 
 ### Added

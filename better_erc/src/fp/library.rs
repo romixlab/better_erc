@@ -113,6 +113,8 @@ pub enum LibCheckError {
     Unreadable(PathBuf),
     /// A `--footprints` path that is no `.pretty` directory and has none in it
     NoFootprints(PathBuf),
+    /// A `--symbols` path that is no symbol library and has none in it
+    NoSymbols(PathBuf),
 }
 
 impl LibCheckError {
@@ -140,13 +142,72 @@ impl fmt::Display for LibCheckError {
                 "{}: no footprint library (.pretty) there or in it",
                 p.display()
             ),
+            LibCheckError::NoSymbols(p) => write!(
+                f,
+                "{}: no symbol library (.kicad_sym, .kicad_symdir) there or in it",
+                p.display()
+            ),
         }
     }
 }
 
 impl std::error::Error for LibCheckError {}
 
-/// Where the libraries are found and what is checked
+/// Where library symbols and footprints are found besides a project's own tables: libraries given by path,
+/// searched first, and the global tables in KiCad's configuration directory
+#[derive(Clone, Debug, Default)]
+pub struct LibrarySearch {
+    /// KiCad's configuration directory ([`super::kicad_config_dir`]), for the global tables
+    pub config: Option<PathBuf>,
+    /// Symbol libraries searched before the tables: each a `.kicad_sym` file, a `.kicad_symdir` directory or a
+    /// folder of them, named by their file names
+    pub symbols: Vec<PathBuf>,
+    /// Footprint libraries searched before the tables: each a `.pretty` directory, or a folder of them, named by
+    /// their directory names
+    pub footprints: Vec<PathBuf>,
+}
+
+impl LibrarySearch {
+    /// The global tables of the KiCad configuration this PC has, no libraries by path
+    pub fn kicad() -> LibrarySearch {
+        LibrarySearch {
+            config: super::kicad_config_dir(),
+            ..LibrarySearch::default()
+        }
+    }
+
+    /// The symbol and footprint libraries of the project in `dir`: the libraries by path first, then the
+    /// project's tables, then the global ones
+    pub fn open(&self, dir: &Path) -> Result<(SymbolLibraries, FootprintLibraries), LibCheckError> {
+        let mut syms = SymbolLibraries::new(dir, self.config.as_deref());
+        let mut fps = FootprintLibraries::new(dir, self.config.as_deref());
+        // Later ones go first, so the first one given wins as in a table
+        for s in self.symbols.iter().rev() {
+            let libs = libraries_in(s, is_symbol_library);
+            if libs.is_empty() {
+                return Err(LibCheckError::NoSymbols(s.clone()));
+            }
+            for l in libs.iter().rev() {
+                syms.add_first(&SymbolLibrary::new(l).default_nickname(), l);
+            }
+        }
+        for f in self.footprints.iter().rev() {
+            let pretty = libraries_in(f, is_footprint_library);
+            if pretty.is_empty() {
+                return Err(LibCheckError::NoFootprints(f.clone()));
+            }
+            for p in pretty.iter().rev() {
+                let nick = p
+                    .file_stem()
+                    .map_or_else(String::new, |s| s.to_string_lossy().into_owned());
+                fps.add_first(&nick, p);
+            }
+        }
+        Ok((syms, fps))
+    }
+}
+
+/// What `berc fp check --lib` checks and where it finds the libraries
 #[derive(Clone, Debug, Default)]
 pub struct LibCheckOptions {
     /// The symbol libraries: each a `.kicad_sym` file, a `.kicad_symdir` directory, a folder holding such
@@ -154,11 +215,7 @@ pub struct LibCheckOptions {
     pub libraries: Vec<String>,
     /// The project directory whose `sym-lib-table` and `fp-lib-table` are read, besides the global ones
     pub project: PathBuf,
-    /// KiCad's configuration directory ([`super::kicad_config_dir`]), for the global tables
-    pub config: Option<PathBuf>,
-    /// Footprint libraries searched before the tables: each a `.pretty` directory, or a folder of them, named by
-    /// their directory names
-    pub footprints: Vec<PathBuf>,
+    pub search: LibrarySearch,
 }
 
 fn is_symbol_library(p: &Path) -> bool {
@@ -216,21 +273,7 @@ fn resolve(
 
 /// Checks every symbol of `opts.libraries` against the review hash of its library footprint
 pub fn check_libraries(opts: &LibCheckOptions) -> Result<LibCheck, LibCheckError> {
-    let mut sym_tables = SymbolLibraries::new(&opts.project, opts.config.as_deref());
-    let mut fps = FootprintLibraries::new(&opts.project, opts.config.as_deref());
-    // Later --footprints go first, so the first one given wins as in a table
-    for f in opts.footprints.iter().rev() {
-        let pretty = libraries_in(f, is_footprint_library);
-        if pretty.is_empty() {
-            return Err(LibCheckError::NoFootprints(f.clone()));
-        }
-        for p in pretty.iter().rev() {
-            let nick = p
-                .file_stem()
-                .map_or_else(String::new, |s| s.to_string_lossy().into_owned());
-            fps.add_first(&nick, p);
-        }
-    }
+    let (mut sym_tables, mut fps) = opts.search.open(&opts.project)?;
     let mut libraries = Vec::new();
     for arg in &opts.libraries {
         libraries.extend(resolve(arg, &mut sym_tables)?);
@@ -248,7 +291,8 @@ pub fn check_libraries(opts: &LibCheckOptions) -> Result<LibCheck, LibCheckError
             symbols: names.len(),
         });
         for name in names {
-            symbols.push(check_symbol(&nick, &name, &mut lib, &mut fps));
+            let fields = lib.fields(&name);
+            symbols.push(check_symbol(&format!("{nick}:{name}"), fields, &mut fps));
         }
     }
     Ok(LibCheck {
@@ -258,14 +302,14 @@ pub fn check_libraries(opts: &LibCheckOptions) -> Result<LibCheck, LibCheckError
     })
 }
 
-fn check_symbol(
-    nick: &str,
-    name: &str,
-    lib: &mut SymbolLibrary,
+/// Library symbol `symbol` (`Lib:Name`) with its `fields` as read, against its library footprint
+pub(super) fn check_symbol(
+    symbol: &str,
+    fields: Result<Vec<(String, String)>, LibError>,
     fps: &mut FootprintLibraries,
 ) -> SymbolEntry {
     let mut e = SymbolEntry {
-        symbol: format!("{nick}:{name}"),
+        symbol: symbol.to_string(),
         footprint: None,
         status: SymbolStatus::NoFootprint,
         hash: None,
@@ -273,7 +317,7 @@ fn check_symbol(
         footprint_file: None,
         note: None,
     };
-    let fields = match lib.fields(name) {
+    let fields = match fields {
         Ok(f) => f,
         Err(why) => {
             e.status = SymbolStatus::Missing;

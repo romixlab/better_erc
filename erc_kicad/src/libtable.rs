@@ -506,6 +506,11 @@ impl SymbolLibraries {
         &self.tables
     }
 
+    /// The symbol library `path` (a `.kicad_sym` or `.kicad_symdir`) as library `nick`, searched before the tables
+    pub fn add_first(&mut self, nick: &str, path: &Path) {
+        self.tables.add_first(nick, path);
+    }
+
     /// Library `nick`, through the tables
     pub fn library(&mut self, nick: &str) -> Result<&mut SymbolLibrary, LibError> {
         let path = self.tables.path(nick)?;

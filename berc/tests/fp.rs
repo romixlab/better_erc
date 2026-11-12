@@ -134,7 +134,7 @@ fn lib_symbol(name: &str, footprint: &str, review: Option<&str>) -> String {
 
 /// A KiCad project in `dir`: the KiCad 10 board of placed.kicad_pcb, a schematic whose symbols U1-U7 come from
 /// library `Rev` (`(name, footprint, library hash, schematic copy's hash)` each), and with `table` a sym-lib-table
-/// and the library file. Every Mixed_Pads copy but the last in the file (U11) is marked board-only: U8, U9, U10 and
+/// and the library file; a name given again places that symbol again. Every Mixed_Pads copy but the last in the file (U11) is marked board-only: U8, U9, U10 and
 /// U12 without a symbol, U7 with one.
 fn project(dir: &Path, symbols: &[(&str, &str, Option<&str>, Option<&str>)], table: bool) {
     let board = std::fs::read_to_string(fixtures().join("placed.kicad_pcb")).unwrap();
@@ -157,8 +157,10 @@ fn project(dir: &Path, symbols: &[(&str, &str, Option<&str>, Option<&str>)], tab
         String::from("(kicad_symbol_lib (version 20231120) (generator \"kicad_symbol_editor\")\n");
     for (i, (name, footprint, lib_hash, sch_hash)) in symbols.iter().enumerate() {
         let n = i + 1;
-        copies += &lib_symbol(&format!("Rev:{name}"), footprint, *sch_hash);
-        lib += &lib_symbol(name, footprint, *lib_hash);
+        if !symbols[..i].iter().any(|s| s.0 == *name) {
+            copies += &lib_symbol(&format!("Rev:{name}"), footprint, *sch_hash);
+            lib += &lib_symbol(name, footprint, *lib_hash);
+        }
         placed += &format!(
             r#"(symbol (lib_id "Rev:{name}") (at {x} 50 0) (unit 1) (in_bom yes) (on_board yes) (dnp no) (uuid "a0000000-0000-4000-8000-0000000001{n:02}")
     (property "Reference" "U{n}" (at {x} 45 0) (effects (font (size 1.27 1.27))))
@@ -417,6 +419,7 @@ fn usage_is_recorded_per_command_and_flag() {
     run(&["fp", "hash", path(&lib), "--canonical"]);
     run(&["fp", "check", path(&dir)]);
     run(&["fp", "check", "--lib", "X", "--footprints", path(&dir)]);
+    run(&["fp", "todo", path(&dir), "--symbols", path(&dir)]);
     let lines = std::fs::read_to_string(&file).unwrap();
     let sigs: Vec<&str> = lines
         .lines()
@@ -431,7 +434,9 @@ fn usage_is_recorded_per_command_and_flag() {
             "fp check",
             "fp check",
             "fp check --lib",
-            "fp check --footprints"
+            "fp check --footprints",
+            "fp todo",
+            "fp todo --symbols"
         ]
     );
     // The app writes its steps into the same record, counted in a column of their own
@@ -667,5 +672,233 @@ fn check_libraries_by_folder_and_nickname() {
     }
     let out = fp_check(&dir, &["--footprints", path(&fixtures())]);
     assert_eq!(out.status.code(), Some(2), "--footprints needs --lib");
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// Test.pretty copied into `dir/changed`, Asym_SOT's pad 1 wider than on the board
+fn changed_footprints(dir: &Path) -> PathBuf {
+    let lib = dir.join("changed/Test.pretty");
+    std::fs::create_dir_all(&lib).unwrap();
+    for name in ["Asym_SOT", "Mixed_Pads"] {
+        let text =
+            std::fs::read_to_string(fixtures().join(format!("Test.pretty/{name}.kicad_mod")))
+                .unwrap()
+                .replacen(
+                    "(at -1.1 -0.95) (size 1.05 0.6)",
+                    "(at -1.1 -0.95) (size 1.2 0.6)",
+                    1,
+                );
+        std::fs::write(lib.join(format!("{name}.kicad_mod")), text).unwrap();
+    }
+    dir.join("changed")
+}
+
+#[test]
+fn check_compares_board_copies_with_their_library_footprint() {
+    let sot = library_hash("Asym_SOT");
+    let dir = scratch("board-differs");
+    project(
+        &dir,
+        &[("Ok", "Test:Asym_SOT", Some(&sot), Some(&sot))],
+        true,
+    );
+    let same = fixtures();
+    let out = fp_check(&dir, &["--format", "json", "--footprints", path(&same)]);
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let u1 = &v["footprints"][0];
+    assert_eq!(u1["library_footprint"], "Test:Asym_SOT", "{u1}");
+    assert_eq!(u1["library_footprint_hash"], sot.as_str());
+    assert_eq!(u1["board_differs"], false);
+    // A footprint without a symbol and without a library nickname can't be looked up
+    let u8 = v["footprints"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|e| e["reference"] == "U8")
+        .unwrap();
+    assert!(
+        u8["footprint_note"]
+            .as_str()
+            .unwrap()
+            .contains("names no library"),
+        "{u8}"
+    );
+
+    let changed = changed_footprints(&dir);
+    let out = fp_check(&dir, &["--format", "json", "--footprints", path(&changed)]);
+    assert_eq!(out.status.code(), Some(1));
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let u1 = &v["footprints"][0];
+    assert_eq!(
+        u1["status"], "ok",
+        "the review hash is the board copy's: {u1}"
+    );
+    assert_eq!(u1["board_differs"], true, "{u1}");
+    assert_ne!(u1["library_footprint_hash"], sot.as_str());
+    let text = stdout(&fp_check(&dir, &["--footprints", path(&changed)]));
+    assert!(
+        text.contains(&format!(
+            "the board copy has {sot}, library footprint Test:Asym_SOT has fp1:"
+        )),
+        "{text}"
+    );
+    assert!(text.contains("update the board from the library"), "{text}");
+    assert!(
+        text.contains("; 1 board copies differ from their library footprint"),
+        "{text}"
+    );
+    assert!(
+        text.contains("not compared with a library footprint (6 footprints): footprint Mixed_Pads names no library"),
+        "{text}"
+    );
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+fn fp_todo(dir: &Path, args: &[&str]) -> Output {
+    Command::new(env!("CARGO_BIN_EXE_berc"))
+        .args(["fp", "todo", path(dir)])
+        .args(args)
+        .env("BERC_USAGE", "off")
+        .env("NO_COLOR", "1")
+        .env("KICAD_CONFIG_HOME", dir.join("no-kicad-config"))
+        .env_remove("COMPLETE")
+        .output()
+        .unwrap()
+}
+
+#[test]
+fn todo_lists_the_board_symbols_to_review_in_order() {
+    let (sot, mixed) = (library_hash("Asym_SOT"), library_hash("Mixed_Pads"));
+    let dir = scratch("todo");
+    project(
+        &dir,
+        &[
+            ("Ok", "Test:Asym_SOT", Some(&sot), None),
+            ("Unreviewed", "Test:Asym_SOT", None, None),
+            ("Changed", "Test:Asym_SOT", Some(&mixed), None),
+            ("Generic", "", None, None),
+            ("Lost", "Test:Gone", None, None),
+            ("Unreviewed", "Test:Asym_SOT", None, None),
+            ("Garbage", "Test:Mixed_Pads", Some("reviewed by R"), None),
+        ],
+        true,
+    );
+    let fps = fixtures();
+    let out = fp_todo(&dir, &["--format", "json", "--footprints", path(&fps)]);
+    assert_eq!(out.status.code(), Some(1), "{out:?}");
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let rows: Vec<(&str, &str, String)> = v["symbols"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|e| {
+            let refs: Vec<&str> = e["references"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|r| r.as_str().unwrap())
+                .collect();
+            (
+                e["symbol"].as_str().unwrap(),
+                e["status"].as_str().unwrap(),
+                refs.join(" "),
+            )
+        })
+        .collect();
+    assert_eq!(
+        rows,
+        [
+            ("Rev:Changed", "changed", "U3".to_string()),
+            ("Rev:Garbage", "malformed", "U7".to_string()),
+            ("Rev:Unreviewed", "unreviewed", "U2 U6".to_string()),
+            ("Rev:Lost", "missing", "U5".to_string()),
+            ("Rev:Ok", "ok", "U1".to_string()),
+            ("Rev:Generic", "no-footprint", "U4".to_string()),
+        ]
+    );
+    let unreviewed = &v["symbols"][2];
+    assert_eq!(unreviewed["hash"], sot.as_str());
+    assert!(
+        unreviewed["footprint_file"]
+            .as_str()
+            .unwrap()
+            .ends_with("Test.pretty/Asym_SOT.kicad_mod")
+    );
+
+    let text = stdout(&fp_todo(&dir, &["--footprints", path(&fps)]));
+    let lines: Vec<&str> = text.lines().collect();
+    assert!(
+        lines[0].starts_with("changed ") && lines[0].contains(" Rev:Changed "),
+        "{text}"
+    );
+    assert!(
+        lines[2].contains(&format!("hash now {sot}  on U2 U6")),
+        "{text}"
+    );
+    assert_eq!(lines[3], "can't be reviewed until fixed (1):", "{text}");
+    assert!(!text.contains("Rev:Ok"), "{text}");
+    assert!(
+        text.contains("2 reviewed or without a footprint to review, not listed: --all lists them"),
+        "{text}"
+    );
+    assert!(text.contains("6 library symbols, 3 to review: 1 changed, 1 malformed, 1 unreviewed, 1 missing, 1 ok, 1 no footprint"), "{text}");
+    let all = stdout(&fp_todo(&dir, &["--footprints", path(&fps), "--all"]));
+    assert!(
+        all.contains("reviewed, or no footprint to review (2):"),
+        "{all}"
+    );
+    assert!(
+        all.contains(" Rev:Ok ") && all.contains(" Rev:Generic "),
+        "{all}"
+    );
+    assert!(!all.contains("--all lists them"), "{all}");
+
+    // Every symbol reviewed: exit 0. --symbols puts a library ahead of the sym-lib-table.
+    let done = scratch("todo-done");
+    project(&done, &[("Ok", "Test:Asym_SOT", None, None)], true);
+    let reviewed = done.join("reviewed");
+    std::fs::create_dir_all(&reviewed).unwrap();
+    std::fs::write(
+        reviewed.join("Rev.kicad_sym"),
+        format!(
+            "(kicad_symbol_lib (version 20231120) (generator \"kicad_symbol_editor\")\n{})\n",
+            lib_symbol("Ok", "Test:Asym_SOT", Some(&sot))
+        ),
+    )
+    .unwrap();
+    let out = fp_todo(&done, &["--footprints", path(&fps)]);
+    assert_eq!(out.status.code(), Some(1), "{out:?}");
+    let out = fp_todo(
+        &done,
+        &["--footprints", path(&fps), "--symbols", path(&reviewed)],
+    );
+    assert_eq!(out.status.code(), Some(0), "{out:?}");
+    assert!(
+        stdout(&out).contains("1 library symbols, 0 to review: 1 ok"),
+        "{}",
+        stdout(&out)
+    );
+    std::fs::remove_dir_all(&dir).unwrap();
+    std::fs::remove_dir_all(&done).unwrap();
+}
+
+#[test]
+fn todo_errors_exit_2() {
+    let dir = scratch("todo-errors");
+    project(&dir, &[("Ok", "Test:Asym_SOT", None, None)], true);
+    let out = fp_todo(&dir, &["--footprints", path(&dir.join("nothing"))]);
+    assert_eq!(out.status.code(), Some(2), "{out:?}");
+    assert!(
+        String::from_utf8_lossy(&out.stderr).contains("no footprint library (.pretty)"),
+        "{out:?}"
+    );
+    let out = fp_todo(&dir, &["--symbols", path(&dir.join("nothing"))]);
+    assert_eq!(out.status.code(), Some(2), "{out:?}");
+    assert!(
+        String::from_utf8_lossy(&out.stderr).contains("no symbol library"),
+        "{out:?}"
+    );
+    let out = fp_todo(&dir.join("nothing"), &[]);
+    assert_eq!(out.status.code(), Some(2), "{out:?}");
     std::fs::remove_dir_all(&dir).unwrap();
 }

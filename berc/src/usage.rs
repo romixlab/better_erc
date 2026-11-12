@@ -22,6 +22,7 @@ const MEANINGFUL_FLAGS: &[&str] = &[
     "with_geometry",
     "lib",
     "footprints",
+    "symbols",
 ];
 
 /// The signals of a run: the subcommand path, then one per meaningful flag given on the command line

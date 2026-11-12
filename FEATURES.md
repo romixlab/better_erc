@@ -747,10 +747,15 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   text and JSON, exit 1 on anything but ok and board-only. `berc fp check --lib LIB` checks every symbol of a symbol
   library (a `.kicad_sym`, a `.kicad_symdir`, a folder of them, or a `sym-lib-table` nickname) against the library
   footprint its `Footprint` field names (`--footprints DIR`, then the `fp-lib-table`): ok, changed, unreviewed,
-  missing, refused, other version, malformed, no footprint (not a failure); every `berc` run recorded in a local
+  missing, refused, other version, malformed, no footprint (not a failure). `berc fp check` also compares each board
+  copy with its library footprint and reports one that differs (both hashes; the board not updated from the library).
+  `berc fp todo [PROJECT]` (`fp::todo`): the library symbols a board uses, once each with their references, those to
+  review first in review order (changed, other version, malformed, unreviewed), then those that can't be (missing,
+  refused), ok ones with `--all`; JSON with footprint file, hash and datasheet for the review tab. `--symbols` and
+  `--footprints` put libraries ahead of the tables; every `berc` run recorded in a local
   usage file (`berc usage`). The hash is put on the symbol by hand for now (`berc fp hash`); the writer is a later
   task · `erc_model/src/fphash.rs`, `erc_kicad/src/symlib.rs`, `erc_kicad/src/libtable.rs`, `better_erc/src/fp.rs`,
-  `better_erc/src/fp/library.rs`, `berc/src/usage.rs`, `berc/tests/fp.rs`, README "Footprint review"
+  `better_erc/src/fp/library.rs`, `better_erc/src/fp/todo.rs`, `berc/src/usage.rs`, `berc/tests/fp.rs`, README "Footprint review"
 
 ## Code generation (`GEN`)
 
