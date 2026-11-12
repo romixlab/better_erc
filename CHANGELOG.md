@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.30] - 2026-11-12
+
 ### Added
 
 - `VIEW-19`: keys for each step of the Footprint review canvas, each a setting (`[footprint_review.keys]`, egui
@@ -19,7 +21,6 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
   first end, where a click or a drag places it exactly, `Z` again on the other end, `Z` again back to the view
   with the length field taking the typed length; `Esc` ends the ruler step. Buttons for the same: Full width,
   Whole page, Zoom on an end. `ruler_zoom` sets how far `Z` zooms in (8× the view).
-
 - `VIEW-19`: the Footprint review tab draws a package's vias as vias: a ring and its hole, of their own layer group
   (Vias, its own colour `colors.vias`), without the number they share with the exposed pad. KiCad has no vias in
   footprints; a package's vias are round plated pads with no number, a heatsink mark or the number of a surface
