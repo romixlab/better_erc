@@ -16,14 +16,16 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `TOOL-8`: `berc fp check [PROJECT]` checks every footprint of a KiCad board against the review hash in the
   `Footprint_Review` field of its library symbol, read from the `.kicad_sym` through the project's or the global
   `sym-lib-table` (`erc_kicad::symlib`), else from the schematic's copy. Each footprint is ok, changed, unreviewed
-  (with the hash to put there), refused (the symbol sets no footprint), no symbol, other version or malformed; a
-  schematic copy whose hash differs from the library's is reported too. Text and JSON, exit 1 on anything but ok.
+  (with the hash to put there), refused (the symbol sets no footprint), no symbol, other version, malformed or
+  board-only (no symbol and marked board-only in KiCad: listed last under its own heading, not a failure); a
+  schematic copy whose hash differs from the library's is reported too. Text and JSON, exit 1 on anything but ok and
+  board-only.
   README section "Footprint review".
 - `berc usage`: every `berc` run appends its command and its feature flags to a local usage file
   (`$BERC_USAGE_FILE`, else `$XDG_STATE_HOME/berc/usage.tsv`); `berc usage` sums it per command, unused ones at 0.
   `BERC_USAGE=off` records nothing. Nothing is sent anywhere.
 
-- `TOOL-8`: the footprint review hash (`erc_model::fphash`): `fp1:` and 32 hex digits over a canonical text of what a
+- `TOOL-8`: the footprint review hash (`erc_model::fphash`): `fp1:` and 16 hex digits over a canonical text of what a
   footprint review checks (pads, copper, mask, paste, courtyard and board-edge graphics, zones and keepouts,
   clearance and mask settings), the same for a library file and every board copy of it, unchanged by silk, texts,
   re-saves, reordering and placement. `berc fp hash FILE.kicad_mod` or `berc fp hash BOARD.kicad_pcb REF` prints it;

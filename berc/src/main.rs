@@ -40,7 +40,8 @@ berc fp hash Lib.pretty/SOT-23.kicad_mod\n  berc fp hash board.kicad_pcb U3 --ca
 const FP_CHECK_AFTER_HELP: &str = "Exit codes: 0 every footprint ok, 1 any other status or a schematic copy older \
 than its library, 2 usage or read error.\n\nStatuses: ok, changed (the footprint differs from the one reviewed), \
 unreviewed (no hash on the symbol), refused (the symbol sets no footprint, so a review means nothing), no symbol \
-(a footprint without a schematic symbol), other version, malformed.\n\nExamples:\n  berc fp check\n  \
+(a footprint without a schematic symbol, not marked board-only), other version, malformed. Board-only footprints \
+without a symbol (logos, mounting holes) are listed last under their own heading and don't fail the run.\n\nExamples:\n  berc fp check\n  \
 berc fp check hw/board --format json";
 
 /// better_erc command line tools
@@ -124,7 +125,7 @@ enum Command {
 enum FpCommand {
     /// Print the review hash of a footprint: a library file, or a footprint on a board by its reference
     ///
-    /// The hash (`fp1:` and 32 hex digits) covers what a footprint review checks against the datasheet: pads,
+    /// The hash (`fp1:` and 16 hex digits) covers what a footprint review checks against the datasheet: pads,
     /// copper, mask, paste, courtyard and board-edge graphics, zones and keepouts, clearance and mask settings.
     /// Silk, fab, texts, the 3D model and the footprint's place on the board don't count, so a board copy has the
     /// hash of its library file. Put it in the library symbol's `Footprint_Review` field once the footprint is

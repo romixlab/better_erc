@@ -31,7 +31,7 @@ fn hash_of_a_library_file_and_of_its_board_copies() {
     let out = berc(&["fp", "hash", path(&lib)]);
     assert!(out.status.success(), "{out:?}");
     let hash = stdout(&out).trim().to_string();
-    assert!(hash.starts_with("fp1:") && hash.len() == 36, "{hash}");
+    assert!(hash.starts_with("fp1:") && hash.len() == 20, "{hash}");
     // U1-U6 are Asym_SOT on both sides at right and odd angles
     for r in ["U1", "U2", "U3", "U4", "U5", "U6"] {
         let out = berc(&["fp", "hash", path(&board), r]);
@@ -134,13 +134,22 @@ fn lib_symbol(name: &str, footprint: &str, review: Option<&str>) -> String {
 
 /// A KiCad project in `dir`: the KiCad 10 board of placed.kicad_pcb, a schematic whose symbols U1-U7 come from
 /// library `Rev` (`(name, footprint, library hash, schematic copy's hash)` each), and with `table` a sym-lib-table
-/// and the library file
+/// and the library file. Every Mixed_Pads copy but the last in the file (U11) is marked board-only: U8, U9, U10 and
+/// U12 without a symbol, U7 with one.
 fn project(dir: &Path, symbols: &[(&str, &str, Option<&str>, Option<&str>)], table: bool) {
-    std::fs::copy(
-        fixtures().join("placed.kicad_pcb"),
-        dir.join("fpcheck.kicad_pcb"),
-    )
-    .unwrap();
+    let board = std::fs::read_to_string(fixtures().join("placed.kicad_pcb")).unwrap();
+    let parts: Vec<&str> = board.split("(attr through_hole)").collect();
+    let last = parts.len() - 2;
+    let mut marked = String::from(parts[0]);
+    for (i, p) in parts[1..].iter().enumerate() {
+        marked += if i == last {
+            "(attr through_hole)"
+        } else {
+            "(attr through_hole board_only)"
+        };
+        marked += p;
+    }
+    std::fs::write(dir.join("fpcheck.kicad_pcb"), marked).unwrap();
     let root = "a0000000-0000-4000-8000-000000000000";
     let mut copies = String::new();
     let mut placed = String::new();
@@ -201,7 +210,7 @@ fn library_hash(name: &str) -> String {
 #[test]
 fn check_every_status_through_the_library_table() {
     let (sot, mixed) = (library_hash("Asym_SOT"), library_hash("Mixed_Pads"));
-    let other = "fp1:00000000000000000000000000000000";
+    let other = "fp1:0000000000000000";
     let dir = scratch("check");
     project(
         &dir,
@@ -248,9 +257,10 @@ fn check_every_status_through_the_library_table() {
     assert_eq!(get("U5")["schematic_hash"], other);
     assert_eq!(status("U6"), "other-version");
     assert_eq!(status("U7"), "malformed");
-    for r in ["U8", "U9", "U10", "U11", "U12"] {
-        assert_eq!(status(r), "no-symbol", "{r}");
+    for r in ["U8", "U9", "U10", "U12"] {
+        assert_eq!(status(r), "board-only", "{r}");
     }
+    assert_eq!(status("U11"), "no-symbol");
     let refs: Vec<&str> = fps
         .iter()
         .map(|e| e["reference"].as_str().unwrap())
@@ -273,9 +283,23 @@ fn check_every_status_through_the_library_table() {
         "{text}"
     );
     assert!(
-        text.contains("12 footprints: 2 ok, 1 changed, 1 unreviewed, 1 refused, 5 no symbol, 1 other version, 1 malformed; 1 with a schematic copy older than the library"),
+        text.contains("12 footprints: 2 ok, 1 changed, 1 unreviewed, 1 refused, 1 no symbol, 1 other version, 1 malformed, 4 board-only; 1 with a schematic copy older than the library"),
         "{text}"
     );
+    // Board-only footprints come last, under their heading, every one of them
+    let lines: Vec<&str> = text.lines().collect();
+    let h = lines
+        .iter()
+        .position(|l| {
+            l.starts_with("board-only footprints without a symbol, nothing to review (4):")
+        })
+        .unwrap_or_else(|| panic!("{text}"));
+    let below: Vec<&str> = lines[h + 1..h + 5]
+        .iter()
+        .map(|l| l.split_whitespace().nth(1).unwrap())
+        .collect();
+    assert_eq!(below, ["U8", "U9", "U10", "U12"], "{text}");
+    assert!(lines[..h].iter().any(|l| l.contains(" U11 ")), "{text}");
     std::fs::remove_dir_all(&dir).unwrap();
 }
 

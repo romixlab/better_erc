@@ -17,7 +17,7 @@ pub struct Hashed {
     pub reference: Option<String>,
     /// The footprint's library id (`Lib:Name` on a board, the footprint's name in a library file)
     pub lib_id: String,
-    /// `fp1:` and 32 hex digits
+    /// `fp1:` and 16 hex digits
     pub hash: String,
     /// What the hash covers, one sorted line per item
     pub canonical: Vec<String>,
@@ -261,8 +261,11 @@ pub enum FpStatus {
     Unreviewed,
     /// Its symbol sets no footprint, so a review of this one means nothing
     Refused,
-    /// No schematic symbol: a board-only footprint, or one whose symbol is gone
+    /// No schematic symbol, and not marked board-only: its symbol is gone, or it was placed on the board alone
     NoSymbol,
+    /// No schematic symbol and marked board-only (a logo, a mounting hole, mouse bites): nothing to review against,
+    /// not a failure
+    BoardOnly,
     /// The hash was made by another version of berc's review hash
     OtherVersion,
     /// The field holds something that is no review hash
@@ -277,12 +280,13 @@ impl FpStatus {
             FpStatus::Unreviewed => "unreviewed",
             FpStatus::Refused => "refused",
             FpStatus::NoSymbol => "no symbol",
+            FpStatus::BoardOnly => "board-only",
             FpStatus::OtherVersion => "other version",
             FpStatus::Malformed => "malformed",
         }
     }
 
-    const ALL: [FpStatus; 7] = [
+    const ALL: [FpStatus; 8] = [
         FpStatus::Ok,
         FpStatus::Changed,
         FpStatus::Unreviewed,
@@ -290,6 +294,7 @@ impl FpStatus {
         FpStatus::NoSymbol,
         FpStatus::OtherVersion,
         FpStatus::Malformed,
+        FpStatus::BoardOnly,
     ];
 }
 
@@ -328,9 +333,9 @@ pub struct FpEntry {
 }
 
 impl FpEntry {
-    /// Ok, with the schematic's copy agreeing with the library
+    /// Ok, with the schematic's copy agreeing with the library, or a board-only footprint
     pub fn is_ok(&self) -> bool {
-        self.status == FpStatus::Ok && !self.copy_differs
+        matches!(self.status, FpStatus::Ok | FpStatus::BoardOnly) && !self.copy_differs
     }
 }
 
@@ -417,6 +422,9 @@ pub fn check(
             library_note: None,
         };
         let Some(part) = f.part.map(|p| board.part(p)) else {
+            if f.attrs.board_only {
+                e.status = FpStatus::BoardOnly;
+            }
             footprints.push(e);
             continue;
         };
@@ -504,6 +512,7 @@ impl FpCheck {
             FpStatus::Changed | FpStatus::Malformed => AnsiColor::Red.on_default().bold(),
             FpStatus::Unreviewed | FpStatus::OtherVersion => AnsiColor::Yellow.on_default().bold(),
             FpStatus::Refused | FpStatus::NoSymbol => AnsiColor::Cyan.on_default(),
+            FpStatus::BoardOnly => Style::new().dimmed(),
         };
         let dim = Style::new().dimmed();
         let width = self
@@ -519,7 +528,19 @@ impl FpCheck {
             .max()
             .unwrap_or(0);
         let mut out = String::new();
-        for e in &self.footprints {
+        // Board-only footprints last, under their own heading: listed, but apart from what needs a look
+        let (board_only, rest): (Vec<&FpEntry>, Vec<&FpEntry>) = self
+            .footprints
+            .iter()
+            .partition(|e| e.status == FpStatus::BoardOnly);
+        let heading = format!(
+            "{dim}board-only footprints without a symbol, nothing to review ({}):{dim:#}\n",
+            board_only.len()
+        );
+        for (i, e) in rest.iter().chain(&board_only).enumerate() {
+            if i == rest.len() {
+                out += &heading;
+            }
             let st = style(e.status);
             let _ = write!(
                 out,
@@ -550,8 +571,12 @@ impl FpCheck {
                     let _ = write!(out, "  {dim}symbol {symbol} sets no footprint{dim:#}");
                 }
                 FpStatus::NoSymbol => {
-                    let _ = write!(out, "  {dim}no schematic symbol{dim:#}");
+                    let _ = write!(
+                        out,
+                        "  {dim}no schematic symbol, and not marked board-only{dim:#}"
+                    );
                 }
+                FpStatus::BoardOnly => {}
                 FpStatus::OtherVersion | FpStatus::Malformed => {
                     let _ = write!(
                         out,

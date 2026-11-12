@@ -14,8 +14,10 @@
 //! and values KiCad leaves out when they are its default left out too. A re-save, a reorder or a placement never
 //! changes it; any change of the scope above does.
 //!
-//! It is written `fp1:` and 32 hex digits. A later change of the canonical text is a new version (`fp2:`), so an old
-//! hash reads as made by another version, never as a silent mismatch.
+//! It is written `fp1:` and 16 hex digits: the first 8 bytes of the SHA-256 of the canonical lines joined by `\n`
+//! (no trailing newline), in lower-case hex. It is a fingerprint, not a signature: 64 bits keep a field short enough
+//! to type and never collide by chance between footprints. A later change of the canonical text is a new version
+//! (`fp2:`), so an old hash reads as made by another version, never as a silent mismatch.
 
 use crate::dump::{shape_tokens, tok, zone_tokens};
 use crate::footprint::{LocalFootprint, canonical_arc, deg360};
@@ -25,11 +27,11 @@ use sha2::{Digest, Sha256};
 /// The version of the canonical text: the hash's prefix
 pub const VERSION: &str = "fp1";
 
-/// The review hash of a footprint in its own frame: `fp1:` and 32 hex digits
+/// The review hash of a footprint in its own frame: `fp1:` and 16 hex digits
 pub fn hash(f: &LocalFootprint) -> String {
     let text = canonical(f).join("\n");
     let digest = Sha256::digest(text.as_bytes());
-    let hex: String = digest[..16].iter().map(|b| format!("{b:02x}")).collect();
+    let hex: String = digest[..8].iter().map(|b| format!("{b:02x}")).collect();
     format!("{VERSION}:{hex}")
 }
 
@@ -60,7 +62,7 @@ pub fn compare(stored: &str, f: &LocalFootprint) -> Compared {
             version: version.to_string(),
         };
     }
-    if hex.len() != 32 || !hex.chars().all(|c| c.is_ascii_hexdigit()) {
+    if hex.len() != 16 || !hex.chars().all(|c| c.is_ascii_hexdigit()) {
         return Compared::Malformed;
     }
     let now = hash(f);
@@ -415,7 +417,7 @@ mod tests {
     #[test]
     fn form_and_version() {
         let h = hash(&sample());
-        assert!(h.starts_with("fp1:") && h.len() == 4 + 32, "{h}");
+        assert!(h.starts_with("fp1:") && h.len() == 4 + 16, "{h}");
         assert_eq!(compare(&h, &sample()), Compared::Same);
         assert_eq!(
             compare(

@@ -172,7 +172,7 @@ In this repository `just check` runs `berc check` on the test schematics against
 A footprint checked once against its datasheet should not have to be checked again on the next board, unless it
 changed. `berc fp` keeps that record as a hash on the library symbol.
 
-`berc fp hash` prints a footprint's review hash, `fp1:` and 32 hex digits:
+`berc fp hash` prints a footprint's review hash, `fp1:` and 16 hex digits:
 
 ```sh
 berc fp hash Lib.pretty/SOT-23.kicad_mod          # a library footprint
@@ -188,10 +188,12 @@ The hash covers what a review checks against the datasheet:
 - graphics on copper, mask, paste, courtyard and `Edge.Cuts` layers, zones and keepouts.
 
 Silk, fab and user layers, texts, the 3D model and where the footprint sits on a board don't count. A board copy is
-brought back to the footprint's own frame first (position, rotation and a flip to the back undone), so it has the
-hash of its library file. Lengths are compared on a 100 nm grid and items in a fixed order, so a re-save in another
-KiCad version or a reorder never changes the hash. The `fp1:` prefix is the version of these rules: a later change of
-them gives `fp2:` hashes, and an `fp1:` hash then reads as made by another version instead of as a mismatch.
+brought back to the footprint's own frame first (position, rotation and a flip to the back undone), so it has the hash
+of its library file. Lengths are compared on a 100 nm grid and items in a fixed order, so a re-save in another KiCad
+version or a reorder never changes the hash. The `fp1:` prefix is the version of these rules: a later change of them
+gives `fp2:` hashes, and an `fp1:` hash then reads as made by another version instead of as a mismatch. The hex digits
+are the first 8 bytes of the SHA-256 of the canonical text (`--canonical`, lines joined by a newline): a short
+fingerprint to tell a footprint unchanged, not a signature.
 
 Once a footprint is reviewed, put its hash in the `Footprint_Review` field of the library symbol that uses it (in
 the symbol editor, then update the schematic from the library). `berc fp check` then checks a board:
@@ -211,11 +213,12 @@ footprint is one of:
 | changed | the footprint differs from the one reviewed: review it again |
 | unreviewed | the symbol has no review hash; the line shows the hash to put there once reviewed |
 | refused | the symbol sets no footprint, so a review of the one on the board means nothing |
-| no symbol | the footprint has no schematic symbol (board-only items such as logos and mounting holes) |
+| no symbol | the footprint has no schematic symbol and is not marked board-only |
+| board-only | no symbol, marked board-only in KiCad (logos, mounting holes): listed last under its own heading, not a failure |
 | other version, malformed | the field holds a hash of another version, or no hash at all |
 
 A schematic copy that holds a different hash than the library is reported as well: the schematic was not updated
-from the library. The exit code is 0 when every footprint is ok and every copy up to date, 1 otherwise, 2 when the
+from the library. The exit code is 0 when every footprint is ok or board-only and every copy up to date, 1 otherwise, 2 when the
 project can't be read.
 
 ## Development
