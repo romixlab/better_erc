@@ -19,6 +19,11 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Fixed
 
+- `VIEW-19`: Footprint review tab, Accept's warning that KiCad may overwrite the change is per file, naming the
+  lock file and its owner: only a held KiCad lock beside that file (`~NAME.EXT.lck`). A lock from this computer
+  counts while a KiCad runs here (or while its `pid` lives, should a lock carry one); an empty lock is stale. A
+  KiCad running with the file closed no longer warns.
+
 - `VIEW-19`: Footprint review tab, the copper, mask and paste views show only what the board makes on that layer,
   each filled in its one colour: Copper the pads' copper, copper graphics and vias (red), Mask the mask openings
   only (pink), Paste the paste apertures only (gray). Before, the pads were drawn in every view and the mask and

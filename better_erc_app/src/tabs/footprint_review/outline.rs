@@ -416,7 +416,9 @@ pub fn items(f: &LocalFootprint, board: Margins) -> Vec<Item> {
         };
         let on = |layer: &str| {
             let any = format!("*.{}", layer.split_once('.').map_or(layer, |(_, l)| l));
-            pad.layers.iter().any(|l| l == layer || *l == any || (layer.ends_with(".Cu") && l == "F&B.Cu"))
+            pad.layers
+                .iter()
+                .any(|l| l == layer || *l == any || (layer.ends_with(".Cu") && l == "F&B.Cu"))
         };
         // The mask opening and the paste aperture, by the pad's margins, else the footprint's
         let small = len(pad.size.x.min(pad.size.y));
@@ -570,11 +572,17 @@ mod tests {
         let at = |i: &Item, p: &Pad| {
             let (lo, hi) = extent(std::slice::from_ref(i)).unwrap();
             let c = mm(p.at);
-            ((lo[0] + hi[0]) / 2.0 - c[0]).abs() < 1e-6 && ((lo[1] + hi[1]) / 2.0 - c[1]).abs() < 1e-6
+            ((lo[0] + hi[0]) / 2.0 - c[0]).abs() < 1e-6
+                && ((lo[1] + hi[1]) / 2.0 - c[1]).abs() < 1e-6
         };
-        let of = |p: &Pad, k: Option<Kind>| items.iter().filter(|i| i.kind() == k && at(i, p)).count();
+        let of =
+            |p: &Pad, k: Option<Kind>| items.iter().filter(|i| i.kind() == k && at(i, p)).count();
         assert_eq!(of(&via, Some(Kind::Copper)), 1, "the via's copper");
-        assert_eq!(of(&via, Some(Kind::BackCopper)), 0, "drawn once, with the front");
+        assert_eq!(
+            of(&via, Some(Kind::BackCopper)),
+            0,
+            "drawn once, with the front"
+        );
         assert_eq!(of(&pin, Some(Kind::BackCopper)), 1, "the pin's back copper");
         assert!(
             items

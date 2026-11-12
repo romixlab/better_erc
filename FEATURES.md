@@ -701,7 +701,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   side in the same views), courtyard, fab, silk and board edge each by its checkbox; colours are settings only,
   no picker in the tab. Accept disabled with its reason
   until a symbol with a footprint is picked and the scale is set on the page shown, asks first with its dry run
-  (each file, field, old and new value; Enter writes, Esc not; a warning on KiCad's lock file or KiCad running),
+  (each file, field, old and new value; Enter writes, Esc not; a warning per file whose KiCad lock file is held, naming it),
   writes the hash into the
   library symbol (and a project's schematic copies, `fp::accept` / `fp::accept_library`), copies it, keeps the
   review, listing the files written or why nothing was. Found datasheets in a panel of their own, the first

@@ -698,13 +698,46 @@ fn accept_writes_into_the_symbols() {
         before,
         files.clone().map(|f| std::fs::read_to_string(f).unwrap())
     );
-    // The schematic open in KiCad (its lock file), KiCad running: both said; Enter writes
-    std::fs::write(dir.join("~rev.kicad_sch.lck"), "").unwrap();
+    // KiCad running, no lock file beside the files: no warning
+    h.state_mut().rt.kicad_running = || true;
+    let warned = |h: &mut Harness<'_, FootprintReview>| {
+        button(h, ACCEPT).click();
+        h.run();
+        let w = h.query_by_label_contains("open in KiCad").is_some();
+        h.key_press(egui::Key::Escape);
+        h.run();
+        w
+    };
+    assert!(!warned(&mut h), "KiCad running alone is no warning");
+    // Stale locks from this computer: a dead process id; KiCad's own (no pid) with no KiCad running here
+    let lock = dir.join("~rev.kicad_sch.lck");
+    let host = this_host().unwrap_or_default();
+    let record = |pid: Option<u64>| {
+        let mut j = serde_json::json!({"username": "someone", "hostname": host});
+        if let Some(p) = pid {
+            j["pid"] = p.into();
+        }
+        j.to_string()
+    };
+    std::fs::write(&lock, "").unwrap();
+    assert!(!warned(&mut h), "an empty lock is stale, as KiCad takes it");
+    std::fs::write(&lock, record(Some(0x7fff_fff0))).unwrap();
+    assert!(!warned(&mut h), "a dead process holds nothing");
+    std::fs::write(&lock, record(None)).unwrap();
+    h.state_mut().rt.kicad_running = || false;
+    assert!(!warned(&mut h), "no KiCad here holds it");
+    // Held: this process' id, then KiCad's own with KiCad running; the warning names the lock file. Enter writes
+    std::fs::write(&lock, record(Some(std::process::id().into()))).unwrap();
+    assert!(warned(&mut h), "a live process holds it");
+    std::fs::write(&lock, record(None)).unwrap();
     h.state_mut().rt.kicad_running = || true;
     button(&h, ACCEPT).click();
     h.run();
-    h.get_by_label_contains("rev.kicad_sch is open in KiCad (its lock file ~rev.kicad_sch.lck)");
-    h.get_by_label_contains("KiCad is running");
+    h.get_by_label_contains(&format!(
+        "rev.kicad_sch is open in KiCad (its lock file ~rev.kicad_sch.lck, someone@{host})"
+    ));
+    assert!(h.query_by_label_contains("KiCad is running").is_none());
+    assert!(h.query_by_label_contains("Rev.kicad_sym is open").is_none());
     h.key_press(egui::Key::Enter);
     h.run();
     assert!(
@@ -881,7 +914,6 @@ fn mask_and_paste_shown_one_at_a_time() {
     }
     std::fs::remove_dir_all(&dir).unwrap();
 }
-
 
 /// A review of the WQFN-20 land pattern in `dir` over the test datasheet's land pattern page: 3 mm of footprint
 /// over 100 points of blank paper below the drawing, opaque, 400 px across in the view
@@ -1340,8 +1372,14 @@ fn ruler_snaps_level() {
     h.run();
     drag(&mut h, [100.0, 200.0], [110.0, 230.0], false);
     let [a, b] = h.state().ruler.unwrap();
-    assert!((a[0] - 110.0).abs() < 0.5 && (a[1] - 230.0).abs() < 0.5, "{a:?}");
-    assert!((b[0] - 200.0).abs() < 0.5, "the other end keeps its X: {b:?}");
+    assert!(
+        (a[0] - 110.0).abs() < 0.5 && (a[1] - 230.0).abs() < 0.5,
+        "{a:?}"
+    );
+    assert!(
+        (b[0] - 200.0).abs() < 0.5,
+        "the other end keeps its X: {b:?}"
+    );
     assert_eq!(a[1], b[1], "both ends keep the same Y");
     // Shift: any angle
     drag(&mut h, [110.0, 230.0], [100.0, 250.0], true);
