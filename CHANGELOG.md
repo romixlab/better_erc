@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.26] - 2026-11-12
+
 ### Added
 
 - `TOOL-8`: `berc fp check --lib LIB` checks every symbol of a symbol library against the review hash of the library
