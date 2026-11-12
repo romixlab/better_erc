@@ -135,140 +135,7 @@ pub fn hash_file(path: &Path, reference: Option<&str>) -> Result<Hashed, FpError
 /// The library symbol field that holds a footprint's review hash
 pub const FIELD: &str = "Footprint_Review";
 
-/// Where the symbol libraries of a project are found: its own `sym-lib-table`, then the user's global one, with
-/// `${VAR}` from the environment, KiCad's `kicad_common.json` and `KIPRJMOD`. Each library file is read once.
-pub struct SymbolLibraries {
-    /// The tables in the order they are searched
-    tables: Vec<Vec<erc_kicad::symlib::LibEntry>>,
-    vars: std::collections::HashMap<String, String>,
-    files: std::collections::HashMap<PathBuf, Option<String>>,
-}
-
-/// A library symbol's fields as found through the library tables, or why they were not
-#[derive(Clone, Debug, PartialEq)]
-pub enum LibraryLookup {
-    Found(Vec<(String, String)>),
-    NotFound(String),
-}
-
-impl SymbolLibraries {
-    /// The libraries of the project in `dir`; `config` is KiCad's configuration directory with the global
-    /// `sym-lib-table` and `kicad_common.json` ([`SymbolLibraries::kicad_config_dir`]), `None` for none
-    pub fn new(dir: &Path, config: Option<&Path>) -> SymbolLibraries {
-        let mut vars: std::collections::HashMap<String, String> = std::collections::HashMap::new();
-        if let Some(c) = config
-            && let Ok(text) = std::fs::read_to_string(c.join("kicad_common.json"))
-            && let Ok(json) = serde_json::from_str::<serde_json::Value>(&text)
-            && let Some(map) = json["environment"]["vars"].as_object()
-        {
-            for (k, v) in map {
-                if let Some(v) = v.as_str() {
-                    vars.insert(k.clone(), v.to_string());
-                }
-            }
-        }
-        vars.insert("KIPRJMOD".into(), dir.to_string_lossy().into_owned());
-        let mut tables = Vec::new();
-        for t in [
-            Some(dir.join("sym-lib-table")),
-            config.map(|c| c.join("sym-lib-table")),
-        ]
-        .into_iter()
-        .flatten()
-        {
-            if let Some(entries) = std::fs::read_to_string(&t)
-                .ok()
-                .and_then(|text| erc_kicad::symlib::read_lib_table(&text))
-            {
-                tables.push(entries);
-            }
-        }
-        SymbolLibraries {
-            tables,
-            vars,
-            files: std::collections::HashMap::new(),
-        }
-    }
-
-    /// KiCad's configuration directory of the newest KiCad that has one: `$KICAD_CONFIG_HOME`, else
-    /// `$XDG_CONFIG_HOME/kicad/<version>` or `~/.config/kicad/<version>`
-    pub fn kicad_config_dir() -> Option<PathBuf> {
-        if let Some(d) = std::env::var_os("KICAD_CONFIG_HOME") {
-            return Some(d.into());
-        }
-        let base = std::env::var_os("XDG_CONFIG_HOME")
-            .map(PathBuf::from)
-            .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".config")))?
-            .join("kicad");
-        ["10.0", "9.0", "8.0"]
-            .iter()
-            .map(|v| base.join(v))
-            .find(|d| d.join("sym-lib-table").is_file())
-    }
-
-    fn var(&self, name: &str) -> Option<String> {
-        std::env::var(name)
-            .ok()
-            .or_else(|| self.vars.get(name).cloned())
-    }
-
-    /// The fields of library symbol `lib_id` (`Lib:Name`)
-    pub fn fields(&mut self, lib_id: &str) -> LibraryLookup {
-        let Some((nick, name)) = lib_id.split_once(':') else {
-            return LibraryLookup::NotFound(format!("`{lib_id}` names no library"));
-        };
-        let Some(entry) = self
-            .tables
-            .iter()
-            .find_map(|t| t.iter().find(|e| e.name == nick))
-            .cloned()
-        else {
-            return LibraryLookup::NotFound(format!("library {nick} is in no sym-lib-table"));
-        };
-        let Some(path) = erc_kicad::symlib::expand(&entry.uri, &|v| self.var(v)) else {
-            return LibraryLookup::NotFound(format!(
-                "library {nick}: a variable of {} is not set",
-                entry.uri
-            ));
-        };
-        let path = PathBuf::from(path);
-        // KiCad 9+ directory symbol libraries (`.kicad_symdir`): one `.kicad_sym` per symbol, named after it
-        if path.extension().is_some_and(|e| e == "kicad_symdir") {
-            if !path.is_dir() {
-                return LibraryLookup::NotFound(format!(
-                    "library {nick}: can't read {}",
-                    path.display()
-                ));
-            }
-            let files = &mut self.files;
-            let read = |n: &str| {
-                let p = path.join(format!("{n}.kicad_sym"));
-                files
-                    .entry(p.clone())
-                    .or_insert_with(|| std::fs::read_to_string(&p).ok())
-                    .clone()
-            };
-            return match erc_kicad::symlib::resolve_fields(name, read) {
-                Some(f) => LibraryLookup::Found(f),
-                None => LibraryLookup::NotFound(format!("no symbol {name} in {}", path.display())),
-            };
-        }
-        let text = self
-            .files
-            .entry(path.clone())
-            .or_insert_with(|| std::fs::read_to_string(&path).ok());
-        let Some(text) = text else {
-            return LibraryLookup::NotFound(format!(
-                "library {nick}: can't read {}",
-                path.display()
-            ));
-        };
-        match erc_kicad::symlib::symbol_fields(text, name) {
-            Some(f) => LibraryLookup::Found(f),
-            None => LibraryLookup::NotFound(format!("no symbol {name} in {}", path.display())),
-        }
-    }
-}
+pub use erc_kicad::libtable::{SymbolLibraries, kicad_config_dir};
 
 /// What `berc fp check` found for one board footprint
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -455,9 +322,9 @@ pub fn check(
             .and_then(|s| field_of(&s.fields, FIELD))
             .map(String::from);
         let lib_fields = match libs.fields(&part.lib_id) {
-            LibraryLookup::Found(fields) => Some(fields),
-            LibraryLookup::NotFound(why) => {
-                e.library_note = Some(why);
+            Ok(fields) => Some(fields),
+            Err(why) => {
+                e.library_note = Some(why.to_string());
                 None
             }
         };

@@ -11,6 +11,14 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `IMP-18`: `erc_kicad::libtable`, the one reader of KiCad's library tables. Footprint libraries come in beside symbol libraries: `FootprintLibraries::footprint("Lib:Name")` reads `Name.kicad_mod` from the library's `.pretty` directory into a `LocalFootprint` (`IMP-17`), `names(nick)` lists a library, `tables().libraries()` lists the libraries KiCad would load. Both kinds read the project's table, then the global one, follow nested tables, skip disabled libraries, and fill `${KICAD9_FOOTPRINT_DIR}` and the like from an installed KiCad when nothing else sets them.
+
+### Changed
+
+- `TOOL-8`: `SymbolLibraries` moved from `better_erc::fp` to `erc_kicad::libtable` (still re-exported from `better_erc::fp`), and `SymbolLibraries::kicad_config_dir()` is now `libtable::kicad_config_dir()`. `fields` returns `Result<_, LibError>` instead of `LibraryLookup`; `berc fp check` reports the same notes. `erc_kicad::symlib` keeps only the reading of symbol fields; `read_lib_table` and `expand` moved to `libtable`.
+
 ## [0.4.23] - 2026-11-12
 
 ### Fixed

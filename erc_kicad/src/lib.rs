@@ -5,7 +5,9 @@
 //! - [`sch`]: the schematic hierarchy with KiCad's connectivity rules.
 //! - [`pcb`]: the board: footprints, pads, tracks, vias, zones, graphics, stackup.
 //! - [`footprint`]: a library footprint (`.kicad_mod`) in its own frame, comparable with a board copy.
-//! - [`symlib`]: symbol library tables and the fields of a symbol in a `.kicad_sym`, for the footprint review.
+//! - [`libtable`]: the library tables (`sym-lib-table`, `fp-lib-table`, project and global, `${VAR}`), and
+//!   `Lib:Name` to a library symbol's fields or a parsed library footprint.
+//! - [`symlib`]: the fields of a symbol in a `.kicad_sym`, for the footprint review.
 //! - [`pro`]: the project file: net classes, text variables, variants, ERC and DRC settings, bus aliases.
 //! - [`netlist`]: the KiCad netlist (`kicad-cli sch export netlist`), the oracle of the schematic importer.
 //! - [`theme`]: a KiCad colour theme (`colors/*.json`).
@@ -16,6 +18,7 @@
 //! [`erc_model::ImportOptions::kicad_version`], bugs of older releases (kicad-cli 9.0.9's) are not copied.
 
 pub mod footprint;
+pub mod libtable;
 pub mod netclass;
 pub mod netlist;
 mod notes;

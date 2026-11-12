@@ -542,10 +542,10 @@ fn fp_hash(file: &Path, reference: Option<&str>, canonical: bool, format: ListFo
 }
 
 fn fp_check(args: &FpCheckArgs) -> ExitCode {
-    use better_erc::fp::{FpCheckError, SymbolLibraries};
+    use better_erc::fp::{FpCheckError, SymbolLibraries, kicad_config_dir};
     let spinner = progress::Delayed::start();
     spinner.set(format!("reading {}", args.project.display()));
-    let config = SymbolLibraries::kicad_config_dir();
+    let config = kicad_config_dir();
     let run = better_erc::fp::check(&args.project, &mut |dir| {
         SymbolLibraries::new(dir, config.as_deref())
     });

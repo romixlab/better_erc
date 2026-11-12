@@ -91,6 +91,7 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   rotation and flip undone, layers swapped back, KiCad's `F&B.Cu` for `*.Cu`), so a board copy equals its library
   file: a board KiCad 10 saved with test footprints placed on both sides, flipped both ways, at right and odd angles
   (`just footprint-fixture`) · `erc_kicad/src/footprint.rs`, `erc_model/src/footprint.rs`, `erc_kicad/tests/footprint.rs`
+- ✅ `IMP-18` KiCad library tables, one module for symbols and footprints: the project's `sym-lib-table` / `fp-lib-table` before the user's global one (KiCad's configuration directory of the newest version, `$KICAD_CONFIG_HOME` first), nested tables (`(type "Table")`) read in place, disabled libraries skipped, `${VAR}` from the environment, `kicad_common.json`, `KIPRJMOD` and an installed KiCad's stock libraries (`KICAD9_FOOTPRINT_DIR`, ...). `Lib:Name` resolves to a library symbol's fields (`.kicad_sym`, `.kicad_symdir`) or a parsed library footprint (`.pretty/Name.kicad_mod`, `IMP-17`), with a typed error for every way the lookup fails · `erc_kicad/src/libtable.rs`, `erc_kicad/tests/libtable.rs`
 - 🚧 `IMP-16` Schematic PDFs as a netlist source. Done: Altium Smart PDFs (stage 1): sheets, parts with their units,
   pins and nets from the bookmarks (`Provenance::Pdf`, `PdfConfidence::Bookmarks`, design rank), nets joined across
   sheets by power names and same-named ports, labels with their search-word position, part properties from the
