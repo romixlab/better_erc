@@ -5,6 +5,7 @@
 //! - [`sch`]: the schematic hierarchy with KiCad's connectivity rules.
 //! - [`pcb`]: the board: footprints, pads, tracks, vias, zones, graphics, stackup.
 //! - [`footprint`]: a library footprint (`.kicad_mod`) in its own frame, comparable with a board copy.
+//! - [`symlib`]: symbol library tables and the fields of a symbol in a `.kicad_sym`, for the footprint review.
 //! - [`pro`]: the project file: net classes, text variables, variants, ERC and DRC settings, bus aliases.
 //! - [`netlist`]: the KiCad netlist (`kicad-cli sch export netlist`), the oracle of the schematic importer.
 //! - [`theme`]: a KiCad colour theme (`colors/*.json`).
@@ -23,6 +24,7 @@ pub mod pro;
 pub mod project;
 pub mod sch;
 pub mod sexpr;
+pub mod symlib;
 pub mod theme;
 
 pub use netlist::NetlistImporter;

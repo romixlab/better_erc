@@ -37,6 +37,9 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
   compared footprint by footprint (position, rotation, side, value, package), with tolerances.
 - **`berc diff --nets A B`**: the nets of any two designs (a schematic, a netlist, an Altium export, a Smart PDF)
   compared as the pins each net connects, whatever their names: renamed, removed and added nets.
+- **`berc fp`**: footprint review. `berc fp hash` prints a footprint's review hash, the same for a library file and
+  every board copy of it; `berc fp check` checks every board footprint against the hash on its library symbol. See
+  [Footprint review](#footprint-review).
 - **The app** (`better_erc`, egui, crate `better_erc_app`): an import tab that opens any design the registry reads
   (and Altium or OrCAD files picked one by one) and shows its findings with their explanations and the checks that
   did not run, and tabs for nets (power rails, grounds and switching nodes from names and pin types), I2C buses,
@@ -163,6 +166,57 @@ commit a baseline (`berc check hw/board --format json > hw/board/berc-baseline.j
 
 In this repository `just check` runs `berc check` on the test schematics against the committed
 `test_schematics/berc-baseline.json` (they have findings on purpose), and `just check-baseline` rewrites it.
+
+## Footprint review
+
+A footprint checked once against its datasheet should not have to be checked again on the next board, unless it
+changed. `berc fp` keeps that record as a hash on the library symbol.
+
+`berc fp hash` prints a footprint's review hash, `fp1:` and 32 hex digits:
+
+```sh
+berc fp hash Lib.pretty/SOT-23.kicad_mod          # a library footprint
+berc fp hash board.kicad_pcb U3                   # a footprint on a board, by its reference
+berc fp hash board.kicad_pcb U3 --canonical       # and the text the hash is taken over
+```
+
+The hash covers what a review checks against the datasheet:
+
+- every pad: number, type, shape, size, position, rotation, drill and its offset, layers, mask, paste, clearance and
+  thermal settings, corner and chamfer ratios, custom pad shapes;
+- the footprint's clearance, mask and paste settings;
+- graphics on copper, mask, paste, courtyard and `Edge.Cuts` layers, zones and keepouts.
+
+Silk, fab and user layers, texts, the 3D model and where the footprint sits on a board don't count. A board copy is
+brought back to the footprint's own frame first (position, rotation and a flip to the back undone), so it has the
+hash of its library file. Lengths are compared on a 100 nm grid and items in a fixed order, so a re-save in another
+KiCad version or a reorder never changes the hash. The `fp1:` prefix is the version of these rules: a later change of
+them gives `fp2:` hashes, and an `fp1:` hash then reads as made by another version instead of as a mismatch.
+
+Once a footprint is reviewed, put its hash in the `Footprint_Review` field of the library symbol that uses it (in
+the symbol editor, then update the schematic from the library). `berc fp check` then checks a board:
+
+```sh
+berc fp check                       # the KiCad project in this directory
+berc fp check hw/board --format json
+```
+
+For each footprint on the board it reads the review hash from its symbol's library symbol: in the `.kicad_sym`
+found through the project's or the global `sym-lib-table`, else in the schematic's copy of the library symbol. Each
+footprint is one of:
+
+| Status | Meaning |
+|---|---|
+| ok | the footprint is the one reviewed |
+| changed | the footprint differs from the one reviewed: review it again |
+| unreviewed | the symbol has no review hash; the line shows the hash to put there once reviewed |
+| refused | the symbol sets no footprint, so a review of the one on the board means nothing |
+| no symbol | the footprint has no schematic symbol (board-only items such as logos and mounting holes) |
+| other version, malformed | the field holds a hash of another version, or no hash at all |
+
+A schematic copy that holds a different hash than the library is reported as well: the schematic was not updated
+from the library. The exit code is 0 when every footprint is ok and every copy up to date, 1 otherwise, 2 when the
+project can't be read.
 
 ## Development
 

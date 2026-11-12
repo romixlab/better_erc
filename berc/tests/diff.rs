@@ -19,6 +19,7 @@ fn fixture(name: &str) -> String {
 
 fn berc(args: &[&str]) -> Output {
     Command::new(env!("CARGO_BIN_EXE_berc"))
+        .env("BERC_USAGE", "off")
         .args(args)
         .env("NO_COLOR", "1")
         .env_remove("COMPLETE")

@@ -4,6 +4,7 @@ use std::process::Command;
 
 fn berc(args: &[&str]) -> std::process::Output {
     Command::new(env!("CARGO_BIN_EXE_berc"))
+        .env("BERC_USAGE", "off")
         .args(args)
         .env_remove("NO_COLOR")
         .env_remove("COMPLETE")
@@ -42,6 +43,7 @@ fn unreadable_file_is_a_plain_error_when_piped() {
 fn completion_scripts_for_bash_zsh_and_fish() {
     for shell in ["bash", "zsh", "fish"] {
         let out = Command::new(env!("CARGO_BIN_EXE_berc"))
+            .env("BERC_USAGE", "off")
             .env("COMPLETE", shell)
             .output()
             .unwrap();

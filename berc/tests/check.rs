@@ -21,6 +21,7 @@ fn berc(args: &[&str]) -> Output {
 
 fn berc_in(dir: &Path, args: &[&str]) -> Output {
     Command::new(env!("CARGO_BIN_EXE_berc"))
+        .env("BERC_USAGE", "off")
         .current_dir(dir)
         .args(args)
         .env_remove("NO_COLOR")
@@ -546,6 +547,7 @@ fn checks_list() {
 fn completion_offers_catalogue_values() {
     let complete = |args: &[&str]| {
         let out = Command::new(env!("CARGO_BIN_EXE_berc"))
+            .env("BERC_USAGE", "off")
             .env("COMPLETE", "fish")
             .arg("--")
             .arg("berc")
@@ -572,6 +574,7 @@ fn completion_offers_catalogue_values() {
     )
     .unwrap();
     let out = Command::new(env!("CARGO_BIN_EXE_berc"))
+        .env("BERC_USAGE", "off")
         .current_dir(&dir)
         .env("COMPLETE", "fish")
         .args(["--", "berc", "check", ".", "--variant", ""])

@@ -2,7 +2,7 @@ use better_erc::diff::DiffError;
 use better_erc::model::placecmp::{Origin, PlaceOptions};
 use better_erc::{CheckError, CheckOptions, Need, RunOptions, RunState, Severity, Stage, Tier};
 use clap::builder::styling::Styles;
-use clap::{CommandFactory, Parser, Subcommand, ValueEnum, ValueHint};
+use clap::{CommandFactory, FromArgMatches, Parser, Subcommand, ValueEnum, ValueHint};
 use clap_complete::engine::ArgValueCandidates;
 use std::io::Write;
 use std::path::{Path, PathBuf};
@@ -10,6 +10,7 @@ use std::process::ExitCode;
 
 mod complete;
 mod progress;
+mod usage;
 
 const VERSION: &str = concat!(
     env!("CARGO_PKG_VERSION"),
@@ -34,6 +35,13 @@ const CHECK_AFTER_HELP: &str = "Exit codes: 0 nothing at or above --fail-on, 1 f
 /// Exit codes of `berc fp hash`, under its --help
 const FP_HASH_AFTER_HELP: &str = "Exit codes: 0 hashed, 2 usage or read error.\n\nExamples:\n  \
 berc fp hash Lib.pretty/SOT-23.kicad_mod\n  berc fp hash board.kicad_pcb U3 --canonical";
+
+/// Exit codes of `berc fp check`, under its --help
+const FP_CHECK_AFTER_HELP: &str = "Exit codes: 0 every footprint ok, 1 any other status or a schematic copy older \
+than its library, 2 usage or read error.\n\nStatuses: ok, changed (the footprint differs from the one reviewed), \
+unreviewed (no hash on the symbol), refused (the symbol sets no footprint, so a review means nothing), no symbol \
+(a footprint without a schematic symbol), other version, malformed.\n\nExamples:\n  berc fp check\n  \
+berc fp check hw/board --format json";
 
 /// better_erc command line tools
 ///
@@ -87,11 +95,17 @@ enum Command {
     ///                    *.kicad_pro diff=kicad
     ///   git config --global diff.kicad.textconv "berc textconv"
     ///   git config --global diff.kicad.cachetextconv true
-    /// Footprint review: the review hash of a footprint
+    /// Footprint review: the review hash of a footprint, every board footprint against its symbol's
     Fp {
         #[command(subcommand)]
         command: FpCommand,
     },
+    /// How often each command ran on this PC, from the local usage record
+    ///
+    /// Every run appends a line to $BERC_USAGE_FILE, else $XDG_STATE_HOME/berc/usage.tsv, else
+    /// ~/.local/state/berc/usage.tsv; nothing is sent anywhere. BERC_USAGE=off records nothing. Commands never run
+    /// show 0, so unused ones stand out.
+    Usage,
     #[command(verbatim_doc_comment)]
     Textconv {
         /// The KiCad file (git passes a temporary copy of each side)
@@ -129,6 +143,23 @@ enum FpCommand {
         #[arg(long, value_enum, default_value_t = ListFormat::Text)]
         format: ListFormat,
     },
+    /// Check every footprint of a board against the review hash on its library symbol
+    ///
+    /// Each board footprint's review hash (as `berc fp hash` prints it) is compared with the `Footprint_Review`
+    /// field of its symbol's library symbol: in the .kicad_sym found through the project's or the global
+    /// sym-lib-table, else in the schematic's copy of it. A schematic copy that holds another hash than the library
+    /// is reported too: the schematic was not updated from the library.
+    #[command(after_help = FP_CHECK_AFTER_HELP)]
+    Check(FpCheckArgs),
+}
+
+#[derive(clap::Args)]
+struct FpCheckArgs {
+    /// The KiCad project: a directory, its .kicad_pro, .kicad_sch or .kicad_pcb
+    #[arg(value_hint = ValueHint::AnyPath, default_value = ".")]
+    project: PathBuf,
+    #[arg(long, value_enum, default_value_t = ListFormat::Text)]
+    format: ListFormat,
 }
 
 #[derive(clap::Args)]
@@ -275,7 +306,12 @@ fn parse_need(s: &str) -> Result<Need, String> {
 
 fn main() -> ExitCode {
     clap_complete::CompleteEnv::with_factory(Cli::command).complete();
-    let cli = Cli::parse();
+    let matches = Cli::command().get_matches();
+    usage::record(&usage::signals(&matches));
+    let cli = match Cli::from_arg_matches(&matches) {
+        Ok(c) => c,
+        Err(e) => e.exit(),
+    };
     match cli.command {
         Command::Check(args) => check(args),
         Command::Explain { id, format } => explain(&id, format),
@@ -298,6 +334,14 @@ fn main() -> ExitCode {
                     format,
                 },
         } => fp_hash(&file, reference.as_deref(), canonical, format),
+        Command::Fp {
+            command: FpCommand::Check(args),
+        } => fp_check(&args),
+        Command::Usage => {
+            let out = usage::summary(&usage::known(&Cli::command()));
+            let _ = std::io::stdout().lock().write_all(out.as_bytes());
+            ExitCode::SUCCESS
+        }
         Command::Textconv {
             file,
             with_geometry,
@@ -494,6 +538,30 @@ fn fp_hash(file: &Path, reference: Option<&str>, canonical: bool, format: ListFo
         }
     }
     ExitCode::SUCCESS
+}
+
+fn fp_check(args: &FpCheckArgs) -> ExitCode {
+    use better_erc::fp::{FpCheckError, SymbolLibraries};
+    let spinner = progress::Delayed::start();
+    spinner.set(format!("reading {}", args.project.display()));
+    let config = SymbolLibraries::kicad_config_dir();
+    let run = better_erc::fp::check(&args.project, &mut |dir| {
+        SymbolLibraries::new(dir, config.as_deref())
+    });
+    spinner.finish();
+    let run = match run {
+        Ok(r) => r,
+        Err(e) => {
+            error(&e.to_string());
+            return ExitCode::from(FpCheckError::EXIT_CODE);
+        }
+    };
+    show_diff(
+        args.format,
+        &run.to_text_color(),
+        &run.to_json(),
+        run.is_ok(),
+    )
 }
 
 fn check_error(e: &CheckError) -> ExitCode {
