@@ -1192,13 +1192,14 @@ fn ruler_by_keys() {
             "{ra:?} {rb:?}"
         );
     }
-    // S: back to the view, the length typed straight away into an emptied field
+    // S: back to the view, the length typed straight away into the box in the middle of the canvas, emptied
     h.state_mut().rt.ruler_mm = "9".into();
     h.key_press(egui::Key::S);
     h.run();
     h.run();
     assert_eq!(h.state().rt.ruler_focus, None);
     assert!((h.state().zoom - zoom).abs() < 1e-3);
+    assert!(h.state().rt.length_box, "the length box asks");
     assert!(h.state().rt.typing_mm, "the length field has the keyboard");
     assert!(
         h.state()
@@ -1229,6 +1230,69 @@ fn ruler_by_keys() {
     ] {
         assert!(st.help_line().contains(k), "{k}: {}", st.help_line());
     }
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// S asks the ruler's length in a box in the middle of the canvas, the number typed shown large and in focus there
+/// (not in the side panel): typing 1.6 and Enter sets the scale; Esc leaves the box without one
+#[test]
+fn ruler_length_box() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-length-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let pdf = datasheet(&dir);
+    let mut h = harness("fp length");
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &footprint());
+    h.state_mut().open_datasheet(&ctx, &pdf);
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    // The ruler along the dimension, 100 points
+    h.state_mut().ruler = Some([[100.0, 200.0], [200.0, 200.0]]);
+    let over_canvas = |h: &mut Harness<'_, FootprintReview>| {
+        h.hover_at(h.state().rt.canvas.center());
+        h.run();
+    };
+    // Esc: no scale, the box gone
+    over_canvas(&mut h);
+    h.key_press(egui::Key::S);
+    h.run();
+    assert!(h.state().rt.length_box);
+    h.event(egui::Event::Text("3".into()));
+    h.key_press(egui::Key::Escape);
+    h.run();
+    assert!(!h.state().rt.length_box);
+    assert!(h.state().scale.is_none(), "Esc sets no scale");
+    // S, 1.6, Enter: the scale
+    over_canvas(&mut h);
+    h.key_press(egui::Key::S);
+    h.run();
+    h.run();
+    let canvas = h.state().rt.canvas;
+    // The text field over the canvas, not the side panel's
+    let at = h
+        .query_all_by_role(egui::accesskit::Role::TextInput)
+        .map(|n| n.rect())
+        .find(|r| canvas.contains(r.center()))
+        .expect("a text field over the canvas");
+    assert!(
+        (at.center() - canvas.center()).length() < 120.0,
+        "the length field in the middle of the canvas: {at:?} in {canvas:?}"
+    );
+    assert!(at.height() >= 40.0, "the number typed large: {at:?}");
+    h.event(egui::Event::Text("1.6".into()));
+    h.run();
+    assert_eq!(h.state().rt.ruler_mm, "1.6");
+    if let Some(p) = std::env::var_os("BERC_FP_SNAPSHOT") {
+        h.render().unwrap().save(p).unwrap();
+    }
+    h.key_press(egui::Key::Enter);
+    h.run();
+    let scale = h.state().scale.clone().expect("the scale is set");
+    assert!((scale.mm_per_point - 0.016).abs() < 1e-6, "{scale:?}");
+    assert!(!h.state().rt.length_box);
+    assert_eq!(h.state().tool, Tool::Move);
     std::fs::remove_dir_all(&dir).unwrap();
 }
 

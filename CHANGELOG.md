@@ -19,6 +19,12 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
   paste shapes were outlines over them. Holes and pad numbers stay over every view. Back pads follow the same
   views behind their checkbox; the Pads and Vias checkboxes are gone.
 
+### Changed
+
+- `VIEW-19`: Footprint review tab, S (and Z a third time) asks the ruler's length in a box in the middle of the
+  canvas, the number typed shown large in mm; Enter sets the scale, Esc leaves it. Before, the keyboard went to the
+  side panel's length field.
+
 ### Removed
 
 - `VIEW-19`: Footprint review tab, the colour presets and pickers; every colour is a setting
@@ -610,6 +616,12 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
   and Inputs (`VIEW-4`) read them.
 - The KiCad netlist fixtures move from `ecad_file_format/test_input` to `erc_kicad/tests/fixtures/netlist`;
   `just netlist-fixtures` exports them there.
+
+### Changed
+
+- `VIEW-19`: Footprint review tab, S (and Z a third time) asks the ruler's length in a box in the middle of the
+  canvas, the number typed shown large in mm; Enter sets the scale, Esc leaves it. Before, the keyboard went to the
+  side panel's length field.
 
 ### Removed
 

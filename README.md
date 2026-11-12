@@ -342,8 +342,9 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    (a setting); the pages it found are listed to pick from. F shows the page at the view's full width.
 3. **Set the scale**: R with the pointer at one end of a dimension of the drawing, R again at the other (or pick
    Ruler and drag along it). Z zooms in on the first end, where a click or a drag puts it exactly; Z again on the
-   other end. S goes back to the view with the length field empty and taking the keyboard (in sight, should the
-   panel be scrolled): type the length and Enter (or Set scale); Z a third time does the same. The keys of the
+   other end. S goes back to the view and asks the length in a box in the middle of the canvas, the number typed
+   shown large in mm: type the length and Enter sets the scale, Esc leaves the box without one (the side panel's
+   field and Set scale do the same by mouse); Z a third time does what S does. The keys of the
    whole step: F, R, R, Z, Z, S, the length, Enter. A page
    that states its own scale (`SCALE: 20X`) offers it as a button; check it with the ruler. Once the scale is set,
    the tool is Move footprint again.

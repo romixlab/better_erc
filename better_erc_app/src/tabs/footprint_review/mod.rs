@@ -331,8 +331,8 @@ struct Runtime {
     ruler_focus: Option<usize>,
     /// The view (zoom, pan) from before zooming in on a ruler end
     overview: Option<(f32, [f32; 2])>,
-    /// The ruler's length field takes the keyboard on the next frame
-    focus_mm: bool,
+    /// The ruler's length asked in a box in the middle of the canvas (the scale key), the number typed shown large
+    length_box: bool,
     /// The length field has the keyboard
     typing_mm: bool,
     /// The page is fitted to the view's width on the next frame
@@ -395,7 +395,7 @@ impl Default for Runtime {
             ruler_placing: false,
             ruler_focus: None,
             overview: None,
-            focus_mm: false,
+            length_box: false,
             typing_mm: false,
             fit_width: false,
             accepted: None,
@@ -1313,16 +1313,60 @@ impl FootprintReview {
         }
     }
 
-    /// The scale key: out of the ruler step, back to the view before any zoom on an end, the length field empty and
-    /// taking the keyboard; Enter there sets the scale and makes the footprint the one to move
+    /// The scale key: out of the ruler step, back to the view before any zoom on an end, the ruler's length asked
+    /// in a box in the middle of the canvas, empty; Enter there sets the scale and makes the footprint the one to
+    /// move, Esc leaves it
     fn scale_key(&mut self) {
         if self.ruler.is_none() {
             return;
         }
         self.ruler_done();
         self.rt.ruler_mm.clear();
-        self.rt.focus_mm = true;
+        self.rt.length_box = true;
         self.usage("scale key");
+    }
+
+    /// The box asking the ruler's length, in the middle of `canvas`: the number typed large, in mm; Enter sets the
+    /// scale, Esc leaves the box without one
+    fn length_box(&mut self, ctx: &egui::Context, canvas: Rect, id: Id) {
+        let (mut set, mut cancel) = (false, false);
+        egui::Area::new(id.with("ruler length box"))
+            .order(egui::Order::Foreground)
+            .fixed_pos(canvas.center())
+            .pivot(Align2::CENTER_CENTER)
+            .show(ctx, |ui| {
+                egui::Frame::popup(ui.style())
+                    .inner_margin(16.0)
+                    .show(ui, |ui| {
+                        ui.label(RichText::new("The ruler's length").size(16.0));
+                        ui.horizontal(|ui| {
+                            let r = ui.add(
+                                TextEdit::singleline(&mut self.rt.ruler_mm)
+                                    .font(FontId::monospace(40.0))
+                                    .desired_width(200.0)
+                                    .horizontal_align(egui::Align::RIGHT)
+                                    .id(id.with("ruler length")),
+                            );
+                            ui.label(RichText::new("mm").size(40.0));
+                            let (enter, esc) = ui.input(|i| {
+                                (i.key_pressed(egui::Key::Enter), i.key_pressed(egui::Key::Escape))
+                            });
+                            set = enter;
+                            cancel = esc;
+                            if !set && !cancel {
+                                r.request_focus();
+                            }
+                        });
+                        ui.label(RichText::new("Enter sets the scale · Esc leaves it").weak());
+                    });
+            });
+        self.rt.typing_mm = self.rt.length_box;
+        if set {
+            self.rt.length_box = false;
+            self.set_scale_from_ruler();
+        } else if cancel {
+            self.rt.length_box = false;
+        }
     }
 
     /// The keys as the settings name them; a name that is no key leaves its step without one
@@ -2138,12 +2182,7 @@ impl FootprintReview {
                     .id_salt("ruler mm"),
             );
             ui.label("mm");
-            if std::mem::take(&mut self.rt.focus_mm) {
-                r.request_focus();
-                // The panel may be scrolled: the field the keyboard goes to is in sight
-                r.scroll_to_me(None);
-            }
-            self.rt.typing_mm = r.has_focus();
+            self.rt.typing_mm = r.has_focus() || self.rt.length_box;
             set = r.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter));
             let ok = self
                 .rt
@@ -2711,6 +2750,9 @@ impl FootprintReview {
                 .expand(2.0);
             painter.rect_filled(r, 2.0, Color32::from_rgb(0, 90, 180));
             painter.galley(r.min + vec2(2.0, 2.0), galley, Color32::WHITE);
+        }
+        if self.rt.length_box {
+            self.length_box(&ctx, canvas, ui.id());
         }
         // The keys, under the canvas; the ruler step's hint above them
         let mut y = canvas.max.y - 4.0;
