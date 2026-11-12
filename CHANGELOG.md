@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.23] - 2026-11-12
+
 ### Fixed
 
 - `TOOL-8`: `berc fp check` reads KiCad 9+ directory symbol libraries (`sym-lib-table` entries whose `uri` is a
