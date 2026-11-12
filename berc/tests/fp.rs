@@ -341,6 +341,54 @@ fn check_falls_back_to_the_schematic_copy() {
 }
 
 #[test]
+fn check_reads_a_symbol_directory_library() {
+    // KiCad 9+ directory symbol library (`.kicad_symdir`): one `.kicad_sym` per symbol, "Ok" extending "Base" in
+    // the directory's other file
+    let sot = library_hash("Asym_SOT");
+    let dir = scratch("symdir");
+    project(
+        &dir,
+        &[
+            ("Base", "Test:Asym_SOT", Some(&sot), Some(&sot)),
+            ("Ok", "Test:Asym_SOT", None, Some(&sot)),
+        ],
+        false,
+    );
+    let symdir = dir.join("Rev.kicad_symdir");
+    std::fs::create_dir(&symdir).unwrap();
+    let wrap = |s: String| {
+        format!("(kicad_symbol_lib (version 20231120) (generator \"kicad_symbol_editor\")\n{s})\n")
+    };
+    std::fs::write(
+        symdir.join("Base.kicad_sym"),
+        wrap(lib_symbol("Base", "Test:Asym_SOT", Some(&sot))),
+    )
+    .unwrap();
+    std::fs::write(
+        symdir.join("Ok.kicad_sym"),
+        wrap(r#"(symbol "Ok" (extends "Base")
+      (property "Footprint" "Test:Asym_SOT" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes))))"#
+            .to_string()),
+    )
+    .unwrap();
+    std::fs::write(
+        dir.join("sym-lib-table"),
+        "(sym_lib_table (version 7)\n  (lib (name \"Rev\")(type \"KiCad\")(uri \"${KIPRJMOD}/Rev.kicad_symdir\")(options \"\")(descr \"\")))\n",
+    )
+    .unwrap();
+    let out = fp_check(&dir, &["--format", "json"]);
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let fps = v["footprints"].as_array().unwrap();
+    let get = |r: &str| fps.iter().find(|e| e["reference"] == r).unwrap();
+    // "Ok" sets no Footprint_Review of its own: the hash comes from "Base", in the directory's other file
+    assert_eq!(get("U2")["status"], "ok", "{v}");
+    assert_eq!(get("U2")["source"], "library", "{v}");
+    assert_eq!(get("U2")["library_hash"], sot.as_str(), "{v}");
+    assert_eq!(get("U2")["copy_differs"], false, "{v}");
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+#[test]
 fn check_errors_exit_2() {
     let dir = scratch("empty");
     let out = fp_check(&dir, &[]);

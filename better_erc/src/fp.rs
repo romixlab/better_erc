@@ -232,6 +232,27 @@ impl SymbolLibraries {
             ));
         };
         let path = PathBuf::from(path);
+        // KiCad 9+ directory symbol libraries (`.kicad_symdir`): one `.kicad_sym` per symbol, named after it
+        if path.extension().is_some_and(|e| e == "kicad_symdir") {
+            if !path.is_dir() {
+                return LibraryLookup::NotFound(format!(
+                    "library {nick}: can't read {}",
+                    path.display()
+                ));
+            }
+            let files = &mut self.files;
+            let read = |n: &str| {
+                let p = path.join(format!("{n}.kicad_sym"));
+                files
+                    .entry(p.clone())
+                    .or_insert_with(|| std::fs::read_to_string(&p).ok())
+                    .clone()
+            };
+            return match erc_kicad::symlib::resolve_fields(name, read) {
+                Some(f) => LibraryLookup::Found(f),
+                None => LibraryLookup::NotFound(format!("no symbol {name} in {}", path.display())),
+            };
+        }
         let text = self
             .files
             .entry(path.clone())

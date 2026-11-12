@@ -11,6 +11,13 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Fixed
+
+- `TOOL-8`: `berc fp check` reads KiCad 9+ directory symbol libraries (`sym-lib-table` entries whose `uri` is a
+  `.kicad_symdir`, one `.kicad_sym` per symbol, named after it): a derived symbol's `extends` chain now follows
+  into the directory's other files for its parent's fields. Before, every such library read as "can't read" and
+  the check fell back to the schematic's copy.
+
 ## [0.4.22] - 2026-11-12
 
 ### Added
