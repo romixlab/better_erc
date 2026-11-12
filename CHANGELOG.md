@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.25] - 2026-11-12
+
 ### Added
 
 - `TOOL-8`: `better_erc::fp::FootprintSource`, one way to get a footprint to review: a `.kicad_mod` file, a board
