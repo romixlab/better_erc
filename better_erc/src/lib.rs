@@ -7,6 +7,7 @@
 //! - [`analysis`] ([`erc_analysis`]): part classes, values, graph queries, the power structure, I2C buses.
 //! - [`checks`] ([`erc_checks`]): the check engine, the catalogue, findings and reports (JSON, SARIF, Markdown).
 //! - [`diff`]: comparisons of two designs on disk, the library side of `berc diff`.
+//! - [`fp`]: footprint review hashes of library footprints and board copies, the library side of `berc fp`.
 //!
 //! The run entry is re-exported at the top: [`Project::open`] reads a design from a path (a directory with one
 //! design, or a design file) through the registry, [`Project::check`] runs the checks into a [`CheckRun`] with its
@@ -32,6 +33,7 @@ pub use erc_kicad as kicad;
 pub use erc_model as model;
 
 pub mod diff;
+pub mod fp;
 
 pub use erc_checks::{
     Availability, BaselineState, CheckError, CheckInfo, CheckOptions, CheckRun, CheckState,

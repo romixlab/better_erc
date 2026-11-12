@@ -217,6 +217,12 @@ fn board_copies_equal_their_library_file() {
             f.rotation,
             f.side
         );
+        assert_eq!(
+            erc_model::fphash::hash(&local),
+            erc_model::fphash::hash(lib),
+            "{} review hash",
+            f.reference
+        );
         sides.push((f.side, f.rotation));
     }
     // The fixture covers what it claims: both sides, right and odd angles
@@ -245,4 +251,28 @@ fn a_changed_copy_differs() {
         })
         .count();
     assert_eq!(changed, 1);
+    let lib_hash = erc_model::fphash::hash(&lib);
+    let changed = (0..lay.footprints.len())
+        .filter(|i| lay.footprints[*i].lib_id == "Asym_SOT")
+        .filter(|i| {
+            erc_model::fphash::hash(&lay.local_footprint(FootprintId::from_index(*i))) != lib_hash
+        })
+        .count();
+    assert_eq!(changed, 1);
+}
+
+#[test]
+fn silk_edits_keep_the_review_hash() {
+    let text = fixture("Test.pretty/Asym_SOT.kicad_mod");
+    let silk = text
+        .replace(
+            "(start -1.5 -1.3) (end 0.8 -1.3)",
+            "(start -1.4 -1.3) (end 0.9 -1.35)",
+        )
+        .replace("(at 0 -2.2 0)", "(at 0.5 -2.4 0)");
+    let mask = text.replace("(solder_mask_margin 0.05)", "(solder_mask_margin 0.04)");
+    let hash = |t: &str| erc_model::fphash::hash(&erc_kicad::footprint::read(t, "f").unwrap().0);
+    assert_ne!(silk, text);
+    assert_eq!(hash(&silk), hash(&text));
+    assert_ne!(hash(&mask), hash(&text));
 }

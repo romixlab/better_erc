@@ -20,6 +20,7 @@ pub mod design;
 pub mod dump;
 pub mod fact;
 pub mod footprint;
+pub mod fphash;
 pub mod geometry;
 pub mod import;
 pub mod layout;

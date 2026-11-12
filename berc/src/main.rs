@@ -31,6 +31,10 @@ const DIFF_AFTER_HELP: &str = "Exit codes: 0 the same, 1 different, 2 usage or i
 const CHECK_AFTER_HELP: &str = "Exit codes: 0 nothing at or above --fail-on, 1 findings at or above --fail-on \
 (with --baseline: new ones only), 2 usage or import error, 3 a --require'd need is not available.";
 
+/// Exit codes of `berc fp hash`, under its --help
+const FP_HASH_AFTER_HELP: &str = "Exit codes: 0 hashed, 2 usage or read error.\n\nExamples:\n  \
+berc fp hash Lib.pretty/SOT-23.kicad_mod\n  berc fp hash board.kicad_pcb U3 --canonical";
+
 /// better_erc command line tools
 ///
 /// Colour in help, errors and `check` text only on a terminal, and never with NO_COLOR set; `textconv` output is
@@ -83,6 +87,11 @@ enum Command {
     ///                    *.kicad_pro diff=kicad
     ///   git config --global diff.kicad.textconv "berc textconv"
     ///   git config --global diff.kicad.cachetextconv true
+    /// Footprint review: the review hash of a footprint
+    Fp {
+        #[command(subcommand)]
+        command: FpCommand,
+    },
     #[command(verbatim_doc_comment)]
     Textconv {
         /// The KiCad file (git passes a temporary copy of each side)
@@ -94,6 +103,31 @@ enum Command {
         /// .kicad_pro only: also show settings that look like KiCad's default, folded out by default
         #[arg(long)]
         all: bool,
+    },
+}
+
+#[derive(Subcommand)]
+enum FpCommand {
+    /// Print the review hash of a footprint: a library file, or a footprint on a board by its reference
+    ///
+    /// The hash (`fp1:` and 32 hex digits) covers what a footprint review checks against the datasheet: pads,
+    /// copper, mask, paste, courtyard and board-edge graphics, zones and keepouts, clearance and mask settings.
+    /// Silk, fab, texts, the 3D model and the footprint's place on the board don't count, so a board copy has the
+    /// hash of its library file. Put it in the library symbol's `Footprint_Review` field once the footprint is
+    /// reviewed.
+    #[command(after_help = FP_HASH_AFTER_HELP)]
+    Hash {
+        /// A library footprint (.kicad_mod) or a board (.kicad_pcb)
+        #[arg(value_hint = ValueHint::FilePath)]
+        file: PathBuf,
+        /// The footprint's reference, for a board
+        #[arg(add = ArgValueCandidates::new(complete::board_references))]
+        reference: Option<String>,
+        /// Also print the canonical text the hash is taken over, one line per pad, graphic and zone
+        #[arg(long)]
+        canonical: bool,
+        #[arg(long, value_enum, default_value_t = ListFormat::Text)]
+        format: ListFormat,
     },
 }
 
@@ -255,6 +289,15 @@ fn main() -> ExitCode {
                     format,
                 },
         } => list(tier, status, project.as_deref(), format),
+        Command::Fp {
+            command:
+                FpCommand::Hash {
+                    file,
+                    reference,
+                    canonical,
+                    format,
+                },
+        } => fp_hash(&file, reference.as_deref(), canonical, format),
         Command::Textconv {
             file,
             with_geometry,
@@ -417,6 +460,40 @@ fn show_diff(format: ListFormat, text: &str, json: &str, same: bool) -> ExitCode
     } else {
         ExitCode::from(1)
     }
+}
+
+fn fp_hash(file: &Path, reference: Option<&str>, canonical: bool, format: ListFormat) -> ExitCode {
+    let h = match better_erc::fp::hash_file(file, reference) {
+        Ok(h) => h,
+        Err(e) => {
+            error(&e.to_string());
+            return ExitCode::from(better_erc::fp::FpError::EXIT_CODE);
+        }
+    };
+    let mut out = anstream::stdout().lock();
+    match format {
+        ListFormat::Json => {
+            let mut v = serde_json::to_value(&h).expect("serialises");
+            if !canonical {
+                v.as_object_mut().expect("an object").remove("canonical");
+            }
+            let _ = writeln!(
+                out,
+                "{}",
+                serde_json::to_string_pretty(&v).expect("serialises")
+            );
+        }
+        ListFormat::Text => {
+            let _ = writeln!(out, "{}", h.hash);
+            if canonical {
+                let dim = anstyle::Style::new().dimmed();
+                for l in &h.canonical {
+                    let _ = writeln!(out, "{dim}{l}{dim:#}");
+                }
+            }
+        }
+    }
+    ExitCode::SUCCESS
 }
 
 fn check_error(e: &CheckError) -> ExitCode {

@@ -1,5 +1,6 @@
 //! Live values for shell completion, each with its help text: check ids and categories from the embedded
-//! catalogue, the needs `--require` knows, and the variants of the design in the current directory.
+//! catalogue, the needs `--require` knows, the variants of the design in the current directory, and the references
+//! of the board named earlier on the command line.
 
 use better_erc::checks::{Need, Project, catalogue::catalogue, registered};
 use clap_complete::engine::CompletionCandidate;
@@ -48,5 +49,27 @@ pub fn variants() -> Vec<CompletionCandidate> {
         .map(|v| {
             CompletionCandidate::new(v).help(Some(format!("variant of {}", project.main).into()))
         })
+        .collect()
+}
+
+/// The footprint references of the board (`.kicad_pcb`) named earlier on the command line, each with its library
+/// footprint (`berc fp hash BOARD REF`)
+pub fn board_references() -> Vec<CompletionCandidate> {
+    let Some(board) = std::env::args().find(|a| a.ends_with(".kicad_pcb")) else {
+        return Vec::new();
+    };
+    let Ok(lay) = better_erc::fp::read_board(std::path::Path::new(&board)) else {
+        return Vec::new();
+    };
+    let mut refs: Vec<(String, String)> = lay
+        .footprints
+        .iter()
+        .filter(|f| !f.reference.is_empty())
+        .map(|f| (f.reference.clone(), f.lib_id.clone()))
+        .collect();
+    refs.sort_by(|a, b| better_erc::model::natural_cmp(&a.0, &b.0));
+    refs.dedup_by(|a, b| a.0 == b.0);
+    refs.into_iter()
+        .map(|(r, lib)| CompletionCandidate::new(r).help(Some(lib.into())))
         .collect()
 }

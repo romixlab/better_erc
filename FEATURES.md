@@ -723,6 +723,13 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   ground orientation, grid, label alignment and scope, field and label direction, text sizes, paper size, fill and
   centring, title blocks, notes, connectors at the edge, DNP, hand-set colours) and prints the table of
   [docs/drawing-guide.md](docs/drawing-guide.md#house-style-measured), per sheet with `--sheets`; on `NET-26`
+- 🚧 `TOOL-8` Footprint review: a versioned review hash (`fp1:` and 32 hex digits) of what a review checks against
+  the datasheet (pads with every property, copper, mask, paste, courtyard and `Edge.Cuts` graphics, zones and
+  keepouts, clearance and mask settings; not silk, fab, texts, the 3D model or the placement), over a canonical text
+  that a re-save, a reorder or a placement never changes (100 nm grid, sorted items, arcs and polygons in one form,
+  symmetric pads by their shape, KiCad's left-out defaults left out); `berc fp hash FILE.kicad_mod` and
+  `berc fp hash BOARD.kicad_pcb REF` print it, `--canonical` the text, `--format json`, references completed from the
+  board. Missing: `berc fp check` · `erc_model/src/fphash.rs`, `better_erc/src/fp.rs`, `berc/tests/fp.rs`
 
 ## Code generation (`GEN`)
 

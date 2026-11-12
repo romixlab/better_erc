@@ -1289,6 +1289,7 @@ name = "erc_model"
 version = "0.4.21"
 dependencies = [
  "serde",
+ "sha2",
 ]
 
 [[package]]
