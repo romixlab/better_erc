@@ -33,6 +33,7 @@ fn harness(socket: &Path, fake: &FakeSpacenavd) -> Harness<'static, FootprintRev
     let settings = FootprintReviewSettings {
         font_dirs: Vec::new(),
         library_search: Vec::new(),
+        library_name: Vec::new(),
         ..Default::default()
     };
     let mut review = FootprintReview::with(settings, Arc::new(|_: &str| {}));
@@ -277,7 +278,7 @@ fn every_slot_names_its_action_and_key() {
                 .flat_map(|r| r.iter().flatten()),
         )
         .collect();
-    assert_eq!(slots.len(), 2 + 9 + 5 + 2);
+    assert_eq!(slots.len(), 2 + 9 + 5 + 3);
     for s in &slots {
         let (name, key) = s.label.split_once(" · ").expect(&s.label);
         assert!(!name.is_empty() && !key.is_empty(), "{}", s.label);

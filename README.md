@@ -347,7 +347,7 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    The page search then goes to the page with the land pattern, found by words such as "recommended land pattern"
    (a setting); the pages it found are listed to pick from. F shows the page at the view's full width.
 3. **Set the scale**: R with the pointer at one end of a dimension of the drawing, R again at the other (or pick
-   Ruler and drag along it). The ruler snaps level: horizontal or vertical by the larger of its dx and dy, an end
+   Scale on the mode bar and drag along it). The ruler snaps level: horizontal or vertical by the larger of its dx and dy, an end
    dragged goes where it is dragged and the other end follows on that axis (Shift held, or the setting off: any
    angle). Its ends snap to the drawing's own lines, read from the PDF's vector paths: within 10 screen pixels (a
    setting, 0 for never) to a line's end or two lines crossing, else onto the nearest line's centre; on a level
@@ -362,9 +362,9 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    field and Set scale do the same by mouse); Z a third time does what S does. The keys of the
    whole step: F, R, R, Z, Z, S, the length, Enter; with the snap and the dimension's number, often F, R, R, D. A page
    that states its own scale (`SCALE: 20X`) offers it as a button; check it with the ruler. Once the scale is set,
-   the tool is Move footprint again.
-4. **Lay the footprint on the drawing**: drag it (Move footprint), nudge it with the arrow keys (Shift: ten times
-   as far), turn it with T or ⟲ 90° or by an angle, mirror it with M for a drawing seen from below. Opacity, Blink
+   the mode is Move again.
+4. **Lay the footprint on the drawing**: drag it (the Move mode, M), nudge it with the arrow keys (Shift: ten times
+   as far), turn it with T or ⟲ 90° or by an angle, mirror it with X for a drawing seen from below. Opacity, Blink
    (B) and Invert page (I, white-ish on black, for a dark drawing or just to see differently; the default is a
    setting) help to see both, and so does the blend mode: Normal (the footprint over the page by its opacity),
    Multiply (the drawing's lines stay dark through it), Screen, or Difference: with white copper (a setting),
@@ -383,7 +383,22 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    the pads they are.
    Scroll zooms at the pointer; the right or middle button pans; Page Up and Page Down turn pages. A help line
    under the canvas names the keys.
-5. **Accept** (A): when the footprint matches the drawing, Accept writes its review hash into the symbol: the library
+5. **Measure and write notes**: a bar above the canvas shows the four modes, each with its key, the one on highlighted
+   and named first in the help line: Move (M: the mouse moves the footprint), Scale (R: the ruler that sets the
+   scale), Measure PDF (E: the ruler on the drawing's lines, snapping as the scale's does) and Measure footprint (G:
+   the ruler on the footprint, its ends snapping to the pads' centres and, on rect and roundrect pads, to the middle
+   of each side, where the pad's centre cross meets its edge; a cross in a ring marks a centre, a diamond a side).
+   Esc, M or a mode's own key again go back to Move. A measuring ruler shows its length with dx and dy, and once let
+   go its length goes into the review note as `M1 = 1.234 mm`; moving an end changes that value, a new ruler is `M2`.
+   The scale's ruler waits while measuring and is back in Move. The note field sits above the canvas; Enter over the
+   canvas gives it the keyboard, and Enter in it (or Add) appends the note to the notes file: a Markdown section per
+   note with the symbol, the footprint, the datasheet and its page, the time (UTC) and the text. The file is a
+   setting, by default `footprint-review-notes.md` beside the project or library under review (an absolute path puts
+   it anywhere). The datasheet is named as the document library names it, by a command (a setting; `tpm lib open
+   --json` by default) that prints a JSON list of `{"path", "value", "doc_no", "doc_rev"}`: by its document number and
+   revision where they are known (`` `tpm d DS13560 rev6` ``, which still finds it after a rename or a move), else by
+   the words that open it, else by its file. The next note's measurements count from M1 again.
+6. **Accept** (A): when the footprint matches the drawing, Accept writes its review hash into the symbol: the library
    symbol and, for a symbol from a project's list, the schematic's copies too (as `berc fp accept --symbol` does).
    It asks first, showing what its dry run would write: each file, the field, the old and the new value. Enter (or
    Write) writes; Esc (or Cancel) writes nothing. It warns, per file and naming the lock file, when KiCad may
@@ -412,8 +427,9 @@ libspnav), so the device is not needed to build or run it.
 - **Hold a button**: a pie menu opens at the pointer. Move out across its outer circle, or click, to do the action
   under the pointer; while the button is held, back through the middle and out again does the next one. The left
   button's ring has the page and the ruler (full width, zoom on a ruler end, type the length, the dimension's
-  number, end the ruler step, next and previous page, invert the page); the right one's the footprint (turn 90°,
-  bottom view, blink, copper/mask/paste); both buttons together Accept and Next to review. Every slot names its
+  number, back to Move, measure the PDF, next and previous page, invert the page); the right one's the footprint
+  (turn 90°, bottom view, blink, copper/mask/paste, measure the footprint); both buttons together Accept, Next to
+  review and Write a note. Every slot names its
   action and its key (`Turn 90° · T`); a slot that can't be used now is drawn muted and says why under the menu
   ("No ruler yet: R lays one, or the left button's tap"). While Accept's question is open, the left tap writes
   and the right one cancels.
@@ -433,9 +449,10 @@ PDF standard fonts that a datasheet uses without embedding them come from the Li
 from egui's own font.
 
 The settings (blink rate, the opacity, blend mode and colours at first, whether the page is inverted at first,
-the page search words, the finest drawing scale, the font folders, the library search command, how far Z zooms
-in, whether the ruler snaps level, how near its ends snap to the drawing's lines, and the keys F, R, Z, S, D, T, M,
-B, C, I, P, A and N by name in `[footprint_review.keys]`) are in
+the page search words, the finest drawing scale, the font folders, the library search command, the library name
+command and the notes file, how far Z zooms in, whether the ruler snaps level, how near its ends snap to the
+drawing's lines, and the keys F, M, R, E, G, Z, S, D, T, X, B, C, I, P, A, N and Enter by name in
+`[footprint_review.keys]`; a file that still has M for the bottom view takes X for it) are in
 `~/.config/better_erc/config.toml` (`$XDG_CONFIG_HOME`, or the file `$BERC_CONFIG` names), section
 `[footprint_review]`, and the SpaceMouse's mapping in `[spacemouse]`; the tab's Settings shows and saves them. Each step of a review
 is recorded in berc's usage record (`app fp-review accept`, `app fp-review write`, ...), which `berc usage` counts in its `app` column.

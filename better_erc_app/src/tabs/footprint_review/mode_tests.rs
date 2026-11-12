@@ -155,6 +155,7 @@ fn every_mode_has_a_way_back_to_move() {
     assert_eq!(h.state().tool, Tool::Move);
     let help = h.state().help_line();
     for k in [
+        "Enter write a review note",
         "M move",
         "R ruler",
         "E measure the PDF",
@@ -255,4 +256,112 @@ fn measure_the_pdf_on_its_lines() {
 fn a_saved_ruler_tool_is_the_scale_mode() {
     let t: Tool = serde_json::from_str("\"Ruler\"").unwrap();
     assert_eq!(t, Tool::Scale);
+}
+
+/// A review note without leaving the tab: a measurement of the footprint goes into the note, the note key gives
+/// the field the keyboard, Enter appends the note to the notes file beside the library (in the test's own
+/// folder), with the symbol, the footprint, the datasheet as the library names it and its page; the field is then
+/// empty and the next note's measurements count from M1 again
+#[test]
+fn a_note_with_a_measurement_into_the_notes_file() {
+    let dir = scratch("note");
+    let pdf = datasheet(&dir);
+    let lib = super::tests::symbol_library(&dir, &pdf);
+    let mut h = harness("fp mode note");
+    let asked: Arc<std::sync::Mutex<Vec<PathBuf>>> = Arc::default();
+    let a = asked.clone();
+    h.state_mut().rt.namer = Some(Arc::new(move |p: &Path| {
+        a.lock().unwrap().push(p.to_path_buf());
+        Ok(Some("`tpm d TEST-DS rev2`".into()))
+    }));
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &lib);
+    h.run();
+    h.get_by_label("Rev:Mixed").click();
+    h.run();
+    h.run();
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    let file = dir.join("footprint-review-notes.md");
+    assert_eq!(h.state().notes_file(), Some(file.clone()));
+    assert_eq!(
+        h.state().note_blocker().as_deref(),
+        Some("write the note first")
+    );
+    {
+        let st = h.state_mut();
+        st.scale = Some(Scale {
+            mm_per_point: 0.02,
+            page: st.page,
+            mm: 2.0,
+            note: None,
+        });
+        st.zoom = 2.0;
+        st.pan = [0.0, 0.0];
+        st.place = Placement {
+            origin: [150.0, 300.0],
+            ..Default::default()
+        };
+    }
+    h.run();
+    key(&mut h, egui::Key::G);
+    let (p2, p3) = (
+        h.state().fp_to_page([0.0, -1.5]),
+        h.state().fp_to_page([2.0, -1.5]),
+    );
+    let (from, to) = (
+        screen(&h, p2) + egui::vec2(3.0, 3.0),
+        screen(&h, p3) + egui::vec2(-3.0, 3.0),
+    );
+    drag(&mut h, from, to);
+    assert_eq!(h.state().rt.note, "M1 = 2.000 mm ");
+    // Enter over the canvas: the note field takes the keyboard, the text goes after the measurement
+    key(&mut h, egui::Key::Enter);
+    h.run();
+    h.event(egui::Event::Text("pitch as drawn".into()));
+    h.run();
+    h.key_press(egui::Key::Enter);
+    h.run();
+    assert_eq!(h.state().rt.note_written, Some(Ok(file.clone())));
+    let text = std::fs::read_to_string(&file).unwrap();
+    let page = h.state().page + 1;
+    assert!(
+        text.starts_with("# Footprint review notes\n\n## Rev:Mixed · 20"),
+        "{text}"
+    );
+    for line in [
+        "- Symbol: `Rev:Mixed`\n".to_string(),
+        "- Footprint: `Test:Mixed_Pads`\n".to_string(),
+        format!("- Datasheet: `tpm d TEST-DS rev2`, page {page}\n"),
+        "\nM1 = 2.000 mm pitch as drawn\n".to_string(),
+    ] {
+        assert!(text.contains(&line), "{line:?} in {text}");
+    }
+    assert_eq!(*asked.lock().unwrap(), vec![pdf.clone()]);
+    assert_eq!(h.state().rt.note, "");
+    h.get_by_label("added to footprint-review-notes.md");
+    // The next note: a new ruler, from pad 4 at (0, 1) mm to pad 2, is M1 again, and the note goes under the first
+    let p4 = h.state().fp_to_page([0.0, 1.0]);
+    let (from, to) = (
+        screen(&h, p4) + egui::vec2(3.0, 3.0),
+        screen(&h, p2) + egui::vec2(3.0, 3.0),
+    );
+    drag(&mut h, from, to);
+    assert_eq!(h.state().rt.note, "M1 = 2.500 mm ");
+    h.get_by_label("Add (Enter)").click();
+    h.run();
+    let text = std::fs::read_to_string(&file).unwrap();
+    assert_eq!(text.matches("## Rev:Mixed").count(), 2, "{text}");
+    assert_eq!(
+        text.matches("# Footprint review notes").count(),
+        1,
+        "{text}"
+    );
+    assert_eq!(
+        asked.lock().unwrap().len(),
+        1,
+        "the library asked once per datasheet"
+    );
+    std::fs::remove_dir_all(&dir).unwrap();
 }

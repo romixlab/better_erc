@@ -718,6 +718,12 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   thermal vias) drawn as vias, in the hash as pads. Settings in `config.toml`
   (`[footprint_review]`), usage signals `app fp-review ...` · `better_erc_app/src/tabs/footprint_review/`,
   `better_erc_app/src/settings.rs`
+- ✅ `VIEW-21` Footprint review notes: a note field above the canvas (Enter over the canvas gives it the keyboard, a
+  pie slot too), Enter or Add appends the note to a Markdown file (a setting, `footprint-review-notes.md` beside the
+  project or library by default) with the symbol, the footprint, the datasheet as the document library names it (`tpm
+  d DS13560 rev6`: number and revision, else the words that open it, else the file; the name command a setting, `tpm
+  lib open --json`), the page, the time and the text; the measuring rulers' `M1 = 1.234 mm` go into the note
+  (`VIEW-19`) · `better_erc_app/src/tabs/footprint_review/notes.rs`, `mode_tests.rs`
 - 🚧 `VIEW-20` Footprint review on a SpaceMouse, through spacenavd (vhrd_egui `ve_spacemouse`, pure Rust): the puck
   pans the page in screen points (one speed at every zoom) and zooms the view about the pointer, or moves the
   footprint (`P` switches); a tap of the left button lays the ruler, of the right one switches what the puck

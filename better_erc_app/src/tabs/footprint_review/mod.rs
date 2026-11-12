@@ -37,6 +37,7 @@ pub mod blend;
 mod geometry;
 #[cfg(test)]
 mod mode_tests;
+mod notes;
 mod outline;
 mod pdf;
 mod puck;
@@ -401,6 +402,9 @@ struct BoardList {
     filter: String,
 }
 
+/// Names a document of the library for the review notes ([`notes::run_library_name`]); tests give their own
+type Namer = Arc<dyn Fn(&Path) -> Result<Option<String>, String> + Send + Sync>;
+
 /// A library search: the datasheets it finds for the search words
 type Searcher = Arc<dyn Fn(&[String]) -> Result<Vec<LibraryHit>, String> + Send + Sync>;
 
@@ -471,6 +475,15 @@ struct Runtime {
     measure_count: usize,
     /// The review note being written
     note: String,
+    /// The note field takes the keyboard on the next frame (the note key)
+    focus_note: bool,
+    /// Where the last note went, or why it did not
+    note_written: Option<Result<PathBuf, String>>,
+    /// How the library names the datasheet open: its file, and the name (none: the library has no such file, or
+    /// no name command; the note gives the file), or why the name command failed
+    doc_name: Option<(PathBuf, Result<Option<String>, String>)>,
+    /// The library's name command in place of the settings' one (tests)
+    namer: Option<Namer>,
     accepted: Option<String>,
     /// Accept waits for its confirmation
     confirm: Option<Confirm>,
@@ -493,6 +506,7 @@ struct Runtime {
     words_text: String,
     fonts_text: String,
     search_text: String,
+    name_text: String,
     /// Where the canvas was drawn last
     canvas: Rect,
     /// A footprint was just opened: find its datasheet (the Datasheet field's file, else the library search)
@@ -548,6 +562,10 @@ impl Default for Runtime {
             measured: None,
             measure_count: 0,
             note: String::new(),
+            focus_note: false,
+            note_written: None,
+            doc_name: None,
+            namer: None,
             accepted: None,
             confirm: None,
             kicad_running,
@@ -561,6 +579,7 @@ impl Default for Runtime {
             words_text: String::new(),
             fonts_text: String::new(),
             search_text: String::new(),
+            name_text: String::new(),
             canvas: Rect::NOTHING,
             want_search: false,
             auto_open: false,
@@ -700,6 +719,7 @@ impl FootprintReview {
             .collect::<Vec<_>>()
             .join("\n");
         self.rt.search_text = s.library_search.join(" ");
+        self.rt.name_text = s.library_name.join(" ");
         self.rt.settings = s;
     }
 
@@ -1705,7 +1725,7 @@ impl FootprintReview {
              {} type the ruler's length, Enter sets the scale · {} the dimension's number sets it · \
              {} · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
              arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans\n\
-             {} accept · {} next to review · SpaceMouse: the puck {} ({} switches), push away zooms out · \
+             {} accept · {} next to review · {} write a review note · SpaceMouse: the puck {} ({} switches), push away zooms out · \
              tap the left button for the ruler, the right one to switch · hold one for its ring, both for Accept",
             self.tool.name(),
             n(k.move_tool),
@@ -1736,6 +1756,7 @@ impl FootprintReview {
             n(k.invert),
             n(k.accept),
             n(k.next),
+            n(k.note),
             match self.puck {
                 PuckMoves::Page => "moves the page",
                 PuckMoves::Footprint => "moves the footprint",
@@ -2729,6 +2750,7 @@ impl FootprintReview {
                         ("What the SpaceMouse's puck moves", &mut k.puck),
                         ("Accept", &mut k.accept),
                         ("Next to review", &mut k.next),
+                        ("Write a review note", &mut k.note),
                     ] {
                         ui.label(what);
                         let ok = egui::Key::from_name(name.trim()).is_some();
@@ -2773,6 +2795,18 @@ impl FootprintReview {
                         .map(String::from)
                         .collect();
                 }
+                ui.label("Library name command, for the notes (the datasheet's file is added)");
+                if ui.add(TextEdit::singleline(&mut self.rt.name_text)).changed() {
+                    s.library_name = self
+                        .rt
+                        .name_text
+                        .split_whitespace()
+                        .map(String::from)
+                        .collect();
+                    self.rt.doc_name = None;
+                }
+                ui.label("Review notes file: a path, or a name beside the project or library");
+                ui.add(TextEdit::singleline(&mut s.notes_file));
                 let file = self.rt.settings_file.clone();
                 ui.horizontal(|ui| {
                     let b = ui.add_enabled(file.is_some(), Button::new("Save"));
@@ -2876,8 +2910,169 @@ impl FootprintReview {
         }
     }
 
+    /// The review note above the canvas: the text, measurements put in by the measuring rulers; Enter or Add
+    /// appends it to the notes file, named beside it, with where the last one went
+    fn note_bar(&mut self, ui: &mut Ui) {
+        let k = self.keys();
+        let file = self.notes_file();
+        let mut add = false;
+        ui.horizontal(|ui| {
+            ui.label("Note");
+            let r = ui.add(
+                TextEdit::singleline(&mut self.rt.note)
+                    .id_salt("review note")
+                    .desired_width((ui.available_width() - 320.0).max(160.0))
+                    .hint_text(format!(
+                        "{} here; the measuring rulers add M1, M2, …; Enter adds it to the notes file",
+                        key_name(k.note)
+                    )),
+            );
+            if std::mem::take(&mut self.rt.focus_note) && !r.has_focus() {
+                r.request_focus();
+            }
+            add = r.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter));
+            let why = self.note_blocker();
+            let b = ui.add_enabled(why.is_none(), Button::new("Add (Enter)"));
+            let b = match &why {
+                Some(w) => b.on_disabled_hover_text(w),
+                None => b.on_hover_text(format!(
+                    "appends the note with the symbol, the footprint, the datasheet and its page to {}",
+                    file.as_ref().map_or(String::new(), |f| f.display().to_string())
+                )),
+            };
+            add |= b.clicked();
+            match (&self.rt.note_written, &file) {
+                (Some(Err(e)), _) => {
+                    ui.colored_label(Color32::RED, e);
+                }
+                (Some(Ok(f)), _) => {
+                    ui.label(format!("added to {}", file_name(f)))
+                        .on_hover_text(f.display().to_string());
+                }
+                (None, Some(f)) => {
+                    ui.label(RichText::new(format!("→ {}", file_name(f))).weak())
+                        .on_hover_text(f.display().to_string());
+                }
+                (None, None) => {}
+            }
+        });
+        if add {
+            self.add_note();
+        }
+    }
+
+    /// Why a note can't be added now, when it can't
+    fn note_blocker(&self) -> Option<String> {
+        if self.rt.note.trim().is_empty() {
+            return Some("write the note first".into());
+        }
+        if self.rt.sourced.is_none() {
+            return Some("no footprint shown: pick a symbol first".into());
+        }
+        if self.notes_file().is_none() {
+            return Some(format!(
+                "no project or library to put \"{}\" beside: give the notes file a path of its own in Settings",
+                self.rt.settings.notes_file
+            ));
+        }
+        None
+    }
+
+    /// The folder of the project or library under review, where the notes file goes by default
+    fn notes_dir(&self) -> Option<PathBuf> {
+        let parent = |p: &Path| p.parent().map(Path::to_path_buf);
+        if let Some(t) = &self.rt.target {
+            return match &t.from {
+                SymbolsFrom::Library { library, project } => {
+                    let l = Path::new(library);
+                    if l.exists() {
+                        parent(l)
+                    } else {
+                        Some(project.clone())
+                    }
+                }
+                from @ SymbolsFrom::Project(_) => Some(from.dir()),
+            };
+        }
+        match &self.rt.sourced.as_ref()?.source {
+            FootprintSource::File(p) => parent(p),
+            FootprintSource::Board { board, .. } => parent(board),
+            FootprintSource::Library { project, .. } => Some(project.clone()),
+        }
+    }
+
+    /// The review notes file ([`notes::file`])
+    fn notes_file(&self) -> Option<PathBuf> {
+        notes::file(&self.rt.settings.notes_file, self.notes_dir().as_deref())
+    }
+
+    /// How the library names the datasheet open, asked once per file: as a command that opens it, else the file
+    fn datasheet_name(&mut self) -> Option<String> {
+        let path = self.datasheet.clone()?;
+        if self.rt.doc_name.as_ref().is_none_or(|(p, _)| *p != path) {
+            let cmd = self.rt.settings.library_name.clone();
+            let name = match &self.rt.namer {
+                Some(n) => n(&path),
+                None if cmd.is_empty() => Ok(None),
+                None => notes::run_library_name(&cmd, &path),
+            };
+            self.rt.doc_name = Some((path.clone(), name));
+        }
+        Some(match &self.rt.doc_name {
+            Some((_, Ok(Some(n)))) => n.clone(),
+            _ => format!("`{}`", path.display()),
+        })
+    }
+
+    /// The note into the notes file with what it is about; the field emptied for the next, whose measurements
+    /// count from M1 again
+    fn add_note(&mut self) {
+        if self.note_blocker().is_some() {
+            return;
+        }
+        let (Some(file), Some(s)) = (self.notes_file(), self.rt.sourced.as_ref()) else {
+            return;
+        };
+        // As the symbol's Footprint field names it; a footprint alone by its own name
+        let field = self.rt.target.as_ref().and_then(|t| {
+            let rows = &self.rt.symbols.as_ref()?.rows;
+            rows.iter()
+                .find(|r| r.symbol == t.symbol)?
+                .footprint
+                .clone()
+        });
+        let footprint = field.unwrap_or_else(|| match &s.source {
+            FootprintSource::Library { lib_id, .. } => lib_id.clone(),
+            _ => s.lib_id().to_string(),
+        });
+        let datasheet = self.datasheet_name();
+        let when = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map_or(0, |d| d.as_secs() as i64);
+        let note = notes::Note {
+            symbol: self.rt.target.as_ref().map(|t| t.symbol.clone()),
+            footprint,
+            page: datasheet.as_ref().map(|_| self.page + 1),
+            datasheet,
+            when,
+            text: self.rt.note.clone(),
+        };
+        let written = notes::append(&file, &note).map(|()| file);
+        if written.is_ok() {
+            self.rt.note.clear();
+            self.rt.measure_count = 0;
+            // The ruler shown is in no note now: moved, it is a new measurement
+            if let Some(m) = &mut self.rt.measured {
+                m.text.clear();
+            }
+            self.usage("note");
+        }
+        self.rt.note_written = Some(written);
+    }
+
     fn canvas(&mut self, ui: &mut Ui) {
         self.mode_bar(ui);
+        self.note_bar(ui);
         let (canvas, resp) = ui.allocate_exact_size(ui.available_size(), Sense::click_and_drag());
         self.rt.canvas = canvas;
         let painter = ui.painter_at(canvas);
@@ -3116,6 +3311,7 @@ impl FootprintReview {
                     puck: pressed(km.puck),
                     accept: pressed(km.accept),
                     next: pressed(km.next),
+                    note: pressed(km.note),
                 };
                 (p, i.modifiers.shift)
             });
@@ -3153,6 +3349,7 @@ impl FootprintReview {
                 (p.puck, Action::Puck),
                 (p.accept, Action::Accept),
                 (p.next, Action::NextToReview),
+                (p.note, Action::Note),
             ] {
                 if on {
                     self.act(&ctx, action, hover_page, shift, lines);
@@ -3251,14 +3448,19 @@ impl FootprintReview {
             return;
         }
         let n = match &self.rt.measured {
-            Some(m) => m.n,
-            None => {
+            Some(m) if !m.text.is_empty() => m.n,
+            _ => {
                 self.rt.measure_count += 1;
                 self.rt.measure_count
             }
         };
         let text = format!("M{n} = {mm:.3} mm");
-        let old = self.rt.measured.take().map(|m| m.text);
+        let old = self
+            .rt
+            .measured
+            .take()
+            .map(|m| m.text)
+            .filter(|t| !t.is_empty());
         match old.and_then(|o| self.rt.note.rfind(&o).map(|i| (i, o.len()))) {
             Some((i, len)) => self.rt.note.replace_range(i..i + len, &text),
             None => {
@@ -3556,6 +3758,7 @@ struct KeyMap {
     puck: Option<egui::Key>,
     accept: Option<egui::Key>,
     next: Option<egui::Key>,
+    note: Option<egui::Key>,
 }
 
 impl From<&Keys> for KeyMap {
@@ -3578,6 +3781,7 @@ impl From<&Keys> for KeyMap {
             puck: key(&k.puck),
             accept: key(&k.accept),
             next: key(&k.next),
+            note: key(&k.note),
         }
     }
 }
@@ -3607,6 +3811,7 @@ struct Pressed {
     puck: bool,
     accept: bool,
     next: bool,
+    note: bool,
 }
 
 /// The ruler's line and label colours in a mode: blue setting the scale, orange measuring the drawing, green

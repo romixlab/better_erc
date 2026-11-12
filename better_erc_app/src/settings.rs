@@ -34,6 +34,14 @@ pub struct FootprintReviewSettings {
     /// search words are added at the end. It prints a JSON list of `{"path": ..., "page": ...}`. Empty: no
     /// library search.
     pub library_search: Vec<String>,
+    /// A command that names a document of the library for the review notes: the program and its arguments; the
+    /// datasheet's file is added at the end. It prints a JSON list of `{"path", "value", "doc_no", "doc_rev"}`
+    /// (`tpm lib open --json`); the note names the datasheet by its number and revision, else by `value`. Empty:
+    /// the note gives the datasheet's file.
+    pub library_name: Vec<String>,
+    /// The review notes file (Markdown): a path of its own, or a name for a file beside the project or library
+    /// under review
+    pub notes_file: String,
     /// How the footprint is mixed with the page at first: `normal`, `multiply`, `screen` or `difference`
     pub blend: BlendMode,
     /// The footprint's colours per layer group, `#rrggbb`: no picker in the tab, change them here
@@ -91,6 +99,8 @@ pub struct Keys {
     pub accept: String,
     /// The next symbol in the list that needs a review
     pub next: String,
+    /// The review note field takes the keyboard; Enter there adds the note to the notes file
+    pub note: String,
 }
 
 impl Default for Keys {
@@ -112,6 +122,7 @@ impl Default for Keys {
             puck: "P".into(),
             accept: "A".into(),
             next: "N".into(),
+            note: "Enter".into(),
         }
     }
 }
@@ -247,6 +258,10 @@ impl Default for FootprintReviewSettings {
             library_search: ["tpm", "lib", "search", "--json", "-n", "10"]
                 .map(String::from)
                 .to_vec(),
+            library_name: ["tpm", "lib", "open", "--json", "-n", "10"]
+                .map(String::from)
+                .to_vec(),
+            notes_file: "footprint-review-notes.md".into(),
             blend: BlendMode::Normal,
             colors: LayerColors::default(),
             ruler_zoom: 8.0,

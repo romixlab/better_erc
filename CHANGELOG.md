@@ -13,6 +13,13 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
+- `VIEW-21`: Footprint review notes without leaving the tab. A note field sits above the canvas; Enter over the canvas
+  (`[footprint_review.keys] note`) or the pie's Write a note gives it the keyboard. Enter in it, or Add, appends the
+  note to a Markdown file, by default `footprint-review-notes.md` beside the project or library (`notes_file`). Each
+  note has the symbol, the footprint, the datasheet and its page, the time and the text. The datasheet is named as the
+  document library names it, by its document number and revision where known (`tpm d DS13560 rev6`, which survives a
+  rename or a move), through a command (`library_name`, `tpm lib open --json` by default); without it, the file.
+  Measurements from the measuring rulers go into the note as `M1 = 1.234 mm`.
 - `VIEW-19`: Footprint review, four modes on a bar above the canvas: Move (`M`), Scale (`R`, the ruler that sets the
   scale, as before), Measure PDF (`E`) and Measure footprint (`G`). The mode on is highlighted on the bar and named
   first in the help line, and each mode is in the pie menu. Measure PDF lays the ruler on the drawing's lines. Measure

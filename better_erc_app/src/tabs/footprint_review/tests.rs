@@ -86,7 +86,7 @@ fn symbol_text(name: &str, props: &[(&str, &str)]) -> String {
 
 /// A symbol library in `dir`, `Rev.kicad_sym`: `Mixed` with footprint Test:Mixed_Pads and the datasheet `pdf`,
 /// `Generic` without a footprint; the footprints through a `fp-lib-table` beside it
-fn symbol_library(dir: &Path, pdf: &Path) -> PathBuf {
+pub(super) fn symbol_library(dir: &Path, pdf: &Path) -> PathBuf {
     footprint_table(dir);
     let lib = dir.join("Rev.kicad_sym");
     std::fs::write(
@@ -133,6 +133,7 @@ fn review_a_symbol_from_its_library() {
     let settings = FootprintReviewSettings {
         font_dirs: Vec::new(),
         library_search: Vec::new(),
+        library_name: Vec::new(),
         ..Default::default()
     };
     let mut cx = Context::new();
@@ -315,6 +316,7 @@ fn a_footprint_alone_is_a_preview() {
     let settings = FootprintReviewSettings {
         font_dirs: Vec::new(),
         library_search: Vec::new(),
+        library_name: Vec::new(),
         ..Default::default()
     };
     let mut cx = Context::new();
@@ -502,6 +504,7 @@ fn blend_modes_mix_with_the_page() {
     let settings = FootprintReviewSettings {
         font_dirs: Vec::new(),
         library_search: Vec::new(),
+        library_name: Vec::new(),
         ..Default::default()
     };
     let rs = egui_kittest::wgpu::create_render_state(
@@ -654,6 +657,7 @@ fn accept_writes_into_the_symbols() {
     let settings = FootprintReviewSettings {
         font_dirs: Vec::new(),
         library_search: Vec::new(),
+        library_name: Vec::new(),
         ..Default::default()
     };
     let mut cx = Context::new();
@@ -782,6 +786,7 @@ pub(super) fn harness(name: &'static str) -> Harness<'static, FootprintReview> {
     let settings = FootprintReviewSettings {
         font_dirs: Vec::new(),
         library_search: Vec::new(),
+        library_name: Vec::new(),
         ..Default::default()
     };
     let mut cx = Context::new();

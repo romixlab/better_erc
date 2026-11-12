@@ -36,6 +36,8 @@ pub enum Action {
     Puck,
     Accept,
     NextToReview,
+    /// The review note field takes the keyboard
+    Note,
     /// Accept's question answered: write, or nothing
     Write,
     Cancel,
@@ -385,6 +387,12 @@ impl FootprintReview {
                         },
                     ),
                 ),
+                Some(footprint(slot(
+                    "Write a note",
+                    short_key(k.note),
+                    icons::NOTE_PENCIL,
+                    Note,
+                ))),
             ],
             free_hint: String::new(),
             ..Default::default()
@@ -469,6 +477,10 @@ impl FootprintReview {
                     self.select_symbol(i, true);
                     self.usage("next");
                 }
+            }
+            Action::Note => {
+                self.rt.focus_note = true;
+                self.usage("note key");
             }
             Action::Write => self.confirmed(ctx, true),
             Action::Cancel => self.confirmed(ctx, false),
