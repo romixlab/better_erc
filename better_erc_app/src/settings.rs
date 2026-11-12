@@ -59,8 +59,16 @@ pub struct FootprintReviewSettings {
 pub struct Keys {
     /// The page at the view's full width
     pub full_width: String,
-    /// The ruler: one end at the pointer, then the other
+    /// Back to Move: the mouse moves the footprint again (Esc too)
+    pub move_tool: String,
+    /// The ruler: one end at the pointer, then the other; from Move it starts the Scale mode
     pub ruler: String,
+    /// The Measure PDF mode: the ruler snaps to the drawing's lines, its length goes into the review note; again:
+    /// back to Move
+    pub measure_pdf: String,
+    /// The Measure footprint mode: the ruler snaps to the pads' centres and side middles, its length goes into the
+    /// review note; again: back to Move
+    pub measure_footprint: String,
     /// Zoom in on one ruler end to place it exactly, then on the other, then back
     pub ruler_zoom: String,
     /// The ruler's length typed in: the length field takes the keyboard, Enter sets the scale
@@ -89,12 +97,15 @@ impl Default for Keys {
     fn default() -> Self {
         Keys {
             full_width: "F".into(),
+            move_tool: "M".into(),
             ruler: "R".into(),
+            measure_pdf: "E".into(),
+            measure_footprint: "G".into(),
             ruler_zoom: "Z".into(),
             scale: "S".into(),
             dimension: "D".into(),
             rotate: "T".into(),
-            mirror: "M".into(),
+            mirror: "X".into(),
             blink: "B".into(),
             cu_layer: "C".into(),
             invert: "I".into(),
@@ -289,7 +300,13 @@ impl Settings {
     }
 
     pub fn parse(text: &str) -> Result<Settings, String> {
-        toml::from_str(text).map_err(|e| e.to_string())
+        let mut s: Settings = toml::from_str(text).map_err(|e| e.to_string())?;
+        // Up to 0.4.36 M was the bottom view's key, and a saved file still says so; M is Move's now
+        let k = &mut s.footprint_review.keys;
+        if k.mirror.trim() == k.move_tool.trim() && k.mirror.trim() == "M" {
+            k.mirror = Keys::default().mirror;
+        }
+        Ok(s)
     }
 
     pub fn to_toml(&self) -> String {
@@ -350,6 +367,13 @@ mod tests {
         let s = Settings::parse("[footprint_review.keys]\nrotate = \"Space\"\n").unwrap();
         assert_eq!(s.footprint_review.keys.rotate, "Space");
         assert_eq!(s.footprint_review.keys.ruler, "R");
+        // A file saved up to 0.4.36 has M for the bottom view: M is Move's now, the bottom view takes its new key;
+        // a key of the person's own choosing stays
+        let s = Settings::parse("[footprint_review.keys]\nmirror = \"M\"\n").unwrap();
+        assert_eq!(s.footprint_review.keys.move_tool, "M");
+        assert_eq!(s.footprint_review.keys.mirror, "X");
+        let s = Settings::parse("[footprint_review.keys]\nmirror = \"V\"\n").unwrap();
+        assert_eq!(s.footprint_review.keys.mirror, "V");
         // The SpaceMouse's mapping, the rest its defaults, through the file as it is
         let s =
             Settings::parse("[spacemouse]\nfull_scale = 300.0\n[spacemouse.speed]\npan = 3000.0\n")

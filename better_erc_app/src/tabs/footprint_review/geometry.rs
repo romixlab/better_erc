@@ -44,6 +44,10 @@ pub enum SnapKind {
     Crossing,
     /// Onto a line (on a level ruler: the line across it for one coordinate, the line along it for the other)
     Line,
+    /// A footprint pad's centre (measuring the footprint)
+    PadCentre,
+    /// The middle of a rectangular pad's side: where its centre cross meets its edge
+    PadSide,
 }
 
 /// Where a ruler end snapped to, and the lines that made it (indices into [`PageGeometry::segs`]), to show them

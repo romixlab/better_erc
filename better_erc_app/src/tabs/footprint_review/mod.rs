@@ -35,6 +35,8 @@ use std::sync::mpsc::Receiver;
 
 pub mod blend;
 mod geometry;
+#[cfg(test)]
+mod mode_tests;
 mod outline;
 mod pdf;
 mod puck;
@@ -115,13 +117,61 @@ pub struct Review {
     pub when: u64,
 }
 
+/// What the primary drag does on the canvas: the mode, always shown (the switcher in the controls, the chip on the
+/// canvas) and always left the same ways (Esc, the Move key, a mode's own key again)
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub enum Tool {
     /// Primary drag moves the footprint
     #[default]
     Move,
-    /// Primary drag draws the ruler or moves one of its ends
-    Ruler,
+    /// The ruler on the drawing's lines, to set the scale from a dimension (S types its length, D takes the
+    /// printed number); setting it goes back to Move
+    #[serde(alias = "Ruler")]
+    Scale,
+    /// The ruler on the drawing's lines, measuring: its length goes into the review note
+    MeasurePdf,
+    /// The ruler on the footprint's pads (centres, and the middles of a rectangular pad's sides), measuring: its
+    /// length goes into the review note
+    MeasureFootprint,
+}
+
+impl Tool {
+    pub fn name(self) -> &'static str {
+        match self {
+            Tool::Move => "Move",
+            Tool::Scale => "Scale",
+            Tool::MeasurePdf => "Measure PDF",
+            Tool::MeasureFootprint => "Measure footprint",
+        }
+    }
+
+    /// A ruler mode: the primary drag lays the ruler
+    pub fn ruler(self) -> bool {
+        self != Tool::Move
+    }
+
+    /// A measuring mode: the ruler's length goes into the review note
+    pub fn measures(self) -> bool {
+        matches!(self, Tool::MeasurePdf | Tool::MeasureFootprint)
+    }
+
+    /// What the primary drag does, for the switcher's tooltip and the canvas' chip
+    fn what(self) -> &'static str {
+        match self {
+            Tool::Move => "the mouse moves the footprint; arrow keys nudge it (Shift: more)",
+            Tool::Scale => {
+                "the ruler on the drawing's lines sets the scale from a dimension: type its length, or take the \
+                 number the drawing prints"
+            }
+            Tool::MeasurePdf => {
+                "the ruler on the drawing's lines measures; its length goes into the review note"
+            }
+            Tool::MeasureFootprint => {
+                "the ruler on the pads' centres and side middles measures the footprint; its length goes into the \
+                 review note"
+            }
+        }
+    }
 }
 
 /// Where the list of symbols to review comes from
@@ -224,6 +274,15 @@ struct SymbolList {
     title: String,
     rows: Vec<TodoEntry>,
     filter: String,
+}
+
+/// A measurement put into the review note: `M{n} = {mm} mm`, from the ruler with these ends
+#[derive(Clone, Debug, PartialEq)]
+struct Measured {
+    n: usize,
+    ends: [[f32; 2]; 2],
+    /// As written into the note
+    text: String,
 }
 
 /// Accept's question before it writes: what its dry run would write where, and whether KiCad may overwrite that
@@ -401,6 +460,17 @@ struct Runtime {
     typing_mm: bool,
     /// The page is fitted to the view's width on the next frame
     fit_width: bool,
+    /// The other ruler: the scale's while measuring, the measuring one while in Move or Scale
+    parked_ruler: Option<[[f32; 2]; 2]>,
+    /// Where the measuring ruler snaps on the footprint: its pads' centres and side middles, footprint mm
+    fp_snaps: Vec<outline::SnapPoint>,
+    /// The measuring ruler's number and length as it went into the note; it is the ruler shown while its ends are
+    /// where they were
+    measured: Option<Measured>,
+    /// How many measurements the note has had: the next is M(n+1)
+    measure_count: usize,
+    /// The review note being written
+    note: String,
     accepted: Option<String>,
     /// Accept waits for its confirmation
     confirm: Option<Confirm>,
@@ -472,6 +542,11 @@ impl Default for Runtime {
             length_box: false,
             typing_mm: false,
             fit_width: false,
+            parked_ruler: None,
+            fp_snaps: Vec::new(),
+            measured: None,
+            measure_count: 0,
+            note: String::new(),
             accepted: None,
             confirm: None,
             kicad_running,
@@ -1034,6 +1109,7 @@ impl FootprintReview {
 
     fn set_sourced(&mut self, s: Sourced, fresh: bool) {
         self.rt.items = outline::items(&s.footprint, self.board_margins(&s));
+        self.rt.fp_snaps = outline::snap_points(&s.footprint);
         self.rt.error = None;
         self.rt.accepted = None;
         self.rt.written = None;
@@ -1329,6 +1405,9 @@ impl FootprintReview {
     }
 
     fn set_scale_from_ruler(&mut self) {
+        if self.tool.measures() {
+            return;
+        }
         let Some([a, b]) = self.ruler else { return };
         let Ok(mm) = self.rt.ruler_mm.trim().replace(',', ".").parse::<f64>() else {
             return;
@@ -1350,8 +1429,26 @@ impl FootprintReview {
     /// The scale is set: the ruler step is over, and the footprint is the one to move
     fn scale_set(&mut self) {
         self.rt.accepted = None;
+        self.set_tool(Tool::Move);
+    }
+
+    /// Into mode `t`, out of any ruler step; the ruler shown is that mode's: the scale's in Move and Scale, the
+    /// measuring one in the measuring modes
+    fn set_tool(&mut self, t: Tool) {
         self.ruler_done();
-        self.tool = Tool::Move;
+        self.rt.length_box = false;
+        if t.measures() != self.tool.measures() {
+            std::mem::swap(&mut self.ruler, &mut self.rt.parked_ruler);
+        }
+        if t != self.tool {
+            self.tool = t;
+            self.usage(&format!("mode {}", t.name().to_lowercase()));
+        }
+    }
+
+    /// A mode's key or button: into that mode, or back to Move when already in it
+    fn tool_key(&mut self, t: Tool) {
+        self.set_tool(if self.tool == t { Tool::Move } else { t });
     }
 
     /// Out of the ruler's steps: no end follows the pointer, and a view zoomed in on an end goes back
@@ -1375,9 +1472,12 @@ impl FootprintReview {
             return;
         }
         self.ruler_done();
-        self.tool = Tool::Ruler;
+        if !self.tool.ruler() {
+            self.set_tool(Tool::Scale);
+        }
         let at = self.start_point(at, lines);
         self.ruler = Some([at, at]);
+        self.rt.measured = None;
         self.rt.ruler_anchor = Some(at);
         self.rt.ruler_placing = true;
         self.usage("ruler key");
@@ -1389,8 +1489,8 @@ impl FootprintReview {
     /// (Alt not held), `p` first snaps to the drawing's lines ([`Self::line_snap`]), each coordinate on its own on
     /// a level ruler.
     fn move_ruler_end(&mut self, i: usize, p: [f32; 2], free: bool, lines: bool) {
-        let snap = self.rt.settings.ruler_snap && !free;
-        self.rt.snap = if lines { self.line_snap(p, snap) } else { None };
+        let snap = self.rt.settings.ruler_snap && !free && self.tool != Tool::MeasureFootprint;
+        self.rt.snap = if lines { self.end_snap(p, snap) } else { None };
         let p = self.rt.snap.as_ref().map_or(p, |s| s.at);
         let anchor = self.rt.ruler_anchor;
         let Some(r) = &mut self.ruler else { return };
@@ -1419,13 +1519,42 @@ impl FootprintReview {
         g.snap(p, self.rt.settings.line_snap_px / self.zoom, level)
     }
 
-    /// A new ruler's first end at `p`: snapped to the drawing's lines with `lines`, shown so
-    fn start_point(&mut self, p: [f32; 2], lines: bool) -> [f32; 2] {
-        self.rt.snap = if lines {
-            self.line_snap(p, false)
+    /// Where a ruler end at `p` snaps in the current mode: to the footprint's pads when measuring the footprint,
+    /// else to the drawing's lines
+    fn end_snap(&self, p: [f32; 2], level: bool) -> Option<Snap> {
+        if self.tool == Tool::MeasureFootprint {
+            self.pad_snap(p)
         } else {
-            None
-        };
+            self.line_snap(p, level)
+        }
+    }
+
+    /// The footprint's pad centre or pad side middle nearest `p` (page points), within twice the line snap's
+    /// pixels (at least 20) at the view's zoom
+    fn pad_snap(&self, p: [f32; 2]) -> Option<Snap> {
+        let reach = self.rt.settings.line_snap_px.max(10.0) * 2.0 / self.zoom;
+        self.rt
+            .fp_snaps
+            .iter()
+            .map(|s| (self.fp_to_page(s.at), s.centre))
+            .map(|(at, centre)| (at, centre, (at[0] - p[0]).hypot(at[1] - p[1])))
+            .filter(|(_, _, d)| *d <= reach)
+            .min_by(|a, b| a.2.total_cmp(&b.2))
+            .map(|(at, centre, _)| Snap {
+                at,
+                kind: if centre {
+                    SnapKind::PadCentre
+                } else {
+                    SnapKind::PadSide
+                },
+                segs: Vec::new(),
+            })
+    }
+
+    /// A new ruler's first end at `p`: snapped (to the drawing's lines or the pads, by the mode) with `lines`,
+    /// shown so
+    fn start_point(&mut self, p: [f32; 2], lines: bool) -> [f32; 2] {
+        self.rt.snap = if lines { self.end_snap(p, false) } else { None };
         self.rt.snap.as_ref().map_or(p, |s| s.at)
     }
 
@@ -1441,6 +1570,9 @@ impl FootprintReview {
 
     /// The dimension's number sets the scale from the ruler: the dimension key or a click on its chip
     fn use_dimension_number(&mut self) {
+        if self.tool.measures() {
+            return;
+        }
         let Some(n) = self.dimension_number() else {
             return;
         };
@@ -1469,10 +1601,13 @@ impl FootprintReview {
                     canvas.width() / 2.0 - p[0] * self.zoom,
                     canvas.height() / 2.0 - p[1] * self.zoom,
                 ];
-                self.tool = Tool::Ruler;
+                if !self.tool.ruler() {
+                    self.set_tool(Tool::Scale);
+                }
                 self.rt.ruler_focus = Some(i);
                 self.usage("ruler zoom");
             }
+            None if self.tool.measures() => self.ruler_done(),
             None => self.scale_key(),
         }
     }
@@ -1481,7 +1616,7 @@ impl FootprintReview {
     /// in a box in the middle of the canvas, empty; Enter there sets the scale and makes the footprint the one to
     /// move, Esc leaves it
     fn scale_key(&mut self) {
-        if self.ruler.is_none() {
+        if self.ruler.is_none() || self.tool.measures() {
             return;
         }
         self.ruler_done();
@@ -1548,12 +1683,20 @@ impl FootprintReview {
         let k = self.keys();
         let n = key_name;
         format!(
-            "{} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back · \
-             {} type the ruler's length, Enter sets the scale · {} the dimension's number sets it · Esc ends the ruler step · \
+            "Mode {}: {} move · {} ruler, setting the scale · {} measure the PDF · {} measure the footprint · \
+             a mode's key again, {} or Esc: back to Move\n\
+             {} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back · \
+             {} type the ruler's length, Enter sets the scale · {} the dimension's number sets it · \
              {} · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
              arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans\n\
              {} accept · {} next to review · SpaceMouse: the puck {} ({} switches), push away zooms out · \
              tap the left button for the ruler, the right one to switch · hold one for its ring, both for Accept",
+            self.tool.name(),
+            n(k.move_tool),
+            n(k.ruler),
+            n(k.measure_pdf),
+            n(k.measure_footprint),
+            n(k.move_tool),
             n(k.full_width),
             n(k.ruler),
             n(k.ruler),
@@ -1588,15 +1731,24 @@ impl FootprintReview {
     /// What the ruler step waits for, when it is on
     fn ruler_hint(&self) -> Option<String> {
         let k = self.keys();
+        let what = match self.tool {
+            Tool::MeasurePdf => "Measuring the PDF",
+            Tool::MeasureFootprint => "Measuring the footprint",
+            Tool::Move | Tool::Scale => "Ruler",
+        };
         if self.rt.ruler_placing {
             return Some(format!(
-                "Ruler: point at the other end and press {} or click",
+                "{what}: point at the other end and press {} or click",
                 key_name(k.ruler)
             ));
         }
         match self.rt.ruler_focus {
             Some(0) => Some(format!(
-                "Ruler, first end: click or drag where it belongs exactly; {} for the other end",
+                "{what}, first end: click or drag where it belongs exactly; {} for the other end",
+                key_name(k.ruler_zoom)
+            )),
+            Some(_) if self.tool.measures() => Some(format!(
+                "{what}, other end: click or drag where it belongs exactly; {} back",
                 key_name(k.ruler_zoom)
             )),
             Some(_) => Some(format!(
@@ -2274,22 +2426,6 @@ impl FootprintReview {
         let k = self.keys();
         let mut zoom_end = false;
         ui.horizontal(|ui| {
-            if ui
-                .selectable_value(&mut self.tool, Tool::Move, "Move footprint")
-                .on_hover_text(
-                    "Drag the footprint; arrow keys nudge it (Shift: more). Setting the scale comes back here",
-                )
-                .clicked()
-            {
-                self.ruler_done();
-            }
-            ui.selectable_value(&mut self.tool, Tool::Ruler, "Ruler")
-                .on_hover_text(format!(
-                    "Drag along a dimension of the drawing, or {} at one end and {} at the other; drag an end to \
-                     adjust it",
-                    key_name(k.ruler),
-                    key_name(k.ruler)
-                ));
             let b = ui.add_enabled(self.ruler.is_some(), Button::new("Zoom on an end"));
             let b = if self.ruler.is_some() {
                 b.on_hover_text(format!(
@@ -2350,6 +2486,17 @@ impl FootprintReview {
                 self.scale_set();
                 self.usage("scale page-note");
             }
+        }
+        if self.tool.measures() {
+            ui.label(
+                RichText::new(format!(
+                    "Measuring: the scale's ruler waits in the Scale mode ({})",
+                    key_name(k.ruler)
+                ))
+                .small()
+                .weak(),
+            );
+            return;
         }
         let Some([a, b]) = self.ruler else {
             ui.label(
@@ -2551,7 +2698,10 @@ impl FootprintReview {
                     let k = &mut s.keys;
                     for (what, name) in [
                         ("Page at full width", &mut k.full_width),
+                        ("Move: the mouse moves the footprint", &mut k.move_tool),
                         ("Ruler: one end, then the other", &mut k.ruler),
+                        ("Measure PDF", &mut k.measure_pdf),
+                        ("Measure footprint", &mut k.measure_footprint),
                         ("Zoom on a ruler end, the other, back", &mut k.ruler_zoom),
                         ("Type the ruler's length", &mut k.scale),
                         ("The dimension's number sets the scale", &mut k.dimension),
@@ -2659,7 +2809,59 @@ impl FootprintReview {
         ]
     }
 
+    /// The modes above the canvas, the one on highlighted, each with its key: what the mouse does is never a hidden
+    /// state. A mode's button or key again goes back to Move, as do the Move key and Esc.
+    fn mode_bar(&mut self, ui: &mut Ui) {
+        let k = self.keys();
+        let pdf = self.rt.pdf.as_ref().is_some_and(|p| p.page_count() > 0);
+        let fp = !self.rt.items.is_empty();
+        let mut pick = None;
+        ui.horizontal(|ui| {
+            ui.label("Mode");
+            for (t, key, why) in [
+                (Tool::Move, k.move_tool, None),
+                (
+                    Tool::Scale,
+                    k.ruler,
+                    (!pdf).then_some("open the datasheet first: the ruler lies on its drawing"),
+                ),
+                (
+                    Tool::MeasurePdf,
+                    k.measure_pdf,
+                    (!pdf).then_some("open the datasheet first: the ruler lies on its drawing"),
+                ),
+                (
+                    Tool::MeasureFootprint,
+                    k.measure_footprint,
+                    (!fp).then_some("no footprint shown: pick a symbol"),
+                ),
+            ] {
+                let text = format!("{} · {}", t.name(), key_name(key));
+                let r = ui.add_enabled(
+                    why.is_none() || self.tool == t,
+                    Button::selectable(self.tool == t, text),
+                );
+                let r = match why {
+                    Some(why) => r.on_disabled_hover_text(why),
+                    None => r.on_hover_text(t.what()),
+                };
+                if r.clicked() {
+                    pick = Some(t);
+                }
+            }
+            if self.tool != Tool::Move {
+                ui.label(
+                    RichText::new(format!("{} or Esc: back to Move", key_name(k.move_tool))).weak(),
+                );
+            }
+        });
+        if let Some(t) = pick {
+            self.tool_key(t);
+        }
+    }
+
     fn canvas(&mut self, ui: &mut Ui) {
+        self.mode_bar(ui);
         let (canvas, resp) = ui.allocate_exact_size(ui.available_size(), Sense::click_and_drag());
         self.rt.canvas = canvas;
         let painter = ui.painter_at(canvas);
@@ -2802,8 +3004,8 @@ impl FootprintReview {
             }
         }
         // An end zoomed in on goes where a click or a drag puts it
-        if let (Tool::Ruler, Some(i), true, Some(p)) = (
-            self.tool,
+        if let (true, Some(i), true, Some(p)) = (
+            self.tool.ruler(),
             self.rt.ruler_focus,
             self.ruler.is_some(),
             pointer_page,
@@ -2817,7 +3019,7 @@ impl FootprintReview {
                     self.place.origin[0] += d.x;
                     self.place.origin[1] += d.y;
                 }
-                Tool::Ruler => {
+                Tool::Scale | Tool::MeasurePdf | Tool::MeasureFootprint => {
                     if let Some(p) = pointer_page {
                         if resp.drag_started() {
                             let start = resp
@@ -2834,6 +3036,7 @@ impl FootprintReview {
                                 None => {
                                     let s = self.start_point(self.to_page(canvas, start), lines);
                                     self.ruler = Some([s, s]);
+                                    self.rt.measured = None;
                                     self.rt.ruler_anchor = Some(s);
                                     self.rt.ruler_end = Some(1);
                                 }
@@ -2853,13 +3056,20 @@ impl FootprintReview {
             }
         }
         // Before an end is placed: where it would snap, at the pointer
-        if self.tool == Tool::Ruler
+        if self.tool.ruler()
             && self.rt.snap.is_none()
             && !resp.dragged_by(egui::PointerButton::Primary)
             && lines
             && let Some(p) = hover_page
         {
-            self.rt.snap = self.line_snap(p, false);
+            self.rt.snap = self.end_snap(p, false);
+        }
+        // A measuring ruler let go: its length into the note
+        if !self.rt.ruler_placing
+            && self.rt.ruler_end.is_none()
+            && !resp.dragged_by(egui::PointerButton::Primary)
+        {
+            self.note_measurement();
         }
         // Keys while the pointer is over the canvas
         if resp.hovered() && !ctx.egui_wants_keyboard_input() {
@@ -2875,7 +3085,10 @@ impl FootprintReview {
                     page_down: pressed(Some(egui::Key::PageDown)),
                     escape: pressed(Some(egui::Key::Escape)),
                     full_width: pressed(km.full_width),
+                    move_tool: pressed(km.move_tool),
                     ruler: pressed(km.ruler),
+                    measure_pdf: pressed(km.measure_pdf),
+                    measure_footprint: pressed(km.measure_footprint),
                     ruler_zoom: pressed(km.ruler_zoom),
                     scale: pressed(km.scale),
                     dimension: pressed(km.dimension),
@@ -2914,7 +3127,10 @@ impl FootprintReview {
                 (p.invert, Action::Invert),
                 (p.full_width, Action::FullWidth),
                 (p.escape, Action::EndRuler),
+                (p.move_tool, Action::Mode(Tool::Move)),
                 (p.ruler, Action::Ruler),
+                (p.measure_pdf, Action::Mode(Tool::MeasurePdf)),
+                (p.measure_footprint, Action::Mode(Tool::MeasureFootprint)),
                 (p.ruler_zoom, Action::RulerZoom),
                 (p.scale, Action::Scale),
                 (p.dimension, Action::Dimension),
@@ -2949,23 +3165,34 @@ impl FootprintReview {
         // The ruler
         if let Some([a, b]) = self.ruler {
             let (sa, sb) = (self.to_screen(canvas, a), self.to_screen(canvas, b));
-            let stroke = Stroke::new(1.5, Color32::from_rgb(0, 140, 255));
+            let (line, fill) = ruler_colours(self.tool);
+            let stroke = Stroke::new(1.5, line);
             painter.line_segment([sa, sb], stroke);
             let n = (sb - sa).normalized().rot90() * 6.0;
             for s in [sa, sb] {
                 painter.line_segment([s - n, s + n], stroke);
                 painter.circle_stroke(s, 3.0, stroke);
             }
-            let pts = ((b[0] - a[0]) as f64).hypot((b[1] - a[1]) as f64);
-            let label = format!("{:.3} mm", pts * self.mm_per_point());
+            let (mm, dx, dy) = self.ruler_mm([a, b]);
+            let label = if self.tool.measures() {
+                let name = match &self.rt.measured {
+                    Some(m) if m.ends == [a, b] => format!("M{} = ", m.n),
+                    _ => String::new(),
+                };
+                format!("{name}{mm:.3} mm · dx {dx:.3} · dy {dy:.3}")
+            } else {
+                format!("{mm:.3} mm")
+            };
             let at = sa + (sb - sa) / 2.0 + n * 2.0;
             let galley = painter.layout_no_wrap(label, FontId::monospace(13.0), Color32::WHITE);
             let r = Align2::CENTER_CENTER
                 .anchor_size(at, galley.size())
                 .expand(2.0);
-            painter.rect_filled(r, 2.0, Color32::from_rgb(0, 90, 180));
+            painter.rect_filled(r, 2.0, fill);
             painter.galley(r.min + vec2(2.0, 2.0), galley, Color32::WHITE);
-            self.dimension_chip(ui, &painter, canvas, r);
+            if !self.tool.measures() {
+                self.dimension_chip(ui, &painter, canvas, r);
+            }
         }
         self.draw_snap(&painter, canvas);
         if self.rt.length_box {
@@ -2987,6 +3214,48 @@ impl FootprintReview {
             painter.galley(r.min + vec2(4.0, 2.0), galley, Color32::WHITE);
             y = r.min.y - 2.0;
         }
+    }
+
+    /// The ruler's length and its x and y spans, mm, at the scale set
+    fn ruler_mm(&self, [a, b]: [[f32; 2]; 2]) -> (f64, f64, f64) {
+        let k = self.mm_per_point();
+        let (dx, dy) = ((b[0] - a[0]) as f64 * k, (b[1] - a[1]) as f64 * k);
+        (dx.hypot(dy), dx.abs(), dy.abs())
+    }
+
+    /// A measuring ruler laid or moved, and let go: its length into the review note as `M1 = 1.234 mm`. A new
+    /// ruler takes the next number; a ruler adjusted keeps its number, its value changed in the note (added again
+    /// when the note no longer has it).
+    fn note_measurement(&mut self) {
+        let Some(ends) = self.ruler.filter(|_| self.tool.measures()) else {
+            return;
+        };
+        let (mm, _, _) = self.ruler_mm(ends);
+        if mm <= 0.0 || self.rt.measured.as_ref().is_some_and(|m| m.ends == ends) {
+            return;
+        }
+        let n = match &self.rt.measured {
+            Some(m) => m.n,
+            None => {
+                self.rt.measure_count += 1;
+                self.rt.measure_count
+            }
+        };
+        let text = format!("M{n} = {mm:.3} mm");
+        let old = self.rt.measured.take().map(|m| m.text);
+        match old.and_then(|o| self.rt.note.rfind(&o).map(|i| (i, o.len()))) {
+            Some((i, len)) => self.rt.note.replace_range(i..i + len, &text),
+            None => {
+                let note = self.rt.note.trim_end().to_string();
+                self.rt.note = if note.is_empty() {
+                    format!("{text} ")
+                } else {
+                    format!("{note} {text} ")
+                };
+            }
+        }
+        self.rt.measured = Some(Measured { n, ends, text });
+        self.usage("measure");
     }
 
     /// Where a ruler end snaps, at the pointer: the lines it snaps to drawn over, a square on a line's end, a cross
@@ -3021,6 +3290,24 @@ impl FootprintReview {
             }
             SnapKind::Line => {
                 painter.circle_stroke(at, 4.5, stroke);
+            }
+            SnapKind::PadCentre => {
+                painter.circle_stroke(at, 5.0, stroke);
+                for d in [vec2(7.0, 0.0), vec2(0.0, 7.0)] {
+                    painter.line_segment([at - d, at + d], stroke);
+                }
+            }
+            SnapKind::PadSide => {
+                let d = 5.0;
+                painter.add(egui::Shape::closed_line(
+                    vec![
+                        at + vec2(0.0, -d),
+                        at + vec2(d, 0.0),
+                        at + vec2(0.0, d),
+                        at + vec2(-d, 0.0),
+                    ],
+                    stroke,
+                ));
             }
         }
     }
@@ -3238,7 +3525,10 @@ impl FootprintReview {
 #[derive(Clone, Copy)]
 struct KeyMap {
     full_width: Option<egui::Key>,
+    move_tool: Option<egui::Key>,
     ruler: Option<egui::Key>,
+    measure_pdf: Option<egui::Key>,
+    measure_footprint: Option<egui::Key>,
     ruler_zoom: Option<egui::Key>,
     scale: Option<egui::Key>,
     dimension: Option<egui::Key>,
@@ -3257,7 +3547,10 @@ impl From<&Keys> for KeyMap {
         let key = |name: &str| egui::Key::from_name(name.trim());
         KeyMap {
             full_width: key(&k.full_width),
+            move_tool: key(&k.move_tool),
             ruler: key(&k.ruler),
+            measure_pdf: key(&k.measure_pdf),
+            measure_footprint: key(&k.measure_footprint),
             ruler_zoom: key(&k.ruler_zoom),
             scale: key(&k.scale),
             dimension: key(&k.dimension),
@@ -3283,7 +3576,10 @@ struct Pressed {
     page_down: bool,
     escape: bool,
     full_width: bool,
+    move_tool: bool,
     ruler: bool,
+    measure_pdf: bool,
+    measure_footprint: bool,
     ruler_zoom: bool,
     scale: bool,
     dimension: bool,
@@ -3295,6 +3591,25 @@ struct Pressed {
     puck: bool,
     accept: bool,
     next: bool,
+}
+
+/// The ruler's line and label colours in a mode: blue setting the scale, orange measuring the drawing, green
+/// measuring the footprint
+fn ruler_colours(t: Tool) -> (Color32, Color32) {
+    match t {
+        Tool::Move | Tool::Scale => (
+            Color32::from_rgb(0, 140, 255),
+            Color32::from_rgb(0, 90, 180),
+        ),
+        Tool::MeasurePdf => (
+            Color32::from_rgb(255, 140, 0),
+            Color32::from_rgb(190, 90, 0),
+        ),
+        Tool::MeasureFootprint => (
+            Color32::from_rgb(40, 200, 90),
+            Color32::from_rgb(20, 130, 60),
+        ),
+    }
 }
 
 /// A key as the help shows it; a setting that names no key shows so

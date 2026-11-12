@@ -277,7 +277,7 @@ fn every_slot_names_its_action_and_key() {
                 .flat_map(|r| r.iter().flatten()),
         )
         .collect();
-    assert_eq!(slots.len(), 2 + 8 + 4 + 2);
+    assert_eq!(slots.len(), 2 + 9 + 5 + 2);
     for s in &slots {
         let (name, key) = s.label.split_once(" · ").expect(&s.label);
         assert!(!name.is_empty() && !key.is_empty(), "{}", s.label);
@@ -297,6 +297,12 @@ fn every_slot_names_its_action_and_key() {
     assert_eq!(label(Action::Blink), "Blink · no key");
     assert_eq!(label(Action::Ruler), "Ruler · R");
     assert_eq!(label(Action::Accept), "Accept · A");
+    assert_eq!(label(Action::Mode(Tool::Move)), "Back to Move · M");
+    assert_eq!(label(Action::Mode(Tool::MeasurePdf)), "Measure the PDF · E");
+    assert_eq!(
+        label(Action::Mode(Tool::MeasureFootprint)),
+        "Measure the footprint · G"
+    );
     // Nothing open: only what the puck moves can be done; the rest says why
     for s in &slots {
         assert_eq!(
@@ -318,6 +324,10 @@ fn every_slot_names_its_action_and_key() {
         "No footprint shown: pick a symbol (left)"
     );
     assert_eq!(why(Action::FullWidth), "Open the datasheet first (left)");
+    assert_eq!(
+        why(Action::Mode(Tool::Move)),
+        "In Move already: the mouse moves the footprint"
+    );
     assert_eq!(
         why(Action::Accept),
         "pick a symbol first: its footprint and datasheet follow"

@@ -21,8 +21,10 @@ pub enum Action {
     RulerZoom,
     Scale,
     Dimension,
-    /// Out of the ruler step (Esc)
+    /// Out of the ruler step and back to Move (Esc)
     EndRuler,
+    /// Into a mode; its own key again goes back to Move ([`FootprintReview::tool_key`])
+    Mode(Tool),
     Rotate,
     Mirror,
     Blink,
@@ -209,8 +211,13 @@ impl FootprintReview {
             short_key(k.ruler)
         );
         let pages = pdf.map_or(0, |p| p.page_count());
-        let in_ruler_step = self.rt.ruler_placing || self.rt.ruler_focus.is_some();
-        let dimension = if self.ruler.is_none() {
+        let measuring = format!(
+            "Measuring: the scale is set in the Scale mode ({})",
+            short_key(k.ruler)
+        );
+        let dimension = if self.tool.measures() {
+            Some(measuring.clone())
+        } else if self.ruler.is_none() {
             Some(no_ruler.clone())
         } else if self.dimension_number().is_none() {
             Some(format!(
@@ -257,7 +264,8 @@ impl FootprintReview {
                 ),
                 Some(
                     slot("Type the length", short_key(k.scale), icons::TEXTBOX, Scale)
-                        .disabled_if(self.ruler.is_none(), no_ruler),
+                        .disabled_if(self.ruler.is_none(), no_ruler)
+                        .disabled_if(self.tool.measures(), measuring),
                 ),
                 Some(Slot {
                     disabled: dimension,
@@ -269,9 +277,27 @@ impl FootprintReview {
                     )
                 }),
                 Some(
-                    slot("End the ruler step", "Esc".into(), icons::X, EndRuler)
-                        .disabled_if(!in_ruler_step, "Not in the ruler step"),
+                    slot(
+                        "Back to Move",
+                        short_key(k.move_tool),
+                        icons::HAND_GRABBING,
+                        Mode(Tool::Move),
+                    )
+                    .disabled_if(
+                        self.tool == Tool::Move,
+                        "In Move already: the mouse moves the footprint",
+                    ),
                 ),
+                Some(datasheet(slot(
+                    if self.tool == Tool::MeasurePdf {
+                        "Stop measuring the PDF"
+                    } else {
+                        "Measure the PDF"
+                    },
+                    short_key(k.measure_pdf),
+                    icons::RULER,
+                    Mode(Tool::MeasurePdf),
+                ))),
                 Some(
                     datasheet(slot(
                         "Next page",
@@ -324,6 +350,16 @@ impl FootprintReview {
                     short_key(k.cu_layer),
                     icons::STACK,
                     CuLayer,
+                ))),
+                Some(footprint(slot(
+                    if self.tool == Tool::MeasureFootprint {
+                        "Stop measuring the footprint"
+                    } else {
+                        "Measure the footprint"
+                    },
+                    short_key(k.measure_footprint),
+                    icons::RULER,
+                    Mode(Tool::MeasureFootprint),
                 ))),
             ],
             ring_both: vec![
@@ -394,7 +430,8 @@ impl FootprintReview {
             Action::RulerZoom => self.ruler_zoom_key(self.rt.canvas),
             Action::Scale => self.scale_key(),
             Action::Dimension => self.use_dimension_number(),
-            Action::EndRuler => self.ruler_done(),
+            Action::EndRuler => self.set_tool(Tool::Move),
+            Action::Mode(t) => self.tool_key(t),
             Action::Rotate => self.place.rotation = (self.place.rotation + 90.0).rem_euclid(360.0),
             Action::Mirror => self.place.mirror = !self.place.mirror,
             Action::Blink => self.blink = !self.blink,

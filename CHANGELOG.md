@@ -11,9 +11,29 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `VIEW-19`: Footprint review, four modes on a bar above the canvas: Move (`M`), Scale (`R`, the ruler that sets the
+  scale, as before), Measure PDF (`E`) and Measure footprint (`G`). The mode on is highlighted on the bar and named
+  first in the help line, and each mode is in the pie menu. Measure PDF lays the ruler on the drawing's lines. Measure
+  footprint snaps its ends to the pads' centres and to the middles of the sides of rect and roundrect pads. A
+  measurement goes into the review note as `M1 = 1.234 mm`; moving an end changes that value, a new ruler is `M2`. The
+  measuring ruler shows dx and dy; the scale's ruler waits while measuring and is back in Move.
+
+### Changed
+
+- `VIEW-19`: Footprint review, the bottom view's key is `X`; `M` is Move now. A settings file saved with `mirror =
+  "M"` takes `X` for it when read.
+
 ### Fixed
 
-- `VIEW-19`: Footprint review, the S length box took no typing and kept the app busy while it was open (0.4.33-0.4.36). It asked for the keyboard on every frame, and in egui each such request interrupts the input method: on Wayland egui-winit switched the input method off and on every frame, which lost what was typed and woke the next frame. The box now takes the keyboard once. The kittest of 0.4.33 typed through plain text events, which no input method touches; the new test types through input method events and fails when a frame interrupts them.
+- `VIEW-19`: Footprint review, the ruler could not be left: Esc ended the ruler step but kept the ruler tool, so the
+  mouse no longer moved the footprint. Esc, `M` and a mode's own key again now go back to Move.
+- `VIEW-19`: Footprint review, the S length box took no typing and kept the app busy while it was open
+  (0.4.33-0.4.36). It asked for the keyboard on every frame, and in egui each such request interrupts the input
+  method: on Wayland egui-winit switched the input method off and on every frame, which lost what was typed and woke
+  the next frame. The box now takes the keyboard once. The kittest of 0.4.33 typed through plain text events, which no
+  input method touches; the new test types through input method events and fails when a frame interrupts them.
 
 ## [0.4.36] - 2026-11-12
 

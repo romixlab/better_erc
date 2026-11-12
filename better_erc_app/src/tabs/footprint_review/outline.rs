@@ -481,6 +481,43 @@ pub fn items(f: &LocalFootprint, board: Margins) -> Vec<Item> {
     out
 }
 
+/// A point the measuring ruler snaps to on the footprint
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct SnapPoint {
+    /// Footprint mm
+    pub at: P,
+    /// A pad's centre; else the middle of one of its sides
+    pub centre: bool,
+}
+
+/// Where the measuring ruler snaps on `f`: each pad's centre (the middle of its copper, by its drill offset), and on
+/// a rectangular or rounded rectangular pad the four points where its centre cross meets its edge
+pub fn snap_points(f: &LocalFootprint) -> Vec<SnapPoint> {
+    let mut out = Vec::new();
+    for pad in &f.pads {
+        let at = mm(pad.at);
+        let o = pad.details.drill_offset.map_or([0.0, 0.0], mm);
+        let place = |p: P| {
+            let r = rotate([p[0] + o[0], p[1] + o[1]], pad.rotation);
+            [r[0] + at[0], r[1] + at[1]]
+        };
+        out.push(SnapPoint {
+            at: place([0.0, 0.0]),
+            centre: true,
+        });
+        if matches!(pad.shape.as_str(), "rect" | "roundrect") {
+            let (w, h) = (len(pad.size.x) / 2.0, len(pad.size.y) / 2.0);
+            for p in [[-w, 0.0], [w, 0.0], [0.0, -h], [0.0, h]] {
+                out.push(SnapPoint {
+                    at: place(p),
+                    centre: false,
+                });
+            }
+        }
+    }
+    out
+}
+
 /// Whether `pad` is a via in the package: a round plated hole through all copper, either without a number, marked
 /// as a heatsink, or sharing its number with a surface pad (a thermal via of an exposed pad). KiCad 10 has no vias
 /// in footprints; a package's vias are such pads, and they are in the review hash as pads.

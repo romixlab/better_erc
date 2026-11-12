@@ -168,7 +168,7 @@ fn review_a_symbol_from_its_library() {
     assert!(disabled(&h, ACCEPT));
     h.get_by_label("set the drawing's scale with the ruler first");
     // The ruler along the 2.00 mm dimension
-    button(&h, "Ruler").click();
+    button(&h, "Scale · R").click();
     h.run();
     h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
     h.run();
@@ -220,7 +220,7 @@ fn review_a_symbol_from_its_library() {
     h.run();
     h.key_press(egui::Key::ArrowRight);
     h.key_press(egui::Key::T);
-    h.key_press(egui::Key::M);
+    h.key_press(egui::Key::X);
     h.run();
     let st = h.state();
     assert!(st.place.origin[0] > origin[0]);
@@ -778,7 +778,7 @@ fn accept_writes_into_the_symbols() {
 }
 
 /// A harness on a review tab without fonts or library search
-fn harness(name: &'static str) -> Harness<'static, FootprintReview> {
+pub(super) fn harness(name: &'static str) -> Harness<'static, FootprintReview> {
     let settings = FootprintReviewSettings {
         font_dirs: Vec::new(),
         library_search: Vec::new(),
@@ -1203,7 +1203,7 @@ fn ruler_by_keys() {
     h.run();
     h.key_press(egui::Key::R);
     h.run();
-    assert_eq!(h.state().tool, Tool::Ruler);
+    assert_eq!(h.state().tool, Tool::Scale);
     assert!(h.state().rt.ruler_placing);
     h.hover_at(screen(&h, [b[0] - 3.0, b[1] + 2.0]));
     h.run();
@@ -1387,7 +1387,10 @@ fn length_box_leaves_the_input_method_alone() {
         assert!(!interrupts(&h), "typing {part} interrupts the input method");
         h.event(egui::Event::Ime(egui::ImeEvent::Commit(part.into())));
         h.step();
-        assert!(!interrupts(&h), "{part} committed interrupts the input method");
+        assert!(
+            !interrupts(&h),
+            "{part} committed interrupts the input method"
+        );
     }
     h.run();
     assert_eq!(h.state().rt.ruler_mm, "1.6");
@@ -1438,7 +1441,7 @@ fn ruler_snaps_level() {
         h.event(egui::Event::ModifiersChanged(egui::Modifiers::NONE));
         h.run();
     };
-    h.state_mut().tool = Tool::Ruler;
+    h.state_mut().tool = Tool::Scale;
     h.state_mut().ruler = Some([[100.0, 200.0], [200.0, 200.0]]);
     h.run();
     drag(&mut h, [100.0, 200.0], [110.0, 230.0], false);
@@ -1485,7 +1488,7 @@ fn ruler_snaps_to_the_drawing() {
     // 2 screen points per page point: the snap's 10 pixels reach 5 points
     h.state_mut().zoom = 2.0;
     h.state_mut().pan = [0.0, 0.0];
-    h.state_mut().tool = Tool::Ruler;
+    h.state_mut().tool = Tool::Scale;
     h.run();
     let screen = |h: &Harness<'_, FootprintReview>, p: [f32; 2]| {
         let st = h.state();
@@ -1531,7 +1534,7 @@ fn ruler_snaps_to_the_drawing() {
     h.run();
     assert!(h.state().scale.is_some(), "the chip sets the scale");
     // Alt: the end where the pointer is
-    h.state_mut().tool = Tool::Ruler;
+    h.state_mut().tool = Tool::Scale;
     let off = [a[0] + 3.0, a[1] - 2.0];
     h.event(egui::Event::ModifiersChanged(egui::Modifiers::ALT));
     h.hover_at(screen(&h, off));
