@@ -241,18 +241,23 @@ Accept gives the hash for the `Footprint_Review` field.
    ruler.
 4. **Lay the footprint on the drawing**: drag it (Move footprint), nudge it with the arrow keys (Shift: ten times
    as far), turn it with R or ⟲ 90° or by an angle, mirror it with M for a drawing seen from below. Opacity, Blink
-   (B) and the layers shown (pads, courtyard, fab, silk, copper, mask, paste) help to see both. Scroll zooms at the
-   pointer; the right or middle button pans; Page Up and Page Down turn pages.
+   (B), the colours (presets for the pads, a picker per layer group) and the layers shown (pads, courtyard, fab,
+   silk, copper, mask, paste) help to see both. The blend mode mixes the footprint into the page: Normal (over it
+   by its opacity), Multiply (the drawing's lines stay dark through it), Screen, or Difference: with white pads,
+   white paper under a pad goes black, so a footprint that covers the drawing's pads exactly leaves no light edge,
+   and a pad that misses shows light. Scroll zooms at the pointer; the right or middle button pans; Page Up and
+   Page Down turn pages.
 5. **Accept**: when the footprint matches the drawing, Accept copies its review hash to the clipboard and keeps the
    review (footprint, hash, datasheet, page, scale) in the tab's list. Accept stays disabled, saying why, until a
    footprint and a datasheet are open and the scale is set on the page shown.
 
 PDFs are read and drawn by [hayro](https://github.com/LaurenzV/hayro), in pure Rust, on a thread of its own. The
+blend modes other than Normal are a wgpu shader that reads the page's own pixel under the footprint. The
 PDF standard fonts that a datasheet uses without embedding them come from the Liberation fonts when installed, else
 from egui's own font.
 
-The settings (blink rate, the opacity at first, the page search words, the finest drawing scale, the font folders,
-the library search command) are in `~/.config/better_erc/config.toml` (`$XDG_CONFIG_HOME`, or the file
+The settings (blink rate, the opacity, blend mode and colours at first, the page search words, the finest drawing
+scale, the font folders, the library search command) are in `~/.config/better_erc/config.toml` (`$XDG_CONFIG_HOME`, or the file
 `$BERC_CONFIG` names), section `[footprint_review]`; the tab's Settings shows and saves them. Each step of a review
 is recorded in berc's usage record (`app fp-review accept`, ...), which `berc usage` counts in its `app` column.
 

@@ -38,10 +38,12 @@ enum Reply {
     Idle,
 }
 
-/// A page's picture and the scale it was drawn at
+/// A page's picture: the texture egui draws, the pixels the blend pass reads and a generation that changes with them
 pub struct Picture {
     pub page: usize,
     pub texture: egui::TextureHandle,
+    pub image: Arc<egui::ColorImage>,
+    pub generation: u64,
 }
 
 /// A PDF file open for the review
@@ -169,12 +171,21 @@ impl PdfDoc {
             }
             Reply::Failed(e) => self.error = Some(e),
             Reply::Picture { page, image } => {
+                let image = Arc::new(image);
                 let texture = ctx.load_texture(
                     format!("pdf page {page}"),
-                    image,
+                    image.clone(),
                     egui::TextureOptions::LINEAR,
                 );
-                self.picture = Some(Picture { page, texture });
+                // Unique across documents: the blend pass uploads a picture again when this changes
+                static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+                let generation = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                self.picture = Some(Picture {
+                    page,
+                    texture,
+                    image,
+                    generation,
+                });
             }
             Reply::Text { page, text } => {
                 if let Some(t) = self.texts.get_mut(page) {

@@ -3,6 +3,7 @@
 
 use super::testpdf::{TestPage, write};
 use super::*;
+use crate::settings::{BlendMode, LayerColors, Rgb};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable;
 use std::sync::Mutex;
@@ -172,19 +173,39 @@ fn review_a_footprint_over_its_datasheet() {
 
 /// A real board: BERC_FP_BOARD names a .kicad_pcb, BERC_FP_REF the footprint to pick (default: the first with a
 /// Datasheet field); the library search runs with the default command when it is on PATH. Not run without them.
+/// BERC_FP_BLEND picks a blend mode.
 #[test]
 fn real_board() {
     let Some(board) = std::env::var_os("BERC_FP_BOARD") else {
         eprintln!("BERC_FP_BOARD not set: no real board opened");
         return;
     };
+    // BERC_FP_BLEND (normal, multiply, screen, difference): that blend mode, through the GPU pass
+    let blend: Option<BlendMode> = std::env::var("BERC_FP_BLEND").ok().map(|m| {
+        serde_json::from_value(serde_json::Value::String(m))
+            .expect("a blend mode: normal, multiply, screen, difference")
+    });
     let mut cx = Context::new();
-    let mut h = Harness::builder()
-        .with_size(vec2(1400.0, 900.0))
-        .build_ui_state(
-            move |ui, state: &mut FootprintReview| state.ui(ui, &mut cx, Id::new("fp real")),
-            FootprintReview::with(FootprintReviewSettings::default(), Arc::new(|_: &str| {})),
-        );
+    let mut b = Harness::builder().with_size(vec2(1400.0, 900.0));
+    let rs = blend.map(|_| {
+        egui_kittest::wgpu::create_render_state(
+            egui_kittest::wgpu::default_wgpu_setup(),
+            eframe::egui_wgpu::RendererOptions::PREDICTABLE,
+        )
+    });
+    if let Some(rs) = &rs {
+        b = b.renderer(egui_kittest::wgpu::WgpuTestRenderer::from_render_state(
+            rs.clone(),
+        ));
+    }
+    let mut h = b.build_ui_state(
+        move |ui, state: &mut FootprintReview| state.ui(ui, &mut cx, Id::new("fp real")),
+        FootprintReview::with(FootprintReviewSettings::default(), Arc::new(|_: &str| {})),
+    );
+    if let Some(rs) = &rs {
+        blend::register(&h.ctx, rs, 1, None);
+    }
+    h.state_mut().blend = blend;
     h.run();
     let ctx = h.ctx.clone();
     h.state_mut().open_path(&ctx, Path::new(&board));
@@ -263,4 +284,107 @@ fn scale_notes() {
         Some(("SCALE: 2.5X".into(), 2.5))
     );
     assert_eq!(scale_note("not to scale"), None);
+}
+
+/// The blend modes on the GPU: a pad drawn white over the page's white paper is black in Difference, white in
+/// Normal and Screen; a red pad is red in Multiply over paper and dark over the drawing's grey pad
+#[test]
+fn blend_modes_mix_with_the_page() {
+    use eframe::egui_wgpu;
+    let dir = std::env::temp_dir().join(format!("berc-fp-blend-{}", std::process::id()));
+    std::fs::create_dir_all(&dir).unwrap();
+    let pdf = datasheet(&dir);
+    let settings = FootprintReviewSettings {
+        font_dirs: Vec::new(),
+        library_search: Vec::new(),
+        ..Default::default()
+    };
+    let rs = egui_kittest::wgpu::create_render_state(
+        egui_kittest::wgpu::default_wgpu_setup(),
+        egui_wgpu::RendererOptions::PREDICTABLE,
+    );
+    let mut cx = Context::new();
+    let mut h = Harness::builder()
+        .with_size(vec2(1200.0, 800.0))
+        .renderer(egui_kittest::wgpu::WgpuTestRenderer::from_render_state(
+            rs.clone(),
+        ))
+        .build_ui_state(
+            move |ui, state: &mut FootprintReview| state.ui(ui, &mut cx, Id::new("fp blend")),
+            FootprintReview::with(settings, Arc::new(|_: &str| {})),
+        );
+    blend::register(&h.ctx, &rs, 1, None);
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &footprint());
+    h.state_mut().open_datasheet(&ctx, &pdf);
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    // The first numbered pad, opaque, at 0.02 mm per point
+    let st = h.state_mut();
+    st.scale = Some(Scale {
+        mm_per_point: 0.02,
+        page: 1,
+        mm: 2.0,
+        note: None,
+    });
+    st.opacity = Some(1.0);
+    let pad = st
+        .rt
+        .items
+        .iter()
+        .find_map(|i| match i {
+            Item::Number { at, .. } => Some(*at),
+            _ => None,
+        })
+        .unwrap();
+    // Put the pad's middle on a page point
+    let place = |st: &mut FootprintReview, at: [f32; 2]| {
+        st.place.origin = [0.0, 0.0];
+        let off = st.fp_to_page(pad);
+        st.place.origin = [at[0] - off[0], at[1] - off[1]];
+    };
+    let pixel =
+        |h: &mut Harness<'_, FootprintReview>, mode: BlendMode, rgb: [u8; 3], at: [f32; 2]| {
+            let st = h.state_mut();
+            st.blend = Some(mode);
+            st.colors = Some(LayerColors {
+                pads: Rgb(rgb),
+                ..Default::default()
+            });
+            place(st, at);
+            h.run();
+            let st = h.state();
+            let p = st.to_screen(st.rt.canvas, at);
+            let img = h.render().unwrap();
+            let ppp = h.ctx.pixels_per_point();
+            let px = img.get_pixel((p.x * ppp) as u32, (p.y * ppp) as u32).0;
+            [px[0], px[1], px[2]]
+        };
+    let paper = [150.0, 330.0];
+    // The drawing's black pad (filled 100..140 x 220..240)
+    let ink = [120.0, 230.0];
+    let near = |got: [u8; 3], want: [u8; 3]| got.iter().zip(want).all(|(g, w)| g.abs_diff(w) <= 12);
+    let white = [255, 255, 255];
+    let red = [220, 30, 30];
+    for (mode, rgb, at, want) in [
+        (BlendMode::Difference, white, paper, [0, 0, 0]),
+        (BlendMode::Normal, white, paper, white),
+        (BlendMode::Screen, red, paper, white),
+        (BlendMode::Multiply, red, paper, red),
+        // The drawing's pads are grey 0.2: 0.2 x red
+        (BlendMode::Multiply, red, ink, [44, 6, 6]),
+        (BlendMode::Difference, white, ink, [204, 204, 204]),
+    ] {
+        let got = pixel(&mut h, mode, rgb, at);
+        assert!(
+            near(got, want),
+            "{mode:?} {rgb:?} at {at:?}: {got:?}, want {want:?}"
+        );
+    }
+    if let Some(p) = std::env::var_os("BERC_FP_SNAPSHOT") {
+        h.render().unwrap().save(p).unwrap();
+    }
+    std::fs::remove_dir_all(&dir).unwrap();
 }

@@ -28,6 +28,11 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
   field and keeps the review; it says why while it can't be used. The app's settings file
   (`~/.config/better_erc/config.toml`, `[footprint_review]`): blink rate, opacity at first, page search words,
   finest drawing scale, font folders, library search command. A kittest test drives the review on a PDF it writes.
+- `VIEW-19`: the footprint's colour (presets for the pads, a picker per layer group) and blend mode: normal,
+  multiply, screen and difference, where white pads over white paper go black so an exact match goes dark. The
+  modes are a wgpu pass (an egui paint callback) whose shader reads the page's pixel under the footprint; without
+  the wgpu renderer they are disabled and say why. Defaults in `[footprint_review]`: `blend` and `colors`
+  (`#rrggbb` per layer group). A kittest test reads the rendered pixels for each mode.
 
 ## [0.4.24] - 2026-11-12
 

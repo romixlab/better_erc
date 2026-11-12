@@ -9,7 +9,7 @@
 //! setting), or a file picker; the page search finds the land pattern page by words that are a setting too.
 
 use crate::prelude::*;
-use crate::settings::{FootprintReviewSettings, Settings};
+use crate::settings::{BlendMode, FootprintReviewSettings, LayerColors, Rgb, Settings};
 use crate::tabs::TabUi;
 use better_erc::fp::{FIELD, FootprintSource, Sourced};
 use better_erc::model::layout::{FootprintId, Layout};
@@ -20,12 +20,27 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::mpsc::Receiver;
 
+pub mod blend;
 mod outline;
 mod pdf;
 #[cfg(test)]
 mod testpdf;
 #[cfg(test)]
 mod tests;
+
+/// Around the page
+const CANVAS_BACKGROUND: Color32 = Color32::from_gray(60);
+
+/// The pads' colour presets: name and colour
+const PAD_PRESETS: [(&str, [u8; 3]); 7] = [
+    ("Red", [220, 30, 30]),
+    ("Green", [0, 170, 60]),
+    ("Blue", [30, 90, 230]),
+    ("Cyan", [0, 190, 210]),
+    ("Magenta", [220, 0, 200]),
+    ("Black", [0, 0, 0]),
+    ("White: with Difference, a match goes dark", [255, 255, 255]),
+];
 
 /// Millimetres per PDF point at the PDF's own scale (1:1)
 const MM_PER_POINT: f64 = 25.4 / 72.0;
@@ -113,6 +128,9 @@ pub struct FootprintReview {
     ruler: Option<[[f32; 2]; 2]>,
     scale: Option<Scale>,
     opacity: Option<f32>,
+    /// The blend mode and colours chosen here; none: the settings' defaults
+    blend: Option<BlendMode>,
+    colors: Option<LayerColors>,
     blink: bool,
     hidden: Vec<String>,
     tool: Tool,
@@ -134,6 +152,8 @@ impl Default for FootprintReview {
             ruler: None,
             scale: None,
             opacity: None,
+            blend: None,
+            colors: None,
             blink: false,
             hidden: Kind::ALL
                 .iter()
@@ -523,6 +543,14 @@ impl FootprintReview {
         } else {
             "library-search"
         });
+    }
+
+    fn blend_mode(&self) -> BlendMode {
+        self.blend.unwrap_or(self.rt.settings.blend)
+    }
+
+    fn layer_colors(&self) -> &LayerColors {
+        self.colors.as_ref().unwrap_or(&self.rt.settings.colors)
     }
 
     /// Millimetres per page point: the scale set with the ruler, else the PDF's own
@@ -1059,6 +1087,77 @@ impl FootprintReview {
                 self.rt.center_footprint = true;
             }
         });
+        // Blend mode: the modes other than normal need the GPU pass
+        let gpu = blend::available(ui.ctx());
+        let mut mode = self.blend_mode();
+        ui.horizontal_wrapped(|ui| {
+            ui.label("Blend");
+            for m in BlendMode::ALL {
+                let ok = m == BlendMode::Normal || gpu;
+                let r = ui.add_enabled(ok, Button::selectable(mode == m, m.name()));
+                let r = if ok {
+                    r.on_hover_text(blend_hint(m))
+                } else {
+                    r.on_disabled_hover_text(
+                        "needs the app's wgpu renderer, which this window does not have",
+                    )
+                };
+                if r.clicked() {
+                    mode = m;
+                }
+            }
+        });
+        if mode != self.blend_mode() {
+            self.blend = Some(mode);
+            self.usage(&format!("blend {}", mode.name().to_lowercase()));
+        }
+        // Colours: presets for the pads, a picker per layer group
+        let mut colors = self.layer_colors().clone();
+        ui.horizontal_wrapped(|ui| {
+            ui.label("Pads");
+            for (name, rgb) in PAD_PRESETS {
+                let c = Color32::from_rgb(rgb[0], rgb[1], rgb[2]);
+                let (rect, r) = ui.allocate_exact_size(vec2(16.0, 16.0), Sense::click());
+                ui.painter().rect_filled(rect, 2.0, c);
+                let selected = colors.pads.0 == rgb;
+                ui.painter().rect_stroke(
+                    rect,
+                    2.0,
+                    Stroke::new(
+                        if selected { 2.0 } else { 1.0 },
+                        ui.visuals().strong_text_color(),
+                    ),
+                    egui::StrokeKind::Outside,
+                );
+                if r.on_hover_text(name).clicked() {
+                    colors.pads = Rgb(rgb);
+                }
+            }
+            colour_button(ui, &mut colors.pads, "Pads: any colour");
+        });
+        egui::CollapsingHeader::new("Colours of the other layers")
+            .id_salt("layer colours")
+            .default_open(false)
+            .show(ui, |ui| {
+                Grid::new("layer colours grid")
+                    .num_columns(2)
+                    .show(ui, |ui| {
+                        for k in Kind::ALL {
+                            if k == Kind::Pad {
+                                continue;
+                            }
+                            ui.label(k.name());
+                            colour_button(ui, layer_colour_mut(&mut colors, k), k.name());
+                            ui.end_row();
+                        }
+                    });
+                if ui.button("Colours from the settings").clicked() {
+                    colors = self.rt.settings.colors.clone();
+                }
+            });
+        if &colors != self.layer_colors() {
+            self.colors = Some(colors);
+        }
         ui.horizontal_wrapped(|ui| {
             for k in Kind::ALL {
                 let mut shown = !self.hidden.iter().any(|h| h == k.name());
@@ -1177,7 +1276,7 @@ impl FootprintReview {
         let (canvas, resp) = ui.allocate_exact_size(ui.available_size(), Sense::click_and_drag());
         self.rt.canvas = canvas;
         let painter = ui.painter_at(canvas);
-        painter.rect_filled(canvas, 0.0, Color32::from_gray(60));
+        painter.rect_filled(canvas, 0.0, CANVAS_BACKGROUND);
         let ctx = ui.ctx().clone();
         let page_size = self.rt.pdf.as_ref().and_then(|p| p.page_size(self.page));
         if self.rt.fit_page
@@ -1365,7 +1464,23 @@ impl FootprintReview {
             true
         };
         if shown && !self.rt.items.is_empty() {
-            self.draw_footprint(&painter, canvas);
+            let page = page_size.and_then(|[w, h]| {
+                let pic = self.rt.pdf.as_ref()?.picture.as_ref()?;
+                (pic.page == self.page).then(|| {
+                    let rect = Rect::from_min_size(
+                        canvas.min + vec2(self.pan[0], self.pan[1]),
+                        vec2(w, h) * self.zoom,
+                    );
+                    (
+                        rect,
+                        blend::PageImage {
+                            generation: pic.generation,
+                            image: pic.image.clone(),
+                        },
+                    )
+                })
+            });
+            self.draw_footprint(&painter, canvas, page, ui.id());
         }
         // The ruler
         if let Some([a, b]) = self.ruler {
@@ -1389,25 +1504,31 @@ impl FootprintReview {
         }
     }
 
-    fn draw_footprint(&self, painter: &egui::Painter, canvas: Rect) {
+    /// Draws the footprint: by egui's painter in the normal mode, else by the blend pass over `page` (its rectangle
+    /// on screen and its picture); holes, pad numbers and the origin by the painter on top
+    fn draw_footprint(
+        &self,
+        painter: &egui::Painter,
+        canvas: Rect,
+        page: Option<(Rect, blend::PageImage)>,
+        id: Id,
+    ) {
         let a = self
             .opacity
             .unwrap_or(self.rt.settings.opacity)
             .clamp(0.0, 1.0);
         let alpha = |c: Color32| c.gamma_multiply(a);
-        let colour = |k: Kind| match k {
-            Kind::Pad => Color32::from_rgb(220, 30, 30),
-            Kind::BackPad => Color32::from_rgb(30, 80, 230),
-            Kind::Courtyard => Color32::from_rgb(230, 0, 230),
-            Kind::Fab => Color32::from_rgb(170, 140, 0),
-            Kind::Silk => Color32::from_rgb(60, 60, 60),
-            Kind::Copper => Color32::from_rgb(200, 60, 0),
-            Kind::Mask => Color32::from_rgb(120, 0, 160),
-            Kind::Paste => Color32::from_rgb(110, 110, 110),
-            Kind::Edge => Color32::from_rgb(200, 180, 0),
+        let colors = self.layer_colors();
+        let colour = |k: Kind| {
+            let [r, g, b] = layer_colour(colors, k).0;
+            Color32::from_rgb(r, g, b)
         };
+        let mode = self.blend_mode();
+        let gpu = mode != BlendMode::Normal && blend::available(painter.ctx());
         let px_per_mm = (self.zoom as f64 / self.mm_per_point()) as f32;
         let screen = |p: outline::P| self.to_screen(canvas, self.fp_to_page(p));
+        // The blend pass gets the shapes at full colour; the shader mixes them in by the opacity
+        let mut blended: Vec<Shape> = Vec::new();
         for item in &self.rt.items {
             if self.hidden.iter().any(|h| h == item.kind().name()) {
                 continue;
@@ -1416,10 +1537,15 @@ impl FootprintReview {
             match item {
                 Item::Area { points, convex, .. } => {
                     let pts: Vec<Pos2> = points.iter().map(|p| screen(*p)).collect();
-                    if *convex {
-                        painter.add(Shape::convex_polygon(pts, alpha(c), Stroke::new(1.0, c)));
+                    let shape = match (*convex, gpu) {
+                        (true, true) => Shape::convex_polygon(pts, c, Stroke::NONE),
+                        (true, false) => Shape::convex_polygon(pts, alpha(c), Stroke::new(1.0, c)),
+                        (false, _) => Shape::closed_line(pts, Stroke::new(1.5, c)),
+                    };
+                    if gpu {
+                        blended.push(shape);
                     } else {
-                        painter.add(Shape::closed_line(pts, Stroke::new(1.5, c)));
+                        painter.add(shape);
                     }
                 }
                 Item::Line {
@@ -1429,14 +1555,21 @@ impl FootprintReview {
                     ..
                 } => {
                     let pts: Vec<Pos2> = points.iter().map(|p| screen(*p)).collect();
-                    let stroke = Stroke::new(
-                        ((*width as f32) * px_per_mm).max(1.0),
-                        alpha(c).to_opaque().gamma_multiply(a.max(0.6)),
-                    );
-                    if *closed {
-                        painter.add(Shape::closed_line(pts, stroke));
+                    let w = ((*width as f32) * px_per_mm).max(1.0);
+                    let stroke = if gpu {
+                        Stroke::new(w, c)
                     } else {
-                        painter.add(Shape::line(pts, stroke));
+                        Stroke::new(w, alpha(c).to_opaque().gamma_multiply(a.max(0.6)))
+                    };
+                    let shape = if *closed {
+                        Shape::closed_line(pts, stroke)
+                    } else {
+                        Shape::line(pts, stroke)
+                    };
+                    if gpu {
+                        blended.push(shape);
+                    } else {
+                        painter.add(shape);
                     }
                 }
                 Item::Hole {
@@ -1482,11 +1615,90 @@ impl FootprintReview {
                 }
             }
         }
+        if gpu && let Some((page_rect, image)) = page {
+            let mut mesh = egui::Mesh::default();
+            let mut tess = egui::epaint::Tessellator::new(
+                painter.ctx().pixels_per_point(),
+                egui::epaint::TessellationOptions::default(),
+                [1, 1],
+                Vec::new(),
+            );
+            for shape in blended {
+                tess.tessellate_shape(shape, &mut mesh);
+            }
+            painter.add(eframe::egui_wgpu::Callback::new_paint_callback(
+                canvas,
+                blend::BlendPass {
+                    id,
+                    mesh,
+                    page: image,
+                    page_rect,
+                    around: CANVAS_BACKGROUND,
+                    opacity: a,
+                    mode,
+                    viewport: canvas,
+                },
+            ));
+        }
         // The origin
         let o = self.to_screen(canvas, self.place.origin);
         let s = Stroke::new(1.0, Color32::from_rgb(0, 160, 0));
         painter.line_segment([o - vec2(6.0, 0.0), o + vec2(6.0, 0.0)], s);
         painter.line_segment([o - vec2(0.0, 6.0), o + vec2(0.0, 6.0)], s);
+    }
+}
+
+fn blend_hint(m: BlendMode) -> &'static str {
+    match m {
+        BlendMode::Normal => "The footprint over the page, by its opacity",
+        BlendMode::Multiply => {
+            "Page times footprint: the drawing's lines stay dark through the footprint"
+        }
+        BlendMode::Screen => "The inverse of multiply: light shapes stay light",
+        BlendMode::Difference => {
+            "The difference of page and footprint: with white pads, white paper under them goes black and the \
+             drawing's pads show light where the footprint misses them"
+        }
+    }
+}
+
+fn layer_colour(c: &LayerColors, k: Kind) -> Rgb {
+    match k {
+        Kind::Pad => c.pads,
+        Kind::BackPad => c.back_pads,
+        Kind::Courtyard => c.courtyard,
+        Kind::Fab => c.fab,
+        Kind::Silk => c.silk,
+        Kind::Copper => c.copper,
+        Kind::Mask => c.mask,
+        Kind::Paste => c.paste,
+        Kind::Edge => c.edge,
+    }
+}
+
+fn layer_colour_mut(c: &mut LayerColors, k: Kind) -> &mut Rgb {
+    match k {
+        Kind::Pad => &mut c.pads,
+        Kind::BackPad => &mut c.back_pads,
+        Kind::Courtyard => &mut c.courtyard,
+        Kind::Fab => &mut c.fab,
+        Kind::Silk => &mut c.silk,
+        Kind::Copper => &mut c.copper,
+        Kind::Mask => &mut c.mask,
+        Kind::Paste => &mut c.paste,
+        Kind::Edge => &mut c.edge,
+    }
+}
+
+/// egui's colour picker for an [`Rgb`]
+fn colour_button(ui: &mut Ui, c: &mut Rgb, hover: &str) {
+    let mut v = c.0;
+    if ui
+        .color_edit_button_srgb(&mut v)
+        .on_hover_text(hover)
+        .changed()
+    {
+        *c = Rgb(v);
     }
 }
 

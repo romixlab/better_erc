@@ -402,6 +402,7 @@ name = "better_erc_app"
 version = "0.4.24"
 dependencies = [
  "better_erc",
+ "bytemuck",
  "eframe",
  "egui",
  "egui-phosphor",

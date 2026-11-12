@@ -2,7 +2,7 @@ use crate::prelude::*;
 use egui_tiles::{SimplificationOptions, Tile, TileId, Tiles, UiResponse};
 use std::fmt::Debug;
 
-mod footprint_review;
+pub(crate) mod footprint_review;
 mod i2c;
 mod inputs;
 pub mod nets;

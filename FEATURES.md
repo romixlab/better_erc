@@ -689,7 +689,8 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   (queries from the datasheet file name, a part name in its URL, the `Mpn` fields, the value), or a file picker;
   read and drawn by hayro (pure Rust) on its own thread, the PDF standard fonts from Liberation or egui's font; a
   page search by words finds the land pattern page. Scale by a ruler along a dimension (or the page's own
-  `SCALE: 20X`), footprint moved, turned, mirrored, opacity, blink, layers shown; Accept disabled with its reason
+  `SCALE: 20X`), footprint moved, turned, mirrored, opacity, blink, colour per layer group, blend mode (normal,
+  multiply, screen, difference: a wgpu shader reading the page), layers shown; Accept disabled with its reason
   until the scale is set on the page shown, copies the hash, keeps the review. Settings in `config.toml`
   (`[footprint_review]`), usage signals `app fp-review ...` · `better_erc_app/src/tabs/footprint_review/`,
   `better_erc_app/src/settings.rs`

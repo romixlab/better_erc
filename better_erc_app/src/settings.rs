@@ -31,6 +31,111 @@ pub struct FootprintReviewSettings {
     /// search words are added at the end. It prints a JSON list of `{"path": ..., "page": ...}`. Empty: no
     /// library search.
     pub library_search: Vec<String>,
+    /// How the footprint is mixed with the page at first: `normal`, `multiply`, `screen` or `difference`
+    pub blend: BlendMode,
+    /// The footprint's colours at first, per layer group, `#rrggbb`
+    pub colors: LayerColors,
+}
+
+/// How the footprint's colour is mixed with the page under it
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum BlendMode {
+    /// The footprint over the page, by its opacity
+    #[default]
+    Normal,
+    /// Page times footprint: the drawing's lines stay dark through a light footprint
+    Multiply,
+    /// The inverse of multiply: light footprint shapes on a dark page stay light
+    Screen,
+    /// The difference of page and footprint: a white footprint over white paper goes black, so a footprint that
+    /// covers the drawing's pads exactly leaves no light edge
+    Difference,
+}
+
+impl BlendMode {
+    pub const ALL: [BlendMode; 4] = [
+        BlendMode::Normal,
+        BlendMode::Multiply,
+        BlendMode::Screen,
+        BlendMode::Difference,
+    ];
+
+    pub fn name(self) -> &'static str {
+        match self {
+            BlendMode::Normal => "Normal",
+            BlendMode::Multiply => "Multiply",
+            BlendMode::Screen => "Screen",
+            BlendMode::Difference => "Difference",
+        }
+    }
+}
+
+/// A colour as `#rrggbb` in the settings file
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Rgb(pub [u8; 3]);
+
+impl Rgb {
+    pub fn parse(s: &str) -> Option<Rgb> {
+        let h = s.trim().strip_prefix('#')?;
+        if h.len() != 6 {
+            return None;
+        }
+        let v = |i: usize| u8::from_str_radix(&h[i..i + 2], 16).ok();
+        Some(Rgb([v(0)?, v(2)?, v(4)?]))
+    }
+}
+
+impl std::fmt::Display for Rgb {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let [r, g, b] = self.0;
+        write!(f, "#{r:02x}{g:02x}{b:02x}")
+    }
+}
+
+impl Serialize for Rgb {
+    fn serialize<S: serde::Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        s.serialize_str(&self.to_string())
+    }
+}
+
+impl<'de> Deserialize<'de> for Rgb {
+    fn deserialize<D: serde::Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
+        let s = String::deserialize(d)?;
+        Rgb::parse(&s)
+            .ok_or_else(|| serde::de::Error::custom(format!("`{s}` is no colour: #rrggbb")))
+    }
+}
+
+/// The footprint's colour per layer group
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(default)]
+pub struct LayerColors {
+    pub pads: Rgb,
+    pub back_pads: Rgb,
+    pub courtyard: Rgb,
+    pub fab: Rgb,
+    pub silk: Rgb,
+    pub copper: Rgb,
+    pub mask: Rgb,
+    pub paste: Rgb,
+    pub edge: Rgb,
+}
+
+impl Default for LayerColors {
+    fn default() -> Self {
+        LayerColors {
+            pads: Rgb([220, 30, 30]),
+            back_pads: Rgb([30, 80, 230]),
+            courtyard: Rgb([230, 0, 230]),
+            fab: Rgb([170, 140, 0]),
+            silk: Rgb([60, 60, 60]),
+            copper: Rgb([200, 60, 0]),
+            mask: Rgb([120, 0, 160]),
+            paste: Rgb([110, 110, 110]),
+            edge: Rgb([200, 180, 0]),
+        }
+    }
 }
 
 impl Default for FootprintReviewSettings {
@@ -65,6 +170,8 @@ impl Default for FootprintReviewSettings {
             library_search: ["tpm", "lib", "search", "--json", "-n", "10"]
                 .map(String::from)
                 .to_vec(),
+            blend: BlendMode::Normal,
+            colors: LayerColors::default(),
         }
     }
 }
@@ -144,5 +251,19 @@ mod tests {
         );
         assert_eq!(Settings::parse(&s.to_toml()).unwrap(), s);
         assert!(Settings::parse("[footprint_review]\nblink_hz = \"fast\"\n").is_err());
+        // Blend mode and colours by name and #rrggbb
+        let s = Settings::parse(
+            "[footprint_review]\nblend = \"difference\"\n[footprint_review.colors]\npads = \"#FFFFFF\"\n",
+        )
+        .unwrap();
+        assert_eq!(s.footprint_review.blend, BlendMode::Difference);
+        assert_eq!(s.footprint_review.colors.pads, Rgb([255, 255, 255]));
+        assert_eq!(s.footprint_review.colors.fab, LayerColors::default().fab);
+        assert!(
+            s.to_toml().contains("pads = \"#ffffff\""),
+            "{}",
+            s.to_toml()
+        );
+        assert!(Settings::parse("[footprint_review.colors]\npads = \"red\"\n").is_err());
     }
 }

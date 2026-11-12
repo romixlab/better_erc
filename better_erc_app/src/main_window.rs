@@ -52,6 +52,11 @@ impl BetterErcApp {
             }
         }
 
+        // The footprint review's blend pass, for the renderer eframe made (main.rs: no multisampling, no depth buffer)
+        if let Some(rs) = cc.wgpu_render_state.as_ref() {
+            crate::tabs::footprint_review::blend::register(&cc.egui_ctx, rs, 1, None);
+        }
+
         // Init fonts
         let mut fonts = egui::FontDefinitions::default();
         egui_phosphor::add_to_fonts(&mut fonts, egui_phosphor::Variant::Regular);
