@@ -695,7 +695,9 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   page search by words finds the land pattern page. Scale by a ruler along a dimension (or the page's own
   `SCALE: 20X`), footprint moved, turned, mirrored, opacity, blink, colour per layer group, blend mode (normal,
   multiply, screen, difference: a wgpu shader reading the page), layers shown; Accept disabled with its reason
-  until a symbol with a footprint is picked and the scale is set on the page shown, writes the hash into the
+  until a symbol with a footprint is picked and the scale is set on the page shown, asks first with its dry run
+  (each file, field, old and new value; Enter writes, Esc not; a warning on KiCad's lock file or KiCad running),
+  writes the hash into the
   library symbol (and a project's schematic copies, `fp::accept` / `fp::accept_library`), copies it, keeps the
   review, listing the files written or why nothing was. Found datasheets in a panel of their own, the first
   opening by itself; another part opens its own datasheet or closes the last one. Keys for each step, each a
