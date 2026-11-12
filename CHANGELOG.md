@@ -11,6 +11,14 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.29] - 2026-11-12
+
+### Added
+
+- `TOOL-9`: `better_erc::fp::accept_library` writes a review hash into a library symbol without a project, for a
+  symbol picked from a library; `fp::SymbolEntry` (`berc fp check --lib`'s JSON) carries the symbol's `datasheet`,
+  and `SymbolStatus::needs_review` is shared with `fp::todo`.
+
 ### Changed
 
 - `VIEW-19`: the Footprint review tab starts from a library symbol, the thing a schematic places and that holds
@@ -23,12 +31,6 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
   board's footprint list is a preview with Accept disabled and the reason (no symbol to put the hash on). Every
   control stays: colours, blend modes, ruler, page search, layers. Kittest tests drive a symbol from a library the
   test writes to Accept writing the hash, a project's symbol to the library and schematic copies, and the preview.
-
-### Added
-
-- `TOOL-9`: `better_erc::fp::accept_library` writes a review hash into a library symbol without a project, for a
-  symbol picked from a library; `fp::SymbolEntry` (`berc fp check --lib`'s JSON) carries the symbol's `datasheet`,
-  and `SymbolStatus::needs_review` is shared with `fp::todo`.
 
 ## [0.4.28] - 2026-11-12
 
