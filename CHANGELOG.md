@@ -27,6 +27,12 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Fixed
 
+- better_erc_app tests: the footprint review's kittests no longer fail now and then under load with `Harness::run
+  exceeded max_steps`. The PDF reader and the library search sent their reply, then woke the UI from their own thread;
+  the frame could take the reply in before that wake landed, so the wake fell into a later frame and how many frames a
+  step took hung on the thread's timing (2 of 10 suite runs on 0.4.36 under load,
+  `library_search_opens_the_first_hit`). In the tests the threads now wake nothing and the UI asks for the next frame
+  itself when it takes a reply in; the app keeps the threads' wakes.
 - `VIEW-19`: Footprint review, the ruler could not be left: Esc ended the ruler step but kept the ruler tool, so the
   mouse no longer moved the footprint. Esc, `M` and a mode's own key again now go back to Move.
 - `VIEW-19`: Footprint review, the S length box took no typing and kept the app busy while it was open

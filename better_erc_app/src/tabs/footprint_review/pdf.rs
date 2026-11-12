@@ -82,6 +82,9 @@ pub struct PdfDoc {
     requests: Sender<(usize, f32)>,
     replies: Receiver<Reply>,
     idle: bool,
+    /// The reader thread wakes the UI with each reply; else the UI asks for the next frame itself when it takes
+    /// one in ([`PdfDoc::open_synced`])
+    wakes: bool,
 }
 
 /// Where hayro finds the PDF standard fonts (Helvetica, Times, Courier) that a datasheet uses without embedding
@@ -129,7 +132,12 @@ pub fn font_settings(dirs: &[PathBuf]) -> InterpreterSettings {
 impl PdfDoc {
     /// Starts reading `path` on a thread of its own, which wakes `ctx` when it has something;
     /// [`poll`](Self::poll) takes it in
-    pub fn open(ctx: &egui::Context, path: &Path, font_dirs: &[PathBuf]) -> PdfDoc {
+    ///
+    /// Without `wakes` (a UI that takes in the replies itself at the end of each frame, [`wait_idle`](Self::wait_idle):
+    /// the tests) the reader thread wakes nothing, and each reply taken in asks for the next frame from the UI's own
+    /// thread. A wake from the reader thread can land a frame late, after the frame that took its reply in, and how
+    /// many frames a step takes would then hang on the thread's timing.
+    pub fn open(ctx: &egui::Context, path: &Path, font_dirs: &[PathBuf], wakes: bool) -> PdfDoc {
         let (req_tx, req_rx) = channel();
         let (rep_tx, rep_rx) = channel();
         let file = path.to_path_buf();
@@ -144,7 +152,7 @@ impl PdfDoc {
                     req_rx,
                     &Waking {
                         tx: rep_tx,
-                        ctx: wake,
+                        ctx: wakes.then_some(wake),
                     },
                 )
             })
@@ -161,6 +169,7 @@ impl PdfDoc {
             requests: req_tx,
             replies: rep_rx,
             idle: false,
+            wakes,
         }
     }
 
@@ -187,6 +196,9 @@ impl PdfDoc {
     }
 
     fn take(&mut self, ctx: &egui::Context, r: Reply) {
+        if !self.wakes {
+            ctx.request_repaint();
+        }
         self.idle = matches!(r, Reply::Idle);
         match r {
             Reply::Opened(pages) => {
@@ -350,16 +362,18 @@ fn normalize(s: &str) -> String {
         .collect()
 }
 
-/// The reply channel, waking the UI with each reply
+/// The reply channel, waking the UI with each reply (none: the UI takes them in by itself)
 struct Waking {
     tx: Sender<Reply>,
-    ctx: egui::Context,
+    ctx: Option<egui::Context>,
 }
 
 impl Waking {
     fn send(&self, r: Reply) -> Result<(), ()> {
         self.tx.send(r).map_err(|_| ())?;
-        self.ctx.request_repaint();
+        if let Some(ctx) = &self.ctx {
+            ctx.request_repaint();
+        }
         Ok(())
     }
 }
@@ -716,7 +730,7 @@ mod tests {
         ];
         std::fs::write(&file, write([300.0, 400.0], &pages)).unwrap();
         let ctx = egui::Context::default();
-        let mut doc = PdfDoc::open(&ctx, &file, &[]);
+        let mut doc = PdfDoc::open(&ctx, &file, &[], true);
         doc.wait_idle(&ctx);
         doc.want(&ctx, 1, 2.0);
         doc.wait_idle(&ctx);
@@ -772,7 +786,7 @@ mod tests {
         };
         std::fs::write(&file, write([300.0, 400.0], &[page])).unwrap();
         let ctx = egui::Context::default();
-        let mut doc = PdfDoc::open(&ctx, &file, &[]);
+        let mut doc = PdfDoc::open(&ctx, &file, &[], true);
         doc.wait_idle(&ctx);
         let g = doc.geometry(0).expect("the page's lines and words").clone();
         let has = |a: [f32; 2], b: [f32; 2], w: f32| {
@@ -827,6 +841,7 @@ mod real {
             &ctx,
             Path::new(&file),
             &[PathBuf::from("/usr/share/fonts/liberation")],
+            true,
         );
         doc.wait_idle(&ctx);
         doc.want(&ctx, 0, 1.0);

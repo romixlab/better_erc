@@ -506,7 +506,8 @@ struct Runtime {
     /// The settings file the Save buttons write; none in tests
     settings_file: Option<PathBuf>,
     /// Each frame ends with the PDF reader done with what it asked (tests: its replies would otherwise come in on
-    /// its thread over any number of frames)
+    /// its thread over any number of frames), and the threads wake no frame: the UI asks for the next one itself
+    /// when it takes a reply in, so how many frames a step takes never hangs on a thread's timing
     #[cfg(test)]
     sync_pdf: bool,
 }
@@ -702,6 +703,15 @@ impl FootprintReview {
         self.rt.settings = s;
     }
 
+    /// Whether the worker threads (the PDF reader, the library search) wake the UI with their replies; not in the
+    /// tests ([`Runtime::sync_pdf`])
+    fn threads_wake(&self) -> bool {
+        #[cfg(test)]
+        return !self.rt.sync_pdf;
+        #[cfg(not(test))]
+        true
+    }
+
     fn usage(&self, signal: &str) {
         (self.rt.usage)(&format!("app fp-review {signal}"));
     }
@@ -769,6 +779,9 @@ impl FootprintReview {
         if let Some(rx) = &self.rt.searching
             && let Ok(r) = rx.try_recv()
         {
+            if !self.threads_wake() {
+                ctx.request_repaint();
+            }
             self.rt.search_result = Some(r.map(|(hits, query)| {
                 if !query.is_empty() {
                     self.rt.query = query;
@@ -1153,7 +1166,8 @@ impl FootprintReview {
         // A datasheet opened by hand is the one to show: no search for another
         self.rt.want_search = false;
         self.rt.auto_open = false;
-        self.rt.pdf = Some(PdfDoc::open(ctx, path, &self.rt.settings.font_dirs));
+        let fonts = &self.rt.settings.font_dirs;
+        self.rt.pdf = Some(PdfDoc::open(ctx, path, fonts, self.threads_wake()));
         self.datasheet = Some(path.to_path_buf());
         self.page = 0;
         self.rt.page_hits = None;
@@ -1188,7 +1202,7 @@ impl FootprintReview {
             return;
         }
         let (tx, rx) = std::sync::mpsc::channel();
-        let ctx = ctx.clone();
+        let wake = self.threads_wake().then(|| ctx.clone());
         std::thread::spawn(move || {
             let mut r = Ok((Vec::new(), String::new()));
             for words in &queries {
@@ -1198,7 +1212,9 @@ impl FootprintReview {
                 }
             }
             let _ = tx.send(r);
-            ctx.request_repaint();
+            if let Some(ctx) = wake {
+                ctx.request_repaint();
+            }
         });
         self.rt.searching = Some(rx);
         self.rt.search_result = None;
