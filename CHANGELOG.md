@@ -11,24 +11,13 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.33] - 2026-11-12
+
 ### Added
 
 - `VIEW-19`: Footprint review tab, the ruler snaps level: horizontal or vertical by the larger of its dx and dy (a
   new ruler from its first end), an end dragged goes where it is dragged and the other end follows on that axis.
   Shift held, or `[footprint_review] ruler_snap = false`, lets it go at any angle. Named in the help line.
-
-### Fixed
-
-- `VIEW-19`: Footprint review tab, Accept's warning that KiCad may overwrite the change is per file, naming the
-  lock file and its owner: only a held KiCad lock beside that file (`~NAME.EXT.lck`). A lock from this computer
-  counts while a KiCad runs here (or while its `pid` lives, should a lock carry one); an empty lock is stale. A
-  KiCad running with the file closed no longer warns.
-
-- `VIEW-19`: Footprint review tab, the copper, mask and paste views show only what the board makes on that layer,
-  each filled in its one colour: Copper the pads' copper, copper graphics and vias (red), Mask the mask openings
-  only (pink), Paste the paste apertures only (gray). Before, the pads were drawn in every view and the mask and
-  paste shapes were outlines over them. Holes and pad numbers stay over every view. Back pads follow the same
-  views behind their checkbox; the Pads and Vias checkboxes are gone.
 
 ### Changed
 
@@ -41,6 +30,18 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `VIEW-19`: Footprint review tab, the colour presets and pickers; every colour is a setting
   (`[footprint_review.colors]`), whose `pads`, `back_pads` and `vias` are gone (copper, mask and paste colour
   both sides).
+
+### Fixed
+
+- `VIEW-19`: Footprint review tab, Accept's warning that KiCad may overwrite the change is per file, naming the
+  lock file and its owner: only a held KiCad lock beside that file (`~NAME.EXT.lck`). A lock from this computer
+  counts while a KiCad runs here (or while its `pid` lives, should a lock carry one); an empty lock is stale. A
+  KiCad running with the file closed no longer warns.
+- `VIEW-19`: Footprint review tab, the copper, mask and paste views show only what the board makes on that layer,
+  each filled in its one colour: Copper the pads' copper, copper graphics and vias (red), Mask the mask openings
+  only (pink), Paste the paste apertures only (gray). Before, the pads were drawn in every view and the mask and
+  paste shapes were outlines over them. Holes and pad numbers stay over every view. Back pads follow the same
+  views behind their checkbox; the Pads and Vias checkboxes are gone.
 
 ## [0.4.32] - 2026-11-12
 
