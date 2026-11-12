@@ -388,3 +388,129 @@ fn blend_modes_mix_with_the_page() {
     }
     std::fs::remove_dir_all(&dir).unwrap();
 }
+
+/// A KiCad project in `dir` around the board of placed.kicad_pcb: its Mixed_Pads footprints U7-U12 placed for
+/// library symbol `Rev:Mixed`, with the library file and a sym-lib-table; returns the board
+fn project(dir: &Path) -> PathBuf {
+    let fixtures =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("../erc_kicad/tests/fixtures/footprints");
+    let board = dir.join("rev.kicad_pcb");
+    std::fs::copy(fixtures.join("placed.kicad_pcb"), &board).unwrap();
+    let symbol = |name: &str| {
+        format!(
+            "(symbol \"{name}\" (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n    (property \"Value\" \"Mixed\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Mixed_Pads\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (symbol \"Mixed_1_1\" (pin passive line (at 0 0 0) (length 1.27) (name \"A\" (effects (font (size 1.27 1.27)))) (number \"1\" (effects (font (size 1.27 1.27)))))))\n"
+        )
+    };
+    let root = "b0000000-0000-4000-8000-000000000000";
+    let placed: String = (7..=12)
+        .map(|n| {
+            format!(
+                "  (symbol (lib_id \"Rev:Mixed\") (at {x} 50 0) (unit 1) (in_bom yes) (on_board yes) (dnp no) (uuid \"b0000000-0000-4000-8000-0000000001{n:02}\")\n    (property \"Reference\" \"U{n}\" (at {x} 45 0) (effects (font (size 1.27 1.27))))\n    (property \"Value\" \"Mixed\" (at {x} 55 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Mixed_Pads\" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (pin \"1\" (uuid \"b0000000-0000-4000-8000-0000000002{n:02}\"))\n    (instances (project \"rev\" (path \"/{root}\" (reference \"U{n}\") (unit 1)))))\n",
+                x = 20 * n
+            )
+        })
+        .collect();
+    std::fs::write(
+        dir.join("rev.kicad_sch"),
+        format!(
+            "(kicad_sch (version 20231120) (generator \"eeschema\") (generator_version \"8.0\")\n  (uuid \"{root}\")\n  (paper \"A4\")\n  (lib_symbols {})\n{placed}  (sheet_instances (path \"/\" (page \"1\"))))\n",
+            symbol("Rev:Mixed")
+        ),
+    )
+    .unwrap();
+    std::fs::write(dir.join("rev.kicad_pro"), "{}\n").unwrap();
+    std::fs::write(
+        dir.join("Rev.kicad_sym"),
+        format!(
+            "(kicad_symbol_lib (version 20231120) (generator \"kicad_symbol_editor\")\n  {})\n",
+            symbol("Mixed")
+        ),
+    )
+    .unwrap();
+    std::fs::write(
+        dir.join("sym-lib-table"),
+        "(sym_lib_table (version 7)\n  (lib (name \"Rev\")(type \"KiCad\")(uri \"${KIPRJMOD}/Rev.kicad_sym\")(options \"\")(descr \"\")))\n",
+    )
+    .unwrap();
+    board
+}
+
+/// A footprint picked from a board: Accept writes its review hash into the symbol of its footprints, in the
+/// library and in the schematic's copy, and `berc fp check` then finds them ok
+#[test]
+fn accept_writes_into_the_symbols() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-write-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let board = project(&dir);
+    let pdf = datasheet(&dir);
+    let signals: Arc<Mutex<Vec<String>>> = Arc::default();
+    let s = signals.clone();
+    let usage: Usage = Arc::new(move |sig: &str| s.lock().unwrap().push(sig.to_string()));
+    let settings = FootprintReviewSettings {
+        font_dirs: Vec::new(),
+        library_search: Vec::new(),
+        ..Default::default()
+    };
+    let mut cx = Context::new();
+    let mut h = Harness::builder()
+        .with_size(vec2(1200.0, 800.0))
+        .build_ui_state(
+            move |ui, state: &mut FootprintReview| state.ui(ui, &mut cx, Id::new("fp write")),
+            FootprintReview::with(settings, usage),
+        );
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &board);
+    h.run();
+    // The board list's row of Mixed_Pads
+    h.get_by_label("Mixed_Pads  (U7, U8, U9, U10, U11, U12)")
+        .click();
+    h.run();
+    assert_eq!(
+        h.state().rt.picked.as_ref().map(|p| p.1.clone()),
+        Some(
+            ["U7", "U8", "U9", "U10", "U11", "U12"]
+                .map(String::from)
+                .to_vec()
+        )
+    );
+    h.state_mut().open_datasheet(&ctx, &pdf);
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    let page = h.state().page;
+    h.state_mut().scale = Some(Scale {
+        mm_per_point: 0.02,
+        page,
+        mm: 2.0,
+        note: None,
+    });
+    h.run();
+    let hash = h.state().rt.sourced.as_ref().unwrap().hash.clone();
+    button(&h, ACCEPT).click();
+    h.run();
+    assert!(
+        matches!(h.state().rt.written, Some(Ok(_))),
+        "{:?}",
+        h.state().rt.written
+    );
+    h.get_by_label("Rev:Mixed: written into");
+    h.get_by_label("  Rev.kicad_sym (library)");
+    h.get_by_label("  rev.kicad_sch (schematic copy)");
+    let want = format!("(property \"Footprint_Review\" \"{hash}\"");
+    for f in ["Rev.kicad_sym", "rev.kicad_sch"] {
+        let text = std::fs::read_to_string(dir.join(f)).unwrap();
+        assert!(text.contains(&want), "{f}: {text}");
+    }
+    let check = better_erc::fp::check(&dir, &better_erc::fp::LibrarySearch::default()).unwrap();
+    for e in check.footprints.iter().filter(|e| e.symbol.is_some()) {
+        assert!(e.is_ok(), "{e:?}");
+    }
+    assert!(
+        signals
+            .lock()
+            .unwrap()
+            .contains(&"app fp-review write".to_string())
+    );
+    std::fs::remove_dir_all(&dir).unwrap();
+}

@@ -198,8 +198,9 @@ gives `fp2:` hashes, and an `fp1:` hash then reads as made by another version in
 are the first 8 bytes of the SHA-256 of the canonical text (`--canonical`, lines joined by a newline): a short
 fingerprint to tell a footprint unchanged, not a signature.
 
-Once a footprint is reviewed, put its hash in the `Footprint_Review` field of the library symbol that uses it (in
-the symbol editor, then update the schematic from the library). `berc fp check` then checks a board:
+Once a footprint is reviewed, `berc fp accept` puts its hash in the `Footprint_Review` field of the library symbol
+that uses it (see [Accepting a review](#accepting-a-review)), or the app's Accept does. `berc fp check` then checks a
+board:
 
 ```sh
 berc fp check                       # the KiCad project in this directory
@@ -257,6 +258,38 @@ with its footprint file, the hash now and the `Datasheet` field, for the app's r
 call is `better_erc::fp::todo`. The exit code is 0 when there is nothing to review or fix, 1 otherwise, 2 when the
 project can't be read.
 
+### Accepting a review
+
+`berc fp accept` writes the review hash of board footprints into their symbols:
+
+```sh
+berc fp accept hw/board U1 U2           # the hash of U1 and U2 now, into their library symbol
+berc fp accept hw/board U1 --dry-run    # what would be written, nothing written
+berc fp accept hw/board --symbol Device:R --hash fp1:0123456789abcdef
+```
+
+The hash goes into the `Footprint_Review` field of each footprint's schematic symbol's library symbol, in two places:
+the library's `.kicad_sym` (or the symbol's file in a `.kicad_symdir`), found through the project's or the global
+`sym-lib-table`, and the copy of the symbol in every schematic sheet's `lib_symbols`, so `berc fp check` finds both
+up to date. A library that is not found is named in the output, and only the schematic copies are written.
+
+Only the field is written. Every other byte of each file stays as it was, so the file's diff is the one field. A
+field that is there gets its new value; a new field goes after the symbol's own fields, hidden, laid out as the
+KiCad version that wrote the file lays it out (checked against kicad-cli in the tests). KiCad 8, 9 and 10 files are
+written; an older file is refused until KiCad 8 or newer saved it. Each file is replaced through a temporary file
+beside it. A library open in KiCad's symbol editor shows the field once it is opened again.
+
+Nothing is written when anything is wrong:
+
+- a symbol placed with more than one footprint (a generic `Device:C` on 0402 and 1210 pads): one hash can't hold
+  for all of them;
+- footprints of one symbol whose board copies differ;
+- a symbol that sets no footprint, a footprint without a schematic symbol, a hash that is not `fp1:` and 16 hex
+  digits.
+
+The exit code is 0 when written (or nothing needed a change), 2 otherwise. `--format json` lists every file with its
+old value.
+
 ### Checking a symbol library
 
 `berc fp check --lib` checks a symbol library itself, before any board uses it: each symbol against the library
@@ -290,7 +323,7 @@ symbol is ok or has no footprint, 1 otherwise, 2 when a library can't be read.
 ### Reviewing in the app
 
 The app's Footprint review tab does the review itself: it draws the footprint over the datasheet's drawing, and
-Accept gives the hash for the `Footprint_Review` field.
+Accept writes the hash into the `Footprint_Review` field of its symbols.
 
 1. **Open a footprint**: a library footprint (`.kicad_mod`), or a board (`.kicad_pcb`) to pick from. A board lists
    one row per library footprint with the references that use it. A picked footprint is reviewed from its library
@@ -312,9 +345,14 @@ Accept gives the hash for the `Footprint_Review` field.
    white paper under a pad goes black, so a footprint that covers the drawing's pads exactly leaves no light edge,
    and a pad that misses shows light. Scroll zooms at the pointer; the right or middle button pans; Page Up and
    Page Down turn pages.
-5. **Accept**: when the footprint matches the drawing, Accept copies its review hash to the clipboard and keeps the
-   review (footprint, hash, datasheet, page, scale) in the tab's list. Accept stays disabled, saying why, until a
-   footprint and a datasheet are open and the scale is set on the page shown.
+5. **Accept**: when the footprint matches the drawing, Accept writes its review hash into the symbols of the board's
+   footprints placed with it (their library symbols and the schematic's copies, as `berc fp accept` does) and lists
+   the files written, or says why it wrote nothing. The reviewed hash is the library file's: a board copy that
+   differs from it shows as changed in `berc fp check` until the board is updated from the library. A footprint
+   opened from a `.kicad_mod` has no board to tell its symbols, so Accept only copies the hash then. Accept copies
+   the hash to the clipboard in both cases and keeps the review (footprint, hash, datasheet, page, scale) in the
+   tab's list. Accept stays disabled, saying why, until a footprint and a datasheet are open and the scale is set on
+   the page shown.
 
 PDFs are read and drawn by [hayro](https://github.com/LaurenzV/hayro), in pure Rust, on a thread of its own. The
 blend modes other than Normal are a wgpu shader that reads the page's own pixel under the footprint. The
@@ -324,7 +362,7 @@ from egui's own font.
 The settings (blink rate, the opacity, blend mode and colours at first, the page search words, the finest drawing
 scale, the font folders, the library search command) are in `~/.config/better_erc/config.toml` (`$XDG_CONFIG_HOME`, or the file
 `$BERC_CONFIG` names), section `[footprint_review]`; the tab's Settings shows and saves them. Each step of a review
-is recorded in berc's usage record (`app fp-review accept`, ...), which `berc usage` counts in its `app` column.
+is recorded in berc's usage record (`app fp-review accept`, `app fp-review write`, ...), which `berc usage` counts in its `app` column.
 
 ## Development
 

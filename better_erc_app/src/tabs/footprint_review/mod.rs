@@ -11,7 +11,9 @@
 use crate::prelude::*;
 use crate::settings::{BlendMode, FootprintReviewSettings, LayerColors, Rgb, Settings};
 use crate::tabs::TabUi;
-use better_erc::fp::{FIELD, FootprintSource, Sourced};
+use better_erc::fp::{
+    AcceptRun, AcceptWhat, FIELD, FootprintSource, HashSource, Sourced, SymbolLibraries,
+};
 use better_erc::model::layout::{FootprintId, Layout};
 use egui::{Align2, FontId, Pos2, Rect, Shape, Stroke, pos2, vec2};
 use outline::{Item, Kind};
@@ -216,6 +218,11 @@ struct Runtime {
     /// Which end of the ruler a drag moves
     ruler_end: Option<usize>,
     accepted: Option<String>,
+    /// The footprint was picked from a board: the board and the references placed with it, whose symbols Accept
+    /// writes the review hash into
+    picked: Option<(PathBuf, Vec<String>)>,
+    /// What Accept wrote into the symbols, or why it could not
+    written: Option<Result<AcceptRun, String>>,
     /// The settings as text being edited: page search words and font folders one per line, the search command
     words_text: String,
     fonts_text: String,
@@ -250,6 +257,8 @@ impl Default for Runtime {
             ruler_mm: String::new(),
             ruler_end: None,
             accepted: None,
+            picked: None,
+            written: None,
             words_text: String::new(),
             fonts_text: String::new(),
             search_text: String::new(),
@@ -449,9 +458,17 @@ impl FootprintReview {
                 reviewed.fields.push((k, v));
             }
         }
+        let refs = b
+            .groups
+            .iter()
+            .find(|g| g.0 == b.layout.footprints[i].lib_id)
+            .map(|g| g.1.clone())
+            .unwrap_or_default();
+        let board = b.path.clone();
         self.source = Some(reviewed.source.clone());
         self.set_sourced(reviewed, true);
         self.rt.board_note = Some(note);
+        self.rt.picked = Some((board, refs));
         self.usage("pick");
         self.rt.want_search = true;
     }
@@ -462,6 +479,7 @@ impl FootprintReview {
                 self.source = Some(source);
                 self.set_sourced(s, fresh);
                 self.rt.board_note = None;
+                self.rt.picked = None;
             }
             Err(e) => {
                 self.rt.error = Some(e.to_string());
@@ -475,6 +493,7 @@ impl FootprintReview {
         self.rt.items = outline::items(&s.footprint);
         self.rt.error = None;
         self.rt.accepted = None;
+        self.rt.written = None;
         if fresh {
             self.rt.center_footprint = true;
             self.place.rotation = 0.0;
@@ -592,6 +611,23 @@ impl FootprintReview {
         };
         ctx.copy_text(review.hash.clone());
         self.rt.accepted = Some(review.hash.clone());
+        // Picked from a board: into the symbols of its footprints, library and schematic
+        self.rt.written = self.rt.picked.as_ref().map(|(board, refs)| {
+            let config = better_erc::fp::kicad_config_dir();
+            better_erc::fp::accept(
+                board,
+                &AcceptWhat::Reviewed {
+                    references: refs.clone(),
+                    hash: review.hash.clone(),
+                },
+                &mut |dir| SymbolLibraries::new(dir, config.as_deref()),
+                false,
+            )
+            .map_err(|e| e.to_string())
+        });
+        if matches!(self.rt.written, Some(Ok(_))) {
+            self.usage("write");
+        }
         self.reviews.push(review);
         self.usage("accept");
     }
@@ -685,9 +721,17 @@ impl FootprintReview {
         );
         let resp = match &blocker {
             Some(why) => resp.on_disabled_hover_text(why),
-            None => {
-                resp.on_hover_text("Copies the review hash for the symbol's Footprint_Review field")
-            }
+            None => match &self.rt.picked {
+                Some((_, refs)) => resp.on_hover_text(format!(
+                    "Writes the review hash into the {FIELD} field of the symbols of {}: their library symbols \
+                     and the schematic's copies; copies it too",
+                    refs.join(", ")
+                )),
+                None => resp.on_hover_text(format!(
+                    "Copies the review hash for the symbol's {FIELD} field (a footprint picked from a board is \
+                     written into its symbols)"
+                )),
+            },
         };
         if let Some(why) = &blocker {
             ui.label(RichText::new(why).small().weak());
@@ -703,6 +747,40 @@ impl FootprintReview {
                     ctx.copy_text(h.clone());
                 }
             });
+        }
+        match &self.rt.written {
+            Some(Ok(run)) => {
+                for a in &run.symbols {
+                    ui.label(format!("{}: written into", a.symbol));
+                    for w in &a.files {
+                        let kind = match w.source {
+                            HashSource::Library => "library",
+                            HashSource::Schematic => "schematic copy",
+                        };
+                        let what = if w.changed { "" } else { ", had it already" };
+                        let name = w
+                            .file
+                            .file_name()
+                            .map(|f| f.to_string_lossy().into_owned())
+                            .unwrap_or_default();
+                        ui.add(
+                            Label::new(RichText::new(format!("  {name} ({kind}{what})")).small())
+                                .truncate(),
+                        )
+                        .on_hover_text(w.file.display().to_string());
+                    }
+                    if let Some(n) = &a.library_note {
+                        ui.colored_label(
+                            Color32::ORANGE,
+                            format!("Library symbol not written: {n}"),
+                        );
+                    }
+                }
+            }
+            Some(Err(e)) => {
+                ui.colored_label(Color32::RED, format!("Not written into the symbols: {e}"));
+            }
+            None => {}
         }
         let n = self.reviews.len();
         egui::CollapsingHeader::new(format!("Accepted reviews ({n})"))

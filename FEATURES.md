@@ -92,6 +92,7 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   file: a board KiCad 10 saved with test footprints placed on both sides, flipped both ways, at right and odd angles
   (`just footprint-fixture`) · `erc_kicad/src/footprint.rs`, `erc_model/src/footprint.rs`, `erc_kicad/tests/footprint.rs`
 - ✅ `IMP-18` KiCad library tables, one module for symbols and footprints: the project's `sym-lib-table` / `fp-lib-table` before the user's global one (KiCad's configuration directory of the newest version, `$KICAD_CONFIG_HOME` first), nested tables (`(type "Table")`) read in place, disabled libraries skipped, `${VAR}` from the environment, `kicad_common.json`, `KIPRJMOD` and an installed KiCad's stock libraries (`KICAD9_FOOTPRINT_DIR`, ...). `Lib:Name` resolves to a library symbol's fields (`.kicad_sym`, `.kicad_symdir`) or a parsed library footprint (`.pretty/Name.kicad_mod`, `IMP-17`), with a typed error for every way the lookup fails · `erc_kicad/src/libtable.rs`, `erc_kicad/tests/libtable.rs`
+- 🚧 `IMP-19` KiCad files written back, formatting-preserving: a file is parsed into a tree that knows each expression's byte range, and only the changed ranges are written, so a file read and written unchanged is the same bytes and a change is one diff hunk (`erc_kicad::edit`). Done: a symbol's property set or inserted in a `.kicad_sym`, a `.kicad_symdir` file and a schematic's `lib_symbols` (`symlib::set_property`), a new property hidden after the symbol's own ones in the layout of the file's KiCad version (8 and 9, or 10), files older than KiCad 8 refused; KiCad as the oracle (kicad-cli saving commutes with the edit), every file of `~/git/kicad-library` and `~/git/hw` round-tripped where they are there. Next: the rest of the writer for the uses of the full plan (courtyard fix `LAY-3`, variant back-import `BOM-13`, `berc fix`, `berc fmt`) · `erc_kicad/src/edit.rs`, `erc_kicad/src/symlib.rs`, `erc_kicad/tests/write.rs`
 - 🚧 `IMP-16` Schematic PDFs as a netlist source. Done: Altium Smart PDFs (stage 1): sheets, parts with their units,
   pins and nets from the bookmarks (`Provenance::Pdf`, `PdfConfidence::Bookmarks`, design rank), nets joined across
   sheets by power names and same-named ports, labels with their search-word position, part properties from the
@@ -691,7 +692,9 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   page search by words finds the land pattern page. Scale by a ruler along a dimension (or the page's own
   `SCALE: 20X`), footprint moved, turned, mirrored, opacity, blink, colour per layer group, blend mode (normal,
   multiply, screen, difference: a wgpu shader reading the page), layers shown; Accept disabled with its reason
-  until the scale is set on the page shown, copies the hash, keeps the review. Settings in `config.toml`
+  until the scale is set on the page shown, copies the hash, keeps the review, and for a footprint picked from a
+  board writes the hash into the symbols of the footprints placed with it (`TOOL-9`'s `fp::accept`), listing the
+  files written or why nothing was. Settings in `config.toml`
   (`[footprint_review]`), usage signals `app fp-review ...` · `better_erc_app/src/tabs/footprint_review/`,
   `better_erc_app/src/settings.rs`
 
@@ -753,9 +756,16 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   review first in review order (changed, other version, malformed, unreviewed), then those that can't be (missing,
   refused), ok ones with `--all`; JSON with footprint file, hash and datasheet for the review tab. `--symbols` and
   `--footprints` put libraries ahead of the tables; every `berc` run recorded in a local
-  usage file (`berc usage`). The hash is put on the symbol by hand for now (`berc fp hash`); the writer is a later
-  task · `erc_model/src/fphash.rs`, `erc_kicad/src/symlib.rs`, `erc_kicad/src/libtable.rs`, `better_erc/src/fp.rs`,
+  usage file (`berc usage`). The hash is written onto the symbol by `berc fp accept` (`TOOL-9`) or the app's
+  Accept (`VIEW-19`) · `erc_model/src/fphash.rs`, `erc_kicad/src/symlib.rs`, `erc_kicad/src/libtable.rs`, `better_erc/src/fp.rs`,
   `better_erc/src/fp/library.rs`, `better_erc/src/fp/todo.rs`, `berc/src/usage.rs`, `berc/tests/fp.rs`, README "Footprint review"
+- ✅ `TOOL-9` `berc fp accept PROJECT REF...`: each board footprint's review hash written into the
+  `Footprint_Review` field of its schematic symbol's library symbol (the `.kicad_sym`, or the symbol's file in a
+  `.kicad_symdir`, through the `sym-lib-table`) and of every sheet's `lib_symbols` copy, through the
+  formatting-preserving writer (`IMP-19`); `--symbol LIB:NAME --hash HASH` for a hash given by hand, `--dry-run`,
+  `--format json`. Refused, writing nothing: a symbol placed with more than one footprint, footprints of one symbol
+  that differ, a symbol without a footprint, a footprint without a symbol, a malformed hash · `better_erc/src/fp.rs`
+  (`accept`), `berc/tests/fp_accept.rs`, README "Accepting a review"
 
 ## Code generation (`GEN`)
 
