@@ -443,6 +443,29 @@ impl SymbolLibrary {
         Some(names)
     }
 
+    /// The file that defines symbol `name`: the library's own file, or in a directory library `Name.kicad_sym`, else
+    /// the file that defines it (a name KiCad escaped for the file system); `None` when there is none
+    pub fn file_of(&mut self, name: &str) -> Option<PathBuf> {
+        if !self.is_dir() {
+            return self.path.is_file().then(|| self.path.clone());
+        }
+        let named = self.path.join(format!("{name}.kicad_sym"));
+        if named.is_file() {
+            return Some(named);
+        }
+        let mut files: Vec<PathBuf> = std::fs::read_dir(&self.path)
+            .ok()?
+            .filter_map(|e| Some(e.ok()?.path()))
+            .filter(|p| p.extension().is_some_and(|e| e == "kicad_sym"))
+            .collect();
+        files.sort();
+        files.into_iter().find(|f| {
+            self.text(f)
+                .and_then(|t| crate::symlib::symbol_names(&t))
+                .is_some_and(|names| names.iter().any(|s| s == name))
+        })
+    }
+
     /// The fields of symbol `name`, a derived symbol's on top of its parent's ([`crate::symlib::resolve_fields`])
     pub fn fields(&mut self, name: &str) -> Result<Vec<(String, String)>, LibError> {
         let not_found = |path: &Path| LibError::NotFound {
@@ -459,25 +482,9 @@ impl SymbolLibrary {
             if !path.is_dir() {
                 return Err(unreadable(&path));
             }
-            // `Name.kicad_sym`, else the file that defines it (a name KiCad escaped for the file system)
             let read = |n: &str| {
-                let named = path.join(format!("{n}.kicad_sym"));
-                if named.is_file() {
-                    return self.text(&named);
-                }
-                let mut files: Vec<PathBuf> = std::fs::read_dir(&path)
-                    .ok()?
-                    .filter_map(|e| Some(e.ok()?.path()))
-                    .filter(|p| p.extension().is_some_and(|e| e == "kicad_sym"))
-                    .collect();
-                files.sort();
-                files.into_iter().find_map(|f| {
-                    let text = self.text(&f)?;
-                    crate::symlib::symbol_names(&text)?
-                        .iter()
-                        .any(|s| s == n)
-                        .then_some(text)
-                })
+                let f = self.file_of(n)?;
+                self.text(&f)
             };
             return crate::symlib::resolve_fields(name, read).ok_or_else(|| not_found(&path));
         }
@@ -531,6 +538,26 @@ impl SymbolLibraries {
             },
             e => e,
         })
+    }
+
+    /// The file that holds library symbol `lib_id` (`Lib:Name`) and its name there, to write it
+    /// ([`crate::symlib::set_property`]): the library's `.kicad_sym`, or the symbol's file in a `.kicad_symdir`
+    /// ([`SymbolLibrary::file_of`]). A flat library's file is checked to exist, not to hold the symbol.
+    pub fn symbol_file(&mut self, lib_id: &str) -> Result<(PathBuf, String), LibError> {
+        let (nick, name) = split_id(lib_id)?;
+        let lib = self.library(nick)?;
+        let path = lib.path().to_path_buf();
+        if lib.is_dir() && !path.is_dir() || !lib.is_dir() && !path.is_file() {
+            return Err(LibError::Unreadable {
+                nick: nick.to_string(),
+                path,
+            });
+        }
+        let file = lib.file_of(name).ok_or_else(|| LibError::NotFound {
+            name: format!("symbol {name}"),
+            path,
+        })?;
+        Ok((file, name.to_string()))
     }
 }
 

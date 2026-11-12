@@ -61,6 +61,12 @@ ones and those without a footprint too; --format json always has every symbol, w
 to write and the datasheet.\n\nExamples:\n  berc fp todo\n  berc fp todo hw/board --format json\n  \
 berc fp todo hw/board --symbols ~/kicad-library/symbols --footprints ~/kicad-library/footprints";
 
+const FP_ACCEPT_AFTER_HELP: &str = "Exit codes: 0 written (or nothing to change), 2 usage, read or write error; \
+nothing is written when anything fails.\n\nKiCad 8 and newer files are written; an older file is refused until KiCad \
+8+ saved it. A library KiCad has open is read again by KiCad only when it is reopened.\n\nExamples:\n  \
+berc fp accept hw/board U1 U2\n  berc fp accept hw/board R1 --dry-run\n  \
+berc fp accept hw/board --symbol Device:R --hash fp1:0123456789abcdef";
+
 /// better_erc command line tools
 ///
 /// Colour in help, errors and `check` text only on a terminal, and never with NO_COLOR set; `textconv` output is
@@ -181,6 +187,15 @@ enum FpCommand {
     /// symbol gains from it.
     #[command(after_help = FP_TODO_AFTER_HELP)]
     Todo(FpTodoArgs),
+    /// Write the review hash of reviewed footprints into their library symbols
+    ///
+    /// Each board footprint's review hash now goes into the `Footprint_Review` field of its schematic symbol's
+    /// library symbol: in the .kicad_sym (or .kicad_symdir file) found through the project's or the global
+    /// sym-lib-table, and in every schematic sheet's copy of it, so `berc fp check` finds them ok. Only the field
+    /// is written: the rest of each file stays byte for byte as it was, and a new field is laid out as KiCad lays
+    /// it out. With --symbol and --hash, a hash for a library symbol given by hand.
+    #[command(after_help = FP_ACCEPT_AFTER_HELP)]
+    Accept(FpAcceptArgs),
 }
 
 /// Libraries searched before the sym-lib-table and fp-lib-table
@@ -216,6 +231,28 @@ struct FpTodoArgs {
     /// Also list the symbols reviewed and unchanged, and those without a footprint
     #[arg(long)]
     all: bool,
+    #[arg(long, value_enum, default_value_t = ListFormat::Text)]
+    format: ListFormat,
+}
+
+#[derive(clap::Args)]
+#[command(group(clap::ArgGroup::new("what").required(true).args(["references", "symbol"])))]
+struct FpAcceptArgs {
+    /// The KiCad project: a directory, its .kicad_pro, .kicad_sch or .kicad_pcb
+    #[arg(value_hint = ValueHint::AnyPath)]
+    project: PathBuf,
+    /// The board footprints reviewed, by reference
+    #[arg(add = ArgValueCandidates::new(complete::board_references))]
+    references: Vec<String>,
+    /// The library symbol (`Lib:Name`) to write --hash into, instead of board footprints
+    #[arg(long, value_name = "LIB:NAME", requires = "hash")]
+    symbol: Option<String>,
+    /// The review hash for --symbol, as `berc fp hash` prints it
+    #[arg(long, value_name = "HASH", requires = "symbol")]
+    hash: Option<String>,
+    /// Show what would be written, write nothing
+    #[arg(long)]
+    dry_run: bool,
     #[arg(long, value_enum, default_value_t = ListFormat::Text)]
     format: ListFormat,
 }
@@ -415,6 +452,9 @@ fn main() -> ExitCode {
         Command::Fp {
             command: FpCommand::Todo(args),
         } => fp_todo(&args),
+        Command::Fp {
+            command: FpCommand::Accept(args),
+        } => fp_accept(&args),
         Command::Usage => {
             let out = usage::summary(&usage::known(&Cli::command()));
             let _ = std::io::stdout().lock().write_all(out.as_bytes());
@@ -685,6 +725,46 @@ fn fp_todo(args: &FpTodoArgs) -> ExitCode {
         Err(e) => {
             error(&e.to_string());
             ExitCode::from(better_erc::fp::FpCheckError::EXIT_CODE)
+        }
+    }
+}
+
+fn fp_accept(args: &FpAcceptArgs) -> ExitCode {
+    use better_erc::fp::{AcceptError, AcceptWhat, SymbolLibraries, kicad_config_dir};
+    let what = match (&args.symbol, &args.hash) {
+        (Some(symbol), Some(hash)) => AcceptWhat::Symbol {
+            symbol: symbol.clone(),
+            hash: hash.clone(),
+        },
+        _ => AcceptWhat::References(args.references.clone()),
+    };
+    let spinner = progress::Delayed::start();
+    spinner.set(format!("reading {}", args.project.display()));
+    let config = kicad_config_dir();
+    let run = better_erc::fp::accept(
+        &args.project,
+        &what,
+        &mut |dir| SymbolLibraries::new(dir, config.as_deref()),
+        args.dry_run,
+    );
+    spinner.finish();
+    match run {
+        Ok(r) => {
+            match args.format {
+                ListFormat::Text => {
+                    let _ = anstream::stdout()
+                        .lock()
+                        .write_all(r.to_text_color().as_bytes());
+                }
+                ListFormat::Json => {
+                    let _ = writeln!(std::io::stdout().lock(), "{}", r.to_json());
+                }
+            }
+            ExitCode::SUCCESS
+        }
+        Err(e) => {
+            error(&e.to_string());
+            ExitCode::from(AcceptError::EXIT_CODE)
         }
     }
 }

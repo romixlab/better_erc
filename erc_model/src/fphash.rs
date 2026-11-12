@@ -48,6 +48,13 @@ pub enum Compared {
     Malformed,
 }
 
+/// Whether `s` is a review hash of this version: `fp1:` and 16 hex digits
+pub fn is_hash(s: &str) -> bool {
+    s.strip_prefix(VERSION)
+        .and_then(|r| r.strip_prefix(':'))
+        .is_some_and(|hex| hex.len() == 16 && hex.chars().all(|c| c.is_ascii_hexdigit()))
+}
+
 /// Compares a stored review hash (surrounding spaces ignored) with a footprint
 pub fn compare(stored: &str, f: &LocalFootprint) -> Compared {
     let stored = stored.trim();
@@ -418,6 +425,12 @@ mod tests {
     fn form_and_version() {
         let h = hash(&sample());
         assert!(h.starts_with("fp1:") && h.len() == 4 + 16, "{h}");
+        assert!(
+            is_hash(&h)
+                && !is_hash("fp1:123")
+                && !is_hash("fp2:0123456789abcdef")
+                && !is_hash(" fp1:0123456789abcdef")
+        );
         assert_eq!(compare(&h, &sample()), Compared::Same);
         assert_eq!(
             compare(

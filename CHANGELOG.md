@@ -13,6 +13,16 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
+- `TOOL-9`: `berc fp accept PROJECT REF...` writes each board footprint's review hash into the `Footprint_Review`
+  field of its schematic symbol's library symbol: the `.kicad_sym` (or the symbol's file in a `.kicad_symdir`)
+  found through the project's or the global `sym-lib-table`, and every schematic sheet's `lib_symbols` copy, so
+  `berc fp check` finds them ok. `--symbol LIB:NAME --hash HASH` writes a hash given by hand; `--dry-run` writes
+  nothing; `--format json`. A symbol placed with more than one footprint (one hash can't hold for them all),
+  footprints of one symbol that differ, a symbol that sets no footprint, a footprint without a symbol or a
+  malformed hash are refused, and nothing is written when anything fails; each file is
+  replaced through a temporary file beside it. Library side: `better_erc::fp::accept`,
+  `erc_kicad::libtable::SymbolLibraries::symbol_file`, `erc_model::fphash::is_hash`.
+
 - `IMP-19`: the first slice of the KiCad writer, formatting-preserving: `erc_kicad::edit` parses a file into a tree
   that knows where each expression is and writes only the byte ranges that change, so a file read and written
   unchanged is the same bytes and a change is one diff hunk. `erc_kicad::symlib::set_property` sets a symbol's

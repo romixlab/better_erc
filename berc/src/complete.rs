@@ -52,10 +52,11 @@ pub fn variants() -> Vec<CompletionCandidate> {
         .collect()
 }
 
-/// The footprint references of the board (`.kicad_pcb`) named earlier on the command line, each with its library
-/// footprint (`berc fp hash BOARD REF`)
+/// The footprint references of the board named earlier on the command line, each with its library footprint: a
+/// `.kicad_pcb` (`berc fp hash BOARD REF`), or a project's directory, `.kicad_pro` or `.kicad_sch` with its board
+/// beside it (`berc fp accept PROJECT REF`)
 pub fn board_references() -> Vec<CompletionCandidate> {
-    let Some(board) = std::env::args().find(|a| a.ends_with(".kicad_pcb")) else {
+    let Some(board) = std::env::args().skip(1).find_map(|a| board_of(&a)) else {
         return Vec::new();
     };
     let Ok(lay) = better_erc::fp::read_board(std::path::Path::new(&board)) else {
@@ -93,4 +94,30 @@ pub fn symbol_libraries(current: &std::ffi::OsStr) -> Vec<CompletionCandidate> {
         .collect();
     out.extend(PathCompleter::any().complete(current));
     out
+}
+
+/// The board an argument names: the `.kicad_pcb` itself, the one beside a `.kicad_pro` or `.kicad_sch` of the same
+/// name, or the only one in a directory
+fn board_of(arg: &str) -> Option<String> {
+    let p = std::path::Path::new(arg);
+    if arg.ends_with(".kicad_pcb") {
+        return Some(arg.to_string());
+    }
+    if arg.ends_with(".kicad_pro") || arg.ends_with(".kicad_sch") {
+        let b = p.with_extension("kicad_pcb");
+        return b.is_file().then(|| b.to_string_lossy().into_owned());
+    }
+    if !p.is_dir() {
+        return None;
+    }
+    let mut boards = std::fs::read_dir(p)
+        .ok()?
+        .flatten()
+        .map(|e| e.path())
+        .filter(|f| f.extension().is_some_and(|x| x == "kicad_pcb"));
+    let first = boards.next()?;
+    boards
+        .next()
+        .is_none()
+        .then(|| first.to_string_lossy().into_owned())
 }
