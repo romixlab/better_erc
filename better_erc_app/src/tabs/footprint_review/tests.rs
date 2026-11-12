@@ -379,7 +379,7 @@ fn real_board() {
             .position(|f| f.reference == r)
             .expect("such a reference")
     });
-    if let Some(show) = std::env::var("BERC_FP_SHOW").ok() {
+    if let Ok(show) = std::env::var("BERC_FP_SHOW") {
         let show: Vec<&str> = show.split(',').collect();
         h.state_mut().hidden.retain(|k| !show.contains(&k.as_str()));
     }
