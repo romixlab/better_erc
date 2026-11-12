@@ -4,6 +4,7 @@
 //! - [`sexpr`]: the s-expression reader every KiCad file goes through (zero-copy, iterative, never panics).
 //! - [`sch`]: the schematic hierarchy with KiCad's connectivity rules.
 //! - [`pcb`]: the board: footprints, pads, tracks, vias, zones, graphics, stackup.
+//! - [`footprint`]: a library footprint (`.kicad_mod`) in its own frame, comparable with a board copy.
 //! - [`pro`]: the project file: net classes, text variables, variants, ERC and DRC settings, bus aliases.
 //! - [`netlist`]: the KiCad netlist (`kicad-cli sch export netlist`), the oracle of the schematic importer.
 //! - [`theme`]: a KiCad colour theme (`colors/*.json`).
@@ -13,6 +14,7 @@
 //! Connectivity follows KiCad 10's behaviour: rule changes between versions are followed by
 //! [`erc_model::ImportOptions::kicad_version`], bugs of older releases (kicad-cli 9.0.9's) are not copied.
 
+pub mod footprint;
 pub mod netclass;
 pub mod netlist;
 mod notes;

@@ -307,6 +307,8 @@ fn sample() -> Design {
         }],
         net_tie_pad_groups: vec![],
         models: vec!["${KICAD9_3DMODEL_DIR}/R.step".into()],
+        settings: Default::default(),
+        zones: vec![],
     });
     for (n, net) in [("1", "/Power supply/VIN"), ("2", "GND")] {
         lay.pads.push(Pad {
@@ -334,6 +336,7 @@ fn sample() -> Design {
                 width: 0,
                 filled: true,
             }],
+            details: Default::default(),
         });
     }
     lay.tracks.push(Track {

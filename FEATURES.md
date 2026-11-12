@@ -83,6 +83,14 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   schematic, board, KiCad netlist, Altium, OrCAD, PnP), a directory scanned for what can be imported, one cargo
   feature per importer; every import gives notes for what it read past and never panics on broken input (a test on
   truncated and garbled fixtures), and a golden dump per fixture · `erc_import/src/lib.rs`, `erc_import/tests`
+- ✅ `IMP-17` KiCad library footprints (`.kicad_mod`, KiCad 8, 9, 10) into the board model's footprint and pad types,
+  in the footprint's own frame (`LocalFootprint`): pads of every shape with roundrect and chamfer ratios, chamfered
+  corners, trapezoid deltas, oval drills and drill offsets, custom pad primitives, anchor and clearance shape, mask,
+  paste, clearance and thermal settings, padstacks as text; graphics per layer, zones and keepouts, footprint
+  settings and attributes. A board footprint comes back to its own frame with `Layout::local_footprint` (position,
+  rotation and flip undone, layers swapped back, KiCad's `F&B.Cu` for `*.Cu`), so a board copy equals its library
+  file: a board KiCad 10 saved with test footprints placed on both sides, flipped both ways, at right and odd angles
+  (`just footprint-fixture`) · `erc_kicad/src/footprint.rs`, `erc_model/src/footprint.rs`, `erc_kicad/tests/footprint.rs`
 - 🚧 `IMP-16` Schematic PDFs as a netlist source. Done: Altium Smart PDFs (stage 1): sheets, parts with their units,
   pins and nets from the bookmarks (`Provenance::Pdf`, `PdfConfidence::Bookmarks`, design rank), nets joined across
   sheets by power names and same-named ports, labels with their search-word position, part properties from the

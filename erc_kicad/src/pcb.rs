@@ -177,7 +177,7 @@ fn text(s: &Sexp, text: &str, frame: Frame) -> BoardText {
     }
 }
 
-struct Reader<'a> {
+pub(crate) struct Reader<'a> {
     file: &'a str,
     notes: Notes,
     /// The board's net table (KiCad 8 and 9): net code to name
@@ -185,7 +185,24 @@ struct Reader<'a> {
     lay: Layout,
 }
 
-impl Reader<'_> {
+impl<'a> Reader<'a> {
+    pub(crate) fn new(file: &'a str) -> Reader<'a> {
+        Reader {
+            file,
+            notes: Notes::new(file),
+            codes: HashMap::new(),
+            lay: Layout {
+                file: file.to_string(),
+                ..Layout::default()
+            },
+        }
+    }
+
+    /// The layout read so far and the notes
+    pub(crate) fn finish(self) -> (Layout, Vec<ImportNote>) {
+        (self.lay, self.notes.into_vec())
+    }
+
     fn src(&self) -> Provenance {
         Provenance::Board {
             file: self.file.to_string(),
@@ -279,7 +296,7 @@ impl Reader<'_> {
         }
     }
 
-    fn footprint(&mut self, s: &Sexp) {
+    pub(crate) fn footprint(&mut self, s: &Sexp) {
         let lib_id = s.arg(0).unwrap_or("").to_string();
         let at = s.child("at");
         let frame = Frame {
@@ -307,6 +324,8 @@ impl Reader<'_> {
             texts: Vec::new(),
             net_tie_pad_groups: Vec::new(),
             models: Vec::new(),
+            settings: FootprintSettings::default(),
+            zones: Vec::new(),
         };
         let first_pad = self.lay.pads.len();
         let mut ctx = format!("footprint {}", fp.lib_id);
@@ -378,12 +397,29 @@ impl Reader<'_> {
                 "path" => fp.schematic_path = item.arg(0).map(String::from),
                 "model" => fp.models.extend(item.arg(0).map(String::from)),
                 "pad" => self.pad(item, id, frame, &ctx),
+                // Footprint zones are written in absolute coordinates, like the board's
+                "zone" => fp.zones.push(self.zone_of(item)),
+                "clearance" => fp.settings.clearance = nm(item, 0),
+                "solder_mask_margin" => fp.settings.solder_mask_margin = nm(item, 0),
+                "solder_paste_margin" => fp.settings.solder_paste_margin = nm(item, 0),
+                "solder_paste_margin_ratio" | "solder_paste_ratio" => {
+                    fp.settings.solder_paste_ratio = item.num(0)
+                }
+                "zone_connect" => {
+                    fp.settings.zone_connect = item.arg(0).and_then(|z| z.parse().ok())
+                }
+                "thermal_width" => fp.settings.thermal_width = nm(item, 0),
+                "thermal_gap" => fp.settings.thermal_gap = nm(item, 0),
                 h if h.starts_with("fp_") => match shape(item, frame) {
                     Some(sh) => fp.graphics.push(sh),
                     None => self.notes.unknown(&ctx, item),
                 },
-                // Identity, library bookkeeping, editor state and defaults that carry no board fact
+                // Identity, library bookkeeping, editor state and defaults that carry no board fact; `version` and
+                // `generator` head a library file
                 "layer"
+                | "version"
+                | "generator"
+                | "generator_version"
                 | "uuid"
                 | "tstamp"
                 | "at"
@@ -398,19 +434,10 @@ impl Reader<'_> {
                 | "jumper_pad_groups"
                 | "embedded_fonts"
                 | "embedded_files"
-                | "zone_connect"
-                | "clearance"
-                | "solder_mask_margin"
-                | "solder_paste_margin"
-                | "solder_paste_margin_ratio"
-                | "solder_paste_ratio"
-                | "thermal_width"
-                | "thermal_gap"
                 | "private_layers"
                 | "component_classes"
                 | "autoplace_cost90"
                 | "autoplace_cost180"
-                | "zone"
                 | "group"
                 | "dimension"
                 | "point"
@@ -457,6 +484,35 @@ impl Reader<'_> {
                 }
             }
         }
+        let options = s.child("options");
+        let details = PadDetails {
+            roundrect_rratio: s.child("roundrect_rratio").and_then(|r| r.num(0)),
+            chamfer_ratio: s.child("chamfer_ratio").and_then(|r| r.num(0)),
+            chamfer: s
+                .child("chamfer")
+                .map(|c| {
+                    c.args()
+                        .iter()
+                        .filter_map(Sexp::text)
+                        .map(String::from)
+                        .collect()
+                })
+                .unwrap_or_default(),
+            rect_delta: xy(s.child("rect_delta")),
+            drill_offset: xy(s.child("drill").and_then(|d| d.child("offset"))),
+            anchor: options.and_then(|o| o.value("anchor")).map(String::from),
+            custom_clearance: options.and_then(|o| o.value("clearance")).map(String::from),
+            clearance: s.child("clearance").and_then(|c| nm(c, 0)),
+            thermal_bridge_width: s
+                .child("thermal_bridge_width")
+                .or_else(|| s.child("thermal_width"))
+                .and_then(|t| nm(t, 0)),
+            thermal_gap: s.child("thermal_gap").and_then(|t| nm(t, 0)),
+            thermal_bridge_angle: s.child("thermal_bridge_angle").and_then(|t| t.num(0)),
+            padstack: s
+                .child("padstack")
+                .map(|p| sexpr::canonical(p, &["uuid", "tstamp"])),
+        };
         let layers: Vec<String> = s
             .child("layers")
             .map(|l| {
@@ -490,6 +546,7 @@ impl Reader<'_> {
                 .and_then(|m| m.num(0)),
             zone_connect: s.child("zone_connect").and_then(|z| z.arg(0)?.parse().ok()),
             primitives,
+            details,
         };
         for item in s.args().iter().skip(3) {
             let known = match item.head() {
@@ -547,6 +604,11 @@ impl Reader<'_> {
     }
 
     fn zone(&mut self, s: &Sexp) {
+        let zone = self.zone_of(s);
+        self.lay.zones.push(zone);
+    }
+
+    fn zone_of(&self, s: &Sexp) -> Zone {
         let mut layers: Vec<String> = Vec::new();
         if let Some(l) = s.value("layer") {
             layers.push(l.to_string());
@@ -572,7 +634,7 @@ impl Reader<'_> {
                     .collect()
             })
             .unwrap_or_default();
-        let zone = Zone {
+        Zone {
             name: s.value("name").map(String::from),
             net_name: self.net(s),
             layers,
@@ -595,8 +657,7 @@ impl Reader<'_> {
             keepout,
             filled: fill.is_some_and(|f| f.arg(0) == Some("yes"))
                 || s.child("filled_polygon").is_some(),
-        };
-        self.lay.zones.push(zone);
+        }
     }
 
     fn top(&mut self, root: &Sexp) {
@@ -709,15 +770,7 @@ pub fn read(text: &str, file: &str) -> Result<(Layout, Vec<ImportNote>), ImportE
             });
         }
     };
-    let mut r = Reader {
-        file,
-        notes: Notes::new(file),
-        codes: HashMap::new(),
-        lay: Layout {
-            file: file.to_string(),
-            ..Layout::default()
-        },
-    };
+    let mut r = Reader::new(file);
     r.top(root);
     // KiCad 10 has no net table: the nets are those its items name
     if r.lay.net_names.is_empty() {
@@ -734,7 +787,7 @@ pub fn read(text: &str, file: &str) -> Result<(Layout, Vec<ImportNote>), ImportE
         names.dedup();
         r.lay.net_names = names;
     }
-    Ok((r.lay, r.notes.into_vec()))
+    Ok(r.finish())
 }
 
 #[cfg(test)]

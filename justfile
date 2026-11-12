@@ -84,6 +84,13 @@ netlist-fixtures:
     {{ kicad }}:10.0 kicad-cli sch export netlist -o fixture.kicad10.net fixture.kicad_sch
     {{ kicad }}:10.0 kicad-cli sch export netlist -o fixture_kicad10.kicad10.net fixture_kicad10.kicad_sch
 
+# The board copies of erc_kicad's footprint test (erc_kicad/tests/footprint.rs): Test.pretty placed by KiCad 10.
+
+# Place the test footprints on a board again with KiCad 10's Python API (podman)
+[working-directory: 'erc_kicad/tests/fixtures/footprints']
+footprint-fixture:
+    {{ kicad }}:10.0 python3 place.py > placed.kicad_pcb
+
 # The fixtures of erc_kicad's differential test (erc_kicad/tests/differential.rs); local_power uses a KiCad 10 feature.
 
 # Export erc_kicad's fixture netlists again with kicad-cli 8, 9 and 10 from KiCad's container images (podman)

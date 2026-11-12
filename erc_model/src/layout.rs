@@ -210,6 +210,25 @@ pub struct Footprint {
     pub net_tie_pad_groups: Vec<Vec<String>>,
     /// 3D model paths
     pub models: Vec<String>,
+    /// Clearance, mask, paste and thermal settings the footprint sets for all its pads
+    #[serde(default)]
+    pub settings: FootprintSettings,
+    /// Copper zones and rule areas (keepouts) of the footprint, absolute coordinates
+    #[serde(default)]
+    pub zones: Vec<Zone>,
+}
+
+/// Settings a footprint sets for all its pads, unless a pad sets its own
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+pub struct FootprintSettings {
+    pub clearance: Option<i64>,
+    pub solder_mask_margin: Option<i64>,
+    pub solder_paste_margin: Option<i64>,
+    pub solder_paste_ratio: Option<f64>,
+    /// Zone connection: 0 none, 1 thermal, 2 solid, 3 through-hole thermal only
+    pub zone_connect: Option<i32>,
+    pub thermal_width: Option<i64>,
+    pub thermal_gap: Option<i64>,
 }
 
 /// A text on the board or in a footprint
@@ -256,6 +275,35 @@ pub struct Pad {
     pub zone_connect: Option<i32>,
     /// Extra shapes of a custom pad, relative to the pad
     pub primitives: Vec<Shape>,
+    /// Shape parameters, drill offset, clearance and thermal settings
+    #[serde(default)]
+    pub details: PadDetails,
+}
+
+/// The rest of a pad's shape and settings: what a footprint review compares beyond number, size and position
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+pub struct PadDetails {
+    /// Corner radius of a `roundrect` (or rounded `chamfered_rect`) as a ratio of the smaller side
+    pub roundrect_rratio: Option<f64>,
+    /// Chamfer size of a `chamfered_rect` as a ratio of the smaller side
+    pub chamfer_ratio: Option<f64>,
+    /// The chamfered corners: `top_left`, `top_right`, `bottom_left`, `bottom_right`
+    pub chamfer: Vec<String>,
+    /// Size difference of a `trapezoid`'s sides, x and y
+    pub rect_delta: Option<Pt>,
+    /// Offset of the pad's shape from its drill, relative to the pad
+    pub drill_offset: Option<Pt>,
+    /// Anchor shape of a `custom` pad (`rect`, `circle`)
+    pub anchor: Option<String>,
+    /// Clearance shape of a `custom` pad (`outline`, `convexhull`)
+    pub custom_clearance: Option<String>,
+    pub clearance: Option<i64>,
+    pub thermal_bridge_width: Option<i64>,
+    pub thermal_gap: Option<i64>,
+    /// Degrees
+    pub thermal_bridge_angle: Option<f64>,
+    /// A KiCad 9+ padstack (shapes per copper layer), as canonical s-expression text without UUIDs
+    pub padstack: Option<String>,
 }
 
 /// A track segment or arc

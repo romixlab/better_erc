@@ -51,12 +51,12 @@ layout file board_kicad9.kicad_pcb thickness 1.6
 pad J1 1 kind thru_hole shape rect at 140,100 rot 270 size 1.7,1.7 drill 1,1 layers *.Cu,*.Mask net /DATA2 func Pin_1 ptype passive
 pad J1 2 kind thru_hole shape oval at 137.46,100 rot 270 size 1.7,2.2 drill 1,1.5 layers *.Cu,*.Mask net GND func Pin_2 ptype passive mask 0.1 zone-connect 2
 pad NT1 1 kind smd shape circle at 149.646447,100.353553 rot 45 size 0.5,0.5 layers F.Cu net GND
-pad NT1 2 kind smd shape custom at 150.353553,99.646447 rot 45 size 0.5,0.5 layers F.Cu net /CTL.EN
+pad NT1 2 kind smd shape custom at 150.353553,99.646447 rot 45 size 0.5,0.5 layers F.Cu net /CTL.EN anchor circle custom-clearance outline
 pad NT1 2 prim "" width 0 filled poly 0,-0.25 -0.5,-0.25 -0.5,0.25 0,0.25
-pad R1 1 kind smd shape roundrect at 110,100.825 rot 90 size 0.8,0.95 layers F.Cu,F.Mask,F.Paste net +3V3 ptype passive
-pad R1 2 kind smd shape roundrect at 110,99.175 rot 90 size 0.8,0.95 layers F.Cu,F.Mask,F.Paste net /A/IN ptype passive
-pad R5 1 kind smd shape roundrect at 120.825,100 rot 180 size 0.8,0.95 layers B.Cu,B.Mask,B.Paste net GLOB ptype passive
-pad R5 2 kind smd shape roundrect at 119.175,100 rot 180 size 0.8,0.95 layers B.Cu,B.Mask,B.Paste net +3V3 ptype passive
+pad R1 1 kind smd shape roundrect at 110,100.825 rot 90 size 0.8,0.95 layers F.Cu,F.Mask,F.Paste net +3V3 ptype passive rratio 0.25
+pad R1 2 kind smd shape roundrect at 110,99.175 rot 90 size 0.8,0.95 layers F.Cu,F.Mask,F.Paste net /A/IN ptype passive rratio 0.25
+pad R5 1 kind smd shape roundrect at 120.825,100 rot 180 size 0.8,0.95 layers B.Cu,B.Mask,B.Paste net GLOB ptype passive rratio 0.25
+pad R5 2 kind smd shape roundrect at 119.175,100 rot 180 size 0.8,0.95 layers B.Cu,B.Mask,B.Paste net +3V3 ptype passive rratio 0.25
 pad TP1 1 kind smd shape circle at 130,100 rot 0 size 1,1 layers F.Cu,F.Mask net GND prop pad_prop_testpoint
 pcbnet +3V3
 pcbnet /A/IN

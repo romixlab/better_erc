@@ -11,6 +11,20 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `IMP-17`: `erc_kicad::footprint::read` reads a library footprint (`.kicad_mod`) into the footprint and pad types
+  the board reader fills, in the footprint's own frame (`erc_model::LocalFootprint`). `Layout::local_footprint`
+  brings a board footprint back to that frame: position and rotation undone, a footprint on the back flipped to the
+  front with its layers, pad angles, chamfered corners, trapezoid deltas, drill offsets and custom pad primitives.
+  Test: a board KiCad 10 saved with two test footprints placed twelve ways (`just footprint-fixture`); every copy
+  equals its library file.
+- The board reader keeps more of each footprint: its zones and keepouts (`Footprint::zones`), its clearance, mask,
+  paste and thermal settings (`Footprint::settings`), and per pad the roundrect and chamfer ratios, chamfered corners,
+  trapezoid delta, drill offset, custom pad anchor and clearance shape, clearance and thermal settings and a KiCad 9
+  padstack (`Pad::details`). Before, footprint zones and these settings were skipped. The canonical dump carries them
+  (`fp ... zone` lines, settings on the `fp` line, details on the `pad` line); the board golden dumps gain them.
+
 ## [0.4.21] - 2026-11-12
 
 ### Added

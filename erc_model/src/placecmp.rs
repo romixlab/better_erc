@@ -247,6 +247,8 @@ mod tests {
             texts: Vec::new(),
             net_tie_pad_groups: Vec::new(),
             models: Vec::new(),
+            settings: Default::default(),
+            zones: Vec::new(),
         }
     }
 

@@ -188,6 +188,8 @@ impl Importer for PnpImporter {
                 texts: Vec::new(),
                 net_tie_pad_groups: Vec::new(),
                 models: Vec::new(),
+                settings: Default::default(),
+                zones: Vec::new(),
             });
         }
         let name = file_name(file);

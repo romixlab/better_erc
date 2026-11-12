@@ -19,6 +19,7 @@ pub mod class;
 pub mod design;
 pub mod dump;
 pub mod fact;
+pub mod footprint;
 pub mod geometry;
 pub mod import;
 pub mod layout;
@@ -31,6 +32,7 @@ pub use canon::{link_layout, natural_cmp, part_paths};
 pub use class::PartClass;
 pub use design::*;
 pub use fact::{Fact, Facts, PdfConfidence, Provenance, Rank, Time};
+pub use footprint::LocalFootprint;
 pub use geometry::Geometry;
 #[cfg(feature = "fs")]
 pub use import::DirFiles;

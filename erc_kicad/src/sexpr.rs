@@ -96,6 +96,44 @@ impl<'a> Sexp<'a> {
     }
 }
 
+/// One line of canonical text: lists in parentheses, atoms as written, strings quoted with `"` and `\` escaped,
+/// single spaces; lists whose head is in `skip` (`uuid`, ...) are left out
+pub fn canonical(s: &Sexp, skip: &[&str]) -> String {
+    fn go(s: &Sexp, skip: &[&str], out: &mut String) {
+        match s {
+            Sexp::Atom(a) => out.push_str(a),
+            Sexp::Str(t) => {
+                out.push('"');
+                for c in t.chars() {
+                    if matches!(c, '"' | '\\') {
+                        out.push('\\');
+                    }
+                    out.push(c);
+                }
+                out.push('"');
+            }
+            Sexp::List(items) => {
+                out.push('(');
+                let mut first = true;
+                for x in items {
+                    if x.head().is_some_and(|h| skip.contains(&h)) {
+                        continue;
+                    }
+                    if !first {
+                        out.push(' ');
+                    }
+                    first = false;
+                    go(x, skip, out);
+                }
+                out.push(')');
+            }
+        }
+    }
+    let mut out = String::new();
+    go(s, skip, &mut out);
+    out
+}
+
 /// Line numbers of the expressions of one parsed text: atoms and plain strings borrow from the text, so where an
 /// expression starts is known without the parser tracking positions
 pub struct Lines {
@@ -302,6 +340,16 @@ mod tests {
         assert_eq!(lines.line_of(&v[0].child("d").unwrap().args()[0]), None);
         // Not from this text
         assert_eq!(Lines::of("(z)").line_of(&v[0]), None);
+    }
+
+    #[test]
+    fn canonical_text() {
+        let p = parse("(padstack (mode custom)\n  (layer \"F.Cu\" (shape  rect) (uuid \"x\")))")
+            .unwrap();
+        assert_eq!(
+            canonical(&p[0], &["uuid"]),
+            r#"(padstack (mode custom) (layer "F.Cu" (shape rect)))"#
+        );
     }
 
     #[test]

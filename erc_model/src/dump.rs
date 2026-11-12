@@ -725,6 +725,51 @@ pub fn zone_tokens(z: &Zone) -> Vec<String> {
     v
 }
 
+/// The pad details as ` key value` tokens, each only when set
+fn pad_details_tokens(d: &PadDetails) -> String {
+    let mut line = String::new();
+    for (key, v) in [
+        ("rratio", d.roundrect_rratio),
+        ("chamfer-ratio", d.chamfer_ratio),
+    ] {
+        if let Some(v) = v {
+            line += &format!(" {key} {v}");
+        }
+    }
+    if !d.chamfer.is_empty() {
+        line += &format!(" chamfer {}", layers(&d.chamfer));
+    }
+    for (key, v) in [("delta", d.rect_delta), ("drill-offset", d.drill_offset)] {
+        if let Some(v) = v {
+            line += &format!(" {key} {v}");
+        }
+    }
+    for (key, v) in [
+        ("anchor", &d.anchor),
+        ("custom-clearance", &d.custom_clearance),
+    ] {
+        if let Some(v) = v {
+            line += &format!(" {key} {}", tok(v));
+        }
+    }
+    for (key, v) in [
+        ("clearance", d.clearance),
+        ("thermal-width", d.thermal_bridge_width),
+        ("thermal-gap", d.thermal_gap),
+    ] {
+        if let Some(v) = v {
+            line += &format!(" {key} {}", Nm(v));
+        }
+    }
+    if let Some(a) = d.thermal_bridge_angle {
+        line += &format!(" thermal-angle {a}");
+    }
+    if let Some(p) = &d.padstack {
+        line += &format!(" padstack {}", tok(p));
+    }
+    line
+}
+
 fn layout_lines(lay: &Layout, keys: &Keys, out: &mut Vec<String>) {
     let mut line = format!("layout file {}", tok(&lay.file));
     if let Some(t) = lay.thickness {
@@ -789,6 +834,24 @@ fn layout_lines(lay: &Layout, keys: &Keys, out: &mut Vec<String>) {
                 line += &format!(" {flag}");
             }
         }
+        let st = &f.settings;
+        for (key, v) in [
+            ("clearance", st.clearance),
+            ("mask", st.solder_mask_margin),
+            ("paste", st.solder_paste_margin),
+            ("thermal-width", st.thermal_width),
+            ("thermal-gap", st.thermal_gap),
+        ] {
+            if let Some(v) = v {
+                line += &format!(" {key} {}", Nm(v));
+            }
+        }
+        if let Some(r) = st.solder_paste_ratio {
+            line += &format!(" paste-ratio {r}");
+        }
+        if let Some(z) = st.zone_connect {
+            line += &format!(" zone-connect {z}");
+        }
         out.push(line);
         for fl in &f.fields {
             fact_lines(
@@ -810,6 +873,9 @@ fn layout_lines(lay: &Layout, keys: &Keys, out: &mut Vec<String>) {
         }
         for m in &f.models {
             out.push(format!("fp {k} model {}", tok(m)));
+        }
+        for z in &f.zones {
+            out.push(format!("fp {k} zone {}", zone_tokens(z).join(" ")));
         }
     }
     for (i, p) in lay.pads.iter().enumerate() {
@@ -850,6 +916,7 @@ fn layout_lines(lay: &Layout, keys: &Keys, out: &mut Vec<String>) {
         if let Some(z) = p.zone_connect {
             line += &format!(" zone-connect {z}");
         }
+        line += &pad_details_tokens(&p.details);
         out.push(line);
         for g in &p.primitives {
             out.push(format!("pad {k} prim {}", shape_tokens(g).join(" ")));
@@ -1541,45 +1608,7 @@ impl BoardReader {
                 });
             }
             "zone" => {
-                let mut z = Zone {
-                    name: None,
-                    net_name: None,
-                    layers: Vec::new(),
-                    outline: Vec::new(),
-                    priority: 0,
-                    connect_pads: String::new(),
-                    clearance: None,
-                    min_thickness: None,
-                    thermal_gap: None,
-                    thermal_bridge_width: None,
-                    keepout: Vec::new(),
-                    filled: false,
-                };
-                while !c.done() {
-                    match c.next()? {
-                        "name" => z.name = Some(c.next()?.into()),
-                        "net" => z.net_name = Some(c.next()?.into()),
-                        "layers" => z.layers = c.list()?,
-                        "priority" => z.priority = c.num()?,
-                        "connect" => z.connect_pads = c.next()?.into(),
-                        "clearance" => z.clearance = Some(c.nm()?),
-                        "min-thickness" => z.min_thickness = Some(c.nm()?),
-                        "thermal-gap" => z.thermal_gap = Some(c.nm()?),
-                        "thermal-bridge" => z.thermal_bridge_width = Some(c.nm()?),
-                        "filled" => z.filled = true,
-                        "keepout" => {
-                            let k = c.next()?.to_string();
-                            let v = c.next()?.to_string();
-                            z.keepout.push((k, v));
-                        }
-                        "outline" => {
-                            while !c.done() {
-                                z.outline.push(c.pt()?);
-                            }
-                        }
-                        o => return Err(format!("bad zone attribute `{o}`")),
-                    }
-                }
+                let z = read_zone(&mut c)?;
                 self.layout()?.zones.push(z);
             }
             "gfx" => {
@@ -1884,6 +1913,7 @@ impl BoardReader {
             c.word("rot")?;
             let rotation: f64 = c.num()?;
             let mut attrs = FootprintAttrs::default();
+            let mut settings = FootprintSettings::default();
             let mut schematic_path = None;
             while !c.done() {
                 match c.next()? {
@@ -1895,6 +1925,13 @@ impl BoardReader {
                     "allow_missing_courtyard" => attrs.allow_missing_courtyard = true,
                     "dnp" => attrs.dnp = true,
                     "allow_soldermask_bridges" => attrs.allow_soldermask_bridges = true,
+                    "clearance" => settings.clearance = Some(c.nm()?),
+                    "mask" => settings.solder_mask_margin = Some(c.nm()?),
+                    "paste" => settings.solder_paste_margin = Some(c.nm()?),
+                    "thermal-width" => settings.thermal_width = Some(c.nm()?),
+                    "thermal-gap" => settings.thermal_gap = Some(c.nm()?),
+                    "paste-ratio" => settings.solder_paste_ratio = Some(c.num()?),
+                    "zone-connect" => settings.zone_connect = Some(c.num()?),
                     o => return Err(format!("bad footprint attribute `{o}`")),
                 }
             }
@@ -1916,6 +1953,8 @@ impl BoardReader {
                 texts: Vec::new(),
                 net_tie_pad_groups: Vec::new(),
                 models: Vec::new(),
+                settings,
+                zones: Vec::new(),
             });
             self.fps.insert(key, id);
             return Ok(());
@@ -1941,6 +1980,11 @@ impl BoardReader {
         } else {
             None
         };
+        let zone = if what == "zone" {
+            Some(read_zone(c)?)
+        } else {
+            None
+        };
         let rest = if matches!(what, "tie" | "model") {
             c.rest()
         } else {
@@ -1957,6 +2001,7 @@ impl BoardReader {
             "text" => f.texts.extend(text),
             "tie" => f.net_tie_pad_groups.push(rest),
             "model" => f.models.extend(rest),
+            "zone" => f.zones.extend(zone),
             o => return Err(format!("bad footprint line `{o}`")),
         }
         Ok(())
@@ -2005,6 +2050,7 @@ impl BoardReader {
             solder_paste_ratio: None,
             zone_connect: None,
             primitives: Vec::new(),
+            details: Default::default(),
         };
         while !c.done() {
             match c.next()? {
@@ -2018,6 +2064,18 @@ impl BoardReader {
                 "paste" => p.solder_paste_margin = Some(c.nm()?),
                 "paste-ratio" => p.solder_paste_ratio = Some(c.num()?),
                 "zone-connect" => p.zone_connect = Some(c.num()?),
+                "rratio" => p.details.roundrect_rratio = Some(c.num()?),
+                "chamfer-ratio" => p.details.chamfer_ratio = Some(c.num()?),
+                "chamfer" => p.details.chamfer = c.list()?,
+                "delta" => p.details.rect_delta = Some(c.pt()?),
+                "drill-offset" => p.details.drill_offset = Some(c.pt()?),
+                "anchor" => p.details.anchor = Some(c.next()?.into()),
+                "custom-clearance" => p.details.custom_clearance = Some(c.next()?.into()),
+                "clearance" => p.details.clearance = Some(c.nm()?),
+                "thermal-width" => p.details.thermal_bridge_width = Some(c.nm()?),
+                "thermal-gap" => p.details.thermal_gap = Some(c.nm()?),
+                "thermal-angle" => p.details.thermal_bridge_angle = Some(c.num()?),
+                "padstack" => p.details.padstack = Some(c.next()?.into()),
                 o => return Err(format!("bad pad attribute `{o}`")),
             }
         }
@@ -2046,6 +2104,49 @@ fn add_param(params: &mut Vec<Param>, key: String, f: Fact<String>) {
             value: Facts::one(f),
         }),
     }
+}
+
+fn read_zone(c: &mut Cur) -> R<Zone> {
+    let mut z = Zone {
+        name: None,
+        net_name: None,
+        layers: Vec::new(),
+        outline: Vec::new(),
+        priority: 0,
+        connect_pads: String::new(),
+        clearance: None,
+        min_thickness: None,
+        thermal_gap: None,
+        thermal_bridge_width: None,
+        keepout: Vec::new(),
+        filled: false,
+    };
+    while !c.done() {
+        match c.next()? {
+            "name" => z.name = Some(c.next()?.into()),
+            "net" => z.net_name = Some(c.next()?.into()),
+            "layers" => z.layers = c.list()?,
+            "priority" => z.priority = c.num()?,
+            "connect" => z.connect_pads = c.next()?.into(),
+            "clearance" => z.clearance = Some(c.nm()?),
+            "min-thickness" => z.min_thickness = Some(c.nm()?),
+            "thermal-gap" => z.thermal_gap = Some(c.nm()?),
+            "thermal-bridge" => z.thermal_bridge_width = Some(c.nm()?),
+            "filled" => z.filled = true,
+            "keepout" => {
+                let k = c.next()?.to_string();
+                let v = c.next()?.to_string();
+                z.keepout.push((k, v));
+            }
+            "outline" => {
+                while !c.done() {
+                    z.outline.push(c.pt()?);
+                }
+            }
+            o => return Err(format!("bad zone attribute `{o}`")),
+        }
+    }
+    Ok(z)
 }
 
 fn read_shape(c: &mut Cur) -> R<Shape> {
