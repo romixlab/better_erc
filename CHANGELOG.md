@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.36] - 2026-11-12
+
 ### Changed
 
 - `berc textconv` (`TOOL-3`): a `.kicad_sch`'s `lib_symbols` now print each library symbol's fields (`Datasheet`,
