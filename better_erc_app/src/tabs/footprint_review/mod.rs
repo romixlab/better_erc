@@ -794,8 +794,25 @@ impl FootprintReview {
         }
     }
 
+    /// The open board's mask and paste margins, for a footprint of that board or of its project's libraries
+    fn board_margins(&self, s: &Sourced) -> outline::Margins {
+        let Some(b) = &self.rt.board else {
+            return outline::Margins::default();
+        };
+        let of_board = match &s.source {
+            FootprintSource::Board { board, .. } => *board == b.path,
+            FootprintSource::Library { project, .. } => Some(project.as_path()) == b.path.parent(),
+            FootprintSource::File(_) => false,
+        };
+        if of_board {
+            outline::Margins::of_setup(&b.layout.setup)
+        } else {
+            outline::Margins::default()
+        }
+    }
+
     fn set_sourced(&mut self, s: Sourced, fresh: bool) {
-        self.rt.items = outline::items(&s.footprint);
+        self.rt.items = outline::items(&s.footprint, self.board_margins(&s));
         self.rt.error = None;
         self.rt.accepted = None;
         self.rt.written = None;
@@ -1201,7 +1218,9 @@ impl FootprintReview {
             }
             Grid::new("fp").num_columns(2).show(ui, |ui| {
                 ui.label("Footprint");
-                ui.label(RichText::new(s.lib_id()).strong());
+                // Truncated: a long footprint name would widen the panel past its edge and hide the layer boxes
+                ui.add(Label::new(RichText::new(s.lib_id()).strong()).truncate())
+                    .on_hover_text(s.lib_id());
                 ui.end_row();
                 ui.label("From");
                 ui.add(Label::new(short_source(&s.source)).truncate())
@@ -1502,7 +1521,8 @@ impl FootprintReview {
                 ui.colored_label(status_colour(r.status), r.status.name());
                 ui.end_row();
                 ui.label("Footprint");
-                ui.label(r.footprint.as_deref().unwrap_or("(none)"));
+                let fp = r.footprint.as_deref().unwrap_or("(none)");
+                ui.add(Label::new(fp).truncate()).on_hover_text(fp);
                 ui.end_row();
                 if let Some(d) = &r.datasheet {
                     ui.label("Datasheet");
@@ -2546,7 +2566,13 @@ impl FootprintReview {
                     ..
                 } => {
                     let pts: Vec<Pos2> = points.iter().map(|p| screen(*p)).collect();
-                    let w = ((*width as f32) * px_per_mm).max(1.0);
+                    // An opening lies on its pad's edge or inside it: thick enough to stand out on the pad
+                    let least = if matches!(item.kind(), Kind::Mask | Kind::Paste) {
+                        2.0
+                    } else {
+                        1.0
+                    };
+                    let w = ((*width as f32) * px_per_mm).max(least);
                     let stroke = if gpu {
                         Stroke::new(w, c)
                     } else {

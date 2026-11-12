@@ -345,9 +345,39 @@ fn shape_item(kind: Kind, s: &Shape, place: impl Fn(P) -> P) -> Item {
     }
 }
 
-/// Everything of `f` to draw, pads last so they are on top
-pub fn items(f: &LocalFootprint) -> Vec<Item> {
+/// A board's defaults for the pads' mask and paste margins, where neither the pad nor its footprint sets one
+/// (`pad_to_mask_clearance`, `pad_to_paste_clearance`, `pad_to_paste_clearance_ratio` of the board's setup), mm
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct Margins {
+    pub mask: f64,
+    pub paste: f64,
+    pub paste_ratio: f64,
+}
+
+impl Margins {
+    /// From a board's design settings; none set is all zero, as KiCad takes them
+    pub fn of_setup(setup: &[(String, String)]) -> Margins {
+        let get = |k: &str| {
+            setup
+                .iter()
+                .find(|(n, _)| n == k)
+                .and_then(|(_, v)| v.parse::<f64>().ok())
+                .unwrap_or(0.0)
+        };
+        Margins {
+            mask: get("pad_to_mask_clearance"),
+            paste: get("pad_to_paste_clearance"),
+            paste_ratio: get("pad_to_paste_clearance_ratio"),
+        }
+    }
+}
+
+/// Everything of `f` to draw, pads after the graphics, the pads' mask openings and paste apertures last: an
+/// opening is about the size of its pad and would vanish under the pad's fill. `board` gives the margins of pads
+/// that set none (all zero for a footprint reviewed without a board).
+pub fn items(f: &LocalFootprint, board: Margins) -> Vec<Item> {
     let mut out = Vec::new();
+    let mut openings = Vec::new();
     for g in &f.footprint.graphics {
         // Only the front and the board edge: a library footprint draws on the front
         if g.layer.starts_with("B.") {
@@ -381,18 +411,18 @@ pub fn items(f: &LocalFootprint) -> Vec<Item> {
         };
         // The mask opening and the paste aperture, by the pad's margins, else the footprint's
         let small = len(pad.size.x.min(pad.size.y));
-        let mask = len(pad
+        let mask = pad
             .solder_mask_margin
             .or(st.solder_mask_margin)
-            .unwrap_or(0));
-        let paste = len(pad
+            .map_or(board.mask, len);
+        let paste = pad
             .solder_paste_margin
             .or(st.solder_paste_margin)
-            .unwrap_or(0))
+            .map_or(board.paste, len)
             + pad
                 .solder_paste_ratio
                 .or(st.solder_paste_ratio)
-                .unwrap_or(0.0)
+                .unwrap_or(board.paste_ratio)
                 * small;
         for (layer, kind, grow) in [
             ("F.Mask", Kind::Mask, mask),
@@ -400,7 +430,7 @@ pub fn items(f: &LocalFootprint) -> Vec<Item> {
         ] {
             if on(layer) {
                 let (shape, _) = pad_shape(pad, grow);
-                out.push(Item::Line {
+                openings.push(Item::Line {
                     kind,
                     points: shape.into_iter().map(place).collect(),
                     closed: true,
@@ -456,6 +486,7 @@ pub fn items(f: &LocalFootprint) -> Vec<Item> {
             });
         }
     }
+    out.extend(openings);
     out
 }
 
@@ -502,7 +533,7 @@ mod tests {
     fn pads_become_outlines() {
         for name in ["Mixed_Pads.kicad_mod", "Asym_SOT.kicad_mod"] {
             let f = fixture(name);
-            let items = items(&f);
+            let items = items(&f, Margins::default());
             // One number per copper pad (a custom pad's primitives are areas of their own)
             let pads = items
                 .iter()
@@ -543,7 +574,7 @@ mod tests {
         f.pads.push(via.clone());
         f.pads.push(pin.clone());
         assert!(is_via(&via, &f.pads) && !is_via(&pin, &f.pads));
-        let items = items(&f);
+        let items = items(&f, Margins::default());
         let of = |k: Kind| items.iter().filter(|i| i.kind() == k).count();
         assert_eq!(of(Kind::Via), 2, "a ring and a hole");
         assert!(
@@ -574,7 +605,7 @@ mod tests {
         p.layers = vec!["F.Cu".into(), "F.Mask".into(), "F.Paste".into()];
         p.solder_mask_margin = Some(100_000);
         p.solder_paste_margin = Some(-100_000);
-        let items = items(&f);
+        let items = items(&f, Margins::default());
         let span = |k: Kind| {
             let pts: Vec<P> = items
                 .iter()
@@ -594,5 +625,47 @@ mod tests {
             "{}",
             span(Kind::Paste)
         );
+    }
+
+    /// A pad and footprint without margins take the board's: its mask opening grows by `pad_to_mask_clearance`, its
+    /// paste aperture by `pad_to_paste_clearance_ratio` of the pad's smaller side; a pad's own margin wins
+    #[test]
+    fn board_margins_where_none_set() {
+        let mut f = fixture("Asym_SOT.kicad_mod");
+        f.pads.truncate(1);
+        f.footprint.settings = Default::default();
+        let p = &mut f.pads[0];
+        p.shape = "rect".into();
+        p.rotation = 0.0;
+        p.at = Pt::default();
+        p.size = Pt::new(1_000_000, 1_000_000);
+        p.layers = vec!["F.Cu".into(), "F.Mask".into(), "F.Paste".into()];
+        p.solder_mask_margin = None;
+        p.solder_paste_margin = None;
+        p.solder_paste_ratio = None;
+        let setup = [
+            ("pad_to_mask_clearance", "0.05"),
+            ("pad_to_paste_clearance_ratio", "-0.12"),
+        ]
+        .map(|(k, v)| (k.to_string(), v.to_string()));
+        let board = Margins::of_setup(&setup);
+        let span = |f: &LocalFootprint, k: Kind| {
+            let pts: Vec<P> = items(f, board)
+                .iter()
+                .filter(|i| i.kind() == k)
+                .flat_map(Item::points)
+                .collect();
+            pts.iter().map(|p| p[0]).fold(f64::MIN, f64::max)
+                - pts.iter().map(|p| p[0]).fold(f64::MAX, f64::min)
+        };
+        assert!((span(&f, Kind::Mask) - 1.1).abs() < 1e-9);
+        assert!((span(&f, Kind::Paste) - 0.76).abs() < 1e-9);
+        f.pads[0].solder_mask_margin = Some(0);
+        assert!((span(&f, Kind::Mask) - 1.0).abs() < 1e-9);
+        // The openings come after the pads, drawn on top of them
+        let all = items(&f, board);
+        let pad = all.iter().position(|i| i.kind() == Kind::Pad).unwrap();
+        let mask = all.iter().position(|i| i.kind() == Kind::Mask).unwrap();
+        assert!(mask > pad);
     }
 }

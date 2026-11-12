@@ -11,6 +11,16 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Fixed
+
+- `VIEW-19`: the Footprint review tab shows the mask openings and paste apertures it was asked to: they were drawn
+  before the pads, and an opening the size of its pad (no margin) or inside it (an exposed pad's mask and paste
+  windows) vanished under the pad's fill, as on U401 of b153a (TI RUK0020B). They are drawn over the pads now, at
+  least 2 px wide, and take the open board's `pad_to_mask_clearance`, `pad_to_paste_clearance` and its ratio
+  where neither the pad nor its footprint sets a margin. The test checks the rendered pixels on a land pattern of that shape, written by the test,
+  opaque, where a line under its pad does not show; the old one only checked the list of shapes. A long footprint
+  name no longer widens the side panel past its edge, which hid the Mask checkbox.
+
 ## [0.4.30] - 2026-11-12
 
 ### Added

@@ -349,7 +349,9 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    as far), turn it with T or ⟲ 90° or by an angle, mirror it with M for a drawing seen from below. Opacity, Blink
    (B), the colours (presets for the pads, a picker per layer group) and the layers shown (pads, vias, courtyard,
    fab, silk, copper, mask, paste) help to see both. Mask and Paste show each pad's mask opening and paste
-   aperture as outlines, by the pad's margins (else the footprint's). A package's vias (round plated pads without
+   aperture as outlines drawn over the pads, by the pad's margins, else the footprint's, else the open board's
+   design settings (`pad_to_mask_clearance`, `pad_to_paste_clearance` and its ratio) for a footprint of that board
+   or its project's libraries. A package's vias (round plated pads without
    a number of their own, such as thermal vias in an exposed pad; KiCad has no vias in footprints) are drawn as
    rings with their holes; they are in the review hash as the pads they are. The blend mode mixes the footprint into the page: Normal (over it
    by its opacity), Multiply (the drawing's lines stay dark through it), Screen, or Difference: with white pads,

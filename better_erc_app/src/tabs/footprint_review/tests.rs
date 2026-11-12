@@ -715,32 +715,135 @@ fn harness(name: &'static str) -> Harness<'static, FootprintReview> {
         )
 }
 
-/// The kinds of what the canvas draws now
-fn drawn_kinds(h: &Harness<'_, FootprintReview>) -> Vec<Kind> {
-    h.state().shown_items().map(Item::kind).collect()
+/// A WQFN-20 land pattern in `dir` shaped as U401's on b153a (3 x 3 mm, 0.4 mm pitch, a 1.7 mm exposed pad): pins
+/// whose mask opening is the pad itself, an exposed pad with a mask margin of -0.05 mm and its back copper, four
+/// paste windows inside it and five thermal vias
+fn wqfn_footprint(dir: &Path) -> PathBuf {
+    let pad = |n: usize, x: f64, y: f64, w: f64, h: f64| {
+        format!(
+            "  (pad \"{n}\" smd roundrect (at {x} {y}) (size {w} {h}) (layers \"F.Cu\" \"F.Mask\" \"F.Paste\") \
+             (roundrect_rratio 0.25))\n"
+        )
+    };
+    let mut text = String::from(
+        "(footprint \"Test_WQFN-20-1EP_3x3mm_P0.4mm_EP1.7x1.7mm_ThermalVias\" (version 20241229) \
+         (generator \"pcbnew\") (layer \"F.Cu\")\n  (attr smd)\n  (fp_rect (start -1.9 -1.9) (end 1.9 1.9) \
+         (stroke (width 0.05) (type solid)) (fill no) (layer \"F.CrtYd\"))\n",
+    );
+    // Pins 1-5 down the left, 6-10 along the bottom, 11-15 up the right, 16-20 along the top
+    for i in 0..5 {
+        let d = -0.8 + 0.4 * i as f64;
+        text += &pad(1 + i, -1.4, d, 0.7, 0.2);
+        text += &pad(6 + i, d, 1.4, 0.2, 0.7);
+        text += &pad(11 + i, 1.4, -d, 0.7, 0.2);
+        text += &pad(16 + i, -d, -1.4, 0.2, 0.7);
+    }
+    text += "  (pad \"21\" smd rect (at 0 0) (size 1.7 1.7) (property pad_prop_heatsink) \
+             (layers \"F.Cu\" \"F.Mask\") (solder_mask_margin -0.05))\n";
+    text += "  (pad \"21\" smd rect (at 0 0) (size 1.7 1.7) (property pad_prop_heatsink) (layers \"B.Cu\"))\n";
+    for (x, y) in [
+        (-0.425, -0.425),
+        (-0.425, 0.425),
+        (0.425, -0.425),
+        (0.425, 0.425),
+    ] {
+        text += &format!(
+            "  (pad \"\" smd roundrect (at {x} {y}) (size 0.75 0.75) (layers \"F.Paste\") (roundrect_rratio 0.25))\n"
+        );
+    }
+    for (x, y) in [(0.0, 0.0), (-0.6, 0.0), (0.6, 0.0), (0.0, -0.6), (0.0, 0.6)] {
+        text += &format!(
+            "  (pad \"21\" thru_hole circle (at {x} {y}) (size 0.5 0.5) (drill 0.2) \
+             (property pad_prop_heatsink) (layers \"*.Cu\"))\n"
+        );
+    }
+    text += ")\n";
+    let file = dir.join("Test_WQFN-20-1EP.kicad_mod");
+    std::fs::write(&file, text).unwrap();
+    file
 }
 
-/// Ticking Mask or Paste draws the pads' mask and paste openings (the footprint has no mask or paste graphics of
-/// its own), and unticking hides them again
+/// Ticking Mask or Paste draws the pads' mask openings and paste apertures on screen, over the pads: checked on the
+/// rendered pixels of a real land pattern, opaque, where an opening under its pad would not show at all
 #[test]
 fn mask_and_paste_layers_show() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-mask-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let pdf = datasheet(&dir);
     let mut h = harness("fp mask");
     h.run();
     let ctx = h.ctx.clone();
-    h.state_mut().open_path(&ctx, &footprint());
+    let fp = wqfn_footprint(&dir);
+    h.state_mut().open_path(&ctx, &fp);
+    h.state_mut().open_datasheet(&ctx, &pdf);
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
     h.run();
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    // 3 mm of footprint over 300 points, opaque, its middle on the page's paper
+    let st = h.state_mut();
+    st.scale = Some(Scale {
+        mm_per_point: 0.01,
+        page: 1,
+        mm: 2.0,
+        note: None,
+    });
+    st.opacity = Some(1.0);
+    st.place.origin = [300.0, 400.0];
+    let colors = LayerColors::default();
+    // Points on the openings' outlines (footprint mm), each where no other shown line runs
+    let probes = [
+        // Pin 1's mask opening is the pad's own outline (no margin): its top edge
+        (Kind::Mask, [-1.4, -0.9], colors.mask),
+        // The exposed pad's mask opening, 0.05 mm inside it: its left edge between the paste windows
+        (Kind::Mask, [-0.8, 0.0], colors.mask),
+        // A paste window inside the exposed pad: its inner edge
+        (Kind::Paste, [-0.05, -0.425], colors.paste),
+        // Pin 1's paste aperture: its top edge
+        (Kind::Paste, [-1.4, -0.9], colors.paste),
+    ];
+    // Whether a pixel within one point of `at` has colour `want`
+    let near = |h: &Harness<'_, FootprintReview>, img: &image::RgbaImage, at: [f64; 2], want: Rgb| {
+        let st = h.state();
+        let p = st.to_screen(st.rt.canvas, st.fp_to_page(at));
+        let ppp = h.ctx.pixels_per_point();
+        let (x, y) = ((p.x * ppp) as i64, (p.y * ppp) as i64);
+        (-2..=2).any(|dx| {
+            (-2..=2).any(|dy| {
+                let px = img.get_pixel((x + dx) as u32, (y + dy) as u32).0;
+                px.iter().zip(want.0).all(|(g, w)| g.abs_diff(w) <= 24)
+            })
+        })
+    };
     for kind in [Kind::Mask, Kind::Paste] {
-        assert!(!drawn_kinds(&h).contains(&kind), "{kind:?} hidden at first");
+        let img = h.render().unwrap();
+        for (k, at, want) in probes {
+            if k == kind {
+                assert!(!near(&h, &img, at, want), "{kind:?} at {at:?} hidden at first");
+            }
+        }
         h.get_by_label(kind.name()).click();
         h.run();
-        assert!(
-            drawn_kinds(&h).contains(&kind),
-            "{kind:?} shown once ticked"
-        );
+        let img = h.render().unwrap();
+        if let Some(p) = std::env::var_os("BERC_FP_SNAPSHOT") {
+            img.save(Path::new(&p).with_extension(format!("{}.png", kind.name()))).unwrap();
+        }
+        for (k, at, want) in probes {
+            if k == kind {
+                assert!(near(&h, &img, at, want), "{kind:?} at {at:?} drawn once ticked");
+            }
+        }
         h.get_by_label(kind.name()).click();
         h.run();
-        assert!(!drawn_kinds(&h).contains(&kind), "{kind:?} hidden again");
+        let img = h.render().unwrap();
+        for (k, at, want) in probes {
+            if k == kind {
+                assert!(!near(&h, &img, at, want), "{kind:?} at {at:?} hidden again");
+            }
+        }
     }
+    std::fs::remove_dir_all(&dir).unwrap();
 }
 
 /// Another part picked while a datasheet is open: its own datasheet opens, and a part without one leaves no
