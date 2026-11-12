@@ -336,19 +336,26 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
 2. **Open the datasheet**: the symbol's `Datasheet` field when it names a local file, a local document library
    search, or Open PDF. The library search runs a command (a setting) with the datasheet's file name, a part name
    in its web address, the `Mpn` fields or the value, until one finds something. The command prints a JSON list of
-   `{"path": ..., "page": ...}`. The page search then goes to the page with the land pattern, found by words such as
-   "recommended land pattern" (a setting); the pages it found are listed to pick from.
-3. **Set the scale**: pick Ruler and drag along a dimension of the drawing (drag an end to adjust it), type its
-   length and Set scale. A page that states its own scale (`SCALE: 20X`) offers it as a button; check it with the
-   ruler.
+   `{"path": ..., "page": ...}`. What it finds is listed in a panel of its own, and for a symbol just picked the
+   first one opens by itself. Picking another symbol opens its datasheet, or closes the last one when it has none.
+   The page search then goes to the page with the land pattern, found by words such as "recommended land pattern"
+   (a setting); the pages it found are listed to pick from. F shows the page at the view's full width.
+3. **Set the scale**: R with the pointer at one end of a dimension of the drawing, R again at the other (or pick
+   Ruler and drag along it). Z zooms in on the first end, where a click or a drag puts it exactly; Z again on the
+   other end; Z again back, the length field taking the keyboard: type the length and Enter (or Set scale). A page
+   that states its own scale (`SCALE: 20X`) offers it as a button; check it with the ruler. Once the scale is set,
+   the tool is Move footprint again.
 4. **Lay the footprint on the drawing**: drag it (Move footprint), nudge it with the arrow keys (Shift: ten times
-   as far), turn it with R or ⟲ 90° or by an angle, mirror it with M for a drawing seen from below. Opacity, Blink
-   (B), the colours (presets for the pads, a picker per layer group) and the layers shown (pads, courtyard, fab,
-   silk, copper, mask, paste) help to see both. The blend mode mixes the footprint into the page: Normal (over it
+   as far), turn it with T or ⟲ 90° or by an angle, mirror it with M for a drawing seen from below. Opacity, Blink
+   (B), the colours (presets for the pads, a picker per layer group) and the layers shown (pads, vias, courtyard,
+   fab, silk, copper, mask, paste) help to see both. Mask and Paste show each pad's mask opening and paste
+   aperture as outlines, by the pad's margins (else the footprint's). A package's vias (round plated pads without
+   a number of their own, such as thermal vias in an exposed pad; KiCad has no vias in footprints) are drawn as
+   rings with their holes; they are in the review hash as the pads they are. The blend mode mixes the footprint into the page: Normal (over it
    by its opacity), Multiply (the drawing's lines stay dark through it), Screen, or Difference: with white pads,
    white paper under a pad goes black, so a footprint that covers the drawing's pads exactly leaves no light edge,
    and a pad that misses shows light. Scroll zooms at the pointer; the right or middle button pans; Page Up and
-   Page Down turn pages.
+   Page Down turn pages. A help line under the canvas names the keys.
 5. **Accept**: when the footprint matches the drawing, Accept writes its review hash into the symbol: the library
    symbol and, for a symbol from a project's list, the schematic's copies too (as `berc fp accept --symbol` does).
    It lists the files written, or says why it wrote nothing, copies the hash to the clipboard and keeps the review
@@ -365,7 +372,8 @@ PDF standard fonts that a datasheet uses without embedding them come from the Li
 from egui's own font.
 
 The settings (blink rate, the opacity, blend mode and colours at first, the page search words, the finest drawing
-scale, the font folders, the library search command) are in `~/.config/better_erc/config.toml` (`$XDG_CONFIG_HOME`, or the file
+scale, the font folders, the library search command, how far Z zooms in, and the keys F, R, Z, T, M and B by name
+in `[footprint_review.keys]`) are in `~/.config/better_erc/config.toml` (`$XDG_CONFIG_HOME`, or the file
 `$BERC_CONFIG` names), section `[footprint_review]`; the tab's Settings shows and saves them. Each step of a review
 is recorded in berc's usage record (`app fp-review accept`, `app fp-review write`, ...), which `berc usage` counts in its `app` column.
 

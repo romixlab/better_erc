@@ -697,7 +697,12 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   multiply, screen, difference: a wgpu shader reading the page), layers shown; Accept disabled with its reason
   until a symbol with a footprint is picked and the scale is set on the page shown, writes the hash into the
   library symbol (and a project's schematic copies, `fp::accept` / `fp::accept_library`), copies it, keeps the
-  review, listing the files written or why nothing was. Settings in `config.toml`
+  review, listing the files written or why nothing was. Found datasheets in a panel of their own, the first
+  opening by itself; another part opens its own datasheet or closes the last one. Keys for each step, each a
+  setting and named in a help line: F full width, R the ruler at one end and the other, Z zoom on each ruler end
+  to place it exactly and back to type its length, T turn, M mirror, B blink; the tool goes back to Move once the
+  scale is set. Mask and paste openings of each pad drawn by their margins; a package's vias (round plated pads,
+  thermal vias) drawn as vias, in the hash as pads. Settings in `config.toml`
   (`[footprint_review]`), usage signals `app fp-review ...` · `better_erc_app/src/tabs/footprint_review/`,
   `better_erc_app/src/settings.rs`
 
