@@ -435,6 +435,10 @@ struct Runtime {
     puck: Puck,
     /// The settings file the Save buttons write; none in tests
     settings_file: Option<PathBuf>,
+    /// Each frame ends with the PDF reader done with what it asked (tests: its replies would otherwise come in on
+    /// its thread over any number of frames)
+    #[cfg(test)]
+    sync_pdf: bool,
 }
 
 impl Default for Runtime {
@@ -487,6 +491,8 @@ impl Default for Runtime {
             searcher: None,
             puck: Puck::default(),
             settings_file: Settings::file(),
+            #[cfg(test)]
+            sync_pdf: false,
         }
     }
 }
@@ -517,6 +523,12 @@ impl TabUi for FootprintReview {
         self.confirm_ui(ui.ctx(), id);
         self.calibration_window(ui.ctx(), id);
         self.puck_pie(ui.ctx(), &events);
+        #[cfg(test)]
+        if self.rt.sync_pdf
+            && let Some(pdf) = &mut self.rt.pdf
+        {
+            pdf.wait_idle(ui.ctx());
+        }
     }
 }
 
@@ -596,6 +608,10 @@ impl FootprintReview {
         // Not this computer's SpaceMouse or settings file
         r.rt.puck.socket = None;
         r.rt.settings_file = None;
+        #[cfg(test)]
+        {
+            r.rt.sync_pdf = true;
+        }
         r
     }
 

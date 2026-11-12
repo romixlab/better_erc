@@ -22,6 +22,13 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
   The canvas' keys and the slots are one set of actions. New keys A (Accept) and N (Next to review). Calibrate…
   in the tab's SpaceMouse section measures the mapping; it is the app's, `[spacemouse]` in the settings file.
 
+### Fixed
+
+- Footprint review tests: the test tab ends each frame with the PDF reader done with what the frame asked. Its
+  replies came in on the reader's thread, each a repaint, so under load a `Harness::run` after a zoom or a page
+  change saw them arrive over more than its 4 steps (`ruler_snaps_to_the_drawing`, `library_search_opens_the_first_hit`,
+  `review_a_symbol_from_its_library` failed about one run in four at 32 test threads).
+
 ## [0.4.34] - 2026-11-12
 
 ### Added
