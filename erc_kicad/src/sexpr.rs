@@ -243,7 +243,7 @@ fn push<'a>(stack: &mut [Vec<Sexp<'a>>], item: Sexp<'a>) {
 }
 
 /// Quoted string starting at `start` (the opening quote); returns the text and the offset after the closing quote
-fn string(text: &str, start: usize) -> Result<(Cow<'_, str>, usize), ParseError> {
+pub(crate) fn string(text: &str, start: usize) -> Result<(Cow<'_, str>, usize), ParseError> {
     let bytes = text.as_bytes();
     let mut i = start + 1;
     let mut owned: Option<String> = None;

@@ -7,7 +7,8 @@
 //! - [`footprint`]: a library footprint (`.kicad_mod`) in its own frame, comparable with a board copy.
 //! - [`libtable`]: the library tables (`sym-lib-table`, `fp-lib-table`, project and global, `${VAR}`), and
 //!   `Lib:Name` to a library symbol's fields or a parsed library footprint.
-//! - [`symlib`]: the fields of a symbol in a `.kicad_sym`, for the footprint review.
+//! - [`symlib`]: the fields of a symbol in a `.kicad_sym`, for the footprint review, and a property written back.
+//! - [`edit`]: formatting-preserving edits: only the changed tokens are written, the rest stays byte for byte.
 //! - [`pro`]: the project file: net classes, text variables, variants, ERC and DRC settings, bus aliases.
 //! - [`netlist`]: the KiCad netlist (`kicad-cli sch export netlist`), the oracle of the schematic importer.
 //! - [`theme`]: a KiCad colour theme (`colors/*.json`).
@@ -17,6 +18,7 @@
 //! Connectivity follows KiCad 10's behaviour: rule changes between versions are followed by
 //! [`erc_model::ImportOptions::kicad_version`], bugs of older releases (kicad-cli 9.0.9's) are not copied.
 
+pub mod edit;
 pub mod footprint;
 pub mod libtable;
 pub mod netclass;

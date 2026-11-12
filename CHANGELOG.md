@@ -11,6 +11,20 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `IMP-19`: the first slice of the KiCad writer, formatting-preserving: `erc_kicad::edit` parses a file into a tree
+  that knows where each expression is and writes only the byte ranges that change, so a file read and written
+  unchanged is the same bytes and a change is one diff hunk. `erc_kicad::symlib::set_property` sets a symbol's
+  property in a `.kicad_sym` (a whole library or one file of a `.kicad_symdir`) or in a schematic's `lib_symbols`
+  copy: only the value token when the property is there, else a new hidden property after the symbol's own ones
+  (before `ki_keywords` and `ki_fp_filters`) in the layout KiCad gives the file's version (KiCad 10's `show_name`,
+  `do_not_autoplace` and `hide` on the property; KiCad 8 and 9's `hide` in the effects), indent and line breaks as
+  the file has them. Files older than KiCad 8 are refused. Tested on synthetic files of each layout, with KiCad as
+  the oracle where kicad-cli is installed (KiCad saving then our edit is our edit then KiCad saving;
+  `BERC_WRITE_KICAD=8,9,10` adds versions through podman), and on every file of `~/git/kicad-library` and `~/git/hw`
+  where they are there (`BERC_KICAD_LIBRARY_DIR`, `BERC_HW_DIR`; every symbol with `BERC_HW_FULL`).
+
 ## [0.4.27] - 2026-11-12
 
 ### Added
