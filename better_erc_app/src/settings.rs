@@ -33,11 +33,13 @@ pub struct FootprintReviewSettings {
     pub library_search: Vec<String>,
     /// How the footprint is mixed with the page at first: `normal`, `multiply`, `screen` or `difference`
     pub blend: BlendMode,
-    /// The footprint's colours at first, per layer group, `#rrggbb`. Copper, mask and paste have no picker in
-    /// the tab (one is shown at a time, each a fixed colour): change them here
+    /// The footprint's colours per layer group, `#rrggbb`: no picker in the tab, change them here
     pub colors: LayerColors,
     /// How much closer the ruler key zooms in on a ruler end than the view it starts from
     pub ruler_zoom: f32,
+    /// The ruler snaps level, horizontal or vertical (an end moved, the other follows on that axis); Shift held
+    /// frees it for any angle
+    pub ruler_snap: bool,
     /// Whether the page is shown inverted (white-ish on black) at first
     pub invert: bool,
     /// The canvas' keys, by egui's key names (`F`, `Space`, `F5`, ...)
@@ -219,6 +221,7 @@ impl Default for FootprintReviewSettings {
             blend: BlendMode::Normal,
             colors: LayerColors::default(),
             ruler_zoom: 8.0,
+            ruler_snap: true,
             invert: false,
             keys: Keys::default(),
         }

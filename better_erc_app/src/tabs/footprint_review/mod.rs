@@ -325,6 +325,9 @@ struct Runtime {
     ruler_mm: String,
     /// Which end of the ruler a drag moves
     ruler_end: Option<usize>,
+    /// While a new ruler is laid (the ruler key, a drag from nothing): its first end, which picks the snapped axis
+    /// with the end that moves
+    ruler_anchor: Option<[f32; 2]>,
     /// The ruler key placed the first end: the other follows the pointer until the key again or a click
     ruler_placing: bool,
     /// The ruler end zoomed in on: a click or a drag places it at the pointer
@@ -393,6 +396,7 @@ impl Default for Runtime {
             ruler_mm: String::new(),
             ruler_end: None,
             ruler_placing: false,
+            ruler_anchor: None,
             ruler_focus: None,
             overview: None,
             length_box: false,
@@ -1262,6 +1266,7 @@ impl FootprintReview {
     /// Out of the ruler's steps: no end follows the pointer, and a view zoomed in on an end goes back
     fn ruler_done(&mut self) {
         self.rt.ruler_placing = false;
+        self.rt.ruler_anchor = None;
         self.rt.ruler_focus = None;
         if let Some((zoom, pan)) = self.rt.overview.take() {
             self.zoom = zoom;
@@ -1271,19 +1276,44 @@ impl FootprintReview {
 
     /// The ruler key: the first end at the pointer (`at`, page points), the other following it; pressed again, the
     /// other end stays where the pointer is
-    fn ruler_key(&mut self, at: [f32; 2]) {
-        if self.rt.ruler_placing
-            && let Some(r) = &mut self.ruler
-        {
-            r[1] = at;
+    fn ruler_key(&mut self, at: [f32; 2], free: bool) {
+        if self.rt.ruler_placing && self.ruler.is_some() {
+            self.move_ruler_end(1, at, free);
             self.rt.ruler_placing = false;
+            self.rt.ruler_anchor = None;
             return;
         }
         self.ruler_done();
         self.tool = Tool::Ruler;
         self.ruler = Some([at, at]);
+        self.rt.ruler_anchor = Some(at);
         self.rt.ruler_placing = true;
         self.usage("ruler key");
+    }
+
+    /// Ruler end `i` to `p` (page points). Snapped (the setting, unless `free`: Shift held), the ruler stays level:
+    /// the other end follows on its axis, taking `p`'s Y on a horizontal ruler and its X on a vertical one. The axis
+    /// is the ruler's own, or while a new ruler is laid, the larger of dx and dy from its first end.
+    fn move_ruler_end(&mut self, i: usize, p: [f32; 2], free: bool) {
+        let snap = self.rt.settings.ruler_snap && !free;
+        let anchor = self.rt.ruler_anchor;
+        let Some(r) = &mut self.ruler else { return };
+        let o = 1 - i;
+        let (from, to) = match anchor {
+            Some(a) => (a, p),
+            None => (r[o], r[i]),
+        };
+        r[i] = p;
+        if snap {
+            let a = anchor.unwrap_or(r[o]);
+            r[o] = if (to[0] - from[0]).abs() >= (to[1] - from[1]).abs() {
+                [a[0], p[1]]
+            } else {
+                [p[0], a[1]]
+            };
+        } else if let Some(a) = anchor {
+            r[o] = a;
+        }
     }
 
     /// The ruler zoom key: in on the first end, then on the other, then back to the view before, the length field
@@ -1380,13 +1410,18 @@ impl FootprintReview {
         let n = key_name;
         format!(
             "{} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back · \
-             {} type the ruler's length, Enter sets the scale · Esc ends the ruler step\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
+             {} type the ruler's length, Enter sets the scale · Esc ends the ruler step · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
              arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans",
             n(k.full_width),
             n(k.ruler),
             n(k.ruler),
             n(k.ruler_zoom),
             n(k.scale),
+            if self.rt.settings.ruler_snap {
+                "the ruler snaps level, Shift: any angle"
+            } else {
+                "the ruler at any angle (Settings: snap)"
+            },
             n(k.rotate),
             n(k.mirror),
             n(k.blink),
@@ -2339,6 +2374,10 @@ impl FootprintReview {
                             .speed(0.1),
                     );
                     ui.end_row();
+                    ui.label("Ruler snaps level");
+                    ui.checkbox(&mut s.ruler_snap, "")
+                        .on_hover_text("horizontal or vertical; Shift held: any angle");
+                    ui.end_row();
                 });
                 ui.label("Keys over the canvas, by name (F, Space, F5, …)");
                 Grid::new("fp keys grid").num_columns(2).show(ui, |ui| {
@@ -2574,23 +2613,27 @@ impl FootprintReview {
         let pointer_page = resp.interact_pointer_pos().map(|p| self.to_page(canvas, p));
         let hover_page = resp.hover_pos().map(|p| self.to_page(canvas, p));
         // The ruler key's other end follows the pointer; a click leaves it there
+        // Shift: the ruler at any angle, not snapped level
+        let free = ui.input(|i| i.modifiers.shift);
         if self.rt.ruler_placing
-            && let (Some(r), Some(p)) = (&mut self.ruler, hover_page)
+            && self.ruler.is_some()
+            && let Some(p) = hover_page
         {
-            r[1] = p;
+            self.move_ruler_end(1, p, free);
             if resp.clicked() {
                 self.rt.ruler_placing = false;
+                self.rt.ruler_anchor = None;
             }
         }
         // An end zoomed in on goes where a click or a drag puts it
-        if let (Tool::Ruler, Some(i), Some(r), Some(p)) = (
+        if let (Tool::Ruler, Some(i), true, Some(p)) = (
             self.tool,
             self.rt.ruler_focus,
-            &mut self.ruler,
+            self.ruler.is_some(),
             pointer_page,
         ) && (resp.clicked() || resp.dragged_by(egui::PointerButton::Primary))
         {
-            r[i] = p;
+            self.move_ruler_end(i, p, free);
         } else if resp.dragged_by(egui::PointerButton::Primary) {
             match self.tool {
                 Tool::Move => {
@@ -2614,13 +2657,14 @@ impl FootprintReview {
                                 Some(i) => self.rt.ruler_end = Some(i),
                                 None => {
                                     let s = self.to_page(canvas, start);
-                                    self.ruler = Some([s, p]);
+                                    self.ruler = Some([s, s]);
+                                    self.rt.ruler_anchor = Some(s);
                                     self.rt.ruler_end = Some(1);
                                 }
                             }
                         }
-                        if let (Some(r), Some(i)) = (&mut self.ruler, self.rt.ruler_end) {
-                            r[i] = p;
+                        if let Some(i) = self.rt.ruler_end {
+                            self.move_ruler_end(i, p, free);
                         }
                     }
                 }
@@ -2628,6 +2672,9 @@ impl FootprintReview {
         }
         if resp.drag_stopped() {
             self.rt.ruler_end = None;
+            if !self.rt.ruler_placing {
+                self.rt.ruler_anchor = None;
+            }
         }
         // Keys while the pointer is over the canvas
         if resp.hovered() && !ctx.egui_wants_keyboard_input() {
@@ -2703,7 +2750,7 @@ impl FootprintReview {
             if p.ruler
                 && let Some(at) = hover_page
             {
-                self.ruler_key(at);
+                self.ruler_key(at, shift);
             }
             if p.ruler_zoom {
                 self.ruler_zoom_key(canvas);

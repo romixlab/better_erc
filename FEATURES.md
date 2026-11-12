@@ -707,7 +707,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   review, listing the files written or why nothing was. Found datasheets in a panel of their own, the first
   opening by itself; another part opens its own datasheet or closes the last one. Keys for each step, each a
   setting and named in a help line: F full width, R the ruler at one end and the other, Z zoom on each ruler end
-  to place it exactly and back to type its length (S: a box in the middle of the canvas, the number large), T turn, M mirror, B blink, C copper/mask/paste, I invert; the
+  to place it exactly and back to type its length (the ruler snapped level unless Shift or the setting; S: a box in the middle of the canvas, the number large), T turn, M mirror, B blink, C copper/mask/paste, I invert; the
   tool goes back to Move once the
   scale is set. Mask and paste openings of each pad drawn by their margins; a package's vias (round plated pads,
   thermal vias) drawn as vias, in the hash as pads. Settings in `config.toml`

@@ -1296,6 +1296,66 @@ fn ruler_length_box() {
     std::fs::remove_dir_all(&dir).unwrap();
 }
 
+/// The ruler snaps level: the left end of a horizontal ruler dragged diagonally goes where it is dragged and the
+/// other end takes its Y; Shift held lets the end go at any angle, the other staying
+#[test]
+fn ruler_snaps_level() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-snap-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let pdf = datasheet(&dir);
+    let mut h = harness("fp snap");
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_datasheet(&ctx, &pdf);
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    let screen = |h: &Harness<'_, FootprintReview>, p: [f32; 2]| {
+        let st = h.state();
+        st.to_screen(st.rt.canvas, p)
+    };
+    let drag = |h: &mut Harness<'_, FootprintReview>, from: [f32; 2], to: [f32; 2], shift: bool| {
+        let (a, b) = (screen(h, from), screen(h, to));
+        let m = if shift {
+            egui::Modifiers::SHIFT
+        } else {
+            egui::Modifiers::NONE
+        };
+        h.event(egui::Event::ModifiersChanged(m));
+        h.hover_at(a);
+        h.run();
+        h.drag_at(a);
+        h.run();
+        for t in [0.3, 0.7, 1.0] {
+            h.event(egui::Event::PointerMoved(a + (b - a) * t));
+            h.run();
+        }
+        h.drop_at(b);
+        h.run();
+        h.event(egui::Event::ModifiersChanged(egui::Modifiers::NONE));
+        h.run();
+    };
+    h.state_mut().tool = Tool::Ruler;
+    h.state_mut().ruler = Some([[100.0, 200.0], [200.0, 200.0]]);
+    h.run();
+    drag(&mut h, [100.0, 200.0], [110.0, 230.0], false);
+    let [a, b] = h.state().ruler.unwrap();
+    assert!((a[0] - 110.0).abs() < 0.5 && (a[1] - 230.0).abs() < 0.5, "{a:?}");
+    assert!((b[0] - 200.0).abs() < 0.5, "the other end keeps its X: {b:?}");
+    assert_eq!(a[1], b[1], "both ends keep the same Y");
+    // Shift: any angle
+    drag(&mut h, [110.0, 230.0], [100.0, 250.0], true);
+    let [a, b] = h.state().ruler.unwrap();
+    assert!((a[1] - 250.0).abs() < 0.5, "{a:?}");
+    assert!((b[1] - 230.0).abs() < 0.5, "the other end stays: {b:?}");
+    assert!(
+        h.state()
+            .help_line()
+            .contains("the ruler snaps level, Shift: any angle")
+    );
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
 /// A part without a Datasheet field: the library search runs for its part number and the first datasheet it finds
 /// opens by itself, shown in the found panel as the one open
 #[test]

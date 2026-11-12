@@ -11,6 +11,12 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `VIEW-19`: Footprint review tab, the ruler snaps level: horizontal or vertical by the larger of its dx and dy (a
+  new ruler from its first end), an end dragged goes where it is dragged and the other end follows on that axis.
+  Shift held, or `[footprint_review] ruler_snap = false`, lets it go at any angle. Named in the help line.
+
 ### Fixed
 
 - `VIEW-19`: Footprint review tab, the copper, mask and paste views show only what the board makes on that layer,

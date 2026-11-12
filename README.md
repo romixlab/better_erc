@@ -341,7 +341,9 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    The page search then goes to the page with the land pattern, found by words such as "recommended land pattern"
    (a setting); the pages it found are listed to pick from. F shows the page at the view's full width.
 3. **Set the scale**: R with the pointer at one end of a dimension of the drawing, R again at the other (or pick
-   Ruler and drag along it). Z zooms in on the first end, where a click or a drag puts it exactly; Z again on the
+   Ruler and drag along it). The ruler snaps level: horizontal or vertical by the larger of its dx and dy, an end
+   dragged goes where it is dragged and the other end follows on that axis (Shift held, or the setting off: any
+   angle). Z zooms in on the first end, where a click or a drag puts it exactly; Z again on the
    other end. S goes back to the view and asks the length in a box in the middle of the canvas, the number typed
    shown large in mm: type the length and Enter sets the scale, Esc leaves the box without one (the side panel's
    field and Set scale do the same by mouse); Z a third time does what S does. The keys of the
@@ -388,7 +390,7 @@ from egui's own font.
 
 The settings (blink rate, the opacity, blend mode and colours at first, whether the page is inverted at first,
 the page search words, the finest drawing scale, the font folders, the library search command, how far Z zooms
-in, and the keys F, R, Z, S, T, M, B, C and I by name in `[footprint_review.keys]`) are in
+in, whether the ruler snaps level, and the keys F, R, Z, S, T, M, B, C and I by name in `[footprint_review.keys]`) are in
 `~/.config/better_erc/config.toml` (`$XDG_CONFIG_HOME`, or the file `$BERC_CONFIG` names), section
 `[footprint_review]`; the tab's Settings shows and saves them. Each step of a review
 is recorded in berc's usage record (`app fp-review accept`, `app fp-review write`, ...), which `berc usage` counts in its `app` column.
