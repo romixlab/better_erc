@@ -342,7 +342,9 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    (a setting); the pages it found are listed to pick from. F shows the page at the view's full width.
 3. **Set the scale**: R with the pointer at one end of a dimension of the drawing, R again at the other (or pick
    Ruler and drag along it). Z zooms in on the first end, where a click or a drag puts it exactly; Z again on the
-   other end; Z again back, the length field taking the keyboard: type the length and Enter (or Set scale). A page
+   other end. S goes back to the view with the length field empty and taking the keyboard (in sight, should the
+   panel be scrolled): type the length and Enter (or Set scale); Z a third time does the same. The keys of the
+   whole step: F, R, R, Z, Z, S, the length, Enter. A page
    that states its own scale (`SCALE: 20X`) offers it as a button; check it with the ruler. Once the scale is set,
    the tool is Move footprint again.
 4. **Lay the footprint on the drawing**: drag it (Move footprint), nudge it with the arrow keys (Shift: ten times
@@ -374,7 +376,7 @@ PDF standard fonts that a datasheet uses without embedding them come from the Li
 from egui's own font.
 
 The settings (blink rate, the opacity, blend mode and colours at first, the page search words, the finest drawing
-scale, the font folders, the library search command, how far Z zooms in, and the keys F, R, Z, T, M and B by name
+scale, the font folders, the library search command, how far Z zooms in, and the keys F, R, Z, S, T, M and B by name
 in `[footprint_review.keys]`) are in `~/.config/better_erc/config.toml` (`$XDG_CONFIG_HOME`, or the file
 `$BERC_CONFIG` names), section `[footprint_review]`; the tab's Settings shows and saves them. Each step of a review
 is recorded in berc's usage record (`app fp-review accept`, `app fp-review write`, ...), which `berc usage` counts in its `app` column.

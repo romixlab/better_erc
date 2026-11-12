@@ -11,6 +11,12 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `VIEW-19`: `S` on the Footprint review canvas (setting `keys.scale`) goes back from a ruler end to the view, empties
+  the ruler's length field, scrolls it into sight and gives it the keyboard; Enter sets the scale and the footprint
+  is the one to move again. The ruler step by keys is F, R, R, Z, Z, S, the length, Enter.
+
 ### Fixed
 
 - `VIEW-19`: the Footprint review tab shows the mask openings and paste apertures it was asked to: they were drawn

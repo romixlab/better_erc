@@ -907,7 +907,7 @@ fn another_part_another_datasheet() {
 }
 
 /// The ruler by keys: R at one end of the dimension and R at the other place it coarsely; Z zooms in on the first
-/// end and a click puts it exactly, Z on the other end likewise, Z again goes back to the view and the length field
+/// end and a click puts it exactly, Z on the other end likewise; S goes back to the view and the length field, empty,
 /// takes the typed length; Enter sets the scale and the footprint is the one to move again. F shows the page at
 /// the view's full width. The help line names the keys.
 #[test]
@@ -970,12 +970,15 @@ fn ruler_by_keys() {
             "{ra:?} {rb:?}"
         );
     }
-    // Back to the view, the length typed straight away
-    h.key_press(egui::Key::Z);
+    // S: back to the view, the length typed straight away into an emptied field
+    h.state_mut().rt.ruler_mm = "9".into();
+    h.key_press(egui::Key::S);
     h.run();
     h.run();
     assert_eq!(h.state().rt.ruler_focus, None);
     assert!((h.state().zoom - zoom).abs() < 1e-3);
+    assert!(h.state().rt.typing_mm, "the length field has the keyboard");
+    assert!(h.state().ruler_hint().unwrap().contains("Enter sets the scale"));
     h.event(egui::Event::Text("2.00".into()));
     h.key_press(egui::Key::Enter);
     h.run();
@@ -994,6 +997,7 @@ fn ruler_by_keys() {
         "F full width",
         "R ruler",
         "Z zoom on a ruler end",
+        "S type the ruler's length",
         "T turn 90°",
     ] {
         assert!(st.help_line().contains(k), "{k}: {}", st.help_line());

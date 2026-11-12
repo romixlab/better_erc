@@ -281,6 +281,8 @@ struct Runtime {
     overview: Option<(f32, [f32; 2])>,
     /// The ruler's length field takes the keyboard on the next frame
     focus_mm: bool,
+    /// The length field has the keyboard
+    typing_mm: bool,
     /// The page is fitted to the view's width on the next frame
     fit_width: bool,
     accepted: Option<String>,
@@ -338,6 +340,7 @@ impl Default for Runtime {
             ruler_focus: None,
             overview: None,
             focus_mm: false,
+            typing_mm: false,
             fit_width: false,
             accepted: None,
             symbols: None,
@@ -1102,11 +1105,20 @@ impl FootprintReview {
                 self.rt.ruler_focus = Some(i);
                 self.usage("ruler zoom");
             }
-            None => {
-                self.ruler_done();
-                self.rt.focus_mm = true;
-            }
+            None => self.scale_key(),
         }
+    }
+
+    /// The scale key: out of the ruler step, back to the view before any zoom on an end, the length field empty and
+    /// taking the keyboard; Enter there sets the scale and makes the footprint the one to move
+    fn scale_key(&mut self) {
+        if self.ruler.is_none() {
+            return;
+        }
+        self.ruler_done();
+        self.rt.ruler_mm.clear();
+        self.rt.focus_mm = true;
+        self.usage("scale key");
     }
 
     /// The keys as the settings name them; a name that is no key leaves its step without one
@@ -1120,12 +1132,13 @@ impl FootprintReview {
         let n = key_name;
         format!(
             "{} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back · \
-             Esc ends the ruler step\n{} turn 90° · {} bottom view · {} blink · arrows nudge (Shift: 10×) · \
+             {} type the ruler's length, Enter sets the scale · Esc ends the ruler step\n{} turn 90° · {} bottom view · {} blink · arrows nudge (Shift: 10×) · \
              PgUp/PgDn page · wheel zoom · right or middle drag pans",
             n(k.full_width),
             n(k.ruler),
             n(k.ruler),
             n(k.ruler_zoom),
+            n(k.scale),
             n(k.rotate),
             n(k.mirror),
             n(k.blink),
@@ -1147,9 +1160,12 @@ impl FootprintReview {
                 key_name(k.ruler_zoom)
             )),
             Some(_) => Some(format!(
-                "Ruler, other end: click or drag where it belongs exactly; {} goes back and asks for its length",
-                key_name(k.ruler_zoom)
+                "Ruler, other end: click or drag where it belongs exactly; {} to type its length",
+                key_name(k.scale)
             )),
+            None if self.rt.typing_mm => {
+                Some("Ruler: type its length in mm, Enter sets the scale, Esc leaves it".into())
+            }
             None => None,
         }
     }
@@ -1917,7 +1933,10 @@ impl FootprintReview {
             ui.label("mm");
             if std::mem::take(&mut self.rt.focus_mm) {
                 r.request_focus();
+                // The panel may be scrolled: the field the keyboard goes to is in sight
+                r.scroll_to_me(None);
             }
+            self.rt.typing_mm = r.has_focus();
             set = r.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter));
             let ok = self
                 .rt
@@ -2105,6 +2124,7 @@ impl FootprintReview {
                         ("Page at full width", &mut k.full_width),
                         ("Ruler: one end, then the other", &mut k.ruler),
                         ("Zoom on a ruler end, the other, back", &mut k.ruler_zoom),
+                        ("Type the ruler's length", &mut k.scale),
                         ("Turn 90°", &mut k.rotate),
                         ("Bottom view", &mut k.mirror),
                         ("Blink", &mut k.blink),
@@ -2390,6 +2410,7 @@ impl FootprintReview {
                     full_width: pressed(km.full_width),
                     ruler: pressed(km.ruler),
                     ruler_zoom: pressed(km.ruler_zoom),
+                    scale: pressed(km.scale),
                     rotate: pressed(km.rotate),
                     mirror: pressed(km.mirror),
                     blink: pressed(km.blink),
@@ -2442,6 +2463,9 @@ impl FootprintReview {
             }
             if p.ruler_zoom {
                 self.ruler_zoom_key(canvas);
+            }
+            if p.scale {
+                self.scale_key();
             }
         }
         // The footprint
@@ -2672,6 +2696,7 @@ struct KeyMap {
     full_width: Option<egui::Key>,
     ruler: Option<egui::Key>,
     ruler_zoom: Option<egui::Key>,
+    scale: Option<egui::Key>,
     rotate: Option<egui::Key>,
     mirror: Option<egui::Key>,
     blink: Option<egui::Key>,
@@ -2684,6 +2709,7 @@ impl From<&Keys> for KeyMap {
             full_width: key(&k.full_width),
             ruler: key(&k.ruler),
             ruler_zoom: key(&k.ruler_zoom),
+            scale: key(&k.scale),
             rotate: key(&k.rotate),
             mirror: key(&k.mirror),
             blink: key(&k.blink),
@@ -2703,6 +2729,7 @@ struct Pressed {
     full_width: bool,
     ruler: bool,
     ruler_zoom: bool,
+    scale: bool,
     rotate: bool,
     mirror: bool,
     blink: bool,

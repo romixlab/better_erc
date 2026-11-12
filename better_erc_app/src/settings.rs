@@ -52,6 +52,8 @@ pub struct Keys {
     pub ruler: String,
     /// Zoom in on one ruler end to place it exactly, then on the other, then back
     pub ruler_zoom: String,
+    /// The ruler's length typed in: the length field takes the keyboard, Enter sets the scale
+    pub scale: String,
     /// Turn the footprint by 90°
     pub rotate: String,
     /// Bottom view: the footprint mirrored
@@ -66,6 +68,7 @@ impl Default for Keys {
             full_width: "F".into(),
             ruler: "R".into(),
             ruler_zoom: "Z".into(),
+            scale: "S".into(),
             rotate: "T".into(),
             mirror: "M".into(),
             blink: "B".into(),
