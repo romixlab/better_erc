@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.38] - 2026-11-13
+
 ### Added
 
 - `VIEW-22`: Footprint review, select the drawing and save it as DXF. Select (V) is the fifth mode, on the mode bar,
