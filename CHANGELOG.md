@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.32] - 2026-11-12
+
 ### Added
 
 - `VIEW-19`: Footprint review tab, the page can be shown inverted (white-ish on black), `I` to toggle (setting
