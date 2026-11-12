@@ -28,8 +28,9 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Changed
 
-- `VIEW-19`: the datasheets the library search finds sit in a panel of their own, each a coloured button with its
-  page (the open one marked), and for a part just picked the first one opens by itself.
+- `VIEW-19`: the datasheets the library search finds sit in a panel of their own, each a coloured button (the open
+  one marked), and for a part just picked the first one opens by itself; the page search then finds its land
+  pattern page.
 - `VIEW-19`: once the scale is set (Set scale, Enter in the length field, or the page's scale note), the tool is
   Move footprint again by itself. Turning the footprint by 90° is `T` now (it was `R`, which is the ruler's).
 

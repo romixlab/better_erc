@@ -329,7 +329,8 @@ fn a_footprint_alone_is_a_preview() {
 
 /// A real board: BERC_FP_BOARD names a KiCad project or board, BERC_FP_SYMBOL the library symbol to review
 /// (default: the first in the list to review); the library search runs with the default command when it is on
-/// PATH. Not run without them. BERC_FP_BLEND picks a blend mode.
+/// PATH. Not run without them. BERC_FP_BLEND picks a blend mode; BERC_FP_PICK a board footprint by reference to
+/// preview instead of a symbol; BERC_FP_SHOW layer groups to show too (`Mask,Paste`).
 #[test]
 fn real_board() {
     let Some(board) = std::env::var_os("BERC_FP_BOARD") else {
@@ -370,6 +371,18 @@ fn real_board() {
     let ctx = h.ctx.clone();
     h.state_mut().open_path(&ctx, Path::new(&board));
     let want = std::env::var("BERC_FP_SYMBOL").ok();
+    let pick = std::env::var("BERC_FP_PICK").ok().map(|r| {
+        let b = h.state().rt.board.as_ref().expect("the board opened");
+        b.layout
+            .footprints
+            .iter()
+            .position(|f| f.reference == r)
+            .expect("such a reference")
+    });
+    if let Some(show) = std::env::var("BERC_FP_SHOW").ok() {
+        let show: Vec<&str> = show.split(',').collect();
+        h.state_mut().hidden.retain(|k| !show.contains(&k.as_str()));
+    }
     let i = {
         let l = h
             .state()
@@ -386,7 +399,10 @@ fn real_board() {
             })
             .expect("such a symbol")
     };
-    h.state_mut().select_symbol(i, true);
+    match pick {
+        Some(f) => h.state_mut().pick(f),
+        None => h.state_mut().select_symbol(i, true),
+    }
     h.run();
     eprintln!(
         "{:?} / {:?} / {:?} / accept: {:?}",

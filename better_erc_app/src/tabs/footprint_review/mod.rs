@@ -811,13 +811,10 @@ impl FootprintReview {
         p.is_file().then_some(p)
     }
 
-    /// Opens a datasheet the library search found, at the page it names (1-based), else the page search's
+    /// Opens a datasheet the library search found; the page search picks the page (the hit's own page is where the
+    /// part number matched, rarely the land pattern)
     fn open_hit(&mut self, ctx: &egui::Context, hit: &LibraryHit) {
         self.open_datasheet(ctx, &hit.path);
-        if let Some(page) = hit.page.filter(|p| *p > 0) {
-            self.page = page - 1;
-            self.rt.auto_page = false;
-        }
     }
 
     /// No datasheet open: the page, the ruler and the scale go with it
@@ -1094,7 +1091,9 @@ impl FootprintReview {
         let k = self.keys();
         let n = key_name;
         format!(
-            "{} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back ·              {} turn 90° · {} bottom view · {} blink · arrows nudge (Shift: 10×) · PgUp/PgDn page · Esc ends the              ruler step · wheel zoom · right or middle drag pans",
+            "{} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back · \
+             Esc ends the ruler step\n{} turn 90° · {} bottom view · {} blink · arrows nudge (Shift: 10×) · \
+             PgUp/PgDn page · wheel zoom · right or middle drag pans",
             n(k.full_width),
             n(k.ruler),
             n(k.ruler),
@@ -1670,9 +1669,8 @@ impl FootprintReview {
                                 .map(|d| d.display().to_string())
                                 .unwrap_or_default();
                             let is_open = self.datasheet.as_ref() == Some(&h.path);
-                            let page = h.page.map_or(String::new(), |p| format!("  p.{p}"));
                             let text = RichText::new(format!(
-                                "📄 {name}{page}{}",
+                                "📄 {name}{}",
                                 if is_open { "  (open)" } else { "" }
                             ))
                             .color(Color32::WHITE)
@@ -1796,7 +1794,8 @@ impl FootprintReview {
             }
             ui.selectable_value(&mut self.tool, Tool::Ruler, "Ruler")
                 .on_hover_text(format!(
-                    "Drag along a dimension of the drawing, or {} at one end and {} at the other; drag an end to                      adjust it",
+                    "Drag along a dimension of the drawing, or {} at one end and {} at the other; drag an end to \
+                     adjust it",
                     key_name(k.ruler),
                     key_name(k.ruler)
                 ));
@@ -2467,12 +2466,7 @@ impl FootprintReview {
             (self.ruler_hint(), Color32::from_rgb(0, 90, 180)),
         ] {
             let Some(text) = text else { continue };
-            let galley = painter.layout(
-                text,
-                FontId::proportional(12.0),
-                Color32::WHITE,
-                canvas.width() - 16.0,
-            );
+            let galley = painter.layout_no_wrap(text, FontId::proportional(12.0), Color32::WHITE);
             let r = Rect::from_min_size(
                 pos2(canvas.min.x + 4.0, y - galley.size().y - 4.0),
                 galley.size() + vec2(8.0, 4.0),
