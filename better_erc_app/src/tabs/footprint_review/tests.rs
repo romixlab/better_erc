@@ -9,14 +9,14 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable;
 use std::sync::Mutex;
 
-fn footprint() -> PathBuf {
+pub(super) fn footprint() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../erc_kicad/tests/fixtures/footprints/Test.pretty/Mixed_Pads.kicad_mod")
 }
 
 /// A datasheet: a cover page, then the land pattern page with a 2.00 mm dimension 100 points long (so the drawing
 /// is at 0.02 mm per point, 17.6:1), then a page of package text
-fn datasheet(dir: &Path) -> PathBuf {
+pub(super) fn datasheet(dir: &Path) -> PathBuf {
     let text = |x: f32, y: f32, s: f32, t: &str| (x, y, s, t.to_string());
     let pages = [
         TestPage {
@@ -231,6 +231,16 @@ fn review_a_symbol_from_its_library() {
     h.run();
     h.get_by_label("Write the review hash?");
     h.get_by_label("Rev.kicad_sym (library)");
+    // The SpaceMouse's taps answer it: the left button writes, the right one cancels; the rings wait
+    let menu = h.state().pie_menu();
+    assert_eq!(menu.center_left.map(|s| s.action), Some(Action::Write));
+    assert_eq!(menu.center_right.map(|s| s.action), Some(Action::Cancel));
+    assert!(
+        menu.ring_both
+            .iter()
+            .flatten()
+            .all(|s| s.disabled.is_some())
+    );
     h.get_by_label(&format!("(none) → {want_hash}"));
     assert!(h.state().rt.accepted.is_none(), "nothing accepted yet");
     button(&h, "Write (Enter)").click();

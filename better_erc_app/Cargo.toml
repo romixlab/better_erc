@@ -42,6 +42,9 @@ toml = { version = "1", default-features = false, features = ["std", "serde", "p
 
 better_erc = { path = "../better_erc" }
 
+# The SpaceMouse in the footprint review: spacenavd's socket, the mapping and its calibrate step, pie menus
+ve_spacemouse = { git = "https://github.com/vhrdtech/vhrd_egui", tag = "v0.32.15" }
+
 # native:
 [dev-dependencies]
 egui_kittest = { version = "0.36", features = ["wgpu"] }

@@ -11,6 +11,17 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `VIEW-20`: Footprint review on a SpaceMouse, through spacenavd (vhrd_egui's `ve_spacemouse`, pure Rust): the puck
+  pans the page in screen points (the same speed at every zoom) and its push and pull zoom the view about the
+  pointer; P (`[footprint_review.keys] puck`) switches it to move the footprint instead. A tap of the left button
+  lays the ruler at the pointer, of the right one switches what the puck moves. Held, each button opens a pie menu
+  of the canvas' actions (left: page and ruler, right: footprint, both: Accept and Next to review); every slot
+  names its action and key, a disabled one says why; while Accept's question is open the taps write or cancel.
+  The canvas' keys and the slots are one set of actions. New keys A (Accept) and N (Next to review). Calibrate…
+  in the tab's SpaceMouse section measures the mapping; it is the app's, `[spacemouse]` in the settings file.
+
 ## [0.4.34] - 2026-11-12
 
 ### Added

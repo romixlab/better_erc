@@ -27,6 +27,8 @@ use egui::{Align2, FontId, Pos2, Rect, Shape, Stroke, pos2, vec2};
 use geometry::{DimNumber, Snap, SnapKind};
 use outline::{Item, Kind};
 use pdf::{PageHit, PdfDoc};
+pub use puck::PuckMoves;
+use puck::{Action, Puck};
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::mpsc::Receiver;
@@ -35,6 +37,7 @@ pub mod blend;
 mod geometry;
 mod outline;
 mod pdf;
+mod puck;
 #[cfg(test)]
 mod testpdf;
 #[cfg(test)]
@@ -175,6 +178,8 @@ pub struct FootprintReview {
     /// Which of copper, mask or paste is shown (the three views shown one at a time, see [`VIEWS`])
     cu_shown: Kind,
     tool: Tool,
+    /// What the SpaceMouse's puck moves
+    puck: PuckMoves,
     reviews: Vec<Review>,
     #[serde(skip)]
     rt: Runtime,
@@ -205,6 +210,7 @@ impl Default for FootprintReview {
                 .collect(),
             cu_shown: Kind::Copper,
             tool: Tool::Move,
+            puck: PuckMoves::Page,
             reviews: Vec::new(),
             rt: Runtime::default(),
         }
@@ -425,6 +431,10 @@ struct Runtime {
     auto_open: bool,
     /// The library search in place of the settings' command (tests)
     searcher: Option<Searcher>,
+    /// The SpaceMouse: its client, mapping, pie menu and calibrate step
+    puck: Puck,
+    /// The settings file the Save buttons write; none in tests
+    settings_file: Option<PathBuf>,
 }
 
 impl Default for Runtime {
@@ -475,6 +485,8 @@ impl Default for Runtime {
             want_search: false,
             auto_open: false,
             searcher: None,
+            puck: Puck::default(),
+            settings_file: Settings::file(),
         }
     }
 }
@@ -486,12 +498,14 @@ impl TabUi for FootprintReview {
         }
         let (settings, note) = Settings::load();
         self.set_settings(settings.footprint_review);
+        self.rt.puck.mapping = settings.spacemouse;
         self.rt.settings_note = note;
     }
 
     fn ui(&mut self, ui: &mut Ui, _cx: &mut Context, id: Id) {
         self.start(ui.ctx());
         self.poll(ui.ctx());
+        let events = self.puck_poll(ui.ctx());
         egui::Panel::left(id.with("controls"))
             .resizable(true)
             .default_size(320.0)
@@ -501,6 +515,8 @@ impl TabUi for FootprintReview {
             });
         self.canvas(ui);
         self.confirm_ui(ui.ctx(), id);
+        self.calibration_window(ui.ctx(), id);
+        self.puck_pie(ui.ctx(), &events);
     }
 }
 
@@ -577,6 +593,9 @@ impl FootprintReview {
         r.rt.config = None;
         // Not this computer's KiCad
         r.rt.kicad_running = || false;
+        // Not this computer's SpaceMouse or settings file
+        r.rt.puck.socket = None;
+        r.rt.settings_file = None;
         r
     }
 
@@ -1514,7 +1533,9 @@ impl FootprintReview {
             "{} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back · \
              {} type the ruler's length, Enter sets the scale · {} the dimension's number sets it · Esc ends the ruler step · \
              {} · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
-             arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans",
+             arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans\n\
+             {} accept · {} next to review · SpaceMouse: the puck {} ({} switches), push away zooms out · \
+             tap the left button for the ruler, the right one to switch · hold one for its ring, both for Accept",
             n(k.full_width),
             n(k.ruler),
             n(k.ruler),
@@ -1536,6 +1557,13 @@ impl FootprintReview {
             n(k.blink),
             n(k.cu_layer),
             n(k.invert),
+            n(k.accept),
+            n(k.next),
+            match self.puck {
+                PuckMoves::Page => "moves the page",
+                PuckMoves::Footprint => "moves the footprint",
+            },
+            n(k.puck),
         )
     }
 
@@ -1785,6 +1813,7 @@ impl FootprintReview {
             });
 
         ui.separator();
+        self.puck_controls(ui);
         self.settings_controls(ui);
     }
 
@@ -2513,6 +2542,9 @@ impl FootprintReview {
                         ("Blink", &mut k.blink),
                         ("Cycles copper/mask/paste", &mut k.cu_layer),
                         ("Invert the page", &mut k.invert),
+                        ("What the SpaceMouse's puck moves", &mut k.puck),
+                        ("Accept", &mut k.accept),
+                        ("Next to review", &mut k.next),
                     ] {
                         ui.label(what);
                         let ok = egui::Key::from_name(name.trim()).is_some();
@@ -2557,7 +2589,7 @@ impl FootprintReview {
                         .map(String::from)
                         .collect();
                 }
-                let file = Settings::file();
+                let file = self.rt.settings_file.clone();
                 ui.horizontal(|ui| {
                     let b = ui.add_enabled(file.is_some(), Button::new("Save"));
                     let b = match &file {
@@ -2566,11 +2598,13 @@ impl FootprintReview {
                             "neither BERC_CONFIG, XDG_CONFIG_HOME nor HOME is set",
                         ),
                     };
-                    if b.clicked() {
-                        let (mut all, _) = Settings::load();
+                    if b.clicked()
+                        && let Some(f) = &file
+                    {
+                        let (mut all, _) = Settings::load_from(f);
                         all.footprint_review = self.rt.settings.clone();
-                        self.rt.settings_note = Some(match all.save() {
-                            Ok(f) => format!("saved to {}", f.display()),
+                        self.rt.settings_note = Some(match all.save_to(f) {
+                            Ok(()) => format!("saved to {}", f.display()),
                             Err(e) => e,
                         });
                         self.usage("settings-save");
@@ -2673,6 +2707,8 @@ impl FootprintReview {
             self.pan[0] += d.x;
             self.pan[1] += d.y;
         }
+        // The SpaceMouse's puck
+        self.puck_nav(&ctx, canvas, resp.hover_pos());
         // The page, inverted (white-ish on black) when asked: the picture's colours, not the footprint's
         let invert = self.page_inverted();
         if let (Some(pdf), Some([w, h])) = (&mut self.rt.pdf, page_size) {
@@ -2830,11 +2866,13 @@ impl FootprintReview {
                     blink: pressed(km.blink),
                     cu_layer: pressed(km.cu_layer),
                     invert: pressed(km.invert),
+                    puck: pressed(km.puck),
+                    accept: pressed(km.accept),
+                    next: pressed(km.next),
                 };
                 (p, i.modifiers.shift)
             });
             let step = if shift { 10.0 } else { 1.0 } / self.zoom;
-            let pages = self.rt.pdf.as_ref().map_or(0, PdfDoc::page_count);
             let p = pressed;
             if p.left {
                 self.place.origin[0] -= step;
@@ -2848,50 +2886,27 @@ impl FootprintReview {
             if p.down {
                 self.place.origin[1] += step;
             }
-            if p.page_up && self.page > 0 {
-                self.page -= 1;
-                self.rt.fit_page = true;
-            }
-            if p.page_down && self.page + 1 < pages {
-                self.page += 1;
-                self.rt.fit_page = true;
-            }
-            if p.rotate {
-                self.place.rotation = (self.place.rotation + 90.0).rem_euclid(360.0);
-            }
-            if p.mirror {
-                self.place.mirror = !self.place.mirror;
-            }
-            if p.blink {
-                self.blink = !self.blink;
-            }
-            if p.cu_layer {
-                self.cycle_cu_layer();
-            }
-            if p.invert {
-                self.invert = Some(!self.page_inverted());
-                self.usage("invert");
-            }
-            if p.full_width {
-                self.rt.fit_width = true;
-                self.usage("full width");
-            }
-            if p.escape {
-                self.ruler_done();
-            }
-            if p.ruler
-                && let Some(at) = hover_page
-            {
-                self.ruler_key(at, shift, lines);
-            }
-            if p.ruler_zoom {
-                self.ruler_zoom_key(canvas);
-            }
-            if p.scale {
-                self.scale_key();
-            }
-            if p.dimension {
-                self.use_dimension_number();
+            for (on, action) in [
+                (p.page_up, Action::PageUp),
+                (p.page_down, Action::PageDown),
+                (p.rotate, Action::Rotate),
+                (p.mirror, Action::Mirror),
+                (p.blink, Action::Blink),
+                (p.cu_layer, Action::CuLayer),
+                (p.invert, Action::Invert),
+                (p.full_width, Action::FullWidth),
+                (p.escape, Action::EndRuler),
+                (p.ruler, Action::Ruler),
+                (p.ruler_zoom, Action::RulerZoom),
+                (p.scale, Action::Scale),
+                (p.dimension, Action::Dimension),
+                (p.puck, Action::Puck),
+                (p.accept, Action::Accept),
+                (p.next, Action::NextToReview),
+            ] {
+                if on {
+                    self.act(&ctx, action, hover_page, shift, lines);
+                }
             }
         }
         // The footprint
@@ -3214,6 +3229,9 @@ struct KeyMap {
     blink: Option<egui::Key>,
     cu_layer: Option<egui::Key>,
     invert: Option<egui::Key>,
+    puck: Option<egui::Key>,
+    accept: Option<egui::Key>,
+    next: Option<egui::Key>,
 }
 
 impl From<&Keys> for KeyMap {
@@ -3230,6 +3248,9 @@ impl From<&Keys> for KeyMap {
             blink: key(&k.blink),
             cu_layer: key(&k.cu_layer),
             invert: key(&k.invert),
+            puck: key(&k.puck),
+            accept: key(&k.accept),
+            next: key(&k.next),
         }
     }
 }
@@ -3253,6 +3274,9 @@ struct Pressed {
     blink: bool,
     cu_layer: bool,
     invert: bool,
+    puck: bool,
+    accept: bool,
+    next: bool,
 }
 
 /// A key as the help shows it; a setting that names no key shows so

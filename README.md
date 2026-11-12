@@ -377,7 +377,7 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    the pads they are.
    Scroll zooms at the pointer; the right or middle button pans; Page Up and Page Down turn pages. A help line
    under the canvas names the keys.
-5. **Accept**: when the footprint matches the drawing, Accept writes its review hash into the symbol: the library
+5. **Accept** (A): when the footprint matches the drawing, Accept writes its review hash into the symbol: the library
    symbol and, for a symbol from a project's list, the schematic's copies too (as `berc fp accept --symbol` does).
    It asks first, showing what its dry run would write: each file, the field, the old and the new value. Enter (or
    Write) writes; Esc (or Cancel) writes nothing. It warns, per file and naming the lock file, when KiCad may
@@ -389,6 +389,33 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    Once written, it lists the files written, or says why it wrote nothing, copies the hash to the clipboard and keeps the review
    (symbol's footprint, hash, datasheet, page, scale) in the tab's list. Accept stays disabled, saying why, until a
    symbol with a footprint is picked, a datasheet is open and the scale is set on the page shown.
+
+#### With a SpaceMouse
+
+A 3Dconnexion SpaceMouse drives the review through [spacenavd](https://spacenav.sourceforge.net/), the free driver
+(`sudo pacman -S spacenavd`, `sudo systemctl enable --now spacenavd`; other distros: their spacenavd package). The
+app reads spacenavd's socket itself ([ve_spacemouse](https://github.com/vhrdtech/vhrd_egui), pure Rust, no
+libspnav), so the device is not needed to build or run it.
+
+- **The puck moves the page**: slide it and the page follows the hand, lift it and the page moves up, push it away
+  and the view zooms out about the pointer (pull it towards you to zoom in). The slide pans in screen points, so a
+  push moves the page across the screen at the same speed at every zoom. P switches the puck to move the footprint
+  over the page instead, at the same screen speed; zooming stays the view's.
+- **Tap a button**: the left one lays the ruler (R at the pointer: once for the first end, again for the other), the
+  right one switches what the puck moves (P).
+- **Hold a button**: a pie menu opens at the pointer. Move out across its outer circle, or click, to do the action
+  under the pointer; while the button is held, back through the middle and out again does the next one. The left
+  button's ring has the page and the ruler (full width, zoom on a ruler end, type the length, the dimension's
+  number, end the ruler step, next and previous page, invert the page); the right one's the footprint (turn 90°,
+  bottom view, blink, copper/mask/paste); both buttons together Accept and Next to review. Every slot names its
+  action and its key (`Turn 90° · T`); a slot that can't be used now is drawn muted and says why under the menu
+  ("No ruler yet: R lays one, or the left button's tap"). While Accept's question is open, the left tap writes
+  and the right one cancels.
+- **Calibrate…** (SpaceMouse, in the tab's side panel) measures which way the puck reads and which button is which:
+  it asks for one motion at a time (slide right, lift up, push away, each button), works the mapping out from what
+  it recorded and shows a table to confirm. The mapping (axes, signs, dead zone, speeds, buttons) is the app's:
+  `[spacemouse]` in the settings file, saved when the calibration is used, or by Save the mapping after an edit by
+  hand under Mapping. The side panel says whether spacenavd is there and, when not, what to do.
 
 A footprint opened alone (Open a footprint alone, a `.kicad_mod`) or picked from a board's footprint list is a
 preview: it is drawn over the datasheet the same way, but there is no symbol to put the hash on, so Accept is
@@ -402,9 +429,9 @@ from egui's own font.
 The settings (blink rate, the opacity, blend mode and colours at first, whether the page is inverted at first,
 the page search words, the finest drawing scale, the font folders, the library search command, how far Z zooms
 in, whether the ruler snaps level, how near its ends snap to the drawing's lines, and the keys F, R, Z, S, D, T, M,
-B, C and I by name in `[footprint_review.keys]`) are in
+B, C, I, P, A and N by name in `[footprint_review.keys]`) are in
 `~/.config/better_erc/config.toml` (`$XDG_CONFIG_HOME`, or the file `$BERC_CONFIG` names), section
-`[footprint_review]`; the tab's Settings shows and saves them. Each step of a review
+`[footprint_review]`, and the SpaceMouse's mapping in `[spacemouse]`; the tab's Settings shows and saves them. Each step of a review
 is recorded in berc's usage record (`app fp-review accept`, `app fp-review write`, ...), which `berc usage` counts in its `app` column.
 
 ## Development

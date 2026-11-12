@@ -3,12 +3,15 @@
 //! file or field takes the default; the app shows and saves them (Footprint review, Settings).
 
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize, Default)]
 #[serde(default)]
 pub struct Settings {
     pub footprint_review: FootprintReviewSettings,
+    /// The SpaceMouse (through spacenavd): which raw axis moves and zooms, the speed, which button is which;
+    /// measured by the calibrate step (Footprint review, SpaceMouse)
+    pub spacemouse: ve_spacemouse::Mapping,
 }
 
 /// The footprint review tab
@@ -74,6 +77,12 @@ pub struct Keys {
     pub cu_layer: String,
     /// Inverts the page (white-ish on black)
     pub invert: String,
+    /// Switches what the SpaceMouse's puck moves: the page or the footprint
+    pub puck: String,
+    /// Accept: asks whether to write the review hash, Enter writes
+    pub accept: String,
+    /// The next symbol in the list that needs a review
+    pub next: String,
 }
 
 impl Default for Keys {
@@ -89,6 +98,9 @@ impl Default for Keys {
             blink: "B".into(),
             cu_layer: "C".into(),
             invert: "I".into(),
+            puck: "P".into(),
+            accept: "A".into(),
+            next: "N".into(),
         }
     }
 }
@@ -249,10 +261,15 @@ impl Settings {
 
     /// The settings from the file, the defaults where it has none; the error says why the file was not read
     pub fn load() -> (Settings, Option<String>) {
-        let Some(file) = Settings::file() else {
-            return (Settings::default(), None);
-        };
-        match std::fs::read_to_string(&file) {
+        match Settings::file() {
+            Some(file) => Settings::load_from(&file),
+            None => (Settings::default(), None),
+        }
+    }
+
+    /// The settings from `file`, as [`Settings::load`] reads them
+    pub fn load_from(file: &Path) -> (Settings, Option<String>) {
+        match std::fs::read_to_string(file) {
             Ok(text) => match Settings::parse(&text) {
                 Ok(s) => (s, None),
                 Err(e) => (
@@ -283,14 +300,19 @@ impl Settings {
     pub fn save(&self) -> Result<PathBuf, String> {
         let file =
             Settings::file().ok_or("neither BERC_CONFIG, XDG_CONFIG_HOME nor HOME is set")?;
+        self.save_to(&file)?;
+        Ok(file)
+    }
+
+    /// Writes `file` as [`Settings::save`] does
+    pub fn save_to(&self, file: &Path) -> Result<(), String> {
         if let Some(d) = file.parent() {
             std::fs::create_dir_all(d).map_err(|e| format!("can't make {}: {e}", d.display()))?;
         }
         let tmp = file.with_extension("toml.tmp");
         std::fs::write(&tmp, self.to_toml())
-            .and_then(|_| std::fs::rename(&tmp, &file))
-            .map_err(|e| format!("can't write {}: {e}", file.display()))?;
-        Ok(file)
+            .and_then(|_| std::fs::rename(&tmp, file))
+            .map_err(|e| format!("can't write {}: {e}", file.display()))
     }
 }
 
@@ -328,5 +350,16 @@ mod tests {
         let s = Settings::parse("[footprint_review.keys]\nrotate = \"Space\"\n").unwrap();
         assert_eq!(s.footprint_review.keys.rotate, "Space");
         assert_eq!(s.footprint_review.keys.ruler, "R");
+        // The SpaceMouse's mapping, the rest its defaults, through the file as it is
+        let s =
+            Settings::parse("[spacemouse]\nfull_scale = 300.0\n[spacemouse.speed]\npan = 3000.0\n")
+                .unwrap();
+        assert_eq!(s.spacemouse.full_scale, 300.0);
+        assert_eq!(s.spacemouse.speed.pan, 3000.0);
+        assert_eq!(
+            s.spacemouse.buttons,
+            ve_spacemouse::Mapping::default().buttons
+        );
+        assert_eq!(Settings::parse(&s.to_toml()).unwrap(), s);
     }
 }

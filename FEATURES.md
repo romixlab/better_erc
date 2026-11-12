@@ -715,6 +715,14 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   thermal vias) drawn as vias, in the hash as pads. Settings in `config.toml`
   (`[footprint_review]`), usage signals `app fp-review ...` · `better_erc_app/src/tabs/footprint_review/`,
   `better_erc_app/src/settings.rs`
+- 🚧 `VIEW-20` Footprint review on a SpaceMouse, through spacenavd (vhrd_egui `ve_spacemouse`, pure Rust): the puck
+  pans the page in screen points (one speed at every zoom) and zooms the view about the pointer, or moves the
+  footprint (`P` switches); a tap of the left button lays the ruler, of the right one switches what the puck
+  moves; held, pie menus with the canvas' actions (left: page and ruler, right: footprint, both: Accept and Next
+  to review), each slot named with its key, a disabled one saying why; Accept's question answered by the taps.
+  Keys and slots are one set of actions; new keys `A` Accept, `N` Next to review. Calibrate… from the tab, the
+  mapping the app's (`[spacemouse]` in `config.toml`). Tests on a fake spacenavd socket. Missing: a try on the
+  device · `better_erc_app/src/tabs/footprint_review/puck.rs`, `puck_tests.rs`, README "With a SpaceMouse"
 
 ## App (`APP`)
 
