@@ -35,6 +35,42 @@ pub struct FootprintReviewSettings {
     pub blend: BlendMode,
     /// The footprint's colours at first, per layer group, `#rrggbb`
     pub colors: LayerColors,
+    /// How much closer the ruler key zooms in on a ruler end than the view it starts from
+    pub ruler_zoom: f32,
+    /// The canvas' keys, by egui's key names (`F`, `Space`, `F5`, ...)
+    pub keys: Keys,
+}
+
+/// The footprint review canvas' keys (while the pointer is over it), by egui's key names; arrows nudge the
+/// footprint, Page Up and Page Down turn pages, Escape drops the ruler step
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[serde(default)]
+pub struct Keys {
+    /// The page at the view's full width
+    pub full_width: String,
+    /// The ruler: one end at the pointer, then the other
+    pub ruler: String,
+    /// Zoom in on one ruler end to place it exactly, then on the other, then back
+    pub ruler_zoom: String,
+    /// Turn the footprint by 90°
+    pub rotate: String,
+    /// Bottom view: the footprint mirrored
+    pub mirror: String,
+    /// Blink the footprint on and off
+    pub blink: String,
+}
+
+impl Default for Keys {
+    fn default() -> Self {
+        Keys {
+            full_width: "F".into(),
+            ruler: "R".into(),
+            ruler_zoom: "Z".into(),
+            rotate: "T".into(),
+            mirror: "M".into(),
+            blink: "B".into(),
+        }
+    }
 }
 
 /// How the footprint's colour is mixed with the page under it
@@ -175,6 +211,8 @@ impl Default for FootprintReviewSettings {
                 .to_vec(),
             blend: BlendMode::Normal,
             colors: LayerColors::default(),
+            ruler_zoom: 8.0,
+            keys: Keys::default(),
         }
     }
 }
@@ -268,5 +306,9 @@ mod tests {
             s.to_toml()
         );
         assert!(Settings::parse("[footprint_review.colors]\npads = \"red\"\n").is_err());
+        // Keys by name, the rest their defaults
+        let s = Settings::parse("[footprint_review.keys]\nrotate = \"Space\"\n").unwrap();
+        assert_eq!(s.footprint_review.keys.rotate, "Space");
+        assert_eq!(s.footprint_review.keys.ruler, "R");
     }
 }

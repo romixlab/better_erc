@@ -206,6 +206,11 @@ fn review_a_symbol_from_its_library() {
     button(&h, "Set scale").click();
     h.run();
     let scale = h.state().scale.clone().expect("the scale is set");
+    assert_eq!(
+        h.state().tool,
+        Tool::Move,
+        "the scale set, the footprint moves again"
+    );
     assert!((scale.mm_per_point - 0.02).abs() < 1e-4, "{scale:?}");
     assert_eq!(scale.page, 1);
     // Move the footprint with the keys, turn it, mirror it
@@ -213,7 +218,7 @@ fn review_a_symbol_from_its_library() {
     h.hover_at(canvas.center());
     h.run();
     h.key_press(egui::Key::ArrowRight);
-    h.key_press(egui::Key::R);
+    h.key_press(egui::Key::T);
     h.key_press(egui::Key::M);
     h.run();
     let st = h.state();
@@ -779,5 +784,100 @@ fn another_part_another_datasheet() {
         h.state().rt.pdf.is_none(),
         "the last part's datasheet is closed"
     );
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// The ruler by keys: R at one end of the dimension and R at the other place it coarsely; Z zooms in on the first
+/// end and a click puts it exactly, Z on the other end likewise, Z again goes back to the view and the length field
+/// takes the typed length; Enter sets the scale and the footprint is the one to move again. F shows the page at
+/// the view's full width. The help line names the keys.
+#[test]
+fn ruler_by_keys() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-keys-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let pdf = datasheet(&dir);
+    let mut h = harness("fp keys");
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &footprint());
+    h.state_mut().open_datasheet(&ctx, &pdf);
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    assert_eq!(h.state().page, 1);
+    let screen = |h: &Harness<'_, FootprintReview>, p: [f32; 2]| {
+        let st = h.state();
+        st.to_screen(st.rt.canvas, p)
+    };
+    let (a, b) = ([100.0, 200.0], [200.0, 200.0]);
+    // Coarse: a few points off each end
+    h.hover_at(screen(&h, [a[0] + 3.0, a[1] - 2.0]));
+    h.run();
+    h.key_press(egui::Key::R);
+    h.run();
+    assert_eq!(h.state().tool, Tool::Ruler);
+    assert!(h.state().rt.ruler_placing);
+    h.hover_at(screen(&h, [b[0] - 3.0, b[1] + 2.0]));
+    h.run();
+    h.key_press(egui::Key::R);
+    h.run();
+    assert!(!h.state().rt.ruler_placing);
+    let coarse = h.state().ruler.unwrap();
+    assert!((coarse[1][0] - (b[0] - 3.0)).abs() < 0.5, "{coarse:?}");
+    // Exact: Z on each end, a click where it belongs
+    let zoom = h.state().zoom;
+    for (i, at) in [(0, a), (1, b)] {
+        h.key_press(egui::Key::Z);
+        h.run();
+        assert_eq!(h.state().rt.ruler_focus, Some(i));
+        assert!(h.state().zoom > zoom * 4.0, "zoomed in on end {i}");
+        let p = screen(&h, at);
+        assert!(h.state().rt.canvas.contains(p), "end {i} in view");
+        h.hover_at(p);
+        h.run();
+        h.drag_at(p);
+        h.drop_at(p);
+        h.run();
+        // The drop takes the pointer off the window: back over the canvas for the next key
+        h.hover_at(p);
+        h.run();
+    }
+    let [ra, rb] = h.state().ruler.unwrap();
+    for (got, want) in [(ra, a), (rb, b)] {
+        assert!(
+            (got[0] - want[0]).abs() < 0.1 && (got[1] - want[1]).abs() < 0.1,
+            "{ra:?} {rb:?}"
+        );
+    }
+    // Back to the view, the length typed straight away
+    h.key_press(egui::Key::Z);
+    h.run();
+    h.run();
+    assert_eq!(h.state().rt.ruler_focus, None);
+    assert!((h.state().zoom - zoom).abs() < 1e-3);
+    h.event(egui::Event::Text("2.00".into()));
+    h.key_press(egui::Key::Enter);
+    h.run();
+    let scale = h.state().scale.clone().expect("the scale is set");
+    assert!((scale.mm_per_point - 0.02).abs() < 1e-4, "{scale:?}");
+    assert_eq!(h.state().tool, Tool::Move);
+    // F: the page across the view's width
+    h.hover_at(h.state().rt.canvas.center());
+    h.run();
+    h.key_press(egui::Key::F);
+    h.run();
+    let st = h.state();
+    let w = st.rt.pdf.as_ref().unwrap().page_size(st.page).unwrap()[0];
+    assert!((w * st.zoom - st.rt.canvas.width()).abs() < 0.5);
+    for k in [
+        "F full width",
+        "R ruler",
+        "Z zoom on a ruler end",
+        "T turn 90°",
+    ] {
+        assert!(st.help_line().contains(k), "{k}: {}", st.help_line());
+    }
     std::fs::remove_dir_all(&dir).unwrap();
 }

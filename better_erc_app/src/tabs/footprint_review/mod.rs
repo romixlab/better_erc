@@ -10,9 +10,13 @@
 //! `Datasheet` field names, else a local library search (a setting), else a file picker; the page search finds the
 //! land pattern page by words that are a setting too. A footprint opened alone (a `.kicad_mod`, a board's copy) is
 //! a preview: there is no symbol to write the hash into, so Accept is off and says so.
+//!
+//! The canvas has a key for each step (settings, `[footprint_review.keys]`; a help line under the canvas names
+//! them): the page at full width; the ruler placed coarsely at the pointer, then each end zoomed in on to place it
+//! exactly, and back; once the scale is set, the footprint is the one to move again.
 
 use crate::prelude::*;
-use crate::settings::{BlendMode, FootprintReviewSettings, LayerColors, Rgb, Settings};
+use crate::settings::{BlendMode, FootprintReviewSettings, Keys, LayerColors, Rgb, Settings};
 use crate::tabs::TabUi;
 use better_erc::fp::{
     AcceptRun, AcceptWhat, FIELD, FootprintSource, HashSource, LibCheckOptions, LibrarySearch,
@@ -266,6 +270,16 @@ struct Runtime {
     ruler_mm: String,
     /// Which end of the ruler a drag moves
     ruler_end: Option<usize>,
+    /// The ruler key placed the first end: the other follows the pointer until the key again or a click
+    ruler_placing: bool,
+    /// The ruler end zoomed in on: a click or a drag places it at the pointer
+    ruler_focus: Option<usize>,
+    /// The view (zoom, pan) from before zooming in on a ruler end
+    overview: Option<(f32, [f32; 2])>,
+    /// The ruler's length field takes the keyboard on the next frame
+    focus_mm: bool,
+    /// The page is fitted to the view's width on the next frame
+    fit_width: bool,
     accepted: Option<String>,
     /// The symbol list open
     symbols: Option<SymbolList>,
@@ -315,6 +329,11 @@ impl Default for Runtime {
             search_result: None,
             ruler_mm: String::new(),
             ruler_end: None,
+            ruler_placing: false,
+            ruler_focus: None,
+            overview: None,
+            focus_mm: false,
+            fit_width: false,
             accepted: None,
             symbols: None,
             target: None,
@@ -992,8 +1011,115 @@ impl FootprintReview {
             mm,
             note: None,
         });
-        self.rt.accepted = None;
+        self.scale_set();
         self.usage("scale");
+    }
+
+    /// The scale is set: the ruler step is over, and the footprint is the one to move
+    fn scale_set(&mut self) {
+        self.rt.accepted = None;
+        self.ruler_done();
+        self.tool = Tool::Move;
+    }
+
+    /// Out of the ruler's steps: no end follows the pointer, and a view zoomed in on an end goes back
+    fn ruler_done(&mut self) {
+        self.rt.ruler_placing = false;
+        self.rt.ruler_focus = None;
+        if let Some((zoom, pan)) = self.rt.overview.take() {
+            self.zoom = zoom;
+            self.pan = pan;
+        }
+    }
+
+    /// The ruler key: the first end at the pointer (`at`, page points), the other following it; pressed again, the
+    /// other end stays where the pointer is
+    fn ruler_key(&mut self, at: [f32; 2]) {
+        if self.rt.ruler_placing
+            && let Some(r) = &mut self.ruler
+        {
+            r[1] = at;
+            self.rt.ruler_placing = false;
+            return;
+        }
+        self.ruler_done();
+        self.tool = Tool::Ruler;
+        self.ruler = Some([at, at]);
+        self.rt.ruler_placing = true;
+        self.usage("ruler key");
+    }
+
+    /// The ruler zoom key: in on the first end, then on the other, then back to the view before, the length field
+    /// taking the keyboard
+    fn ruler_zoom_key(&mut self, canvas: Rect) {
+        let Some(r) = self.ruler else { return };
+        self.rt.ruler_placing = false;
+        let next = match self.rt.ruler_focus {
+            None => Some(0),
+            Some(0) => Some(1),
+            Some(_) => None,
+        };
+        match next {
+            Some(i) => {
+                let (zoom, _) = *self.rt.overview.get_or_insert((self.zoom, self.pan));
+                self.zoom = (zoom * self.rt.settings.ruler_zoom.max(1.0)).clamp(0.05, 400.0);
+                let p = r[i];
+                self.pan = [
+                    canvas.width() / 2.0 - p[0] * self.zoom,
+                    canvas.height() / 2.0 - p[1] * self.zoom,
+                ];
+                self.tool = Tool::Ruler;
+                self.rt.ruler_focus = Some(i);
+                self.usage("ruler zoom");
+            }
+            None => {
+                self.ruler_done();
+                self.rt.focus_mm = true;
+            }
+        }
+    }
+
+    /// The keys as the settings name them; a name that is no key leaves its step without one
+    fn keys(&self) -> KeyMap {
+        KeyMap::from(&self.rt.settings.keys)
+    }
+
+    /// One line on the canvas' keys and mouse
+    fn help_line(&self) -> String {
+        let k = self.keys();
+        let n = key_name;
+        format!(
+            "{} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back ·              {} turn 90° · {} bottom view · {} blink · arrows nudge (Shift: 10×) · PgUp/PgDn page · Esc ends the              ruler step · wheel zoom · right or middle drag pans",
+            n(k.full_width),
+            n(k.ruler),
+            n(k.ruler),
+            n(k.ruler_zoom),
+            n(k.rotate),
+            n(k.mirror),
+            n(k.blink),
+        )
+    }
+
+    /// What the ruler step waits for, when it is on
+    fn ruler_hint(&self) -> Option<String> {
+        let k = self.keys();
+        if self.rt.ruler_placing {
+            return Some(format!(
+                "Ruler: point at the other end and press {} or click",
+                key_name(k.ruler)
+            ));
+        }
+        match self.rt.ruler_focus {
+            Some(0) => Some(format!(
+                "Ruler, first end: click or drag where it belongs exactly; {} for the other end",
+                key_name(k.ruler_zoom)
+            )),
+            Some(_) => Some(format!(
+                "Ruler, other end: click or drag where it belongs exactly; {} goes back and asks for its length",
+                key_name(k.ruler_zoom)
+            )),
+            None => None,
+        }
     }
 
     fn controls(&mut self, ui: &mut Ui) {
@@ -1567,6 +1693,19 @@ impl FootprintReview {
             if ui.add_enabled(page + 1 < pages, Button::new("▶")).clicked() {
                 page += 1;
             }
+            if ui
+                .button("Full width")
+                .on_hover_text(format!(
+                    "The page at the view's full width; {}",
+                    key_name(KeyMap::from(&self.rt.settings.keys).full_width)
+                ))
+                .clicked()
+            {
+                self.rt.fit_width = true;
+            }
+            if ui.button("Whole page").clicked() {
+                self.rt.fit_page = true;
+            }
         });
         let words = &self.rt.settings.page_search_words;
         match &self.rt.page_hits {
@@ -1609,12 +1748,42 @@ impl FootprintReview {
     }
 
     fn scale_controls(&mut self, ui: &mut Ui) {
+        let k = self.keys();
+        let mut zoom_end = false;
         ui.horizontal(|ui| {
-            ui.selectable_value(&mut self.tool, Tool::Move, "Move footprint")
-                .on_hover_text("Drag the footprint; arrow keys nudge it (Shift: more)");
+            if ui
+                .selectable_value(&mut self.tool, Tool::Move, "Move footprint")
+                .on_hover_text(
+                    "Drag the footprint; arrow keys nudge it (Shift: more). Setting the scale comes back here",
+                )
+                .clicked()
+            {
+                self.ruler_done();
+            }
             ui.selectable_value(&mut self.tool, Tool::Ruler, "Ruler")
-                .on_hover_text("Drag along a dimension of the drawing; drag an end to adjust it");
+                .on_hover_text(format!(
+                    "Drag along a dimension of the drawing, or {} at one end and {} at the other; drag an end to                      adjust it",
+                    key_name(k.ruler),
+                    key_name(k.ruler)
+                ));
+            let b = ui.add_enabled(self.ruler.is_some(), Button::new("Zoom on an end"));
+            let b = if self.ruler.is_some() {
+                b.on_hover_text(format!(
+                    "In on the first end to place it exactly, again on the other, again back ({})",
+                    key_name(k.ruler_zoom)
+                ))
+            } else {
+                b.on_disabled_hover_text(format!("draw the ruler first ({})", key_name(k.ruler)))
+            };
+            zoom_end = b.clicked();
         });
+        if zoom_end {
+            let c = self.rt.canvas;
+            self.ruler_zoom_key(c);
+        }
+        if let Some(h) = self.ruler_hint() {
+            ui.colored_label(Color32::from_rgb(0, 140, 255), h);
+        }
         match &self.scale {
             Some(s) => {
                 ui.label(format!(
@@ -1654,7 +1823,7 @@ impl FootprintReview {
                     mm: 0.0,
                     note: Some(text),
                 });
-                self.rt.accepted = None;
+                self.scale_set();
                 self.usage("scale page-note");
             }
         }
@@ -1680,6 +1849,9 @@ impl FootprintReview {
                     .id_salt("ruler mm"),
             );
             ui.label("mm");
+            if std::mem::take(&mut self.rt.focus_mm) {
+                r.request_focus();
+            }
             set = r.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter));
             let ok = self
                 .rt
@@ -1714,19 +1886,27 @@ impl FootprintReview {
             if ui
                 .checkbox(&mut self.blink, "Blink")
                 .on_hover_text(format!(
-                    "{} times a second (Settings); B",
-                    self.rt.settings.blink_hz
+                    "{} times a second (Settings); {}",
+                    self.rt.settings.blink_hz,
+                    key_name(self.keys().blink)
                 ))
                 .changed()
                 && self.blink
             {
                 self.usage("blink");
             }
-            if ui.button("⟲ 90°").on_hover_text("R").clicked() {
+            if ui
+                .button("⟲ 90°")
+                .on_hover_text(key_name(self.keys().rotate))
+                .clicked()
+            {
                 self.place.rotation = (self.place.rotation + 90.0).rem_euclid(360.0);
             }
             ui.checkbox(&mut self.place.mirror, "Bottom view")
-                .on_hover_text("Mirrored, as seen from below; M");
+                .on_hover_text(format!(
+                    "Mirrored, as seen from below; {}",
+                    key_name(self.keys().mirror)
+                ));
         });
         ui.horizontal(|ui| {
             ui.label("Angle");
@@ -1844,6 +2024,37 @@ impl FootprintReview {
                             .speed(0.1),
                     );
                     ui.end_row();
+                    ui.label("Ruler end zoom, times the view");
+                    ui.add(
+                        DragValue::new(&mut s.ruler_zoom)
+                            .range(1.0..=64.0)
+                            .speed(0.1),
+                    );
+                    ui.end_row();
+                });
+                ui.label("Keys over the canvas, by name (F, Space, F5, …)");
+                Grid::new("fp keys grid").num_columns(2).show(ui, |ui| {
+                    let k = &mut s.keys;
+                    for (what, name) in [
+                        ("Page at full width", &mut k.full_width),
+                        ("Ruler: one end, then the other", &mut k.ruler),
+                        ("Zoom on a ruler end, the other, back", &mut k.ruler_zoom),
+                        ("Turn 90°", &mut k.rotate),
+                        ("Bottom view", &mut k.mirror),
+                        ("Blink", &mut k.blink),
+                    ] {
+                        ui.label(what);
+                        let ok = egui::Key::from_name(name.trim()).is_some();
+                        let mut edit = TextEdit::singleline(name).desired_width(70.0);
+                        if !ok {
+                            edit = edit.text_color(Color32::RED);
+                        }
+                        let r = ui.add(edit);
+                        if !ok {
+                            r.on_hover_text("not a key name: this step has no key");
+                        }
+                        ui.end_row();
+                    }
                 });
                 ui.label("Page search words, best first, one per line");
                 if ui
@@ -1943,6 +2154,17 @@ impl FootprintReview {
             ];
             self.rt.fit_page = false;
         }
+        if self.rt.fit_width
+            && let Some([w, _]) = page_size
+            && canvas.width() > 1.0
+        {
+            // Full width, the page point in the middle of the view staying at the same height
+            let mid = self.to_page(canvas, canvas.center());
+            self.zoom = canvas.width() / w;
+            self.pan = [0.0, canvas.height() / 2.0 - mid[1] * self.zoom];
+            self.rt.fit_width = false;
+            self.rt.overview = None;
+        }
         if self.rt.center_footprint && canvas.width() > 1.0 {
             // The middle of the footprint's extent to the middle of the view
             let target = self.to_page(canvas, canvas.center());
@@ -2029,7 +2251,26 @@ impl FootprintReview {
         }
         // Primary drag: the footprint or the ruler
         let pointer_page = resp.interact_pointer_pos().map(|p| self.to_page(canvas, p));
-        if resp.dragged_by(egui::PointerButton::Primary) {
+        let hover_page = resp.hover_pos().map(|p| self.to_page(canvas, p));
+        // The ruler key's other end follows the pointer; a click leaves it there
+        if self.rt.ruler_placing
+            && let (Some(r), Some(p)) = (&mut self.ruler, hover_page)
+        {
+            r[1] = p;
+            if resp.clicked() {
+                self.rt.ruler_placing = false;
+            }
+        }
+        // An end zoomed in on goes where a click or a drag puts it
+        if let (Tool::Ruler, Some(i), Some(r), Some(p)) = (
+            self.tool,
+            self.rt.ruler_focus,
+            &mut self.ruler,
+            pointer_page,
+        ) && (resp.clicked() || resp.dragged_by(egui::PointerButton::Primary))
+        {
+            r[i] = p;
+        } else if resp.dragged_by(egui::PointerButton::Primary) {
             match self.tool {
                 Tool::Move => {
                     let d = resp.drag_delta() / self.zoom;
@@ -2068,47 +2309,73 @@ impl FootprintReview {
             self.rt.ruler_end = None;
         }
         // Keys while the pointer is over the canvas
-        if resp.hovered() {
-            let (keys, shift) = ui.input(|i| {
-                let keys: Vec<egui::Key> = [
-                    egui::Key::ArrowLeft,
-                    egui::Key::ArrowRight,
-                    egui::Key::ArrowUp,
-                    egui::Key::ArrowDown,
-                    egui::Key::R,
-                    egui::Key::M,
-                    egui::Key::B,
-                    egui::Key::PageUp,
-                    egui::Key::PageDown,
-                ]
-                .into_iter()
-                .filter(|k| i.key_pressed(*k))
-                .collect();
-                (keys, i.modifiers.shift)
+        if resp.hovered() && !ctx.egui_wants_keyboard_input() {
+            let km = self.keys();
+            let (pressed, shift) = ui.input(|i| {
+                let pressed = |k: Option<egui::Key>| k.is_some_and(|k| i.key_pressed(k));
+                let p = Pressed {
+                    left: pressed(Some(egui::Key::ArrowLeft)),
+                    right: pressed(Some(egui::Key::ArrowRight)),
+                    up: pressed(Some(egui::Key::ArrowUp)),
+                    down: pressed(Some(egui::Key::ArrowDown)),
+                    page_up: pressed(Some(egui::Key::PageUp)),
+                    page_down: pressed(Some(egui::Key::PageDown)),
+                    escape: pressed(Some(egui::Key::Escape)),
+                    full_width: pressed(km.full_width),
+                    ruler: pressed(km.ruler),
+                    ruler_zoom: pressed(km.ruler_zoom),
+                    rotate: pressed(km.rotate),
+                    mirror: pressed(km.mirror),
+                    blink: pressed(km.blink),
+                };
+                (p, i.modifiers.shift)
             });
             let step = if shift { 10.0 } else { 1.0 } / self.zoom;
             let pages = self.rt.pdf.as_ref().map_or(0, PdfDoc::page_count);
-            for k in keys {
-                match k {
-                    egui::Key::ArrowLeft => self.place.origin[0] -= step,
-                    egui::Key::ArrowRight => self.place.origin[0] += step,
-                    egui::Key::ArrowUp => self.place.origin[1] -= step,
-                    egui::Key::ArrowDown => self.place.origin[1] += step,
-                    egui::Key::R => {
-                        self.place.rotation = (self.place.rotation + 90.0).rem_euclid(360.0)
-                    }
-                    egui::Key::M => self.place.mirror = !self.place.mirror,
-                    egui::Key::B => self.blink = !self.blink,
-                    egui::Key::PageUp if self.page > 0 => {
-                        self.page -= 1;
-                        self.rt.fit_page = true;
-                    }
-                    egui::Key::PageDown if self.page + 1 < pages => {
-                        self.page += 1;
-                        self.rt.fit_page = true;
-                    }
-                    _ => {}
-                }
+            let p = pressed;
+            if p.left {
+                self.place.origin[0] -= step;
+            }
+            if p.right {
+                self.place.origin[0] += step;
+            }
+            if p.up {
+                self.place.origin[1] -= step;
+            }
+            if p.down {
+                self.place.origin[1] += step;
+            }
+            if p.page_up && self.page > 0 {
+                self.page -= 1;
+                self.rt.fit_page = true;
+            }
+            if p.page_down && self.page + 1 < pages {
+                self.page += 1;
+                self.rt.fit_page = true;
+            }
+            if p.rotate {
+                self.place.rotation = (self.place.rotation + 90.0).rem_euclid(360.0);
+            }
+            if p.mirror {
+                self.place.mirror = !self.place.mirror;
+            }
+            if p.blink {
+                self.blink = !self.blink;
+            }
+            if p.full_width {
+                self.rt.fit_width = true;
+                self.usage("full width");
+            }
+            if p.escape {
+                self.ruler_done();
+            }
+            if p.ruler
+                && let Some(at) = hover_page
+            {
+                self.ruler_key(at);
+            }
+            if p.ruler_zoom {
+                self.ruler_zoom_key(canvas);
             }
         }
         // The footprint
@@ -2158,6 +2425,27 @@ impl FootprintReview {
                 .expand(2.0);
             painter.rect_filled(r, 2.0, Color32::from_rgb(0, 90, 180));
             painter.galley(r.min + vec2(2.0, 2.0), galley, Color32::WHITE);
+        }
+        // The keys, under the canvas; the ruler step's hint above them
+        let mut y = canvas.max.y - 4.0;
+        for (text, bg) in [
+            (Some(self.help_line()), Color32::from_black_alpha(170)),
+            (self.ruler_hint(), Color32::from_rgb(0, 90, 180)),
+        ] {
+            let Some(text) = text else { continue };
+            let galley = painter.layout(
+                text,
+                FontId::proportional(12.0),
+                Color32::WHITE,
+                canvas.width() - 16.0,
+            );
+            let r = Rect::from_min_size(
+                pos2(canvas.min.x + 4.0, y - galley.size().y - 4.0),
+                galley.size() + vec2(8.0, 4.0),
+            );
+            painter.rect_filled(r, 3.0, bg);
+            painter.galley(r.min + vec2(4.0, 2.0), galley, Color32::WHITE);
+            y = r.min.y - 2.0;
         }
     }
 
@@ -2309,6 +2597,53 @@ impl FootprintReview {
         painter.line_segment([o - vec2(6.0, 0.0), o + vec2(6.0, 0.0)], s);
         painter.line_segment([o - vec2(0.0, 6.0), o + vec2(0.0, 6.0)], s);
     }
+}
+
+/// The canvas' keys, resolved from the settings' key names
+#[derive(Clone, Copy)]
+struct KeyMap {
+    full_width: Option<egui::Key>,
+    ruler: Option<egui::Key>,
+    ruler_zoom: Option<egui::Key>,
+    rotate: Option<egui::Key>,
+    mirror: Option<egui::Key>,
+    blink: Option<egui::Key>,
+}
+
+impl From<&Keys> for KeyMap {
+    fn from(k: &Keys) -> Self {
+        let key = |name: &str| egui::Key::from_name(name.trim());
+        KeyMap {
+            full_width: key(&k.full_width),
+            ruler: key(&k.ruler),
+            ruler_zoom: key(&k.ruler_zoom),
+            rotate: key(&k.rotate),
+            mirror: key(&k.mirror),
+            blink: key(&k.blink),
+        }
+    }
+}
+
+/// The keys pressed this frame
+struct Pressed {
+    left: bool,
+    right: bool,
+    up: bool,
+    down: bool,
+    page_up: bool,
+    page_down: bool,
+    escape: bool,
+    full_width: bool,
+    ruler: bool,
+    ruler_zoom: bool,
+    rotate: bool,
+    mirror: bool,
+    blink: bool,
+}
+
+/// A key as the help shows it; a setting that names no key shows so
+fn key_name(k: Option<egui::Key>) -> String {
+    k.map_or_else(|| "(no key: see Settings)".into(), |k| k.name().to_string())
 }
 
 fn status_colour(s: SymbolStatus) -> Color32 {
