@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.27] - 2026-11-12
+
 ### Added
 
 - `TOOL-8`: `berc fp todo [PROJECT]` lists the library symbols a board's footprints come from, once each with the
