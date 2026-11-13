@@ -18,6 +18,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 ### Changed
 
 - Footprint review: `K` no longer cycles the footprint and then each view; it picks the next view (Silhouettes) or turns the 3D model to the next side, and `Q` switches between moving the footprint and the model (`VIEW-27`). The mode bar wraps when it is wider than the window.
+- better_erc_app builds on vhrd_egui 0.33.0 (ve_view3d's snap to a side and offscreen render, ve_spacemouse's save buttons) (`VIEW-27`).
 - Footprint review: the SpaceMouse panel saves with *Save to ~/.config* or *Save locally*, shows what is not saved and asks before the window closes with a changed mapping; the calibrate step asks for all six motions (ve_spacemouse SPM-6, `VIEW-27`).
 
 ## [0.4.52] - 2026-11-13
