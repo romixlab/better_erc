@@ -411,7 +411,7 @@ impl Family {
 impl Supply {
     /// Its value at a corner.
     pub fn at(&self, corner: Corner, env: &Env) -> Result<Volts, String> {
-        self.at_v(corner, env).map(Volts::new)
+        Volts::try_new(self.at_v(corner, env)?).map_err(|e| e.to_string())
     }
 
     fn at_v(&self, corner: Corner, env: &Env) -> Result<f64, String> {
@@ -439,20 +439,22 @@ impl Level {
     pub fn limits(&self, env: &Env) -> Result<[Option<Quantity>; 3], String> {
         let si = self.si(env)?;
         let dim = self.unit.dim();
-        let q = |v: Option<f64>| {
+        let q = |v: Option<f64>| -> Result<Option<Quantity>, String> {
             v.map(|v| {
-                if dim == <Volt as exact_units::Unit>::DIM {
-                    Quantity::Voltage(Volts::new(v))
+                Ok(if dim == <Volt as exact_units::Unit>::DIM {
+                    Quantity::Voltage(Volts::try_new(v).map_err(|e| e.to_string())?)
                 } else if dim == <Ampere as exact_units::Unit>::DIM {
-                    Quantity::Current(Amperes::new(v))
+                    Quantity::Current(Amperes::try_new(v).map_err(|e| e.to_string())?)
                 } else if dim == <Farad as exact_units::Unit>::DIM {
-                    Quantity::Capacitance(Farads::new(v))
+                    Quantity::Capacitance(Farads::try_new(v).map_err(|e| e.to_string())?)
                 } else {
-                    Quantity::Resistance(Ohms::new(v))
-                }
+                    Quantity::Resistance(Ohms::try_new(v).map_err(|e| e.to_string())?)
+                })
             })
+            .transpose()
         };
-        Ok(si.map(q))
+        let [min, typ, max] = si;
+        Ok([q(min)?, q(typ)?, q(max)?])
     }
 
     /// Its limits as voltages, (min, typ, max); `None` for a level that is not a voltage.
@@ -460,7 +462,9 @@ impl Level {
         if self.unit.dim() != <Volt as exact_units::Unit>::DIM {
             return Ok(None);
         }
-        Ok(Some(self.si(env)?.map(|v| v.map(Volts::new))))
+        let [min, typ, max] = self.si(env)?;
+        let v = |x: Option<f64>| x.map(Volts::try_new).transpose().map_err(|e| e.to_string());
+        Ok(Some([v(min)?, v(typ)?, v(max)?]))
     }
 
     /// Its limits as currents, (min, typ, max); `None` for a level that is not a current.
@@ -468,7 +472,13 @@ impl Level {
         if self.unit.dim() != <Ampere as exact_units::Unit>::DIM {
             return Ok(None);
         }
-        Ok(Some(self.si(env)?.map(|v| v.map(Amperes::new))))
+        let [min, typ, max] = self.si(env)?;
+        let a = |x: Option<f64>| {
+            x.map(Amperes::try_new)
+                .transpose()
+                .map_err(|e| e.to_string())
+        };
+        Ok(Some([a(min)?, a(typ)?, a(max)?]))
     }
 
     /// The limits as plain numbers in V, A, Ω or F.

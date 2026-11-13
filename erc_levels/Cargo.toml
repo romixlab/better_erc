@@ -9,6 +9,6 @@ include = ["**/*.rs", "Cargo.toml", "data/*.toml"]
 
 [dependencies]
 # from git until it is on crates.io; electrical (V, A, Ω, F) and thermal (°C) units only
-exact_units = { version = "0.1.0", git = "https://github.com/romixlab/exact_units", rev = "1819d9f32275d003458e383383ff4808d7ea64b8", default-features = false, features = ["electrical", "thermal"] }
+exact_units = { version = "0.1.0", git = "https://github.com/romixlab/exact_units", default-features = false, features = ["electrical", "thermal"] }
 serde = { version = "1.0", default-features = false, features = ["std", "derive"] }
 toml = { version = "1", default-features = false, features = ["std", "parse", "serde"] }

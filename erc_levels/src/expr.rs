@@ -187,7 +187,7 @@ mod tests {
 
     #[test]
     fn evaluates_with_the_supplies() {
-        let env = Env::from([("VDD".to_string(), crate::Volts::new(3.3))]);
+        let env = Env::from([("VDD".to_string(), crate::Volts::try_new(3.3).unwrap())]);
         let l = Limit::Expr(e("VDD-0.4"));
         assert!((l.eval(&env).unwrap() - 2.9).abs() < 1e-12);
         assert!(Limit::Expr(e("VCC")).eval(&env).is_err());

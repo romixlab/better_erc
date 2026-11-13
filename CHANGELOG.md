@@ -11,6 +11,15 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Changed
+
+- `ve_spacemouse` (better_erc_app) and `exact_units` (erc_levels) no longer pin a tag or a rev: both are plain
+  `git = "..."` dependencies, so `cargo update` picks up the default branch's latest commit. `exact_units` moved
+  forward to a commit where `Fixed::new` and `Point::from_raw` no longer accept a float (they now only compile for
+  an integer storage, to keep a NaN out of a checked value); `erc_levels` now builds `Volts`/`Amperes`/`Farads`/
+  `Ohms`/`DegC` with `try_new`/`try_from_raw` and propagates a NaN as an error, as it already did for other bad
+  input.
+
 ## [0.4.41] - 2026-11-13
 
 ### Added

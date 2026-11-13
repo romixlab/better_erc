@@ -43,7 +43,7 @@ fn every_family_has_a_source_and_every_level_a_way_to_it() {
 fn i2c_fast_mode_at_3v3() {
     let f = Database::builtin().get("i2c-fm").unwrap();
     let mut env = f.env(Corner::Typ).unwrap();
-    env.insert("VDD".into(), Volts::new(3.3));
+    env.insert("VDD".into(), Volts::try_new(3.3).unwrap());
     let vih = f
         .levels("VIH")
         .next()
