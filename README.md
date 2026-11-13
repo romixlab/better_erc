@@ -299,7 +299,9 @@ Below them, under their own heading, the symbols that can't be
 reviewed until fixed: missing (the library symbol or its footprint is not found, the line says why) and refused. The
 ok ones and those without a footprint are counted; `--all` lists them too. `--format json` always holds every symbol
 with its footprint file, the hash now and the `Datasheet` field, for the app's review tab and scripts; the library
-call is `better_erc::fp::todo`. The exit code is 0 when there is nothing to review or fix, 1 otherwise, 2 when the
+call is `better_erc::fp::todo`. A symbol whose board places another footprint than its own carries that one too:
+`placed`, its library file `placed_file` and hash now `placed_hash`, or `placed_note` saying why no library has it.
+`files` lists every file the list was made from (what the app's review tab watches). The exit code is 0 when there is nothing to review or fix, 1 otherwise, 2 when the
 project can't be read.
 
 ### Accepting a review
@@ -433,7 +435,9 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    status (unreviewed, changed, ok, missing, no footprint). Picking one opens the library footprint its `Footprint`
    field names, found through the project's or the global `fp-lib-table`; from a board, when every reference places
    a different footprint than that field names, the one actually placed opens instead, noted above the canvas
-   rather than left unsaid. A symbol that sets no footprint, or whose
+   rather than left unsaid. That one too is read from its library file, since the review hash is the library
+   footprint's; the note says when the board's copy differs from it (the board not updated from the library yet),
+   and only a footprint no library table has is read from the board's copy. A symbol that sets no footprint, or whose
    symbol or footprint is not found, is refused with the reason. Next to review steps to the next symbol that
    needs one. A reviewed symbol lists its review lines (what each was made against, its MPNs, ok or stale) and the
    MPNs no line reviews yet.
@@ -572,6 +576,10 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    Once written, it lists the files written, or says why it wrote nothing, copies the hash to the clipboard and keeps the review
    (symbol's footprint, hash, datasheet, page, scale) in the tab's list. Accept stays disabled, saying why, until a
    symbol with a footprint is picked, a datasheet is open and the scale is set on the page shown.
+
+#### Files changed on disk
+
+The tab shows the files as they are on disk. It watches every file it read: the board and its schematics, the library tables, the symbol libraries, the footprint files, the 3D models and the datasheet. A file saved in KiCad or another editor is read again by itself once it stays quiet for a moment, and picking a symbol or a board footprint looks at the files first. Reload (`F5`, a setting, or the button under the Open buttons) reads everything again; a line beside it says what was read again and when. A reload keeps the view: the page, the scale, the footprint's placement, the 3D camera and the list's filter. The review status follows the file, so a footprint changed since its review shows the review as changed. A file counts as changed only when its content changed; what Accept writes into the symbols reloads nothing.
 
 #### With a SpaceMouse
 

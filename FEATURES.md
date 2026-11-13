@@ -817,6 +817,18 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   3D view a hidden edge picks too. Usage signals `app fp-review xray on|off`. Tests: on the GPU, the leads' inner
   edges under the body drawn over the page and the body faded; the 3D view's body faded from the mode bar's
   switch · `better_erc_app/src/tabs/footprint_review/solid.rs`, `model3d.rs`
+- ✅ `VIEW-31` Footprint review, files changed on disk read again: the tab watches every file it read (`notify`,
+  inotify on Linux, on the files' directories so a save by rename is seen): the board and its schematics, the library
+  tables, the symbol libraries, the footprint files (`FpTodo::files`, `LibCheck::files`), the 3D models and the
+  datasheet. A change is read again by itself once the file stays quiet (300 ms), and picking a symbol or a board
+  footprint looks at the files first. Reload (`F5`, a setting, and a button) reads everything again, and a line
+  says what and when. The view is kept (page, scale, placement, 3D camera, filters), and the review status
+  follows the file. A file's stamp (length, time, content hash) decides, so what Accept wrote reloads nothing. An
+  overridden footprint is reviewed from its library file (`TodoEntry::placed_file`), with a note when the board's
+  copy differs. Usage signals `app fp-review reload|reload changed`. Tests: stamps, debounce and real events on a
+  temp folder; in the tab, a footprint changed on disk shown with its new pad and a stale review by Reload, F5,
+  picking it again and the watcher alone; Accept reloading nothing; an override read from its library ·
+  `better_erc_app/src/tabs/footprint_review/watch.rs`, `reload_tests.rs`, `better_erc/src/fp/todo.rs`
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
   one lookup per MPN per session, on a worker thread) and its review state from the review lines (reviewed, reviewed
