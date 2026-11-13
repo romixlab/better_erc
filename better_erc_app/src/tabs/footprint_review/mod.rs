@@ -1908,21 +1908,26 @@ impl FootprintReview {
                 ui.label("Review hash");
                 ui.label(RichText::new(&s.hash).monospace());
                 ui.end_row();
-                if let Some(stored) = s.field(FIELD)
-                    && self.rt.target.is_some()
-                {
-                    ui.label(FIELD);
-                    if stored == s.hash {
-                        ui.colored_label(Color32::GREEN, format!("{stored}, the same: reviewed"));
-                    } else {
-                        ui.colored_label(
-                            Color32::ORANGE,
-                            format!("{stored}: not this footprint, review it again"),
-                        );
-                    }
-                    ui.end_row();
-                }
             });
+            // Outside the grid, not a row of it: a row that comes and goes (or whose text changes length,
+            // as the full hash does once reviewed) would otherwise change the grid's own layout, which then
+            // takes a few frames to settle rather than one
+            if let Some(stored) = s.field(FIELD)
+                && self.rt.target.is_some()
+            {
+                let (color, text) = if stored == s.hash {
+                    (Color32::GREEN, format!("{stored}, the same: reviewed"))
+                } else {
+                    (
+                        Color32::ORANGE,
+                        format!("{stored}: not this footprint, review it again"),
+                    )
+                };
+                ui.horizontal(|ui| {
+                    ui.label(FIELD);
+                    ui.add(Label::new(RichText::new(text).color(color)).truncate());
+                });
+            }
             if let Some(n) = &self.rt.board_note {
                 ui.label(RichText::new(n).small());
             }

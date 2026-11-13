@@ -11,6 +11,14 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Fixed
+
+- Footprint review: the once-reviewed line (the `Footprint_Review` field, old value and new) was a row of the
+  footprint's own grid, so its first appearance (and the full hash it carries) changed that grid's layout, taking
+  the UI a few frames to settle instead of one; moved it below the grid, as a line of its own, so the grid's rows
+  never change. Fixes a deterministic GUI test failure (`review_a_symbol_from_its_library`'s `run()` after Accept's
+  Write exceeded `max_steps`).
+
 ## [0.4.38] - 2026-11-13
 
 ### Added
