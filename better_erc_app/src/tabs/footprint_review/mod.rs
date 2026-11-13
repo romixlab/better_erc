@@ -595,6 +595,10 @@ struct Runtime {
     /// The footprint, the model over the page hidden for a moment, their places kept (VIEW-28)
     fp_hidden: bool,
     model_hidden: bool,
+    /// What moves moved this frame (the mouse, the arrows, turn, mirror, the puck)
+    moved: bool,
+    /// The hidden model (true) or footprint moved: its outline drawn until this time (VIEW-32)
+    ghost: Option<(bool, f64)>,
     /// The peek key is held: the page alone
     peek: bool,
     /// Ctrl is held: a Measure across end snaps to the source that is not the nearer (VIEW-29)
@@ -707,6 +711,8 @@ impl Default for Runtime {
             canvas: Rect::NOTHING,
             fp_hidden: false,
             model_hidden: false,
+            moved: false,
+            ghost: None,
             peek: false,
             other_source: false,
             end_snaps: [None; 2],
@@ -2296,7 +2302,7 @@ impl FootprintReview {
              arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans · \
              {} the model as silhouettes or 3D ({}) · {} moves the footprint or the model ({}) · {} {} · \
              3D: SpaceMouse tilt, roll and twist or Ctrl+drag turn it, letting go lands on a side (Alt: free) · \
-             {} hides or shows the footprint, {} the model · hold {}: the page alone · {} X-ray · {} reload from disk\n\
+             {} the model onto the footprint · {} hides or shows the footprint, {} the model · hold {}: the page alone · {} X-ray · {} reload from disk\n\
              {} accept · {} next to review · {} write a review note · SpaceMouse: the puck {} ({} switches), push away zooms out · \
              tap the left button for the ruler, the right one to switch · hold one for its ring, both for Accept",
             self.tool.name(),
@@ -2338,6 +2344,7 @@ impl FootprintReview {
                 modelviews::ModelLook::Silhouettes => "the next model view",
                 modelviews::ModelLook::Solid => "the 3D model to the next side",
             },
+            n(k.model_on_footprint),
             n(k.hide_footprint),
             n(k.hide_model),
             n(k.peek),
@@ -2426,6 +2433,7 @@ impl FootprintReview {
         let mut pick = None;
         let mut toggle_3d = false;
         let mut cycle_view = false;
+        let mut on_footprint = false;
         ui.horizontal_wrapped(|ui| {
             ui.label("Mode");
             for (t, key, why) in [
@@ -2518,6 +2526,17 @@ impl FootprintReview {
             if r.clicked() {
                 cycle_view = true;
             }
+            let r = ui.add_enabled(
+                why.is_none(),
+                Button::new(format!("On footprint · {}", key_name(k.model_on_footprint))),
+            );
+            let r = match why {
+                Some(why) => r.on_disabled_hover_text(format!("no model: {why}")),
+                None => r.on_hover_text(modelviews::ON_FOOTPRINT_HINT),
+            };
+            if r.clicked() {
+                on_footprint = true;
+            }
             ui.separator();
             self.shown_switches(ui);
             // Its room kept in Move too, so the bar never wraps differently and the canvas never jumps
@@ -2536,6 +2555,9 @@ impl FootprintReview {
         }
         if cycle_view {
             self.cycle_model_view(ui.input(|i| i.time));
+        }
+        if on_footprint {
+            self.model_on_footprint(ui.input(|i| i.time));
         }
         if self.tool == Tool::Select || !self.selection().is_empty() {
             self.dxf_bar(ui);
@@ -3149,6 +3171,7 @@ impl FootprintReview {
                     let place = self.moving_mut();
                     place.origin[0] += d.x;
                     place.origin[1] += d.y;
+                    self.rt.moved = true;
                 }
                 Tool::Select => {
                     if resp.drag_started() {
@@ -3251,6 +3274,9 @@ impl FootprintReview {
             if p.down {
                 place.origin[1] += step;
             }
+            if p.left || p.right || p.up || p.down || p.rotate || p.mirror {
+                self.rt.moved = true;
+            }
             for (on, action) in [
                 (p.page_up, Action::PageUp),
                 (p.page_down, Action::PageDown),
@@ -3284,6 +3310,7 @@ impl FootprintReview {
                 (p.hide_model, Action::HideModel),
                 (p.xray, Action::XRay),
                 (p.reload, Action::Reload),
+                (p.model_on_footprint, Action::ModelOnFootprint),
             ] {
                 if on {
                     self.act(&ctx, action, hover_page, shift, lines);
@@ -3305,6 +3332,7 @@ impl FootprintReview {
         if self.footprint_shown() && self.blinked(&ctx, self.blink) && !self.rt.items.is_empty() {
             self.draw_footprint(&painter, canvas, page, ui.id());
         }
+        self.ghost(&ctx, &painter, canvas);
         self.draw_selection(&painter, canvas);
         // The ruler
         if let Some([a, b]) = self.ruler {
@@ -3686,6 +3714,105 @@ impl FootprintReview {
         ((t * hz * 2.0).floor() as i64) % 2 == 0
     }
 
+    /// `model` (else the footprint) moved at `now`: when it is hidden, its outline is drawn for a moment, so hiding
+    /// never leaves Move doing nothing to see (VIEW-32)
+    pub(super) fn moved_hidden(&mut self, model: bool, now: f64) {
+        let hidden = if model {
+            self.rt.model_hidden
+        } else {
+            self.rt.fp_hidden
+        };
+        if hidden {
+            self.rt.ghost = Some((model, now + GHOST_S));
+        }
+    }
+
+    /// The outline of a hidden footprint or model that moved: kept while it moves and a moment after
+    fn ghost(&mut self, ctx: &egui::Context, painter: &egui::Painter, canvas: Rect) {
+        let now = ctx.input(|i| i.time);
+        if std::mem::take(&mut self.rt.moved) {
+            let model = self.model_views.moves == modelviews::Moves::Model;
+            self.moved_hidden(model, now);
+        }
+        if self.rt.solid.turned {
+            self.moved_hidden(true, now);
+        }
+        let Some((model, until)) = self.rt.ghost else {
+            return;
+        };
+        let hidden = if model {
+            self.rt.model_hidden
+        } else {
+            self.rt.fp_hidden
+        };
+        if now > until || !hidden {
+            self.rt.ghost = None;
+            return;
+        }
+        ctx.request_repaint_after(std::time::Duration::from_secs_f64(until - now));
+        if self.rt.peek {
+            return;
+        }
+        let k = self.keys();
+        let (line, at, what) = if model {
+            let [r, g, b] = self.layer_colors().model.0;
+            let line = Color32::from_rgb(r, g, b);
+            let at = self.draw_model_ghost(painter, canvas, line);
+            (
+                line,
+                at,
+                format!("model hidden · {} shows it", key_name(k.hide_model)),
+            )
+        } else {
+            let [r, g, b] = self.layer_colors().copper.0;
+            let line = Color32::from_rgb(r, g, b);
+            self.draw_footprint_ghost(painter, canvas, line);
+            let at = self.to_screen(canvas, self.place.origin);
+            (
+                line,
+                Some(at),
+                format!("footprint hidden · {} shows it", key_name(k.hide_footprint)),
+            )
+        };
+        if let Some(at) = at {
+            painter.text(
+                at + vec2(8.0, -8.0),
+                Align2::LEFT_BOTTOM,
+                what,
+                FontId::proportional(12.0),
+                line,
+            );
+        }
+    }
+
+    /// The hidden footprint's outline: its areas and lines shown, thin, and its origin
+    fn draw_footprint_ghost(&self, painter: &egui::Painter, canvas: Rect, line: Color32) {
+        let s = Stroke::new(1.0, line);
+        let screen = |p: outline::P| self.to_screen(canvas, self.fp_to_page(p));
+        for item in self.shown_items() {
+            match item {
+                Item::Area { points, .. } => {
+                    painter.add(Shape::closed_line(
+                        points.iter().map(|p| screen(*p)).collect(),
+                        s,
+                    ));
+                }
+                Item::Line { points, closed, .. } => {
+                    let pts = points.iter().map(|p| screen(*p)).collect();
+                    painter.add(if *closed {
+                        Shape::closed_line(pts, s)
+                    } else {
+                        Shape::line(pts, s)
+                    });
+                }
+                Item::Hole { .. } | Item::Number { .. } => {}
+            }
+        }
+        let o = self.to_screen(canvas, self.place.origin);
+        painter.line_segment([o - vec2(6.0, 0.0), o + vec2(6.0, 0.0)], s);
+        painter.line_segment([o - vec2(0.0, 6.0), o + vec2(0.0, 6.0)], s);
+    }
+
     /// Draws the footprint: by egui's painter in the normal mode, else by the blend pass over `page` (its rectangle
     /// on screen and its picture); holes, pad numbers and the origin by the painter on top
     fn draw_footprint(
@@ -3825,6 +3952,9 @@ impl FootprintReview {
     }
 }
 
+/// How long a hidden footprint's or model's outline stays after it last moved, seconds (VIEW-32)
+const GHOST_S: f64 = 0.8;
+
 /// Mixes `mesh` (screen points, full colour) into the page (its rectangle on screen and its picture) by `mode` and
 /// `opacity` in the blend pass, under `id` (one pass per id and frame)
 fn blend_pass(
@@ -3885,6 +4015,7 @@ struct KeyMap {
     measure_across: Option<egui::Key>,
     xray: Option<egui::Key>,
     reload: Option<egui::Key>,
+    model_on_footprint: Option<egui::Key>,
 }
 
 impl From<&Keys> for KeyMap {
@@ -3921,6 +4052,7 @@ impl From<&Keys> for KeyMap {
             measure_across: key(&k.measure_across),
             xray: key(&k.xray),
             reload: key(&k.reload),
+            model_on_footprint: key(&k.model_on_footprint),
         }
     }
 }
@@ -3965,6 +4097,7 @@ struct Pressed {
     measure_across: bool,
     xray: bool,
     reload: bool,
+    model_on_footprint: bool,
 }
 
 impl Pressed {
@@ -4010,6 +4143,7 @@ impl Pressed {
                 measure_across: pressed(km.measure_across),
                 xray: pressed(km.xray),
                 reload: pressed(km.reload),
+                model_on_footprint: pressed(km.model_on_footprint),
             };
             (p, i.modifiers.shift)
         })

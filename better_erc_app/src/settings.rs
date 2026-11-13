@@ -161,6 +161,9 @@ pub struct Keys {
     /// Reads everything shown again from disk (the symbols, footprints, board, models and datasheet), the view kept
     /// (VIEW-31)
     pub reload: String,
+    /// The model onto the footprint as KiCad places it: at the footprint's origin with its turn, seen from its side
+    /// (the bottom for a footprint in bottom view), the model entry's offset and rotation applied (VIEW-32)
+    pub model_on_footprint: String,
 }
 
 impl Default for Keys {
@@ -196,6 +199,7 @@ impl Default for Keys {
             measure_across: "Y".into(),
             xray: "U".into(),
             reload: "F5".into(),
+            model_on_footprint: "Home".into(),
         }
     }
 }

@@ -82,7 +82,10 @@ fn model_opacity_apart_from_the_footprints() {
     assert_ne!(st.rt.settings.model_opacity, st.rt.settings.opacity);
     h.state_mut().opacity = Some(0.1);
     h.run();
-    assert_eq!(h.state().model_views_opacity(), h.state().rt.settings.model_opacity);
+    assert_eq!(
+        h.state().model_views_opacity(),
+        h.state().rt.settings.model_opacity
+    );
     h.state_mut().model_views.opacity = Some(0.9);
     h.run();
     assert_eq!(h.state().opacity, Some(0.1));

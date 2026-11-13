@@ -1627,6 +1627,7 @@ impl FootprintReview {
                         ),
                         ("X-ray: the 3D model see-through", &mut k.xray),
                         ("Reload everything from disk", &mut k.reload),
+                        ("The model onto the footprint", &mut k.model_on_footprint),
                         ("Hide or show the footprint", &mut k.hide_footprint),
                         ("Hide or show the model", &mut k.hide_model),
                         ("Held: the page alone", &mut k.peek),

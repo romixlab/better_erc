@@ -436,7 +436,10 @@ fn a_lost_focus_leaves_no_turn_held() {
     let turn0 = h.state().model_views.solid.turn;
     push(&mut h, &fake, [0, 0, 0, 0, 0, full]);
     push(&mut h, &fake, [0, 0, 0, 0, 0, full]);
-    assert!(h.state().model_views.solid.turn.angle_between(turn0) > 1e-3, "the puck turns it");
+    assert!(
+        h.state().model_views.solid.turn.angle_between(turn0) > 1e-3,
+        "the puck turns it"
+    );
     // Focus goes elsewhere with the puck still twisted; the hand lets go there, so no rest event comes
     h.event(egui::Event::WindowFocused(false));
     h.step();
@@ -476,7 +479,10 @@ fn a_lost_focus_leaves_no_turn_held() {
     h.drop_at(a + vec2(40.0, 0.0));
     h.step();
     let after = h.state().model_views.solid.clone();
-    assert!(after.turn.angle_between(before.turn) < 1e-6, "the drag turned the model");
+    assert!(
+        after.turn.angle_between(before.turn) < 1e-6,
+        "the drag turned the model"
+    );
     let (p, q) = (before.place.unwrap(), after.place.unwrap());
     let zoom = h.state().zoom;
     assert!(
@@ -489,7 +495,10 @@ fn a_lost_focus_leaves_no_turn_held() {
     push(&mut h, &fake, [0, 0, 0, 0, 0, 0]);
     let rest = h.state().model_views.solid.turn;
     push(&mut h, &fake, [0, 0, 0, 0, 0, full]);
-    assert!(h.state().model_views.solid.turn.angle_between(rest) > 1e-3, "the puck turns it again");
+    assert!(
+        h.state().model_views.solid.turn.angle_between(rest) > 1e-3,
+        "the puck turns it again"
+    );
     drop(h);
     drop(fake);
     std::fs::remove_dir_all(&dir).unwrap();

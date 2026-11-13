@@ -58,6 +58,8 @@ pub enum Action {
     XRay,
     /// Everything shown read again from disk (VIEW-31)
     Reload,
+    /// The model onto the footprint as KiCad places it (VIEW-32)
+    ModelOnFootprint,
     /// Accept's question answered: write, or nothing
     Write,
     Cancel,
@@ -204,6 +206,7 @@ impl FootprintReview {
                 let place = self.moving_mut();
                 place.origin[0] += d.x / zoom;
                 place.origin[1] += d.y / zoom;
+                self.rt.moved = true;
             }
         }
         let factor = (nav.zoom * dt).exp();
@@ -641,6 +644,7 @@ impl FootprintReview {
             Action::HideModel => self.toggle_hidden(true),
             Action::XRay => self.toggle_xray(),
             Action::Reload => self.reload_all(),
+            Action::ModelOnFootprint => self.model_on_footprint(ctx.input(|i| i.time)),
             Action::Write => self.confirmed(ctx, true),
             Action::Cancel => self.confirmed(ctx, false),
         }

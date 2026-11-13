@@ -255,7 +255,7 @@ impl FootprintReview {
 
     /// The picture's corners on the page, in footprint mm around the origin before the placement (x right, y down):
     /// top left, top right, bottom right, bottom left
-    fn solid_corners(&self) -> [[f64; 2]; 4] {
+    pub(super) fn solid_corners(&self) -> [[f64; 2]; 4] {
         let r = self.rt.solid.radius as f64;
         [[-r, -r], [r, -r], [r, r], [-r, r]]
     }
@@ -783,6 +783,176 @@ mod tests {
         // Back to the silhouettes: the 3D model is gone, the views as they were
         key(&mut h, egui::Key::L);
         assert_eq!(h.state().model_views.look, ModelLook::Silhouettes);
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    /// How many pixels of `a` and `b` differ, and the box they lie in
+    fn changed(a: &image::RgbaImage, b: &image::RgbaImage) -> usize {
+        a.pixels()
+            .zip(b.pixels())
+            .filter(|(p, q)| (0..3).map(|i| p.0[i].abs_diff(q.0[i]) as i32).sum::<i32>() > 30)
+            .count()
+    }
+
+    /// Round 8 (VIEW-32): Home puts the model on the footprint as KiCad places it, at the footprint's origin with its
+    /// turn, seen from the bottom for a footprint in bottom view, in Silhouettes and in 3D; a hidden model and a
+    /// hidden footprint still move, their thin outline drawn while they move and a moment after
+    #[test]
+    fn the_model_on_the_footprint_and_moved_hidden() {
+        let dir = std::env::temp_dir().join(format!("berc-fp-home-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let fp = two_pin(&dir);
+        let pdf = datasheet(&dir);
+        let mut h = gpu_harness("fp home");
+        h.run();
+        let ctx = h.ctx.clone();
+        h.state_mut().open_path(&ctx, &fp);
+        h.state_mut().open_datasheet(&ctx, &pdf);
+        h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+        h.run();
+        let st = h.state_mut();
+        st.scale = Some(Scale {
+            mm_per_point: 0.04,
+            page: st.page,
+            mm: 2.0,
+            note: None,
+        });
+        st.zoom = 1.0;
+        st.pan = [0.0, 0.0];
+        st.rt.fit_page = false;
+        st.place = Placement {
+            origin: [300.0, 400.0],
+            rotation: 90.0,
+            mirror: true,
+        };
+        st.model_views.opacity = Some(1.0);
+        h.run();
+        let on = Placement {
+            origin: [300.0, 400.0],
+            rotation: 90.0,
+            mirror: false,
+        };
+        // Silhouettes: the bottom view onto the footprint, shown and picked
+        key(&mut h, egui::Key::Home);
+        let st = h.state();
+        assert_eq!(
+            st.model_views.place[Side::Bottom.index()].as_ref(),
+            Some(&on)
+        );
+        assert!(st.model_views.shown[Side::Bottom.index()]);
+        assert_eq!(st.model_views.view, Side::Bottom);
+        h.run();
+        h.run();
+        let st = h.state();
+        assert!(st.projected(Side::Bottom).is_some(), "the model read");
+        // A model point lands where the footprint puts the same point: KiCad's footprint frame is y down
+        for p in [Vec3::new(2.0, 1.0, 0.0), Vec3::new(-1.27, -0.4, 0.3)] {
+            let by_model = st.placed(&on, Side::Bottom.project(p).0);
+            let by_fp = st.fp_to_page([p.x as f64, -p.y as f64]);
+            assert!(
+                (by_model[0] - by_fp[0]).abs() < 1e-3 && (by_model[1] - by_fp[1]).abs() < 1e-3,
+                "{p}: {by_model:?} {by_fp:?}"
+            );
+        }
+        // 3D, the model moved away and turned: Home puts it back, turned onto the bottom
+        key(&mut h, egui::Key::L);
+        let st = h.state_mut();
+        st.model_views.solid.place = Some(Placement {
+            origin: [500.0, 200.0],
+            rotation: 0.0,
+            mirror: true,
+        });
+        st.model_views.solid.turn = side_rotation(Side::Front);
+        key(&mut h, egui::Key::Home);
+        steps(&mut h, 10);
+        assert_eq!(h.state().model_views.solid.place.as_ref(), Some(&on));
+        assert_eq!(h.state().solid_side(), Some((Side::Bottom, 0)));
+        // The footprint on the top: the model from the top
+        h.state_mut().place.mirror = false;
+        key(&mut h, egui::Key::Home);
+        steps(&mut h, 10);
+        assert_eq!(h.state().solid_side(), Some((Side::Top, 0)));
+
+        // The model hidden, moving: a drag moves it, its outline drawn while it moves
+        key(&mut h, egui::Key::Q);
+        assert!(h.state().moving_solid());
+        key(&mut h, egui::Key::J);
+        assert!(!h.state().model_shown());
+        steps(&mut h, 20);
+        let hidden = h.render().unwrap();
+        let a = screen(&h, [300.0, 400.0]) + vec2(5.0, 5.0);
+        h.hover_at(a);
+        h.step();
+        h.drag_at(a);
+        h.step();
+        for i in 1..=4 {
+            h.hover_at(a + vec2(10.0 * i as f32, 0.0));
+            h.step();
+        }
+        assert_eq!(
+            h.state().rt.ghost.map(|g| g.0),
+            Some(true),
+            "the hidden model's outline"
+        );
+        let moving = h.render().unwrap();
+        assert!(
+            changed(&hidden, &moving) > 100,
+            "its outline drawn: {}",
+            changed(&hidden, &moving)
+        );
+        h.drop_at(a + vec2(40.0, 0.0));
+        h.step();
+        let origin = h.state().model_views.solid.place.as_ref().unwrap().origin;
+        assert!(
+            (origin[0] - 340.0).abs() < 0.5 && (origin[1] - 400.0).abs() < 0.5,
+            "{origin:?}"
+        );
+        assert!(!h.state().model_shown(), "still hidden");
+        // A moment after, the outline is gone: the page and the footprint alone again
+        h.hover_at(h.state().rt.canvas.center());
+        steps(&mut h, 20);
+        assert_eq!(h.state().rt.ghost, None);
+        let after = h.render().unwrap();
+        if let Some(d) = std::env::var_os("BERC_GHOST_PNG") {
+            let d = PathBuf::from(d);
+            hidden.save(d.join("hidden.png")).unwrap();
+            moving.save(d.join("moving.png")).unwrap();
+            after.save(d.join("after.png")).unwrap();
+        }
+        assert!(
+            changed(&hidden, &after) < 20,
+            "no outline left: {}",
+            changed(&hidden, &after)
+        );
+        // J: shown again where it was put
+        key(&mut h, egui::Key::J);
+        assert!(h.state().model_shown());
+        assert_eq!(
+            h.state().model_views.solid.place.as_ref().unwrap().origin,
+            origin
+        );
+
+        // The footprint hidden, moving: an arrow nudges it, its outline drawn
+        key(&mut h, egui::Key::Q);
+        key(&mut h, egui::Key::H);
+        steps(&mut h, 20);
+        let fp_hidden = h.render().unwrap();
+        let before = h.state().place.origin;
+        h.key_press(egui::Key::ArrowRight);
+        h.step();
+        assert_eq!(h.state().place.origin[0], before[0] + 1.0);
+        assert_eq!(
+            h.state().rt.ghost.map(|g| g.0),
+            Some(false),
+            "the hidden footprint's outline"
+        );
+        let nudged = h.render().unwrap();
+        assert!(
+            changed(&fp_hidden, &nudged) > 50,
+            "its outline drawn: {}",
+            changed(&fp_hidden, &nudged)
+        );
         let _ = std::fs::remove_dir_all(&dir);
     }
 

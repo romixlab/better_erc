@@ -26,6 +26,10 @@ use ve_theme::props::*;
 use ve_view3d::Mesh;
 use ve_view3d::glam::Vec3;
 
+/// What the model onto the footprint does, for its button's tooltip
+pub(super) const ON_FOOTPRINT_HINT: &str = "the model onto the footprint as KiCad places it: at the footprint's origin \
+     with its turn, seen from its side (the bottom for the bottom view), the model entry's offset and rotation applied";
+
 /// Which way the model is looked at
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Side {
@@ -912,6 +916,16 @@ impl FootprintReview {
             if ui.button("Centre in view").on_hover_text(centre).clicked() {
                 self.centre_model();
             }
+            if ui
+                .button(format!(
+                    "On the footprint · {}",
+                    key_name(k.model_on_footprint)
+                ))
+                .on_hover_text(ON_FOOTPRINT_HINT)
+                .clicked()
+            {
+                self.model_on_footprint(ui.input(|i| i.time));
+            }
         });
         hint(
             ui,
@@ -921,6 +935,98 @@ impl FootprintReview {
                 key_name(k.measure_footprint)
             ),
         );
+    }
+
+    /// The model onto the footprint as KiCad places it: at the footprint's origin with its turn, seen from the side
+    /// it is on (the top; the bottom for a footprint in bottom view, as KiCad puts a back-side footprint's model
+    /// under the board). The model's parts already carry the model entry's offset, scale and rotation, so the
+    /// footprint's placement is all that is left. Silhouettes: that side's view, shown and picked; 3D: the shaded
+    /// model, turned onto that side
+    pub(super) fn model_on_footprint(&mut self, now: f64) {
+        let side = if self.place.mirror {
+            Side::Bottom
+        } else {
+            Side::Top
+        };
+        let on = Placement {
+            origin: self.place.origin,
+            rotation: self.place.rotation,
+            mirror: false,
+        };
+        self.model_views.view = side;
+        match self.model_views.look {
+            ModelLook::Silhouettes => {
+                self.model_views.place[side.index()] = Some(on);
+                self.model_views.shown[side.index()] = true;
+            }
+            ModelLook::Solid => {
+                self.model_views.solid.place = Some(on);
+                self.turn_solid_to(side, now);
+            }
+        }
+        self.moved_hidden(true, now);
+        self.usage("model on footprint");
+    }
+
+    /// The hidden model's outline, thin: the silhouettes shown, or the 3D model's (its side's silhouette while it sits
+    /// on one, else the square its picture fills); where its name goes
+    pub(super) fn draw_model_ghost(
+        &self,
+        painter: &egui::Painter,
+        canvas: Rect,
+        line: Color32,
+    ) -> Option<Pos2> {
+        let s = Stroke::new(1.0, line);
+        let mut at: Option<Pos2> = None;
+        let mut contour = |pts: Vec<Pos2>| {
+            if let Some(top) = pts
+                .iter()
+                .copied()
+                .min_by(|p, q| (p.x + p.y).total_cmp(&(q.x + q.y)))
+            {
+                at = Some(match at {
+                    Some(a) if a.x + a.y <= top.x + top.y => a,
+                    _ => top,
+                });
+            }
+            painter.add(Shape::closed_line(pts, s));
+        };
+        match self.model_views.look {
+            ModelLook::Silhouettes => {
+                for (_, place, v) in self.shown_views() {
+                    for c in &v.outline {
+                        contour(
+                            c.iter()
+                                .map(|p| self.to_screen(canvas, self.placed(place, *p)))
+                                .collect(),
+                        );
+                    }
+                }
+            }
+            ModelLook::Solid => {
+                let place = self.model_views.solid.place.clone()?;
+                let screen = |p: [f64; 2]| self.to_screen(canvas, self.placed(&place, p));
+                match self
+                    .solid_side()
+                    .and_then(|(side, k)| Some((self.projected(side)?, k)))
+                {
+                    Some((v, k)) => {
+                        for c in &v.outline {
+                            contour(
+                                c.iter()
+                                    .map(|p| screen(super::solid::quartered(*p, k)))
+                                    .collect(),
+                            );
+                        }
+                    }
+                    None => contour(self.solid_corners().map(screen).to_vec()),
+                }
+                let o = self.to_screen(canvas, place.origin);
+                painter.line_segment([o - vec2(6.0, 0.0), o + vec2(6.0, 0.0)], s);
+                painter.line_segment([o - vec2(0.0, 6.0), o + vec2(0.0, 6.0)], s);
+            }
+        }
+        at.map(|a| a + vec2(-8.0, 0.0))
     }
 
     /// The model picked into the middle of the canvas: the view picked, or the 3D model
