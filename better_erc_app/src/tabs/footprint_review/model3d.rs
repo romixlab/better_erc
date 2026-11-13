@@ -51,7 +51,7 @@ pub fn register(ctx: &egui::Context, rs: &egui_wgpu::RenderState) {
     ctx.data_mut(|d| d.insert_temp(render_state_id(), rs.clone()));
 }
 
-fn render_state(ctx: &egui::Context) -> Option<egui_wgpu::RenderState> {
+pub(super) fn render_state(ctx: &egui::Context) -> Option<egui_wgpu::RenderState> {
     ctx.data(|d| d.get_temp::<egui_wgpu::RenderState>(render_state_id()))
 }
 
@@ -87,6 +87,9 @@ pub struct ModelScene {
     pub shown: usize,
     /// The model's six orthographic views for the page, by [`modelviews::Side::index`] (VIEW-24)
     pub views: Vec<modelviews::ProjectedView>,
+    /// The model's parts and edges alone (no board, no pads), for the shaded model over the page (VIEW-27);
+    /// `None` once handed to its renderer
+    pub parts: Option<Scene>,
 }
 
 /// Colour of a STEP colour, 0 to 1 per channel
@@ -425,6 +428,14 @@ pub fn build(key: String, vm: ViewModels, pads: &[(String, Vec<Vec<[f64; 2]>>)])
 
     let part_meshes: Vec<&Mesh> = parts.iter().map(|(m, _)| m).collect();
     let views = modelviews::project_all(&part_meshes, &polylines);
+    let parts_scene = Scene {
+        meshes: part_meshes.iter().map(|m| (*m).clone()).collect(),
+        lines: vec![LineSet {
+            polylines: polylines.clone(),
+            color: EDGE_COLOUR,
+            width: 1.2,
+        }],
+    };
     let mut meshes = vec![board, pad_mesh];
     let mut infos = vec![board_info, pad_info];
     for (m, i) in parts {
@@ -447,6 +458,7 @@ pub fn build(key: String, vm: ViewModels, pads: &[(String, Vec<Vec<[f64; 2]>>)])
         notes,
         shown,
         views,
+        parts: Some(parts_scene),
     }
 }
 
@@ -689,7 +701,7 @@ pub fn measure(a: &Picked, b: &Picked) -> ModelMeasure {
 #[derive(Default)]
 pub(super) struct Model3d {
     /// The footprint the scene was made or is being made for
-    key: Option<String>,
+    pub(super) key: Option<String>,
     loading: Option<Receiver<ModelScene>>,
     pub(super) loaded: Option<ModelScene>,
     /// The front pads' copper of the footprint loaded (numbers and polygons), for naming a pad picked

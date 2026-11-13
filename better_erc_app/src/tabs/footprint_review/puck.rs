@@ -45,8 +45,12 @@ pub enum Action {
     SaveDxf,
     /// The canvas between the page and the 3D model
     View3d,
-    /// What moves over the page: the footprint, then each of the model's views
+    /// Silhouettes: the next model view picked, moving; 3D: the shaded model turned to the next side
     ModelView,
+    /// Silhouettes or 3D (VIEW-27)
+    ModelLook,
+    /// What moves: the footprint or the model (VIEW-27)
+    Moves,
     /// Accept's question answered: write, or nothing
     Write,
     Cancel,
@@ -156,6 +160,8 @@ impl FootprintReview {
             return;
         }
         let dt = ctx.input(|i| i.stable_dt).min(0.1);
+        // Tilt, roll and twist turn the shaded model while 3D is shown (VIEW-27)
+        self.solid_puck(&nav, dt);
         let d = nav.pan_screen() * dt;
         match self.puck {
             PuckMoves::Page => {
@@ -411,13 +417,47 @@ impl FootprintReview {
                 ),
                 Some(
                     slot(
-                        "Next model view",
+                        match self.model_views.look {
+                            modelviews::ModelLook::Silhouettes => "Next model view",
+                            modelviews::ModelLook::Solid => "Model to the next side",
+                        },
                         short_key(k.model_view),
                         icons::SQUARES_FOUR,
                         ModelView,
                     )
                     .disabled_if(
                         self.model_blocker().is_some(),
+                        self.model_blocker().unwrap_or_default(),
+                    ),
+                ),
+                Some(
+                    slot(
+                        match self.model_views.look {
+                            modelviews::ModelLook::Silhouettes => "Model in 3D",
+                            modelviews::ModelLook::Solid => "Model as silhouettes",
+                        },
+                        short_key(k.model_look),
+                        icons::CUBE_TRANSPARENT,
+                        ModelLook,
+                    )
+                    .disabled_if(
+                        self.model_blocker().is_some(),
+                        self.model_blocker().unwrap_or_default(),
+                    ),
+                ),
+                Some(
+                    slot(
+                        match self.model_views.moves {
+                            modelviews::Moves::Footprint => "Move the model",
+                            modelviews::Moves::Model => "Move the footprint",
+                        },
+                        short_key(k.moves),
+                        icons::ARROWS_OUT,
+                        Moves,
+                    )
+                    .disabled_if(
+                        self.model_views.moves == modelviews::Moves::Footprint
+                            && self.model_blocker().is_some(),
                         self.model_blocker().unwrap_or_default(),
                     ),
                 ),
@@ -518,9 +558,9 @@ impl FootprintReview {
                 let place = self.moving_mut();
                 place.mirror = !place.mirror;
             }
-            Action::Blink => match self.model_views.current {
-                Some(_) => self.model_views.blink = !self.model_views.blink,
-                None => self.blink = !self.blink,
+            Action::Blink => match self.model_views.moves {
+                modelviews::Moves::Model => self.model_views.blink = !self.model_views.blink,
+                modelviews::Moves::Footprint => self.blink = !self.blink,
             },
             Action::CuLayer => self.cycle_cu_layer(),
             Action::Invert => {
@@ -563,7 +603,9 @@ impl FootprintReview {
             }
             Action::SaveDxf => self.save_dxf(),
             Action::View3d => self.toggle_3d(),
-            Action::ModelView => self.cycle_model_view(),
+            Action::ModelView => self.cycle_model_view(ctx.input(|i| i.time)),
+            Action::ModelLook => self.toggle_look(),
+            Action::Moves => self.toggle_moves(),
             Action::Write => self.confirmed(ctx, true),
             Action::Cancel => self.confirmed(ctx, false),
         }
@@ -617,11 +659,13 @@ impl FootprintReview {
             });
     }
 
-    /// The calibrate step's window while it is open; its mapping, once used, is the one in use and saved
+    /// The calibrate step's window while it is open; its mapping, once used, is the one in use, unsaved until Save
+    /// to ~/.config or Save locally; closing the window with it unsaved asks (SPM-6)
     pub(super) fn calibration_window(&mut self, ctx: &egui::Context) {
         if self.rt.puck.settings.calibration_window(ctx) {
             self.usage("puck calibrated");
         }
+        self.rt.puck.settings.leave_guard(ctx);
     }
 }
 

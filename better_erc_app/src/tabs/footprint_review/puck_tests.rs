@@ -278,7 +278,7 @@ fn every_slot_names_its_action_and_key() {
                 .flat_map(|r| r.iter().flatten()),
         )
         .collect();
-    assert_eq!(slots.len(), 2 + 10 + 8 + 4);
+    assert_eq!(slots.len(), 2 + 10 + 10 + 4);
     for s in &slots {
         let (name, key) = s.label.split_once(" · ").expect(&s.label);
         assert!(!name.is_empty() && !key.is_empty(), "{}", s.label);
@@ -381,7 +381,7 @@ fn calibrate_from_the_tab_and_the_mapping_saved() {
     h.get_by_label("Cancel").click();
     h.step();
     assert!(!h.state().rt.puck.settings.calibrating());
-    // The mapping into the shared spacemouse.toml (a folder of the test's own), not the app's settings file
+    // The mapping into the shared spacemouse.toml (a folder of the test's own), not the app's settings file; Save to ~/.config writes the user's file (SPM-6)
     let user = dir.join("cfg/spacemouse.toml");
     h.state_mut().rt.puck.settings = ve_spacemouse::SettingsPanel::new(
         ve_spacemouse::Config::load_from(&dir, Some(user.clone())),
@@ -391,11 +391,11 @@ fn calibrate_from_the_tab_and_the_mapping_saved() {
     m.speed.pan = 3000.0;
     h.state_mut().rt.puck.settings.set_mapping(m.clone());
     h.step();
-    h.get_by_label("Save").scroll_to_me();
+    h.get_by_label("Save to ~/.config").scroll_to_me();
     for _ in 0..10 {
         h.step();
     }
-    h.get_by_label("Save").click();
+    h.get_by_label("Save to ~/.config").click();
     h.step();
     let again = ve_spacemouse::Config::load_from(&dir, Some(user.clone()));
     assert_eq!(again.mapping(), &m);

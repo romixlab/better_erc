@@ -11,6 +11,15 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- Footprint review: the shaded 3D model over the datasheet page at the drawing's scale (`VIEW-27`). A switch picks Silhouettes (the six views) or 3D (`L`), another what moves, the footprint or the model (`Q`); both sit in the mode bar and the Model views section, with pie slots. In 3D the SpaceMouse's tilt, roll and twist or Ctrl+drag turn the model, and letting go lands it on the nearest of the 24 sides, eased (the `model_snap` setting; Alt keeps the free angle); `K` turns it to the next side. It mixes into the page in every blend mode, and Measure footprint snaps to its outline's corners while it sits on a side.
+
+### Changed
+
+- Footprint review: `K` no longer cycles the footprint and then each view; it picks the next view (Silhouettes) or turns the 3D model to the next side, and `Q` switches between moving the footprint and the model (`VIEW-27`). The mode bar wraps when it is wider than the window.
+- Footprint review: the SpaceMouse panel saves with *Save to ~/.config* or *Save locally*, shows what is not saved and asks before the window closes with a changed mapping; the calibrate step asks for all six motions (ve_spacemouse SPM-6, `VIEW-27`).
+
 ## [0.4.52] - 2026-11-13
 
 ### Added

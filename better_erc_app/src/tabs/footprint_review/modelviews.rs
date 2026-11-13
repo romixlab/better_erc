@@ -349,6 +349,34 @@ pub fn project_all(meshes: &[&Mesh], edges: &[Vec<Vec3>]) -> Vec<ProjectedView> 
         .collect()
 }
 
+/// How the model is shown over the page
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub enum ModelLook {
+    /// The six flat views of VIEW-24, each shown on its own
+    #[default]
+    Silhouettes,
+    /// The shaded model, turned by the SpaceMouse or Ctrl+drag, snapping to a side (VIEW-27)
+    Solid,
+}
+
+impl ModelLook {
+    pub fn name(self) -> &'static str {
+        match self {
+            ModelLook::Silhouettes => "Silhouettes",
+            ModelLook::Solid => "3D",
+        }
+    }
+}
+
+/// What the mouse in Move, the arrow keys, turn and mirror move
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub enum Moves {
+    #[default]
+    Footprint,
+    /// The model: the view picked in Silhouettes, the shaded model in 3D
+    Model,
+}
+
 /// The model views' state in the tab, saved with it
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
@@ -357,8 +385,14 @@ pub struct ModelViews {
     pub place: [Option<Placement>; 6],
     /// Which views are drawn, by [`Side::index`]
     pub shown: [bool; 6],
-    /// The view the placement controls, the keys and the mouse move; none: the footprint
-    pub current: Option<Side>,
+    /// The view picked: what Model moves in Silhouettes, what the model view key cycles
+    pub view: Side,
+    /// Silhouettes or the shaded model
+    pub look: ModelLook,
+    /// The footprint or the model
+    pub moves: Moves,
+    /// The shaded model's placement and turn (VIEW-27)
+    pub solid: super::solid::Solid,
     /// How opaque the views' fill is; none: the settings' opacity
     pub opacity: Option<f32>,
     /// How the views blend with the page; none: the settings' blend mode
@@ -373,10 +407,25 @@ impl ModelViews {
 }
 
 impl FootprintReview {
-    /// The placement the mouse, the arrow keys, turn and mirror move: the current model view's, else the
-    /// footprint's
+    /// The silhouette view that moves, when the model moves in Silhouettes
+    pub(super) fn moving_view(&self) -> Option<Side> {
+        (self.model_views.moves == Moves::Model && self.model_views.look == ModelLook::Silhouettes)
+            .then_some(self.model_views.view)
+    }
+
+    /// The shaded model moves
+    pub(super) fn moving_solid(&self) -> bool {
+        self.model_views.moves == Moves::Model && self.model_views.look == ModelLook::Solid
+    }
+
+    /// The placement the mouse, the arrow keys, turn and mirror move: the view picked's or the shaded model's
+    /// when the model moves, else the footprint's
     pub(super) fn moving_mut(&mut self) -> &mut Placement {
-        match self.model_views.current {
+        if self.moving_solid() {
+            let first = self.place.clone();
+            return self.model_views.solid.place.get_or_insert(first);
+        }
+        match self.moving_view() {
             Some(side) => {
                 let first = self.first_place(side);
                 self.model_views.place[side.index()].get_or_insert(first)
@@ -400,7 +449,10 @@ impl FootprintReview {
 
     /// What the placement controls move, in words
     pub(super) fn moving_name(&self) -> String {
-        match self.model_views.current {
+        if self.moving_solid() {
+            return "the 3D model".into();
+        }
+        match self.moving_view() {
             Some(s) => format!("the model's {} view", s.name().to_lowercase()),
             None => "the footprint".into(),
         }
@@ -418,25 +470,80 @@ impl FootprintReview {
         }
     }
 
-    /// The model view key: what moves goes from the footprint to each view in turn and back, the view picked shown
-    pub(super) fn cycle_model_view(&mut self) {
-        let next = match self.model_views.current {
-            None => Some(Side::Top),
-            Some(s) => Side::ALL.get(s.index() + 1).copied(),
-        };
-        self.set_moving(next);
+    /// The model view key. Silhouettes: the model moves, the next view picked (the first press takes the view
+    /// picked), shown. 3D: the shaded model turns to the next side, eased
+    pub(super) fn cycle_model_view(&mut self, now: f64) {
+        let next = Side::ALL[(self.model_views.view.index() + 1) % Side::ALL.len()];
+        match self.model_views.look {
+            ModelLook::Silhouettes => {
+                if self.model_views.moves == Moves::Model {
+                    self.model_views.view = next;
+                }
+                self.set_moving(Some(self.model_views.view));
+            }
+            ModelLook::Solid => {
+                let side = match self.solid_side() {
+                    Some((s, _)) => Side::ALL[(s.index() + 1) % Side::ALL.len()],
+                    None => self.model_views.view,
+                };
+                self.model_views.view = side;
+                self.turn_solid_to(side, now);
+                self.usage(&format!("model 3d side {}", side.name().to_lowercase()));
+            }
+        }
     }
 
-    /// What moves: a model view (shown with it) or the footprint
+    /// What moves: a model view (picked and shown, Silhouettes) or the footprint; in 3D any side means the shaded
+    /// model
     pub(super) fn set_moving(&mut self, side: Option<Side>) {
-        self.model_views.current = side;
-        if let Some(s) = side {
-            self.show_model_view(s);
+        match side {
+            Some(s) => {
+                self.model_views.moves = Moves::Model;
+                self.model_views.view = s;
+                if self.model_views.look == ModelLook::Silhouettes {
+                    self.show_model_view(s);
+                }
+            }
+            None => self.model_views.moves = Moves::Footprint,
         }
         self.usage(&format!(
             "model views moves {}",
-            side.map_or("footprint", |s| s.name()).to_lowercase()
+            match (self.model_views.look, side) {
+                (_, None) => "footprint",
+                (ModelLook::Solid, Some(_)) => "3d model",
+                (ModelLook::Silhouettes, Some(s)) => s.name(),
+            }
+            .to_lowercase()
         ));
+    }
+
+    /// The moves key: the footprint or the model
+    pub(super) fn toggle_moves(&mut self) {
+        match self.model_views.moves {
+            Moves::Footprint => self.set_moving(Some(self.model_views.view)),
+            Moves::Model => self.set_moving(None),
+        }
+    }
+
+    /// Silhouettes or 3D; the 3D model's first placement is the footprint's, seen from the top, so it lies on its
+    /// pads
+    pub(super) fn set_look(&mut self, look: ModelLook) {
+        self.model_views.look = look;
+        if look == ModelLook::Solid && self.model_views.solid.place.is_none() {
+            self.model_views.solid.place = Some(self.place.clone());
+        }
+        if look == ModelLook::Silhouettes && self.model_views.moves == Moves::Model {
+            self.show_model_view(self.model_views.view);
+        }
+        self.usage(&format!("model look {}", look.name().to_lowercase()));
+    }
+
+    /// The look key
+    pub(super) fn toggle_look(&mut self) {
+        self.set_look(match self.model_views.look {
+            ModelLook::Silhouettes => ModelLook::Solid,
+            ModelLook::Solid => ModelLook::Silhouettes,
+        });
     }
 
     /// The model view `side` as worked out from the model read, when it has something in it
@@ -445,21 +552,31 @@ impl FootprintReview {
         v.extent.is_some().then_some(v)
     }
 
-    /// The model views shown, each with its placement and what it draws
+    /// The model views shown, each with its placement and what it draws; none in 3D
     fn shown_views(&self) -> impl Iterator<Item = (Side, &Placement, &ProjectedView)> {
-        Side::ALL.into_iter().filter_map(|s| {
-            let i = s.index();
-            if !self.model_views.shown[i] {
-                return None;
-            }
-            Some((s, self.model_views.place[i].as_ref()?, self.projected(s)?))
-        })
+        let silhouettes = self.model_views.look == ModelLook::Silhouettes;
+        Side::ALL
+            .into_iter()
+            .filter(move |_| silhouettes)
+            .filter_map(|s| {
+                let i = s.index();
+                if !self.model_views.shown[i] {
+                    return None;
+                }
+                Some((s, self.model_views.place[i].as_ref()?, self.projected(s)?))
+            })
     }
 
     /// Each frame on the page: the model read while a view is wanted, a view shown for the first time moved into
     /// the middle of the canvas once it can be
     pub(super) fn model_views_frame(&mut self, ctx: &egui::Context, canvas: Rect) {
-        if !self.model_views.any_shown() && self.model_views.current.is_none() {
+        let wanted = match self.model_views.look {
+            ModelLook::Silhouettes => {
+                self.model_views.any_shown() || self.model_views.moves == Moves::Model
+            }
+            ModelLook::Solid => true,
+        };
+        if !wanted {
             return;
         }
         if self.model_blocker().is_some() {
@@ -493,12 +610,15 @@ impl FootprintReview {
 
     /// Where a measuring ruler snaps on the model views shown: their outlines' corners and their edges' ends, page
     /// points
+    /// and the shaded model's silhouette corners while it sits on a side
     pub(super) fn model_view_snaps(&self) -> impl Iterator<Item = ([f32; 2], SnapKind)> + '_ {
-        self.shown_views().flat_map(move |(_, place, v)| {
-            v.snaps
-                .iter()
-                .map(move |p| (self.placed(place, *p), SnapKind::ModelCorner))
-        })
+        self.shown_views()
+            .flat_map(move |(_, place, v)| {
+                v.snaps
+                    .iter()
+                    .map(move |p| (self.placed(place, *p), SnapKind::ModelCorner))
+            })
+            .chain(self.solid_snaps().map(|p| (p, SnapKind::ModelCorner)))
     }
 
     pub(super) fn model_views_opacity(&self) -> f32 {
@@ -543,7 +663,7 @@ impl FootprintReview {
                 }
                 mesh.add_triangle(base, base + 1, base + 2);
             }
-            let current = self.model_views.current == Some(side);
+            let current = self.moving_view() == Some(side);
             let stroke = Stroke::new(
                 if current { 2.5 } else { 1.5 },
                 line.gamma_multiply(a.max(0.6)),
@@ -616,22 +736,91 @@ impl FootprintReview {
 
     /// The side panel's section on the model's views over the page
     pub(super) fn model_views_section(&mut self, ui: &mut Ui) {
-        let shown: Vec<&str> = Side::ALL
-            .iter()
-            .filter(|s| self.model_views.shown[s.index()])
-            .map(|s| s.name())
-            .collect();
-        let summary = if shown.is_empty() {
-            "none shown".to_string()
-        } else {
-            format!("{} · moves {}", shown.join(", "), self.moving_name())
+        let summary = match self.model_views.look {
+            ModelLook::Silhouettes => {
+                let shown: Vec<&str> = Side::ALL
+                    .iter()
+                    .filter(|s| self.model_views.shown[s.index()])
+                    .map(|s| s.name())
+                    .collect();
+                if shown.is_empty() {
+                    "Silhouettes, none shown".to_string()
+                } else {
+                    format!("Silhouettes {}", shown.join(", "))
+                }
+            }
+            ModelLook::Solid => format!("3D, {}", self.solid_side_name()),
         };
+        let summary = format!("{summary} · moves {}", self.moving_name());
         SubPane::new("Model views")
             .id_salt("fp model views")
             .summary(summary)
-            .tooltip("The 3D model's top, bottom, front, back, left and right views over the page, at its scale")
+            .tooltip(
+                "The 3D model over the page at its scale: its six flat views (Silhouettes) or the shaded model \
+                 turned by the SpaceMouse (3D)",
+            )
             .default_open(false)
             .show(ui, |ui| self.model_views_controls(ui));
+    }
+
+    /// The two switches, Silhouettes or 3D and what moves, each with its key; the mode bar shows the same
+    pub(super) fn model_switches(&mut self, ui: &mut Ui, fill: bool) {
+        let k = self.keys();
+        let mut look = self.model_views.look;
+        let mut seg = Segmented::new(&mut look).id_salt("model look");
+        if fill {
+            seg = seg.fill_width();
+        }
+        seg.item(
+            ModelLook::Silhouettes,
+            "Silhouettes",
+            format!(
+                "The model's six flat views, each placed on its own; {} switches",
+                key_name(k.model_look)
+            ),
+        )
+        .item(
+            ModelLook::Solid,
+            "3D",
+            format!(
+                "The shaded model at the page's scale, turned by the SpaceMouse or Ctrl+drag, landing on the nearest \
+                 side when let go; {} switches",
+                key_name(k.model_look)
+            ),
+        )
+        .show(ui);
+        if look != self.model_views.look {
+            self.set_look(look);
+        }
+        let mut moves = self.model_views.moves;
+        let mut seg = Segmented::new(&mut moves).id_salt("model moves");
+        if fill {
+            seg = seg.fill_width();
+        }
+        seg.item(
+            Moves::Footprint,
+            "Footprint",
+            format!(
+                "The mouse in Move, the arrow keys, turn and mirror move the footprint; {} switches",
+                key_name(k.moves)
+            ),
+        )
+        .item(
+            Moves::Model,
+            "Model",
+            format!(
+                "They move {}; {} switches",
+                match self.model_views.look {
+                    ModelLook::Silhouettes => "the view picked",
+                    ModelLook::Solid => "the 3D model",
+                },
+                key_name(k.moves)
+            ),
+        )
+        .show(ui);
+        if moves != self.model_views.moves {
+            self.toggle_moves();
+        }
     }
 
     fn model_views_controls(&mut self, ui: &mut Ui) {
@@ -651,62 +840,19 @@ impl FootprintReview {
                 format!("No 3D model shown: {}", l.notes.join("; ")),
             );
         }
-        Group::new("Shown")
-            .tooltip("Which of the model's views are drawn over the page")
-            .show(ui, |ui| {
-                ui.horizontal_wrapped(|ui| {
-                    for side in Side::ALL {
-                        let mut on = self.model_views.shown[side.index()];
-                        if ui
-                            .add(ToggleChip::new(&mut on, side.name()).tooltip(format!(
-                                "The model seen from the {}",
-                                side.name().to_lowercase()
-                            )))
-                            .changed()
-                        {
-                            if on {
-                                self.show_model_view(side);
-                                self.usage(&format!(
-                                    "model views show {}",
-                                    side.name().to_lowercase()
-                                ));
-                            } else {
-                                self.model_views.shown[side.index()] = false;
-                                if self.model_views.current == Some(side) {
-                                    self.model_views.current = None;
-                                }
-                            }
-                        }
-                    }
-                });
-            });
-        Group::new("Moves")
+        Group::new("Shown as")
             .tooltip(format!(
-                "What the mouse in Move, the arrow keys, turn and mirror move, and the Placement section shows; {} \
-                 cycles",
-                key_name(k.model_view)
+                "Silhouettes or 3D ({}), and what moves: the footprint or the model ({})",
+                key_name(k.model_look),
+                key_name(k.moves)
             ))
             .show(ui, |ui| {
-                let mut pick = None;
-                ui.horizontal_wrapped(|ui| {
-                    let current = self.model_views.current;
-                    if ui.selectable_label(current.is_none(), "Footprint").clicked() {
-                        pick = Some(None);
-                    }
-                    for side in Side::ALL {
-                        if ui
-                            .selectable_label(current == Some(side), side.name())
-                            .on_hover_text(format!("The {} view, shown", side.name().to_lowercase()))
-                            .clicked()
-                        {
-                            pick = Some(Some(side));
-                        }
-                    }
-                });
-                if let Some(p) = pick {
-                    self.set_moving(p);
-                }
+                ui.vertical(|ui| self.model_switches(ui, true));
             });
+        match self.model_views.look {
+            ModelLook::Silhouettes => self.silhouette_controls(ui),
+            ModelLook::Solid => self.solid_controls(ui),
+        }
         let gpu = blend::available(ui.ctx());
         let mut mode = self.model_views_blend();
         Group::new("Blend")
@@ -751,22 +897,89 @@ impl FootprintReview {
                     key_name(k.blink)
                 )),
             );
-            if let Some(side) = self.model_views.current
-                && ui
-                    .button("Centre in view")
-                    .on_hover_text("The view that moves into the middle of the canvas")
-                    .clicked()
-            {
-                self.rt.center_model_view = Some(side);
+            let centre = match self.model_views.look {
+                ModelLook::Silhouettes => "The view picked into the middle of the canvas",
+                ModelLook::Solid => "The 3D model into the middle of the canvas",
+            };
+            if ui.button("Centre in view").on_hover_text(centre).clicked() {
+                self.centre_model();
             }
         });
         hint(
             ui,
             format!(
-                "Each view at the page's scale; its corners and edge ends are where Measure footprint ({}) snaps",
+                "At the page's scale; a view's corners and edge ends, and the 3D model's outline corners while it \
+                 sits on a side, are where Measure footprint ({}) snaps",
                 key_name(k.measure_footprint)
             ),
         );
+    }
+
+    /// The model picked into the middle of the canvas: the view picked, or the 3D model
+    pub(super) fn centre_model(&mut self) {
+        match self.model_views.look {
+            ModelLook::Silhouettes => {
+                self.show_model_view(self.model_views.view);
+                self.rt.center_model_view = Some(self.model_views.view);
+            }
+            ModelLook::Solid => self.rt.solid.centre = true,
+        }
+    }
+
+    /// Silhouettes: which views are drawn, and the view picked (what Model moves, what the model view key cycles)
+    fn silhouette_controls(&mut self, ui: &mut Ui) {
+        let k = self.keys();
+        Group::new("Shown")
+            .tooltip("Which of the model's views are drawn over the page")
+            .show(ui, |ui| {
+                ui.horizontal_wrapped(|ui| {
+                    for side in Side::ALL {
+                        let mut on = self.model_views.shown[side.index()];
+                        if ui
+                            .add(ToggleChip::new(&mut on, side.name()).tooltip(format!(
+                                "The model seen from the {}",
+                                side.name().to_lowercase()
+                            )))
+                            .changed()
+                        {
+                            if on {
+                                self.show_model_view(side);
+                                self.usage(&format!(
+                                    "model views show {}",
+                                    side.name().to_lowercase()
+                                ));
+                            } else {
+                                self.model_views.shown[side.index()] = false;
+                            }
+                        }
+                    }
+                });
+            });
+        Group::new("View picked")
+            .tooltip(format!(
+                "The view Model moves, shown with it; {} picks the next",
+                key_name(k.model_view)
+            ))
+            .show(ui, |ui| {
+                let mut pick = None;
+                ui.horizontal_wrapped(|ui| {
+                    for side in Side::ALL {
+                        if ui
+                            .selectable_label(self.model_views.view == side, side.name())
+                            .on_hover_text(format!(
+                                "The {} view moves, shown",
+                                side.name().to_lowercase()
+                            ))
+                            .clicked()
+                        {
+                            pick = Some(side);
+                        }
+                    }
+                });
+                if let Some(p) = pick {
+                    self.set_moving(Some(p));
+                }
+            });
     }
 }
 
@@ -917,8 +1130,8 @@ mod tests {
         (a[0] - b[0]).abs() < 0.01 && (a[1] - b[1]).abs() < 0.01
     }
 
-    /// The model view key shows the top view on the footprint and moves it, then each view in turn, then the
-    /// footprint again; a drag and the turn key move only what moves; Measure footprint snaps to a view's corner
+    /// The model view key shows the top view on the footprint and moves it, then each view in turn, wrapping; the
+    /// moves key the footprint again; a drag and the turn key move only what moves; Measure footprint snaps to a view's corner
     #[test]
     fn model_views_over_the_page() {
         let dir = std::env::temp_dir().join(format!("berc-fp-modelviews-{}", std::process::id()));
@@ -949,7 +1162,7 @@ mod tests {
         // Top: on the footprint, read and projected; the body 4 x 2 mm
         key(&mut h, egui::Key::K);
         let st = h.state();
-        assert_eq!(st.model_views.current, Some(Side::Top));
+        assert_eq!(st.moving_view(), Some(Side::Top));
         assert!(st.model_views.shown[Side::Top.index()]);
         assert_eq!(st.model_views.place[0].as_ref(), Some(&st.place));
         let top = st
@@ -981,7 +1194,7 @@ mod tests {
         // Bottom: shown beside, moved into the middle of the view; a drag and the turn key move it alone
         key(&mut h, egui::Key::K);
         let st = h.state();
-        assert_eq!(st.model_views.current, Some(Side::Bottom));
+        assert_eq!(st.moving_view(), Some(Side::Bottom));
         assert!(
             st.model_views.shown[Side::Top.index()] && st.model_views.shown[Side::Bottom.index()]
         );
@@ -1032,11 +1245,17 @@ mod tests {
             "{lo:?} {hi:?}"
         );
 
-        // Back, left, right, then the footprint again: a drag moves it
-        for _ in 0..4 {
+        // Back, left, right; the model view key then wraps to the top view; the moves key (Q) the footprint
+        // again: a drag moves it
+        for _ in 0..3 {
             key(&mut h, egui::Key::K);
         }
-        assert_eq!(h.state().model_views.current, None);
+        assert_eq!(h.state().moving_view(), Some(Side::Right));
+        key(&mut h, egui::Key::K);
+        assert_eq!(h.state().moving_view(), Some(Side::Top));
+        key(&mut h, egui::Key::Q);
+        assert_eq!(h.state().moving_view(), None);
+        assert_eq!(h.state().model_views.moves, Moves::Footprint);
         assert_eq!(
             h.state().model_views.shown.iter().filter(|s| **s).count(),
             6
@@ -1061,7 +1280,9 @@ mod tests {
 
     /// A real footprint and datasheet drawn on the GPU with the model's views placed over the package drawing:
     /// `BERC_MODEL_VIEWS` holds `FOOTPRINT;PDF;PAGE;MM_PER_POINT;ZOOM;X,Y` (the page point at the canvas' top left)
-    /// and then `fp:X,Y,DEG` and `SIDE:X,Y,DEG[,m]` for the footprint and each view (page points, `m`: mirrored);
+    /// and then `fp:X,Y,DEG` and `SIDE:X,Y,DEG[,m]` for the footprint and each view (page points, `m`: mirrored),
+    /// `3d:X,Y,DEG[,m]` for the shaded model (VIEW-27), `turn:SIDE` for the side it shows and `blend:MODE,OPACITY`
+    /// (multiply at 0.45 without it);
     /// `BERC_MODEL_VIEWS_PNG` names the picture to write. Skips without them.
     #[test]
     fn a_real_drawing_with_the_model_views() {
@@ -1100,6 +1321,7 @@ mod tests {
                 FootprintReview::with(settings, Arc::new(|_: &str| {})),
             );
         blend::register(&h.ctx, &rs, 1, None);
+        super::super::model3d::register(&h.ctx, &rs);
         h.run();
         let ctx = h.ctx.clone();
         h.state_mut().open_path(&ctx, Path::new(parts[0]));
@@ -1121,6 +1343,23 @@ mod tests {
         st.rt.fit_page = false;
         for p in &parts[6..] {
             let (what, v) = p.split_once(':').unwrap();
+            // `blend:MODE,OPACITY` (normal, multiply, screen, difference)
+            if what.trim() == "blend" {
+                let (mode, opacity) = v.split_once(',').unwrap();
+                st.model_views.blend = BlendMode::ALL
+                    .into_iter()
+                    .find(|m| m.name().eq_ignore_ascii_case(mode.trim()));
+                st.model_views.opacity = Some(num(opacity));
+                continue;
+            }
+            if what.trim() == "turn" {
+                let side = Side::ALL
+                    .into_iter()
+                    .find(|s| s.name().eq_ignore_ascii_case(v.trim()))
+                    .unwrap();
+                st.model_views.solid.turn = super::super::solid::side_rotation(side);
+                continue;
+            }
             let v: Vec<&str> = v.split(',').collect();
             let place = Placement {
                 origin: [num(v[0]), num(v[1])],
@@ -1132,6 +1371,12 @@ mod tests {
                 st.rt.center_footprint = false;
                 continue;
             }
+            // The shaded model (VIEW-27): `3d:x,y,rotation[,m]` places it, `turn:side` turns it onto a side
+            if what.trim() == "3d" {
+                st.model_views.look = ModelLook::Solid;
+                st.model_views.solid.place = Some(place);
+                continue;
+            }
             let side = Side::ALL
                 .into_iter()
                 .find(|s| s.name().eq_ignore_ascii_case(what.trim()))
@@ -1139,8 +1384,10 @@ mod tests {
             st.model_views.shown[side.index()] = true;
             st.model_views.place[side.index()] = Some(place);
         }
-        st.model_views.blend = Some(BlendMode::Multiply);
-        st.model_views.opacity = Some(0.45);
+        if st.model_views.blend.is_none() {
+            st.model_views.blend = Some(BlendMode::Multiply);
+            st.model_views.opacity = Some(0.45);
+        }
         h.run();
         h.run();
         let st = h.state();
@@ -1160,8 +1407,9 @@ mod tests {
             }
         }
         h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
-        h.run();
-        h.run();
+        for _ in 0..4 {
+            h.step();
+        }
         let image = h.render().unwrap();
         image.save(png).unwrap();
     }

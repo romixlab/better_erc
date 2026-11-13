@@ -45,6 +45,7 @@ pub mod modelviews;
 mod mpndocs;
 mod notes;
 mod panel;
+mod solid;
 use better_erc::fp::outline;
 #[cfg(test)]
 mod panel_tests;
@@ -484,6 +485,8 @@ struct Runtime {
     center_footprint: bool,
     /// This model view goes to the middle of the view once the model is read (VIEW-24)
     center_model_view: Option<modelviews::Side>,
+    /// The shaded model over the page (VIEW-27)
+    solid: solid::SolidRt,
     /// The page is fitted into the view on the next frame
     fit_page: bool,
     query: String,
@@ -618,6 +621,7 @@ impl Default for Runtime {
             auto_page: false,
             center_footprint: false,
             center_model_view: None,
+            solid: solid::SolidRt::default(),
             fit_page: false,
             query: String::new(),
             queries: Vec::new(),
@@ -697,7 +701,7 @@ impl TabUi for FootprintReview {
             .as_deref()
             .and_then(|f| crate::settings::move_spacemouse(f, &mut spacemouse));
         self.rt.puck.settings =
-            ve_spacemouse::SettingsPanel::new(spacemouse, ve_spacemouse::CalibrateSteps::TwoD);
+            ve_spacemouse::SettingsPanel::new(spacemouse, ve_spacemouse::CalibrateSteps::Full);
         self.rt.settings_note = match (note, moved) {
             (Some(a), Some(b)) => Some(format!("{a}; {b}")),
             (a, b) => a.or(b),
@@ -1970,7 +1974,8 @@ impl FootprintReview {
              {} type the ruler's length, Enter sets the scale · {} the dimension's number sets it · \
              {} · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
              arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans · \
-             {} what moves: the footprint, then each 3D model view ({})\n\
+             {} the model as silhouettes or 3D ({}) · {} moves the footprint or the model ({}) · {} {} · \
+             3D: SpaceMouse tilt, roll and twist or Ctrl+drag turn it, letting go lands on a side (Alt: free)\n\
              {} accept · {} next to review · {} write a review note · SpaceMouse: the puck {} ({} switches), push away zooms out · \
              tap the left button for the ruler, the right one to switch · hold one for its ring, both for Accept",
             self.tool.name(),
@@ -2002,8 +2007,15 @@ impl FootprintReview {
             n(k.blink),
             n(k.cu_layer),
             n(k.invert),
-            n(k.model_view),
+            n(k.model_look),
+            self.model_views.look.name(),
+            n(k.moves),
             self.moving_name(),
+            n(k.model_view),
+            match self.model_views.look {
+                modelviews::ModelLook::Silhouettes => "the next model view",
+                modelviews::ModelLook::Solid => "the 3D model to the next side",
+            },
             n(k.accept),
             n(k.next),
             n(k.note),
@@ -2086,7 +2098,7 @@ impl FootprintReview {
         let mut pick = None;
         let mut toggle_3d = false;
         let mut cycle_view = false;
-        ui.horizontal(|ui| {
+        ui.horizontal_wrapped(|ui| {
             ui.label("Mode");
             for (t, key, why) in [
                 (Tool::Move, k.move_tool, None),
@@ -2140,21 +2152,25 @@ impl FootprintReview {
             if r.clicked() {
                 toggle_3d = true;
             }
-            // What Move moves: the footprint or a model view (VIEW-24)
-            let views = self.model_views.current.is_some();
+            // How the model is shown over the page and what Move moves (VIEW-24, VIEW-27), always in sight
+            ui.separator();
+            self.model_switches(ui, false);
+            let next = match self.model_views.look {
+                modelviews::ModelLook::Silhouettes => "Next view",
+                modelviews::ModelLook::Solid => "Next side",
+            };
             let r = ui.add_enabled(
-                why.is_none() || views,
-                Button::selectable(
-                    views,
-                    format!("Moves {} · {}", self.moving_name(), key_name(k.model_view)),
-                ),
+                why.is_none(),
+                Button::new(format!("{next} · {}", key_name(k.model_view))),
             );
             let r = match why {
                 Some(why) => r.on_disabled_hover_text(format!("no model views: {why}")),
-                None => r.on_hover_text(
-                    "what the mouse in Move, the arrow keys, turn and mirror move: the footprint, then each of the \
-                     3D model's views over the page",
-                ),
+                None => r.on_hover_text(match self.model_views.look {
+                    modelviews::ModelLook::Silhouettes => {
+                        "the next of the model's views picked, moving, shown"
+                    }
+                    modelviews::ModelLook::Solid => "the 3D model turned to the next side",
+                }),
             };
             if r.clicked() {
                 cycle_view = true;
@@ -2172,7 +2188,7 @@ impl FootprintReview {
             self.toggle_3d();
         }
         if cycle_view {
-            self.cycle_model_view();
+            self.cycle_model_view(ui.input(|i| i.time));
         }
         if self.tool == Tool::Select || !self.selection().is_empty() {
             self.dxf_bar(ui);
@@ -2666,6 +2682,7 @@ impl FootprintReview {
             self.rt.center_footprint = false;
         }
         self.model_views_frame(&ctx, canvas);
+        self.solid_frame(&ctx, canvas);
         // Zoom at the pointer, pan with the secondary or middle button
         if resp.hovered() {
             let (scroll, zoom_delta, pointer) = ui.input(|i| {
@@ -2780,6 +2797,13 @@ impl FootprintReview {
             self.move_ruler_end(i, p, free, lines);
         } else if resp.dragged_by(egui::PointerButton::Primary) {
             match self.tool {
+                // Ctrl+drag turns the shaded model while it is shown (VIEW-27)
+                Tool::Move
+                    if self.model_views.look == modelviews::ModelLook::Solid
+                        && ui.input(|i| i.modifiers.command) =>
+                {
+                    self.solid_drag(resp.drag_delta());
+                }
                 Tool::Move => {
                     let d = resp.drag_delta() / self.zoom;
                     let place = self.moving_mut();
@@ -2918,6 +2942,8 @@ impl FootprintReview {
                 (p.view_3d, Action::View3d),
                 (p.measure_model, Action::Mode(Tool::MeasureModel)),
                 (p.model_view, Action::ModelView),
+                (p.model_look, Action::ModelLook),
+                (p.moves, Action::Moves),
             ] {
                 if on {
                     self.act(&ctx, action, hover_page, shift, lines);
@@ -2934,6 +2960,7 @@ impl FootprintReview {
         let page = rect.zip(self.page_image(&ctx, invert));
         if self.blinked(&ctx, self.model_views.blink) {
             self.draw_model_views(&painter, canvas, page.clone(), ui.id());
+            self.draw_solid(&painter, canvas, page.clone(), ui.id());
         }
         if self.blinked(&ctx, self.blink) && !self.rt.items.is_empty() {
             self.draw_footprint(&painter, canvas, page, ui.id());
@@ -3328,6 +3355,7 @@ fn blend_pass(
             opacity,
             mode,
             viewport: canvas,
+            layer: None,
         },
     ));
 }
@@ -3357,6 +3385,8 @@ struct KeyMap {
     view_3d: Option<egui::Key>,
     measure_model: Option<egui::Key>,
     model_view: Option<egui::Key>,
+    model_look: Option<egui::Key>,
+    moves: Option<egui::Key>,
 }
 
 impl From<&Keys> for KeyMap {
@@ -3385,6 +3415,8 @@ impl From<&Keys> for KeyMap {
             view_3d: key(&k.view_3d),
             measure_model: key(&k.measure_model),
             model_view: key(&k.model_view),
+            model_look: key(&k.model_look),
+            moves: key(&k.moves),
         }
     }
 }
@@ -3420,6 +3452,8 @@ struct Pressed {
     view_3d: bool,
     measure_model: bool,
     model_view: bool,
+    model_look: bool,
+    moves: bool,
 }
 
 impl Pressed {
@@ -3457,6 +3491,8 @@ impl Pressed {
                 view_3d: pressed(km.view_3d),
                 measure_model: pressed(km.measure_model),
                 model_view: pressed(km.model_view),
+                model_look: pressed(km.model_look),
+                moves: pressed(km.moves),
             };
             (p, i.modifiers.shift)
         })

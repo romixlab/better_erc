@@ -67,6 +67,9 @@ pub struct FootprintReviewSettings {
     /// How near (screen pixels) a ruler end snaps to the drawing's lines: a line's end, two lines crossing, else
     /// onto the line; 0: never. Alt held lets it go free of them.
     pub line_snap_px: f32,
+    /// The shaded 3D model over the page: a turn by the SpaceMouse or Ctrl+drag finishes onto the nearest side
+    /// when it lets go, over this time (VIEW-27); Alt held keeps the free angle
+    pub model_snap: ve_view3d::SnapSettings,
     /// Whether the page is shown inverted (white-ish on black) at first
     pub invert: bool,
     /// How closely the DXF follows the drawing's curves, mm: a curve within it of a circle is an arc, any other is
@@ -130,9 +133,13 @@ pub struct Keys {
     /// The Measure model mode: on the 3D model a click picks a face or an edge, a second click another; what lies
     /// between them goes into the review note; again: back to Move
     pub measure_model: String,
-    /// Cycles what the placement keys and the mouse move over the page: the footprint, then each of the 3D model's
-    /// views (top, bottom, front, back, left, right), showing the view picked (VIEW-24)
+    /// Silhouettes: picks the next of the 3D model's views (top, bottom, front, back, left, right) and moves it,
+    /// shown (VIEW-24); 3D: turns the shaded model to the next side (VIEW-27)
     pub model_view: String,
+    /// How the model is shown over the page: Silhouettes (its six flat views) or 3D (the shaded model) (VIEW-27)
+    pub model_look: String,
+    /// What the mouse in Move, the arrow keys, turn and mirror move: the footprint or the model (VIEW-27)
+    pub moves: String,
 }
 
 impl Default for Keys {
@@ -160,6 +167,8 @@ impl Default for Keys {
             view_3d: "3".into(),
             measure_model: "O".into(),
             model_view: "K".into(),
+            model_look: "L".into(),
+            moves: "Q".into(),
         }
     }
 }
@@ -315,6 +324,7 @@ impl Default for FootprintReviewSettings {
             ruler_zoom: 8.0,
             ruler_snap: true,
             line_snap_px: 10.0,
+            model_snap: ve_view3d::SnapSettings::default(),
             invert: false,
             dxf_tolerance_mm: 0.005,
             keys: Keys::default(),

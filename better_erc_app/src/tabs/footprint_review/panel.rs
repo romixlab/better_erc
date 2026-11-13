@@ -1170,7 +1170,7 @@ impl FootprintReview {
     fn placement_section(&mut self, ui: &mut Ui) {
         let k = self.mm_per_point();
         let place = self.moving_mut().clone();
-        let fp = self.model_views.current.is_none();
+        let fp = self.model_views.moves == modelviews::Moves::Footprint;
         let summary = format!(
             "{}{:.2}, {:.2} mm · {:.0}° · {}",
             if fp {
@@ -1200,15 +1200,15 @@ impl FootprintReview {
     fn placement_controls(&mut self, ui: &mut Ui) {
         let keys = self.keys();
         let k = self.mm_per_point();
-        let fp = self.model_views.current.is_none();
+        let fp = self.model_views.moves == modelviews::Moves::Footprint;
         let what = self.moving_name();
         let mut place = self.moving_mut().clone();
         if !fp {
             hint(
                 ui,
                 format!(
-                    "Placing {what}; {} cycles to the footprint (Model views)",
-                    key_name(keys.model_view)
+                    "Placing {what}; {} moves the footprint again (Model views)",
+                    key_name(keys.moves)
                 ),
             );
         }
@@ -1274,9 +1274,9 @@ impl FootprintReview {
         });
         *self.moving_mut() = place;
         if centre {
-            match self.model_views.current {
-                Some(side) => self.rt.center_model_view = Some(side),
-                None => self.rt.center_footprint = true,
+            match self.model_views.moves {
+                modelviews::Moves::Model => self.centre_model(),
+                modelviews::Moves::Footprint => self.rt.center_footprint = true,
             }
         }
     }

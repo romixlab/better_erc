@@ -771,12 +771,28 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   (hidden ones cut on a depth raster). The fill through the blend pass in every mode (normal, multiply, screen,
   difference; overlapping triangles mix in once), its own opacity and blink; colours are settings. Each view placed
   on its own (the top view first on the footprint, the others in the middle of the canvas), moved, turned and
-  mirrored as the footprint is: the model view key (`K`, a setting, the mode bar's Moves button, a pie slot) cycles
-  what moves, the footprint then each view, and Move, the arrows, `T`, `X`, `B`, the puck and the Placement section
-  act on it. Measure footprint (`G`) snaps to the views' outline corners and edge ends. A Model views section in the
+  mirrored as the footprint is: since `VIEW-27` the moves switch (`Q`) picks the footprint or the model, the model
+  view key (`K`, a setting, the mode bar, a pie slot) picks the next view, moving and shown, and Move, the arrows,
+  `T`, `X`, `B`, the puck and the Placement section act on what moves. Measure footprint (`G`) snaps to the views' outline corners and edge ends. A Model views section in the
   side panel; usage signals `app fp-review model views moves|show|blend ...`. Tests on boxes for every side and
   hidden edges, the keys and snaps on the synthetic STEP, a real datasheet and model on the GPU through
   `BERC_MODEL_VIEWS` · `better_erc_app/src/tabs/footprint_review/modelviews.rs`
+- ✅ `VIEW-27` Footprint review, the shaded 3D model over the PDF: one switch for how the model is shown, Silhouettes
+  (`VIEW-24`'s six views, as they were) or 3D (`L`, a setting; a segmented button in the Model views section and the
+  mode bar, a pie slot), and one for what moves, Footprint or Model (`Q`; in Silhouettes the view picked, in 3D the
+  shaded model), both always in sight with their keys in the help line. In 3D, ve_view3d renders the model's parts
+  (no board, no pads) shaded with an orthographic camera at the page's mm scale into a picture around the model's
+  origin, which the blend pass mixes into the page in every blend mode (`blend.rs` samples it as a layer), with the
+  model views' opacity and blink; placed like a view (first on the footprint, seen from the top), moved, turned (`T`)
+  and mirrored (`X`). The SpaceMouse's tilt, roll and twist and Ctrl+drag in Move turn it; when they let go it
+  finishes onto the nearest of the 24 axis-aligned orientations, eased over the settings' snap time (`model_snap`;
+  Alt held or snap off: the free angle). `K` turns it to the next side; Turn to buttons in the section. Sitting on
+  a side, Measure footprint (`G`) snaps to that side's silhouette corners turned with it. The calibrate step now
+  asks for all six motions (the puck turns the model). Usage signals `app fp-review model look|3d side|3d snap ...`.
+  Tests: the sides and quarter turns found again, the picture agreeing with the silhouettes for every side and
+  quarter, a screen turn in a turned or mirrored picture; on the GPU, L and Q, the body's edge at the page mm, the
+  corner snap, the puck's turn landing, K, Ctrl+drag with and without Alt; a real drawing through
+  `BERC_MODEL_VIEWS` (`3d:` and `turn:`) · `better_erc_app/src/tabs/footprint_review/solid.rs`
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
   one lookup per MPN per session, on a worker thread) and its review state from the review lines (reviewed, reviewed

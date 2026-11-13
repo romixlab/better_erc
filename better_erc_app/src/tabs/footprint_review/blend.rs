@@ -4,6 +4,9 @@
 //! exactly goes dark). egui's own painter only mixes by alpha, so the other modes need the page's pixel, which only
 //! a shader with the page as a texture has.
 //!
+//! A pass can also mix a picture in instead of flat colours ([`BlendPass::layer`]): the shaded 3D model rendered by
+//! ve_view3d (VIEW-27), sampled at each vertex's uv, its colour premultiplied by coverage as the renderer leaves it.
+//!
 //! [`register`] puts the pipeline into the renderer's callback resources once, for the renderer's target format;
 //! [`available`] tells the UI whether that happened (no wgpu renderer: the blend modes other than normal are off,
 //! and say why).
@@ -36,17 +39,20 @@ struct Params {
     mode: u32,
     // 1: the target is an sRGB format and wants linear colour
     linear_out: u32,
-    _pad: u32,
+    // 1: the colour comes from the layer picture at the vertex's uv
+    textured: u32,
 };
 
 @group(0) @binding(0) var<uniform> p: Params;
 @group(0) @binding(1) var page_tex: texture_2d<f32>;
 @group(0) @binding(2) var page_smp: sampler;
+@group(0) @binding(3) var layer_tex: texture_2d<f32>;
 
 struct VsOut {
     @builtin(position) clip: vec4<f32>,
     @location(0) pos: vec2<f32>,
     @location(1) color: vec4<f32>,
+    @location(2) uv: vec2<f32>,
 };
 
 fn unpack(c: u32) -> vec4<f32> {
@@ -60,6 +66,7 @@ fn vs_main(@location(0) pos: vec2<f32>, @location(1) uv: vec2<f32>, @location(2)
     o.clip = vec4<f32>(n.x * 2.0 - 1.0, 1.0 - n.y * 2.0, 0.0, 1.0);
     o.pos = pos;
     o.color = unpack(color);
+    o.uv = uv;
     return o;
 }
 
@@ -76,11 +83,15 @@ fn fs_main(v: VsOut) -> @location(0) vec4<f32> {
     if (all(uv >= vec2<f32>(0.0)) && all(uv <= vec2<f32>(1.0))) {
         base = textureSampleLevel(page_tex, page_smp, uv, 0.0).rgb;
     }
-    // Vertex colours are premultiplied by the edge's coverage
-    let a = v.color.a;
+    // Vertex colours are premultiplied by the edge's coverage; so is the layer picture's colour
+    var col = v.color;
+    if (p.textured == 1u) {
+        col = textureSampleLevel(layer_tex, page_smp, v.uv, 0.0) * v.color.a;
+    }
+    let a = col.a;
     var c = vec3<f32>(0.0);
     if (a > 0.0) {
-        c = v.color.rgb / a;
+        c = col.rgb / a;
     }
     var mixed = c;
     if (p.mode == 1u) {
@@ -107,7 +118,7 @@ struct Params {
     opacity: f32,
     mode: u32,
     linear_out: u32,
-    _pad: u32,
+    textured: u32,
 }
 
 /// The pipeline, kept in the renderer's callback resources, and what each review tab draws with
@@ -115,6 +126,8 @@ struct Resources {
     pipeline: wgpu::RenderPipeline,
     layout: wgpu::BindGroupLayout,
     sampler: wgpu::Sampler,
+    /// Bound as the layer when a pass has none
+    no_layer: wgpu::TextureView,
     linear_out: bool,
     views: std::collections::HashMap<egui::Id, View>,
 }
@@ -123,7 +136,9 @@ struct Resources {
 struct View {
     params: wgpu::Buffer,
     /// The page picture uploaded last, by its generation
-    page: Option<(u64, wgpu::BindGroup)>,
+    page: Option<(u64, wgpu::TextureView)>,
+    /// The page and this frame's layer, bound
+    bind: Option<wgpu::BindGroup>,
     /// This frame's triangles
     vertices: Option<(wgpu::Buffer, wgpu::Buffer, u32)>,
 }
@@ -180,6 +195,16 @@ pub fn register(
                 ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
                 count: None,
             },
+            wgpu::BindGroupLayoutEntry {
+                binding: 3,
+                visibility: wgpu::ShaderStages::FRAGMENT,
+                ty: wgpu::BindingType::Texture {
+                    sample_type: wgpu::TextureSampleType::Float { filterable: true },
+                    view_dimension: wgpu::TextureViewDimension::D2,
+                    multisampled: false,
+                },
+                count: None,
+            },
         ],
     });
     let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -233,10 +258,27 @@ pub fn register(
         min_filter: wgpu::FilterMode::Linear,
         ..Default::default()
     });
+    let no_layer = device
+        .create_texture(&wgpu::TextureDescriptor {
+            label: Some("footprint blend no layer"),
+            size: wgpu::Extent3d {
+                width: 1,
+                height: 1,
+                depth_or_array_layers: 1,
+            },
+            mip_level_count: 1,
+            sample_count: 1,
+            dimension: wgpu::TextureDimension::D2,
+            format: wgpu::TextureFormat::Rgba8Unorm,
+            usage: wgpu::TextureUsages::TEXTURE_BINDING,
+            view_formats: &[],
+        })
+        .create_view(&wgpu::TextureViewDescriptor::default());
     rs.renderer.write().callback_resources.insert(Resources {
         pipeline,
         layout,
         sampler,
+        no_layer,
         linear_out: rs.target_format.is_srgb(),
         views: Default::default(),
     });
@@ -264,6 +306,9 @@ pub struct BlendPass {
     pub mode: BlendMode,
     /// The callback's rectangle (the canvas), in points
     pub viewport: Rect,
+    /// A picture mixed in instead of the vertices' colours, sampled at their uv (the vertices' alpha still
+    /// scales it): the 3D model's rendering
+    pub layer: Option<wgpu::TextureView>,
 }
 
 impl egui_wgpu::CallbackTrait for BlendPass {
@@ -287,6 +332,7 @@ impl egui_wgpu::CallbackTrait for BlendPass {
                 mapped_at_creation: false,
             }),
             page: None,
+            bind: None,
             vertices: None,
         });
         if r.page
@@ -316,7 +362,15 @@ impl egui_wgpu::CallbackTrait for BlendPass {
                 bytemuck::cast_slice(&self.page.image.pixels),
             );
             let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
-            let bind = device.create_bind_group(&wgpu::BindGroupDescriptor {
+            r.page = Some((self.page.generation, view));
+            r.bind = None;
+        }
+        // Bound again when the page changed, and every frame with a layer (its picture changes size)
+        if (r.bind.is_none() || self.layer.is_some())
+            && let Some((_, page)) = &r.page
+        {
+            let layer = self.layer.as_ref().unwrap_or(&res.no_layer);
+            r.bind = Some(device.create_bind_group(&wgpu::BindGroupDescriptor {
                 label: Some("footprint blend"),
                 layout: &res.layout,
                 entries: &[
@@ -326,15 +380,18 @@ impl egui_wgpu::CallbackTrait for BlendPass {
                     },
                     wgpu::BindGroupEntry {
                         binding: 1,
-                        resource: wgpu::BindingResource::TextureView(&view),
+                        resource: wgpu::BindingResource::TextureView(page),
                     },
                     wgpu::BindGroupEntry {
                         binding: 2,
                         resource: wgpu::BindingResource::Sampler(&res.sampler),
                     },
+                    wgpu::BindGroupEntry {
+                        binding: 3,
+                        resource: wgpu::BindingResource::TextureView(layer),
+                    },
                 ],
-            });
-            r.page = Some((self.page.generation, bind));
+            }));
         }
         let rect = |r: Rect| [r.min.x, r.min.y, r.width(), r.height()];
         let around = self.around.to_normalized_gamma_f32();
@@ -345,7 +402,7 @@ impl egui_wgpu::CallbackTrait for BlendPass {
             opacity: self.opacity,
             mode: code(self.mode),
             linear_out: linear_out as u32,
-            _pad: 0,
+            textured: self.layer.is_some() as u32,
         };
         queue.write_buffer(&r.params, 0, bytemuck::bytes_of(&params));
         r.vertices = (!self.mesh.indices.is_empty()).then(|| {
@@ -376,7 +433,7 @@ impl egui_wgpu::CallbackTrait for BlendPass {
         let Some(r) = res.views.get(&self.id) else {
             return;
         };
-        let (Some((_, bind)), Some((vb, ib, n))) = (&r.page, &r.vertices) else {
+        let (Some(bind), Some((vb, ib, n))) = (&r.bind, &r.vertices) else {
             return;
         };
         pass.set_pipeline(&res.pipeline);
