@@ -347,15 +347,22 @@ pub struct FpEntry {
     pub board_differs: bool,
     /// Why the library footprint was not found, when it was not
     pub footprint_note: Option<String>,
+    /// What the symbol itself names as its `Footprint`: the library symbol's field, else the schematic's copy of
+    /// it. Unlike [`library_footprint`](Self::library_footprint), never the placed footprint's own `Lib:Name`
+    pub symbol_footprint: Option<String>,
+    /// The board places a footprint other than the one [`symbol_footprint`](Self::symbol_footprint) names: an
+    /// override, deliberate or not, shown rather than silently resolved
+    pub footprint_overridden: bool,
 }
 
 impl FpEntry {
-    /// Ok, with the schematic's copy agreeing with the library and the board copy with its library footprint, or
-    /// a board-only footprint
+    /// Ok, with the schematic's copy agreeing with the library, the board copy with its library footprint, and no
+    /// overridden footprint, or a board-only footprint
     pub fn is_ok(&self) -> bool {
         matches!(self.status, FpStatus::Ok | FpStatus::BoardOnly)
             && !self.copy_differs
             && !self.board_differs
+            && !self.footprint_overridden
     }
 }
 
@@ -434,6 +441,13 @@ impl Opened {
     }
 }
 
+/// `id` is a `Lib:Name`, not a bare name (a footprint placed without a library nickname, legitimate in KiCad):
+/// [`library_footprint`] and [`FpEntry::footprint_overridden`] only make sense of one
+pub(super) fn is_lib_name(id: &str) -> bool {
+    id.split_once(':')
+        .is_some_and(|(l, n)| !l.is_empty() && !n.is_empty())
+}
+
 /// The `Lib:Name` a board footprint is compared with in the footprint libraries: its own when it names a library,
 /// else its symbol's `Footprint` field
 fn library_footprint(board_lib_id: &str, symbol_footprint: Option<&str>) -> Option<String> {
@@ -441,10 +455,7 @@ fn library_footprint(board_lib_id: &str, symbol_footprint: Option<&str>) -> Opti
         .into_iter()
         .flatten()
         .map(str::trim)
-        .find(|id| {
-            id.split_once(':')
-                .is_some_and(|(l, n)| !l.is_empty() && !n.is_empty())
-        })
+        .find(|id| is_lib_name(id))
         .map(String::from)
 }
 
@@ -480,6 +491,8 @@ pub fn check(path: &Path, search: &LibrarySearch) -> Result<FpCheck, FpCheckErro
             library_footprint_hash: None,
             board_differs: false,
             footprint_note: None,
+            symbol_footprint: None,
+            footprint_overridden: false,
         };
         let Some(part) = f.part.map(|p| board.part(p)) else {
             if f.attrs.board_only {
@@ -515,6 +528,15 @@ pub fn check(path: &Path, search: &LibrarySearch) -> Result<FpCheck, FpCheckErro
             .or_else(|| copy.and_then(|s| field_of(&s.fields, "Footprint")))
             .or_else(|| lib_fields.as_deref().and_then(|f| field_of(f, "Footprint")));
         compare_with_library(&mut e, footprint_field, fps);
+        e.symbol_footprint = lib_fields
+            .as_deref()
+            .and_then(|f| field_of(f, "Footprint"))
+            .or_else(|| copy.and_then(|s| field_of(&s.fields, "Footprint")))
+            .map(String::from);
+        e.footprint_overridden = is_lib_name(e.footprint.trim())
+            && e.symbol_footprint
+                .as_deref()
+                .is_some_and(|sym| sym.trim() != e.footprint.trim());
         e.status = if footprint_field.is_none_or(|v| v.trim().is_empty()) {
             FpStatus::Refused
         } else {
@@ -697,6 +719,18 @@ impl FpCheck {
                     e.library_footprint_hash.as_deref().unwrap_or(""),
                 );
             }
+            if e.footprint_overridden {
+                let note = AnsiColor::Cyan.on_default();
+                let _ = write!(
+                    out,
+                    "\n{:13} {:width$} {note}the board places {}, symbol {symbol} sets {}: an override, shown \
+                     rather than resolved silently{note:#}",
+                    "",
+                    "",
+                    e.footprint,
+                    e.symbol_footprint.as_deref().unwrap_or(""),
+                );
+            }
             out.push('\n');
         }
         // Why libraries were not found, once each: their symbols' hashes came from the schematic's copies, and their
@@ -751,6 +785,17 @@ impl FpCheck {
                 "; {differs} board copies differ from their library footprint"
             );
         }
+        let overridden = self
+            .footprints
+            .iter()
+            .filter(|e| e.footprint_overridden)
+            .count();
+        if overridden > 0 {
+            let _ = write!(
+                out,
+                "; {overridden} board copies place an overridden footprint"
+            );
+        }
         out.push('\n');
         out
     }
@@ -772,7 +817,7 @@ fn once_each<'a>(lines: impl Iterator<Item = &'a str>) -> Vec<(&'a str, usize)> 
 // ---------------------------------------------------------------------------------------------------------------
 // berc fp accept
 
-/// One file an accept writes the review hash into
+/// One file an accept writes a property into
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Written {
     pub file: PathBuf,
@@ -780,6 +825,8 @@ pub struct Written {
     pub source: HashSource,
     /// The symbol's name in the file: `Name` in a library, `Lib:Name` in a schematic
     pub symbol: String,
+    /// The property set: [`FIELD`] for the review hash, `Footprint` for [`Accepted::footprint`]
+    pub property: String,
     /// The field's value before, `None` when the symbol did not have it
     pub old: Option<String>,
     /// The file changes: the field was missing or held another value
@@ -798,6 +845,9 @@ pub struct Accepted {
     pub files: Vec<Written>,
     /// Why the library symbol was not written, when it was not
     pub library_note: Option<String>,
+    /// The symbol's `Footprint` set to the placed footprint too, when [`accept`]'s `footprint` asked for it: every
+    /// file that holds the symbol
+    pub footprint: Vec<Written>,
 }
 
 /// What [`accept`] did, or would do with `dry_run`
@@ -858,6 +908,8 @@ pub enum AcceptError {
         symbol: String,
         why: String,
     },
+    /// `footprint` was given for more than one library symbol: which one it names is ambiguous
+    FootprintAmbiguous(Vec<String>),
     Read(PathBuf, std::io::Error),
     Edit(PathBuf, erc_kicad::symlib::EditError),
     Write(PathBuf, std::io::Error),
@@ -926,6 +978,12 @@ impl fmt::Display for AcceptError {
                 f,
                 "symbol {symbol} is neither in a library found ({why}) nor in a schematic sheet's lib_symbols"
             ),
+            AcceptError::FootprintAmbiguous(symbols) => write!(
+                f,
+                "footprint names a Footprint for several library symbols ({}): give one symbol to accept at a \
+                 time",
+                symbols.join(", ")
+            ),
             AcceptError::Read(p, e) => write!(f, "can't read {}: {e}", p.display()),
             AcceptError::Edit(p, e) => write!(f, "{}: {e}", p.display()),
             AcceptError::Write(p, e) => write!(f, "can't write {}: {e}", p.display()),
@@ -938,12 +996,16 @@ impl std::error::Error for AcceptError {}
 /// Writes review hashes into the library symbols of the KiCad project at `path` (a directory, its `.kicad_pro`,
 /// `.kicad_sch` or `.kicad_pcb`) and into the schematic sheets' copies of them, so `berc fp check` finds them ok:
 /// the [`FIELD`] property set or inserted by [`erc_kicad::symlib::set_property`], every other byte of each file
-/// kept. The library is found through `libs` as [`check`] finds it. Every edit is made before any file is written,
+/// kept. The library is found through `libs` as [`check`] finds it. `footprint`, when given, also sets the
+/// symbol's `Footprint` property to it (the board's placed footprint, offered where [`FpEntry::footprint_overridden`]
+/// or [`TodoEntry::overridden`](crate::fp::TodoEntry::overridden) said it differs): an error when `what` names more
+/// than one library symbol, since one value can't hold for several. Every edit is made before any file is written,
 /// so a failing one writes nothing; `dry_run` writes nothing at all.
 pub fn accept(
     path: &Path,
     what: &AcceptWhat,
     libs: &mut dyn FnMut(&Path) -> SymbolLibraries,
+    footprint: Option<&str>,
     dry_run: bool,
 ) -> Result<AcceptRun, AcceptError> {
     let project = crate::Project::open(path).map_err(AcceptError::Open)?;
@@ -1042,8 +1104,13 @@ pub fn accept(
             }
         }
     }
+    if footprint.is_some() && wanted.len() > 1 {
+        return Err(AcceptError::FootprintAmbiguous(
+            wanted.iter().map(|w| w.0.clone()).collect(),
+        ));
+    }
     let mut libs = libs(&project.dir);
-    write_hashes(wanted, &sheets, &mut libs, dry_run)
+    write_hashes(wanted, &sheets, &mut libs, footprint, dry_run)
 }
 
 /// The library symbols to write, each with its hash and the references it came from, with theirs
@@ -1051,59 +1118,67 @@ type Wanted = (String, String, Vec<(String, String)>);
 
 /// Writes the review hash `hash` into library symbol `symbol` (`Lib:Name`) found through `libs`, without a project:
 /// a symbol picked from a library, before any schematic uses it. Like [`accept`], every other byte of the file is
-/// kept; `dry_run` writes nothing.
+/// kept; `dry_run` writes nothing. `footprint`, when given, also sets its `Footprint` property.
 pub fn accept_library(
     libs: &mut SymbolLibraries,
     symbol: &str,
     hash: &str,
+    footprint: Option<&str>,
     dry_run: bool,
 ) -> Result<AcceptRun, AcceptError> {
     if !fphash::is_hash(hash.trim()) {
         return Err(AcceptError::BadHash(hash.to_string()));
     }
     let wanted = vec![(symbol.to_string(), hash.trim().to_string(), Vec::new())];
-    write_hashes(wanted, &[], libs, dry_run)
+    write_hashes(wanted, &[], libs, footprint, dry_run)
 }
 
-/// Writes each wanted hash into its library symbol through `libs` and into the copies in `sheets`
+/// Writes each wanted hash into its library symbol through `libs` and into the copies in `sheets`; `footprint`,
+/// when given, also sets the `Footprint` property of every wanted symbol (there is at most one: [`accept`] refuses
+/// several)
 fn write_hashes(
     wanted: Vec<Wanted>,
     sheets: &[PathBuf],
     libs: &mut SymbolLibraries,
+    footprint: Option<&str>,
     dry_run: bool,
 ) -> Result<AcceptRun, AcceptError> {
     // Every edit first, by file: one file can hold several symbols
     let mut texts: Vec<(PathBuf, String, String)> = Vec::new();
-    let mut edit =
-        |file: &Path, symbol: &str, hash: &str| -> Result<Option<Written>, AcceptError> {
-            let i = match texts.iter().position(|t| t.0 == file) {
-                Some(i) => i,
-                None => {
-                    let text = std::fs::read_to_string(file)
-                        .map_err(|e| AcceptError::Read(file.to_path_buf(), e))?;
-                    texts.push((file.to_path_buf(), text.clone(), text));
-                    texts.len() - 1
-                }
-            };
-            let e = match erc_kicad::symlib::set_property(&texts[i].2, symbol, FIELD, hash) {
-                Ok(e) => e,
-                Err(erc_kicad::symlib::EditError::NoSymbol(_)) => return Ok(None),
-                Err(e) => return Err(AcceptError::Edit(file.to_path_buf(), e)),
-            };
-            texts[i].2 = e.text;
-            Ok(Some(Written {
-                file: file.to_path_buf(),
-                source: HashSource::Library,
-                symbol: symbol.to_string(),
-                old: e.old,
-                changed: e.changed,
-            }))
+    let mut edit = |file: &Path,
+                    symbol: &str,
+                    property: &str,
+                    value: &str|
+     -> Result<Option<Written>, AcceptError> {
+        let i = match texts.iter().position(|t| t.0 == file) {
+            Some(i) => i,
+            None => {
+                let text = std::fs::read_to_string(file)
+                    .map_err(|e| AcceptError::Read(file.to_path_buf(), e))?;
+                texts.push((file.to_path_buf(), text.clone(), text));
+                texts.len() - 1
+            }
         };
+        let e = match erc_kicad::symlib::set_property(&texts[i].2, symbol, property, value) {
+            Ok(e) => e,
+            Err(erc_kicad::symlib::EditError::NoSymbol(_)) => return Ok(None),
+            Err(e) => return Err(AcceptError::Edit(file.to_path_buf(), e)),
+        };
+        texts[i].2 = e.text;
+        Ok(Some(Written {
+            file: file.to_path_buf(),
+            source: HashSource::Library,
+            symbol: symbol.to_string(),
+            property: property.to_string(),
+            old: e.old,
+            changed: e.changed,
+        }))
+    };
     let mut symbols = Vec::new();
     for (symbol, hash, refs) in wanted {
         let mut files = Vec::new();
         let library_note = match libs.symbol_file(&symbol) {
-            Ok((file, name)) => match edit(&file, &name, &hash)? {
+            Ok((file, name)) => match edit(&file, &name, FIELD, &hash)? {
                 Some(w) => {
                     files.push(w);
                     None
@@ -1113,7 +1188,7 @@ fn write_hashes(
             Err(why) => Some(why.to_string()),
         };
         for sheet in sheets {
-            if let Some(mut w) = edit(sheet, &symbol, &hash)? {
+            if let Some(mut w) = edit(sheet, &symbol, FIELD, &hash)? {
                 w.source = HashSource::Schematic;
                 files.push(w);
             }
@@ -1124,12 +1199,28 @@ fn write_hashes(
                 why: library_note.unwrap_or_default(),
             });
         }
+        let mut footprint_files = Vec::new();
+        if let Some(placed) = footprint {
+            if let Ok((file, name)) = libs.symbol_file(&symbol)
+                && let Some(mut w) = edit(&file, &name, "Footprint", placed)?
+            {
+                w.source = HashSource::Library;
+                footprint_files.push(w);
+            }
+            for sheet in sheets {
+                if let Some(mut w) = edit(sheet, &symbol, "Footprint", placed)? {
+                    w.source = HashSource::Schematic;
+                    footprint_files.push(w);
+                }
+            }
+        }
         symbols.push(Accepted {
             symbol,
             hash,
             references: refs.into_iter().map(|(r, _)| r).collect(),
             files,
             library_note,
+            footprint: footprint_files,
         });
     }
     if !dry_run {
@@ -1175,6 +1266,18 @@ impl AcceptRun {
         let dim = Style::new().dimmed();
         let green = AnsiColor::Green.on_default();
         let mut out = String::new();
+        let line = |out: &mut String, w: &Written| {
+            let what = match (&w.old, w.changed) {
+                (_, false) => "already has it".to_string(),
+                (None, true) => format!("{} added", w.property),
+                (Some(old), true) => format!("{} was {old}", w.property),
+            };
+            let kind = match w.source {
+                HashSource::Library => "library",
+                HashSource::Schematic => "schematic copy",
+            };
+            let _ = writeln!(out, "  {} {dim}({kind}): {what}{dim:#}", w.file.display());
+        };
         for a in &self.symbols {
             let refs = if a.references.is_empty() {
                 String::new()
@@ -1183,16 +1286,7 @@ impl AcceptRun {
             };
             let _ = writeln!(out, "{} {green}{}{green:#}{refs}", a.symbol, a.hash);
             for w in &a.files {
-                let what = match (&w.old, w.changed) {
-                    (_, false) => "already has it".to_string(),
-                    (None, true) => format!("{FIELD} added"),
-                    (Some(old), true) => format!("{FIELD} was {old}"),
-                };
-                let kind = match w.source {
-                    HashSource::Library => "library",
-                    HashSource::Schematic => "schematic copy",
-                };
-                let _ = writeln!(out, "  {} {dim}({kind}): {what}{dim:#}", w.file.display());
+                line(&mut out, w);
             }
             if let Some(n) = &a.library_note {
                 let warn = AnsiColor::Yellow.on_default();
@@ -1201,11 +1295,17 @@ impl AcceptRun {
                     "  {warn}library symbol not written: {n}; update the library by hand{warn:#}"
                 );
             }
+            for w in &a.footprint {
+                line(&mut out, w);
+            }
         }
         let n: usize = self
             .symbols
             .iter()
-            .map(|a| a.files.iter().filter(|w| w.changed).count())
+            .map(|a| {
+                a.files.iter().filter(|w| w.changed).count()
+                    + a.footprint.iter().filter(|w| w.changed).count()
+            })
             .sum();
         let verb = if self.dry_run {
             "would change"
@@ -1300,6 +1400,7 @@ mod tests {
             config: None,
             symbols: vec![lib.clone()],
             footprints: vec![fixtures().join("Test.pretty")],
+            allowed: Vec::new(),
         };
         let check = || {
             check_libraries(&LibCheckOptions {
@@ -1315,14 +1416,14 @@ mod tests {
         let hash = before.symbols[0].hash.clone().unwrap();
         let (mut syms, _) = search.open(&dir).unwrap();
         assert!(matches!(
-            accept_library(&mut syms, "Rev:Asym", "fp1:nothex", false),
+            accept_library(&mut syms, "Rev:Asym", "fp1:nothex", None, false),
             Err(AcceptError::BadHash(_))
         ));
         assert!(matches!(
-            accept_library(&mut syms, "Rev:Other", &hash, false),
+            accept_library(&mut syms, "Rev:Other", &hash, None, false),
             Err(AcceptError::Nowhere { .. })
         ));
-        let run = accept_library(&mut syms, "Rev:Asym", &hash, false).unwrap();
+        let run = accept_library(&mut syms, "Rev:Asym", &hash, None, false).unwrap();
         assert_eq!(run.symbols[0].files.len(), 1);
         assert_eq!(run.symbols[0].files[0].file, lib);
         assert!(run.symbols[0].files[0].changed);

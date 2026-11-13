@@ -598,3 +598,69 @@ name that says both (`NC/D3`). Group only pins of the same meaning under one.
 **References.** KLC S4.6 (hidden pins); KiCad Schematic Editor manual, "Hidden Power Pins"
 ([docs.kicad.org/9.0/en/eeschema](https://docs.kicad.org/9.0/en/eeschema/eeschema.html#hidden-power-pins)); `WIRE-10`
 for hidden power pins joined by name.
+
+## `LIB-20` Placed footprint overrides the symbol's own `Footprint` <a id="lib-20"></a>
+
+ℹ️ info · needs: the board, the schematic's symbols and (for the library side) the sym-lib-table · [catalogue
+entry](../checks.md#lib-20)
+
+**Impl.** easy · depends on `TOOL-10`
+
+**What it catches.** A board footprint (`Lib:Name`) that names a different library footprint than the one its
+schematic symbol itself sets in its own `Footprint` field (the library symbol's field, or the schematic's cached
+copy of it where the library is not found). A footprint placed with no library nickname at all is not this: it is a
+legitimate case with nothing to compare the name against, and `LIB-17`'s broken-link check covers it instead.
+
+**Why it matters.** The two usually agree because KiCad writes the board's footprint from the schematic's field at
+"Update PCB from Schematic". They drift apart when a footprint library is renamed or migrated (a vendor copy of a
+stock part, `VHRD_*`) and only one side of the project is updated, or when someone edits the board's footprint by
+hand without touching the schematic. Either way the review and the library tooling should look at what the board
+actually carries, not the symbol's possibly stale say-so, and the mismatch is worth a look even when it turns out to
+be a deliberate per-instance override.
+
+**Example.** b153a's U201 (a USB hub) placed `VHRD_Package_QFP:LQFP-48` on the board while its library symbol's
+`Footprint` field still said the stock `Package_QFP:LQFP-48`, left behind by an earlier, partial library migration.
+`berc fp check` and `berc fp todo` took the symbol's field without a word; a footprint review of the symbol reviewed
+the stock footprint, not the one actually on the board.
+
+**How to check.** For each board footprint with a schematic symbol: its own `Lib:Name` against the symbol's
+`Footprint` field (instance override, else the schematic's cached copy, else the library symbol's), string equality
+after trimming, skipped when the board's own name has no library nickname. better_erc: `FpEntry::footprint_overridden`
+(`berc fp check`, per board footprint, naming both) and `TodoEntry::overridden` (`berc fp todo`, per library symbol,
+the references that disagree).
+
+**Fix.** Update the schematic symbol's `Footprint` field to match what the board places (`berc fp accept --footprint
+LIB:NAME`, or the app's Accept confirmation, writes it into the library and every schematic copy), or update the
+board from the schematic if the board is the one that is wrong.
+
+**References.** None beyond the project's own history; `TOOL-10`, `IMP-19` (the writer).
+
+## `LIB-21` Symbol or footprint library outside the project's allowed set <a id="lib-21"></a>
+
+⚠️ warning · needs: a project setting (the allowed library nicknames) · [catalogue entry](../checks.md#lib-21)
+
+**Impl.** easy · depends on `TOOL-10`, `CFG-2`
+
+**What it catches.** A symbol's own library, or the library its `Footprint` field names, whose nickname is not one
+of a configured set of allowed nicknames (an exact name, or a prefix ending `*`). The set is a setting with no
+default: a project that never sets it gets no finding at all.
+
+**Why it matters.** A project moving its parts onto its own library (`VHRD_*` over KiCad's stock libraries, or a
+vendor's over a generic one) wants every symbol and footprint to end up there; one left behind, or a copy that
+sneaked in from a stock library mid-migration, is easy to miss by eye in a schematic with hundreds of parts.
+
+**Example.** Roman's convention for `~/git/kicad-library` is `VHRD_*`: every symbol and footprint library should
+carry that prefix once a board's libraries are migrated (`kilib migrate`). `kilib check --only VHRD_` catches this
+on the library's own side; `berc fp check --lib --allow 'VHRD_*'` and `berc fp todo --allow 'VHRD_*'` catch it from a
+project that uses the library, before the symbols are migrated rather than after.
+
+**How to check.** The nickname (the text before the colon) of a symbol's own `Lib:Name` and of its `Footprint`
+field's `Lib:Name`, each checked against the allowed patterns: a pattern ending `*` matches a prefix, any other
+matches only that exact name; no patterns given is no rule. better_erc: `SymbolEntry::symbol_library_disallowed` /
+`footprint_library_disallowed` (`berc fp check --lib`, `berc fp todo`), the setting a repeatable `--allow NICKNAME`
+on the command line or `[footprint_review] allowed_libraries` in the app's `config.toml`.
+
+**Fix.** Move the symbol, or its footprint, into one of the allowed libraries (`kilib migrate` on the library side),
+or widen the allowed set if the library is meant to stay.
+
+**References.** None beyond the project's own convention; `TOOL-10`.

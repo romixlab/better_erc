@@ -305,6 +305,13 @@ struct Confirm {
     run: AcceptRun,
     /// Why KiCad may overwrite the change on its next save, one line each
     warnings: Vec<String>,
+    /// The board places this footprint instead of what the symbol's own `Footprint` names, the same for every
+    /// reference: offered as an extra write into the library symbol
+    footprint: Option<String>,
+    /// The symbol's own `Footprint` now, shown next to `footprint`
+    footprint_now: Option<String>,
+    /// The checkbox's state: whether to write `footprint` too
+    write_footprint: bool,
 }
 
 /// Why KiCad may overwrite what `run` writes: a file it would change is open in KiCad, by its lock file (see
@@ -660,7 +667,9 @@ impl FootprintReview {
     /// Accept's confirmation, when it waits for one: each file, the field, its old and new value; Enter writes, Esc
     /// or Cancel writes nothing
     fn confirm_ui(&mut self, ctx: &egui::Context, id: Id) {
-        let Some(c) = &self.rt.confirm else { return };
+        let Some(c) = self.rt.confirm.as_mut() else {
+            return;
+        };
         let mut answer = None;
         let modal = egui::Modal::new(id.with("confirm accept")).show(ctx, |ui| {
             ui.set_max_width(640.0);
@@ -698,6 +707,16 @@ impl FootprintReview {
             }
             for w in &c.warnings {
                 ui.colored_label(Color32::from_rgb(230, 140, 0), format!("⚠ {w}"));
+            }
+            if let Some(fp) = &c.footprint {
+                ui.checkbox(
+                    &mut c.write_footprint,
+                    format!(
+                        "Also set the library symbol's Footprint to {fp} (now {}): the board places it, not the \
+                         symbol's own",
+                        c.footprint_now.as_deref().unwrap_or("none")
+                    ),
+                );
             }
             ui.horizontal(|ui| {
                 if ui.button("Write (Enter)").clicked() {
@@ -880,6 +899,7 @@ impl FootprintReview {
     fn library_search_for(&self, from: &SymbolsFrom) -> LibrarySearch {
         let mut s = LibrarySearch {
             config: self.rt.config.clone(),
+            allowed: self.rt.settings.allowed_libraries.clone(),
             ..LibrarySearch::default()
         };
         if let SymbolsFrom::Library { library, .. } = from
@@ -924,6 +944,9 @@ impl FootprintReview {
                             stored: e.stored,
                             datasheet: e.datasheet,
                             references: Vec::new(),
+                            overridden: Vec::new(),
+                            symbol_library_disallowed: e.symbol_library_disallowed,
+                            footprint_library_disallowed: e.footprint_library_disallowed,
                             note: e.note,
                         })
                         .collect();
@@ -989,7 +1012,6 @@ impl FootprintReview {
         let from = list.from.clone();
         self.symbol = Some(row.symbol.clone());
         self.source = None;
-        self.rt.board_note = None;
         self.rt.target = Some(Target {
             symbol: row.symbol.clone(),
             from: from.clone(),
@@ -998,25 +1020,50 @@ impl FootprintReview {
         self.rt.accepted = None;
         self.rt.written = None;
         let no_footprint = |why: String| (None, Some(why));
-        let (sourced, note) = match (&row.footprint, &row.footprint_file) {
-            (None, _) if row.status == SymbolStatus::Missing => no_footprint(format!(
-                "the library symbol was not found: {}",
-                row.note.as_deref().unwrap_or("")
-            )),
-            (None, _) => no_footprint(format!(
-                "{} sets no footprint (its Footprint field is empty): nothing to review, and no review hash to \
-                 give it",
-                row.symbol
-            )),
-            (Some(fp), None) => no_footprint(format!(
-                "its footprint {fp} was not found: {}",
-                row.note.as_deref().unwrap_or("no such library footprint")
-            )),
-            (Some(_), Some(file)) => match FootprintSource::File(file.clone()).read() {
-                Ok(s) => (Some(s), None),
+        // An overridden footprint (the board places one other than the symbol's own `Footprint`): review follows
+        // the board, shown in `board_note` rather than silently resolved to the symbol's default
+        let overridden = row
+            .overridden_footprint()
+            .map(|fp| (fp.to_string(), row.overridden[0].0.clone()));
+        let mut override_note = None;
+        let (sourced, note) = match (&overridden, &self.board) {
+            (Some((placed, reference)), Some(board)) => match (FootprintSource::Board {
+                board: board.clone(),
+                reference: reference.clone(),
+            })
+            .read()
+            {
+                Ok(s) => {
+                    override_note = Some(format!(
+                        "placed on {reference} as {placed}, not the symbol's own Footprint ({}): reviewing what \
+                         the board places",
+                        row.footprint.as_deref().unwrap_or("none")
+                    ));
+                    (Some(s), None)
+                }
                 Err(e) => no_footprint(e.to_string()),
             },
+            _ => match (&row.footprint, &row.footprint_file) {
+                (None, _) if row.status == SymbolStatus::Missing => no_footprint(format!(
+                    "the library symbol was not found: {}",
+                    row.note.as_deref().unwrap_or("")
+                )),
+                (None, _) => no_footprint(format!(
+                    "{} sets no footprint (its Footprint field is empty): nothing to review, and no review hash \
+                     to give it",
+                    row.symbol
+                )),
+                (Some(fp), None) => no_footprint(format!(
+                    "its footprint {fp} was not found: {}",
+                    row.note.as_deref().unwrap_or("no such library footprint")
+                )),
+                (Some(_), Some(file)) => match FootprintSource::File(file.clone()).read() {
+                    Ok(s) => (Some(s), None),
+                    Err(e) => no_footprint(e.to_string()),
+                },
+            },
         };
+        self.rt.board_note = override_note;
         match sourced {
             Some(mut s) => {
                 // The symbol's fields first (Datasheet, part numbers, Footprint_Review), then the footprint's
@@ -1361,7 +1408,18 @@ impl FootprintReview {
             self.finish_accept(ctx, review, None);
             return;
         };
-        match self.write(&target, &review.hash, true) {
+        let footprint = self.overridden_footprint(&target.symbol);
+        let footprint_now = footprint.as_ref().and_then(|_| {
+            self.rt
+                .symbols
+                .as_ref()?
+                .rows
+                .iter()
+                .find(|r| r.symbol == target.symbol)?
+                .footprint
+                .clone()
+        });
+        match self.write(&target, &review.hash, None, true) {
             Ok(run) => {
                 let warnings = kicad_warnings(&run, (self.rt.kicad_running)());
                 self.rt.confirm = Some(Confirm {
@@ -1369,11 +1427,28 @@ impl FootprintReview {
                     target,
                     run,
                     warnings,
+                    footprint,
+                    footprint_now,
+                    write_footprint: false,
                 });
                 self.usage("confirm");
             }
             Err(e) => self.finish_accept(ctx, review, Some(Err(e))),
         }
+    }
+
+    /// The footprint the board places for every reference of `symbol`, when it is the same for all of them and
+    /// differs from the symbol's own `Footprint` ([`TodoEntry::overridden_footprint`]); `None` when there is
+    /// none, or they disagree among themselves
+    fn overridden_footprint(&self, symbol: &str) -> Option<String> {
+        self.rt
+            .symbols
+            .as_ref()?
+            .rows
+            .iter()
+            .find(|r| r.symbol == symbol)?
+            .overridden_footprint()
+            .map(String::from)
     }
 
     /// The confirmation's answer: write (Enter), or nothing at all (Esc)
@@ -1382,7 +1457,11 @@ impl FootprintReview {
             return;
         };
         if write {
-            let written = self.write(&c.target, &c.review.hash, false);
+            let footprint = c
+                .write_footprint
+                .then_some(c.footprint.as_deref())
+                .flatten();
+            let written = self.write(&c.target, &c.review.hash, footprint, false);
             self.finish_accept(ctx, c.review, Some(written));
         } else {
             self.usage("cancel");
@@ -1425,8 +1504,15 @@ impl FootprintReview {
         self.usage("accept");
     }
 
-    /// Writes `hash` into the symbol under review; `dry_run` says what it would write
-    fn write(&self, t: &Target, hash: &str, dry_run: bool) -> Result<AcceptRun, String> {
+    /// Writes `hash` into the symbol under review, `footprint` into it too when given; `dry_run` says what it
+    /// would write
+    fn write(
+        &self,
+        t: &Target,
+        hash: &str,
+        footprint: Option<&str>,
+        dry_run: bool,
+    ) -> Result<AcceptRun, String> {
         match &t.from {
             SymbolsFrom::Project(p) => {
                 let config = self.rt.config.clone();
@@ -1437,13 +1523,14 @@ impl FootprintReview {
                         hash: hash.to_string(),
                     },
                     &mut |dir| SymbolLibraries::new(dir, config.as_deref()),
+                    footprint,
                     dry_run,
                 )
             }
             SymbolsFrom::Library { project, .. } => {
                 let search = self.library_search_for(&t.from);
                 let (mut syms, _) = search.open(project).map_err(|e| e.to_string())?;
-                better_erc::fp::accept_library(&mut syms, &t.symbol, hash, dry_run)
+                better_erc::fp::accept_library(&mut syms, &t.symbol, hash, footprint, dry_run)
             }
         }
         .map_err(|e| e.to_string())
@@ -2173,6 +2260,22 @@ impl FootprintReview {
                                 if !r.references.is_empty() {
                                     hover.push_str(&format!("\non {}", r.references.join(", ")));
                                 }
+                                if let Some(fp) = r.overridden_footprint() {
+                                    hover.push_str(&format!(
+                                        "\nplaced as {fp}, not its own Footprint"
+                                    ));
+                                }
+                                for lib in [
+                                    &r.symbol_library_disallowed,
+                                    &r.footprint_library_disallowed,
+                                ]
+                                .into_iter()
+                                .flatten()
+                                {
+                                    hover.push_str(&format!(
+                                        "\nlibrary {lib} is not in the allowed libraries"
+                                    ));
+                                }
                                 if let Some(n) = &r.note {
                                     hover.push_str(&format!("\n{n}"));
                                 }
@@ -2220,8 +2323,29 @@ impl FootprintReview {
                     ui.add(Label::new(r.references.join(", ")).truncate());
                     ui.end_row();
                 }
+                if let Some(fp) = r.overridden_footprint() {
+                    ui.label("Placed");
+                    ui.add(Label::new(fp).truncate()).on_hover_text(
+                        "the board places this instead of the symbol's own Footprint above",
+                    );
+                    ui.end_row();
+                }
             }
         });
+        if let Some(r) = row {
+            for lib in [
+                &r.symbol_library_disallowed,
+                &r.footprint_library_disallowed,
+            ]
+            .into_iter()
+            .flatten()
+            {
+                ui.colored_label(
+                    Color32::ORANGE,
+                    format!("library {lib} is not in the allowed libraries"),
+                );
+            }
+        }
         if let Some(n) = &self.rt.symbol_note {
             ui.colored_label(Color32::ORANGE, n);
         }

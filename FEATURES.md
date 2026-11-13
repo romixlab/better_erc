@@ -811,6 +811,22 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `--format json`. Refused, writing nothing: a symbol placed with more than one footprint, footprints of one symbol
   that differ, a symbol without a footprint, a footprint without a symbol, a malformed hash · `better_erc/src/fp.rs`
   (`accept`), `berc/tests/fp_accept.rs`, README "Accepting a review"
+- ✅ `TOOL-10` Placed footprint overrides, shown rather than resolved silently: `berc fp check` and `berc fp todo`
+  name a board footprint placed under a different `Lib:Name` than its symbol's own `Footprint` field (a library
+  migration half done, or a deliberate per-instance override), naming both (`FpEntry::footprint_overridden`,
+  `TodoEntry::overridden`); a footprint placed with no library nickname at all is not an override, a legitimate
+  case `library_footprint` already fell back on. The app's Footprint Review tab follows the board: it reviews the
+  footprint actually placed when it differs, not the symbol's stale default, noted on the canvas rather than left
+  unsaid. `berc fp accept --footprint LIB:NAME` (and the app's Accept confirmation, a checkbox offering the placed
+  one) also sets the library symbol's own `Footprint` to it, through `IMP-19`'s writer, into the library and every
+  schematic copy; refused when references of more than one symbol are accepted together, one value can't hold for
+  several. A setting lists the library nicknames a symbol and its footprint may be in (`--allow NICKNAME`,
+  repeatable, an exact name or a `*` prefix; the app's `[footprint_review] allowed_libraries`), default none (no
+  rule); `berc fp check --lib` and `berc fp todo` report any other
+  (`SymbolEntry::symbol_library_disallowed`/`footprint_library_disallowed`) · `better_erc/src/fp.rs`,
+  `better_erc/src/fp/todo.rs`, `better_erc/src/fp/library.rs` (`lib_allowed`), `berc/src/main.rs`,
+  `better_erc_app/src/tabs/footprint_review/mod.rs`, `better_erc_app/src/settings.rs`, `berc/tests/fp.rs`,
+  `berc/tests/fp_accept.rs`
 
 ## Code generation (`GEN`)
 

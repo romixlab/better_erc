@@ -177,6 +177,24 @@ fn status(dir: &Path, reference: &str) -> serde_json::Value {
         .clone()
 }
 
+/// `acc.kicad_pcb` in `dir` (as [`project`] wrote it) with `reference`'s footprint's `Lib:Name` changed from `old`
+/// to `new`: the geometry stays, only the name
+fn rename_footprint(dir: &Path, reference: &str, old: &str, new: &str) {
+    let board = read(dir, "acc.kicad_pcb");
+    let ref_marker = format!("(property \"Reference\" \"{reference}\"");
+    let ref_at = board
+        .find(&ref_marker)
+        .unwrap_or_else(|| panic!("no {reference} in acc.kicad_pcb"));
+    let old_marker = format!("(footprint \"{old}\"");
+    let fp_at = board[..ref_at]
+        .rfind(&old_marker)
+        .unwrap_or_else(|| panic!("no {old_marker:?} before {reference}"));
+    let mut out = board[..fp_at].to_string();
+    out += &format!("(footprint \"{new}\"");
+    out += &board[fp_at + old_marker.len()..];
+    std::fs::write(dir.join("acc.kicad_pcb"), out).unwrap();
+}
+
 /// U1-U6 are Asym_SOT on the board, U7 and up Mixed_Pads
 const SYMBOLS: [Sym; 4] = [
     ("New", "Test:Asym_SOT", None, None),
@@ -403,4 +421,79 @@ fn symdir_library() {
         read(&lib, "Old{slash}.kicad_sym")
             .contains(&format!("(property \"Footprint_Review\" \"{h}\""))
     );
+}
+
+/// `--footprint` also sets the library symbol's own `Footprint`, in the library and the schematic copy, the same
+/// as `Footprint_Review`; a value already there and the same changes nothing
+#[test]
+fn accept_footprint_sets_it_in_both_files() {
+    let dir = scratch("footprint");
+    project(&dir, &SYMBOLS, &[0], true);
+    rename_footprint(&dir, "U1", "Asym_SOT", "VHRD_Test:Asym_SOT");
+
+    let out = accept(&dir, &["U1", "--footprint", "VHRD_Test:Asym_SOT"]);
+    assert!(out.status.success(), "{}", stderr(&out));
+    let text = stdout(&out);
+    assert!(
+        text.contains("(library): Footprint was Test:Asym_SOT"),
+        "{text}"
+    );
+    assert!(
+        text.contains("(schematic copy): Footprint was Test:Asym_SOT"),
+        "{text}"
+    );
+    for (file, indent) in [("Rev.kicad_sym", "\t\t"), ("acc.kicad_sch", "\t\t\t")] {
+        assert!(
+            read(&dir, file).contains(&format!(
+                "\n{indent}(property \"Footprint\" \"VHRD_Test:Asym_SOT\"\n"
+            )),
+            "{file}: {}",
+            read(&dir, file)
+        );
+    }
+
+    // Already there: nothing changes
+    let out = accept(
+        &dir,
+        &[
+            "U1",
+            "--footprint",
+            "VHRD_Test:Asym_SOT",
+            "--format",
+            "json",
+        ],
+    );
+    assert!(out.status.success(), "{}", stderr(&out));
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let footprint = v["symbols"][0]["footprint"].as_array().unwrap();
+    assert_eq!(footprint.len(), 2, "{footprint:?}");
+    assert!(
+        footprint.iter().all(|w| w["changed"] == false),
+        "{footprint:?}"
+    );
+
+    // --dry-run writes nothing
+    let (lib, sch) = (read(&dir, "Rev.kicad_sym"), read(&dir, "acc.kicad_sch"));
+    let out = accept(&dir, &["U1", "--footprint", "Test:Other", "--dry-run"]);
+    assert!(out.status.success(), "{}", stderr(&out));
+    assert_eq!(read(&dir, "Rev.kicad_sym"), lib);
+    assert_eq!(read(&dir, "acc.kicad_sch"), sch);
+}
+
+/// `--footprint` for references of more than one symbol is ambiguous: one value can't hold for several, nothing
+/// is written
+#[test]
+fn accept_footprint_for_several_symbols_is_refused() {
+    let dir = scratch("footprint-ambiguous");
+    project(&dir, &SYMBOLS, &[0, 3], true);
+    let (lib, sch) = (read(&dir, "Rev.kicad_sym"), read(&dir, "acc.kicad_sch"));
+    let out = accept(&dir, &["U1", "U2", "--footprint", "Test:Other"]);
+    assert_eq!(out.status.code(), Some(2), "{}", stdout(&out));
+    assert!(
+        stderr(&out).contains("footprint names a Footprint for several library symbols"),
+        "{}",
+        stderr(&out)
+    );
+    assert_eq!(read(&dir, "Rev.kicad_sym"), lib);
+    assert_eq!(read(&dir, "acc.kicad_sch"), sch);
 }

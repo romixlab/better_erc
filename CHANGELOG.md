@@ -11,6 +11,20 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `TOOL-10`: placed footprint overrides, shown rather than resolved silently. `berc fp check` and `berc fp todo`
+  name a board footprint placed under a different `Lib:Name` than its symbol's own `Footprint` field (a library
+  migration half done, or a deliberate per-instance override); a footprint placed with no library nickname at all
+  is not an override. The app's Footprint review tab follows the board: it reviews the footprint actually placed
+  when it differs, noted above the canvas. `berc fp accept --footprint LIB:NAME`, and the app's Accept
+  confirmation (a checkbox offering the placed one), also set the library symbol's own `Footprint` to it, through
+  `IMP-19`'s writer; refused for references of more than one symbol at once. A new catalogue check, `LIB-20`.
+- `TOOL-10`: a setting lists the library nicknames a symbol and its footprint may be in, an exact name or a `*`
+  prefix (`berc fp check --lib`/`berc fp todo --allow NICKNAME`, repeatable; the app's `[footprint_review]
+  allowed_libraries`), default none (no rule); any other library named is reported. A new catalogue check,
+  `LIB-21`.
+
 ## [0.4.39] - 2026-11-13
 
 ### Fixed

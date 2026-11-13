@@ -712,6 +712,8 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="lib-17"></a>⚠️ `LIB-17` Placed symbol differs from its library copy, or its footprint link is broken or fails the symbol's footprint filter · impl: mid (TOOL-3) · [📖](checks/lib.md#lib-17) <!-- 21 Oct 2026 -->
 - <a id="lib-18"></a>🛑 `LIB-18` Footprint built from a bottom-view drawing: the pinout is mirrored (regulators, transistors and connectors most often) · impl: judgement (TOOL-3) · [📖](checks/lib.md#lib-18) <!-- 21 Oct 2026 -->
 - <a id="lib-19"></a>⚠️ `LIB-19` Hidden symbol pin that is not grouped with a visible pin of the same meaning (an N.C. or a signal pin hidden under GND, a supply pin joining its net by name); strict: every hidden pin ≈ WIRE-10 · impl: easy (netlist) · [📖](checks/lib.md#lib-19) <!-- 6 Nov 2026; TPD6S300A pins 16 / 17 -->
+- <a id="lib-20"></a>ℹ️ `LIB-20` Board places a footprint other than the one its symbol's own `Footprint` field names (a library migration half done, or a deliberate per-instance override) · impl: easy (TOOL-10) · [📖](checks/lib.md#lib-20) <!-- 13 Nov 2026; b153a U201 -->
+- <a id="lib-21"></a>⚠️ `LIB-21` Symbol or its footprint in a library outside the project's allowed set (a vendor library migration not finished, a stock part that should be a local copy) · impl: easy (TOOL-10, CFG-2) · [📖](checks/lib.md#lib-21) <!-- 13 Nov 2026 -->
 
 ## Layout
 

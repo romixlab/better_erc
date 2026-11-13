@@ -87,13 +87,31 @@ pub struct SymbolEntry {
     pub datasheet: Option<String>,
     /// Why the footprint or the symbol could not be read
     pub note: Option<String>,
+    /// The symbol's own library (the nickname of `symbol`), when `allowed` named some and it is none of them
+    #[serde(default)]
+    pub symbol_library_disallowed: Option<String>,
+    /// The library its `Footprint` field names, when `allowed` named some and it is none of them
+    #[serde(default)]
+    pub footprint_library_disallowed: Option<String>,
 }
 
 impl SymbolEntry {
-    /// Ok, or nothing to review
+    /// Ok, or nothing to review, and no library outside what is allowed
     pub fn is_ok(&self) -> bool {
         matches!(self.status, SymbolStatus::Ok | SymbolStatus::NoFootprint)
+            && self.symbol_library_disallowed.is_none()
+            && self.footprint_library_disallowed.is_none()
     }
+}
+
+/// `nickname` matches one of `patterns`: an exact name, or (a pattern ending `*`) a prefix. No patterns: always
+/// allowed, there is no rule
+pub(super) fn lib_allowed(nickname: &str, patterns: &[String]) -> bool {
+    patterns.is_empty()
+        || patterns.iter().any(|p| match p.strip_suffix('*') {
+            Some(prefix) => nickname.starts_with(prefix),
+            None => nickname == p,
+        })
 }
 
 /// One symbol library read
@@ -179,6 +197,10 @@ pub struct LibrarySearch {
     /// Footprint libraries searched before the tables: each a `.pretty` directory, or a folder of them, named by
     /// their directory names
     pub footprints: Vec<PathBuf>,
+    /// The library nicknames a symbol and the footprint its `Footprint` field names may be in (an exact name, or a
+    /// prefix with a trailing `*`, [`lib_allowed`]): `berc fp check --lib` and `berc fp todo` report any other.
+    /// Empty: no rule
+    pub allowed: Vec<String>,
 }
 
 impl LibrarySearch {
@@ -306,7 +328,12 @@ pub fn check_libraries(opts: &LibCheckOptions) -> Result<LibCheck, LibCheckError
         });
         for name in names {
             let fields = lib.fields(&name);
-            symbols.push(check_symbol(&format!("{nick}:{name}"), fields, &mut fps));
+            symbols.push(check_symbol(
+                &format!("{nick}:{name}"),
+                fields,
+                &mut fps,
+                &opts.search.allowed,
+            ));
         }
     }
     Ok(LibCheck {
@@ -316,11 +343,13 @@ pub fn check_libraries(opts: &LibCheckOptions) -> Result<LibCheck, LibCheckError
     })
 }
 
-/// Library symbol `symbol` (`Lib:Name`) with its `fields` as read, against its library footprint
+/// Library symbol `symbol` (`Lib:Name`) with its `fields` as read, against its library footprint; `allowed` lists
+/// the library nicknames it and its footprint may be in ([`lib_allowed`])
 pub(super) fn check_symbol(
     symbol: &str,
     fields: Result<Vec<(String, String)>, LibError>,
     fps: &mut FootprintLibraries,
+    allowed: &[String],
 ) -> SymbolEntry {
     let mut e = SymbolEntry {
         symbol: symbol.to_string(),
@@ -331,7 +360,14 @@ pub(super) fn check_symbol(
         footprint_file: None,
         datasheet: None,
         note: None,
+        symbol_library_disallowed: None,
+        footprint_library_disallowed: None,
     };
+    if let Some((lib, _)) = symbol.split_once(':')
+        && !lib_allowed(lib, allowed)
+    {
+        e.symbol_library_disallowed = Some(lib.to_string());
+    }
     let fields = match fields {
         Ok(f) => f,
         Err(why) => {
@@ -341,6 +377,11 @@ pub(super) fn check_symbol(
         }
     };
     e.footprint = field_of(&fields, "Footprint").map(String::from);
+    if let Some((lib, _)) = e.footprint.as_deref().and_then(|f| f.split_once(':'))
+        && !lib_allowed(lib, allowed)
+    {
+        e.footprint_library_disallowed = Some(lib.to_string());
+    }
     e.datasheet = field_of(&fields, "Datasheet")
         .filter(|d| *d != "~")
         .map(String::from);
@@ -473,6 +514,22 @@ impl LibCheck {
             }
             // The footprint column's padding, where nothing follows it
             out.truncate(out.trim_end_matches(' ').len());
+            if let Some(lib) = &e.symbol_library_disallowed {
+                let warn = AnsiColor::Yellow.on_default();
+                let _ = write!(
+                    out,
+                    "\n{:13} {:width$} {warn}its own library {lib} is not in the allowed libraries{warn:#}",
+                    "", "",
+                );
+            }
+            if let Some(lib) = &e.footprint_library_disallowed {
+                let warn = AnsiColor::Yellow.on_default();
+                let _ = write!(
+                    out,
+                    "\n{:13} {:width$} {warn}its footprint library {lib} is not in the allowed libraries{warn:#}",
+                    "", "",
+                );
+            }
             out.push('\n');
         }
         let counts: Vec<String> = self
@@ -487,7 +544,7 @@ impl LibCheck {
             [one] => one.path.display().to_string(),
             many => format!("{} libraries", many.len()),
         };
-        let _ = writeln!(
+        let _ = write!(
             out,
             "{libs}: {} symbols: {}",
             self.symbols.len(),
@@ -497,6 +554,35 @@ impl LibCheck {
                 counts.join(", ")
             }
         );
+        let disallowed = self
+            .symbols
+            .iter()
+            .filter(|e| {
+                e.symbol_library_disallowed.is_some() || e.footprint_library_disallowed.is_some()
+            })
+            .count();
+        if disallowed > 0 {
+            let _ = write!(out, "; {disallowed} outside the allowed libraries");
+        }
+        out.push('\n');
         out
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::lib_allowed;
+
+    /// No patterns: no rule, everything is allowed; a pattern without a trailing `*` matches only that exact
+    /// name; one with it matches names starting with what is before it
+    #[test]
+    fn exact_names_and_prefixes() {
+        assert!(lib_allowed("VHRD_Package_QFP", &[]));
+        assert!(lib_allowed("VHRD_Package_QFP", &["VHRD_*".into()]));
+        assert!(lib_allowed("VHRD_", &["VHRD_*".into()]));
+        assert!(!lib_allowed("Package_QFP", &["VHRD_*".into()]));
+        assert!(lib_allowed("Test", &["Test".into(), "VHRD_*".into()]));
+        assert!(!lib_allowed("Test2", &["Test".into()]));
+        assert!(!lib_allowed("", &["VHRD_*".into()]));
     }
 }

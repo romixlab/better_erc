@@ -209,6 +209,11 @@ struct LibraryArgs {
     /// name; repeatable
     #[arg(long, value_name = "DIR", value_hint = ValueHint::DirPath)]
     footprints: Vec<PathBuf>,
+    /// A library nickname symbols and their footprints may be in, repeatable: an exact name, or a prefix with a
+    /// trailing `*` (`VHRD_*`). With --lib or in `berc fp todo`: any other library named is reported. None (the
+    /// default): no rule
+    #[arg(long, value_name = "NICKNAME")]
+    allow: Vec<String>,
 }
 
 impl LibraryArgs {
@@ -216,6 +221,7 @@ impl LibraryArgs {
         better_erc::fp::LibrarySearch {
             symbols: self.symbols.clone(),
             footprints: self.footprints.clone(),
+            allowed: self.allow.clone(),
             ..better_erc::fp::LibrarySearch::kicad()
         }
     }
@@ -250,6 +256,10 @@ struct FpAcceptArgs {
     /// The review hash for --symbol, as `berc fp hash` prints it
     #[arg(long, value_name = "HASH", requires = "symbol")]
     hash: Option<String>,
+    /// Also set the library symbol's Footprint to this (`Lib:Name`): offered by `berc fp check` as the placed
+    /// footprint, when it differs from what the symbol itself names
+    #[arg(long, value_name = "LIB:NAME")]
+    footprint: Option<String>,
     /// Show what would be written, write nothing
     #[arg(long)]
     dry_run: bool,
@@ -745,6 +755,7 @@ fn fp_accept(args: &FpAcceptArgs) -> ExitCode {
         &args.project,
         &what,
         &mut |dir| SymbolLibraries::new(dir, config.as_deref()),
+        args.footprint.as_deref(),
         args.dry_run,
     );
     spinner.finish();

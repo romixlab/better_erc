@@ -882,6 +882,235 @@ fn todo_lists_the_board_symbols_to_review_in_order() {
     std::fs::remove_dir_all(&done).unwrap();
 }
 
+/// `fpcheck.kicad_pcb` in `dir` (as [`project`] wrote it) with `reference`'s footprint's `Lib:Name` changed from
+/// `old` to `new`: the geometry stays, so the review hash is unaffected, only the name
+fn rename_footprint(dir: &Path, reference: &str, old: &str, new: &str) {
+    let board = std::fs::read_to_string(dir.join("fpcheck.kicad_pcb")).unwrap();
+    let ref_marker = format!("(property \"Reference\" \"{reference}\"");
+    let ref_at = board.find(&ref_marker).unwrap_or_else(|| {
+        panic!(
+            "no {reference} in {}",
+            dir.join("fpcheck.kicad_pcb").display()
+        )
+    });
+    let old_marker = format!("(footprint \"{old}\"");
+    let fp_at = board[..ref_at]
+        .rfind(&old_marker)
+        .unwrap_or_else(|| panic!("no {old_marker:?} before {reference}"));
+    let mut out = board[..fp_at].to_string();
+    out += &format!("(footprint \"{new}\"");
+    out += &board[fp_at + old_marker.len()..];
+    std::fs::write(dir.join("fpcheck.kicad_pcb"), out).unwrap();
+}
+
+/// U1 placed on the board as `VHRD_Test:Asym_SOT`, its symbol's own `Footprint` still `Test:Asym_SOT` (as a
+/// library migration might leave it, half done): `fp check` and `fp todo` name both rather than silently taking
+/// the symbol's
+#[test]
+fn check_and_todo_report_an_overridden_footprint() {
+    let sot = library_hash("Asym_SOT");
+    let dir = scratch("override");
+    project(
+        &dir,
+        &[("Ok", "Test:Asym_SOT", Some(&sot), Some(&sot))],
+        true,
+    );
+    rename_footprint(&dir, "U1", "Asym_SOT", "VHRD_Test:Asym_SOT");
+    let fps = fixtures();
+
+    let out = fp_check(&dir, &["--footprints", path(&fps), "--format", "json"]);
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let u1 = v["footprints"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|e| e["reference"] == "U1")
+        .unwrap();
+    assert_eq!(u1["footprint"], "VHRD_Test:Asym_SOT");
+    assert_eq!(u1["symbol_footprint"], "Test:Asym_SOT");
+    assert_eq!(u1["footprint_overridden"], true);
+    assert_eq!(u1["status"], "ok", "the hash itself still matches: {u1}");
+
+    let text = stdout(&fp_check(&dir, &["--footprints", path(&fps)]));
+    assert!(
+        text.contains(
+            "the board places VHRD_Test:Asym_SOT, symbol Rev:Ok sets Test:Asym_SOT: an override"
+        ),
+        "{text}"
+    );
+    assert!(
+        text.contains("1 board copies place an overridden footprint"),
+        "{text}"
+    );
+
+    let out = fp_todo(
+        &dir,
+        &["--footprints", path(&fps), "--format", "json", "--all"],
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let rev_ok = v["symbols"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|e| e["symbol"] == "Rev:Ok")
+        .unwrap();
+    assert_eq!(
+        rev_ok["overridden"],
+        serde_json::json!([["U1", "VHRD_Test:Asym_SOT"]])
+    );
+
+    let text = stdout(&fp_todo(&dir, &["--footprints", path(&fps)]));
+    assert!(
+        text.contains("placed as U1 (VHRD_Test:Asym_SOT): review follows the board"),
+        "{text}"
+    );
+    assert!(text.contains("1 with an overridden footprint"), "{text}");
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// A board footprint placed without a library nickname at all (legitimate: a footprint not bound to a footprint
+/// library) is not an override, whatever its symbol's `Footprint` names
+#[test]
+fn a_bare_footprint_name_is_not_an_override() {
+    let sot = library_hash("Asym_SOT");
+    let dir = scratch("bare");
+    project(
+        &dir,
+        &[("Ok", "Test:Asym_SOT", Some(&sot), Some(&sot))],
+        true,
+    );
+    // placed.kicad_pcb's own U1 is "Asym_SOT", no library nickname: project() leaves it as it is
+    let out = fp_check(
+        &dir,
+        &["--footprints", path(&fixtures()), "--format", "json"],
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let u1 = v["footprints"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|e| e["reference"] == "U1")
+        .unwrap();
+    assert_eq!(u1["footprint"], "Asym_SOT");
+    assert_eq!(u1["footprint_overridden"], false);
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// `--allow` lists the library nicknames symbols and their footprints may be in: `fp check --lib` and `fp todo`
+/// report any other, `fp check` (board mode) does not need to (it has no `--lib`)
+#[test]
+fn allow_reports_libraries_outside_it() {
+    let sot = library_hash("Asym_SOT");
+    let dir = scratch("allow");
+    project(
+        &dir,
+        &[("Ok", "Test:Asym_SOT", Some(&sot), Some(&sot))],
+        true,
+    );
+    let lib = dir.join("Rev.kicad_sym");
+    let fps = fixtures();
+
+    // No --allow: no rule, nothing reported
+    let out = fp_check(
+        &dir,
+        &[
+            "--lib",
+            path(&lib),
+            "--footprints",
+            path(&fps),
+            "--format",
+            "json",
+        ],
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let rev_ok = v["symbols"].as_array().unwrap().first().unwrap();
+    assert_eq!(rev_ok["symbol_library_disallowed"], serde_json::Value::Null);
+    assert_eq!(
+        rev_ok["footprint_library_disallowed"],
+        serde_json::Value::Null
+    );
+
+    // --allow Test: the footprint library Test is allowed, the symbol library Rev is not
+    let out = fp_check(
+        &dir,
+        &[
+            "--lib",
+            path(&lib),
+            "--footprints",
+            path(&fps),
+            "--format",
+            "json",
+            "--allow",
+            "Test",
+        ],
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let rev_ok = v["symbols"].as_array().unwrap().first().unwrap();
+    assert_eq!(rev_ok["symbol_library_disallowed"], "Rev");
+    assert_eq!(
+        rev_ok["footprint_library_disallowed"],
+        serde_json::Value::Null
+    );
+
+    let text = stdout(&fp_check(
+        &dir,
+        &[
+            "--lib",
+            path(&lib),
+            "--footprints",
+            path(&fps),
+            "--allow",
+            "Test",
+        ],
+    ));
+    assert!(
+        text.contains("its own library Rev is not in the allowed libraries"),
+        "{text}"
+    );
+    assert!(text.contains("1 outside the allowed libraries"), "{text}");
+
+    // --allow Rev*: the symbol library is allowed, nothing left to report
+    let out = fp_check(
+        &dir,
+        &[
+            "--lib",
+            path(&lib),
+            "--footprints",
+            path(&fps),
+            "--format",
+            "json",
+            "--allow",
+            "Rev*",
+            "--allow",
+            "Test",
+        ],
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let rev_ok = v["symbols"].as_array().unwrap().first().unwrap();
+    assert_eq!(rev_ok["symbol_library_disallowed"], serde_json::Value::Null);
+    assert_eq!(
+        rev_ok["footprint_library_disallowed"],
+        serde_json::Value::Null
+    );
+
+    // berc fp todo reports the same, board-footprint-centric
+    let out = fp_todo(
+        &dir,
+        &[
+            "--footprints",
+            path(&fps),
+            "--format",
+            "json",
+            "--allow",
+            "Test",
+        ],
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let rev_ok = v["symbols"].as_array().unwrap().first().unwrap();
+    assert_eq!(rev_ok["symbol_library_disallowed"], "Rev");
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
 #[test]
 fn todo_errors_exit_2() {
     let dir = scratch("todo-errors");

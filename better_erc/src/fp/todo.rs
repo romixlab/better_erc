@@ -3,7 +3,7 @@
 //! `Footprint` field names, as `berc fp check --lib` checks it.
 
 use super::library::check_symbol;
-use super::{FIELD, FpCheckError, LibrarySearch, Opened, SymbolStatus};
+use super::{FIELD, FpCheckError, LibrarySearch, Opened, SymbolStatus, is_lib_name};
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
@@ -26,6 +26,16 @@ pub struct TodoEntry {
     pub datasheet: Option<String>,
     /// The board footprints placed from this symbol, in natural order
     pub references: Vec<String>,
+    /// References placed with a footprint other than [`footprint`](Self::footprint), the symbol's own: an
+    /// override, deliberate or not, shown rather than silently resolved (reference, the footprint placed)
+    #[serde(default)]
+    pub overridden: Vec<(String, String)>,
+    /// The symbol's own library (the nickname of `symbol`), when `allowed` named some and it is none of them
+    #[serde(default)]
+    pub symbol_library_disallowed: Option<String>,
+    /// The library [`footprint`](Self::footprint) names, when `allowed` named some and it is none of them
+    #[serde(default)]
+    pub footprint_library_disallowed: Option<String>,
     /// Why the library symbol or its footprint could not be read
     pub note: Option<String>,
 }
@@ -39,6 +49,28 @@ impl TodoEntry {
     /// Nothing to do: reviewed and unchanged, or no footprint to review
     pub fn is_ok(&self) -> bool {
         matches!(self.status, SymbolStatus::Ok | SymbolStatus::NoFootprint)
+    }
+
+    /// A board places a footprint other than what this symbol itself names, for one of its references
+    pub fn is_overridden(&self) -> bool {
+        !self.overridden.is_empty()
+    }
+
+    /// The footprint placed, when every overridden reference agrees on one; `None` when there is none to
+    /// override, or they disagree among themselves
+    pub fn overridden_footprint(&self) -> Option<&str> {
+        match self.overridden.as_slice() {
+            [] => None,
+            [first, rest @ ..] => rest
+                .iter()
+                .all(|(_, p)| p == &first.1)
+                .then_some(first.1.as_str()),
+        }
+    }
+
+    /// Nothing outside what is allowed
+    pub fn is_allowed(&self) -> bool {
+        self.symbol_library_disallowed.is_none() && self.footprint_library_disallowed.is_none()
     }
 }
 
@@ -78,23 +110,33 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
     let Opened { project, syms, fps } = &mut opened;
     let board = &project.imported.design.boards[0];
     let lay = board.layout.as_ref().expect("checked in open");
-    // Library id -> references, in the board's order
-    let mut used: Vec<(String, Vec<String>)> = Vec::new();
+    // Library id -> (reference, the footprint placed), in the board's order
+    let mut used: Vec<(String, Vec<(String, String)>)> = Vec::new();
     for f in &lay.footprints {
         let Some(part) = f.part.map(|p| board.part(p)) else {
             continue;
         };
+        let placed = (f.reference.clone(), f.lib_id.clone());
         match used.iter_mut().find(|(id, _)| *id == part.lib_id) {
-            Some((_, refs)) => refs.push(f.reference.clone()),
-            None => used.push((part.lib_id.clone(), vec![f.reference.clone()])),
+            Some((_, refs)) => refs.push(placed),
+            None => used.push((part.lib_id.clone(), vec![placed])),
         }
     }
     let mut symbols: Vec<TodoEntry> = used
         .into_iter()
-        .map(|(lib_id, mut references)| {
-            references.sort_by(|a, b| erc_model::natural_cmp(a, b));
-            references.dedup();
-            let e = check_symbol(&lib_id, syms.fields(&lib_id), fps);
+        .map(|(lib_id, mut placed)| {
+            placed.sort_by(|a, b| erc_model::natural_cmp(&a.0, &b.0));
+            placed.dedup();
+            let e = check_symbol(&lib_id, syms.fields(&lib_id), fps, &search.allowed);
+            let overridden: Vec<(String, String)> = match &e.footprint {
+                Some(sym_fp) => placed
+                    .iter()
+                    .filter(|(_, fp)| is_lib_name(fp.trim()) && fp.trim() != sym_fp.trim())
+                    .cloned()
+                    .collect(),
+                None => Vec::new(),
+            };
+            let references = placed.into_iter().map(|(r, _)| r).collect();
             TodoEntry {
                 symbol: e.symbol,
                 status: e.status,
@@ -104,6 +146,9 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
                 stored: e.stored,
                 datasheet: e.datasheet,
                 references,
+                overridden,
+                symbol_library_disallowed: e.symbol_library_disallowed,
+                footprint_library_disallowed: e.footprint_library_disallowed,
                 note: e.note,
             }
         })
@@ -126,9 +171,12 @@ impl FpTodo {
         self.symbols.iter().filter(|e| e.needs_review())
     }
 
-    /// Nothing to review and nothing that can't be
+    /// Nothing to review and nothing that can't be, no overridden footprint and no library outside what is
+    /// allowed
     pub fn is_ok(&self) -> bool {
-        self.symbols.iter().all(TodoEntry::is_ok)
+        self.symbols
+            .iter()
+            .all(|e| e.is_ok() && !e.is_overridden() && e.is_allowed())
     }
 
     /// How many symbols have each status, the statuses that occur, in list order
@@ -165,7 +213,11 @@ impl FpTodo {
             SymbolStatus::NoFootprint => Style::new().dimmed(),
         };
         let dim = Style::new().dimmed();
-        let shown: Vec<&TodoEntry> = self.symbols.iter().filter(|e| all || !e.is_ok()).collect();
+        let shown: Vec<&TodoEntry> = self
+            .symbols
+            .iter()
+            .filter(|e| all || !e.is_ok() || e.is_overridden() || !e.is_allowed())
+            .collect();
         let width = shown.iter().map(|e| e.symbol.len()).max().unwrap_or(0);
         let fp_width = shown
             .iter()
@@ -243,6 +295,38 @@ impl FpTodo {
                 }
             }
             let _ = write!(out, "  {dim}on{dim:#} {}", e.references.join(" "));
+            if !e.overridden.is_empty() {
+                let note = AnsiColor::Cyan.on_default();
+                let placed: Vec<String> = e
+                    .overridden
+                    .iter()
+                    .map(|(r, fp)| format!("{r} ({fp})"))
+                    .collect();
+                let _ = write!(
+                    out,
+                    "\n{:13} {:width$} {note}placed as {}: review follows the board, not the symbol's own \
+                     Footprint{note:#}",
+                    "",
+                    "",
+                    placed.join(", "),
+                );
+            }
+            if let Some(lib) = &e.symbol_library_disallowed {
+                let warn = AnsiColor::Yellow.on_default();
+                let _ = write!(
+                    out,
+                    "\n{:13} {:width$} {warn}its own library {lib} is not in the allowed libraries{warn:#}",
+                    "", "",
+                );
+            }
+            if let Some(lib) = &e.footprint_library_disallowed {
+                let warn = AnsiColor::Yellow.on_default();
+                let _ = write!(
+                    out,
+                    "\n{:13} {:width$} {warn}its footprint library {lib} is not in the allowed libraries{warn:#}",
+                    "", "",
+                );
+            }
             out.push('\n');
         }
         if !all && done > 0 {
@@ -259,7 +343,7 @@ impl FpTodo {
                 format!("{st}{n} {}{st:#}", s.name())
             })
             .collect();
-        let _ = writeln!(
+        let _ = write!(
             out,
             "{}: {} library symbols, {} to review: {}",
             self.board.display(),
@@ -271,6 +355,15 @@ impl FpTodo {
                 counts.join(", ")
             }
         );
+        let overridden = self.symbols.iter().filter(|e| e.is_overridden()).count();
+        if overridden > 0 {
+            let _ = write!(out, "; {overridden} with an overridden footprint");
+        }
+        let disallowed = self.symbols.iter().filter(|e| !e.is_allowed()).count();
+        if disallowed > 0 {
+            let _ = write!(out, "; {disallowed} outside the allowed libraries");
+        }
+        out.push('\n');
         out
     }
 }

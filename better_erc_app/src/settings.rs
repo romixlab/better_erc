@@ -61,6 +61,9 @@ pub struct FootprintReviewSettings {
     pub dxf_tolerance_mm: f64,
     /// The canvas' keys, by egui's key names (`F`, `Space`, `F5`, ...)
     pub keys: Keys,
+    /// The library nicknames a symbol and its footprint may be in, repeatable: an exact name, or a prefix with a
+    /// trailing `*` (`VHRD_*`). Any other library named is reported in the symbol list. Empty: no rule
+    pub allowed_libraries: Vec<String>,
 }
 
 /// The footprint review canvas' keys (while the pointer is over it), by egui's key names; arrows nudge the
@@ -280,6 +283,7 @@ impl Default for FootprintReviewSettings {
             invert: false,
             dxf_tolerance_mm: 0.005,
             keys: Keys::default(),
+            allowed_libraries: Vec::new(),
         }
     }
 }

@@ -224,8 +224,13 @@ footprint is one of:
 A schematic copy that holds a different hash than the library is reported as well: the schematic was not updated
 from the library. So is a board copy that differs from its library footprint (the footprint the board names, found
 through `--footprints` and the `fp-lib-table`; a board footprint without a library nickname is looked up by its
-symbol's `Footprint` field): the line shows both hashes, and the board was not updated from the library. Footprints
-that could not be compared are summed up once per reason below the list. `--symbols DIR` adds symbol libraries (a
+symbol's `Footprint` field): the line shows both hashes, and the board was not updated from the library.
+
+A board footprint placed under a different `Lib:Name` than its symbol's own `Footprint` field (a library migration
+half done, or a deliberate per-instance override) is reported too, naming both: a library migration that renamed or
+moved a footprint library, left half done, or a board edited by hand without updating the schematic, looks exactly
+like this. A footprint placed with no library nickname at all is not an override, there being nothing to compare its
+name against. Footprints that could not be compared are summed up once per reason below the list. `--symbols DIR` adds symbol libraries (a
 `.kicad_sym`, a `.kicad_symdir` or a folder of them, each named by its file name) searched before the
 `sym-lib-table`, and `--footprints DIR` footprint libraries searched before the `fp-lib-table`, for a PC without
 KiCad's global tables:
@@ -251,7 +256,9 @@ berc fp todo hw/board --format json
 
 The symbols to review come first, in the order to step through them: changed (reviewed before, the footprint moved
 on), other version, malformed, unreviewed; by symbol within each. Each line shows the footprint, the hash it gets once
-reviewed and the board references that use it. Below them, under their own heading, the symbols that can't be
+reviewed and the board references that use it, and (always shown, whatever the symbol's own status) the references
+whose board places a different footprint than this line's, the same `Lib:Name` mismatch `berc fp check` names.
+Below them, under their own heading, the symbols that can't be
 reviewed until fixed: missing (the library symbol or its footprint is not found, the line says why) and refused. The
 ok ones and those without a footprint are counted; `--all` lists them too. `--format json` always holds every symbol
 with its footprint file, the hash now and the `Datasheet` field, for the app's review tab and scripts; the library
@@ -266,7 +273,12 @@ project can't be read.
 berc fp accept hw/board U1 U2           # the hash of U1 and U2 now, into their library symbol
 berc fp accept hw/board U1 --dry-run    # what would be written, nothing written
 berc fp accept hw/board --symbol Device:R --hash fp1:0123456789abcdef
+berc fp accept hw/board U1 --footprint VHRD_Package_QFP:LQFP-48   # also sets the symbol's own Footprint
 ```
+
+`--footprint LIB:NAME` also sets the library symbol's own `Footprint` field to it, the value `berc fp check` showed
+as the one the board places: written the same way as the review hash, into the library and every schematic copy.
+Given for references of more than one library symbol at once, it is refused: one value can't hold for several.
 
 The hash goes into the `Footprint_Review` field of each footprint's schematic symbol's library symbol, in two places:
 the library's `.kicad_sym` (or the symbol's file in a `.kicad_symdir`), found through the project's or the global
@@ -326,6 +338,11 @@ the directory given, `.` by default. Each symbol is one of:
 A derived symbol (`extends`) has its parent's footprint and hash unless it sets its own. The exit code is 0 when every
 symbol is ok or has no footprint, 1 otherwise, 2 when a library can't be read.
 
+`--allow NICKNAME` (repeatable, for `--lib` here and for `berc fp todo`) lists the library nicknames a symbol and its
+footprint may be in: an exact name, or a prefix ending `*` (`--allow 'VHRD_*'`). A symbol's own library, or the one
+its `Footprint` names, that is none of them is reported, naming it. Given none, there is no rule and nothing is
+reported: a project only sets this once it has a library convention to enforce.
+
 ### Reviewing in the app
 
 The app's Footprint review tab does the review itself: it starts from a library symbol, since the symbol is what a
@@ -336,7 +353,9 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    its board uses, as `berc fp todo` lists them, those to review first; or a symbol library (a `.kicad_sym`, a
    `.kicad_symdir` folder, or a nickname from the `sym-lib-table`s) for its symbols. Each row shows the symbol's
    status (unreviewed, changed, ok, missing, no footprint). Picking one opens the library footprint its `Footprint`
-   field names, found through the project's or the global `fp-lib-table`. A symbol that sets no footprint, or whose
+   field names, found through the project's or the global `fp-lib-table`; from a board, when every reference places
+   a different footprint than that field names, the one actually placed opens instead, noted above the canvas
+   rather than left unsaid. A symbol that sets no footprint, or whose
    symbol or footprint is not found, is refused with the reason. Next to review steps to the next symbol that
    needs one.
 2. **Open the datasheet**: the symbol's `Datasheet` field when it names a local file, a local document library
@@ -413,7 +432,10 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    something is selected, the scale is set on the page shown and a footprint is shown.
 7. **Accept** (A): when the footprint matches the drawing, Accept writes its review hash into the symbol: the library
    symbol and, for a symbol from a project's list, the schematic's copies too (as `berc fp accept --symbol` does).
-   It asks first, showing what its dry run would write: each file, the field, the old and the new value. Enter (or
+   It asks first, showing what its dry run would write: each file, the field, the old and the new value. When the
+   board places a different footprint than the symbol's own `Footprint` field, a checkbox offers to also set that
+   field to the placed one, showing both; checked, it writes the same as `berc fp accept --footprint` does.
+   Enter (or
    Write) writes; Esc (or Cancel) writes nothing. It warns, per file and naming the lock file, when KiCad may
    overwrite the change on its next save: a file with KiCad's lock file beside it (`~name.kicad_sch.lck`, open in
    an editor there) that is held. A lock from this computer is held while a KiCad runs here (KiCad's locks name
@@ -463,7 +485,8 @@ from egui's own font.
 
 The settings (blink rate, the opacity, blend mode and colours at first, whether the page is inverted at first,
 the page search words, the finest drawing scale, the font folders, the library search command, the library name
-command and the notes file, how far Z zooms in, whether the ruler snaps level, how near its ends snap to the
+command and the notes file, the allowed library nicknames (`allowed_libraries`, the app's side of `--allow`, none
+by default), how far Z zooms in, whether the ruler snaps level, how near its ends snap to the
 drawing's lines, the DXF curve tolerance, and the keys F, M, R, E, G, Z, S, D, T, X, B, C, I, P, A, N, Enter, V and W
 by name in
 `[footprint_review.keys]`; a file that still has M for the bottom view takes X for it) are in
