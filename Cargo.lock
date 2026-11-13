@@ -1473,7 +1473,7 @@ dependencies = [
 
 [[package]]
 name = "erc_step"
-version = "0.4.41"
+version = "0.4.44"
 dependencies = [
  "ruststep",
  "truck-geotrait",
@@ -4299,7 +4299,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32497e9a4c7b38532efcdebeef879707aa9f794296a4f0244f6f69e9bc8574bd"
 dependencies = [
  "fastrand",
- "getrandom 0.4.3",
+ "getrandom 0.3.4",
  "once_cell",
  "rustix 1.1.5",
  "windows-sys 0.61.2",
@@ -4509,7 +4509,7 @@ dependencies = [
 [[package]]
 name = "truck-assembly"
 version = "0.1.0"
-source = "git+https://github.com/vhrdtech/truck#55548a27de0af3e87cceeb677b809aa110a87028"
+source = "git+https://github.com/vhrdtech/truck#98d5e39f9a79d1c2f08070e3b7380d79ced03b13"
 dependencies = [
  "rayon",
  "truck-base",
@@ -4518,7 +4518,7 @@ dependencies = [
 [[package]]
 name = "truck-base"
 version = "0.5.0"
-source = "git+https://github.com/vhrdtech/truck#55548a27de0af3e87cceeb677b809aa110a87028"
+source = "git+https://github.com/vhrdtech/truck#98d5e39f9a79d1c2f08070e3b7380d79ced03b13"
 dependencies = [
  "cgmath",
  "matext4cgmath",
@@ -4529,7 +4529,7 @@ dependencies = [
 [[package]]
 name = "truck-derivers"
 version = "0.1.0"
-source = "git+https://github.com/vhrdtech/truck#55548a27de0af3e87cceeb677b809aa110a87028"
+source = "git+https://github.com/vhrdtech/truck#98d5e39f9a79d1c2f08070e3b7380d79ced03b13"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
@@ -4540,7 +4540,7 @@ dependencies = [
 [[package]]
 name = "truck-geometry"
 version = "0.5.0"
-source = "git+https://github.com/vhrdtech/truck#55548a27de0af3e87cceeb677b809aa110a87028"
+source = "git+https://github.com/vhrdtech/truck#98d5e39f9a79d1c2f08070e3b7380d79ced03b13"
 dependencies = [
  "serde",
  "thiserror 2.0.21",
@@ -4551,7 +4551,7 @@ dependencies = [
 [[package]]
 name = "truck-geotrait"
 version = "0.4.0"
-source = "git+https://github.com/vhrdtech/truck#55548a27de0af3e87cceeb677b809aa110a87028"
+source = "git+https://github.com/vhrdtech/truck#98d5e39f9a79d1c2f08070e3b7380d79ced03b13"
 dependencies = [
  "getrandom 0.4.3",
  "rand 0.10.3",
@@ -4563,7 +4563,7 @@ dependencies = [
 [[package]]
 name = "truck-meshalgo"
 version = "0.4.0"
-source = "git+https://github.com/vhrdtech/truck#55548a27de0af3e87cceeb677b809aa110a87028"
+source = "git+https://github.com/vhrdtech/truck#98d5e39f9a79d1c2f08070e3b7380d79ced03b13"
 dependencies = [
  "array-macro",
  "derive_more 2.1.1",
@@ -4580,7 +4580,7 @@ dependencies = [
 [[package]]
 name = "truck-modeling"
 version = "0.6.0"
-source = "git+https://github.com/vhrdtech/truck#55548a27de0af3e87cceeb677b809aa110a87028"
+source = "git+https://github.com/vhrdtech/truck#98d5e39f9a79d1c2f08070e3b7380d79ced03b13"
 dependencies = [
  "derive_more 2.1.1",
  "itertools 0.15.0",
@@ -4596,7 +4596,7 @@ dependencies = [
 [[package]]
 name = "truck-polymesh"
 version = "0.6.0"
-source = "git+https://github.com/vhrdtech/truck#55548a27de0af3e87cceeb677b809aa110a87028"
+source = "git+https://github.com/vhrdtech/truck#98d5e39f9a79d1c2f08070e3b7380d79ced03b13"
 dependencies = [
  "array-macro",
  "bytemuck",
@@ -4611,7 +4611,7 @@ dependencies = [
 [[package]]
 name = "truck-stepio"
 version = "0.3.0"
-source = "git+https://github.com/vhrdtech/truck#55548a27de0af3e87cceeb677b809aa110a87028"
+source = "git+https://github.com/vhrdtech/truck#98d5e39f9a79d1c2f08070e3b7380d79ced03b13"
 dependencies = [
  "chrono",
  "derive_more 2.1.1",
@@ -4629,7 +4629,7 @@ dependencies = [
 [[package]]
 name = "truck-topology"
 version = "0.6.0"
-source = "git+https://github.com/vhrdtech/truck#55548a27de0af3e87cceeb677b809aa110a87028"
+source = "git+https://github.com/vhrdtech/truck#98d5e39f9a79d1c2f08070e3b7380d79ced03b13"
 dependencies = [
  "parking_lot 0.13.0",
  "rayon",
