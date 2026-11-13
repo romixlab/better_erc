@@ -267,3 +267,99 @@ fn a_change_on_disk_reloads_by_itself() {
     h.run();
     h.get_by_label_contains("the symbols and footprints changed on disk: reloaded at ");
 }
+
+/// A project in `dir` around placed.kicad_pcb whose Mixed_Pads footprints U7-U12 are placed for `Rev:Mixed` as
+/// `Test:Mixed_Pads`, while the library symbol's own `Footprint` is `Test:Asym_SOT`: an override. The library is
+/// [`library`]'s; returns its Mixed_Pads file
+fn override_project(dir: &Path) -> PathBuf {
+    let pdf = datasheet(dir);
+    let (lib, mixed) = library(dir, &pdf);
+    let fixtures =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("../erc_kicad/tests/fixtures/footprints");
+    let board = std::fs::read_to_string(fixtures.join("placed.kicad_pcb"))
+        .unwrap()
+        .replace(
+            "(footprint \"Mixed_Pads\"",
+            "(footprint \"Test:Mixed_Pads\"",
+        );
+    std::fs::write(dir.join("rev.kicad_pcb"), board).unwrap();
+    // The library symbol names its own footprint, not the one the board places
+    let text = std::fs::read_to_string(&lib).unwrap();
+    let own = text.replacen(
+        "(property \"Footprint\" \"Test:Mixed_Pads\"",
+        "(property \"Footprint\" \"Test:Asym_SOT\"",
+        1,
+    );
+    std::fs::write(&lib, own).unwrap();
+    let root = "b0000000-0000-4000-8000-000000000000";
+    let lib_symbol = "(symbol \"Rev:Mixed\" (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Asym_SOT\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (symbol \"Mixed_1_1\" (pin passive line (at 0 0 0) (length 1.27) (name \"A\" (effects (font (size 1.27 1.27)))) (number \"1\" (effects (font (size 1.27 1.27)))))))\n";
+    let placed: String = (7..=12)
+        .map(|n| {
+            format!(
+                "  (symbol (lib_id \"Rev:Mixed\") (at {x} 50 0) (unit 1) (in_bom yes) (on_board yes) (dnp no) (uuid \"b0000000-0000-4000-8000-0000000001{n:02}\")\n    (property \"Reference\" \"U{n}\" (at {x} 45 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Mixed_Pads\" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (pin \"1\" (uuid \"b0000000-0000-4000-8000-0000000002{n:02}\"))\n    (instances (project \"rev\" (path \"/{root}\" (reference \"U{n}\") (unit 1)))))\n",
+                x = 20 * n
+            )
+        })
+        .collect();
+    std::fs::write(
+        dir.join("rev.kicad_sch"),
+        format!(
+            "(kicad_sch (version 20231120) (generator \"eeschema\") (generator_version \"8.0\")\n  (uuid \"{root}\")\n  (paper \"A4\")\n  (lib_symbols {lib_symbol})\n{placed}  (sheet_instances (path \"/\" (page \"1\"))))\n"
+        ),
+    )
+    .unwrap();
+    std::fs::write(dir.join("rev.kicad_pro"), "{}\n").unwrap();
+    std::fs::write(
+        dir.join("sym-lib-table"),
+        "(sym_lib_table (version 7)\n  (lib (name \"Rev\")(type \"KiCad\")(uri \"${KIPRJMOD}/Rev.kicad_sym\")(options \"\")(descr \"\")))\n",
+    )
+    .unwrap();
+    mixed
+}
+
+/// The board places a footprint other than the symbol's own, and that footprint was edited in its library after
+/// the board was last updated: the review is of the library file (the review hash is the library footprint's),
+/// with a note that the board's copy differs; the library edited again is read again
+#[test]
+fn an_override_is_reviewed_from_its_library() {
+    let dir = tempfile::tempdir().unwrap();
+    let mixed = override_project(dir.path());
+    add_pad(&mixed, 7);
+    let mut h = harness("fp reload override", false);
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut()
+        .open_path(&ctx, &dir.path().join("rev.kicad_pro"));
+    h.run();
+    let i = h.state().symbol_row("Rev:Mixed").unwrap();
+    h.state_mut().select_symbol(i, true);
+    h.run();
+    let st = h.state();
+    let s = st.rt.sourced.as_ref().expect("a footprint shown");
+    assert_eq!(s.source, FootprintSource::File(mixed.clone()));
+    assert!(pads(&h).contains(&"7".to_string()), "{:?}", pads(&h));
+    let note = h.state().rt.board_note.clone().unwrap_or_default();
+    assert!(
+        note.contains(
+            "placed on U7 as Test:Mixed_Pads, not the symbol's own Footprint (Test:Asym_SOT)"
+        ),
+        "{note}"
+    );
+    assert!(
+        note.contains("the board copy U7 differs from the library")
+            && note.contains("update the board"),
+        "{note}"
+    );
+    // Edited in the library again: read again, as any footprint shown
+    add_pad(&mixed, 8);
+    h.get_by_label_contains("Reload · F5").click();
+    h.run();
+    assert!(pads(&h).contains(&"8".to_string()), "{:?}", pads(&h));
+    assert!(
+        h.state()
+            .rt
+            .watch
+            .files(watch::Group::List)
+            .contains(&mixed)
+    );
+}

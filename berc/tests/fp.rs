@@ -984,6 +984,40 @@ fn check_and_todo_report_an_overridden_footprint() {
         rev_ok["overridden"],
         serde_json::json!([["U1", "VHRD_Test:Asym_SOT"]])
     );
+    // The placed footprint at the top of the row: here no library has it, and the row says why
+    assert_eq!(rev_ok["placed"], "VHRD_Test:Asym_SOT");
+    assert_eq!(rev_ok["placed_file"], serde_json::Value::Null);
+    assert!(
+        rev_ok["placed_note"]
+            .as_str()
+            .is_some_and(|n| n.contains("VHRD_Test")),
+        "{rev_ok}"
+    );
+
+    // Placed as a footprint the library has: its file and its hash now, what a review of it reads
+    rename_footprint(&dir, "U1", "VHRD_Test:Asym_SOT", "Test:Mixed_Pads");
+    let out = fp_todo(
+        &dir,
+        &["--footprints", path(&fps), "--format", "json", "--all"],
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let rev_ok = v["symbols"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|e| e["symbol"] == "Rev:Ok")
+        .unwrap();
+    assert_eq!(rev_ok["footprint"], "Test:Asym_SOT", "the symbol's own");
+    assert_eq!(rev_ok["placed"], "Test:Mixed_Pads");
+    assert!(
+        rev_ok["placed_file"]
+            .as_str()
+            .unwrap()
+            .ends_with("Test.pretty/Mixed_Pads.kicad_mod")
+    );
+    assert_eq!(rev_ok["placed_hash"], library_hash("Mixed_Pads").as_str());
+    assert_eq!(rev_ok["placed_note"], serde_json::Value::Null);
+    rename_footprint(&dir, "U1", "Test:Mixed_Pads", "VHRD_Test:Asym_SOT");
 
     let text = stdout(&fp_todo(&dir, &["--footprints", path(&fps)]));
     assert!(

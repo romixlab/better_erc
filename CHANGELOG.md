@@ -16,6 +16,11 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - Footprint review: files changed on disk are read again. Before, the tab kept what it had read: an edited footprint, symbol, board, 3D model or datasheet stayed old until the app restarted. The tab now watches every file it shows (the board and its schematics, the library tables, the symbol libraries, the footprint files, the STEP models, the datasheet). A change is read again by itself once the file stays quiet for 300 ms, and picking a symbol looks at the files first. The view stays as it was (page, scale, placement, the 3D camera, the list's filter), and the review status follows the file (a changed footprint shows its review stale). What Accept writes itself reloads nothing (`VIEW-31`).
 - Footprint review: a Reload button and key (`F5`, a setting) read everything again from disk, and a line beside it says what was read again and when (`VIEW-31`).
 - `berc fp todo` and `berc fp check --lib` name the files their list was made from (`files` in the JSON): the project's own files, the library tables looked at (the project's and the global one, there or not, and nested ones), the symbol libraries and the footprint files read or looked for in vain. When one of them changes the list is out of date. The footprint review watches them (`VIEW-31`).
+- `berc fp todo` names the footprint a board places in place of the symbol's own on the row itself (`placed`), with its library file and review hash now (`placed_file`, `placed_hash`), or why its library has none (`placed_note`). Before, only the `overridden` list held it, under the symbol's own `footprint` (`VIEW-31`).
+
+### Fixed
+
+- Footprint review: a footprint the board places in place of the symbol's own (an override) is reviewed from its library file, the review hash being the library footprint's. Before, the tab read the board's copy, so a footprint edited in the footprint editor stayed old until KiCad's Update PCB from Library, even after a restart. A board copy that differs from the library is named in the note ("update the board from the library"); the board's copy is reviewed only where no library table has the footprint (`VIEW-31`).
 
 ### Changed
 

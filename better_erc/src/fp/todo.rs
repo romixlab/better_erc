@@ -33,6 +33,20 @@ pub struct TodoEntry {
     /// override, deliberate or not, shown rather than silently resolved (reference, the footprint placed)
     #[serde(default)]
     pub overridden: Vec<(String, String)>,
+    /// The footprint the board places in place of [`footprint`](Self::footprint), when every overridden reference
+    /// agrees on one ([`TodoEntry::overridden_footprint`]): what a review of this symbol on this board is of
+    #[serde(default)]
+    pub placed: Option<String>,
+    /// [`placed`](Self::placed)'s library `.kicad_mod`, found through the footprint library tables: the file a
+    /// review of it reads (the board's copy may be older, until the board is updated from the library)
+    #[serde(default)]
+    pub placed_file: Option<PathBuf>,
+    /// [`placed`](Self::placed)'s review hash now, its library footprint's
+    #[serde(default)]
+    pub placed_hash: Option<String>,
+    /// Why [`placed`](Self::placed)'s library footprint could not be read
+    #[serde(default)]
+    pub placed_note: Option<String>,
     /// The symbol's own library (the nickname of `symbol`), when `allowed` named some and it is none of them
     #[serde(default)]
     pub symbol_library_disallowed: Option<String>,
@@ -62,18 +76,23 @@ impl TodoEntry {
     /// The footprint placed, when every overridden reference agrees on one; `None` when there is none to
     /// override, or they disagree among themselves
     pub fn overridden_footprint(&self) -> Option<&str> {
-        match self.overridden.as_slice() {
-            [] => None,
-            [first, rest @ ..] => rest
-                .iter()
-                .all(|(_, p)| p == &first.1)
-                .then_some(first.1.as_str()),
-        }
+        agreed(&self.overridden)
     }
 
     /// Nothing outside what is allowed
     pub fn is_allowed(&self) -> bool {
         self.symbol_library_disallowed.is_none() && self.footprint_library_disallowed.is_none()
+    }
+}
+
+/// The footprint every one of `overridden` places, when they agree on one
+fn agreed(overridden: &[(String, String)]) -> Option<&str> {
+    match overridden {
+        [] => None,
+        [first, rest @ ..] => rest
+            .iter()
+            .all(|(_, p)| p == &first.1)
+            .then_some(first.1.as_str()),
     }
 }
 
@@ -146,6 +165,18 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
                 None => Vec::new(),
             };
             let references = placed.into_iter().map(|(r, _)| r).collect();
+            // The placed footprint as the library has it: the board's copy may be older
+            let placed = agreed(&overridden).map(|p| p.trim().to_string());
+            let (mut placed_file, mut placed_hash, mut placed_note) = (None, None, None);
+            if let Some(p) = &placed {
+                match fps.footprint(p) {
+                    Ok(f) => {
+                        placed_file = Some(f.path.clone());
+                        placed_hash = Some(erc_model::fphash::hash(&f.footprint));
+                    }
+                    Err(why) => placed_note = Some(why.to_string()),
+                }
+            }
             TodoEntry {
                 symbol: e.symbol,
                 status: e.status,
@@ -157,6 +188,10 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
                 datasheet: e.datasheet,
                 references,
                 overridden,
+                placed,
+                placed_file,
+                placed_hash,
+                placed_note,
                 symbol_library_disallowed: e.symbol_library_disallowed,
                 footprint_library_disallowed: e.footprint_library_disallowed,
                 note: e.note,

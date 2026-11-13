@@ -1135,6 +1135,10 @@ impl FootprintReview {
                             datasheet: e.datasheet,
                             references: Vec::new(),
                             overridden: Vec::new(),
+                            placed: None,
+                            placed_file: None,
+                            placed_hash: None,
+                            placed_note: None,
                             symbol_library_disallowed: e.symbol_library_disallowed,
                             footprint_library_disallowed: e.footprint_library_disallowed,
                             note: e.note,
@@ -1239,13 +1243,29 @@ impl FootprintReview {
         self.rt.written = None;
         let no_footprint = |why: String| (None, Some(why));
         // An overridden footprint (the board places one other than the symbol's own `Footprint`): review follows
-        // the board, shown in `board_note` rather than silently resolved to the symbol's default
+        // the board, shown in `board_note` rather than silently resolved to the symbol's default. What is reviewed
+        // is the placed footprint as its library has it (the review hash is of the library footprint); the board's
+        // copy only where the library has none, and a copy that differs is named: the board is not updated yet
         let overridden = row
             .overridden_footprint()
             .map(|fp| (fp.to_string(), row.overridden[0].0.clone()));
         let mut override_note = None;
-        let (sourced, note) = match (&overridden, &self.board) {
-            (Some((placed, reference)), Some(board)) => match (FootprintSource::Board {
+        let own = row.footprint.as_deref().unwrap_or("none").to_string();
+        let (sourced, note) = match (&overridden, &row.placed_file, &self.board) {
+            (Some((placed, reference)), Some(file), _) => {
+                match FootprintSource::File(file.clone()).read() {
+                    Ok(s) => {
+                        let copy = self.board_copy_note(reference, &s.hash);
+                        override_note = Some(format!(
+                            "placed on {reference} as {placed}, not the symbol's own Footprint ({own}): reviewing \
+                             {placed} from its library{copy}"
+                        ));
+                        (Some(s), None)
+                    }
+                    Err(e) => no_footprint(e.to_string()),
+                }
+            }
+            (Some((placed, reference)), None, Some(board)) => match (FootprintSource::Board {
                 board: board.clone(),
                 reference: reference.clone(),
             })
@@ -1253,9 +1273,11 @@ impl FootprintReview {
             {
                 Ok(s) => {
                     override_note = Some(format!(
-                        "placed on {reference} as {placed}, not the symbol's own Footprint ({}): reviewing what \
-                         the board places",
-                        row.footprint.as_deref().unwrap_or("none")
+                        "placed on {reference} as {placed}, not the symbol's own Footprint ({own}): reviewing the \
+                         board's copy, the library footprint was not found ({})",
+                        row.placed_note
+                            .as_deref()
+                            .unwrap_or("no footprint library table names it")
                     ));
                     (Some(s), None)
                 }
@@ -1443,6 +1465,32 @@ impl FootprintReview {
                 self.rt.sourced = None;
                 self.rt.items.clear();
             }
+        }
+    }
+
+    /// How the open board's copy of footprint `reference` compares with the library footprint of review hash
+    /// `hash`: `; the board copy … differs …` when it is older (the board not updated from the library yet), else
+    /// nothing
+    fn board_copy_note(&self, reference: &str, hash: &str) -> String {
+        let Some(b) = &self.rt.board else {
+            return String::new();
+        };
+        let Some(i) = b
+            .layout
+            .footprints
+            .iter()
+            .position(|f| f.reference == reference)
+        else {
+            return String::new();
+        };
+        let copy = Sourced::from_board(&b.path, &b.layout, FootprintId::from_index(i));
+        if copy.hash == hash {
+            String::new()
+        } else {
+            format!(
+                "; the board copy {reference} differs from the library ({}): update the board from the library",
+                copy.hash
+            )
         }
     }
 
