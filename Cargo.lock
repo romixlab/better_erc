@@ -447,6 +447,7 @@ dependencies = [
  "tokio",
  "toml",
  "ve_spacemouse",
+ "ve_theme",
  "wasm-bindgen-futures",
  "web-sys",
 ]
@@ -4760,8 +4761,8 @@ dependencies = [
 
 [[package]]
 name = "ve_basics"
-version = "0.32.17"
-source = "git+https://github.com/vhrdtech/vhrd_egui#2f12366724c52766af3b993e08e7d750dea95995"
+version = "0.32.18"
+source = "git+https://github.com/vhrdtech/vhrd_egui#3c63fd6b25092a474170494eade0b3532b86667f"
 dependencies = [
  "egui",
  "web-time",
@@ -4769,8 +4770,8 @@ dependencies = [
 
 [[package]]
 name = "ve_spacemouse"
-version = "0.32.17"
-source = "git+https://github.com/vhrdtech/vhrd_egui#2f12366724c52766af3b993e08e7d750dea95995"
+version = "0.32.18"
+source = "git+https://github.com/vhrdtech/vhrd_egui#3c63fd6b25092a474170494eade0b3532b86667f"
 dependencies = [
  "egui",
  "egui-phosphor",
@@ -4782,8 +4783,8 @@ dependencies = [
 
 [[package]]
 name = "ve_theme"
-version = "0.32.17"
-source = "git+https://github.com/vhrdtech/vhrd_egui#2f12366724c52766af3b993e08e7d750dea95995"
+version = "0.32.18"
+source = "git+https://github.com/vhrdtech/vhrd_egui#3c63fd6b25092a474170494eade0b3532b86667f"
 dependencies = [
  "egui",
  "serde_json",
