@@ -656,8 +656,18 @@ impl TabUi for FootprintReview {
         }
         let (settings, note) = Settings::load();
         self.set_settings(settings.footprint_review);
-        self.rt.puck.mapping = settings.spacemouse;
-        self.rt.settings_note = note;
+        let mut spacemouse = ve_spacemouse::Config::load();
+        let moved = self
+            .rt
+            .settings_file
+            .as_deref()
+            .and_then(|f| crate::settings::move_spacemouse(f, &mut spacemouse));
+        self.rt.puck.settings =
+            ve_spacemouse::SettingsPanel::new(spacemouse, ve_spacemouse::CalibrateSteps::TwoD);
+        self.rt.settings_note = match (note, moved) {
+            (Some(a), Some(b)) => Some(format!("{a}; {b}")),
+            (a, b) => a.or(b),
+        };
     }
 
     fn ui(&mut self, ui: &mut Ui, _cx: &mut Context, id: Id) {
@@ -673,7 +683,7 @@ impl TabUi for FootprintReview {
             });
         self.canvas(ui);
         self.confirm_ui(ui.ctx(), id);
-        self.calibration_window(ui.ctx(), id);
+        self.calibration_window(ui.ctx());
         self.puck_pie(ui.ctx(), &events);
         #[cfg(test)]
         if self.rt.sync_pdf

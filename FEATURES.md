@@ -746,9 +746,12 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   footprint (`P` switches); a tap of the left button lays the ruler, of the right one switches what the puck
   moves; held, pie menus with the canvas' actions (left: page and ruler, right: footprint, both: Accept and Next
   to review), each slot named with its key, a disabled one saying why; Accept's question answered by the taps.
-  Keys and slots are one set of actions; new keys `A` Accept, `N` Next to review. Calibrate… from the tab, the
-  mapping the app's (`[spacemouse]` in `config.toml`). Tests on a fake spacenavd socket. Missing: a try on the
-  device · `better_erc_app/src/tabs/footprint_review/puck.rs`, `puck_tests.rs`, README "With a SpaceMouse"
+  Keys and slots are one set of actions; new keys `A` Accept, `N` Next to review. The mapping is the shared
+  `spacemouse.toml` through ve_spacemouse's settings panel (vhrd_egui SPM-5: Calibrate…, where each value comes
+  from, Save to every folder or this project); the old `[spacemouse]` of `config.toml` moves there once at start
+  (`settings::move_spacemouse`, tests on a copy of a real file through `BERC_SPACEMOUSE_COPY`). Tests on a fake
+  spacenavd socket. Missing: a try on the device · `better_erc_app/src/tabs/footprint_review/puck.rs`,
+  `puck_tests.rs`, `settings.rs`, README "With a SpaceMouse"
 
 ## App (`APP`)
 

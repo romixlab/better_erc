@@ -528,9 +528,15 @@ libspnav), so the device is not needed to build or run it.
   and the right one cancels.
 - **Calibrate…** (SpaceMouse, in the tab's side panel) measures which way the puck reads and which button is which:
   it asks for one motion at a time (slide right, lift up, push away, each button), works the mapping out from what
-  it recorded and shows a table to confirm. The mapping (axes, signs, dead zone, speeds, buttons) is the app's:
-  `[spacemouse]` in the settings file, saved when the calibration is used, or by Save the mapping after an edit by
-  hand under Mapping. The side panel says whether spacenavd is there and, when not, what to do.
+  it recorded and shows a table to confirm. The side panel says whether spacenavd is there and, when not, what to do.
+- **One mapping for every app**: the mapping (axes, signs, dead zone, speeds, buttons) is not the app's own but
+  ve_spacemouse's shared `spacemouse.toml`, the same settings panel as in every app on it. It is read from
+  `.config/spacemouse.toml` in the folder the app started in and each parent, then `~/.config/spacemouse.toml`,
+  merged key by key with the nearest file winning, as Cargo reads its config. The panel shows which file each value
+  comes from; Save (and a used calibration) writes to every folder's file, `~/.config/spacemouse.toml`, or to this
+  project's. A `[spacemouse]` section that `config.toml` kept up to 0.4.42 moves into `~/.config/spacemouse.toml`
+  at the tab's first start, once: keys that file already has keep their values, then the section leaves
+  `config.toml` (the settings' note says what moved).
 
 A footprint opened alone (Open a footprint alone, a `.kicad_mod`) or picked from a board's footprint list is a
 preview: it is drawn over the datasheet the same way, but there is no symbol to put the hash on, so Accept is
@@ -550,7 +556,7 @@ drawing's lines, the DXF curve tolerance, and the keys F, M, R, E, G, Z, S, D, T
 by name in
 `[footprint_review.keys]`; a file that still has M for the bottom view takes X for it) are in
 `~/.config/better_erc/config.toml` (`$XDG_CONFIG_HOME`, or the file `$BERC_CONFIG` names), section
-`[footprint_review]`, and the SpaceMouse's mapping in `[spacemouse]`; the tab's Settings shows and saves them. Each step of a review
+`[footprint_review]`; the tab's Settings shows and saves them. The SpaceMouse's mapping is in `spacemouse.toml` (above). Each step of a review
 is recorded in berc's usage record (`app fp-review accept`, `app fp-review write`, ...), which `berc usage` counts in its `app` column.
 
 ## Development

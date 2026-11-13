@@ -47,6 +47,7 @@ ve_spacemouse = { git = "https://github.com/vhrdtech/vhrd_egui" }
 
 # native:
 [dev-dependencies]
+tempfile = "3"
 egui_kittest = { version = "0.36", features = ["wgpu"] }
 image = { version = "0.25", default-features = false, features = ["png"] }
 

@@ -11,6 +11,15 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Changed
+
+- Footprint review: the SpaceMouse's mapping is the one every app on ve_spacemouse shares, `spacemouse.toml`
+  (`.config/spacemouse.toml` in the folder the app started in and its parents, then `~/.config/spacemouse.toml`,
+  the nearest file winning per key), shown and saved by ve_spacemouse's settings panel: Calibrate…, the file each
+  value comes from, Save to every folder or to this project. `[spacemouse]` in `config.toml` moves into
+  `~/.config/spacemouse.toml` at the tab's first start, once, keeping the calibration; keys that file already has
+  keep their values (`VIEW-20`). Needs vhrd_egui with SPM-5 (`cargo update -p ve_spacemouse`).
+
 ## [0.4.43] - 2026-11-13
 
 ### Added

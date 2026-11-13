@@ -344,7 +344,10 @@ fn calibrate_from_the_tab_and_the_mapping_saved() {
     let fake = FakeSpacenavd::start(&socket).unwrap();
     let mut h = harness(&socket, &fake);
     h.get_by_label("SpaceMouse").click();
-    h.step();
+    // The section opens over a few frames; a click lands once it is open
+    for _ in 0..10 {
+        h.step();
+    }
     h.get_by_label("Calibrate…").click();
     h.step();
     h.step();
@@ -366,35 +369,34 @@ fn calibrate_from_the_tab_and_the_mapping_saved() {
     button(&mut h, &fake, b, false);
     h.get_by_label("Cancel").click();
     h.step();
-    assert!(h.state().rt.puck.calibration.is_none());
-    // The mapping into the settings file: [spacemouse], the review's settings left as they are
-    let file = dir.join("config.toml");
-    std::fs::write(&file, "[footprint_review]\nblink_hz = 5.0\n").unwrap();
-    h.state_mut().rt.settings_file = Some(file.clone());
-    h.state_mut().rt.puck.mapping.speed.pan = 3000.0;
-    h.state_mut().save_mapping();
-    let (saved, error) = Settings::load_from(&file);
-    assert_eq!(error, None);
-    assert_eq!(saved.spacemouse.speed.pan, 3000.0);
-    assert_eq!(saved.spacemouse, h.state().rt.puck.mapping);
-    assert_eq!(saved.footprint_review.blink_hz, 5.0);
-    // A file that can't be read is left alone
-    std::fs::write(&file, "[footprint_review]\nblink_hz = \"fast\"\n").unwrap();
-    h.state_mut().save_mapping();
+    assert!(!h.state().rt.puck.settings.calibrating());
+    // The mapping into the shared spacemouse.toml (a folder of the test's own), not the app's settings file
+    let user = dir.join("cfg/spacemouse.toml");
+    h.state_mut().rt.puck.settings = ve_spacemouse::SettingsPanel::new(
+        ve_spacemouse::Config::load_from(&dir, Some(user.clone())),
+        ve_spacemouse::CalibrateSteps::TwoD,
+    );
+    let mut m = h.state().rt.puck.settings.mapping().clone();
+    m.speed.pan = 3000.0;
+    h.state_mut().rt.puck.settings.set_mapping(m.clone());
+    h.step();
+    h.get_by_label("Save").scroll_to_me();
+    for _ in 0..10 {
+        h.step();
+    }
+    h.get_by_label("Save").click();
+    h.step();
+    let again = ve_spacemouse::Config::load_from(&dir, Some(user.clone()));
+    assert_eq!(again.mapping(), &m);
     assert!(
         h.state()
             .rt
             .puck
-            .note
-            .as_deref()
-            .unwrap()
-            .starts_with("not saved, the file is left as it is"),
+            .settings
+            .note()
+            .is_some_and(|n| n.starts_with("saved to")),
         "{:?}",
-        h.state().rt.puck.note
-    );
-    assert_eq!(
-        std::fs::read_to_string(&file).unwrap(),
-        "[footprint_review]\nblink_hz = \"fast\"\n"
+        h.state().rt.puck.settings.note()
     );
     // The client first, then the fake (its socket is in the folder)
     drop(h);

@@ -4,13 +4,14 @@
 //! [`Action`]s, done by [`FootprintReview::act`].
 //!
 //! Pan is in screen points per second: a push moves the page across the screen at the same speed at every zoom.
-//! The mapping (which raw axis does what, the speed, which button is which) is the app's: `[spacemouse]` in the
-//! settings file, measured by the calibrate step reached from the tab.
+//! The mapping (which raw axis does what, the speed, which button is which) is shared by every app on
+//! ve_spacemouse: `spacemouse.toml` in `~/.config` or a project's `.config`, shown, calibrated and saved by
+//! ve_spacemouse's settings panel in the tab. A `[spacemouse]` the settings file kept before moves there once
+//! ([`crate::settings::move_spacemouse`]).
 
 use super::*;
 use ve_spacemouse::{
-    Axes, Calibration, CalibrationAction, Event, Mapping, PieMenu, PieState, Slot, calibration_ui,
-    icons, mapping_ui,
+    Axes, CalibrateSteps, Config, Event, PieMenu, PieState, SettingsPanel, Slot, icons,
 };
 
 /// What the canvas does on a key or a pie slot
@@ -63,11 +64,10 @@ pub(super) struct Puck {
     mouse: Option<ve_spacemouse::SpaceMouse>,
     /// The deflection this frame
     pub axes: Axes,
-    pub mapping: Mapping,
     pub pie: PieState,
-    pub calibration: Option<Calibration>,
-    /// Where the mapping was saved, or why not
-    pub note: Option<String>,
+    /// The mapping, its files and the calibrate step (ve_spacemouse's shared panel); no files until the tab
+    /// starts ([`FootprintReview::init`]), so tests never read the host's
+    pub settings: SettingsPanel,
 }
 
 impl Default for Puck {
@@ -77,10 +77,8 @@ impl Default for Puck {
             #[cfg(unix)]
             mouse: None,
             axes: Axes::default(),
-            mapping: Mapping::default(),
             pie: PieState::default(),
-            calibration: None,
-            note: None,
+            settings: SettingsPanel::new(Config::none(), CalibrateSteps::TwoD),
         }
     }
 }
@@ -135,12 +133,8 @@ impl FootprintReview {
     /// The first part of a frame: spacenavd's events, fed to the calibrate step while it is open
     pub(super) fn puck_poll(&mut self, ctx: &egui::Context) -> Vec<Event> {
         let events = self.rt.puck.poll(ctx);
-        if let Some(cal) = &mut self.rt.puck.calibration {
-            let now = ctx.input(|i| i.time);
-            for e in &events {
-                cal.feed(e, now);
-            }
-        }
+        let now = ctx.input(|i| i.time);
+        self.rt.puck.settings.feed(&events, now);
         events
     }
 
@@ -148,10 +142,10 @@ impl FootprintReview {
     /// at every zoom; its push and pull zoom the view about the pointer over the canvas, else the canvas' middle.
     /// Nothing while the calibrate step measures the motions.
     pub(super) fn puck_nav(&mut self, ctx: &egui::Context, canvas: Rect, pointer: Option<Pos2>) {
-        if self.rt.puck.calibration.is_some() {
+        if self.rt.puck.settings.calibrating() {
             return;
         }
-        let nav = self.rt.puck.mapping.apply(&self.rt.puck.axes);
+        let nav = self.rt.puck.settings.mapping().apply(&self.rt.puck.axes);
         if nav.is_zero() {
             return;
         }
@@ -184,11 +178,11 @@ impl FootprintReview {
     /// The pie menus on the SpaceMouse's buttons, over everything; what fired is done at the place the menu
     /// opened. Not while the calibrate step records the buttons.
     pub(super) fn puck_pie(&mut self, ctx: &egui::Context, events: &[Event]) {
-        if self.rt.puck.calibration.is_some() {
+        if self.rt.puck.settings.calibrating() {
             return;
         }
         let menu = self.pie_menu();
-        let buttons = ve_spacemouse::buttons(events, &self.rt.puck.mapping);
+        let buttons = ve_spacemouse::buttons(events, self.rt.puck.settings.mapping());
         let fired = menu.show(ctx, &mut self.rt.puck.pie, &buttons);
         let (free, lines) = ctx.input(|i| (i.modifiers.shift, !i.modifiers.alt));
         for f in fired {
@@ -524,99 +518,35 @@ impl FootprintReview {
                 } else {
                     ui.visuals().warn_fg_color
                 };
-                ui.colored_label(colour, line)
-                    .on_hover_text(format!("spacenavd's socket: {}", self.rt.puck.socket_line()));
+                ui.colored_label(colour, line).on_hover_text(format!(
+                    "spacenavd's socket: {}",
+                    self.rt.puck.socket_line()
+                ));
                 ui.horizontal(|ui| {
                     ui.label("The puck moves");
                     let k = short_key(self.keys().puck);
                     ui.radio_value(&mut self.puck, PuckMoves::Page, "the page")
                         .on_hover_text(format!("its slide pans the view; {k} switches"));
                     ui.radio_value(&mut self.puck, PuckMoves::Footprint, "the footprint")
-                        .on_hover_text(format!("its slide moves the footprint over the page; {k} switches"));
+                        .on_hover_text(format!(
+                            "its slide moves the footprint over the page; {k} switches"
+                        ));
                 });
-                let calibrating = self.rt.puck.calibration.is_some();
-                if ui
-                    .add_enabled(!calibrating, Button::new("Calibrate…"))
-                    .on_hover_text(
-                        "Measure which way the puck reads when you slide it, lift it and push it away, and which \
-                         button is which; saved for this app",
-                    )
-                    .on_disabled_hover_text("The calibration window is open")
-                    .clicked()
-                {
-                    self.rt.puck.calibration =
-                        Some(Calibration::two_d(self.rt.puck.mapping.clone()));
+                ui.separator();
+                let calibrating = self.rt.puck.settings.calibrating();
+                let live = self.rt.puck.axes;
+                self.rt.puck.settings.ui(ui, Some(&live));
+                if !calibrating && self.rt.puck.settings.calibrating() {
                     self.usage("puck calibrate");
-                }
-                egui::CollapsingHeader::new("Mapping")
-                    .id_salt("fp spacemouse mapping")
-                    .default_open(false)
-                    .show(ui, |ui| {
-                        let live = self.rt.puck.axes;
-                        if mapping_ui(ui, &mut self.rt.puck.mapping, Some(&live)) {
-                            self.rt.puck.note = Some("changed, not saved yet".into());
-                        }
-                        let file = self.rt.settings_file.clone();
-                        let b = ui.add_enabled(file.is_some(), Button::new("Save the mapping"));
-                        let b = match &file {
-                            Some(f) => b.on_hover_text(f.display().to_string()),
-                            None => b.on_disabled_hover_text(
-                                "no settings file: neither BERC_CONFIG, XDG_CONFIG_HOME nor HOME is set",
-                            ),
-                        };
-                        if b.clicked() {
-                            self.save_mapping();
-                        }
-                    });
-                if let Some(n) = &self.rt.puck.note {
-                    ui.label(RichText::new(n).small());
                 }
             });
     }
 
-    /// The calibrate step's window while it is open; its mapping, once used, is the app's and saved
-    pub(super) fn calibration_window(&mut self, ctx: &egui::Context, id: Id) {
-        let Some(cal) = &mut self.rt.puck.calibration else {
-            return;
-        };
-        let mut open = true;
-        let mut action = CalibrationAction::None;
-        egui::Window::new("Calibrate the SpaceMouse")
-            .id(id.with("spacemouse calibration"))
-            .open(&mut open)
-            .default_width(460.0)
-            .show(ctx, |ui| action = calibration_ui(ui, cal));
-        match action {
-            CalibrationAction::Apply(m) => {
-                self.rt.puck.mapping = m;
-                self.rt.puck.calibration = None;
-                self.save_mapping();
-                self.usage("puck calibrated");
-            }
-            CalibrationAction::Cancel => self.rt.puck.calibration = None,
-            CalibrationAction::None if !open => self.rt.puck.calibration = None,
-            CalibrationAction::None => {}
+    /// The calibrate step's window while it is open; its mapping, once used, is the one in use and saved
+    pub(super) fn calibration_window(&mut self, ctx: &egui::Context) {
+        if self.rt.puck.settings.calibration_window(ctx) {
+            self.usage("puck calibrated");
         }
-    }
-
-    /// The mapping into the settings file, `[spacemouse]`, the rest of it kept
-    fn save_mapping(&mut self) {
-        let Some(file) = self.rt.settings_file.clone() else {
-            self.rt.puck.note = Some(
-                "not saved: no settings file (neither BERC_CONFIG, XDG_CONFIG_HOME nor HOME is set)".into(),
-            );
-            return;
-        };
-        let (mut all, error) = Settings::load_from(&file);
-        if let Some(e) = error {
-            self.rt.puck.note = Some(format!("not saved, the file is left as it is: {e}"));
-            return;
-        }
-        all.spacemouse = self.rt.puck.mapping.clone();
-        self.rt.puck.note = Some(match all.save_to(&file) {
-            Ok(()) => format!("saved to {}", file.display()),
-            Err(e) => e,
-        });
     }
 }
 

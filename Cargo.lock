@@ -417,6 +417,7 @@ dependencies = [
  "serde_json",
  "strum",
  "tap",
+ "tempfile",
  "tokio",
  "toml",
  "ve_spacemouse",

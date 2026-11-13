@@ -9,9 +9,6 @@ use std::path::{Path, PathBuf};
 #[serde(default)]
 pub struct Settings {
     pub footprint_review: FootprintReviewSettings,
-    /// The SpaceMouse (through spacenavd): which raw axis moves and zooms, the speed, which button is which;
-    /// measured by the calibrate step (Footprint review, SpaceMouse)
-    pub spacemouse: ve_spacemouse::Mapping,
 }
 
 /// The footprint review tab
@@ -375,6 +372,45 @@ impl Settings {
     }
 }
 
+/// Moves the SpaceMouse's mapping this file kept up to 0.4.42 (`[spacemouse]`) into the `spacemouse.toml` every app
+/// on ve_spacemouse shares, once: keys that file lacks come from the section, keys it has keep their values; then
+/// the section leaves this file. Nothing happens without a section; a file that does not read, or a failed write,
+/// leaves this file as it is. Returns what happened, for the settings' note
+pub fn move_spacemouse(file: &Path, config: &mut ve_spacemouse::Config) -> Option<String> {
+    let text = std::fs::read_to_string(file).ok()?;
+    let table: toml::Table = text.parse().ok()?;
+    let old = table.get("spacemouse")?.as_table()?;
+    let settings = match Settings::parse(&text) {
+        Ok(s) => s,
+        Err(e) => {
+            return Some(format!(
+                "the SpaceMouse's mapping stays in {}: {e}",
+                file.display()
+            ));
+        }
+    };
+    let from = format!("{} [spacemouse]", file.display());
+    let note = match config.adopt(old, &from) {
+        Ok(ve_spacemouse::Adopted::AlreadyThere) => {
+            format!("the SpaceMouse's mapping in {from} was in spacemouse.toml already")
+        }
+        Ok(ve_spacemouse::Adopted::Moved { path, kept, .. }) if kept.is_empty() => format!(
+            "moved the SpaceMouse's mapping from {from} to {}",
+            path.display()
+        ),
+        Ok(ve_spacemouse::Adopted::Moved { path, kept, .. }) => format!(
+            "moved the SpaceMouse's mapping from {from} to {}, which kept its own {}",
+            path.display(),
+            kept.join(", ")
+        ),
+        Err(e) => return Some(format!("the SpaceMouse's mapping stays in {from}: {e}")),
+    };
+    Some(match settings.save_to(file) {
+        Ok(()) => note,
+        Err(e) => format!("{note}; the old section stays: {e}"),
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -416,16 +452,109 @@ mod tests {
         assert_eq!(s.footprint_review.keys.mirror, "X");
         let s = Settings::parse("[footprint_review.keys]\nmirror = \"V\"\n").unwrap();
         assert_eq!(s.footprint_review.keys.mirror, "V");
-        // The SpaceMouse's mapping, the rest its defaults, through the file as it is
+        // A file from before spacemouse.toml still reads; its [spacemouse] is not this file's any more
         let s =
             Settings::parse("[spacemouse]\nfull_scale = 300.0\n[spacemouse.speed]\npan = 3000.0\n")
                 .unwrap();
-        assert_eq!(s.spacemouse.full_scale, 300.0);
-        assert_eq!(s.spacemouse.speed.pan, 3000.0);
-        assert_eq!(
-            s.spacemouse.buttons,
-            ve_spacemouse::Mapping::default().buttons
+        assert!(!s.to_toml().contains("spacemouse"));
+    }
+
+    /// The `[spacemouse]` a calibration on the device saved (omarchy-m1, 13 Nov 2026: z and y swapped, y reversed,
+    /// full scale 944), with the review's settings beside it
+    const OLD: &str = "[footprint_review]\nblink_hz = 3.0\nreviewer = \"me\"\n\n[spacemouse]\nconvention = \"Content\"\n\
+        full_scale = 944.0\ndead_zone = 0.08\n\n[[spacemouse.axes]]\nraw = 0\ninvert = false\n\n[[spacemouse.axes]]\n\
+        raw = 2\ninvert = false\n\n[[spacemouse.axes]]\nraw = 1\ninvert = true\n\n[[spacemouse.axes]]\nraw = 3\n\
+        invert = false\n\n[[spacemouse.axes]]\nraw = 4\ninvert = false\n\n[[spacemouse.axes]]\nraw = 5\n\
+        invert = false\n\n[spacemouse.speed]\npan = 1200.0\nzoom = 1.5\nrotate = 2.0\n\n[spacemouse.buttons]\n\
+        left = 0\nright = 1\n";
+
+    /// The old section's mapping as `Mapping`, read straight
+    fn old_mapping(text: &str) -> ve_spacemouse::Mapping {
+        let t: toml::Table = text.parse().unwrap();
+        t["spacemouse"].clone().try_into().unwrap()
+    }
+
+    /// Moves `text` (a copy) in a folder of its own, the user's spacemouse.toml there too; the settings file,
+    /// the spacemouse.toml and the note after
+    fn moved(
+        text: &str,
+        existing: Option<&str>,
+    ) -> (String, ve_spacemouse::Config, Option<String>) {
+        let dir = tempfile::tempdir().unwrap();
+        let file = dir.path().join("better_erc/config.toml");
+        std::fs::create_dir_all(file.parent().unwrap()).unwrap();
+        std::fs::write(&file, text).unwrap();
+        let user = dir.path().join("spacemouse.toml");
+        if let Some(e) = existing {
+            std::fs::write(&user, e).unwrap();
+        }
+        let cwd = dir.path().join("work");
+        std::fs::create_dir_all(&cwd).unwrap();
+        let mut config = ve_spacemouse::Config::load_from(&cwd, Some(user.clone()));
+        let note = move_spacemouse(&file, &mut config);
+        let after = std::fs::read_to_string(&file).unwrap();
+        // What a fresh start reads
+        let config = ve_spacemouse::Config::load_from(&cwd, Some(user));
+        (after, config, note)
+    }
+
+    #[test]
+    fn the_old_section_moves_once_keeping_the_calibration() {
+        let (after, config, note) = moved(OLD, None);
+        assert_eq!(config.mapping(), &old_mapping(OLD));
+        assert_eq!(config.mapping().full_scale, 944.0);
+        assert!(config.problems().is_empty(), "{:?}", config.problems());
+        assert!(!after.contains("spacemouse"), "{after}");
+        let s = Settings::parse(&after).unwrap();
+        assert_eq!(s.footprint_review.blink_hz, 3.0);
+        assert_eq!(s.footprint_review.reviewer, "me");
+        assert!(note.unwrap().starts_with("moved the SpaceMouse's mapping"));
+        // Moved already: nothing to do
+        let (again, _, note) = moved(&after, None);
+        assert_eq!(again, after);
+        assert_eq!(note, None);
+    }
+
+    #[test]
+    fn a_spacemouse_toml_there_already_keeps_its_keys() {
+        let (after, config, note) = moved(OLD, Some("full_scale = 500.0\n[speed]\npan = 3000.0\n"));
+        assert_eq!(config.mapping().full_scale, 500.0);
+        assert_eq!(config.mapping().speed.pan, 3000.0);
+        assert_eq!(config.mapping().axes, old_mapping(OLD).axes);
+        assert!(!after.contains("spacemouse"));
+        let note = note.unwrap();
+        assert!(
+            note.contains("kept its own full_scale, speed.pan"),
+            "{note}"
         );
-        assert_eq!(Settings::parse(&s.to_toml()).unwrap(), s);
+    }
+
+    #[test]
+    fn a_file_that_does_not_read_is_left_alone() {
+        let bad = OLD.replace("blink_hz = 3.0", "blink_hz = \"fast\"");
+        let (after, config, note) = moved(&bad, None);
+        assert_eq!(after, bad);
+        assert_eq!(config.mapping(), &ve_spacemouse::Mapping::default());
+        assert!(
+            note.unwrap()
+                .starts_with("the SpaceMouse's mapping stays in")
+        );
+    }
+
+    /// The move on a copy of a real settings file, when `BERC_SPACEMOUSE_COPY` names one: the copy only, in a
+    /// temporary folder, never the file itself
+    #[test]
+    fn a_real_settings_file_moves_on_a_copy() {
+        let Some(real) = std::env::var_os("BERC_SPACEMOUSE_COPY") else {
+            eprintln!("BERC_SPACEMOUSE_COPY not set: no real settings file to try the move on");
+            return;
+        };
+        let text = std::fs::read_to_string(&real).unwrap();
+        let before = Settings::parse(&text).unwrap();
+        let (after, config, note) = moved(&text, None);
+        eprintln!("{}", note.unwrap_or_default());
+        assert_eq!(config.mapping(), &old_mapping(&text));
+        assert!(!after.contains("spacemouse"));
+        assert_eq!(Settings::parse(&after).unwrap(), before);
     }
 }
