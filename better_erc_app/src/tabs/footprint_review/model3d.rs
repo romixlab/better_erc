@@ -1328,6 +1328,82 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
     }
 
+    /// A real STEP file through the whole build, its model at the footprint's origin: `BERC_MODEL3D_STEP` names
+    /// it (skips without). Prints what it holds and the pitch of each two vertical cylinders, nearest first.
+    #[test]
+    fn a_real_model_builds() {
+        let Some(step) = std::env::var_os("BERC_MODEL3D_STEP") else {
+            eprintln!("BERC_MODEL3D_STEP not set: no real model read");
+            return;
+        };
+        let dir = std::env::temp_dir().join(format!("berc-fp-model3d-real-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let fp = dir.join("Real.kicad_mod");
+        std::fs::write(
+            &fp,
+            format!(
+                "(footprint \"Real\" (layer \"F.Cu\") (attr through_hole)\n  (model \"{}\"))\n",
+                Path::new(&step).display()
+            ),
+        )
+        .unwrap();
+        let sourced = better_erc::fp::FootprintSource::File(fp).read().unwrap();
+        let opts = fpm::ModelOptions {
+            config: None,
+            ..fpm::ModelOptions::default()
+        };
+        let l = build("real".into(), fpm::for_view(&sourced, &opts), &[]);
+        assert_eq!(l.shown, 1, "{:?}", l.notes);
+        let faces: Vec<&SurfaceKind> = l.meshes.iter().skip(2).flat_map(|m| &m.faces).collect();
+        let count = |f: fn(&SurfaceKind) -> bool| faces.iter().filter(|k| f(k)).count();
+        eprintln!(
+            "{} parts, {} faces: {} planes, {} cylinders, {} freeform; {} edges; {} triangles",
+            l.meshes.len() - 2,
+            faces.len(),
+            count(|k| matches!(k, SurfaceKind::Plane { .. })),
+            count(|k| matches!(k, SurfaceKind::Cylinder { .. })),
+            count(|k| matches!(k, SurfaceKind::Freeform)),
+            l.edges.len(),
+            l.scene.as_ref().unwrap().triangle_count()
+        );
+        let pins: Vec<(usize, &SurfaceKind)> = l
+            .meshes
+            .iter()
+            .enumerate()
+            .skip(2)
+            .flat_map(|(i, m)| m.faces.iter().map(move |f| (i, f)))
+            .filter(|(_, k)| {
+                matches!(k, SurfaceKind::Cylinder { axis, outward: true, .. } if axis[2].abs() > 0.999)
+            })
+            .collect();
+        let mut pitches = Vec::new();
+        for (i, (ma, a)) in pins.iter().enumerate() {
+            for (mb, b) in &pins[i + 1..] {
+                let pa = Picked {
+                    item: Item::Face { mesh: *ma, face: 0 },
+                    exact: Exact::Surface((*a).clone()),
+                    point: [0.0; 3],
+                    owner: String::new(),
+                    pad: None,
+                };
+                let pb = Picked {
+                    item: Item::Face { mesh: *mb, face: 1 },
+                    exact: Exact::Surface((*b).clone()),
+                    ..pa.clone()
+                };
+                let mm = measure(&pa, &pb);
+                if mm.value > 0.01 {
+                    pitches.push(mm.note(1));
+                }
+            }
+        }
+        pitches.sort();
+        pitches.dedup();
+        eprintln!("pitches: {:?}", &pitches[..pitches.len().min(6)]);
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
     #[test]
     fn a_footprint_without_a_model_says_so() {
         let mut h = harness("fp model none");
@@ -1438,6 +1514,81 @@ mod tests {
         let mm = measure(&e, &e);
         assert_eq!(mm.note(1), "M1 = 2.540 mm (edge length)");
         assert_eq!(measure(&top, &e).what, "plane to edge");
+    }
+
+    /// The exact kinds follow the entry's transform: turned 90° about z, moved, scaled by 2
+    #[test]
+    fn kinds_are_placed_as_the_triangles() {
+        use better_erc::model::layout::{ModelEntry, Xyz};
+        let e = ModelEntry {
+            offset: Xyz::new(1.0, 2.0, 0.5),
+            scale: Xyz::new(2.0, 2.0, 2.0),
+            rotate: Xyz::new(0.0, 0.0, 90.0),
+            ..ModelEntry::default()
+        };
+        let t = fpm::placement(&e);
+        let s = uniform_scale(&e);
+        assert_eq!(s, Some(2.0));
+        let close = |a: V3, b: V3| (0..3).all(|k| (a[k] - b[k]).abs() < 1e-9);
+        let SurfaceKind::Plane { origin, normal } = place_surface(
+            &t,
+            s,
+            &SurfaceKind::Plane {
+                origin: [1.0, 0.0, 0.0],
+                normal: [1.0, 0.0, 0.0],
+            },
+        ) else {
+            panic!()
+        };
+        // KiCad turns by the negated angle: +x goes to -y
+        assert!(close(normal, [0.0, -1.0, 0.0]), "{normal:?}");
+        assert!(close(origin, t.apply_point([1.0, 0.0, 0.0])));
+        let SurfaceKind::Cylinder { axis, radius, .. } = place_surface(
+            &t,
+            s,
+            &SurfaceKind::Cylinder {
+                axis_origin: [0.0; 3],
+                axis: [0.0, 1.0, 0.0],
+                radius: 0.3,
+                outward: true,
+            },
+        ) else {
+            panic!()
+        };
+        assert!(close(axis, [1.0, 0.0, 0.0]), "{axis:?}");
+        assert!((radius - 0.6).abs() < 1e-12);
+        // Scaled unevenly: a plane keeps a true normal, a cylinder is no longer one
+        let uneven = ModelEntry {
+            scale: Xyz::new(2.0, 1.0, 1.0),
+            ..ModelEntry::default()
+        };
+        let t = fpm::placement(&uneven);
+        assert_eq!(uniform_scale(&uneven), None);
+        let SurfaceKind::Plane { normal, .. } = place_surface(
+            &t,
+            None,
+            &SurfaceKind::Plane {
+                origin: [0.0; 3],
+                normal: [0.6, 0.8, 0.0],
+            },
+        ) else {
+            panic!()
+        };
+        // x stretched by 2: the normal leans toward y (0.3, 0.8 normalised)
+        let n = 0.3f64.hypot(0.8);
+        assert!(close(normal, [0.3 / n, 0.8 / n, 0.0]), "{normal:?}");
+        assert_eq!(
+            place_surface(
+                &t,
+                None,
+                &SurfaceKind::Sphere {
+                    centre: [0.0; 3],
+                    radius: 1.0,
+                    outward: true
+                }
+            ),
+            SurfaceKind::Freeform
+        );
     }
 
     #[test]

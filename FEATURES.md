@@ -763,7 +763,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   length, point to point; drawn on the view and written into the review note as `M3 = 1.270 mm (pitch, axis to axis)`
   (`VIEW-21`); the face or edge under the pointer named at the top. A 3D model section in the side panel, pie slots for
   both keys, usage signals `app fp-review model view 3d|page`, `model loaded`, `model measure`. Tests on a synthetic
-  STEP written by `erc_step::write`, picking without a GPU and one render on it ·
+  STEP written by `erc_step::write`, picking without a GPU and one render on it; a real file through `BERC_MODEL3D_STEP` ·
   `better_erc_app/src/tabs/footprint_review/model3d.rs`
 - 🚧 `VIEW-20` Footprint review on a SpaceMouse, through spacenavd (vhrd_egui `ve_spacemouse`, pure Rust): the puck
   pans the page in screen points (one speed at every zoom) and zooms the view about the pointer, or moves the
