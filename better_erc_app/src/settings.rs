@@ -155,6 +155,9 @@ pub struct Keys {
     /// X-ray: the 3D model see-through, its edges behind the faces drawn too, in the 3D view and over the page
     /// (VIEW-30)
     pub xray: String,
+    /// Reads everything shown again from disk (the symbols, footprints, board, models and datasheet), the view kept
+    /// (VIEW-31)
+    pub reload: String,
 }
 
 impl Default for Keys {
@@ -189,6 +192,7 @@ impl Default for Keys {
             peek: "Space".into(),
             measure_across: "Y".into(),
             xray: "U".into(),
+            reload: "F5".into(),
         }
     }
 }

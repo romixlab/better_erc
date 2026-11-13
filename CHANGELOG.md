@@ -13,7 +13,13 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
+- Footprint review: files changed on disk are read again. Before, the tab kept what it had read: an edited footprint, symbol, board, 3D model or datasheet stayed old until the app restarted. The tab now watches every file it shows (the board and its schematics, the library tables, the symbol libraries, the footprint files, the STEP models, the datasheet). A change is read again by itself once the file stays quiet for 300 ms, and picking a symbol looks at the files first. The view stays as it was (page, scale, placement, the 3D camera, the list's filter), and the review status follows the file (a changed footprint shows its review stale). What Accept writes itself reloads nothing (`VIEW-31`).
+- Footprint review: a Reload button and key (`F5`, a setting) read everything again from disk, and a line beside it says what was read again and when (`VIEW-31`).
 - `berc fp todo` and `berc fp check --lib` name the files their list was made from (`files` in the JSON): the project's own files, the library tables looked at (the project's and the global one, there or not, and nested ones), the symbol libraries and the footprint files read or looked for in vain. When one of them changes the list is out of date. The footprint review watches them (`VIEW-31`).
+
+### Changed
+
+- better_erc_app depends on `notify` 8 (default features off: inotify on Linux, no C library; `inotify-sys` only declares the kernel's calls) to watch the review's files, and on `jiff` (already in the tree through env_logger) with `tz-system` for the local time of the reload line (`VIEW-31`).
 
 ## [0.4.54] - 2026-11-13
 

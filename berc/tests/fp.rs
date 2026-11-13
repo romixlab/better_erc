@@ -844,7 +844,11 @@ fn todo_lists_the_board_symbols_to_review_in_order() {
         fps.join("Test.pretty/Mixed_Pads.kicad_mod"),
         fps.join("Test.pretty/Gone.kicad_mod"),
     ] {
-        assert!(files.contains(&want), "{} not in {files:#?}", want.display());
+        assert!(
+            files.contains(&want),
+            "{} not in {files:#?}",
+            want.display()
+        );
     }
 
     let text = stdout(&fp_todo(&dir, &["--footprints", path(&fps)]));

@@ -196,6 +196,24 @@ impl FootprintReview {
                         self.open_path(ctx, &p);
                     }
                 });
+                ui.horizontal_wrapped(|ui| {
+                    if ui
+                        .button(format!("Reload · {}", key_name(self.keys().reload)))
+                        .on_hover_text(
+                            "Reads the symbols, footprints, board, 3D models and datasheet again from disk, the view \
+                             kept. A file changed on disk is read again by itself",
+                        )
+                        .clicked()
+                    {
+                        self.reload_all();
+                    }
+                    if let Some(r) = &self.rt.reloaded {
+                        hint(ui, r);
+                    }
+                });
+                if let Some(e) = &self.rt.watch.error {
+                    notice(ui, Tone::Warn, e);
+                }
                 if let Some(e) = &self.rt.error {
                     notice(ui, Tone::Crit, e);
                 }
@@ -1597,6 +1615,7 @@ impl FootprintReview {
                             &mut k.measure_across,
                         ),
                         ("X-ray: the 3D model see-through", &mut k.xray),
+                        ("Reload everything from disk", &mut k.reload),
                         ("Hide or show the footprint", &mut k.hide_footprint),
                         ("Hide or show the model", &mut k.hide_model),
                         ("Held: the page alone", &mut k.peek),

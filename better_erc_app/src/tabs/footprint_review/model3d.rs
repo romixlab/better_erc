@@ -711,6 +711,8 @@ pub(super) struct Model3d {
     pub(super) first: Option<Picked>,
     /// The last measurement, and its number in the note once its button added it
     pub(super) last: Option<(Option<usize>, ModelMeasure)>,
+    /// The next scene keeps the 3D view's camera: it is the same footprint or model read again (VIEW-31)
+    pub(super) keep_view: bool,
 }
 
 impl Model3d {
@@ -826,6 +828,19 @@ impl FootprintReview {
             return;
         }
         self.usage("model loaded");
+        // The model files read, or looked for in vain, watched (VIEW-31)
+        let files: Vec<PathBuf> = scene
+            .report
+            .models
+            .iter()
+            .filter_map(|m| match &m.resolved {
+                fpm::Resolved::Found { path, .. } | fpm::Resolved::NotFound { path } => {
+                    Some(path.clone())
+                }
+                fpm::Resolved::UnknownVar { .. } => None,
+            })
+            .collect();
+        self.rt.watch.set(super::watch::Group::Model, files);
         self.rt.model.loaded = Some(scene);
         ctx.request_repaint();
     }
@@ -839,7 +854,9 @@ impl FootprintReview {
         });
         if let Some(scene) = m.loaded.as_mut().and_then(|l| l.scene.take()) {
             view.set_scene(scene);
-            view.view(ViewPreset::Iso);
+            if !std::mem::take(&mut m.keep_view) {
+                view.view(ViewPreset::Iso);
+            }
         }
         view.xray = self.xray;
         view.style.hidden_edges = self.rt.settings.hidden_edges;
@@ -1050,6 +1067,7 @@ impl FootprintReview {
                 (p.measure_footprint, Action::Mode(Tool::MeasureFootprint)),
                 (p.measure_across, Action::Mode(Tool::MeasureAcross)),
                 (p.xray, Action::XRay),
+                (p.reload, Action::Reload),
                 (p.select, Action::Mode(Tool::Select)),
                 (p.measure_model, Action::Mode(Tool::MeasureModel)),
                 (p.view_3d, Action::View3d),

@@ -50,6 +50,8 @@ ve_theme = { git = "https://github.com/vhrdtech/vhrd_egui" }
 # The footprint's 3D model in the review: offscreen wgpu mesh view, camera, CPU picking (VIEW-23)
 ve_view3d = { git = "https://github.com/vhrdtech/vhrd_egui" }
 i_overlay = { version = "9", default-features = false }
+notify = { version = "8", default-features = false }
+jiff = { version = "0.2", default-features = false, features = ["std", "tz-system"] }
 
 # native:
 [dev-dependencies]

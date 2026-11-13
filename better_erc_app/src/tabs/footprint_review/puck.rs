@@ -56,6 +56,8 @@ pub enum Action {
     HideModel,
     /// The 3D model see-through (VIEW-30)
     XRay,
+    /// Everything shown read again from disk (VIEW-31)
+    Reload,
     /// Accept's question answered: write, or nothing
     Write,
     Cancel,
@@ -614,6 +616,7 @@ impl FootprintReview {
             Action::HideFootprint => self.toggle_hidden(false),
             Action::HideModel => self.toggle_hidden(true),
             Action::XRay => self.toggle_xray(),
+            Action::Reload => self.reload_all(),
             Action::Write => self.confirmed(ctx, true),
             Action::Cancel => self.confirmed(ctx, false),
         }

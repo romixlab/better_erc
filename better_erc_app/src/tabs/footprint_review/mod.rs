@@ -22,6 +22,7 @@ use better_erc::fp::{
     AcceptRun, AcceptWhat, FIELD, FootprintSource, HashSource, LibCheckOptions, LibrarySearch,
     Sourced, SymbolLibraries, SymbolStatus, TodoEntry,
 };
+use better_erc::kicad::libtable::FootprintLibraries;
 use better_erc::model::layout::{FootprintId, Layout};
 use egui::{Align2, FontId, Pos2, Rect, Shape, Stroke, pos2, vec2};
 use geometry::{DimNumber, Snap, SnapKind};
@@ -54,9 +55,12 @@ mod prims;
 mod puck;
 mod recorded;
 #[cfg(test)]
+mod reload_tests;
+#[cfg(test)]
 mod testpdf;
 #[cfg(test)]
 mod tests;
+mod watch;
 
 /// Around the page
 const CANVAS_BACKGROUND: Color32 = Color32::from_gray(60);
@@ -326,6 +330,8 @@ struct SymbolList {
     title: String,
     rows: Vec<TodoEntry>,
     filter: String,
+    /// The files the list was made from ([`better_erc::fp::FpTodo::files`]), watched
+    files: Vec<PathBuf>,
 }
 
 /// A measurement put into the review note by its button: `M{n} = {mm} mm`, from the ruler with these ends
@@ -621,6 +627,14 @@ struct Runtime {
     model: model3d::Model3d,
     /// The settings file the Save buttons write; none in tests
     settings_file: Option<PathBuf>,
+    /// The files shown, watched on disk (VIEW-31)
+    watch: watch::Watch,
+    /// Whether the file watcher runs; off in tests unless one asks (each watcher is an inotify instance of the host)
+    watch_files: bool,
+    /// What was read again from disk last, and when
+    reloaded: Option<String>,
+    /// The datasheet is read again on the next frame
+    reload_pdf: bool,
     /// Each frame ends with the PDF reader done with what it asked (tests: its replies would otherwise come in on
     /// its thread over any number of frames), and the threads wake no frame: the UI asks for the next one itself
     /// when it takes a reply in, so how many frames a step takes never hangs on a thread's timing
@@ -710,6 +724,10 @@ impl Default for Runtime {
             puck: Puck::default(),
             model: model3d::Model3d::default(),
             settings_file: Settings::file(),
+            watch: watch::Watch::default(),
+            watch_files: true,
+            reloaded: None,
+            reload_pdf: false,
             #[cfg(test)]
             sync_pdf: false,
         }
@@ -901,6 +919,7 @@ impl FootprintReview {
         // Not this computer's SpaceMouse or settings file
         r.rt.puck.socket = None;
         r.rt.settings_file = None;
+        r.rt.watch_files = false;
         #[cfg(test)]
         {
             r.rt.sync_pdf = true;
@@ -943,6 +962,11 @@ impl FootprintReview {
             return;
         }
         self.rt.started = true;
+        if self.rt.watch_files {
+            self.rt
+                .watch
+                .start(self.threads_wake().then(|| ctx.clone()));
+        }
         if let Some(b) = self.board.clone()
             && b.is_file()
         {
@@ -971,6 +995,14 @@ impl FootprintReview {
     }
 
     fn poll(&mut self, ctx: &egui::Context) {
+        let (changed, wait) = self.rt.watch.poll(std::time::Instant::now());
+        self.reload(&changed, false);
+        if let Some(wait) = wait {
+            ctx.request_repaint_after(wait);
+        }
+        if std::mem::take(&mut self.rt.reload_pdf) {
+            self.reopen_datasheet(ctx);
+        }
         if std::mem::take(&mut self.rt.want_search) {
             // A search still running for the last part has nothing for this one
             self.rt.searching = None;
@@ -1079,7 +1111,7 @@ impl FootprintReview {
                         file_name(&t.board),
                         t.to_review().count()
                     );
-                    (title, t.symbols, Some(t.board))
+                    (title, t.symbols, Some(t.board), t.files)
                 })
                 .map_err(|e| e.to_string()),
             SymbolsFrom::Library { library, project } => {
@@ -1116,24 +1148,26 @@ impl FootprintReview {
                         names.join(", "),
                         rows.iter().filter(|r| r.needs_review()).count()
                     );
-                    (title, rows, None)
+                    (title, rows, None, c.files)
                 })
                 .map_err(|e| e.to_string())
             }
         };
         match list {
-            Ok((title, rows, board)) => {
+            Ok((title, rows, board, files)) => {
                 self.symbols_from = Some(from.clone());
                 self.rt.symbols = Some(SymbolList {
                     from,
                     title,
                     rows,
                     filter: String::new(),
+                    files,
                 });
                 self.rt.error = None;
                 if let Some(b) = board {
                     self.open_board(&b);
                 }
+                self.watch_list();
             }
             Err(e) => self.rt.error = Some(e),
         }
@@ -1162,9 +1196,34 @@ impl FootprintReview {
             .find(|i| Some(*i) != at && rows[*i].needs_review())
     }
 
+    /// Puts row `i` of the symbol list under review (a click, Next, the puck): the files are looked at first, and
+    /// what changed on disk is read again before, so the symbol and its footprint are as they are on disk now
+    /// (VIEW-31)
+    fn select_symbol(&mut self, i: usize, fresh: bool) {
+        let Some(symbol) = self
+            .rt
+            .symbols
+            .as_ref()
+            .and_then(|l| l.rows.get(i))
+            .map(|r| r.symbol.clone())
+        else {
+            return;
+        };
+        let changed = self.rt.watch.changed();
+        let mut i = i;
+        if !changed.is_empty() {
+            self.reload(&changed, false);
+            match self.symbol_row(&symbol) {
+                Some(j) => i = j,
+                None => return,
+            }
+        }
+        self.show_symbol(i, fresh);
+    }
+
     /// Puts row `i` of the symbol list under review: its footprint from its `Footprint` field, its datasheet from
     /// its `Datasheet` field (`fresh`: looked for again), or the reason it has no footprint to review
-    fn select_symbol(&mut self, i: usize, fresh: bool) {
+    fn show_symbol(&mut self, i: usize, fresh: bool) {
         let Some(list) = &self.rt.symbols else { return };
         let row = list.rows[i].clone();
         let from = list.from.clone();
@@ -1284,14 +1343,43 @@ impl FootprintReview {
                     filter: String::new(),
                 });
                 self.rt.error = None;
+                self.watch_list();
             }
             Err(e) => self.rt.error = Some(e.to_string()),
         }
     }
 
-    /// Picks footprint `i` of the open board to preview: its library file when the project's tables give it, else
-    /// the board copy
+    /// Picks footprint `i` of the open board to preview, what changed on disk read again first (VIEW-31)
     fn pick(&mut self, i: usize) {
+        let Some(reference) = self
+            .rt
+            .board
+            .as_ref()
+            .and_then(|b| b.layout.footprints.get(i))
+            .map(|f| f.reference.clone())
+        else {
+            return;
+        };
+        let changed = self.rt.watch.changed();
+        let mut i = i;
+        if !changed.is_empty() {
+            self.reload(&changed, false);
+            match self.rt.board.as_ref().and_then(|b| {
+                b.layout
+                    .footprints
+                    .iter()
+                    .position(|f| f.reference == reference)
+            }) {
+                Some(j) => i = j,
+                None => return,
+            }
+        }
+        self.show_pick(i);
+    }
+
+    /// Footprint `i` of the open board shown as a preview: its library file when the project's tables give it, else
+    /// the board copy
+    fn show_pick(&mut self, i: usize) {
         let Some(b) = &self.rt.board else { return };
         let copy = Sourced::from_board(&b.path, &b.layout, FootprintId::from_index(i));
         let project = b.path.parent().unwrap_or(Path::new(".")).to_path_buf();
@@ -1383,6 +1471,7 @@ impl FootprintReview {
         self.rt.written = None;
         if fresh {
             self.rt.center_footprint = true;
+            self.rt.model.keep_view = false;
             self.place.rotation = 0.0;
             self.place.mirror = false;
             self.rt.queries = search_queries(&s);
@@ -1390,6 +1479,120 @@ impl FootprintReview {
             self.rt.search_result = None;
         }
         self.rt.sourced = Some(s);
+        self.watch_list();
+    }
+
+    /// The files the symbol list, the board and the footprint shown were read from, watched (VIEW-31)
+    fn watch_list(&mut self) {
+        let mut files: Vec<PathBuf> = self
+            .rt
+            .symbols
+            .as_ref()
+            .map(|l| l.files.clone())
+            .unwrap_or_default();
+        files.extend(self.rt.board.as_ref().map(|b| b.path.clone()));
+        match self.rt.sourced.as_ref().map(|s| &s.source) {
+            Some(FootprintSource::File(p)) => files.push(p.clone()),
+            Some(FootprintSource::Board { board, .. }) => files.push(board.clone()),
+            Some(FootprintSource::Library {
+                lib_id,
+                project,
+                config,
+            }) => {
+                let libs = FootprintLibraries::new(project, config.as_deref());
+                files.extend(libs.tables().files().iter().cloned());
+                files.extend(libs.path(lib_id).ok());
+            }
+            None => {}
+        }
+        self.rt.watch.set(watch::Group::List, files);
+    }
+
+    /// Reads `groups` again from disk, the view kept: the symbol list, the board and the footprint shown (its review
+    /// state as the files say now), the 3D model, the datasheet (on the next frame). `by_hand`: the Reload button
+    /// or key, else a change on disk (VIEW-31)
+    fn reload(&mut self, groups: &[watch::Group], by_hand: bool) {
+        use watch::Group;
+        if groups.is_empty() {
+            return;
+        }
+        if groups.contains(&Group::List) {
+            self.reload_list();
+        }
+        // The model read again, the 3D view's camera kept; also when the list brought another footprint hash
+        self.rt.model.keep_view = true;
+        if groups.contains(&Group::Model) {
+            self.rt.model.key = None;
+        }
+        if groups.contains(&Group::Pdf) && self.datasheet.is_some() {
+            self.rt.reload_pdf = true;
+        }
+        let at = jiff::Zoned::now().strftime("%H:%M:%S").to_string();
+        self.rt.reloaded = Some(if by_hand {
+            format!("Reloaded everything at {at}")
+        } else {
+            let what: Vec<&str> = groups.iter().map(|g| g.name()).collect();
+            format!("{} changed on disk: reloaded at {at}", and_list(&what))
+        });
+        self.usage(if by_hand { "reload" } else { "reload changed" });
+    }
+
+    /// The Reload button and key: everything shown read again from disk (VIEW-31)
+    pub(super) fn reload_all(&mut self) {
+        use watch::Group;
+        self.reload(&[Group::List, Group::Model, Group::Pdf], true);
+        self.rt.watch.restamp_all();
+    }
+
+    /// The symbol list and the board read again, their filters kept, and the symbol or footprint shown with them,
+    /// its place on the page kept
+    fn reload_list(&mut self) {
+        let filter = self.rt.symbols.as_ref().map(|l| l.filter.clone());
+        let board_filter = self.rt.board.as_ref().map(|b| b.filter.clone());
+        self.rt.tables = None;
+        if let Some(from) = self.symbols_from.clone() {
+            self.open_symbols(from);
+        }
+        if let Some(b) = self.board.clone()
+            && !matches!(self.symbols_from, Some(SymbolsFrom::Project(_)))
+        {
+            self.open_board(&b);
+        }
+        if let (Some(l), Some(f)) = (&mut self.rt.symbols, filter) {
+            l.filter = f;
+        }
+        if let (Some(b), Some(f)) = (&mut self.rt.board, board_filter) {
+            b.filter = f;
+        }
+        if let Some(symbol) = self.symbol.clone() {
+            match self.symbol_row(&symbol) {
+                Some(i) => self.show_symbol(i, false),
+                None => {
+                    self.rt.symbol_note = Some(format!("{symbol} is no longer in the list"));
+                    self.rt.sourced = None;
+                    self.rt.items.clear();
+                }
+            }
+        } else if let Some(s) = self.source.clone() {
+            let note = self.rt.board_note.take();
+            self.load(s, false);
+            if self.rt.sourced.is_some() {
+                self.rt.board_note = note;
+            }
+        }
+    }
+
+    /// The datasheet open read again from disk: its page, the view, the ruler and the scale kept
+    fn reopen_datasheet(&mut self, ctx: &egui::Context) {
+        let Some(d) = self.datasheet.clone().filter(|d| d.is_file()) else {
+            return;
+        };
+        let fonts = &self.rt.settings.font_dirs;
+        self.rt.pdf = Some(PdfDoc::open(ctx, &d, fonts, self.threads_wake()));
+        self.rt.page_hits = None;
+        self.rt.auto_page = false;
+        self.rt.fit_page = false;
+        self.clear_selection();
     }
 
     /// The footprint's `Datasheet` field as a local file, when it is one
@@ -1407,6 +1610,7 @@ impl FootprintReview {
 
     /// No datasheet open: the page, the ruler and the scale go with it
     fn close_datasheet(&mut self) {
+        self.rt.watch.set(watch::Group::Pdf, []);
         self.rt.pdf = None;
         self.datasheet = None;
         self.page = 0;
@@ -1424,6 +1628,7 @@ impl FootprintReview {
         self.rt.auto_open = false;
         let fonts = &self.rt.settings.font_dirs;
         self.rt.pdf = Some(PdfDoc::open(ctx, path, fonts, self.threads_wake()));
+        self.rt.watch.set(watch::Group::Pdf, [path.to_path_buf()]);
         self.datasheet = Some(path.to_path_buf());
         self.page = 0;
         self.rt.page_hits = None;
@@ -1667,8 +1872,17 @@ impl FootprintReview {
                 .first()
                 .map(|a| a.lines.clone())
                 .unwrap_or_default();
+            // The files written are as the tab knows them: their change on disk is no reason to reload
+            let written: Vec<PathBuf> = run
+                .symbols
+                .iter()
+                .flat_map(|a| &a.files)
+                .filter(|w| w.changed)
+                .map(|w| w.file.clone())
+                .collect();
             self.usage("write");
             self.reviewed(&lines);
+            self.rt.watch.restamp(written.iter().map(PathBuf::as_path));
         }
         self.reviews.push(review);
         self.usage("accept");
@@ -2034,7 +2248,7 @@ impl FootprintReview {
              arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans · \
              {} the model as silhouettes or 3D ({}) · {} moves the footprint or the model ({}) · {} {} · \
              3D: SpaceMouse tilt, roll and twist or Ctrl+drag turn it, letting go lands on a side (Alt: free) · \
-             {} hides or shows the footprint, {} the model · hold {}: the page alone · {} X-ray\n\
+             {} hides or shows the footprint, {} the model · hold {}: the page alone · {} X-ray · {} reload from disk\n\
              {} accept · {} next to review · {} write a review note · SpaceMouse: the puck {} ({} switches), push away zooms out · \
              tap the left button for the ruler, the right one to switch · hold one for its ring, both for Accept",
             self.tool.name(),
@@ -2080,6 +2294,7 @@ impl FootprintReview {
             n(k.hide_model),
             n(k.peek),
             n(k.xray),
+            n(k.reload),
             n(k.accept),
             n(k.next),
             n(k.note),
@@ -3023,6 +3238,7 @@ impl FootprintReview {
                 (p.hide_footprint, Action::HideFootprint),
                 (p.hide_model, Action::HideModel),
                 (p.xray, Action::XRay),
+                (p.reload, Action::Reload),
             ] {
                 if on {
                     self.act(&ctx, action, hover_page, shift, lines);
@@ -3614,6 +3830,7 @@ struct KeyMap {
     peek: Option<egui::Key>,
     measure_across: Option<egui::Key>,
     xray: Option<egui::Key>,
+    reload: Option<egui::Key>,
 }
 
 impl From<&Keys> for KeyMap {
@@ -3649,6 +3866,7 @@ impl From<&Keys> for KeyMap {
             peek: key(&k.peek),
             measure_across: key(&k.measure_across),
             xray: key(&k.xray),
+            reload: key(&k.reload),
         }
     }
 }
@@ -3692,6 +3910,7 @@ struct Pressed {
     peek: bool,
     measure_across: bool,
     xray: bool,
+    reload: bool,
 }
 
 impl Pressed {
@@ -3736,6 +3955,7 @@ impl Pressed {
                 peek: km.peek.is_some_and(|k| i.key_down(k)),
                 measure_across: pressed(km.measure_across),
                 xray: pressed(km.xray),
+                reload: pressed(km.reload),
             };
             (p, i.modifiers.shift)
         })
@@ -3778,6 +3998,15 @@ fn ticked(mpns: &[MpnChoice]) -> Vec<String> {
         .filter(|m| m.ticked)
         .map(|m| m.mpn.clone())
         .collect()
+}
+
+/// `a`, `a and b`, `a, b and c`
+fn and_list(items: &[&str]) -> String {
+    match items {
+        [] => String::new(),
+        [one] => one.to_string(),
+        [rest @ .., last] => format!("{} and {last}", rest.join(", ")),
+    }
 }
 
 fn file_name(p: &Path) -> String {

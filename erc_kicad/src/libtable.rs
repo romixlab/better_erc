@@ -273,7 +273,13 @@ impl LibTables {
         let mut entries = Vec::new();
         let mut files = Vec::new();
         for t in [Some(dir), config].into_iter().flatten() {
-            read_nested(&t.join(kind.table_file()), &vars, 0, &mut entries, &mut files);
+            read_nested(
+                &t.join(kind.table_file()),
+                &vars,
+                0,
+                &mut entries,
+                &mut files,
+            );
         }
         LibTables {
             kind,
