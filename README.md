@@ -579,7 +579,14 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
 
 #### Files changed on disk
 
-The tab shows the files as they are on disk. It watches every file it read: the board and its schematics, the library tables, the symbol libraries, the footprint files, the 3D models and the datasheet. A file saved in KiCad or another editor is read again by itself once it stays quiet for a moment, and picking a symbol or a board footprint looks at the files first. Reload (`F5`, a setting, or the button under the Open buttons) reads everything again; a line beside it says what was read again and when. A reload keeps the view: the page, the scale, the footprint's placement, the 3D camera and the list's filter. The review status follows the file, so a footprint changed since its review shows the review as changed. A file counts as changed only when its content changed; what Accept writes into the symbols reloads nothing.
+The tab shows the files as they are on disk. It watches every file it read: the board and its schematics, the library
+tables, the symbol libraries, the footprint files, the 3D models and the datasheet. A file saved in KiCad or another
+editor is read again by itself once it stays quiet for a moment, and picking a symbol or a board footprint looks at
+the files first. Reload (`F5`, a setting, or the button under the Open buttons) reads everything again; a line beside
+it says what was read again and when. A reload keeps the view: the page, the scale, the footprint's placement, the 3D
+camera and the list's filter. The review status follows the file, so a footprint changed since its review shows the
+review as changed. A file counts as changed only when its content changed; what Accept writes into the symbols reloads
+nothing.
 
 #### With a SpaceMouse
 
