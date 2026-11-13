@@ -545,6 +545,7 @@ mod tests {
     use super::super::modelviews::Moves;
     use super::super::tests::datasheet;
     use egui_kittest::Harness;
+    use egui_kittest::kittest::Queryable;
 
     type H = Harness<'static, FootprintReview>;
 
@@ -782,6 +783,112 @@ mod tests {
         // Back to the silhouettes: the 3D model is gone, the views as they were
         key(&mut h, egui::Key::L);
         assert_eq!(h.state().model_views.look, ModelLook::Silhouettes);
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    /// Pictures of the review's steps for a person to look at: `BERC_FP_SHOTS` names a folder (skips without). A
+    /// two-pin part over a drawing at 3 screen points per page point: a measuring ruler with its + note button,
+    /// then added; the 3D model over the page, then in X-ray; the footprint hidden; the page alone; Measure across
+    /// from a pad to the drawing; the 3D view, then in X-ray.
+    #[test]
+    fn pictures_of_the_review() {
+        let Some(out) = std::env::var_os("BERC_FP_SHOTS").map(PathBuf::from) else {
+            eprintln!("BERC_FP_SHOTS not set: no pictures");
+            return;
+        };
+        std::fs::create_dir_all(&out).unwrap();
+        let dir = std::env::temp_dir().join(format!("berc-fp-shots-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let fp = two_pin(&dir);
+        let pdf = datasheet(&dir);
+        let mut h = gpu_harness("fp shots");
+        h.run();
+        let ctx = h.ctx.clone();
+        h.state_mut().open_path(&ctx, &fp);
+        h.state_mut().open_datasheet(&ctx, &pdf);
+        h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+        h.run();
+        let st = h.state_mut();
+        st.scale = Some(Scale {
+            mm_per_point: 0.02,
+            page: st.page,
+            mm: 2.0,
+            note: None,
+        });
+        st.zoom = 3.0;
+        st.pan = [-150.0, -330.0];
+        st.rt.fit_page = false;
+        st.place.origin = [250.0, 230.0];
+        st.model_views.opacity = Some(0.8);
+        steps(&mut h, 3);
+        let shot = |h: &mut H, name: &str| {
+            h.render().unwrap().save(out.join(name)).unwrap();
+        };
+        let drag = |h: &mut H, a: [f32; 2], b: [f32; 2]| {
+            let (a, b) = (screen(h, a), screen(h, b));
+            h.hover_at(a);
+            h.step();
+            h.drag_at(a);
+            h.step();
+            for i in 1..=5 {
+                h.hover_at(a + (b - a) * (i as f32 / 5.0));
+                h.step();
+            }
+            h.drop_at(b);
+            h.step();
+            h.hover_at(b + vec2(40.0, 60.0));
+            h.step();
+        };
+        // Measure PDF along the drawing's dimension line: its + note button beside the label, then added
+        key(&mut h, egui::Key::E);
+        drag(&mut h, [101.0, 201.0], [199.0, 199.0]);
+        shot(&mut h, "1-measure-with-note-button.png");
+        h.get_by_label("+ note").click();
+        steps(&mut h, 2);
+        shot(&mut h, "2-measure-added-to-note.png");
+        key(&mut h, egui::Key::Escape);
+        // The 3D model over the page, then in X-ray (hidden edges dashed)
+        key(&mut h, egui::Key::L);
+        steps(&mut h, 4);
+        shot(&mut h, "3-model-over-page.png");
+        key(&mut h, egui::Key::U);
+        shot(&mut h, "4-model-over-page-xray.png");
+        // The footprint hidden, the model kept; Space held: the page alone
+        key(&mut h, egui::Key::H);
+        shot(&mut h, "5-footprint-hidden.png");
+        key(&mut h, egui::Key::H);
+        let space = |pressed| egui::Event::Key {
+            key: egui::Key::Space,
+            physical_key: None,
+            pressed,
+            repeat: false,
+            modifiers: Default::default(),
+        };
+        h.event(space(true));
+        steps(&mut h, 2);
+        shot(&mut h, "6-page-alone-space-held.png");
+        h.event(space(false));
+        steps(&mut h, 2);
+        key(&mut h, egui::Key::U);
+        key(&mut h, egui::Key::J);
+        // Measure across: pad 2's centre to the dimension line's end
+        key(&mut h, egui::Key::Y);
+        let p2 = h.state().fp_to_page([1.27, 0.0]);
+        drag(&mut h, [p2[0] + 1.0, p2[1] + 1.0], [199.0, 201.0]);
+        shot(&mut h, "7-measure-across.png");
+        h.get_by_label("+ note").click();
+        steps(&mut h, 2);
+        shot(&mut h, "7a-measure-across-in-note.png");
+        key(&mut h, egui::Key::Escape);
+        key(&mut h, egui::Key::J);
+        // The 3D view, then in X-ray
+        key(&mut h, egui::Key::Num3);
+        steps(&mut h, 4);
+        shot(&mut h, "8-3d-view.png");
+        key(&mut h, egui::Key::U);
+        steps(&mut h, 2);
+        shot(&mut h, "9-3d-view-xray.png");
         let _ = std::fs::remove_dir_all(&dir);
     }
 }
