@@ -11,12 +11,13 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.56] - 2026-11-13
+
 ### Added
 
 - Footprint review: the model onto the footprint as KiCad places it, by a key (`Home`, a setting) and a button (On footprint, in the mode bar and the Model views section). The model goes to the footprint's origin with the footprint's turn, seen from the footprint's side: from the top, or from below for a footprint in bottom view. The model entry's offset, scale and rotation are already in the model. In Silhouettes that side's view is shown and picked; in 3D the shaded model turns onto that side (`VIEW-32`).
 - Footprint review: in Move a press drags what is under it: the footprint, a silhouette view or the 3D model; the empty page pans. Where two overlap, the one the moves switch (`Q`) picks wins, else the topmost. Hovering outlines what a press would pick, and the mode bar names it. The keys, turn, mirror and the SpaceMouse still move what the switch picks. Before, a press anywhere moved what the switch picked (`VIEW-32`).
 - Footprint review: a hidden footprint or model is never dragged. While the one the moves switch picks is hidden, the keys, turn, mirror and the puck move the one shown, the switch shows that with the other disabled and why, and the choice comes back when it is shown again. Ctrl+drag turns only a shown 3D model (`VIEW-32`).
-
 - Footprint review: the 3D model and its silhouettes have an opacity of their own, apart from the footprint's. The View section shows Footprint opacity and Model opacity one under the other (the Model views section has the same Model opacity), and `model_opacity` (a setting, 0.7) is where the model starts. Before, the model started at the footprint's opacity and its slider sat only in the Model views section (`VIEW-32`).
 
 ### Fixed
