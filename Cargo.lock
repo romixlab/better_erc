@@ -4212,8 +4212,8 @@ dependencies = [
 
 [[package]]
 name = "ve_basics"
-version = "0.32.15"
-source = "git+https://github.com/vhrdtech/vhrd_egui#8baf77674fb404fbbd92022f69ad3489cd6d8805"
+version = "0.32.16"
+source = "git+https://github.com/vhrdtech/vhrd_egui#030c4added016f0a262cb364c3fa73981669c9eb"
 dependencies = [
  "egui",
  "web-time",
@@ -4221,8 +4221,8 @@ dependencies = [
 
 [[package]]
 name = "ve_spacemouse"
-version = "0.32.15"
-source = "git+https://github.com/vhrdtech/vhrd_egui#8baf77674fb404fbbd92022f69ad3489cd6d8805"
+version = "0.32.16"
+source = "git+https://github.com/vhrdtech/vhrd_egui#030c4added016f0a262cb364c3fa73981669c9eb"
 dependencies = [
  "egui",
  "egui-phosphor",
@@ -4233,8 +4233,8 @@ dependencies = [
 
 [[package]]
 name = "ve_theme"
-version = "0.32.15"
-source = "git+https://github.com/vhrdtech/vhrd_egui#8baf77674fb404fbbd92022f69ad3489cd6d8805"
+version = "0.32.16"
+source = "git+https://github.com/vhrdtech/vhrd_egui#030c4added016f0a262cb364c3fa73981669c9eb"
 dependencies = [
  "egui",
  "serde_json",
