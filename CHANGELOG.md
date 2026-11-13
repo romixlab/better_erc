@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.46] - 2026-11-13
+
 ### Added
 
 - `TOOL-12`: `berc fp model PROJECT|LIBRARY|FILE [NAME...]` reads each footprint's 3D models and measures them
