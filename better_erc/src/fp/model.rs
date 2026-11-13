@@ -1171,6 +1171,78 @@ impl std::fmt::Display for Mm {
     }
 }
 
+/// The directory a footprint's model paths and `KIPRJMOD` resolve against, as `berc fp model` takes it: a board's
+/// directory, a library footprint's project, a `.kicad_mod`'s library's parent (the folder beside a `.pretty`)
+pub fn project_dir(source: &super::FootprintSource) -> PathBuf {
+    use super::FootprintSource;
+    let parent = |p: &Path| {
+        p.parent()
+            .map_or_else(|| PathBuf::from("."), Path::to_path_buf)
+    };
+    match source {
+        FootprintSource::File(file) => {
+            let lib = parent(file);
+            if lib.extension().is_some_and(|e| e == "pretty") {
+                parent(&lib)
+            } else {
+                lib
+            }
+        }
+        FootprintSource::Board { board, .. } => parent(board),
+        FootprintSource::Library { project, .. } if project.is_file() => parent(project),
+        FootprintSource::Library { project, .. } => project.clone(),
+    }
+}
+
+/// The copper of each pad on the front, in the footprint's 3D frame (y up): its number and its outline polygons
+pub fn front_pad_copper(f: &LocalFootprint) -> Vec<(String, Vec<Vec<[f64; 2]>>)> {
+    f.pads
+        .iter()
+        .filter(|p| front_copper(p, &f.pads))
+        .map(|p| {
+            let polys = outline::pad_copper(p)
+                .into_iter()
+                .map(|poly| poly.into_iter().map(up).collect())
+                .collect();
+            (p.number.clone(), polys)
+        })
+        .collect()
+}
+
+/// A footprint's models for a 3D view: the analysis of every entry, and the model each entry read, in the order of
+/// [`FootprintModels::models`] (`None` where the file was not found; the error where it did not read). Place a
+/// model with [`placement`] of its entry.
+pub struct ViewModels {
+    pub report: FootprintModels,
+    pub models: Vec<Option<Arc<Result<erc_step::Model, String>>>>,
+}
+
+/// Reads and analyses the models of `sourced` for a view, paths resolved as [`project_dir`] and `opts.config` say
+pub fn for_view(sourced: &super::Sourced, opts: &ModelOptions) -> ViewModels {
+    let dir = project_dir(&sourced.source);
+    let vars = erc_kicad::libtable::KicadVars::new(&dir, opts.config.as_deref());
+    let var = |n: &str| vars.get(n);
+    let mut cache = ModelCache::default();
+    let report = analyze(
+        sourced.footprint.footprint.lib_id.clone(),
+        None,
+        &sourced.footprint,
+        &dir,
+        &var,
+        &mut cache,
+        opts,
+    );
+    let models = report
+        .models
+        .iter()
+        .map(|m| match &m.resolved {
+            Resolved::Found { path, .. } => Some(cache.get(path, &opts.read)),
+            _ => None,
+        })
+        .collect();
+    ViewModels { report, models }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

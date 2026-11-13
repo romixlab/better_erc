@@ -516,7 +516,22 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    reads it as text too. Curves become arcs and circles where they follow a circle within the DXF curve tolerance (a
    setting, 0.005 mm), any other curve becomes straight pieces within it. Save stays disabled, saying why, until
    something is selected, the scale is set on the page shown and a footprint is shown.
-7. **Accept** (A): when the footprint matches the drawing, Accept writes its review line into the symbol: the library
+7. **The 3D model and Measure model**: 3 (a setting, the 3D button in the mode bar, the pie) swaps the canvas between
+   the page and the footprint's 3D model. The STEP files of its `(model ...)` entries are found and read as `berc fp
+   model` does, on a worker thread, and placed as KiCad places them: on a 1.6 mm board whose top is z 0, with the
+   front pads' copper on it. Drag turns the model, the right or middle button pans, the wheel zooms at the pointer, a
+   double-click turns about the point under it, a right-click gives the preset views; the SpaceMouse drives all six
+   axes there. Measure model (O, the sixth mode, which shows the model by itself) measures on the faces and edges as
+   the STEP file writes them, not on the triangles: a click picks a face or an edge, a second click another. Two
+   parallel planes give their distance and two planes at an angle the angle; two cylinders, holes or circles the
+   distance of their axes (a pin pitch); a plane and an axis parallel to it the axis' height; a plane and anything
+   else the point's height over it; the same cylinder or circle twice its diameter, the same edge twice its length;
+   anything else the straight distance. The result is drawn on the view and goes into the review note as `M3 = 1.270
+   mm (pitch, axis to axis)`, numbered with the rulers' measurements. What is under the pointer shows at the top of
+   the view (`pad 2: plane facing +Z at z 0.035 mm`, `part: hole Ø 0.800 mm`). The side panel's 3D model section
+   names each file with its parts, faces, size and height, and what could not be read. A footprint that names no
+   model, or a file not found, says so in the view and the section.
+8. **Accept** (A): when the footprint matches the drawing, Accept writes its review line into the symbol: the library
    symbol and, for a symbol from a project's list, the schematic's copies too (as `berc fp accept --symbol` does).
    The line records where the review was made: the datasheet by the document library's content hash and document
    number, the page, the scale, the footprint's placement, who (a setting, else the login name) and the day. It

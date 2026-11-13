@@ -754,6 +754,17 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   polylines within a tolerance (a setting); the file `<symbol>-p<page>-<n>.dxf` beside the notes file, its name
   appended to the note; disabled with why until there is a selection, a scale on the page and a footprint (`VIEW-19`,
   `VIEW-21`) · `better_erc_app/src/tabs/footprint_review/prims.rs`, `dxf.rs`, `mode_tests.rs`
+- ✅ `VIEW-23` Footprint review, the 3D model and Measure model: the 3D key (`3`, a setting) swaps the canvas between
+  the page and the footprint's STEP models, read on a worker thread (`fp::model::for_view`: the paths resolved and
+  each model analysed as `berc fp model` does, `TOOL-12`) and placed by KiCad's transform over a 1.6 mm board with
+  the front pads' copper, in vhrd_egui's `ve_view3d` (V3D-1: offscreen wgpu, orbit camera, CPU picking, SpaceMouse on
+  six axes). Measure model (`O`, a sixth mode) picks two faces or edges and measures on their exact B-rep kinds
+  (`erc_step::measure`): plane to plane, angle, axis to axis (pitch), plane to axis, plane to point, diameter, edge
+  length, point to point; drawn on the view and written into the review note as `M3 = 1.270 mm (pitch, axis to axis)`
+  (`VIEW-21`); the face or edge under the pointer named at the top. A 3D model section in the side panel, pie slots for
+  both keys, usage signals `app fp-review model view 3d|page`, `model loaded`, `model measure`. Tests on a synthetic
+  STEP written by `erc_step::write`, picking without a GPU and one render on it ·
+  `better_erc_app/src/tabs/footprint_review/model3d.rs`
 - 🚧 `VIEW-20` Footprint review on a SpaceMouse, through spacenavd (vhrd_egui `ve_spacemouse`, pure Rust): the puck
   pans the page in screen points (one speed at every zoom) and zooms the view about the pointer, or moves the
   footprint (`P` switches); a tap of the left button lays the ruler, of the right one switches what the puck

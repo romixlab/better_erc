@@ -117,6 +117,11 @@ pub struct Keys {
     pub select: String,
     /// Saves the pieces selected as a DXF in the footprint's mm beside the notes file, named in the note
     pub save_dxf: String,
+    /// Swaps the canvas between the page and the footprint's 3D model (VIEW-23)
+    pub view_3d: String,
+    /// The Measure model mode: on the 3D model a click picks a face or an edge, a second click another; what lies
+    /// between them goes into the review note; again: back to Move
+    pub measure_model: String,
 }
 
 impl Default for Keys {
@@ -141,6 +146,8 @@ impl Default for Keys {
             note: "Enter".into(),
             select: "V".into(),
             save_dxf: "W".into(),
+            view_3d: "3".into(),
+            measure_model: "O".into(),
         }
     }
 }

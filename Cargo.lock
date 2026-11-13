@@ -435,6 +435,7 @@ dependencies = [
  "egui_kittest",
  "egui_tiles",
  "env_logger",
+ "erc_step",
  "hayro",
  "image",
  "log",
@@ -448,6 +449,7 @@ dependencies = [
  "toml",
  "ve_spacemouse",
  "ve_theme",
+ "ve_view3d",
  "wasm-bindgen-futures",
  "web-sys",
 ]
@@ -1773,6 +1775,16 @@ dependencies = [
  "khronos_api",
  "log",
  "xml-rs",
+]
+
+[[package]]
+name = "glam"
+version = "0.34.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "627003914c6057c9c8f0832ee4f870b5a4f599d0cfa83f4072675114860cd0ff"
+dependencies = [
+ "bytemuck",
+ "serde_core",
 ]
 
 [[package]]
@@ -4789,6 +4801,19 @@ dependencies = [
  "egui",
  "serde_json",
  "ve_basics",
+]
+
+[[package]]
+name = "ve_view3d"
+version = "0.32.18"
+source = "git+https://github.com/vhrdtech/vhrd_egui#3c63fd6b25092a474170494eade0b3532b86667f"
+dependencies = [
+ "bytemuck",
+ "egui",
+ "egui-wgpu",
+ "glam",
+ "serde",
+ "ve_spacemouse",
 ]
 
 [[package]]

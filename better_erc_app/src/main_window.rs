@@ -57,6 +57,7 @@ impl BetterErcApp {
         // The footprint review's blend pass, for the renderer eframe made (main.rs: no multisampling, no depth buffer)
         if let Some(rs) = cc.wgpu_render_state.as_ref() {
             crate::tabs::footprint_review::blend::register(&cc.egui_ctx, rs, 1, None);
+            crate::tabs::footprint_review::model3d::register(&cc.egui_ctx, rs);
         }
 
         setup_look(&cc.egui_ctx);

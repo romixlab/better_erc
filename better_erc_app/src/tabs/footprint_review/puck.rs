@@ -43,6 +43,8 @@ pub enum Action {
     Note,
     /// The pieces selected as a DXF beside the notes file
     SaveDxf,
+    /// The canvas between the page and the 3D model
+    View3d,
     /// Accept's question answered: write, or nothing
     Write,
     Cancel,
@@ -371,6 +373,38 @@ impl FootprintReview {
                     icons::RULER,
                     Mode(Tool::MeasureFootprint),
                 ))),
+                Some(
+                    slot(
+                        if self.view_3d {
+                            "Back to the page"
+                        } else {
+                            "3D model"
+                        },
+                        short_key(k.view_3d),
+                        icons::CUBE,
+                        View3d,
+                    )
+                    .disabled_if(
+                        !self.view_3d && self.model_blocker().is_some(),
+                        self.model_blocker().unwrap_or_default(),
+                    ),
+                ),
+                Some(
+                    slot(
+                        if self.tool == Tool::MeasureModel {
+                            "Stop measuring the model"
+                        } else {
+                            "Measure the model"
+                        },
+                        short_key(k.measure_model),
+                        icons::RULER,
+                        Mode(Tool::MeasureModel),
+                    )
+                    .disabled_if(
+                        self.tool != Tool::MeasureModel && self.model_blocker().is_some(),
+                        self.model_blocker().unwrap_or_default(),
+                    ),
+                ),
             ],
             ring_both: vec![
                 Some(
@@ -503,6 +537,7 @@ impl FootprintReview {
                 self.usage("note key");
             }
             Action::SaveDxf => self.save_dxf(),
+            Action::View3d => self.toggle_3d(),
             Action::Write => self.confirmed(ctx, true),
             Action::Cancel => self.confirmed(ctx, false),
         }

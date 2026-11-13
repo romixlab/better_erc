@@ -40,6 +40,7 @@ mod dxf;
 mod geometry;
 #[cfg(test)]
 mod mode_tests;
+pub mod model3d;
 mod notes;
 mod panel;
 use better_erc::fp::outline;
@@ -147,6 +148,9 @@ pub enum Tool {
     MeasureFootprint,
     /// Picks the drawing's lines, arcs, curves and shapes, to save them as a DXF in the footprint's mm (VIEW-22)
     Select,
+    /// The footprint's 3D model in place of the page: a click picks a face or an edge, a second click another, and
+    /// what lies between them (plane to plane, pitch, diameter, angle) goes into the review note (VIEW-23)
+    MeasureModel,
 }
 
 impl Tool {
@@ -157,12 +161,13 @@ impl Tool {
             Tool::MeasurePdf => "Measure PDF",
             Tool::MeasureFootprint => "Measure footprint",
             Tool::Select => "Select",
+            Tool::MeasureModel => "Measure model",
         }
     }
 
     /// A ruler mode: the primary drag lays the ruler
     pub fn ruler(self) -> bool {
-        !matches!(self, Tool::Move | Tool::Select)
+        !matches!(self, Tool::Move | Tool::Select | Tool::MeasureModel)
     }
 
     /// A measuring mode: the ruler's length goes into the review note
@@ -188,6 +193,10 @@ impl Tool {
             Tool::Select => {
                 "a click picks a line, arc or shape of the drawing (again: drops it), a drag the ones inside its box \
                  (Shift adds); Save writes them as a DXF in the footprint's mm and names it in the note"
+            }
+            Tool::MeasureModel => {
+                "the 3D model: a click picks a face or an edge, a second click another; the distance, pitch, \
+                 diameter or angle between them goes into the review note"
             }
         }
     }
@@ -249,6 +258,8 @@ pub struct FootprintReview {
     tool: Tool,
     /// What the SpaceMouse's puck moves
     puck: PuckMoves,
+    /// The canvas shows the footprint's 3D model in place of the page (VIEW-23)
+    view_3d: bool,
     reviews: Vec<Review>,
     #[serde(skip)]
     rt: Runtime,
@@ -280,6 +291,7 @@ impl Default for FootprintReview {
             cu_shown: Kind::Copper,
             tool: Tool::Move,
             puck: PuckMoves::Page,
+            view_3d: false,
             reviews: Vec::new(),
             rt: Runtime::default(),
         }
@@ -566,6 +578,8 @@ struct Runtime {
     docs_text: String,
     /// The SpaceMouse: its client, mapping, pie menu and calibrate step
     puck: Puck,
+    /// The footprint's 3D model: read on a worker thread, its view, the picks of Measure model
+    model: model3d::Model3d,
     /// The settings file the Save buttons write; none in tests
     settings_file: Option<PathBuf>,
     /// Each frame ends with the PDF reader done with what it asked (tests: its replies would otherwise come in on
@@ -645,6 +659,7 @@ impl Default for Runtime {
             record_note: None,
             docs_text: String::new(),
             puck: Puck::default(),
+            model: model3d::Model3d::default(),
             settings_file: Settings::file(),
             #[cfg(test)]
             sync_pdf: false,
@@ -682,7 +697,11 @@ impl TabUi for FootprintReview {
             .default_size(340.0)
             .max_size(520.0)
             .show(ui, |ui| self.controls(ui));
-        self.canvas(ui);
+        if self.view_3d {
+            self.canvas_3d(ui);
+        } else {
+            self.canvas(ui);
+        }
         self.confirm_ui(ui.ctx(), id);
         self.calibration_window(ui.ctx());
         self.puck_pie(ui.ctx(), &events);
@@ -1671,6 +1690,15 @@ impl FootprintReview {
         if t.measures() != self.tool.measures() {
             std::mem::swap(&mut self.ruler, &mut self.rt.parked_ruler);
         }
+        // The view follows the mode: Measure model on the 3D model, the rulers and Select on the page
+        match t {
+            Tool::MeasureModel => self.view_3d = true,
+            Tool::Move => {}
+            _ => self.view_3d = false,
+        }
+        if t != Tool::MeasureModel {
+            self.rt.model.first = None;
+        }
         if t != self.tool {
             self.tool = t;
             self.usage(&format!("mode {}", t.name().to_lowercase()));
@@ -1969,6 +1997,7 @@ impl FootprintReview {
             Tool::MeasurePdf => "Measuring the PDF",
             Tool::MeasureFootprint => "Measuring the footprint",
             Tool::Select => return Some(self.select_hint()),
+            Tool::MeasureModel => return None,
             Tool::Move | Tool::Scale => "Ruler",
         };
         if self.rt.ruler_placing {
@@ -2025,6 +2054,7 @@ impl FootprintReview {
         let pdf = self.rt.pdf.as_ref().is_some_and(|p| p.page_count() > 0);
         let fp = !self.rt.items.is_empty();
         let mut pick = None;
+        let mut toggle_3d = false;
         ui.horizontal(|ui| {
             ui.label("Mode");
             for (t, key, why) in [
@@ -2049,6 +2079,7 @@ impl FootprintReview {
                     k.select,
                     (!pdf).then_some("open the datasheet first: the pieces are its drawing's"),
                 ),
+                (Tool::MeasureModel, k.measure_model, self.model_blocker()),
             ] {
                 let text = format!("{} · {}", t.name(), key_name(key));
                 let r = ui.add_enabled(
@@ -2063,6 +2094,21 @@ impl FootprintReview {
                     pick = Some(t);
                 }
             }
+            ui.separator();
+            let why = self.model_blocker();
+            let r = ui.add_enabled(
+                why.is_none() || self.view_3d,
+                Button::selectable(self.view_3d, format!("3D · {}", key_name(k.view_3d))),
+            );
+            let r = match why {
+                Some(why) => r.on_disabled_hover_text(why),
+                None => r.on_hover_text(
+                    "the canvas shows the footprint's 3D model in place of the page",
+                ),
+            };
+            if r.clicked() {
+                toggle_3d = true;
+            }
             if self.tool != Tool::Move {
                 ui.label(
                     RichText::new(format!("{} or Esc: back to Move", key_name(k.move_tool))).weak(),
@@ -2071,6 +2117,9 @@ impl FootprintReview {
         });
         if let Some(t) = pick {
             self.tool_key(t);
+        }
+        if toggle_3d {
+            self.toggle_3d();
         }
         if self.tool == Tool::Select || !self.selection().is_empty() {
             self.dxf_bar(ui);
@@ -2692,6 +2741,8 @@ impl FootprintReview {
                     }
                     self.rt.select_box_end = pointer_page;
                 }
+                // Not on the page: the 3D view has its own canvas
+                Tool::MeasureModel => {}
                 Tool::Scale | Tool::MeasurePdf | Tool::MeasureFootprint => {
                     if let Some(p) = pointer_page {
                         if resp.drag_started() {
@@ -2770,38 +2821,7 @@ impl FootprintReview {
         // Keys while the pointer is over the canvas
         if resp.hovered() && !ctx.egui_wants_keyboard_input() {
             let km = self.keys();
-            let (pressed, shift) = ui.input(|i| {
-                let pressed = |k: Option<egui::Key>| k.is_some_and(|k| i.key_pressed(k));
-                let p = Pressed {
-                    left: pressed(Some(egui::Key::ArrowLeft)),
-                    right: pressed(Some(egui::Key::ArrowRight)),
-                    up: pressed(Some(egui::Key::ArrowUp)),
-                    down: pressed(Some(egui::Key::ArrowDown)),
-                    page_up: pressed(Some(egui::Key::PageUp)),
-                    page_down: pressed(Some(egui::Key::PageDown)),
-                    escape: pressed(Some(egui::Key::Escape)),
-                    full_width: pressed(km.full_width),
-                    move_tool: pressed(km.move_tool),
-                    ruler: pressed(km.ruler),
-                    measure_pdf: pressed(km.measure_pdf),
-                    measure_footprint: pressed(km.measure_footprint),
-                    ruler_zoom: pressed(km.ruler_zoom),
-                    scale: pressed(km.scale),
-                    dimension: pressed(km.dimension),
-                    rotate: pressed(km.rotate),
-                    mirror: pressed(km.mirror),
-                    blink: pressed(km.blink),
-                    cu_layer: pressed(km.cu_layer),
-                    invert: pressed(km.invert),
-                    puck: pressed(km.puck),
-                    accept: pressed(km.accept),
-                    next: pressed(km.next),
-                    note: pressed(km.note),
-                    select: pressed(km.select),
-                    save_dxf: pressed(km.save_dxf),
-                };
-                (p, i.modifiers.shift)
-            });
+            let (pressed, shift) = Pressed::read(ui, &km);
             let step = if shift { 10.0 } else { 1.0 } / self.zoom;
             let p = pressed;
             if p.left {
@@ -2839,6 +2859,8 @@ impl FootprintReview {
                 (p.note, Action::Note),
                 (p.select, Action::Mode(Tool::Select)),
                 (p.save_dxf, Action::SaveDxf),
+                (p.view_3d, Action::View3d),
+                (p.measure_model, Action::Mode(Tool::MeasureModel)),
             ] {
                 if on {
                     self.act(&ctx, action, hover_page, shift, lines);
@@ -3251,6 +3273,8 @@ struct KeyMap {
     note: Option<egui::Key>,
     select: Option<egui::Key>,
     save_dxf: Option<egui::Key>,
+    view_3d: Option<egui::Key>,
+    measure_model: Option<egui::Key>,
 }
 
 impl From<&Keys> for KeyMap {
@@ -3276,6 +3300,8 @@ impl From<&Keys> for KeyMap {
             note: key(&k.note),
             select: key(&k.select),
             save_dxf: key(&k.save_dxf),
+            view_3d: key(&k.view_3d),
+            measure_model: key(&k.measure_model),
         }
     }
 }
@@ -3308,6 +3334,48 @@ struct Pressed {
     note: bool,
     select: bool,
     save_dxf: bool,
+    view_3d: bool,
+    measure_model: bool,
+}
+
+impl Pressed {
+    /// The keys pressed this frame, and whether Shift is held
+    fn read(ui: &Ui, km: &KeyMap) -> (Pressed, bool) {
+        ui.input(|i| {
+            let pressed = |k: Option<egui::Key>| k.is_some_and(|k| i.key_pressed(k));
+            let p = Pressed {
+                left: pressed(Some(egui::Key::ArrowLeft)),
+                right: pressed(Some(egui::Key::ArrowRight)),
+                up: pressed(Some(egui::Key::ArrowUp)),
+                down: pressed(Some(egui::Key::ArrowDown)),
+                page_up: pressed(Some(egui::Key::PageUp)),
+                page_down: pressed(Some(egui::Key::PageDown)),
+                escape: pressed(Some(egui::Key::Escape)),
+                full_width: pressed(km.full_width),
+                move_tool: pressed(km.move_tool),
+                ruler: pressed(km.ruler),
+                measure_pdf: pressed(km.measure_pdf),
+                measure_footprint: pressed(km.measure_footprint),
+                ruler_zoom: pressed(km.ruler_zoom),
+                scale: pressed(km.scale),
+                dimension: pressed(km.dimension),
+                rotate: pressed(km.rotate),
+                mirror: pressed(km.mirror),
+                blink: pressed(km.blink),
+                cu_layer: pressed(km.cu_layer),
+                invert: pressed(km.invert),
+                puck: pressed(km.puck),
+                accept: pressed(km.accept),
+                next: pressed(km.next),
+                note: pressed(km.note),
+                select: pressed(km.select),
+                save_dxf: pressed(km.save_dxf),
+                view_3d: pressed(km.view_3d),
+                measure_model: pressed(km.measure_model),
+            };
+            (p, i.modifiers.shift)
+        })
+    }
 }
 
 /// The ruler's line and label colours in a mode: blue setting the scale, orange measuring the drawing, green
@@ -3327,7 +3395,7 @@ fn ruler_colours(t: Tool) -> (Color32, Color32) {
             Color32::from_rgb(20, 130, 60),
         ),
         // No ruler of its own: the scale's is shown
-        Tool::Select => ruler_colours(Tool::Scale),
+        Tool::Select | Tool::MeasureModel => ruler_colours(Tool::Scale),
     }
 }
 

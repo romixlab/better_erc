@@ -3,7 +3,7 @@
 //! its header what it holds (the symbol, the page, the scale, the placement), so a folded one hides nothing.
 //!
 //! The sections, top to bottom: Symbol and footprint, Datasheet and page, View, Ruler and scale, Measure,
-//! Placement, Review, Notes, SpaceMouse, Settings.
+//! 3D model, Placement, Review, Notes, SpaceMouse, Settings.
 
 use super::*;
 use crate::settings::{FootprintReviewSettings, Settings};
@@ -116,6 +116,7 @@ impl FootprintReview {
                         self.view_section(ui);
                         self.ruler_section(ui);
                         self.measure_section(ui);
+                        self.model_section(ui);
                         self.placement_section(ui);
                         self.review_section(ui, &ctx);
                         self.notes_section(ui);
@@ -1429,6 +1430,8 @@ impl FootprintReview {
                         ("Write a review note", &mut k.note),
                         ("Select the drawing's lines", &mut k.select),
                         ("Save the selection as DXF", &mut k.save_dxf),
+                        ("The page or the 3D model", &mut k.view_3d),
+                        ("Measure model", &mut k.measure_model),
                     ] {
                         ui.label(what);
                         let ok = egui::Key::from_name(name.trim()).is_some();

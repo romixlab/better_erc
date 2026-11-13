@@ -11,6 +11,16 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `VIEW-23`: the footprint review shows the footprint's 3D model. The 3D key (`3`) swaps the canvas between the page
+  and the model, placed as KiCad places it on a board with the pads' copper; it is read on a worker thread, and the
+  view says in words what is missing or failed. A new mode, Measure model (`O`), measures between two picked faces
+  or edges on the STEP file's exact surfaces and curves: plane to plane, angle, pin pitch (axis to axis), height of
+  an axis or a point over a plane, diameter, edge length. Each measurement goes into the review note as `M3 = 1.270
+  mm (pitch, axis to axis)`. The side panel has a 3D model section; the pie has slots for both keys.
+  `better_erc::fp::model` gains `project_dir`, `front_pad_copper` and `for_view`.
+
 ## [0.4.49] - 2026-11-13
 
 ### Changed

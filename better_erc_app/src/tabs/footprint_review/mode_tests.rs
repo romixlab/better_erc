@@ -97,6 +97,7 @@ fn every_mode_has_a_way_back_to_move() {
             Tool::MeasurePdf,
             Tool::MeasureFootprint,
             Tool::Select,
+            Tool::MeasureModel,
         ] {
             let k = h.state().keys();
             let key = match m {
@@ -105,6 +106,7 @@ fn every_mode_has_a_way_back_to_move() {
                 Tool::MeasurePdf => k.measure_pdf,
                 Tool::MeasureFootprint => k.measure_footprint,
                 Tool::Select => k.select,
+                Tool::MeasureModel => k.measure_model,
             };
             let label = format!("{} · {}", m.name(), key_name(key));
             let node = h.get_by_label(&label);
