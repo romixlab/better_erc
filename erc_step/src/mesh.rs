@@ -570,14 +570,13 @@ impl<'t, 'e, 'a> Mesher<'t, 'e, 'a> {
                     ),
                     None => (oe, true),
                 };
-                if !edge_curves.contains_key(&edge) {
+                if let std::collections::hash_map::Entry::Vacant(slot) = edge_curves.entry(edge) {
                     let c = self.convert_edge(edge, straightened);
-                    edge_curves.insert(edge, c.as_ref().ok().cloned());
+                    slot.insert(c.as_ref().ok().cloned());
                     if let Err(msg) = c {
                         return Err((id, format!("edge #{edge}: {msg}")));
                     }
-                }
-                if edge_curves[&edge].is_none() {
+                } else if edge_curves[&edge].is_none() {
                     return Err((id, format!("edge #{edge} not converted")));
                 }
                 wire.push((edge, o == bound_orientation));

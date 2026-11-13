@@ -96,7 +96,7 @@ impl Transform {
         ]
     }
 
-    /// `self` after `inner`: `self.then_inner(inner).apply(p) == self.apply(inner.apply(p))`.
+    /// `self` after `inner`: `self.compose(inner).apply_point(p) == self.apply_point(inner.apply_point(p))`.
     pub fn compose(&self, inner: &Transform) -> Transform {
         let mut rot = [[0.0; 3]; 3];
         for (i, row) in rot.iter_mut().enumerate() {

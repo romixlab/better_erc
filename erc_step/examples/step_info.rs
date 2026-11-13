@@ -1,4 +1,6 @@
-//! `cargo run -p erc_step --example step_info FILE...`: what erc_step reads from STEP files.
+//! `cargo run --release -p erc_step --example step_info FILE...`: what erc_step reads from STEP files: unit,
+//! parts, faces, triangles, box, warnings. `SUMMARY=1`: one tab-separated line per file (path, parts, faces,
+//! faces meshed, triangles, warnings, box, time), for comparing two builds over a set of files.
 
 fn main() {
     for path in std::env::args().skip(1) {
@@ -57,38 +59,6 @@ fn main() {
                         p.edges.len(),
                         p.transform.translation
                     );
-                }
-                if std::env::var("STRAY").is_ok() {
-                    for p in &m.parts {
-                        for (fi, f) in p.faces.iter().enumerate() {
-                            let Some(mesh) = &f.mesh else { continue };
-                            let mut lo = [f64::MAX; 3];
-                            let mut hi = [f64::MIN; 3];
-                            for e in p.edges.iter().filter(|e| e.faces.contains(&fi)) {
-                                for q in &e.polyline {
-                                    for i in 0..3 {
-                                        lo[i] = lo[i].min(q[i]);
-                                        hi[i] = hi[i].max(q[i]);
-                                    }
-                                }
-                            }
-                            let out = mesh
-                                .positions
-                                .iter()
-                                .map(|q| {
-                                    (0..3)
-                                        .map(|i| (lo[i] - q[i]).max(q[i] - hi[i]).max(0.0))
-                                        .fold(0.0, f64::max)
-                                })
-                                .fold(0.0, f64::max);
-                            if out > 0.5 {
-                                println!(
-                                    "  stray face #{} {:?} by {out:.2} mm",
-                                    f.step_id, f.surface
-                                );
-                            }
-                        }
-                    }
                 }
                 let mut unmeshed = std::collections::BTreeMap::new();
                 for f in m

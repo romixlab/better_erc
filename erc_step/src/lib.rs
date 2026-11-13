@@ -305,9 +305,9 @@ impl Bounds {
     fn grow(b: &mut Option<Bounds>, p: Vec3) {
         match b {
             Some(b) => {
-                for i in 0..3 {
-                    b.min[i] = b.min[i].min(p[i]);
-                    b.max[i] = b.max[i].max(p[i]);
+                for (i, x) in p.into_iter().enumerate() {
+                    b.min[i] = b.min[i].min(x);
+                    b.max[i] = b.max[i].max(x);
                 }
             }
             None => *b = Some(Bounds { min: p, max: p }),

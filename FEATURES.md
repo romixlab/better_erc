@@ -32,6 +32,9 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   ([docs/model.md](docs/model.md))
 - `erc_levels`: the signal-level database: logic families, buses and differential standards with their levels,
   each value with the document it was read from ([docs/signal-levels.md](docs/signal-levels.md))
+- `erc_step`: STEP models read with the truck crates (from the vhrdtech fork): parts placed by the assembly tree,
+  in mm, with colours; faces with triangles and their exact surface, edges with their curve; measurements on them.
+  No egui, no KiCad
 - `better_erc`: the library: the crates above re-exported, the run entry and report types at the top, `diff`
   (`TOOL-6`)
 - `better_erc_app`: egui/eframe desktop app (`egui_tiles` tabs), binary `better_erc`
@@ -112,6 +115,17 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   drawing, `PdfConfidence::Geometry`), popups of llPDFLib files (bound by drawn designator text), the differential
   on a real board with both a Smart PDF and its EDIF/WireList · `erc_import/src/pdf`, `erc_import/tests/pdf.rs`,
   docs/model.md "The PDF importer"
+- ✅ `IMP-20` STEP models (AP203, AP214, AP242 B-rep) into parts, faces and edges in mm (`erc_step`): units (SI
+  prefixes, inch and other conversion units, the angle unit), the assembly tree with its transforms (products and
+  occurrences, `MAPPED_ITEM`, a part once per use), `STYLED_ITEM` colours on solids, shells and faces; each face's
+  exact surface (plane, cylinder, cone, sphere, torus, freeform) and each edge's curve (line, circle) with the faces
+  it joins, triangles wound out of the solid; `measure`: plane to plane and to a point, diameters, axis to axis,
+  edge length, point to point, angle. Robust on real vendor files: `$` names and unsorted complex entities fixed
+  before parsing, degenerate tori, pcurves and splines truck cannot convert drawn from their 3D curve or straight
+  (a warning), a grid search where truck's parameter search fails, a mesh outside its face's edges dropped, a panic
+  costs one face, a time budget; every loss a warning with its entity id. All 235 models of the VHRD library and
+  the KiCad models the hw boards use read without a panic (73,418 of 73,456 faces meshed) · `erc_step`,
+  `erc_step/tests/synthetic.rs`, `erc_step/tests/extended.rs` (`BERC_STEP_DIR`)
 
 ## Netlist model and analysis (`NET`)
 

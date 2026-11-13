@@ -11,6 +11,16 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `IMP-20`: new crate `erc_step`, a STEP reader. `read_file`, `read_bytes` (on a worker thread with a time limit)
+  and `read_str` give a `Model`: the length unit, the parts (a solid placed by the assembly tree, once per use, with
+  its name, transform and colour), their faces (triangles in mm, the exact `SurfaceKind`, the colour) and edges
+  (polyline, `CurveKind`, the faces they join), and `Warning`s with the STEP entity of every face, edge or entity
+  not read as it should be. `measure` has the measurements on planes, axes, circles and edges. Built on truck from
+  the vhrdtech fork, whose truck-geotrait caps the parameter division that never ends on some real files; pure
+  Rust, no C build step. `cargo run -p erc_step --example step_info FILE...` prints what a file reads as.
+
 ## [0.4.44] - 2026-11-13
 
 ### Changed
