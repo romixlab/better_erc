@@ -759,6 +759,22 @@ mod tests {
             out.lines().find(|l| l.starts_with("lib ")).unwrap()
         }
         assert_eq!(hash_of(&before), hash_of(&after), "{before}\n{after}");
+        // Review lines with their source, one per datasheet: each property whole on its own line
+        let lines = render_str(&sym(
+            r#"(property "Footprint_Review" "fp1:0123456789abcdef mpn=A-7-F doc=DS1@Rev2 pdf=b3:0123456789abcdef page=3 scale=0.3528 at=12.5,40.2,90,mirror by=roman on=13nov2026" (at 0 0 0))
+               (property "Footprint_Review2" "fp1:0123456789abcdef mpn=B%2C115 doc=DS2" (at 0 0 0))"#,
+        ));
+        let shown: Vec<&str> = lines
+            .lines()
+            .filter(|l| l.contains("Footprint_Review"))
+            .collect();
+        assert_eq!(shown.len(), 2, "{lines}");
+        assert!(
+            shown[0].contains("page=3 scale=0.3528 at=12.5,40.2,90,mirror by=roman on=13nov2026"),
+            "{lines}"
+        );
+        assert!(shown[1].contains("mpn=B%2C115 doc=DS2"), "{lines}");
+        assert_eq!(hash_of(&before), hash_of(&lines), "{before}\n{lines}");
     }
 
     #[test]

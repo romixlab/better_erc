@@ -29,11 +29,13 @@ use outline::{Item, Kind};
 use pdf::{PageHit, PdfDoc};
 pub use puck::PuckMoves;
 use puck::{Action, Puck};
+use recorded::{Indexer, Locator, MpnChoice};
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::mpsc::Receiver;
 
 pub mod blend;
+mod docindex;
 mod dxf;
 mod geometry;
 #[cfg(test)]
@@ -43,6 +45,7 @@ mod outline;
 mod pdf;
 mod prims;
 mod puck;
+mod recorded;
 #[cfg(test)]
 mod testpdf;
 #[cfg(test)]
@@ -312,6 +315,10 @@ struct Confirm {
     footprint_now: Option<String>,
     /// The checkbox's state: whether to write `footprint` too
     write_footprint: bool,
+    /// The review line written, its MPNs from [`mpns`](Self::mpns)
+    line: better_erc::fp::record::ReviewLine,
+    /// The symbol's MPNs: which the datasheet covers
+    mpns: Vec<MpnChoice>,
 }
 
 /// Why KiCad may overwrite what `run` writes: a file it would change is open in KiCad, by its lock file (see
@@ -545,6 +552,15 @@ struct Runtime {
     auto_open: bool,
     /// The library search in place of the settings' command (tests)
     searcher: Option<Searcher>,
+    /// The document library's index, read once ([`recorded`])
+    doc_index: Option<Result<Vec<docindex::IndexedDoc>, String>>,
+    /// The index in place of the settings' docs command (tests)
+    indexer: Option<Indexer>,
+    /// Finds a library file in place of the settings' open command (tests)
+    locator: Option<Locator>,
+    /// What the review recorded in the symbol says about the view: restored from it, stale, its PDF not found
+    record_note: Option<String>,
+    docs_text: String,
     /// The SpaceMouse: its client, mapping, pie menu and calibrate step
     puck: Puck,
     /// The settings file the Save buttons write; none in tests
@@ -620,6 +636,11 @@ impl Default for Runtime {
             want_search: false,
             auto_open: false,
             searcher: None,
+            doc_index: None,
+            indexer: None,
+            locator: None,
+            record_note: None,
+            docs_text: String::new(),
             puck: Puck::default(),
             settings_file: Settings::file(),
             #[cfg(test)]
@@ -671,11 +692,31 @@ impl FootprintReview {
             return;
         };
         let mut answer = None;
+        let mut mpns_changed = false;
         let modal = egui::Modal::new(id.with("confirm accept")).show(ctx, |ui| {
             ui.set_max_width(640.0);
-            ui.heading("Write the review hash?");
+            ui.heading("Write the review?");
+            if !c.mpns.is_empty() {
+                ui.label("Which MPNs does this datasheet cover? (found in its text: ticked)");
+                ui.horizontal_wrapped(|ui| {
+                    for m in c.mpns.iter_mut() {
+                        let label = if m.in_pdf {
+                            format!("{} (in the PDF)", m.mpn)
+                        } else {
+                            m.mpn.clone()
+                        };
+                        mpns_changed |= ui.checkbox(&mut m.ticked, label).changed();
+                    }
+                });
+                if c.mpns.iter().all(|m| !m.ticked) {
+                    ui.colored_label(
+                        Color32::from_rgb(230, 140, 0),
+                        "none ticked: the review line is for the whole symbol, every MPN",
+                    );
+                }
+            }
             ui.label(format!(
-                "Accepting {} writes its review hash into these files:",
+                "Accepting {} writes its review line into these files:",
                 c.review.lib_id
             ));
             for a in &c.run.symbols {
@@ -691,13 +732,14 @@ impl FootprintReview {
                             };
                             ui.label(format!("{} ({kind})", file_name(&w.file)))
                                 .on_hover_text(w.file.display().to_string());
-                            ui.label(&c.run.field);
+                            ui.label(&w.property);
+                            let new = w.new.as_deref().unwrap_or("(removed)");
                             let change = match (&w.old, w.changed) {
-                                (_, false) => format!("{}, already", a.hash),
-                                (None, true) => format!("(none) → {}", a.hash),
-                                (Some(old), true) => format!("{old} → {}", a.hash),
+                                (_, false) => format!("{new}, already"),
+                                (None, true) => format!("(none) → {new}"),
+                                (Some(old), true) => format!("{old} → {new}"),
                             };
-                            ui.label(RichText::new(change).monospace());
+                            ui.add(Label::new(RichText::new(change).monospace()).wrap());
                             ui.end_row();
                         }
                     });
@@ -733,8 +775,32 @@ impl FootprintReview {
         if modal.should_close() {
             answer.get_or_insert(false);
         }
+        if mpns_changed && answer.is_none() {
+            self.confirm_mpns_changed();
+        }
         if let Some(write) = answer {
             self.confirmed(ctx, write);
+        }
+    }
+
+    /// The MPNs ticked in Accept's question changed: the line and the dry run follow
+    fn confirm_mpns_changed(&mut self) {
+        let Some(mut c) = self.rt.confirm.take() else {
+            return;
+        };
+        c.line.mpns = ticked(&c.mpns);
+        match self.write(&c.target, &c.review.hash, None, &c.line, true) {
+            Ok(run) => {
+                c.warnings = kicad_warnings(&run, (self.rt.kicad_running)());
+                c.run = run;
+                self.rt.confirm = Some(c);
+            }
+            Err(e) => {
+                let review = c.review;
+                self.rt.accepted = Some(review.hash.clone());
+                self.rt.written = Some(Err(e));
+                self.reviews.push(review);
+            }
         }
     }
 
@@ -748,6 +814,9 @@ impl FootprintReview {
         r.rt.config = None;
         // Not this computer's KiCad
         r.rt.kicad_running = || false;
+        // Not this computer's document library: an empty one, unless the test gives its own
+        r.rt.indexer = Some(Arc::new(|| Ok(Vec::new())));
+        r.rt.locator = Some(Arc::new(|_: &Path| Ok(None)));
         // Not this computer's SpaceMouse or settings file
         r.rt.puck.socket = None;
         r.rt.settings_file = None;
@@ -768,6 +837,7 @@ impl FootprintReview {
             .join("\n");
         self.rt.search_text = s.library_search.join(" ");
         self.rt.name_text = s.library_name.join(" ");
+        self.rt.docs_text = s.library_docs.join(" ");
         self.rt.settings = s;
     }
 
@@ -808,9 +878,10 @@ impl FootprintReview {
         if let Some(d) = self.datasheet.clone()
             && d.is_file()
         {
-            let page = self.page;
+            let (page, place) = (self.page, self.place.clone());
             self.open_datasheet(ctx, &d);
             self.page = page;
+            self.place = place;
             self.rt.auto_page = false;
             self.rt.fit_page = false;
         }
@@ -821,6 +892,8 @@ impl FootprintReview {
             // A search still running for the last part has nothing for this one
             self.rt.searching = None;
             match self.datasheet_file() {
+                // The datasheet its review was made on, where the review recorded one the library has
+                _ if self.open_recorded(ctx) => {}
                 Some(f) if self.datasheet.as_ref() != Some(&f) => self.open_datasheet(ctx, &f),
                 Some(_) => {}
                 None => {
@@ -942,6 +1015,7 @@ impl FootprintReview {
                             footprint_file: e.footprint_file,
                             hash: e.hash,
                             stored: e.stored,
+                            reviews: e.reviews,
                             datasheet: e.datasheet,
                             references: Vec::new(),
                             overridden: Vec::new(),
@@ -1017,6 +1091,7 @@ impl FootprintReview {
             from: from.clone(),
         });
         self.rt.symbol_note = None;
+        self.rt.record_note = None;
         self.rt.accepted = None;
         self.rt.written = None;
         let no_footprint = |why: String| (None, Some(why));
@@ -1274,6 +1349,7 @@ impl FootprintReview {
         self.ruler = None;
         self.scale = None;
         self.clear_selection();
+        self.restore_recorded();
         self.usage("datasheet");
     }
 
@@ -1419,7 +1495,10 @@ impl FootprintReview {
                 .footprint
                 .clone()
         });
-        match self.write(&target, &review.hash, None, true) {
+        let mpns = self.mpn_choices();
+        let mut line = self.review_line();
+        line.mpns = ticked(&mpns);
+        match self.write(&target, &review.hash, None, &line, true) {
             Ok(run) => {
                 let warnings = kicad_warnings(&run, (self.rt.kicad_running)());
                 self.rt.confirm = Some(Confirm {
@@ -1430,6 +1509,8 @@ impl FootprintReview {
                     footprint,
                     footprint_now,
                     write_footprint: false,
+                    line,
+                    mpns,
                 });
                 self.usage("confirm");
             }
@@ -1461,7 +1542,7 @@ impl FootprintReview {
                 .write_footprint
                 .then_some(c.footprint.as_deref())
                 .flatten();
-            let written = self.write(&c.target, &c.review.hash, footprint, false);
+            let written = self.write(&c.target, &c.review.hash, footprint, &c.line, false);
             self.finish_accept(ctx, c.review, Some(written));
         } else {
             self.usage("cancel");
@@ -1496,21 +1577,27 @@ impl FootprintReview {
         ctx.copy_text(review.hash.clone());
         self.rt.accepted = Some(review.hash.clone());
         self.rt.written = written;
-        if matches!(self.rt.written, Some(Ok(_))) {
+        if let Some(Ok(run)) = &self.rt.written {
+            let lines = run
+                .symbols
+                .first()
+                .map(|a| a.lines.clone())
+                .unwrap_or_default();
             self.usage("write");
-            self.reviewed(&review.hash);
+            self.reviewed(&lines);
         }
         self.reviews.push(review);
         self.usage("accept");
     }
 
-    /// Writes `hash` into the symbol under review, `footprint` into it too when given; `dry_run` says what it
-    /// would write
+    /// Writes `hash` into the symbol under review as review line `line` among its others, `footprint` into it too
+    /// when given; `dry_run` says what it would write
     fn write(
         &self,
         t: &Target,
         hash: &str,
         footprint: Option<&str>,
+        line: &better_erc::fp::record::ReviewLine,
         dry_run: bool,
     ) -> Result<AcceptRun, String> {
         match &t.from {
@@ -1524,38 +1611,17 @@ impl FootprintReview {
                     },
                     &mut |dir| SymbolLibraries::new(dir, config.as_deref()),
                     footprint,
+                    line,
                     dry_run,
                 )
             }
             SymbolsFrom::Library { project, .. } => {
                 let search = self.library_search_for(&t.from);
                 let (mut syms, _) = search.open(project).map_err(|e| e.to_string())?;
-                better_erc::fp::accept_library(&mut syms, &t.symbol, hash, footprint, dry_run)
+                better_erc::fp::accept_library(&mut syms, &t.symbol, hash, footprint, line, dry_run)
             }
         }
         .map_err(|e| e.to_string())
-    }
-
-    /// The symbol under review holds `hash` now: its row and fields say so
-    fn reviewed(&mut self, hash: &str) {
-        let Some(t) = &self.rt.target else { return };
-        if let Some(row) = self
-            .rt
-            .symbols
-            .as_mut()
-            .and_then(|l| l.rows.iter_mut().find(|r| r.symbol == t.symbol))
-        {
-            row.stored = Some(hash.to_string());
-            if row.hash.as_deref() == Some(hash) {
-                row.status = SymbolStatus::Ok;
-            }
-        }
-        if let Some(s) = &mut self.rt.sourced {
-            match s.fields.iter_mut().find(|f| f.0 == FIELD) {
-                Some(f) => f.1 = hash.to_string(),
-                None => s.fields.push((FIELD.to_string(), hash.to_string())),
-            }
-        }
     }
 
     fn set_scale_from_ruler(&mut self) {
@@ -1999,10 +2065,10 @@ impl FootprintReview {
             // Outside the grid, not a row of it: a row that comes and goes (or whose text changes length,
             // as the full hash does once reviewed) would otherwise change the grid's own layout, which then
             // takes a few frames to settle rather than one
-            if let Some(stored) = s.field(FIELD)
-                && self.rt.target.is_some()
-            {
-                let (color, text) = if stored == s.hash {
+            let rec = self.recorded();
+            if let Some(stored) = rec.stored() {
+                // Every review line's hash against this footprint's: the first that differs, else the one they share
+                let (color, text) = if rec.stale().is_empty() {
                     (Color32::GREEN, format!("{stored}, the same: reviewed"))
                 } else {
                     (
@@ -2349,6 +2415,7 @@ impl FootprintReview {
         if let Some(n) = &self.rt.symbol_note {
             ui.colored_label(Color32::ORANGE, n);
         }
+        self.review_lines_ui(ui);
     }
 
     fn board_list(&mut self, ui: &mut Ui) {
@@ -2981,6 +3048,18 @@ impl FootprintReview {
                         .collect();
                     self.rt.doc_name = None;
                 }
+                ui.label("Library docs command, for the review record (the index with content hashes)");
+                if ui.add(TextEdit::singleline(&mut self.rt.docs_text)).changed() {
+                    s.library_docs = self
+                        .rt
+                        .docs_text
+                        .split_whitespace()
+                        .map(String::from)
+                        .collect();
+                    self.rt.doc_index = None;
+                }
+                ui.label("Reviewer, written into the review record; empty: the login name");
+                ui.add(TextEdit::singleline(&mut s.reviewer));
                 ui.label("Review notes file: a path, or a name beside the project or library");
                 ui.add(TextEdit::singleline(&mut s.notes_file));
                 let file = self.rt.settings_file.clone();
@@ -4353,13 +4432,23 @@ fn key_name(k: Option<egui::Key>) -> String {
     k.map_or_else(|| "(no key: see Settings)".into(), |k| k.name().to_string())
 }
 
+/// The MPNs ticked in Accept's question
+fn ticked(mpns: &[MpnChoice]) -> Vec<String> {
+    mpns.iter()
+        .filter(|m| m.ticked)
+        .map(|m| m.mpn.clone())
+        .collect()
+}
+
 fn status_colour(s: SymbolStatus) -> Color32 {
     match s {
         SymbolStatus::Ok => Color32::from_rgb(0, 170, 60),
         SymbolStatus::Changed | SymbolStatus::Malformed | SymbolStatus::Missing => {
             Color32::from_rgb(220, 50, 50)
         }
-        SymbolStatus::Unreviewed | SymbolStatus::OtherVersion => Color32::from_rgb(230, 140, 0),
+        SymbolStatus::Unreviewed | SymbolStatus::OtherVersion | SymbolStatus::Partial => {
+            Color32::from_rgb(230, 140, 0)
+        }
         SymbolStatus::Refused => Color32::from_rgb(0, 160, 190),
         SymbolStatus::NoFootprint => Color32::GRAY,
     }

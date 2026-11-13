@@ -20,8 +20,11 @@ pub struct TodoEntry {
     /// The library footprint's review hash now, when it was found: what the symbol's `Footprint_Review` gets once
     /// it is reviewed
     pub hash: Option<String>,
-    /// The library symbol's `Footprint_Review` field
+    /// The review hash on the library symbol: its first stale review line's, else its first line's
     pub stored: Option<String>,
+    /// The library symbol's review lines, each against the footprint, and its MPNs no line reviews
+    #[serde(default)]
+    pub reviews: super::record::Assessed,
     /// The library symbol's `Datasheet` field, what the footprint is reviewed against
     pub datasheet: Option<String>,
     /// The board footprints placed from this symbol, in natural order
@@ -82,10 +85,11 @@ fn rank(s: SymbolStatus) -> u8 {
         SymbolStatus::OtherVersion => 1,
         SymbolStatus::Malformed => 2,
         SymbolStatus::Unreviewed => 3,
-        SymbolStatus::Missing => 4,
-        SymbolStatus::Refused => 5,
-        SymbolStatus::Ok => 6,
-        SymbolStatus::NoFootprint => 7,
+        SymbolStatus::Partial => 4,
+        SymbolStatus::Missing => 5,
+        SymbolStatus::Refused => 6,
+        SymbolStatus::Ok => 7,
+        SymbolStatus::NoFootprint => 8,
     }
 }
 
@@ -144,6 +148,7 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
                 footprint_file: e.footprint_file,
                 hash: e.hash,
                 stored: e.stored,
+                reviews: e.reviews,
                 datasheet: e.datasheet,
                 references,
                 overridden,
@@ -206,7 +211,7 @@ impl FpTodo {
             SymbolStatus::Changed | SymbolStatus::Malformed | SymbolStatus::Missing => {
                 AnsiColor::Red.on_default().bold()
             }
-            SymbolStatus::Unreviewed | SymbolStatus::OtherVersion => {
+            SymbolStatus::Unreviewed | SymbolStatus::OtherVersion | SymbolStatus::Partial => {
                 AnsiColor::Yellow.on_default().bold()
             }
             SymbolStatus::Refused => AnsiColor::Cyan.on_default(),
@@ -268,7 +273,7 @@ impl FpTodo {
             let stored = e.stored.as_deref().unwrap_or("");
             let now = e.hash.as_deref().unwrap_or("");
             match e.status {
-                SymbolStatus::Ok | SymbolStatus::NoFootprint => {}
+                SymbolStatus::Ok | SymbolStatus::NoFootprint | SymbolStatus::Partial => {}
                 SymbolStatus::Changed => {
                     let _ = write!(
                         out,
@@ -295,6 +300,9 @@ impl FpTodo {
                 }
             }
             let _ = write!(out, "  {dim}on{dim:#} {}", e.references.join(" "));
+            for l in super::review_notes(&e.reviews, false) {
+                let _ = write!(out, "\n{:13} {:width$} {l}", "", "");
+            }
             if !e.overridden.is_empty() {
                 let note = AnsiColor::Cyan.on_default();
                 let placed: Vec<String> = e

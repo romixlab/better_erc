@@ -230,8 +230,11 @@ fn review_a_symbol_from_its_library() {
     assert!(!disabled(&h, ACCEPT));
     button(&h, ACCEPT).click();
     h.run();
-    h.get_by_label("Write the review hash?");
+    h.get_by_label("Write the review?");
     h.get_by_label("Rev.kicad_sym (library)");
+    // Its MPN is in the PDF's text: ticked already
+    assert!(h.state().rt.confirm.as_ref().unwrap().mpns[0].ticked);
+    h.get_by_label("TEST-PART (in the PDF)");
     // The SpaceMouse's taps answer it: the left button writes, the right one cancels; the rings wait
     let menu = h.state().pie_menu();
     assert_eq!(menu.center_left.map(|s| s.action), Some(Action::Write));
@@ -242,7 +245,8 @@ fn review_a_symbol_from_its_library() {
             .flatten()
             .all(|s| s.disabled.is_some())
     );
-    h.get_by_label(&format!("(none) → {want_hash}"));
+    let line = format!("{want_hash} mpn=TEST-PART page=2 scale=0.02 at=");
+    h.get_by_label_contains(&format!("(none) → {line}"));
     assert!(h.state().rt.accepted.is_none(), "nothing accepted yet");
     button(&h, "Write (Enter)").click();
     h.run();
@@ -257,7 +261,7 @@ fn review_a_symbol_from_its_library() {
     h.get_by_label("  Rev.kicad_sym (library)");
     let text = std::fs::read_to_string(&lib).unwrap();
     assert!(
-        text.contains(&format!("(property \"Footprint_Review\" \"{want_hash}\"")),
+        text.contains(&format!("(property \"Footprint_Review\" \"{line}")),
         "{text}"
     );
     let r = &h.state().reviews[0];
@@ -658,6 +662,7 @@ fn accept_writes_into_the_symbols() {
         font_dirs: Vec::new(),
         library_search: Vec::new(),
         library_name: Vec::new(),
+        reviewer: "tester".into(),
         ..Default::default()
     };
     let mut cx = Context::new();
@@ -703,7 +708,14 @@ fn accept_writes_into_the_symbols() {
     h.run();
     h.get_by_label("Rev.kicad_sym (library)");
     h.get_by_label("rev.kicad_sch (schematic copy)");
-    assert_eq!(h.get_all_by_label(&format!("(none) → {hash}")).count(), 2);
+    // The review line: the hash, then where it was made (no document library here: the page, scale, placement)
+    let line = format!("{hash} page=2 scale=0.02 at=");
+    assert_eq!(
+        h.get_all_by_label_contains(&format!("(none) → {line}"))
+            .count(),
+        2
+    );
+    assert_eq!(h.get_all_by_label_contains("by=tester on=").count(), 2);
     assert!(h.query_by_label_contains("open in KiCad").is_none());
     h.key_press(egui::Key::Escape);
     h.run();
@@ -763,7 +775,7 @@ fn accept_writes_into_the_symbols() {
     h.get_by_label("Rev:Mixed: written into");
     h.get_by_label("  Rev.kicad_sym (library)");
     h.get_by_label("  rev.kicad_sch (schematic copy)");
-    let want = format!("(property \"Footprint_Review\" \"{hash}\"");
+    let want = format!("(property \"Footprint_Review\" \"{line}");
     for f in ["Rev.kicad_sym", "rev.kicad_sch"] {
         let text = std::fs::read_to_string(dir.join(f)).unwrap();
         assert!(text.contains(&want), "{f}: {text}");
@@ -1619,5 +1631,199 @@ fn library_search_opens_the_first_hit() {
     assert_eq!(h.state().datasheet.as_deref(), Some(pdf.as_path()));
     h.get_by_label("Found in the library (1), the first opens by itself:");
     h.get_by_label("📄 TEST-PART.pdf  (open)");
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// Accept records where the review was made and reopening the symbol goes back there: the datasheet as the
+/// document library knows it (its content hash and number), the MPNs it covers (the one in its text ticked, the
+/// other maker's not), the page, scale and placement. Reopened, the recorded PDF opens by itself with that view; a
+/// changed footprint hash is said to be stale, a PDF the library doesn't have is said too
+#[test]
+fn the_review_records_where_it_was_made() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-record-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(dir.join("lib/Test")).unwrap();
+    // The datasheet inside a document library rooted at dir/lib, which lists it relative to that root
+    let pdf = datasheet(&dir.join("lib/Test"));
+    footprint_table(&dir);
+    let lib = dir.join("Rev.kicad_sym");
+    std::fs::write(
+        &lib,
+        format!(
+            "(kicad_symbol_lib (version 20231120) (generator \"kicad_symbol_editor\")\n{}{})\n",
+            symbol_text(
+                "Two",
+                &[
+                    ("Footprint", "Test:Mixed_Pads"),
+                    ("Mpn1", "TEST-PART"),
+                    ("Mpn2", "OTHER-PART"),
+                ]
+            ),
+            symbol_text("Generic", &[("Datasheet", "~")]),
+        ),
+    )
+    .unwrap();
+    let settings = FootprintReviewSettings {
+        font_dirs: Vec::new(),
+        library_search: Vec::new(),
+        library_name: Vec::new(),
+        reviewer: "tester".into(),
+        ..Default::default()
+    };
+    let mut cx = Context::new();
+    let mut h = Harness::builder()
+        .with_size(vec2(1200.0, 1400.0))
+        .build_ui_state(
+            move |ui, state: &mut FootprintReview| state.ui(ui, &mut cx, Id::new("fp record")),
+            FootprintReview::with(settings, Arc::new(|_: &str| {})),
+        );
+    let root = dir.join("lib");
+    h.state_mut().rt.indexer = Some(Arc::new(|| {
+        docindex::parse_index(
+            r#"[{"path": "Test/TEST-PART.pdf", "doc": "DS99", "rev": "3",
+                 "hash": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"}]"#,
+        )
+    }));
+    let found = root.clone();
+    let locate: Locator =
+        Arc::new(move |rel: &Path| Ok(Some(found.join(rel)).filter(|p| p.is_file())));
+    h.state_mut().rt.locator = Some(locate.clone());
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &lib);
+    h.run();
+    h.get_by_label("Rev:Two").click();
+    h.run();
+    h.run();
+    // Never reviewed: no datasheet recorded, none in its fields; opened by hand
+    assert!(h.state().datasheet.is_none());
+    h.state_mut().open_datasheet(&ctx, &pdf);
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    assert_eq!(h.state().page, 1);
+    let hash = h.state().rt.sourced.as_ref().unwrap().hash.clone();
+    h.state_mut().scale = Some(Scale {
+        mm_per_point: 0.02,
+        page: 1,
+        mm: 2.0,
+        note: None,
+    });
+    let placed = Placement {
+        origin: [150.0, 230.0],
+        rotation: 90.0,
+        mirror: true,
+    };
+    h.state_mut().place = placed.clone();
+    h.run();
+    button(&h, ACCEPT).click();
+    h.run();
+    // The MPN in the PDF's text is ticked, the other maker's is not
+    let mpns = h.state().rt.confirm.as_ref().unwrap().mpns.clone();
+    assert_eq!(
+        mpns.iter()
+            .map(|m| (m.mpn.as_str(), m.ticked))
+            .collect::<Vec<_>>(),
+        [("TEST-PART", true), ("OTHER-PART", false)]
+    );
+    let line = format!(
+        "{hash} mpn=TEST-PART doc=DS99@rev3 pdf=b3:0123456789abcdef page=2 scale=0.02 at=150,230,90,mirror \
+         by=tester on="
+    );
+    h.get_by_label_contains(&format!("(none) → {line}"));
+    // Ticking the other one changes what would be written; unticked again, back
+    h.get_by_label("OTHER-PART").click();
+    h.run();
+    h.get_by_label_contains(&format!(
+        "(none) → {hash} mpn=TEST-PART,OTHER-PART doc=DS99"
+    ));
+    h.get_by_label("OTHER-PART").click();
+    h.run();
+    h.get_by_label_contains(&format!("(none) → {line}"));
+    h.key_press(egui::Key::Enter);
+    h.run();
+    assert!(
+        matches!(h.state().rt.written, Some(Ok(_))),
+        "{:?}",
+        h.state().rt.written
+    );
+    let text = std::fs::read_to_string(&lib).unwrap();
+    assert!(
+        text.contains(&format!("(property \"Footprint_Review\" \"{line}")),
+        "{text}"
+    );
+    // One maker's datasheet reviewed: the other MPN is not, and the row says partial
+    let row = |h: &Harness<'_, FootprintReview>| {
+        let rows = &h.state().rt.symbols.as_ref().unwrap().rows;
+        rows.iter().find(|r| r.symbol == "Rev:Two").unwrap().clone()
+    };
+    assert_eq!(row(&h).status, SymbolStatus::Partial);
+    h.get_by_label("MPNs not reviewed yet: OTHER-PART: accept against their datasheet");
+    let check = better_erc::fp::check_libraries(&LibCheckOptions {
+        libraries: vec![lib.display().to_string()],
+        project: dir.clone(),
+        search: LibrarySearch::default(),
+    })
+    .unwrap();
+    assert_eq!(check.symbols[1].status, SymbolStatus::Partial);
+
+    // Reopened after the view was lost: the recorded PDF opens by itself, on that page, scale and placement
+    let reopen = |h: &mut Harness<'_, FootprintReview>| {
+        h.state_mut().close_datasheet();
+        h.state_mut().place = Placement::default();
+        h.get_by_label("Rev:Generic").click();
+        h.run();
+        h.get_by_label("Rev:Two").click();
+        h.run();
+        h.run();
+        if let Some(p) = h.state_mut().rt.pdf.as_mut() {
+            p.wait_idle(&ctx);
+        }
+        h.run();
+    };
+    reopen(&mut h);
+    let st = h.state();
+    assert_eq!(st.datasheet.as_deref(), Some(pdf.as_path()));
+    assert_eq!(st.page, 1);
+    assert_eq!(
+        st.scale.as_ref().map(|s| (s.mm_per_point, s.page)),
+        Some((0.02, 1))
+    );
+    assert_eq!(st.place, placed);
+    let note = st.rt.record_note.clone().unwrap_or_default();
+    assert!(
+        note.starts_with("the view the review was made in: DS99@rev3, page 2, by tester on "),
+        "{note}"
+    );
+    assert!(!note.contains("stale"), "{note}");
+    // Accept straight away: the line for this datasheet is replaced, not added to
+    assert!(!disabled(&h, ACCEPT));
+
+    // The footprint changed since (here: the hash on the line edited): stale, said plainly
+    std::fs::write(
+        &lib,
+        text.replace(&format!("\"{hash} mpn="), "\"fp1:0000000000000000 mpn="),
+    )
+    .unwrap();
+    reopen(&mut h);
+    let note = h.state().rt.record_note.clone().unwrap_or_default();
+    assert!(
+        note.contains(&format!(
+            "stale: the footprint changed since (reviewed fp1:0000000000000000, now {hash}): review it again"
+        )),
+        "{note}"
+    );
+    h.get_by_label("stale: the footprint changed since");
+
+    // A PDF the library doesn't have: said, and the view stays as it is
+    h.state_mut().rt.locator = Some(Arc::new(|_: &Path| Ok(None)));
+    reopen(&mut h);
+    assert!(h.state().datasheet.is_none());
+    let note = h.state().rt.record_note.clone().unwrap_or_default();
+    assert_eq!(
+        note,
+        "reviewed against DS99@rev3, page 2: not found in the document library; open that PDF to see the \
+         review's view"
+    );
+    h.get_by_label(&note);
     std::fs::remove_dir_all(&dir).unwrap();
 }

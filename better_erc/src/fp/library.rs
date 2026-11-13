@@ -1,7 +1,7 @@
 //! `berc fp check --lib`: every symbol of a symbol library against the review hash of the library footprint its
 //! `Footprint` field names, before any board uses it.
 
-use super::{FIELD, field_of};
+use super::{FIELD, field_of, record, review_notes};
 use erc_kicad::libtable::{FootprintLibraries, LibError, SymbolLibraries, SymbolLibrary};
 use erc_model::fphash;
 use serde::{Deserialize, Serialize};
@@ -29,6 +29,9 @@ pub enum SymbolStatus {
     /// The symbol sets no footprint and has no hash (a generic part, a power symbol): nothing to review, not a
     /// failure
     NoFootprint,
+    /// Every review line's hash matches, but some of the symbol's MPNs have no line: their datasheets not
+    /// reviewed yet
+    Partial,
 }
 
 impl SymbolStatus {
@@ -40,6 +43,7 @@ impl SymbolStatus {
                 | SymbolStatus::OtherVersion
                 | SymbolStatus::Malformed
                 | SymbolStatus::Unreviewed
+                | SymbolStatus::Partial
         )
     }
 
@@ -53,12 +57,14 @@ impl SymbolStatus {
             SymbolStatus::OtherVersion => "other version",
             SymbolStatus::Malformed => "malformed",
             SymbolStatus::NoFootprint => "no footprint",
+            SymbolStatus::Partial => "partial",
         }
     }
 
-    const ALL: [SymbolStatus; 8] = [
+    const ALL: [SymbolStatus; 9] = [
         SymbolStatus::Ok,
         SymbolStatus::Changed,
+        SymbolStatus::Partial,
         SymbolStatus::Unreviewed,
         SymbolStatus::Missing,
         SymbolStatus::Refused,
@@ -78,8 +84,11 @@ pub struct SymbolEntry {
     pub status: SymbolStatus,
     /// The footprint's review hash now, when it was found
     pub hash: Option<String>,
-    /// The symbol's `Footprint_Review` field
+    /// The review hash on the symbol: its first stale review line's, else its first line's
     pub stored: Option<String>,
+    /// The symbol's review lines, each against the footprint, and its MPNs no line reviews
+    #[serde(default)]
+    pub reviews: record::Assessed,
     /// The `.kicad_mod` read
     pub footprint_file: Option<PathBuf>,
     /// The symbol's `Datasheet` field, what the footprint is reviewed against
@@ -357,6 +366,7 @@ pub(super) fn check_symbol(
         status: SymbolStatus::NoFootprint,
         hash: None,
         stored: None,
+        reviews: record::Assessed::default(),
         footprint_file: None,
         datasheet: None,
         note: None,
@@ -385,7 +395,8 @@ pub(super) fn check_symbol(
     e.datasheet = field_of(&fields, "Datasheet")
         .filter(|d| *d != "~")
         .map(String::from);
-    e.stored = field_of(&fields, FIELD).map(String::from);
+    e.reviews = record::assess(&fields, None);
+    e.stored = e.reviews.stored();
     let Some(footprint) = e.footprint.clone() else {
         if e.stored.is_some() {
             e.status = SymbolStatus::Refused;
@@ -402,14 +413,16 @@ pub(super) fn check_symbol(
     };
     e.footprint_file = Some(found.path.clone());
     e.hash = Some(fphash::hash(&found.footprint));
-    e.status = match &e.stored {
-        None => SymbolStatus::Unreviewed,
-        Some(stored) => match fphash::compare(stored, &found.footprint) {
-            fphash::Compared::Same => SymbolStatus::Ok,
-            fphash::Compared::Changed { .. } => SymbolStatus::Changed,
-            fphash::Compared::OtherVersion { .. } => SymbolStatus::OtherVersion,
-            fphash::Compared::Malformed => SymbolStatus::Malformed,
-        },
+    let compare = |stored: &str| fphash::compare(stored, &found.footprint);
+    e.reviews = record::assess(&fields, Some(&compare));
+    e.stored = e.reviews.stored();
+    e.status = match e.reviews.overall() {
+        record::Overall::Ok => SymbolStatus::Ok,
+        record::Overall::Unreviewed => SymbolStatus::Unreviewed,
+        record::Overall::Partial => SymbolStatus::Partial,
+        record::Overall::Changed => SymbolStatus::Changed,
+        record::Overall::OtherVersion => SymbolStatus::OtherVersion,
+        record::Overall::Malformed => SymbolStatus::Malformed,
     };
     e
 }
@@ -434,8 +447,9 @@ impl LibCheck {
     }
 
     /// One line per symbol and a summary, statuses in colour (the caller's stream drops it off a terminal).
-    /// Symbols without a footprint are listed last under their own heading.
-    pub fn to_text_color(&self) -> String {
+    /// Symbols without a footprint are listed last under their own heading; `details`: every review line under its
+    /// symbol
+    pub fn to_text_color(&self, details: bool) -> String {
         use anstyle::{AnsiColor, Style};
         use std::fmt::Write as _;
         let style = |s: SymbolStatus| match s {
@@ -443,7 +457,7 @@ impl LibCheck {
             SymbolStatus::Changed | SymbolStatus::Malformed | SymbolStatus::Missing => {
                 AnsiColor::Red.on_default().bold()
             }
-            SymbolStatus::Unreviewed | SymbolStatus::OtherVersion => {
+            SymbolStatus::Unreviewed | SymbolStatus::OtherVersion | SymbolStatus::Partial => {
                 AnsiColor::Yellow.on_default().bold()
             }
             SymbolStatus::Refused => AnsiColor::Cyan.on_default(),
@@ -486,7 +500,7 @@ impl LibCheck {
             let stored = e.stored.as_deref().unwrap_or("");
             let now = e.hash.as_deref().unwrap_or("");
             match e.status {
-                SymbolStatus::Ok | SymbolStatus::NoFootprint => {}
+                SymbolStatus::Ok | SymbolStatus::NoFootprint | SymbolStatus::Partial => {}
                 SymbolStatus::Changed => {
                     let _ = write!(
                         out,
@@ -514,6 +528,9 @@ impl LibCheck {
             }
             // The footprint column's padding, where nothing follows it
             out.truncate(out.trim_end_matches(' ').len());
+            for l in review_notes(&e.reviews, details) {
+                let _ = write!(out, "\n{:13} {:width$} {l}", "", "");
+            }
             if let Some(lib) = &e.symbol_library_disallowed {
                 let warn = AnsiColor::Yellow.on_default();
                 let _ = write!(

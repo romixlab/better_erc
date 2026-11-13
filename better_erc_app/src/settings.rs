@@ -39,6 +39,14 @@ pub struct FootprintReviewSettings {
     /// (`tpm lib open --json`); the note names the datasheet by its number and revision, else by `value`. Empty:
     /// the note gives the datasheet's file.
     pub library_name: Vec<String>,
+    /// A command that lists the document library's index: the program and its arguments. It prints a JSON list of
+    /// `{"path", "hash", "doc", "rev"}` (`tpm lib docs --json --all`, paths relative to the library's root, the
+    /// content hash in hex). Accept records the datasheet by its hash and document number with it, and a reviewed
+    /// symbol's datasheet is found again through it and `library_name`. Empty: no datasheet recorded but the page,
+    /// scale and placement.
+    pub library_docs: Vec<String>,
+    /// Who reviews, written into the review record (`by=`); empty: the login name
+    pub reviewer: String,
     /// The review notes file (Markdown): a path of its own, or a name for a file beside the project or library
     /// under review
     pub notes_file: String,
@@ -274,6 +282,10 @@ impl Default for FootprintReviewSettings {
             library_name: ["tpm", "lib", "open", "--json", "-n", "10"]
                 .map(String::from)
                 .to_vec(),
+            library_docs: ["tpm", "lib", "docs", "--json", "--all"]
+                .map(String::from)
+                .to_vec(),
+            reviewer: String::new(),
             notes_file: "footprint-review-notes.md".into(),
             blend: BlendMode::Normal,
             colors: LayerColors::default(),

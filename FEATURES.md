@@ -92,7 +92,7 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   file: a board KiCad 10 saved with test footprints placed on both sides, flipped both ways, at right and odd angles
   (`just footprint-fixture`) · `erc_kicad/src/footprint.rs`, `erc_model/src/footprint.rs`, `erc_kicad/tests/footprint.rs`
 - ✅ `IMP-18` KiCad library tables, one module for symbols and footprints: the project's `sym-lib-table` / `fp-lib-table` before the user's global one (KiCad's configuration directory of the newest version, `$KICAD_CONFIG_HOME` first), nested tables (`(type "Table")`) read in place, disabled libraries skipped, `${VAR}` from the environment, `kicad_common.json`, `KIPRJMOD` and an installed KiCad's stock libraries (`KICAD9_FOOTPRINT_DIR`, ...). `Lib:Name` resolves to a library symbol's fields (`.kicad_sym`, `.kicad_symdir`) or a parsed library footprint (`.pretty/Name.kicad_mod`, `IMP-17`), with a typed error for every way the lookup fails · `erc_kicad/src/libtable.rs`, `erc_kicad/tests/libtable.rs`
-- 🚧 `IMP-19` KiCad files written back, formatting-preserving: a file is parsed into a tree that knows each expression's byte range, and only the changed ranges are written, so a file read and written unchanged is the same bytes and a change is one diff hunk (`erc_kicad::edit`). Done: a symbol's property set or inserted in a `.kicad_sym`, a `.kicad_symdir` file and a schematic's `lib_symbols` (`symlib::set_property`), a new property hidden after the symbol's own ones in the layout of the file's KiCad version (8 and 9, or 10), files older than KiCad 8 refused; KiCad as the oracle (kicad-cli saving commutes with the edit), every file of `~/git/kicad-library` and `~/git/hw` round-tripped where they are there. Next: the rest of the writer for the uses of the full plan (courtyard fix `LAY-3`, variant back-import `BOM-13`, `berc fix`, `berc fmt`) · `erc_kicad/src/edit.rs`, `erc_kicad/src/symlib.rs`, `erc_kicad/tests/write.rs`
+- 🚧 `IMP-19` KiCad files written back, formatting-preserving: a file is parsed into a tree that knows each expression's byte range, and only the changed ranges are written, so a file read and written unchanged is the same bytes and a change is one diff hunk (`erc_kicad::edit`). Done: a symbol's property set or inserted in a `.kicad_sym`, a `.kicad_symdir` file and a schematic's `lib_symbols` (`symlib::set_property`), or removed with the line it stood on (`symlib::remove_property`), a new property hidden after the symbol's own ones in the layout of the file's KiCad version (8 and 9, or 10), files older than KiCad 8 refused; KiCad as the oracle (kicad-cli saving commutes with the edit), every file of `~/git/kicad-library` and `~/git/hw` round-tripped where they are there. Next: the rest of the writer for the uses of the full plan (courtyard fix `LAY-3`, variant back-import `BOM-13`, `berc fix`, `berc fmt`) · `erc_kicad/src/edit.rs`, `erc_kicad/src/symlib.rs`, `erc_kicad/tests/write.rs`
 - 🚧 `IMP-16` Schematic PDFs as a netlist source. Done: Altium Smart PDFs (stage 1): sheets, parts with their units,
   pins and nets from the bookmarks (`Provenance::Pdf`, `PdfConfidence::Bookmarks`, design rank), nets joined across
   sheets by power names and same-named ports, labels with their search-word position, part properties from the
@@ -827,6 +827,24 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `better_erc/src/fp/todo.rs`, `better_erc/src/fp/library.rs` (`lib_allowed`), `berc/src/main.rs`,
   `better_erc_app/src/tabs/footprint_review/mod.rs`, `better_erc_app/src/settings.rs`, `berc/tests/fp.rs`,
   `berc/tests/fp_accept.rs`
+- ✅ `TOOL-11` Footprint review lines, where a review was made recorded in the symbol: one line per datasheet, each
+  in a property of its own (`Footprint_Review`, `Footprint_Review2`, ...), the review hash first and then `mpn=`
+  (the MPNs it covers, as strings; a comma in one escaped `%2C`), `doc=` (number and revision), `pdf=` (`b3:` and 16
+  hex digits of the document library's blake3), `page=`, `scale=`, `at=` (placement), `by=`, `on=`; unknown keys
+  kept (`fp::record`). `berc fp check` (board and `--lib`) and `berc fp todo` read the first token of each line as
+  its hash: ok when every line's hash is the footprint's and every `Mpn`/`MpnN` of the symbol is on a line (a
+  symbol without them: a line without `mpn=`), `partial` listing the MPNs not reviewed yet, `changed` naming the
+  stale lines; a hash alone stays valid (no source recorded); `--details` prints every line, JSON `reviews`.
+  `berc fp accept --mpn --doc --pdf --page --by` and the app's Accept write a datasheet's line among the others
+  (`record::merge`: the same document replaced in place, its MPNs leave other lines, a line left without any
+  removed through `symlib::remove_property`) into the library and every schematic copy. The review tab's Accept
+  asks which MPNs the datasheet covers, those in the PDF's text ticked; the datasheet identified through the
+  library's index (`tpm lib docs --json --all`, a setting), the reviewer a setting. Opening a reviewed symbol opens
+  the recorded PDF (by its hash, else its document number, through `tpm lib open --json`) and restores page,
+  scale and placement; a stale line or a PDF not found is said. `berc textconv` shows each line whole ·
+  `better_erc/src/fp/record.rs`, `better_erc/src/fp.rs`, `erc_kicad/src/symlib.rs`,
+  `better_erc_app/src/tabs/footprint_review/recorded.rs`, `docindex.rs`, `berc/tests/fp_accept.rs`, README "Review
+  lines"
 
 ## Code generation (`GEN`)
 

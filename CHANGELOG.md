@@ -11,6 +11,27 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `TOOL-11`: a footprint review records where it was made, in the symbol: one review line per datasheet, in
+  `Footprint_Review`, `Footprint_Review2`, ..., the hash first, then the MPNs it covers, the document number and
+  revision, the PDF by the document library's blake3, the page, scale and placement, who and when. `berc fp check`
+  (board and `--lib`) and `berc fp todo` check every line's hash and that every `Mpn`/`MpnN` of the symbol is on a
+  line: a new status `partial` names the MPNs not reviewed yet, `changed` names the stale lines, `--details` prints
+  every line, the JSON has `reviews`. A value with the hash alone stays valid. `berc fp accept --mpn --doc --pdf
+  --page --by` writes a datasheet's line among the others; the app's Accept asks which MPNs the datasheet covers
+  (those in its text ticked), records the view, and opening a reviewed symbol opens the recorded PDF from the
+  document library with that page, scale and placement, saying when a line is stale or its PDF is not found. New
+  app settings `library_docs` (`tpm lib docs --json --all`) and `reviewer`.
+- `IMP-19`: `erc_kicad::symlib::remove_property` and `property_names`.
+
+### Changed
+
+- `berc fp accept` and the app's Accept write the review line merged with the symbol's other lines rather than
+  overwriting `Footprint_Review` with the hash: `AcceptRun` lists each property written with its new value
+  (`Written::new`, `None` for one removed) and the symbol's lines (`Accepted::lines`). `fp::accept` and
+  `fp::accept_library` take the review line's source (`fp::record::ReviewLine`).
+
 ## [0.4.40] - 2026-11-13
 
 ### Added

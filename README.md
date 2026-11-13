@@ -214,7 +214,8 @@ footprint is one of:
 | Status | Meaning |
 |---|---|
 | ok | the footprint is the one reviewed |
-| changed | the footprint differs from the one reviewed: review it again |
+| changed | the footprint differs from the one reviewed: review it again (with several review lines, the stale ones are named) |
+| partial | every review line's hash matches, but some of the symbol's MPNs are on no line: their datasheets are not reviewed yet, named |
 | unreviewed | the symbol has no review hash; the line shows the hash to put there once reviewed |
 | refused | the symbol sets no footprint, so a review of the one on the board means nothing |
 | no symbol | the footprint has no schematic symbol and is not marked board-only |
@@ -242,6 +243,42 @@ berc fp check hw/board --symbols ~/kicad-library/symbols --footprints ~/kicad-li
 The exit code is 0 when every footprint is ok or board-only and every copy up to date, 1 otherwise, 2 when the
 project can't be read.
 
+### Review lines: where a review was made
+
+A review is made against one datasheet, and a datasheet is one maker's: the MPNs of one maker usually share one, and
+two makers never do. So a symbol holds one review line per datasheet, each in a property of its own,
+`Footprint_Review`, `Footprint_Review2`, `Footprint_Review3`, ... (KiCad needs field names unique, as with `Mpn1`,
+`Mpn2`). Each is one line, the review hash first and where the review was made after it:
+
+```text
+fp1:7726812df851763a mpn=BSS138W-7-F,BSS138WQ-7-F doc=DS30154@rev16 pdf=b3:0123456789abcdef page=3 scale=0.02 at=150,230,90,mirror by=roman on=13nov2026
+```
+
+| Key | What |
+|---|---|
+| `mpn=` | the MPNs this datasheet covers, from the symbol's `Mpn`, `Mpn1`, `Mpn2`, ... fields, comma-separated; a comma, `%` or blank inside one is written `%2C`, `%25`, `%20` (Nexperia's `BSS138BKW,115` is `BSS138BKW%2C115`). No `mpn=`: the line reviews the whole symbol |
+| `doc=` | the document number and revision, where the document library knows them: they survive a download of the same document with other bytes |
+| `pdf=` | the PDF by the document library's content hash: `b3:` and 16 hex digits of its blake3 |
+| `page=` | the page the land pattern is on, 1-based |
+| `scale=` | the drawing's scale on that page, mm per PDF point |
+| `at=` | where the footprint lay on the page: its origin in page points from the page's top left, its rotation in degrees, `mirror` when seen from below |
+| `by=`, `on=` | who reviewed it, and the day |
+
+The MPNs are written as strings, so reordering the `Mpn` fields breaks nothing. A key this version doesn't know stays
+on the line as it is. `berc fp check` reads the first token of each line as its hash: a symbol is ok when every line's
+hash is the footprint's and every MPN of the symbol is on some line (a symbol without `Mpn` fields needs a line
+without `mpn=`); otherwise it lists the MPNs not reviewed yet (partial) and the stale lines (changed). A value with
+the hash alone, as written before lines had a source, stays valid: a review of the whole symbol with no source
+recorded. `--details` prints every line under its footprint or symbol, with its status:
+
+```sh
+berc fp check hw/board --details
+berc fp check --lib Device --details
+```
+
+`--format json` holds each line read (`reviews.lines`: property, value, its parts, status) and the MPNs not reviewed
+(`reviews.unreviewed_mpns`). `berc textconv` shows each line whole.
+
 ### What to review for a board
 
 `berc fp todo` lists the library symbols a board's footprints come from, once each, and what each needs. The review
@@ -255,7 +292,7 @@ berc fp todo hw/board --format json
 ```
 
 The symbols to review come first, in the order to step through them: changed (reviewed before, the footprint moved
-on), other version, malformed, unreviewed; by symbol within each. Each line shows the footprint, the hash it gets once
+on), other version, malformed, unreviewed, partial (an MPN's datasheet not reviewed yet); by symbol within each. Each line shows the footprint, the hash it gets once
 reviewed and the board references that use it, and (always shown, whatever the symbol's own status) the references
 whose board places a different footprint than this line's, the same `Lib:Name` mismatch `berc fp check` names.
 Below them, under their own heading, the symbols that can't be
@@ -274,13 +311,22 @@ berc fp accept hw/board U1 U2           # the hash of U1 and U2 now, into their 
 berc fp accept hw/board U1 --dry-run    # what would be written, nothing written
 berc fp accept hw/board --symbol Device:R --hash fp1:0123456789abcdef
 berc fp accept hw/board U1 --footprint VHRD_Package_QFP:LQFP-48   # also sets the symbol's own Footprint
+berc fp accept hw/board Q1 --mpn BSS138W-7-F --mpn BSS138WQ-7-F --doc DS30154@rev16 --page 3
 ```
+
+`--mpn` (repeatable), `--doc`, `--pdf` and `--page` say where the review was made: the review line of that
+datasheet is written (see [Review lines](#review-lines-where-a-review-was-made)), with `by=` (`--by`, else the
+login name) and today's date. Among the symbol's other lines, a line about the same datasheet (the same `pdf=`, or
+the same document number) is replaced in its place; the MPNs it names leave the other lines, and a line left with
+none goes; a line with the hash alone goes once lines with MPNs cover every MPN; a new line goes last. Without
+them, the line is the hash alone and replaces the lines without MPNs. Every file gets the same lines, and a review
+property left over past them is removed.
 
 `--footprint LIB:NAME` also sets the library symbol's own `Footprint` field to it, the value `berc fp check` showed
 as the one the board places: written the same way as the review hash, into the library and every schematic copy.
 Given for references of more than one library symbol at once, it is refused: one value can't hold for several.
 
-The hash goes into the `Footprint_Review` field of each footprint's schematic symbol's library symbol, in two places:
+The review line goes into the `Footprint_Review` fields of each footprint's schematic symbol's library symbol, in two places:
 the library's `.kicad_sym` (or the symbol's file in a `.kicad_symdir`), found through the project's or the global
 `sym-lib-table`, and the copy of the symbol in every schematic sheet's `lib_symbols`, so `berc fp check` finds both
 up to date. A library that is not found is named in the output, and only the schematic copies are written.
@@ -357,12 +403,20 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    a different footprint than that field names, the one actually placed opens instead, noted above the canvas
    rather than left unsaid. A symbol that sets no footprint, or whose
    symbol or footprint is not found, is refused with the reason. Next to review steps to the next symbol that
-   needs one.
+   needs one. A reviewed symbol lists its review lines (what each was made against, its MPNs, ok or stale) and the
+   MPNs no line reviews yet.
 2. **Open the datasheet**: the symbol's `Datasheet` field when it names a local file, a local document library
    search, or Open PDF. The library search runs a command (a setting) with the datasheet's file name, a part name
    in its web address, the `Mpn` fields or the value, until one finds something. The command prints a JSON list of
    `{"path": ..., "page": ...}`. What it finds is listed in a panel of its own, and for a symbol just picked the
    first one opens by itself. Picking another symbol opens its datasheet, or closes the last one when it has none.
+   A symbol whose review recorded its datasheet opens that PDF first, found in the document library by its content
+   hash, else by its document number, and with it the view the review was made in: the page, the scale and the
+   footprint's placement. So does opening any datasheet a review line was made on. A line whose hash is no longer
+   the footprint's is said to be stale, and a recorded PDF the library doesn't have is said too. The library's
+   index comes from a command (a setting, `tpm lib docs --json --all` by default) that prints a JSON list of
+   `{"path", "hash", "doc", "rev"}`, paths relative to the library's root; the file on disk is then found through
+   the library name command below, which prints full paths.
    The page search then goes to the page with the land pattern, found by words such as "recommended land pattern"
    (a setting); the pages it found are listed to pick from. F shows the page at the view's full width.
 3. **Set the scale**: R with the pointer at one end of a dimension of the drawing, R again at the other (or pick
@@ -430,9 +484,13 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    reads it as text too. Curves become arcs and circles where they follow a circle within the DXF curve tolerance (a
    setting, 0.005 mm), any other curve becomes straight pieces within it. Save stays disabled, saying why, until
    something is selected, the scale is set on the page shown and a footprint is shown.
-7. **Accept** (A): when the footprint matches the drawing, Accept writes its review hash into the symbol: the library
+7. **Accept** (A): when the footprint matches the drawing, Accept writes its review line into the symbol: the library
    symbol and, for a symbol from a project's list, the schematic's copies too (as `berc fp accept --symbol` does).
-   It asks first, showing what its dry run would write: each file, the field, the old and the new value. When the
+   The line records where the review was made: the datasheet by the document library's content hash and document
+   number, the page, the scale, the footprint's placement, who (a setting, else the login name) and the day. It
+   asks first which of the symbol's MPNs this datasheet covers, those found in the PDF's text (and those the
+   line for this datasheet already names) ticked; none ticked makes a line for the whole symbol. It shows what
+   its dry run would write, following the ticks: each file, each property, the old and the new value. When the
    board places a different footprint than the symbol's own `Footprint` field, a checkbox offers to also set that
    field to the placed one, showing both; checked, it writes the same as `berc fp accept --footprint` does.
    Enter (or
@@ -485,7 +543,8 @@ from egui's own font.
 
 The settings (blink rate, the opacity, blend mode and colours at first, whether the page is inverted at first,
 the page search words, the finest drawing scale, the font folders, the library search command, the library name
-command and the notes file, the allowed library nicknames (`allowed_libraries`, the app's side of `--allow`, none
+command and the notes file, the library docs command (`library_docs`) and the reviewer (`reviewer`) for the review
+record, the allowed library nicknames (`allowed_libraries`, the app's side of `--allow`, none
 by default), how far Z zooms in, whether the ruler snaps level, how near its ends snap to the
 drawing's lines, the DXF curve tolerance, and the keys F, M, R, E, G, Z, S, D, T, X, B, C, I, P, A, N, Enter, V and W
 by name in

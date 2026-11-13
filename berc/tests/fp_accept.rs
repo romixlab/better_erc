@@ -497,3 +497,169 @@ fn accept_footprint_for_several_symbols_is_refused() {
     assert_eq!(read(&dir, "Rev.kicad_sym"), lib);
     assert_eq!(read(&dir, "acc.kicad_sch"), sch);
 }
+
+/// `project` with `Mpn1` A-7-F and `Mpn2` B,115 on every symbol (a Nexperia-style MPN with a comma)
+fn with_mpns(dir: &Path) {
+    for f in ["Rev.kicad_sym", "acc.kicad_sch"] {
+        let t = read(dir, f).replace(
+            "(property \"Footprint\" \"Test:Asym_SOT\"",
+            "(property \"Mpn1\" \"A-7-F\") (property \"Mpn2\" \"B,115\") (property \"Footprint\" \"Test:Asym_SOT\"",
+        );
+        std::fs::write(dir.join(f), t).unwrap();
+    }
+}
+
+/// The value of `property` of library symbol `New` in `file`, `None` without it
+fn property(dir: &Path, file: &str, property: &str) -> Option<String> {
+    let t = read(dir, file);
+    let sym = t.find("(symbol \"").unwrap();
+    let marker = format!("(property \"{property}\" \"");
+    let at = t[sym..].find(&marker)? + sym + marker.len();
+    Some(t[at..at + t[at..].find('"').unwrap()].to_string())
+}
+
+/// One review line per datasheet: a line for one maker's MPNs leaves the other MPN unreviewed (partial), a second
+/// line completes it, a third datasheet that covers both takes their MPNs and the old lines go; a stale hash and
+/// every line are shown with --details
+#[test]
+fn one_review_line_per_datasheet() {
+    let sot = library_hash("Asym_SOT");
+    let dir = scratch("record");
+    project(&dir, &SYMBOLS[..1], &[0], true);
+    with_mpns(&dir);
+    let src = [
+        "--doc",
+        "DS1@Rev2",
+        "--pdf",
+        "b3:0123456789abcdef",
+        "--page",
+        "3",
+        "--by",
+        "tester",
+    ];
+    let mut args = vec!["U1", "--mpn", "A-7-F"];
+    args.extend(src);
+    let out = accept(&dir, &args);
+    assert!(out.status.success(), "{}", stderr(&out));
+    let first = property(&dir, "Rev.kicad_sym", "Footprint_Review").unwrap();
+    let prefix =
+        format!("{sot} mpn=A-7-F doc=DS1@Rev2 pdf=b3:0123456789abcdef page=3 by=tester on=");
+    assert!(first.starts_with(&prefix), "{first}");
+    assert_eq!(
+        property(&dir, "acc.kicad_sch", "Footprint_Review").as_deref(),
+        Some(first.as_str())
+    );
+    let u1 = status(&dir, "U1");
+    assert_eq!(u1["status"], "partial");
+    assert_eq!(u1["reviews"]["unreviewed_mpns"][0], "B,115");
+    assert_eq!(u1["copy_differs"], false);
+    let text = stdout(&berc(&dir, &["fp", "check", path(&dir)]));
+    assert!(text.contains("MPNs not reviewed yet: B,115"), "{text}");
+    let lib = stdout(&berc(
+        &dir,
+        &[
+            "fp",
+            "check",
+            "--lib",
+            path(&dir.join("Rev.kicad_sym")),
+            "--footprints",
+            path(&fixtures().join("Test.pretty")),
+            path(&dir),
+        ],
+    ));
+    assert!(lib.contains("partial"), "{lib}");
+
+    // The other maker's datasheet: a line of its own, the comma in its MPN escaped
+    let out = accept(
+        &dir,
+        &["U1", "--mpn", "B,115", "--doc", "DS2", "--by", "tester"],
+    );
+    assert!(out.status.success(), "{}", stderr(&out));
+    assert!(
+        stdout(&out).contains("Footprint_Review2 added"),
+        "{}",
+        stdout(&out)
+    );
+    let second = property(&dir, "Rev.kicad_sym", "Footprint_Review2").unwrap();
+    assert!(
+        second.starts_with(&format!("{sot} mpn=B%2C115 doc=DS2 by=tester on=")),
+        "{second}"
+    );
+    assert_eq!(status(&dir, "U1")["status"], "ok");
+    let details = stdout(&berc(&dir, &["fp", "check", path(&dir), "--details"]));
+    assert!(
+        details.contains(&format!("ok Footprint_Review: {first}")),
+        "{details}"
+    );
+    assert!(
+        details.contains(&format!("ok Footprint_Review2: {second}")),
+        "{details}"
+    );
+
+    // A stale hash on one line: changed, and that line named
+    for f in ["Rev.kicad_sym", "acc.kicad_sch"] {
+        let t = read(&dir, f).replace(
+            &format!("\"{sot} mpn=B%2C115"),
+            "\"fp1:0000000000000000 mpn=B%2C115",
+        );
+        std::fs::write(dir.join(f), t).unwrap();
+    }
+    assert_eq!(status(&dir, "U1")["status"], "changed");
+    let text = stdout(&berc(&dir, &["fp", "check", path(&dir)]));
+    assert!(
+        text.contains("stale: Footprint_Review2 (DS2) fp1:0000000000000000"),
+        "{text}"
+    );
+    let details = stdout(&berc(&dir, &["fp", "check", path(&dir), "--details"]));
+    assert!(details.contains("stale Footprint_Review2:"), "{details}");
+
+    // One datasheet for both: their MPNs leave the old lines, which go, in the library and the schematic alike
+    let out = accept(
+        &dir,
+        &["U1", "--mpn", "A-7-F", "--mpn", "B,115", "--doc", "DS3"],
+    );
+    assert!(out.status.success(), "{}", stderr(&out));
+    assert!(
+        stdout(&out).contains("Footprint_Review2 removed"),
+        "{}",
+        stdout(&out)
+    );
+    for f in ["Rev.kicad_sym", "acc.kicad_sch"] {
+        let only = property(&dir, f, "Footprint_Review").unwrap();
+        assert!(
+            only.starts_with(&format!("{sot} mpn=A-7-F,B%2C115 doc=DS3")),
+            "{f}: {only}"
+        );
+        assert_eq!(property(&dir, f, "Footprint_Review2"), None, "{f}");
+    }
+    assert_eq!(status(&dir, "U1")["status"], "ok");
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// A value with the hash alone (written before review lines had a source) stays valid for every MPN; a plain
+/// accept without a source replaces it, in place
+#[test]
+fn a_hash_alone_stays_valid() {
+    let sot = library_hash("Asym_SOT");
+    let dir = scratch("legacy");
+    project(
+        &dir,
+        &[("New", "Test:Asym_SOT", Some(&sot), Some(&sot))],
+        &[0],
+        true,
+    );
+    with_mpns(&dir);
+    let u1 = status(&dir, "U1");
+    assert_eq!(u1["status"], "ok");
+    assert_eq!(u1["reviews"]["lines"][0]["line"]["hash"], sot.as_str());
+    let details = stdout(&berc(&dir, &["fp", "check", path(&dir), "--details"]));
+    assert!(details.contains("(no source recorded)"), "{details}");
+    let out = accept(&dir, &["U1", "--dry-run"]);
+    assert!(out.status.success(), "{}", stderr(&out));
+    assert!(
+        stdout(&out).contains("Footprint_Review already has it"),
+        "{}",
+        stdout(&out)
+    );
+    std::fs::remove_dir_all(&dir).unwrap();
+}

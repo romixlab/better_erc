@@ -133,27 +133,7 @@ pub fn set_property(
     value: &str,
 ) -> Result<PropertyEdit, EditError> {
     let tree = Tree::parse(text).map_err(EditError::Parse)?;
-    let (root, symbols) = if let Some(lib) = tree.root("kicad_symbol_lib") {
-        (lib, Some(lib))
-    } else if let Some(sch) = tree.root("kicad_sch") {
-        (sch, tree.child(sch, "lib_symbols"))
-    } else {
-        return Err(EditError::NotSymbolFile);
-    };
-    let version = tree
-        .child(root, "version")
-        .and_then(|v| tree.arg(v, 0))
-        .and_then(|v| v.parse::<u32>().ok())
-        .unwrap_or(0);
-    if version < OLDEST_WRITTEN {
-        return Err(EditError::TooOld(version));
-    }
-    let sym = symbols
-        .and_then(|l| {
-            tree.children(l, "symbol")
-                .find(|s| tree.arg(s, 0).as_deref() == Some(symbol))
-        })
-        .ok_or_else(|| EditError::NoSymbol(symbol.to_string()))?;
+    let (sym, version) = find_symbol(&tree, symbol)?;
     let props: Vec<&Node> = tree.children(sym, "property").collect();
     let mut edits = Edits::new();
     let old = match props
@@ -188,6 +168,82 @@ pub fn set_property(
         .expect("edits of one property don't overlap");
     Ok(PropertyEdit {
         text,
+        old,
+        changed: true,
+    })
+}
+
+/// Symbol `symbol` of a parsed symbol library or schematic (its `lib_symbols` copy), with the file's version;
+/// files older than [`OLDEST_WRITTEN`] refused
+fn find_symbol<'t>(tree: &'t Tree, symbol: &str) -> Result<(&'t Node, u32), EditError> {
+    let (root, symbols) = if let Some(lib) = tree.root("kicad_symbol_lib") {
+        (lib, Some(lib))
+    } else if let Some(sch) = tree.root("kicad_sch") {
+        (sch, tree.child(sch, "lib_symbols"))
+    } else {
+        return Err(EditError::NotSymbolFile);
+    };
+    let version = tree
+        .child(root, "version")
+        .and_then(|v| tree.arg(v, 0))
+        .and_then(|v| v.parse::<u32>().ok())
+        .unwrap_or(0);
+    if version < OLDEST_WRITTEN {
+        return Err(EditError::TooOld(version));
+    }
+    let sym = symbols
+        .and_then(|l| {
+            tree.children(l, "symbol")
+                .find(|s| tree.arg(s, 0).as_deref() == Some(symbol))
+        })
+        .ok_or_else(|| EditError::NoSymbol(symbol.to_string()))?;
+    Ok((sym, version))
+}
+
+/// The names of the properties symbol `symbol` has in `text` (a symbol library or a schematic, as [`set_property`]
+/// reads them), in file order: its own, not a parent's (`extends`)
+pub fn property_names(text: &str, symbol: &str) -> Result<Vec<String>, EditError> {
+    let tree = Tree::parse(text).map_err(EditError::Parse)?;
+    let (sym, _) = find_symbol(&tree, symbol)?;
+    Ok(tree
+        .children(sym, "property")
+        .filter_map(|p| tree.arg(p, 0).map(|n| n.into_owned()))
+        .collect())
+}
+
+/// Removes property `name` of symbol `symbol` from `text` (a symbol library or a schematic, as [`set_property`]
+/// reads them): the property and the line it stood on, every other byte kept. The same text, unchanged, when the
+/// symbol has no such property.
+pub fn remove_property(text: &str, symbol: &str, name: &str) -> Result<PropertyEdit, EditError> {
+    let tree = Tree::parse(text).map_err(EditError::Parse)?;
+    let (sym, _) = find_symbol(&tree, symbol)?;
+    let Some(p) = tree
+        .children(sym, "property")
+        .find(|p| tree.arg(p, 0).as_deref() == Some(name))
+    else {
+        return Ok(PropertyEdit {
+            text: text.to_string(),
+            old: None,
+            changed: false,
+        });
+    };
+    let old = tree.arg(p, 1).map(|v| v.into_owned());
+    // The blanks before it, and the line break before them when it stood on a line of its own
+    let bytes = text.as_bytes();
+    let mut start = p.span.start;
+    while start > 0 && matches!(bytes[start - 1], b' ' | b'\t') {
+        start -= 1;
+    }
+    if start > 0 && bytes[start - 1] == b'\n' {
+        start -= 1;
+        if start > 0 && bytes[start - 1] == b'\r' {
+            start -= 1;
+        }
+    }
+    let mut edits = Edits::new();
+    edits.replace(start..p.span.end, "");
+    Ok(PropertyEdit {
+        text: edits.apply(text).expect("one edit"),
         old,
         changed: true,
     })
@@ -312,5 +368,35 @@ mod tests {
         assert_eq!(get("Footprint_Review"), Some("fp1:aa"));
         assert_eq!(get("Value"), Some("X"));
         assert!(resolve_fields("Missing", read).is_none());
+    }
+
+    /// A property removed with the line it stood on, every other byte kept; one not there changes nothing
+    #[test]
+    fn property_removed_with_its_line() {
+        let t = "(kicad_symbol_lib (version 20241209)\n  (symbol \"R\"\n    (property \"Reference\" \"R\")\n    (property \"Footprint_Review2\" \"fp1:bb\")\n    (property \"Value\" \"R\") (property \"Inline\" \"x\")\n  )\n)\n";
+        let e = remove_property(t, "R", "Footprint_Review2").unwrap();
+        assert!(e.changed);
+        assert_eq!(e.old.as_deref(), Some("fp1:bb"));
+        assert_eq!(
+            e.text,
+            "(kicad_symbol_lib (version 20241209)\n  (symbol \"R\"\n    (property \"Reference\" \"R\")\n    (property \"Value\" \"R\") (property \"Inline\" \"x\")\n  )\n)\n"
+        );
+        let e = remove_property(&e.text, "R", "Inline").unwrap();
+        assert!(
+            e.text.contains("(property \"Value\" \"R\")\n  )"),
+            "{}",
+            e.text
+        );
+        assert_eq!(
+            property_names(t, "R").unwrap(),
+            ["Reference", "Footprint_Review2", "Value", "Inline"]
+        );
+        let same = remove_property(t, "R", "Missing").unwrap();
+        assert!(!same.changed);
+        assert_eq!(same.text, t);
+        assert_eq!(
+            remove_property(t, "Nope", "Value").unwrap_err(),
+            EditError::NoSymbol("Nope".into())
+        );
     }
 }

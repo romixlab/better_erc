@@ -9,6 +9,7 @@ use std::fmt;
 use std::path::{Path, PathBuf};
 
 mod library;
+pub mod record;
 mod todo;
 pub use library::{
     CheckedLibrary, LibCheck, LibCheckError, LibCheckOptions, LibrarySearch, SymbolEntry,
@@ -278,6 +279,9 @@ pub enum FpStatus {
     OtherVersion,
     /// The field holds something that is no review hash
     Malformed,
+    /// Every review line's hash matches, but some of the symbol's MPNs have no line: their datasheets not
+    /// reviewed yet
+    Partial,
 }
 
 impl FpStatus {
@@ -291,12 +295,25 @@ impl FpStatus {
             FpStatus::BoardOnly => "board-only",
             FpStatus::OtherVersion => "other version",
             FpStatus::Malformed => "malformed",
+            FpStatus::Partial => "partial",
         }
     }
 
-    const ALL: [FpStatus; 8] = [
+    fn of(o: record::Overall) -> FpStatus {
+        match o {
+            record::Overall::Ok => FpStatus::Ok,
+            record::Overall::Unreviewed => FpStatus::Unreviewed,
+            record::Overall::Partial => FpStatus::Partial,
+            record::Overall::Changed => FpStatus::Changed,
+            record::Overall::OtherVersion => FpStatus::OtherVersion,
+            record::Overall::Malformed => FpStatus::Malformed,
+        }
+    }
+
+    const ALL: [FpStatus; 9] = [
         FpStatus::Ok,
         FpStatus::Changed,
+        FpStatus::Partial,
         FpStatus::Unreviewed,
         FpStatus::Refused,
         FpStatus::NoSymbol,
@@ -327,14 +344,19 @@ pub struct FpEntry {
     pub status: FpStatus,
     /// The footprint's review hash now
     pub hash: String,
-    /// The review hash on the symbol, from [`source`](Self::source)
+    /// The review hash on the symbol, from [`source`](Self::source): the first stale line's, else the first line's
     pub stored: Option<String>,
     pub source: Option<HashSource>,
-    /// The hash in the library symbol, when the library was found
+    /// The review lines read from [`source`](Self::source), each against the footprint, and the symbol's MPNs no
+    /// line reviews ([`record::assess`])
+    #[serde(default)]
+    pub reviews: record::Assessed,
+    /// The hashes of the library symbol's review lines, comma-separated, when the library was found
     pub library_hash: Option<String>,
-    /// The hash in the schematic's copy of the library symbol
+    /// The hashes of the review lines in the schematic's copy of the library symbol
     pub schematic_hash: Option<String>,
-    /// The library and the schematic's copy hold different hashes: the schematic was not updated from the library
+    /// The library and the schematic's copy hold different review lines: the schematic was not updated from the
+    /// library
     pub copy_differs: bool,
     /// Why the library symbol was not found, when it was not
     pub library_note: Option<String>,
@@ -415,6 +437,15 @@ fn field_of<'a>(fields: &'a [(String, String)], name: &str) -> Option<&'a str> {
         .filter(|v| !v.is_empty())
 }
 
+/// The hashes of some review values, comma-separated; `None` for none
+fn review_hashes(values: &[(String, String)]) -> Option<String> {
+    let hashes: Vec<String> = values
+        .iter()
+        .map(|(_, v)| record::ReviewLine::parse(v).hash)
+        .collect();
+    (!hashes.is_empty()).then(|| hashes.join(", "))
+}
+
 /// The KiCad project at `path` (a directory, its `.kicad_pro`, `.kicad_sch` or `.kicad_pcb`), its board and
 /// layout, and its libraries through `search`
 struct Opened {
@@ -483,6 +514,7 @@ pub fn check(path: &Path, search: &LibrarySearch) -> Result<FpCheck, FpCheckErro
             hash,
             stored: None,
             source: None,
+            reviews: record::Assessed::default(),
             library_hash: None,
             schematic_hash: None,
             copy_differs: false,
@@ -504,9 +536,8 @@ pub fn check(path: &Path, search: &LibrarySearch) -> Result<FpCheck, FpCheckErro
         };
         e.symbol = Some(part.lib_id.clone());
         let copy = part.symbol.map(|s| &board.symbols[s.index()]);
-        e.schematic_hash = copy
-            .and_then(|s| field_of(&s.fields, FIELD))
-            .map(String::from);
+        let copy_reviews = copy.map(|s| record::review_values(&s.fields));
+        e.schematic_hash = copy_reviews.as_deref().and_then(review_hashes);
         let lib_fields = match libs.fields(&part.lib_id) {
             Ok(fields) => Some(fields),
             Err(why) => {
@@ -514,15 +545,24 @@ pub fn check(path: &Path, search: &LibrarySearch) -> Result<FpCheck, FpCheckErro
                 None
             }
         };
-        e.library_hash = lib_fields
-            .as_deref()
-            .and_then(|f| field_of(f, FIELD))
-            .map(String::from);
-        e.copy_differs = lib_fields.is_some() && e.library_hash != e.schematic_hash;
-        (e.stored, e.source) = match &lib_fields {
-            Some(_) => (e.library_hash.clone(), Some(HashSource::Library)),
-            None => (e.schematic_hash.clone(), Some(HashSource::Schematic)),
+        let lib_reviews = lib_fields.as_deref().map(record::review_values);
+        e.library_hash = lib_reviews.as_deref().and_then(review_hashes);
+        e.copy_differs = lib_reviews.is_some()
+            && lib_reviews.as_deref().unwrap_or_default()
+                != copy_reviews.as_deref().unwrap_or_default();
+        let local = lay.local_footprint(FootprintId::from_index(i));
+        let compare = |stored: &str| fphash::compare(stored, &local);
+        let empty = Vec::new();
+        let read_from = match &lib_fields {
+            Some(f) => f,
+            None => copy.map_or(&empty, |s| &s.fields),
         };
+        e.reviews = record::assess(read_from, Some(&compare));
+        e.stored = e.reviews.stored();
+        e.source = Some(match &lib_fields {
+            Some(_) => HashSource::Library,
+            None => HashSource::Schematic,
+        });
         let footprint_field = part
             .field("Footprint")
             .or_else(|| copy.and_then(|s| field_of(&s.fields, "Footprint")))
@@ -540,18 +580,7 @@ pub fn check(path: &Path, search: &LibrarySearch) -> Result<FpCheck, FpCheckErro
         e.status = if footprint_field.is_none_or(|v| v.trim().is_empty()) {
             FpStatus::Refused
         } else {
-            match &e.stored {
-                None => FpStatus::Unreviewed,
-                Some(stored) => {
-                    match fphash::compare(stored, &lay.local_footprint(FootprintId::from_index(i)))
-                    {
-                        fphash::Compared::Same => FpStatus::Ok,
-                        fphash::Compared::Changed { .. } => FpStatus::Changed,
-                        fphash::Compared::OtherVersion { .. } => FpStatus::OtherVersion,
-                        fphash::Compared::Malformed => FpStatus::Malformed,
-                    }
-                }
-            }
+            FpStatus::of(e.reviews.overall())
         };
         footprints.push(e);
     }
@@ -611,14 +640,17 @@ impl FpCheck {
         serde_json::to_string_pretty(self).expect("serialises")
     }
 
-    /// One line per footprint and a summary, statuses in colour (the caller's stream drops it off a terminal)
-    pub fn to_text_color(&self) -> String {
+    /// One line per footprint and a summary, statuses in colour (the caller's stream drops it off a terminal);
+    /// `details`: every review line under its footprint
+    pub fn to_text_color(&self, details: bool) -> String {
         use anstyle::{AnsiColor, Style};
         use std::fmt::Write as _;
         let style = |s: FpStatus| match s {
             FpStatus::Ok => AnsiColor::Green.on_default(),
             FpStatus::Changed | FpStatus::Malformed => AnsiColor::Red.on_default().bold(),
-            FpStatus::Unreviewed | FpStatus::OtherVersion => AnsiColor::Yellow.on_default().bold(),
+            FpStatus::Unreviewed | FpStatus::OtherVersion | FpStatus::Partial => {
+                AnsiColor::Yellow.on_default().bold()
+            }
             FpStatus::Refused | FpStatus::NoSymbol => AnsiColor::Cyan.on_default(),
             FpStatus::BoardOnly => Style::new().dimmed(),
         };
@@ -659,7 +691,7 @@ impl FpCheck {
             );
             let symbol = e.symbol.as_deref().unwrap_or("");
             match e.status {
-                FpStatus::Ok => {}
+                FpStatus::Ok | FpStatus::Partial => {}
                 FpStatus::Changed => {
                     let _ = write!(
                         out,
@@ -693,6 +725,9 @@ impl FpCheck {
                         e.hash
                     );
                 }
+            }
+            for l in review_notes(&e.reviews, details) {
+                let _ = write!(out, "\n{:13} {:width$} {l}", "", "");
             }
             if e.copy_differs {
                 let warn = AnsiColor::Yellow.on_default();
@@ -801,6 +836,66 @@ impl FpCheck {
     }
 }
 
+/// What a symbol's review lines say beyond its status, one line each: the MPNs no line reviews, the stale lines
+/// when there are several (one stale line alone is the status line's `reviewed ... now ...`), and with `details`
+/// every line whole
+pub(crate) fn review_notes(r: &record::Assessed, details: bool) -> Vec<String> {
+    use anstyle::{AnsiColor, Style};
+    let dim = Style::new().dimmed();
+    let warn = AnsiColor::Yellow.on_default();
+    let mut out = Vec::new();
+    if !r.unreviewed_mpns.is_empty() {
+        out.push(format!(
+            "{warn}MPNs not reviewed yet: {}{warn:#}",
+            r.unreviewed_mpns.join(", ")
+        ));
+    }
+    if r.whole_unreviewed {
+        out.push(format!(
+            "{warn}the symbol has no Mpn fields, and every review line names MPNs: none reviews it as a \
+             whole{warn:#}"
+        ));
+    }
+    let stale = r.stale();
+    if !details && r.lines.len() > 1 {
+        for l in stale {
+            let what = l
+                .line
+                .doc
+                .clone()
+                .or_else(|| (!l.line.mpns.is_empty()).then(|| l.line.mpns.join(",")))
+                .unwrap_or_else(|| "no source".into());
+            out.push(format!(
+                "{warn}stale:{warn:#} {} {dim}({what}){dim:#} {}",
+                l.property, l.line.hash
+            ));
+        }
+    }
+    if details {
+        if r.lines.is_empty() {
+            out.push(format!("{dim}no review line{dim:#}"));
+        }
+        for l in &r.lines {
+            let (st, word) = match l.status {
+                record::LineStatus::Ok => (AnsiColor::Green.on_default(), "ok"),
+                record::LineStatus::Changed => (AnsiColor::Red.on_default(), "stale"),
+                record::LineStatus::OtherVersion => (warn, "other version"),
+                record::LineStatus::Malformed => (AnsiColor::Red.on_default(), "malformed"),
+            };
+            let source = if l.line.has_source() {
+                ""
+            } else {
+                " (no source recorded)"
+            };
+            out.push(format!(
+                "{st}{word}{st:#} {dim}{}:{dim:#} {}{dim}{source}{dim:#}",
+                l.property, l.value
+            ));
+        }
+    }
+    out
+}
+
 /// Each distinct line once, with how often it came, sorted
 fn once_each<'a>(lines: impl Iterator<Item = &'a str>) -> Vec<(&'a str, usize)> {
     let mut out: Vec<(&str, usize)> = Vec::new();
@@ -825,11 +920,14 @@ pub struct Written {
     pub source: HashSource,
     /// The symbol's name in the file: `Name` in a library, `Lib:Name` in a schematic
     pub symbol: String,
-    /// The property set: [`FIELD`] for the review hash, `Footprint` for [`Accepted::footprint`]
+    /// The property set: a review line's ([`record::property_name`]), `Footprint` for [`Accepted::footprint`]
     pub property: String,
     /// The field's value before, `None` when the symbol did not have it
     pub old: Option<String>,
-    /// The file changes: the field was missing or held another value
+    /// The value written; `None`: the property removed (a review line whose MPNs all moved to another line)
+    #[serde(default)]
+    pub new: Option<String>,
+    /// The file changes: the field was missing, held another value, or goes
     pub changed: bool,
 }
 
@@ -839,6 +937,9 @@ pub struct Accepted {
     /// The library symbol (`Lib:Name`)
     pub symbol: String,
     pub hash: String,
+    /// The review lines the symbol holds once written, in property order ([`record::merge`])
+    #[serde(default)]
+    pub lines: Vec<String>,
     /// The board footprints whose review it is, empty for a hash given by hand
     pub references: Vec<String>,
     /// The library's file first, when found, then the schematic sheets with a copy of the symbol
@@ -999,13 +1100,16 @@ impl std::error::Error for AcceptError {}
 /// kept. The library is found through `libs` as [`check`] finds it. `footprint`, when given, also sets the
 /// symbol's `Footprint` property to it (the board's placed footprint, offered where [`FpEntry::footprint_overridden`]
 /// or [`TodoEntry::overridden`](crate::fp::TodoEntry::overridden) said it differs): an error when `what` names more
-/// than one library symbol, since one value can't hold for several. Every edit is made before any file is written,
-/// so a failing one writes nothing; `dry_run` writes nothing at all.
+/// than one library symbol, since one value can't hold for several. `source` is where the review was made (its
+/// hash is the accepted one's, whatever it holds): it becomes that datasheet's review line among the symbol's
+/// others ([`record::merge`]); a [`ReviewLine::default`](record::ReviewLine) is a line with the hash alone. Every
+/// edit is made before any file is written, so a failing one writes nothing; `dry_run` writes nothing at all.
 pub fn accept(
     path: &Path,
     what: &AcceptWhat,
     libs: &mut dyn FnMut(&Path) -> SymbolLibraries,
     footprint: Option<&str>,
+    source: &record::ReviewLine,
     dry_run: bool,
 ) -> Result<AcceptRun, AcceptError> {
     let project = crate::Project::open(path).map_err(AcceptError::Open)?;
@@ -1019,7 +1123,7 @@ pub fn accept(
             if !fphash::is_hash(hash.trim()) {
                 return Err(AcceptError::BadHash(hash.clone()));
             }
-            wanted.push((symbol.clone(), hash.trim().to_string(), Vec::new()));
+            wanted.push(Wanted::new(symbol, hash.trim(), Vec::new()));
         }
         AcceptWhat::References(refs)
         | AcceptWhat::Reviewed {
@@ -1077,18 +1181,21 @@ pub fn accept(
                 let hash = reviewed.clone().unwrap_or_else(|| {
                     fphash::hash(&lay.local_footprint(FootprintId::from_index(i)))
                 });
-                match wanted.iter_mut().find(|w| w.0 == part.lib_id) {
-                    Some(w) => w.2.push((r.clone(), hash)),
+                match wanted.iter_mut().find(|w| w.symbol == part.lib_id) {
+                    Some(w) => w.refs.push((r.clone(), hash)),
                     None => {
-                        wanted.push((part.lib_id.clone(), hash.clone(), vec![(r.clone(), hash)]))
+                        let mut w =
+                            Wanted::new(&part.lib_id, &hash, vec![(r.clone(), hash.clone())]);
+                        w.copy_fields = copy.map(|s| s.fields.clone());
+                        wanted.push(w);
                     }
                 }
             }
-            for (symbol, _, refs) in &wanted {
-                if refs.iter().any(|(_, h)| *h != refs[0].1) {
+            for w in &wanted {
+                if w.refs.iter().any(|(_, h)| *h != w.refs[0].1) {
                     return Err(AcceptError::Conflict {
-                        symbol: symbol.clone(),
-                        hashes: refs.clone(),
+                        symbol: w.symbol.clone(),
+                        hashes: w.refs.clone(),
                     });
                 }
             }
@@ -1106,125 +1213,161 @@ pub fn accept(
     }
     if footprint.is_some() && wanted.len() > 1 {
         return Err(AcceptError::FootprintAmbiguous(
-            wanted.iter().map(|w| w.0.clone()).collect(),
+            wanted.iter().map(|w| w.symbol.clone()).collect(),
         ));
     }
+    // A symbol given by hand: its fields from a schematic copy, where the library is not found
+    for w in wanted.iter_mut().filter(|w| w.copy_fields.is_none()) {
+        w.copy_fields = project
+            .imported
+            .design
+            .boards
+            .iter()
+            .flat_map(|b| &b.symbols)
+            .find(|s| s.name == w.symbol)
+            .map(|s| s.fields.clone());
+    }
     let mut libs = libs(&project.dir);
-    write_hashes(wanted, &sheets, &mut libs, footprint, dry_run)
+    write_hashes(wanted, &sheets, &mut libs, footprint, source, dry_run)
 }
 
-/// The library symbols to write, each with its hash and the references it came from, with theirs
-type Wanted = (String, String, Vec<(String, String)>);
+/// A library symbol to write: its hash, the references it came from with theirs, and the fields of a schematic copy
+/// of it (its review lines and MPNs where the library symbol is not found)
+struct Wanted {
+    symbol: String,
+    hash: String,
+    refs: Vec<(String, String)>,
+    copy_fields: Option<Vec<(String, String)>>,
+}
+
+impl Wanted {
+    fn new(symbol: &str, hash: &str, refs: Vec<(String, String)>) -> Wanted {
+        Wanted {
+            symbol: symbol.to_string(),
+            hash: hash.to_string(),
+            refs,
+            copy_fields: None,
+        }
+    }
+}
 
 /// Writes the review hash `hash` into library symbol `symbol` (`Lib:Name`) found through `libs`, without a project:
 /// a symbol picked from a library, before any schematic uses it. Like [`accept`], every other byte of the file is
-/// kept; `dry_run` writes nothing. `footprint`, when given, also sets its `Footprint` property.
+/// kept; `dry_run` writes nothing. `footprint`, when given, also sets its `Footprint` property; `source` is where
+/// the review was made, as for [`accept`].
 pub fn accept_library(
     libs: &mut SymbolLibraries,
     symbol: &str,
     hash: &str,
     footprint: Option<&str>,
+    source: &record::ReviewLine,
     dry_run: bool,
 ) -> Result<AcceptRun, AcceptError> {
     if !fphash::is_hash(hash.trim()) {
         return Err(AcceptError::BadHash(hash.to_string()));
     }
-    let wanted = vec![(symbol.to_string(), hash.trim().to_string(), Vec::new())];
-    write_hashes(wanted, &[], libs, footprint, dry_run)
+    let wanted = vec![Wanted::new(symbol, hash.trim(), Vec::new())];
+    write_hashes(wanted, &[], libs, footprint, source, dry_run)
 }
 
-/// Writes each wanted hash into its library symbol through `libs` and into the copies in `sheets`; `footprint`,
-/// when given, also sets the `Footprint` property of every wanted symbol (there is at most one: [`accept`] refuses
-/// several)
+/// Writes each wanted hash, as a review line from `source`, into its library symbol through `libs` and into the
+/// copies in `sheets`: the symbol's review lines merged with it ([`record::merge`]) and laid out as
+/// `Footprint_Review`, `Footprint_Review2`, ..., the ones left over removed. `footprint`, when given, also sets the
+/// `Footprint` property of every wanted symbol (there is at most one: [`accept`] refuses several)
 fn write_hashes(
     wanted: Vec<Wanted>,
     sheets: &[PathBuf],
     libs: &mut SymbolLibraries,
     footprint: Option<&str>,
+    source: &record::ReviewLine,
     dry_run: bool,
 ) -> Result<AcceptRun, AcceptError> {
     // Every edit first, by file: one file can hold several symbols
-    let mut texts: Vec<(PathBuf, String, String)> = Vec::new();
-    let mut edit = |file: &Path,
-                    symbol: &str,
-                    property: &str,
-                    value: &str|
-     -> Result<Option<Written>, AcceptError> {
-        let i = match texts.iter().position(|t| t.0 == file) {
-            Some(i) => i,
-            None => {
-                let text = std::fs::read_to_string(file)
-                    .map_err(|e| AcceptError::Read(file.to_path_buf(), e))?;
-                texts.push((file.to_path_buf(), text.clone(), text));
-                texts.len() - 1
-            }
-        };
-        let e = match erc_kicad::symlib::set_property(&texts[i].2, symbol, property, value) {
-            Ok(e) => e,
-            Err(erc_kicad::symlib::EditError::NoSymbol(_)) => return Ok(None),
-            Err(e) => return Err(AcceptError::Edit(file.to_path_buf(), e)),
-        };
-        texts[i].2 = e.text;
-        Ok(Some(Written {
-            file: file.to_path_buf(),
-            source: HashSource::Library,
-            symbol: symbol.to_string(),
-            property: property.to_string(),
-            old: e.old,
-            changed: e.changed,
-        }))
-    };
+    let mut edits = FileEdits::default();
     let mut symbols = Vec::new();
-    for (symbol, hash, refs) in wanted {
+    for w in wanted {
+        let lib_file = libs.symbol_file(&w.symbol);
+        let lib_fields = libs.fields(&w.symbol).ok();
+        let fields = lib_fields
+            .as_ref()
+            .or(w.copy_fields.as_ref())
+            .cloned()
+            .unwrap_or_default();
+        let old: Vec<String> = record::review_values(&fields)
+            .into_iter()
+            .map(|(_, v)| v)
+            .collect();
+        let line = record::ReviewLine {
+            hash: w.hash.clone(),
+            ..source.clone()
+        };
+        let lines = record::merge(&old, &line, &record::mpns(&fields));
+        // The lines in order, then every review property past them removed: a file's own count may differ
+        let props_for = |names: &[String]| -> Vec<(String, Option<String>)> {
+            let mut props: Vec<(String, Option<String>)> = lines
+                .iter()
+                .enumerate()
+                .map(|(i, v)| (record::property_name(i), Some(v.clone())))
+                .collect();
+            let mut extra: Vec<(usize, &String)> = names
+                .iter()
+                .filter_map(|n| Some((record::property_index(n)?, n)))
+                .filter(|(i, _)| *i >= lines.len())
+                .collect();
+            extra.sort();
+            props.extend(extra.into_iter().map(|(_, n)| (n.clone(), None)));
+            props
+        };
         let mut files = Vec::new();
-        let library_note = match libs.symbol_file(&symbol) {
-            Ok((file, name)) => match edit(&file, &name, FIELD, &hash)? {
-                Some(w) => {
-                    files.push(w);
+        let library_note = match &lib_file {
+            Ok((file, name)) => match edits.edit(file, name, &props_for, HashSource::Library)? {
+                Some(ws) => {
+                    files.extend(ws);
                     None
                 }
                 None => Some(format!("no symbol {name} in {}", file.display())),
             },
             Err(why) => Some(why.to_string()),
         };
+        let mut found = files.len();
         for sheet in sheets {
-            if let Some(mut w) = edit(sheet, &symbol, FIELD, &hash)? {
-                w.source = HashSource::Schematic;
-                files.push(w);
+            if let Some(ws) = edits.edit(sheet, &w.symbol, &props_for, HashSource::Schematic)? {
+                found += 1;
+                files.extend(ws);
             }
         }
-        if files.is_empty() {
+        if found == 0 {
             return Err(AcceptError::Nowhere {
-                symbol,
+                symbol: w.symbol,
                 why: library_note.unwrap_or_default(),
             });
         }
         let mut footprint_files = Vec::new();
         if let Some(placed) = footprint {
-            if let Ok((file, name)) = libs.symbol_file(&symbol)
-                && let Some(mut w) = edit(&file, &name, "Footprint", placed)?
+            let set = |_: &[String]| vec![("Footprint".to_string(), Some(placed.to_string()))];
+            if let Ok((file, name)) = &lib_file
+                && let Some(ws) = edits.edit(file, name, &set, HashSource::Library)?
             {
-                w.source = HashSource::Library;
-                footprint_files.push(w);
+                footprint_files.extend(ws);
             }
             for sheet in sheets {
-                if let Some(mut w) = edit(sheet, &symbol, "Footprint", placed)? {
-                    w.source = HashSource::Schematic;
-                    footprint_files.push(w);
+                if let Some(ws) = edits.edit(sheet, &w.symbol, &set, HashSource::Schematic)? {
+                    footprint_files.extend(ws);
                 }
             }
         }
         symbols.push(Accepted {
-            symbol,
-            hash,
-            references: refs.into_iter().map(|(r, _)| r).collect(),
+            symbol: w.symbol,
+            hash: w.hash,
+            lines,
+            references: w.refs.into_iter().map(|(r, _)| r).collect(),
             files,
             library_note,
             footprint: footprint_files,
         });
     }
     if !dry_run {
-        for (file, before, after) in &texts {
+        for (file, before, after) in &edits.texts {
             if before != after {
                 write_atomic(file, after).map_err(|e| AcceptError::Write(file.clone(), e))?;
             }
@@ -1235,6 +1378,70 @@ fn write_hashes(
         dry_run,
         symbols,
     })
+}
+
+/// The properties to set (`Some`) or remove (`None`) given the names a symbol has in a file
+type PropertyPlan<'a> = dyn Fn(&[String]) -> Vec<(String, Option<String>)> + 'a;
+
+/// The files an accept edits: each file's text before and after, read once
+#[derive(Default)]
+struct FileEdits {
+    texts: Vec<(PathBuf, String, String)>,
+}
+
+impl FileEdits {
+    fn text(&mut self, file: &Path) -> Result<&mut String, AcceptError> {
+        let i = match self.texts.iter().position(|t| t.0 == file) {
+            Some(i) => i,
+            None => {
+                let text = std::fs::read_to_string(file)
+                    .map_err(|e| AcceptError::Read(file.to_path_buf(), e))?;
+                self.texts.push((file.to_path_buf(), text.clone(), text));
+                self.texts.len() - 1
+            }
+        };
+        Ok(&mut self.texts[i].2)
+    }
+
+    /// Sets (`Some`) or removes (`None`) each property `props` gives for the names of the properties symbol
+    /// `symbol` has in `file`; `None` when the file has no such symbol
+    fn edit(
+        &mut self,
+        file: &Path,
+        symbol: &str,
+        props: &PropertyPlan<'_>,
+        source: HashSource,
+    ) -> Result<Option<Vec<Written>>, AcceptError> {
+        use erc_kicad::symlib::{EditError, property_names, remove_property, set_property};
+        let fail = |e: EditError| AcceptError::Edit(file.to_path_buf(), e);
+        let text = self.text(file)?;
+        let have = match property_names(text, symbol) {
+            Ok(names) => names,
+            Err(EditError::NoSymbol(_)) => return Ok(None),
+            Err(e) => return Err(fail(e)),
+        };
+        let mut written = Vec::new();
+        for (property, value) in props(&have) {
+            let e = match &value {
+                Some(v) => set_property(text, symbol, &property, v).map_err(fail)?,
+                None if have.contains(&property) => {
+                    remove_property(text, symbol, &property).map_err(fail)?
+                }
+                None => continue,
+            };
+            *text = e.text;
+            written.push(Written {
+                file: file.to_path_buf(),
+                source,
+                symbol: symbol.to_string(),
+                property,
+                old: e.old,
+                new: value,
+                changed: e.changed,
+            });
+        }
+        Ok(Some(written))
+    }
 }
 
 /// `text` into `path` through a temporary file beside it, renamed over it: a reader never sees half a file, and the
@@ -1267,10 +1474,11 @@ impl AcceptRun {
         let green = AnsiColor::Green.on_default();
         let mut out = String::new();
         let line = |out: &mut String, w: &Written| {
-            let what = match (&w.old, w.changed) {
-                (_, false) => "already has it".to_string(),
-                (None, true) => format!("{} added", w.property),
-                (Some(old), true) => format!("{} was {old}", w.property),
+            let what = match (&w.old, &w.new, w.changed) {
+                (_, _, false) => format!("{} already has it", w.property),
+                (None, _, true) => format!("{} added", w.property),
+                (Some(old), None, true) => format!("{} removed, was {old}", w.property),
+                (Some(old), Some(_), true) => format!("{} was {old}", w.property),
             };
             let kind = match w.source {
                 HashSource::Library => "library",
@@ -1285,6 +1493,11 @@ impl AcceptRun {
                 format!(" {dim}for{dim:#} {}", a.references.join(", "))
             };
             let _ = writeln!(out, "{} {green}{}{green:#}{refs}", a.symbol, a.hash);
+            if a.lines.len() > 1 || a.lines.first().is_some_and(|l| *l != a.hash) {
+                for (i, l) in a.lines.iter().enumerate() {
+                    let _ = writeln!(out, "  {dim}{}:{dim:#} {l}", record::property_name(i));
+                }
+            }
             for w in &a.files {
                 line(&mut out, w);
             }
@@ -1303,8 +1516,16 @@ impl AcceptRun {
             .symbols
             .iter()
             .map(|a| {
-                a.files.iter().filter(|w| w.changed).count()
-                    + a.footprint.iter().filter(|w| w.changed).count()
+                let mut changed: Vec<&Path> = a
+                    .files
+                    .iter()
+                    .chain(&a.footprint)
+                    .filter(|w| w.changed)
+                    .map(|w| w.file.as_path())
+                    .collect();
+                changed.sort();
+                changed.dedup();
+                changed.len()
             })
             .sum();
         let verb = if self.dry_run {
@@ -1416,14 +1637,36 @@ mod tests {
         let hash = before.symbols[0].hash.clone().unwrap();
         let (mut syms, _) = search.open(&dir).unwrap();
         assert!(matches!(
-            accept_library(&mut syms, "Rev:Asym", "fp1:nothex", None, false),
+            accept_library(
+                &mut syms,
+                "Rev:Asym",
+                "fp1:nothex",
+                None,
+                &Default::default(),
+                false
+            ),
             Err(AcceptError::BadHash(_))
         ));
         assert!(matches!(
-            accept_library(&mut syms, "Rev:Other", &hash, None, false),
+            accept_library(
+                &mut syms,
+                "Rev:Other",
+                &hash,
+                None,
+                &Default::default(),
+                false
+            ),
             Err(AcceptError::Nowhere { .. })
         ));
-        let run = accept_library(&mut syms, "Rev:Asym", &hash, None, false).unwrap();
+        let run = accept_library(
+            &mut syms,
+            "Rev:Asym",
+            &hash,
+            None,
+            &Default::default(),
+            false,
+        )
+        .unwrap();
         assert_eq!(run.symbols[0].files.len(), 1);
         assert_eq!(run.symbols[0].files[0].file, lib);
         assert!(run.symbols[0].files[0].changed);

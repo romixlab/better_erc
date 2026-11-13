@@ -169,9 +169,11 @@ enum FpCommand {
     },
     /// Check every footprint of a board against the review hash on its library symbol, or every symbol of a library
     ///
-    /// Each board footprint's review hash (as `berc fp hash` prints it) is compared with the `Footprint_Review`
-    /// field of its symbol's library symbol: in the .kicad_sym found through the project's or the global
-    /// sym-lib-table, else in the schematic's copy of it. A schematic copy that holds another hash than the library
+    /// Each board footprint's review hash (as `berc fp hash` prints it) is compared with the review lines of its
+    /// symbol's library symbol (`Footprint_Review`, `Footprint_Review2`, ..., one per datasheet, the hash first):
+    /// in the .kicad_sym found through the project's or the global sym-lib-table, else in the schematic's copy of
+    /// it. Ok when every line's hash is the footprint's and every MPN of the symbol (`Mpn1`, `Mpn2`, ...) is on a
+    /// line; partial when some MPN is on none. A schematic copy that holds another hash than the library
     /// is reported too: the schematic was not updated from the library. So is a board copy that differs from its
     /// library footprint: the board was not updated from the library.
     ///
@@ -260,6 +262,23 @@ struct FpAcceptArgs {
     /// footprint, when it differs from what the symbol itself names
     #[arg(long, value_name = "LIB:NAME")]
     footprint: Option<String>,
+    /// An MPN the datasheet reviewed against covers (one of the symbol's Mpn fields), repeatable: the review line
+    /// is that datasheet's, and the MPNs leave any other line. None: a line for the whole symbol
+    #[arg(long, value_name = "MPN")]
+    mpn: Vec<String>,
+    /// The datasheet's document number and revision, `DS30154@Rev16`
+    #[arg(long, value_name = "NO@REV")]
+    doc: Option<String>,
+    /// The datasheet PDF by the document library's content hash: `b3:` and 16 hex digits of its blake3
+    #[arg(long, value_name = "b3:HEX")]
+    pdf: Option<String>,
+    /// The datasheet page the land pattern is on, 1-based
+    #[arg(long, value_name = "N", value_parser = clap::value_parser!(u32).range(1..))]
+    page: Option<u32>,
+    /// Who reviewed it, written with today's date once a source (--mpn, --doc, --pdf, --page) is given; default
+    /// the login name
+    #[arg(long, value_name = "NAME")]
+    by: Option<String>,
     /// Show what would be written, write nothing
     #[arg(long)]
     dry_run: bool,
@@ -280,6 +299,10 @@ struct FpCheckArgs {
     lib: Vec<String>,
     #[command(flatten)]
     libraries: LibraryArgs,
+    /// Also print every review line under its footprint or symbol: the hash, the MPNs, the datasheet, page,
+    /// scale and placement it was checked at, who and when
+    #[arg(long)]
+    details: bool,
     #[arg(long, value_enum, default_value_t = ListFormat::Text)]
     format: ListFormat,
 }
@@ -686,7 +709,7 @@ fn fp_check(args: &FpCheckArgs) -> ExitCode {
     };
     show_diff(
         args.format,
-        &run.to_text_color(),
+        &run.to_text_color(args.details),
         &run.to_json(),
         run.is_ok(),
     )
@@ -712,7 +735,12 @@ fn fp_check_libraries(args: &FpCheckArgs) -> ExitCode {
     let run = better_erc::fp::check_libraries(&opts);
     spinner.finish();
     match run {
-        Ok(r) => show_diff(args.format, &r.to_text_color(), &r.to_json(), r.is_ok()),
+        Ok(r) => show_diff(
+            args.format,
+            &r.to_text_color(args.details),
+            &r.to_json(),
+            r.is_ok(),
+        ),
         Err(e) => {
             error(&e.to_string());
             ExitCode::from(LibCheckError::EXIT_CODE)
@@ -748,6 +776,21 @@ fn fp_accept(args: &FpAcceptArgs) -> ExitCode {
         },
         _ => AcceptWhat::References(args.references.clone()),
     };
+    let mut source = better_erc::fp::record::ReviewLine {
+        mpns: args.mpn.clone(),
+        doc: args.doc.clone(),
+        pdf: args.pdf.clone(),
+        page: args.page,
+        ..Default::default()
+    };
+    if !source.mpns.is_empty() || source.has_source() {
+        source.by = args
+            .by
+            .clone()
+            .or_else(|| std::env::var("USER").ok())
+            .filter(|b| !b.trim().is_empty());
+        source.on = Some(better_erc::fp::record::today());
+    }
     let spinner = progress::Delayed::start();
     spinner.set(format!("reading {}", args.project.display()));
     let config = kicad_config_dir();
@@ -756,6 +799,7 @@ fn fp_accept(args: &FpAcceptArgs) -> ExitCode {
         &what,
         &mut |dir| SymbolLibraries::new(dir, config.as_deref()),
         args.footprint.as_deref(),
+        &source,
         args.dry_run,
     );
     spinner.finish();
