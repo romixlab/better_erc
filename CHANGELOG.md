@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `berc fp todo` and `berc fp check --lib` name the files their list was made from (`files` in the JSON): the project's own files, the library tables looked at (the project's and the global one, there or not, and nested ones), the symbol libraries and the footprint files read or looked for in vain. When one of them changes the list is out of date. The footprint review watches them (`VIEW-31`).
+
 ## [0.4.54] - 2026-11-13
 
 ### Added

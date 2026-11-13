@@ -104,6 +104,11 @@ pub struct FpTodo {
     /// to review them ([`FpTodo::to_review`]), then those that can't be reviewed, then the ok ones, then those
     /// without a footprint; by symbol in natural order within each status
     pub symbols: Vec<TodoEntry>,
+    /// Every file this was made from, sorted: the project's files read (its schematics, its board, its
+    /// `.kicad_pro`), the library tables looked at, the symbol libraries and the footprint files used or looked for
+    /// in vain. When one of them changes the list is out of date (the review tab watches them)
+    #[serde(default)]
+    pub files: Vec<PathBuf>,
 }
 
 /// The library symbols the footprints of the KiCad project at `path` come from (a directory, its `.kicad_pro`,
@@ -163,10 +168,22 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
             .cmp(&rank(b.status))
             .then_with(|| erc_model::natural_cmp(&a.symbol, &b.symbol))
     });
+    let mut files: Vec<PathBuf> = board
+        .source
+        .files
+        .iter()
+        .map(|f| project.dir.join(f))
+        .chain([project.dir.join(&lay.file)])
+        .chain(syms.files())
+        .chain(fps.files())
+        .collect();
+    files.sort();
+    files.dedup();
     Ok(FpTodo {
         board: project.dir.join(&lay.file),
         field: FIELD.to_string(),
         symbols,
+        files,
     })
 }
 

@@ -141,6 +141,11 @@ pub struct LibCheck {
     pub libraries: Vec<CheckedLibrary>,
     /// Library by library in the order given, symbols in natural order
     pub symbols: Vec<SymbolEntry>,
+    /// Every file this was made from, sorted: the library tables looked at, the symbol libraries checked and the
+    /// files read from them, the footprint files used or looked for in vain. When one of them changes the check is
+    /// out of date (the review tab watches them)
+    #[serde(default)]
+    pub files: Vec<PathBuf>,
 }
 
 /// Why `berc fp check --lib` could not run (exit code 2)
@@ -325,6 +330,7 @@ pub fn check_libraries(opts: &LibCheckOptions) -> Result<LibCheck, LibCheckError
     }
     let mut checked = Vec::new();
     let mut symbols = Vec::new();
+    let mut files: Vec<PathBuf> = sym_tables.files();
     for (nick, path) in libraries {
         let mut lib = SymbolLibrary::new(&path);
         let names = lib
@@ -344,11 +350,16 @@ pub fn check_libraries(opts: &LibCheckOptions) -> Result<LibCheck, LibCheckError
                 &opts.search.allowed,
             ));
         }
+        files.extend(lib.files());
     }
+    files.extend(fps.files());
+    files.sort();
+    files.dedup();
     Ok(LibCheck {
         field: FIELD.to_string(),
         libraries: checked,
         symbols,
+        files,
     })
 }
 

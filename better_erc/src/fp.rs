@@ -1642,6 +1642,20 @@ mod tests {
         };
         let before = check();
         assert_eq!(before.symbols[0].status, SymbolStatus::Unreviewed);
+        // What the check was made from: the project's table looked at (not there), the library, the footprint
+        for want in [
+            dir.join("sym-lib-table"),
+            dir.join("fp-lib-table"),
+            lib.clone(),
+            fixtures().join("Test.pretty/Asym_SOT.kicad_mod"),
+        ] {
+            assert!(
+                before.files.contains(&want),
+                "{} not in {:#?}",
+                want.display(),
+                before.files
+            );
+        }
         assert_eq!(before.symbols[0].datasheet, None, "~ is no datasheet");
         let hash = before.symbols[0].hash.clone().unwrap();
         let (mut syms, _) = search.open(&dir).unwrap();

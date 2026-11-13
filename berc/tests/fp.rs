@@ -824,6 +824,28 @@ fn todo_lists_the_board_symbols_to_review_in_order() {
             .unwrap()
             .ends_with("Test.pretty/Asym_SOT.kicad_mod")
     );
+    // Every file the list was made from, what the review tab watches: the project's own files, the tables (the
+    // project's and the global one, there or not), the symbol library, the footprints read and the one looked for
+    // in vain
+    let files: Vec<PathBuf> = v["files"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|f| PathBuf::from(f.as_str().unwrap()))
+        .collect();
+    for want in [
+        dir.join("fpcheck.kicad_pcb"),
+        dir.join("fpcheck.kicad_sch"),
+        dir.join("sym-lib-table"),
+        dir.join("fp-lib-table"),
+        dir.join("no-kicad-config/sym-lib-table"),
+        dir.join("Rev.kicad_sym"),
+        fps.join("Test.pretty/Asym_SOT.kicad_mod"),
+        fps.join("Test.pretty/Mixed_Pads.kicad_mod"),
+        fps.join("Test.pretty/Gone.kicad_mod"),
+    ] {
+        assert!(files.contains(&want), "{} not in {files:#?}", want.display());
+    }
 
     let text = stdout(&fp_todo(&dir, &["--footprints", path(&fps)]));
     let lines: Vec<&str> = text.lines().collect();

@@ -261,6 +261,8 @@ pub struct LibTables {
     /// Every library in search order: the first of a nickname wins
     entries: Vec<LibEntry>,
     vars: KicadVars,
+    /// The table files looked at: the project's and the global one (there or not), and every nested table
+    files: Vec<PathBuf>,
 }
 
 impl LibTables {
@@ -269,13 +271,15 @@ impl LibTables {
     pub fn new(kind: LibKind, dir: &Path, config: Option<&Path>) -> LibTables {
         let vars = KicadVars::new(dir, config);
         let mut entries = Vec::new();
+        let mut files = Vec::new();
         for t in [Some(dir), config].into_iter().flatten() {
-            read_nested(&t.join(kind.table_file()), &vars, 0, &mut entries);
+            read_nested(&t.join(kind.table_file()), &vars, 0, &mut entries, &mut files);
         }
         LibTables {
             kind,
             entries,
             vars,
+            files,
         }
     }
 
@@ -299,6 +303,12 @@ impl LibTables {
 
     pub fn vars(&self) -> &KicadVars {
         &self.vars
+    }
+
+    /// The table files looked at, whether they were there or not: the project's, the global one, every nested
+    /// table listed; what to watch for the tables to change
+    pub fn files(&self) -> &[PathBuf] {
+        &self.files
     }
 
     /// Every library KiCad would load, in search order, one per nickname (disabled ones left out)
@@ -349,7 +359,14 @@ impl LibTables {
 }
 
 /// The libraries of the table at `path` into `out`, a nested table's (`(type "Table")`) where it is listed
-fn read_nested(path: &Path, vars: &KicadVars, depth: usize, out: &mut Vec<LibEntry>) {
+fn read_nested(
+    path: &Path,
+    vars: &KicadVars,
+    depth: usize,
+    out: &mut Vec<LibEntry>,
+    files: &mut Vec<PathBuf>,
+) {
+    files.push(path.to_path_buf());
     let Some(entries) = std::fs::read_to_string(path)
         .ok()
         .and_then(|t| read_lib_table(&t))
@@ -362,7 +379,7 @@ fn read_nested(path: &Path, vars: &KicadVars, depth: usize, out: &mut Vec<LibEnt
                 && !e.disabled
                 && let Some(p) = vars.expand(&e.uri)
             {
-                read_nested(Path::new(&p), vars, depth + 1, out);
+                read_nested(Path::new(&p), vars, depth + 1, out, files);
             }
         } else {
             out.push(e);
@@ -410,6 +427,17 @@ impl SymbolLibrary {
         self.path
             .file_stem()
             .map_or_else(String::new, |s| s.to_string_lossy().into_owned())
+    }
+
+    /// The library itself (its file, or its directory, where a symbol file may come or go) and every file read
+    /// from it, sorted
+    pub fn files(&self) -> Vec<PathBuf> {
+        let mut out: Vec<PathBuf> = std::iter::once(self.path.clone())
+            .chain(self.files.keys().cloned())
+            .collect();
+        out.sort();
+        out.dedup();
+        out
     }
 
     fn text(&mut self, path: &Path) -> Option<String> {
@@ -518,6 +546,16 @@ impl SymbolLibraries {
         self.tables.add_first(nick, path);
     }
 
+    /// The table files looked at ([`LibTables::files`]) and the files of every library used
+    /// ([`SymbolLibrary::files`]), sorted
+    pub fn files(&self) -> Vec<PathBuf> {
+        let mut out: Vec<PathBuf> = self.tables.files().to_vec();
+        out.extend(self.libraries.values().flat_map(SymbolLibrary::files));
+        out.sort();
+        out.dedup();
+        out
+    }
+
     /// Library `nick`, through the tables
     pub fn library(&mut self, nick: &str) -> Result<&mut SymbolLibrary, LibError> {
         let path = self.tables.path(nick)?;
@@ -597,6 +635,19 @@ impl FootprintLibraries {
         self.tables.add_first(nick, path);
         self.read
             .retain(|id, _| !id.starts_with(&format!("{nick}:")));
+    }
+
+    /// The table files looked at ([`LibTables::files`]) and the `.kicad_mod` file of every footprint asked for,
+    /// read or looked for in vain (a footprint that comes later is a change too), sorted
+    pub fn files(&self) -> Vec<PathBuf> {
+        let mut out: Vec<PathBuf> = self.tables.files().to_vec();
+        out.extend(self.read.iter().filter_map(|(id, r)| match r {
+            Ok(f) => Some(f.path.clone()),
+            Err(_) => self.path(id).ok(),
+        }));
+        out.sort();
+        out.dedup();
+        out
     }
 
     /// The `.kicad_mod` file of `lib_id` (`Lib:Name`): `Name.kicad_mod` in the library's `.pretty` directory; not
