@@ -1,0 +1,21 @@
+[package]
+name = "erc_step"
+description = "better_erc STEP reader: parts with transforms and colours, B-rep faces and edges with their exact kinds, meshes in mm, and measurements on them"
+authors.workspace = true
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+include = ["**/*.rs", "Cargo.toml"]
+
+[dependencies]
+ruststep = { version = "0.4", default-features = false }
+# The B-rep and the tessellation: truck from the vhrdtech fork, whose truck-geotrait caps the curve and surface
+# division that never ends on some real STEP files (changes marked `vhrdtech:`). Pure Rust, no -sys crate and no
+# C build step. truck-stepio needs `derive` beside `in`.
+truck-stepio = { git = "https://github.com/vhrdtech/truck", default-features = false, features = ["in", "derive"] }
+truck-meshalgo = { git = "https://github.com/vhrdtech/truck", default-features = false, features = ["tessellation"] }
+truck-topology = { git = "https://github.com/vhrdtech/truck", default-features = false }
+truck-geotrait = { git = "https://github.com/vhrdtech/truck", default-features = false }
+
+[dev-dependencies]
+truck-modeling = { git = "https://github.com/vhrdtech/truck", default-features = false }

@@ -22,6 +22,7 @@ members = [
     "erc_kicad",
     "erc_levels",
     "erc_model",
+    "erc_step",
     "test_schematics/generate_netlists",
 ]
 
