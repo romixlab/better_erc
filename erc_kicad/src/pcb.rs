@@ -51,6 +51,33 @@ fn hidden(s: &Sexp) -> bool {
     here(s) || s.child("effects").is_some_and(here)
 }
 
+/// `(head (xyz x y z))`, `default` when `head` or `xyz` is missing
+fn model_xyz(s: &Sexp, head: &str, default: Xyz) -> Xyz {
+    let Some(v) = s.child(head).and_then(|c| c.child("xyz")) else {
+        return default;
+    };
+    Xyz::new(
+        v.num(0).unwrap_or(default.x),
+        v.num(1).unwrap_or(default.y),
+        v.num(2).unwrap_or(default.z),
+    )
+}
+
+/// A `(model "path" (hide ..) (opacity ..) (offset (xyz ..)) (scale (xyz ..)) (rotate (xyz ..)))` entry
+fn model(s: &Sexp) -> Option<ModelEntry> {
+    Some(ModelEntry {
+        path: s.arg(0)?.to_string(),
+        offset: model_xyz(s, "offset", Xyz::default()),
+        scale: model_xyz(s, "scale", Xyz::new(1.0, 1.0, 1.0)),
+        rotate: model_xyz(s, "rotate", Xyz::default()),
+        hide: hidden(s),
+        opacity: s
+            .value("opacity")
+            .and_then(|v| v.parse().ok())
+            .unwrap_or(1.0),
+    })
+}
+
 /// The points of a `(pts (xy ..) (arc (start ..) (mid ..) (end ..)) ...)`, an arc as its three points
 fn pts(s: &Sexp) -> Vec<Pt> {
     let mut out = Vec::new();
@@ -395,7 +422,7 @@ impl<'a> Reader<'a> {
                     }
                 }
                 "path" => fp.schematic_path = item.arg(0).map(String::from),
-                "model" => fp.models.extend(item.arg(0).map(String::from)),
+                "model" => fp.models.extend(model(item)),
                 "pad" => self.pad(item, id, frame, &ctx),
                 // Footprint zones are written in absolute coordinates, like the board's
                 "zone" => fp.zones.push(self.zone_of(item)),
@@ -874,5 +901,46 @@ mod tests {
                 .collect();
             assert_eq!(f.pads, back, "footprint {}", f.reference);
         }
+    }
+
+    #[test]
+    fn model_entries_read_every_field() {
+        let text = r#"(kicad_pcb (version 20240108) (net 0 "")
+            (footprint "R" (layer "F.Cu") (at 10 10)
+              (property "Reference" "R1" (at 0 -1.5 0) (layer "F.SilkS"))
+              (model "${KICAD9_3DMODEL_DIR}/R.step"
+                (hide yes)
+                (opacity 0.8)
+                (offset (xyz 0.1 -0.2 0))
+                (scale (xyz 2 2 2))
+                (rotate (xyz 0 0 90)))
+              (model "${KIPRJMOD}/models/J.wrl")
+              (model "legacy.wrl" hide))
+            )"#;
+        let (lay, notes) = read(text, "b.kicad_pcb").unwrap();
+        assert!(notes.is_empty(), "{notes:?}");
+        let models = &lay.footprints[0].models;
+        assert_eq!(models.len(), 3);
+        assert_eq!(
+            models[0],
+            ModelEntry {
+                path: "${KICAD9_3DMODEL_DIR}/R.step".into(),
+                offset: Xyz::new(0.1, -0.2, 0.0),
+                scale: Xyz::new(2.0, 2.0, 2.0),
+                rotate: Xyz::new(0.0, 0.0, 90.0),
+                hide: true,
+                opacity: 0.8,
+            }
+        );
+        // Defaults when a field is left out
+        assert_eq!(
+            models[1],
+            ModelEntry {
+                path: "${KIPRJMOD}/models/J.wrl".into(),
+                ..ModelEntry::default()
+            }
+        );
+        // A bare `hide`, as older KiCad versions write it
+        assert!(models[2].hide);
     }
 }

@@ -3,7 +3,7 @@ fp R1 field Mpn1 = X @ pcb sample.kicad_pcb
 fp R1 gfx B.CrtYd width 0.05 rect 99,49 101,51
 fp R1 gfx B.SilkS width 0.12 arc 0,0 0.000001,0.000001 0.000002,0
 fp R1 lib R:R_0603 value 10k side back at 100,50 rot 180 mount smd dnp
-fp R1 model ${KICAD9_3DMODEL_DIR}/R.step
+fp R1 model ${KICAD9_3DMODEL_DIR}/R.step offset 0.1 -0.2 0 scale 2 2 2 rotate 0 0 90 hide opacity 0.8
 fp R1 text B.SilkS R1 at 100,48 size 1 mirrored
 gfx Edge.Cuts width 0.05 circle 50,50 40
 label "/Power supply/" hierarchical VIN at 1,2 shape input net "/Power supply/VIN"

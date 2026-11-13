@@ -11,6 +11,13 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `IMP-21`: a footprint's `(model ...)` entries read in full (path, `offset`, `scale`, `rotate`, `hide`,
+  `opacity`), in `.kicad_mod` and `.kicad_pcb` · `erc_model::layout::ModelEntry`. The path resolved against the
+  same `${VAR}` chain as a library table (`IMP-18`'s `KicadVars`), a missing `.wrl` trying `.step` and `.stp`
+  beside it, each result saying which variables resolved it or why it did not · `erc_kicad::model3d::resolve`.
+
 ## [0.4.42] - 2026-11-13
 
 ### Changed

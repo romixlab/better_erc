@@ -306,7 +306,14 @@ fn sample() -> Design {
             mirrored: true,
         }],
         net_tie_pad_groups: vec![],
-        models: vec!["${KICAD9_3DMODEL_DIR}/R.step".into()],
+        models: vec![ModelEntry {
+            path: "${KICAD9_3DMODEL_DIR}/R.step".into(),
+            offset: Xyz::new(0.1, -0.2, 0.0),
+            scale: Xyz::new(2.0, 2.0, 2.0),
+            rotate: Xyz::new(0.0, 0.0, 90.0),
+            hide: true,
+            opacity: 0.8,
+        }],
         settings: Default::default(),
         zones: vec![],
     });

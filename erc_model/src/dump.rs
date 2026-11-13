@@ -725,6 +725,35 @@ pub fn zone_tokens(z: &Zone) -> Vec<String> {
     v
 }
 
+/// `[label, x, y, z]` when `got` is not `default`, else nothing
+fn xyz_tokens(label: &str, got: Xyz, default: Xyz) -> Vec<String> {
+    if got == default {
+        return Vec::new();
+    }
+    [
+        label.to_string(),
+        got.x.to_string(),
+        got.y.to_string(),
+        got.z.to_string(),
+    ]
+    .into()
+}
+
+/// Tokens of a 3D model entry: `offset`, `scale` and `rotate` only when they are not the default
+pub fn model_tokens(m: &ModelEntry) -> Vec<String> {
+    let mut v = vec![tok(&m.path)];
+    v.extend(xyz_tokens("offset", m.offset, Xyz::default()));
+    v.extend(xyz_tokens("scale", m.scale, Xyz::new(1.0, 1.0, 1.0)));
+    v.extend(xyz_tokens("rotate", m.rotate, Xyz::default()));
+    if m.hide {
+        v.push("hide".into());
+    }
+    if m.opacity != 1.0 {
+        v.extend(["opacity".into(), m.opacity.to_string()]);
+    }
+    v
+}
+
 /// The pad details as ` key value` tokens, each only when set
 fn pad_details_tokens(d: &PadDetails) -> String {
     let mut line = String::new();
@@ -872,7 +901,7 @@ fn layout_lines(lay: &Layout, keys: &Keys, out: &mut Vec<String>) {
             out.push(format!("fp {k} tie {}", g.join(" ")));
         }
         for m in &f.models {
-            out.push(format!("fp {k} model {}", tok(m)));
+            out.push(format!("fp {k} model {}", model_tokens(m).join(" ")));
         }
         for z in &f.zones {
             out.push(format!("fp {k} zone {}", zone_tokens(z).join(" ")));
@@ -1985,10 +2014,11 @@ impl BoardReader {
         } else {
             None
         };
-        let rest = if matches!(what, "tie" | "model") {
-            c.rest()
+        let rest = if what == "tie" { c.rest() } else { Vec::new() };
+        let model = if what == "model" {
+            Some(read_model(c)?)
         } else {
-            Vec::new()
+            None
         };
         let f = &mut self.layout()?.footprints[id.index()];
         match what {
@@ -2000,7 +2030,7 @@ impl BoardReader {
             "gfx" => f.graphics.extend(shape),
             "text" => f.texts.extend(text),
             "tie" => f.net_tie_pad_groups.push(rest),
-            "model" => f.models.extend(rest),
+            "model" => f.models.extend(model),
             "zone" => f.zones.extend(zone),
             o => return Err(format!("bad footprint line `{o}`")),
         }
@@ -2201,6 +2231,29 @@ fn read_text(c: &mut Cur) -> R<BoardText> {
         hidden,
         mirrored,
     })
+}
+
+fn read_model(c: &mut Cur) -> R<ModelEntry> {
+    let mut m = ModelEntry {
+        path: c.next()?.to_string(),
+        ..ModelEntry::default()
+    };
+    while !c.done() {
+        if c.opt("offset") {
+            m.offset = Xyz::new(c.num()?, c.num()?, c.num()?);
+        } else if c.opt("scale") {
+            m.scale = Xyz::new(c.num()?, c.num()?, c.num()?);
+        } else if c.opt("rotate") {
+            m.rotate = Xyz::new(c.num()?, c.num()?, c.num()?);
+        } else if c.opt("hide") {
+            m.hide = true;
+        } else if c.opt("opacity") {
+            m.opacity = c.num()?;
+        } else {
+            return Err(format!("bad model token `{}`", c.next()?));
+        }
+    }
+    Ok(m)
 }
 
 fn read_link(design: &Design, toks: &[Tok]) -> R<BoardLink> {

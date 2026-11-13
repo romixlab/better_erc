@@ -344,7 +344,13 @@ impl Board {
                 grp.sort_by(|a, b| natural_cmp(a, b));
             }
             f.net_tie_pad_groups.sort();
-            f.models.sort();
+            let mut m: Vec<(String, _)> = f
+                .models
+                .drain(..)
+                .map(|s| (dump::model_tokens(&s).join(" "), s))
+                .collect();
+            m.sort_by(|a, b| natural_cmp(&a.0, &b.0));
+            f.models = m.into_iter().map(|x| x.1).collect();
         }
         for p in &mut lay.pads {
             let mut g: Vec<(String, _)> = p

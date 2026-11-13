@@ -182,6 +182,50 @@ pub struct FootprintAttrs {
     pub allow_soldermask_bridges: bool,
 }
 
+/// Three numbers of a model entry: millimetres (`offset`), degrees (`rotate`) or a dimensionless factor (`scale`)
+#[derive(Clone, Copy, Debug, Default, PartialEq, Serialize, Deserialize)]
+pub struct Xyz {
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
+}
+
+impl Xyz {
+    pub const fn new(x: f64, y: f64, z: f64) -> Xyz {
+        Xyz { x, y, z }
+    }
+}
+
+/// A footprint's `(model ...)` entry: its 3D shape file and how it sits against the footprint's own frame
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ModelEntry {
+    /// As the file writes it, `${VAR}` references included
+    pub path: String,
+    /// Millimetres
+    pub offset: Xyz,
+    /// Dimensionless; `(1, 1, 1)` is no scaling
+    pub scale: Xyz,
+    /// Degrees, applied in KiCad's order: X, then Y, then Z
+    pub rotate: Xyz,
+    /// Left out of rendering and export
+    pub hide: bool,
+    /// `1.0` is opaque
+    pub opacity: f64,
+}
+
+impl Default for ModelEntry {
+    fn default() -> ModelEntry {
+        ModelEntry {
+            path: String::new(),
+            offset: Xyz::default(),
+            scale: Xyz::new(1.0, 1.0, 1.0),
+            rotate: Xyz::default(),
+            hide: false,
+            opacity: 1.0,
+        }
+    }
+}
+
 /// A footprint placed on the board
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Footprint {
@@ -208,8 +252,8 @@ pub struct Footprint {
     pub texts: Vec<BoardText>,
     /// Pad groups connected inside the footprint (net ties)
     pub net_tie_pad_groups: Vec<Vec<String>>,
-    /// 3D model paths
-    pub models: Vec<String>,
+    /// 3D model entries
+    pub models: Vec<ModelEntry>,
     /// Clearance, mask, paste and thermal settings the footprint sets for all its pads
     #[serde(default)]
     pub settings: FootprintSettings,

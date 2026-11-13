@@ -471,7 +471,10 @@ mod tests {
             mirrored: false,
         });
         f.footprint.reference = "R2".into();
-        f.footprint.models.push("R.step".into());
+        f.footprint.models.push(ModelEntry {
+            path: "R.step".into(),
+            ..ModelEntry::default()
+        });
         f.pads[0].layers.reverse();
         f.pads[1].net_name = Some("GND".into());
         assert_eq!(hash(&f), h);

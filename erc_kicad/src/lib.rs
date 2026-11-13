@@ -7,6 +7,8 @@
 //! - [`footprint`]: a library footprint (`.kicad_mod`) in its own frame, comparable with a board copy.
 //! - [`libtable`]: the library tables (`sym-lib-table`, `fp-lib-table`, project and global, `${VAR}`), and
 //!   `Lib:Name` to a library symbol's fields or a parsed library footprint.
+//! - [`model3d`]: a footprint's `(model ...)` path resolved: the same `${VAR}` as [`libtable::KicadVars`], a
+//!   `.wrl` falling back to `.step`/`.stp`.
 //! - [`symlib`]: the fields of a symbol in a `.kicad_sym`, for the footprint review, and a property written back.
 //! - [`edit`]: formatting-preserving edits: only the changed tokens are written, the rest stays byte for byte.
 //! - [`pro`]: the project file: net classes, text variables, variants, ERC and DRC settings, bus aliases.
@@ -21,6 +23,7 @@
 pub mod edit;
 pub mod footprint;
 pub mod libtable;
+pub mod model3d;
 pub mod netclass;
 pub mod netlist;
 mod notes;
