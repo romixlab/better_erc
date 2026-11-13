@@ -41,6 +41,7 @@ mod geometry;
 #[cfg(test)]
 mod mode_tests;
 pub mod model3d;
+pub mod modelviews;
 mod notes;
 mod panel;
 use better_erc::fp::outline;
@@ -260,6 +261,8 @@ pub struct FootprintReview {
     puck: PuckMoves,
     /// The canvas shows the footprint's 3D model in place of the page (VIEW-23)
     view_3d: bool,
+    /// The 3D model's views over the page (VIEW-24)
+    model_views: modelviews::ModelViews,
     reviews: Vec<Review>,
     #[serde(skip)]
     rt: Runtime,
@@ -292,6 +295,7 @@ impl Default for FootprintReview {
             tool: Tool::Move,
             puck: PuckMoves::Page,
             view_3d: false,
+            model_views: modelviews::ModelViews::default(),
             reviews: Vec::new(),
             rt: Runtime::default(),
         }
@@ -477,6 +481,8 @@ struct Runtime {
     auto_page: bool,
     /// The footprint goes to the middle of the view on the next frame
     center_footprint: bool,
+    /// This model view goes to the middle of the view once the model is read (VIEW-24)
+    center_model_view: Option<modelviews::Side>,
     /// The page is fitted into the view on the next frame
     fit_page: bool,
     query: String,
@@ -605,6 +611,7 @@ impl Default for Runtime {
             page_hits: None,
             auto_page: false,
             center_footprint: false,
+            center_model_view: None,
             fit_page: false,
             query: String::new(),
             queries: Vec::new(),
@@ -1788,24 +1795,25 @@ impl FootprintReview {
         }
     }
 
-    /// The footprint's pad centre or pad side middle nearest `p` (page points), within twice the line snap's
+    /// The footprint's pad centre or pad side middle, or a model view's corner, nearest `p` (page points), within twice the line snap's
     /// pixels (at least 20) at the view's zoom
     fn pad_snap(&self, p: [f32; 2]) -> Option<Snap> {
         let reach = self.rt.settings.line_snap_px.max(10.0) * 2.0 / self.zoom;
-        self.rt
-            .fp_snaps
-            .iter()
-            .map(|s| (self.fp_to_page(s.at), s.centre))
-            .map(|(at, centre)| (at, centre, (at[0] - p[0]).hypot(at[1] - p[1])))
+        let pads = self.rt.fp_snaps.iter().map(|s| {
+            let kind = if s.centre {
+                SnapKind::PadCentre
+            } else {
+                SnapKind::PadSide
+            };
+            (self.fp_to_page(s.at), kind)
+        });
+        pads.chain(self.model_view_snaps())
+            .map(|(at, kind)| (at, kind, (at[0] - p[0]).hypot(at[1] - p[1])))
             .filter(|(_, _, d)| *d <= reach)
             .min_by(|a, b| a.2.total_cmp(&b.2))
-            .map(|(at, centre, _)| Snap {
+            .map(|(at, kind, _)| Snap {
                 at,
-                kind: if centre {
-                    SnapKind::PadCentre
-                } else {
-                    SnapKind::PadSide
-                },
+                kind,
                 segs: Vec::new(),
             })
     }
@@ -1947,7 +1955,8 @@ impl FootprintReview {
              {} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back · \
              {} type the ruler's length, Enter sets the scale · {} the dimension's number sets it · \
              {} · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
-             arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans\n\
+             arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans · \
+             {} what moves: the footprint, then each 3D model view ({})\n\
              {} accept · {} next to review · {} write a review note · SpaceMouse: the puck {} ({} switches), push away zooms out · \
              tap the left button for the ruler, the right one to switch · hold one for its ring, both for Accept",
             self.tool.name(),
@@ -1979,6 +1988,8 @@ impl FootprintReview {
             n(k.blink),
             n(k.cu_layer),
             n(k.invert),
+            n(k.model_view),
+            self.moving_name(),
             n(k.accept),
             n(k.next),
             n(k.note),
@@ -2038,12 +2049,17 @@ impl FootprintReview {
 
     /// Footprint millimetres to page points
     fn fp_to_page(&self, p: outline::P) -> [f32; 2] {
-        let p = if self.place.mirror { [-p[0], p[1]] } else { p };
-        let r = outline::rotate(p, self.place.rotation as f64);
+        self.placed(&self.place, p)
+    }
+
+    /// Millimetres placed on the page by `place` (the footprint's, or a model view's) to page points
+    fn placed(&self, place: &Placement, p: outline::P) -> [f32; 2] {
+        let p = if place.mirror { [-p[0], p[1]] } else { p };
+        let r = outline::rotate(p, place.rotation as f64);
         let k = 1.0 / self.mm_per_point();
         [
-            self.place.origin[0] + (r[0] * k) as f32,
-            self.place.origin[1] + (r[1] * k) as f32,
+            place.origin[0] + (r[0] * k) as f32,
+            place.origin[1] + (r[1] * k) as f32,
         ]
     }
 
@@ -2055,6 +2071,7 @@ impl FootprintReview {
         let fp = !self.rt.items.is_empty();
         let mut pick = None;
         let mut toggle_3d = false;
+        let mut cycle_view = false;
         ui.horizontal(|ui| {
             ui.label("Mode");
             for (t, key, why) in [
@@ -2109,6 +2126,25 @@ impl FootprintReview {
             if r.clicked() {
                 toggle_3d = true;
             }
+            // What Move moves: the footprint or a model view (VIEW-24)
+            let views = self.model_views.current.is_some();
+            let r = ui.add_enabled(
+                why.is_none() || views,
+                Button::selectable(
+                    views,
+                    format!("Moves {} · {}", self.moving_name(), key_name(k.model_view)),
+                ),
+            );
+            let r = match why {
+                Some(why) => r.on_disabled_hover_text(format!("no model views: {why}")),
+                None => r.on_hover_text(
+                    "what the mouse in Move, the arrow keys, turn and mirror move: the footprint, then each of the \
+                     3D model's views over the page",
+                ),
+            };
+            if r.clicked() {
+                cycle_view = true;
+            }
             if self.tool != Tool::Move {
                 ui.label(
                     RichText::new(format!("{} or Esc: back to Move", key_name(k.move_tool))).weak(),
@@ -2120,6 +2156,9 @@ impl FootprintReview {
         }
         if toggle_3d {
             self.toggle_3d();
+        }
+        if cycle_view {
+            self.cycle_model_view();
         }
         if self.tool == Tool::Select || !self.selection().is_empty() {
             self.dxf_bar(ui);
@@ -2612,6 +2651,7 @@ impl FootprintReview {
             }
             self.rt.center_footprint = false;
         }
+        self.model_views_frame(&ctx, canvas);
         // Zoom at the pointer, pan with the secondary or middle button
         if resp.hovered() {
             let (scroll, zoom_delta, pointer) = ui.input(|i| {
@@ -2728,8 +2768,9 @@ impl FootprintReview {
             match self.tool {
                 Tool::Move => {
                     let d = resp.drag_delta() / self.zoom;
-                    self.place.origin[0] += d.x;
-                    self.place.origin[1] += d.y;
+                    let place = self.moving_mut();
+                    place.origin[0] += d.x;
+                    place.origin[1] += d.y;
                 }
                 Tool::Select => {
                     if resp.drag_started() {
@@ -2824,17 +2865,18 @@ impl FootprintReview {
             let (pressed, shift) = Pressed::read(ui, &km);
             let step = if shift { 10.0 } else { 1.0 } / self.zoom;
             let p = pressed;
+            let place = self.moving_mut();
             if p.left {
-                self.place.origin[0] -= step;
+                place.origin[0] -= step;
             }
             if p.right {
-                self.place.origin[0] += step;
+                place.origin[0] += step;
             }
             if p.up {
-                self.place.origin[1] -= step;
+                place.origin[1] -= step;
             }
             if p.down {
-                self.place.origin[1] += step;
+                place.origin[1] += step;
             }
             for (on, action) in [
                 (p.page_up, Action::PageUp),
@@ -2861,29 +2903,25 @@ impl FootprintReview {
                 (p.save_dxf, Action::SaveDxf),
                 (p.view_3d, Action::View3d),
                 (p.measure_model, Action::Mode(Tool::MeasureModel)),
+                (p.model_view, Action::ModelView),
             ] {
                 if on {
                     self.act(&ctx, action, hover_page, shift, lines);
                 }
             }
         }
-        // The footprint
-        let shown = if self.blink {
-            let hz = self.rt.settings.blink_hz.max(0.1) as f64;
-            let t = ui.input(|i| i.time);
-            ctx.request_repaint_after(std::time::Duration::from_secs_f64(0.5 / hz));
-            ((t * hz * 2.0).floor() as i64) % 2 == 0
-        } else {
-            true
-        };
-        if shown && !self.rt.items.is_empty() {
-            let rect = page_size.map(|[w, h]| {
-                Rect::from_min_size(
-                    canvas.min + vec2(self.pan[0], self.pan[1]),
-                    vec2(w, h) * self.zoom,
-                )
-            });
-            let page = rect.zip(self.page_image(&ctx, invert));
+        // The model's views (VIEW-24), then the footprint over them
+        let rect = page_size.map(|[w, h]| {
+            Rect::from_min_size(
+                canvas.min + vec2(self.pan[0], self.pan[1]),
+                vec2(w, h) * self.zoom,
+            )
+        });
+        let page = rect.zip(self.page_image(&ctx, invert));
+        if self.blinked(&ctx, self.model_views.blink) {
+            self.draw_model_views(&painter, canvas, page.clone(), ui.id());
+        }
+        if self.blinked(&ctx, self.blink) && !self.rt.items.is_empty() {
             self.draw_footprint(&painter, canvas, page, ui.id());
         }
         self.draw_selection(&painter, canvas);
@@ -3027,6 +3065,10 @@ impl FootprintReview {
                     painter.line_segment([at - d, at + d], stroke);
                 }
             }
+            SnapKind::ModelCorner => {
+                painter.circle_stroke(at, 5.0, stroke);
+                painter.circle_filled(at, 1.5, SNAP_COLOUR);
+            }
             SnapKind::PadSide => {
                 let d = 5.0;
                 painter.add(egui::Shape::closed_line(
@@ -3098,6 +3140,17 @@ impl FootprintReview {
     /// What of the footprint is drawn: the items shown
     fn shown_items(&self) -> impl Iterator<Item = &Item> {
         self.rt.items.iter().filter(|i| self.item_shown(i))
+    }
+
+    /// Whether something blinking (`on`) is shown this frame; asks for the frame it changes in
+    fn blinked(&self, ctx: &egui::Context, on: bool) -> bool {
+        if !on {
+            return true;
+        }
+        let hz = self.rt.settings.blink_hz.max(0.1) as f64;
+        let t = ctx.input(|i| i.time);
+        ctx.request_repaint_after(std::time::Duration::from_secs_f64(0.5 / hz));
+        ((t * hz * 2.0).floor() as i64) % 2 == 0
     }
 
     /// Draws the footprint: by egui's painter in the normal mode, else by the blend pass over `page` (its rectangle
@@ -3218,7 +3271,7 @@ impl FootprintReview {
                 }
             }
         }
-        if gpu && let Some((page_rect, image)) = page {
+        if gpu && let Some(page) = page {
             let mut mesh = egui::Mesh::default();
             let mut tess = egui::epaint::Tessellator::new(
                 painter.ctx().pixels_per_point(),
@@ -3229,19 +3282,7 @@ impl FootprintReview {
             for shape in blended {
                 tess.tessellate_shape(shape, &mut mesh);
             }
-            painter.add(eframe::egui_wgpu::Callback::new_paint_callback(
-                canvas,
-                blend::BlendPass {
-                    id,
-                    mesh,
-                    page: image,
-                    page_rect,
-                    around: CANVAS_BACKGROUND,
-                    opacity: a,
-                    mode,
-                    viewport: canvas,
-                },
-            ));
+            blend_pass(painter, canvas, page, id, mesh, a, mode);
         }
         // The origin
         let o = self.to_screen(canvas, self.place.origin);
@@ -3249,6 +3290,32 @@ impl FootprintReview {
         painter.line_segment([o - vec2(6.0, 0.0), o + vec2(6.0, 0.0)], s);
         painter.line_segment([o - vec2(0.0, 6.0), o + vec2(0.0, 6.0)], s);
     }
+}
+
+/// Mixes `mesh` (screen points, full colour) into the page (its rectangle on screen and its picture) by `mode` and
+/// `opacity` in the blend pass, under `id` (one pass per id and frame)
+fn blend_pass(
+    painter: &egui::Painter,
+    canvas: Rect,
+    (page_rect, image): (Rect, blend::PageImage),
+    id: Id,
+    mesh: egui::Mesh,
+    opacity: f32,
+    mode: BlendMode,
+) {
+    painter.add(eframe::egui_wgpu::Callback::new_paint_callback(
+        canvas,
+        blend::BlendPass {
+            id,
+            mesh,
+            page: image,
+            page_rect,
+            around: CANVAS_BACKGROUND,
+            opacity,
+            mode,
+            viewport: canvas,
+        },
+    ));
 }
 
 /// The canvas' keys, resolved from the settings' key names
@@ -3275,6 +3342,7 @@ struct KeyMap {
     save_dxf: Option<egui::Key>,
     view_3d: Option<egui::Key>,
     measure_model: Option<egui::Key>,
+    model_view: Option<egui::Key>,
 }
 
 impl From<&Keys> for KeyMap {
@@ -3302,6 +3370,7 @@ impl From<&Keys> for KeyMap {
             save_dxf: key(&k.save_dxf),
             view_3d: key(&k.view_3d),
             measure_model: key(&k.measure_model),
+            model_view: key(&k.model_view),
         }
     }
 }
@@ -3336,6 +3405,7 @@ struct Pressed {
     save_dxf: bool,
     view_3d: bool,
     measure_model: bool,
+    model_view: bool,
 }
 
 impl Pressed {
@@ -3372,6 +3442,7 @@ impl Pressed {
                 save_dxf: pressed(km.save_dxf),
                 view_3d: pressed(km.view_3d),
                 measure_model: pressed(km.measure_model),
+                model_view: pressed(km.model_view),
             };
             (p, i.modifiers.shift)
         })

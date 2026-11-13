@@ -117,6 +117,7 @@ impl FootprintReview {
                         self.ruler_section(ui);
                         self.measure_section(ui);
                         self.model_section(ui);
+                        self.model_views_section(ui);
                         self.placement_section(ui);
                         self.review_section(ui, &ctx);
                         self.notes_section(ui);
@@ -1065,18 +1066,30 @@ impl FootprintReview {
 
     fn placement_section(&mut self, ui: &mut Ui) {
         let k = self.mm_per_point();
+        let place = self.moving_mut().clone();
+        let fp = self.model_views.current.is_none();
         let summary = format!(
-            "{:.2}, {:.2} mm · {:.0}° · {}",
-            self.place.origin[0] as f64 * k,
-            self.place.origin[1] as f64 * k,
-            self.place.rotation,
-            if self.place.mirror { "bottom" } else { "top" }
+            "{}{:.2}, {:.2} mm · {:.0}° · {}",
+            if fp {
+                String::new()
+            } else {
+                format!("{} · ", self.moving_name())
+            },
+            place.origin[0] as f64 * k,
+            place.origin[1] as f64 * k,
+            place.rotation,
+            match (fp, place.mirror) {
+                (true, true) => "bottom",
+                (true, false) => "top",
+                (false, true) => "mirrored",
+                (false, false) => "as seen",
+            }
         );
         SubPane::new("Placement")
             .id_salt("fp placement")
             .summary(summary)
             .tooltip(
-                "Where the footprint sits on the page: its origin, its turn, which side is seen",
+                "Where the footprint, or the model view that moves, sits on the page: its origin, its turn, which side is seen",
             )
             .show(ui, |ui| self.placement_controls(ui));
     }
@@ -1084,10 +1097,24 @@ impl FootprintReview {
     fn placement_controls(&mut self, ui: &mut Ui) {
         let keys = self.keys();
         let k = self.mm_per_point();
+        let fp = self.model_views.current.is_none();
+        let what = self.moving_name();
+        let mut place = self.moving_mut().clone();
+        if !fp {
+            hint(
+                ui,
+                format!(
+                    "Placing {what}; {} cycles to the footprint (Model views)",
+                    key_name(keys.model_view)
+                ),
+            );
+        }
         PropertyRow::new("Position")
-            .tooltip("The footprint's origin from the page's top left corner, in mm at the drawing's scale")
+            .tooltip(format!(
+                "The origin of {what} from the page's top left corner, in mm at the drawing's scale"
+            ))
             .show(ui, |ui| {
-                let mut xy = self.place.origin.map(|v| v as f64 * k);
+                let mut xy = place.origin.map(|v| v as f64 * k);
                 let [x, y] = &mut xy;
                 if ui
                     .add(
@@ -1100,7 +1127,7 @@ impl FootprintReview {
                     .changed()
                     && k > 0.0
                 {
-                    self.place.origin = xy.map(|v| (v / k) as f32);
+                    place.origin = xy.map(|v| (v / k) as f32);
                 }
             });
         PropertyRow::new("Rotation")
@@ -1109,38 +1136,46 @@ impl FootprintReview {
                 ui.horizontal(|ui| {
                     let w = (ui.available_width() - 70.0).max(60.0);
                     ui.add(
-                        ScalarField::new(&mut self.place.rotation)
+                        ScalarField::new(&mut place.rotation)
                             .unit("°")
                             .speed(0.5)
                             .decimals(1)
                             .range(-360.0..=360.0)
                             .width(w)
-                            .tooltip("The footprint's turn"),
+                            .tooltip(format!("The turn of {what}")),
                     );
                     if ui
                         .button("⟲ 90°")
                         .on_hover_text(format!("A quarter turn; {}", key_name(keys.rotate)))
                         .clicked()
                     {
-                        self.place.rotation = (self.place.rotation + 90.0).rem_euclid(360.0);
+                        place.rotation = (place.rotation + 90.0).rem_euclid(360.0);
                     }
                 });
             });
+        let mut centre = false;
         ui.horizontal_wrapped(|ui| {
+            let (text, tip) = if fp {
+                ("Bottom view", "Mirrored, as seen from below")
+            } else {
+                ("Mirrored", "Mirrored left to right")
+            };
             ui.add(
-                ToggleChip::new(&mut self.place.mirror, "Bottom view").tooltip(format!(
-                    "Mirrored, as seen from below; {}",
-                    key_name(keys.mirror)
-                )),
+                ToggleChip::new(&mut place.mirror, text)
+                    .tooltip(format!("{tip}; {}", key_name(keys.mirror))),
             );
-            if ui
+            centre = ui
                 .button("Centre in view")
-                .on_hover_text("The footprint into the middle of the view")
-                .clicked()
-            {
-                self.rt.center_footprint = true;
-            }
+                .on_hover_text(format!("{what} into the middle of the view"))
+                .clicked();
         });
+        *self.moving_mut() = place;
+        if centre {
+            match self.model_views.current {
+                Some(side) => self.rt.center_model_view = Some(side),
+                None => self.rt.center_footprint = true,
+            }
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------

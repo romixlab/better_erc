@@ -49,6 +49,8 @@ pub enum SnapKind {
     PadCentre,
     /// The middle of a rectangular pad's side: where its centre cross meets its edge
     PadSide,
+    /// A corner of a 3D model view's outline or the end of one of its edges (VIEW-24)
+    ModelCorner,
 }
 
 /// Where a ruler end snapped to, and the lines that made it (indices into [`PageGeometry::segs`]), to show them

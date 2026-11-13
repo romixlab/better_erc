@@ -765,6 +765,18 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   both keys, usage signals `app fp-review model view 3d|page`, `model loaded`, `model measure`. Tests on a synthetic
   STEP written by `erc_step::write`, picking without a GPU and one render on it; a real file through `BERC_MODEL3D_STEP` ·
   `better_erc_app/src/tabs/footprint_review/model3d.rs`
+- ✅ `VIEW-24` Footprint review, the 3D model's views over the PDF: top, bottom, front, back, left and right views of
+  the model (`VIEW-23`'s, read on its worker thread) over the datasheet page at the drawing's scale, each the
+  silhouette (the projected triangles unioned by `i_overlay`) filled, outlined, with the edges seen from that side
+  (hidden ones cut on a depth raster). The fill through the blend pass in every mode (normal, multiply, screen,
+  difference; overlapping triangles mix in once), its own opacity and blink; colours are settings. Each view placed
+  on its own (the top view first on the footprint, the others in the middle of the canvas), moved, turned and
+  mirrored as the footprint is: the model view key (`K`, a setting, the mode bar's Moves button, a pie slot) cycles
+  what moves, the footprint then each view, and Move, the arrows, `T`, `X`, `B`, the puck and the Placement section
+  act on it. Measure footprint (`G`) snaps to the views' outline corners and edge ends. A Model views section in the
+  side panel; usage signals `app fp-review model views moves|show|blend ...`. Tests on boxes for every side and
+  hidden edges, the keys and snaps on the synthetic STEP, a real datasheet and model on the GPU through
+  `BERC_MODEL_VIEWS` · `better_erc_app/src/tabs/footprint_review/modelviews.rs`
 - 🚧 `VIEW-20` Footprint review on a SpaceMouse, through spacenavd (vhrd_egui `ve_spacemouse`, pure Rust): the puck
   pans the page in screen points (one speed at every zoom) and zooms the view about the pointer, or moves the
   footprint (`P` switches); a tap of the left button lays the ruler, of the right one switches what the puck

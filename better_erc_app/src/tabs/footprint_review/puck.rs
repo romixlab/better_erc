@@ -45,6 +45,8 @@ pub enum Action {
     SaveDxf,
     /// The canvas between the page and the 3D model
     View3d,
+    /// What moves over the page: the footprint, then each of the model's views
+    ModelView,
     /// Accept's question answered: write, or nothing
     Write,
     Cancel,
@@ -161,8 +163,10 @@ impl FootprintReview {
                 self.pan[1] += d.y;
             }
             PuckMoves::Footprint => {
-                self.place.origin[0] += d.x / self.zoom;
-                self.place.origin[1] += d.y / self.zoom;
+                let zoom = self.zoom;
+                let place = self.moving_mut();
+                place.origin[0] += d.x / zoom;
+                place.origin[1] += d.y / zoom;
             }
         }
         let factor = (nav.zoom * dt).exp();
@@ -405,6 +409,18 @@ impl FootprintReview {
                         self.model_blocker().unwrap_or_default(),
                     ),
                 ),
+                Some(
+                    slot(
+                        "Next model view",
+                        short_key(k.model_view),
+                        icons::SQUARES_FOUR,
+                        ModelView,
+                    )
+                    .disabled_if(
+                        self.model_blocker().is_some(),
+                        self.model_blocker().unwrap_or_default(),
+                    ),
+                ),
             ],
             ring_both: vec![
                 Some(
@@ -494,9 +510,18 @@ impl FootprintReview {
             Action::Dimension => self.use_dimension_number(),
             Action::EndRuler => self.set_tool(Tool::Move),
             Action::Mode(t) => self.tool_key(t),
-            Action::Rotate => self.place.rotation = (self.place.rotation + 90.0).rem_euclid(360.0),
-            Action::Mirror => self.place.mirror = !self.place.mirror,
-            Action::Blink => self.blink = !self.blink,
+            Action::Rotate => {
+                let place = self.moving_mut();
+                place.rotation = (place.rotation + 90.0).rem_euclid(360.0);
+            }
+            Action::Mirror => {
+                let place = self.moving_mut();
+                place.mirror = !place.mirror;
+            }
+            Action::Blink => match self.model_views.current {
+                Some(_) => self.model_views.blink = !self.model_views.blink,
+                None => self.blink = !self.blink,
+            },
             Action::CuLayer => self.cycle_cu_layer(),
             Action::Invert => {
                 self.invert = Some(!self.page_inverted());
@@ -538,6 +563,7 @@ impl FootprintReview {
             }
             Action::SaveDxf => self.save_dxf(),
             Action::View3d => self.toggle_3d(),
+            Action::ModelView => self.cycle_model_view(),
             Action::Write => self.confirmed(ctx, true),
             Action::Cancel => self.confirmed(ctx, false),
         }

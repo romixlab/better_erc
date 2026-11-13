@@ -85,6 +85,8 @@ pub struct ModelScene {
     pub notes: Vec<String>,
     /// How many models are in the scene
     pub shown: usize,
+    /// The model's six orthographic views for the page, by [`modelviews::Side::index`] (VIEW-24)
+    pub views: Vec<modelviews::ProjectedView>,
 }
 
 /// Colour of a STEP colour, 0 to 1 per channel
@@ -421,6 +423,8 @@ pub fn build(key: String, vm: ViewModels, pads: &[(String, Vec<Vec<[f64; 2]>>)])
             .collect(),
     };
 
+    let part_meshes: Vec<&Mesh> = parts.iter().map(|(m, _)| m).collect();
+    let views = modelviews::project_all(&part_meshes, &polylines);
     let mut meshes = vec![board, pad_mesh];
     let mut infos = vec![board_info, pad_info];
     for (m, i) in parts {
@@ -442,6 +446,7 @@ pub fn build(key: String, vm: ViewModels, pads: &[(String, Vec<Vec<[f64; 2]>>)])
         report: vm.report,
         notes,
         shown,
+        views,
     }
 }
 
@@ -1116,14 +1121,14 @@ impl FootprintReview {
 }
 
 #[cfg(test)]
-mod tests {
+pub(super) mod tests {
     use super::super::tests::harness;
     use super::*;
     use egui_kittest::Harness;
 
     /// A two-pin part in `dir`: pads at x ±1.27, and its STEP model, a body 4 × 2 × 1.1 mm standing 0.1 mm over the
     /// board on two leads under the pads
-    fn two_pin(dir: &Path) -> PathBuf {
+    pub(in super::super) fn two_pin(dir: &Path) -> PathBuf {
         use erc_step::write::{Cuboid, cuboids};
         let step = cuboids(
             "TWO_PIN",

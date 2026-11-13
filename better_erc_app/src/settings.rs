@@ -122,6 +122,9 @@ pub struct Keys {
     /// The Measure model mode: on the 3D model a click picks a face or an edge, a second click another; what lies
     /// between them goes into the review note; again: back to Move
     pub measure_model: String,
+    /// Cycles what the placement keys and the mouse move over the page: the footprint, then each of the 3D model's
+    /// views (top, bottom, front, back, left, right), showing the view picked (VIEW-24)
+    pub model_view: String,
 }
 
 impl Default for Keys {
@@ -148,6 +151,7 @@ impl Default for Keys {
             save_dxf: "W".into(),
             view_3d: "3".into(),
             measure_model: "O".into(),
+            model_view: "K".into(),
         }
     }
 }
@@ -235,6 +239,9 @@ pub struct LayerColors {
     pub mask: Rgb,
     pub paste: Rgb,
     pub edge: Rgb,
+    /// The 3D model's views over the page: the fill, and the outline and edges
+    pub model: Rgb,
+    pub model_edges: Rgb,
 }
 
 impl Default for LayerColors {
@@ -247,6 +254,8 @@ impl Default for LayerColors {
             mask: Rgb([230, 120, 180]),
             paste: Rgb([130, 130, 130]),
             edge: Rgb([200, 180, 0]),
+            model: Rgb([40, 140, 255]),
+            model_edges: Rgb([0, 60, 170]),
         }
     }
 }

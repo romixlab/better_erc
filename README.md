@@ -531,7 +531,19 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    the view (`pad 2: plane facing +Z at z 0.035 mm`, `part: hole Ø 0.800 mm`). The side panel's 3D model section
    names each file with its parts, faces, size and height, and what could not be read. A footprint that names no
    model, or a file not found, says so in the view and the section.
-8. **Accept** (A): when the footprint matches the drawing, Accept writes its review line into the symbol: the library
+8. **The model's views over the page**: the model's top, bottom, front, back, left and right views drawn over the
+   datasheet at the page's scale, to hold against the package drawing. Each is the model's silhouette filled in its
+   colour (a setting, `colors.model`), outlined, with the edges seen from that side (`colors.model_edges`); edges
+   hidden behind a face are left out. The top view lies as the footprint does, the side views stand on the board's
+   line through the origin, the bottom view is mirrored as a package drawing's is. K (a setting, the Moves button in
+   the mode bar, the pie) picks what moves: the footprint, then each view in turn, then the footprint again; the view
+   picked is shown, the top view first on the footprint and the others in the middle of the canvas. What moves is
+   what the mouse in Move, the arrow keys, turn (T) and mirror (X) move and what the Placement section shows; each
+   view keeps its own place, all share the page's scale. The side panel's Model views section shows and hides each
+   view, picks what moves, and sets the views' blend mode (normal, multiply, screen, difference), opacity and blink
+   (B blinks what moves). Measure footprint (G) snaps to the views' outline corners and edge ends too, so a model
+   dimension measures on the page. The footprint is drawn over the views where they overlap.
+9. **Accept** (A): when the footprint matches the drawing, Accept writes its review line into the symbol: the library
    symbol and, for a symbol from a project's list, the schematic's copies too (as `berc fp accept --symbol` does).
    The line records where the review was made: the datasheet by the document library's content hash and document
    number, the page, the scale, the footprint's placement, who (a setting, else the login name) and the day. It
@@ -599,7 +611,7 @@ the page search words, the finest drawing scale, the font folders, the library s
 command and the notes file, the library docs command (`library_docs`) and the reviewer (`reviewer`) for the review
 record, the allowed library nicknames (`allowed_libraries`, the app's side of `--allow`, none
 by default), how far Z zooms in, whether the ruler snaps level, how near its ends snap to the
-drawing's lines, the DXF curve tolerance, and the keys F, M, R, E, G, Z, S, D, T, X, B, C, I, P, A, N, Enter, V and W
+drawing's lines, the DXF curve tolerance, and the keys F, M, R, E, G, Z, S, D, T, X, B, C, I, P, A, N, Enter, V, W, 3, O and K
 by name in
 `[footprint_review.keys]`; a file that still has M for the bottom view takes X for it) are in
 `~/.config/better_erc/config.toml` (`$XDG_CONFIG_HOME`, or the file `$BERC_CONFIG` names), section

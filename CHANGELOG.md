@@ -11,6 +11,16 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `VIEW-24`: the footprint review draws the 3D model's top, bottom, front, back, left and right views over the
+  datasheet page at the drawing's scale: each the model's silhouette filled, outlined and with the edges seen from
+  that side, to hold against the package drawing. The model view key (`K`) cycles what moves, the footprint or one
+  of the views; the mouse in Move, the arrows, turn, mirror, blink, the puck and the Placement section act on it, and
+  each view keeps its own place. A Model views section in the side panel shows and hides them and sets their blend
+  mode, opacity and blink; Measure footprint (`G`) snaps to their corners. New settings: `keys.model_view`,
+  `colors.model`, `colors.model_edges`. New dependency `i_overlay` (pure Rust, 4 small crates) for the silhouettes.
+
 ## [0.4.50] - 2026-11-13
 
 ### Added

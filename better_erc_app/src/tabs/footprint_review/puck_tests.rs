@@ -278,7 +278,7 @@ fn every_slot_names_its_action_and_key() {
                 .flat_map(|r| r.iter().flatten()),
         )
         .collect();
-    assert_eq!(slots.len(), 2 + 10 + 7 + 4);
+    assert_eq!(slots.len(), 2 + 10 + 8 + 4);
     for s in &slots {
         let (name, key) = s.label.split_once(" · ").expect(&s.label);
         assert!(!name.is_empty() && !key.is_empty(), "{}", s.label);
@@ -298,6 +298,7 @@ fn every_slot_names_its_action_and_key() {
     assert_eq!(label(Action::Blink), "Blink · no key");
     assert_eq!(label(Action::Ruler), "Ruler · R");
     assert_eq!(label(Action::Accept), "Accept · A");
+    assert_eq!(label(Action::ModelView), "Next model view · K");
     assert_eq!(label(Action::View3d), "3D model · 3");
     assert_eq!(
         label(Action::Mode(Tool::MeasureModel)),
