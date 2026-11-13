@@ -19,6 +19,9 @@ pub struct FootprintReviewSettings {
     pub blink_hz: f32,
     /// How opaque the footprint is over the datasheet at first, 0 (not seen) to 1 (covers the drawing)
     pub opacity: f32,
+    /// How opaque the 3D model and its silhouettes are over the datasheet at first, 0 (only their outlines and
+    /// edges) to 1 (covers the drawing); apart from the footprint's
+    pub model_opacity: f32,
     /// Words that find the datasheet page with the land pattern, best first; case, spaces and punctuation don't
     /// matter
     pub page_search_words: Vec<String>,
@@ -306,6 +309,7 @@ impl Default for FootprintReviewSettings {
         FootprintReviewSettings {
             blink_hz: 2.0,
             opacity: 0.55,
+            model_opacity: 0.7,
             page_search_words: [
                 "recommended land pattern",
                 "recommended footprint",

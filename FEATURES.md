@@ -829,6 +829,13 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   temp folder; in the tab, a footprint changed on disk shown with its new pad and a stale review by Reload, F5,
   picking it again and the watcher alone; Accept reloading nothing; an override read from its library ·
   `better_erc_app/src/tabs/footprint_review/watch.rs`, `reload_tests.rs`, `better_erc/src/fp/todo.rs`
+- 🚧 `VIEW-32` Footprint review round 8: the model's own opacity, apart from the footprint's (Model opacity in the
+  View section beside Footprint opacity and in the Model views section, one value; `model_opacity`, a setting, at
+  first). Fixed: Move only turned the 3D model after the window lost its focus with the puck turned (spacenavd
+  sends to the focused window only, so the client kept the last deflection): the puck counts as at rest from a lost
+  focus until it reports again; Ctrl is read once per frame, and while it makes a drag turn the model a line on the
+  canvas says so. Tests: a lost focus with the puck twisted and with Ctrl held, then a drag that moves; the two
+  opacities apart · `better_erc_app/src/tabs/footprint_review/puck.rs`, `panel.rs`, `puck_tests.rs`
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
   one lookup per MPN per session, on a worker thread) and its review state from the review lines (reviewed, reviewed

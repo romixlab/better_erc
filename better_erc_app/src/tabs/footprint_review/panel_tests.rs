@@ -68,3 +68,24 @@ fn panel_with_a_review_under_way() {
         std::fs::remove_dir_all(&dir).unwrap();
     }
 }
+
+/// The View section has the model's opacity apart from the footprint's (round 8): each its own row, its own value,
+/// one changed leaves the other
+#[test]
+fn model_opacity_apart_from_the_footprints() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-opacity-{}", std::process::id()));
+    let mut h = review_under_way(&dir, egui::Theme::Dark);
+    h.get_by_label("Footprint opacity");
+    h.get_by_label("Model opacity");
+    let st = h.state();
+    assert_eq!(st.model_views_opacity(), st.rt.settings.model_opacity);
+    assert_ne!(st.rt.settings.model_opacity, st.rt.settings.opacity);
+    h.state_mut().opacity = Some(0.1);
+    h.run();
+    assert_eq!(h.state().model_views_opacity(), h.state().rt.settings.model_opacity);
+    h.state_mut().model_views.opacity = Some(0.9);
+    h.run();
+    assert_eq!(h.state().opacity, Some(0.1));
+    assert_eq!(h.state().model_views_opacity(), 0.9);
+    std::fs::remove_dir_all(&dir).unwrap();
+}

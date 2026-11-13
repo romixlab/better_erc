@@ -3140,11 +3140,8 @@ impl FootprintReview {
             self.move_ruler_end(i, p, free, lines);
         } else if resp.dragged_by(egui::PointerButton::Primary) {
             match self.tool {
-                // Ctrl+drag turns the shaded model while it is shown (VIEW-27)
-                Tool::Move
-                    if self.model_views.look == modelviews::ModelLook::Solid
-                        && ui.input(|i| i.modifiers.command) =>
-                {
+                // Ctrl+drag turns the shaded model (VIEW-27); Ctrl as this frame sees it
+                Tool::Move if self.ctrl_turns(other) => {
                     self.solid_drag(resp.drag_delta());
                 }
                 Tool::Move => {
@@ -3350,9 +3347,13 @@ impl FootprintReview {
         }
         // The keys, under the canvas; the ruler step's hint above them
         let mut y = canvas.max.y - 4.0;
+        let turns = self.ctrl_turns(other).then(|| {
+            "Ctrl held: a drag turns the 3D model; let Ctrl go and it moves again".to_string()
+        });
         for (text, bg) in [
             (Some(self.help_line()), Color32::from_black_alpha(170)),
             (self.ruler_hint(), Color32::from_rgb(0, 90, 180)),
+            (turns, Color32::from_rgb(150, 80, 0)),
         ] {
             let Some(text) = text else { continue };
             let galley = painter.layout_no_wrap(text, FontId::proportional(12.0), Color32::WHITE);
@@ -3364,6 +3365,11 @@ impl FootprintReview {
             painter.galley(r.min + vec2(4.0, 2.0), galley, Color32::WHITE);
             y = r.min.y - 2.0;
         }
+    }
+
+    /// A drag in Move turns the 3D model, not moves: Ctrl held (`command`, read from this frame's input) in 3D
+    fn ctrl_turns(&self, command: bool) -> bool {
+        command && self.tool == Tool::Move && self.model_views.look == modelviews::ModelLook::Solid
     }
 
     /// The ruler's length and its x and y spans, mm, at the scale set

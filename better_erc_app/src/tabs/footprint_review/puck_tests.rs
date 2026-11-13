@@ -414,3 +414,83 @@ fn calibrate_from_the_tab_and_the_mapping_saved() {
     drop(fake);
     std::fs::remove_dir_all(&dir).unwrap();
 }
+
+/// Move moves after the window lost focus with the puck turned or Ctrl held (round 8's "Move only turned the
+/// model"): spacenavd stops sending to a window without focus, so the client keeps the last deflection, and a
+/// Ctrl let go in another window never reaches this one. Neither may stay seen: while the window has no focus and
+/// after it, until the puck reports again, it stands still, and a drag without Ctrl now moves the model
+#[test]
+fn a_lost_focus_leaves_no_turn_held() {
+    let dir = scratch("focus");
+    let socket = dir.join("spnav.sock");
+    let fake = FakeSpacenavd::start(&socket).unwrap();
+    let mut h = harness(&socket, &fake);
+    open(&mut h, &dir);
+    let st = h.state_mut();
+    st.model_views.look = modelviews::ModelLook::Solid;
+    st.model_views.moves = modelviews::Moves::Model;
+    st.rt.settings.model_snap.enabled = false;
+    h.step();
+    let full = Mapping::default().full_scale as i32;
+    // The puck twisted: the model turns
+    let turn0 = h.state().model_views.solid.turn;
+    push(&mut h, &fake, [0, 0, 0, 0, 0, full]);
+    push(&mut h, &fake, [0, 0, 0, 0, 0, full]);
+    assert!(h.state().model_views.solid.turn.angle_between(turn0) > 1e-3, "the puck turns it");
+    // Focus goes elsewhere with the puck still twisted; the hand lets go there, so no rest event comes
+    h.event(egui::Event::WindowFocused(false));
+    h.step();
+    h.event(egui::Event::WindowFocused(true));
+    h.step();
+    let held = h.state().model_views.solid.turn;
+    for _ in 0..5 {
+        h.step();
+    }
+    assert!(
+        h.state().model_views.solid.turn.angle_between(held) < 1e-6,
+        "the model keeps turning by a deflection from before the focus went"
+    );
+    // Ctrl held, the focus gone and back: Ctrl is let go elsewhere, so the drag moves the model, not turns it
+    let ctrl = egui::Modifiers {
+        command: true,
+        ctrl: true,
+        ..Default::default()
+    };
+    h.event(egui::Event::ModifiersChanged(ctrl));
+    h.step();
+    h.event(egui::Event::WindowFocused(false));
+    h.step();
+    h.event(egui::Event::WindowFocused(true));
+    h.step();
+    let canvas = h.state().rt.canvas;
+    let a = canvas.center() + vec2(50.0, 50.0);
+    let before = h.state().model_views.solid.clone();
+    h.hover_at(a);
+    h.step();
+    h.drag_at(a);
+    h.step();
+    for i in 1..=4 {
+        h.hover_at(a + vec2(10.0 * i as f32, 0.0));
+        h.step();
+    }
+    h.drop_at(a + vec2(40.0, 0.0));
+    h.step();
+    let after = h.state().model_views.solid.clone();
+    assert!(after.turn.angle_between(before.turn) < 1e-6, "the drag turned the model");
+    let (p, q) = (before.place.unwrap(), after.place.unwrap());
+    let zoom = h.state().zoom;
+    assert!(
+        (q.origin[0] - p.origin[0] - 40.0 / zoom).abs() < 0.5,
+        "the drag moves the model: {:?} → {:?}",
+        p.origin,
+        q.origin
+    );
+    // The puck reports again: it turns the model again
+    push(&mut h, &fake, [0, 0, 0, 0, 0, 0]);
+    let rest = h.state().model_views.solid.turn;
+    push(&mut h, &fake, [0, 0, 0, 0, 0, full]);
+    assert!(h.state().model_views.solid.turn.angle_between(rest) > 1e-3, "the puck turns it again");
+    drop(h);
+    drop(fake);
+    std::fs::remove_dir_all(&dir).unwrap();
+}

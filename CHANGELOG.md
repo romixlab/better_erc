@@ -11,6 +11,14 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- Footprint review: the 3D model and its silhouettes have an opacity of their own, apart from the footprint's. The View section shows Footprint opacity and Model opacity one under the other (the Model views section has the same Model opacity), and `model_opacity` (a setting, 0.7) is where the model starts. Before, the model started at the footprint's opacity and its slider sat only in the Model views section (`VIEW-32`).
+
+### Fixed
+
+- Footprint review: Move no longer only turns the 3D model after the window lost its focus while the SpaceMouse's puck was turned. spacenavd sends to the focused window only, so the hand let go elsewhere and the app kept the last deflection, turning the model on and on. The puck now counts as at rest from a lost focus until it reports again. Ctrl is read once per frame, and while it makes a drag turn the model, a line on the canvas says so (`VIEW-32`).
+
 ## [0.4.55] - 2026-11-13
 
 ### Added

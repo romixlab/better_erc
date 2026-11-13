@@ -852,16 +852,18 @@ impl FootprintReview {
     fn view_section(&mut self, ui: &mut Ui) {
         let opacity = self.opacity.unwrap_or(self.rt.settings.opacity);
         let summary = format!(
-            "{} · {} · {:.0} %",
+            "{} · {} · {:.0} % · model {:.0} %",
             self.cu_shown.name(),
             self.blend_mode().name(),
-            opacity * 100.0
+            opacity * 100.0,
+            self.model_views_opacity() * 100.0
         );
         SubPane::new("View")
             .id_salt("fp view")
             .summary(summary)
             .tooltip(
-                "How the footprint is drawn over the page: which layer, how it blends, how opaque",
+                "How the footprint is drawn over the page: which layer, how it blends, how opaque; the model's opacity \
+                 apart",
             )
             .show(ui, |ui| self.overlay_controls(ui));
     }
@@ -914,7 +916,7 @@ impl FootprintReview {
         }
         Group::new("Page and overlay").show(ui, |ui| {
             let mut opacity = self.opacity.unwrap_or(self.rt.settings.opacity);
-            PropertyRow::new("Opacity")
+            PropertyRow::new("Footprint opacity")
                 .tooltip("0: the page alone, 1: the footprint hides the page under it")
                 .show(ui, |ui| {
                     if ui
@@ -930,6 +932,7 @@ impl FootprintReview {
                         self.opacity = Some(opacity);
                     }
                 });
+            self.model_opacity_row(ui);
             ui.horizontal_wrapped(|ui| {
                 if ui
                     .add(ToggleChip::new(&mut self.blink, "Blink").tooltip(format!(
@@ -1525,6 +1528,14 @@ impl FootprintReview {
                         .range(0.0..=1.0)
                         .speed(0.005)
                         .tooltip("The footprint's opacity when a review starts"),
+                )
+            });
+            PropertyRow::new("Model opacity at first").show(ui, |ui| {
+                ui.add(
+                    ScalarField::new(&mut s.model_opacity)
+                        .range(0.0..=1.0)
+                        .speed(0.005)
+                        .tooltip("The 3D model's and its silhouettes' opacity when a review starts"),
                 )
             });
             PropertyRow::new("Finest drawing").show(ui, |ui| {

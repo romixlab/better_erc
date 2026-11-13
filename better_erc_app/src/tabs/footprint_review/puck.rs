@@ -81,6 +81,10 @@ pub(super) struct Puck {
     mouse: Option<ve_spacemouse::SpaceMouse>,
     /// The deflection this frame
     pub axes: Axes,
+    /// The window lost its focus since the puck last reported: spacenavd sends to the focused window only, so the
+    /// client may still hold a deflection the hand let go elsewhere. The puck counts as at rest until it reports
+    /// again
+    stale: bool,
     pub pie: PieState,
     /// The mapping, its files and the calibrate step (ve_spacemouse's shared panel); no files until the tab
     /// starts ([`FootprintReview::init`]), so tests never read the host's
@@ -94,6 +98,7 @@ impl Default for Puck {
             #[cfg(unix)]
             mouse: None,
             axes: Axes::default(),
+            stale: false,
             pie: PieState::default(),
             settings: SettingsPanel::new(Config::none(), CalibrateSteps::TwoD),
         }
@@ -114,13 +119,32 @@ impl Puck {
                 });
                 self.mouse = Some(mouse.with_repaint(ctx));
             }
-            if let Some(m) = &self.mouse {
-                self.axes = m.axes();
-                return m.poll();
+            if let Some((events, axes)) = self.mouse.as_ref().map(|m| (m.poll(), m.axes())) {
+                self.see_focus(ctx, &events);
+                self.axes = if self.stale { Axes::default() } else { axes };
+                return events;
             }
         }
         let _ = ctx;
         Vec::new()
+    }
+
+    /// The focus this frame: lost (or not there), the deflection held is stale; a motion reported with the focus
+    /// there is fresh again
+    fn see_focus(&mut self, ctx: &egui::Context, events: &[Event]) {
+        let (lost, focused) = ctx.input(|i| {
+            let lost = i
+                .raw
+                .events
+                .iter()
+                .any(|e| matches!(e, egui::Event::WindowFocused(false)));
+            (lost, i.focused)
+        });
+        if lost || !focused {
+            self.stale = true;
+        } else if events.iter().any(|e| matches!(e, Event::Motion { .. })) {
+            self.stale = false;
+        }
     }
 
     /// One line on the connection, and whether the SpaceMouse is there

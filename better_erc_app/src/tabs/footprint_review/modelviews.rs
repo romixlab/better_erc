@@ -393,7 +393,7 @@ pub struct ModelViews {
     pub moves: Moves,
     /// The shaded model's placement and turn (VIEW-27)
     pub solid: super::solid::Solid,
-    /// How opaque the views' fill is; none: the settings' opacity
+    /// How opaque the views' fill and the 3D model are; none: the settings' model opacity
     pub opacity: Option<f32>,
     /// How the views blend with the page; none: the settings' blend mode
     pub blend: Option<BlendMode>,
@@ -624,8 +624,32 @@ impl FootprintReview {
     pub(super) fn model_views_opacity(&self) -> f32 {
         self.model_views
             .opacity
-            .unwrap_or(self.rt.settings.opacity)
+            .unwrap_or(self.rt.settings.model_opacity)
             .clamp(0.0, 1.0)
+    }
+
+    /// The model's opacity, apart from the footprint's: in the View section and the Model views section (one value)
+    pub(super) fn model_opacity_row(&mut self, ui: &mut Ui) {
+        let mut opacity = self.model_views_opacity();
+        PropertyRow::new("Model opacity")
+            .tooltip(
+                "The 3D model and its silhouettes, apart from the footprint: 0 only their outline and edges, 1 the \
+                 fill hides the page under it",
+            )
+            .show(ui, |ui| {
+                if ui
+                    .add(
+                        ScalarField::new(&mut opacity)
+                            .range(0.0..=1.0)
+                            .speed(0.005)
+                            .decimals(2)
+                            .tooltip("How much of the page the model covers"),
+                    )
+                    .changed()
+                {
+                    self.model_views.opacity = Some(opacity);
+                }
+            });
     }
 
     pub(super) fn model_views_blend(&self) -> BlendMode {
@@ -873,23 +897,7 @@ impl FootprintReview {
             self.model_views.blend = Some(mode);
             self.usage(&format!("model views blend {}", mode.name().to_lowercase()));
         }
-        let mut opacity = self.model_views_opacity();
-        PropertyRow::new("Opacity")
-            .tooltip("0: only the outline and edges, 1: the fill hides the page under it")
-            .show(ui, |ui| {
-                if ui
-                    .add(
-                        ScalarField::new(&mut opacity)
-                            .range(0.0..=1.0)
-                            .speed(0.005)
-                            .decimals(2)
-                            .tooltip("How much of the page the views' fill covers"),
-                    )
-                    .changed()
-                {
-                    self.model_views.opacity = Some(opacity);
-                }
-            });
+        self.model_opacity_row(ui);
         ui.horizontal_wrapped(|ui| {
             ui.add(
                 ToggleChip::new(&mut self.model_views.blink, "Blink").tooltip(format!(
