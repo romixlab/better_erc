@@ -1773,8 +1773,10 @@ fn the_review_records_where_it_was_made() {
         h.get_by_label("Rev:Generic").click();
         h.run();
         h.get_by_label("Rev:Two").click();
-        h.run();
-        h.run();
+        // Stepped, not run: the recorded PDF opens on its own thread, and each of its replies asks for a frame, so
+        // how many frames a run takes would depend on how fast the thread answers; wait for it instead
+        h.step();
+        h.step();
         if let Some(p) = h.state_mut().rt.pdf.as_mut() {
             p.wait_idle(&ctx);
         }
