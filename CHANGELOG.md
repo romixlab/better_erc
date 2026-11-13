@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.53] - 2026-11-13
+
 ### Added
 
 - Footprint review: the shaded 3D model over the datasheet page at the drawing's scale (`VIEW-27`). A switch picks Silhouettes (the six views) or 3D (`L`), another what moves, the footprint or the model (`Q`); both sit in the mode bar and the Model views section, with pie slots. In 3D the SpaceMouse's tilt, roll and twist or Ctrl+drag turn the model, and letting go lands it on the nearest of the 24 sides, eased (the `model_snap` setting; Alt keeps the free angle); `K` turns it to the next side. It mixes into the page in every blend mode, and Measure footprint snaps to its outline's corners while it sits on a side.
