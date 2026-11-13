@@ -354,15 +354,10 @@ fn check_insert(text: &str, symbol: &str) -> String {
     let i = after.iter().position(|(k, _)| k == FIELD).unwrap();
     assert_eq!(after.remove(i).1, HASH);
     assert_eq!(after, before);
-    // Before KiCad's ki_ properties, after the symbol's own
-    assert!(
-        before[..i].iter().all(|(k, _)| !k.starts_with("ki_")),
-        "{symbol}: {before:?}"
-    );
-    assert!(
-        before[i..].iter().all(|(k, _)| k.starts_with("ki_")),
-        "{symbol}: {before:?}"
-    );
+    // Right after the symbol's last own property. KiCad 10 writes its ki_ properties after the own ones, but a
+    // hand-edited file may hold one earlier (`ki_keywords` before `Mpn1`): that one stays where it is
+    let last_own = before.iter().rposition(|(k, _)| !k.starts_with("ki_"));
+    assert_eq!(i, last_own.map_or(0, |n| n + 1), "{symbol}: {before:?}");
     let again = set_property(&e.text, symbol, FIELD, HASH).unwrap();
     assert!(!again.changed);
     assert_eq!(again.text, e.text);
@@ -875,6 +870,10 @@ fn extended_set_kicad_oracle() {
     for path in files.iter().step_by(step) {
         let text = std::fs::read_to_string(path).unwrap();
         let ext = path.extension().unwrap().to_string_lossy().into_owned();
+        // A derived symbol (`extends`) in a symdir file has its parent in a sibling file: alone KiCad cannot load it
+        if text.contains("(extends ") {
+            continue;
+        }
         let Some(name) = symbol_names(&text)
             .into_iter()
             .find(|s| !props(&text, s).iter().any(|(k, _)| k == FIELD))

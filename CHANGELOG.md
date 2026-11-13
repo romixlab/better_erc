@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Fixed
+
+- The writer's extended-set tests pass on kicad-library again. The round trip no longer demands every `ki_` property after the own ones in a hand-edited symbol (`ki_keywords` before `Mpn1`): KiCad 10 itself writes them last, the writer inserts after the last own property, and an existing earlier `ki_` stays. The KiCad oracle skips symdir files with a derived (`extends`) symbol, which KiCad cannot load without its parent.
+
 ## [0.4.46] - 2026-11-13
 
 ### Added
