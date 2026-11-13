@@ -5,7 +5,8 @@
 //! `SHAPE_REPRESENTATION_RELATIONSHIP`s. A `NEXT_ASSEMBLY_USAGE_OCCURRENCE` puts a child product into a parent; its
 //! `CONTEXT_DEPENDENT_SHAPE_REPRESENTATION` names the representation relationship with an
 //! `ITEM_DEFINED_TRANSFORMATION` that moves the child. A `MAPPED_ITEM` places a whole representation inside
-//! another one. The walk goes from the products that are nobody's child down to every solid, multiplying the
+//! another one; a product whose shape is only placed that way is a child as well. The walk goes from the products
+//! that are nobody's child down to every solid, multiplying the
 //! transforms; a solid no product reaches is placed where its own coordinates put it.
 
 use crate::entities::{Entities, entity, list, real, refs, string};
@@ -102,11 +103,32 @@ impl Structure {
             .collect();
         product_defs.sort_unstable();
         let child_set: HashSet<u64> = w.children.values().flatten().map(|(_, c)| *c).collect();
-        let roots: Vec<u64> = product_defs
+        // A product whose shape another one places through MAPPED_ITEMs (an assembly written without
+        // NEXT_ASSEMBLY_USAGE_OCCURRENCEs) is a child too: as a root its solids would be there twice
+        let mapped: HashSet<u64> = ents
+            .iter()
+            .filter_map(|(id, _)| {
+                ents.simple(id, "REPRESENTATION_MAP")?
+                    .get(1)
+                    .and_then(entity)
+            })
+            .collect();
+        let is_mapped = |pd: u64| {
+            let group = w.rep_group(pd);
+            !group.is_empty() && group.iter().all(|r| mapped.contains(r))
+        };
+        let mut roots: Vec<u64> = product_defs
             .iter()
             .copied()
-            .filter(|pd| !child_set.contains(pd))
+            .filter(|pd| !child_set.contains(pd) && !is_mapped(*pd))
             .collect();
+        if roots.is_empty() {
+            roots = product_defs
+                .iter()
+                .copied()
+                .filter(|pd| !child_set.contains(pd))
+                .collect();
+        }
         let mut unit = None;
         for &root in &roots {
             let group = w.rep_group(root);

@@ -11,6 +11,14 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Fixed
+
+- `IMP-20`: an assembly written with `MAPPED_ITEM`s and no `NEXT_ASSEMBLY_USAGE_OCCURRENCE` (Würth's inductor
+  models) had every part twice, once where the assembly maps it and once as a product of its own; a product whose
+  shape is only mapped into another is no root now. A freeform face meshed more than ten times its edges' box
+  outside them (a vertex 1000 mm off on a spline extrusion) is dropped with a warning, as a plane, cylinder or cone
+  face already was past its edges; the warning names the distance allowed.
+
 ## [0.4.45] - 2026-11-13
 
 ### Added

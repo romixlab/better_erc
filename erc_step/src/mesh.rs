@@ -427,8 +427,9 @@ impl<'t, 'e, 'a> Mesher<'t, 'e, 'a> {
             }
         }
         // truck meshes the whole parameter range of a surface it fails to trim (a cylinder out to its axis
-        // origin): a plane, cylinder or cone face never leaves the box of its own edges
-        let mut stray: Vec<Option<f64>> = vec![None; converted.len()];
+        // origin): a plane, cylinder or cone face never leaves the box of its own edges, nor any other face that box
+        // ten times over
+        let mut stray: Vec<Option<(f64, f64)>> = vec![None; converted.len()];
         for (i, c) in converted.iter().enumerate() {
             let ruled = ents
                 .simple(c.id, "ADVANCED_FACE")
@@ -436,7 +437,7 @@ impl<'t, 'e, 'a> Mesher<'t, 'e, 'a> {
                 .and_then(entity)
                 .and_then(|g| ents.keyword(g))
                 .is_some_and(|k| matches!(k, "PLANE" | "CYLINDRICAL_SURFACE" | "CONICAL_SURFACE"));
-            let Some(mesh) = meshes[i].as_ref().filter(|_| ruled) else {
+            let Some(mesh) = meshes[i].as_ref() else {
                 continue;
             };
             let edge_points: Vec<&Vec3> = face_edges[i]
@@ -460,16 +461,26 @@ impl<'t, 'e, 'a> Mesher<'t, 'e, 'a> {
                 .iter()
                 .flat_map(|q| (0..3).map(move |k| (lo[k] - q[k]).max(q[k] - hi[k])))
                 .fold(0.0, f64::max);
-            if out > 10.0 * tol {
+            // Any other surface may bulge past its edges (a dome, a spline face bounded by a short seam), but not by
+            // ten times their box's size: that far out is truck's parameter search gone wrong (a vertex 1000 units
+            // off on a 0.3 unit extrusion of a spline)
+            let diagonal = (0..3).map(|k| (hi[k] - lo[k]).powi(2)).sum::<f64>().sqrt();
+            let limit = if ruled {
+                10.0 * tol
+            } else {
+                10.0 * tol.max(diagonal)
+            };
+            if out > limit {
                 meshes[i] = None;
-                stray[i] = Some(out);
+                stray[i] = Some((out, limit));
             }
         }
         let mut out = LocalShell::default();
         for (i, c) in converted.iter().enumerate() {
-            if let Some(out) = stray[i] {
+            if let Some((out, limit)) = stray[i] {
                 let msg = format!(
-                    "not meshed: truck's trimming failed (triangles {out:.3} units outside the face's edges)"
+                    "not meshed: truck's trimming failed (triangles {out:.3} units outside the face's edges, \
+                     {limit:.3} allowed)"
                 );
                 self.warn(c.id, WarningKind::FaceNotMeshed, msg);
             } else if meshes[i].is_none() {

@@ -377,6 +377,29 @@ fn assembly_moves_its_parts() {
     assert!(near(normal, [0.0, 1.0, 0.0]), "{normal:?}");
 }
 
+/// An assembly of MAPPED_ITEMs without occurrences (some exporters write them so): each child product's solid once,
+/// where the assembly maps it, not a second time as a product of its own
+#[test]
+fn mapped_products_are_not_roots() {
+    let mut s = Step::new();
+    let ctx = s.context(Unit::Mm);
+    let (solid, _) = s.cuboid([0.0; 3], [2.0, 1.0, 0.5], "''");
+    let pin = s.product("pin", &[solid], ctx);
+    let map = s.add(format!("REPRESENTATION_MAP(#{},#{})", pin.2, pin.1));
+    let target = s.axis2([10.0, 0.0, 0.0], [0.0, 0.0, 1.0], [1.0, 0.0, 0.0]);
+    let item = s.add(format!("MAPPED_ITEM('',#{map},#{target})"));
+    s.product("assembly", &[item], ctx);
+    let m = read(&s.text());
+    assert!(m.warnings.is_empty(), "{:?}", m.warnings);
+    assert_eq!(
+        m.parts.len(),
+        1,
+        "{:?}",
+        m.parts.iter().map(|p| &p.name).collect::<Vec<_>>()
+    );
+    assert_box(&m, [10.0, 0.0, 0.0], [12.0, 1.0, 0.5]);
+}
+
 #[test]
 fn colours_of_solids_and_faces() {
     let mut s = Step::new();
