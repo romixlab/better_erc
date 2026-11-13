@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.44] - 2026-11-13
+
 ### Changed
 
 - Footprint review: the SpaceMouse's mapping is the one every app on ve_spacemouse shares, `spacemouse.toml`
