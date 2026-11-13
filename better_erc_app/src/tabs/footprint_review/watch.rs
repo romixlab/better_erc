@@ -91,6 +91,7 @@ struct Watched {
 }
 
 /// The files watched, their stamps, the watcher and the events waiting
+#[derive(Default)]
 pub(super) struct Watch {
     files: HashMap<PathBuf, Watched>,
     /// The directories the watcher watches
@@ -101,19 +102,6 @@ pub(super) struct Watch {
     due: Option<Instant>,
     /// Why the watcher could not start, once (the Reload button still works)
     pub(super) error: Option<String>,
-}
-
-impl Default for Watch {
-    fn default() -> Self {
-        Watch {
-            files: HashMap::new(),
-            dirs: HashSet::new(),
-            watcher: None,
-            events: None,
-            due: None,
-            error: None,
-        }
-    }
 }
 
 impl Watch {
@@ -310,7 +298,7 @@ mod tests {
         std::fs::write(&a, "four, not looked at yet").unwrap();
         w.set(Group::List, [a.clone()]);
         assert_eq!(w.changed(), [Group::List]);
-        assert_eq!(w.files(Group::List), [a.clone()]);
+        assert_eq!(w.files(Group::List), std::slice::from_ref(&a));
         std::fs::write(symdir.join("C.kicad_sym"), "(kicad_symbol_lib)").unwrap();
         assert_eq!(w.changed(), []);
     }
