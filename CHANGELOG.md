@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.57] - 2026-11-14
+
 ### Added
 
 - Footprint review: the 3D view's camera is orthographic or perspective, with the field of view as a setting (`view_3d_projection`, `fov_deg`). The 3D model section has the switch and the field of view, and the view's own right-click menu changes the same values; changing them keeps the model's size at the middle of the view. Needs vhrd_egui's `ve_view3d` with V3D-5 (`VIEW-32`).
