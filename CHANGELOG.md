@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.50] - 2026-11-13
+
 ### Added
 
 - `VIEW-23`: the footprint review shows the footprint's 3D model. The 3D key (`3`) swaps the canvas between the page
