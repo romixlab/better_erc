@@ -333,7 +333,7 @@ fn every_slot_names_its_action_and_key() {
     assert_eq!(why(Action::FullWidth), "Open the datasheet first (left)");
     assert_eq!(
         why(Action::Mode(Tool::Move)),
-        "In Move already: the mouse moves the footprint"
+        "In Move already: a press drags what is under it"
     );
     assert_eq!(
         why(Action::Accept),
@@ -418,7 +418,7 @@ fn calibrate_from_the_tab_and_the_mapping_saved() {
 /// Move moves after the window lost focus with the puck turned or Ctrl held (round 8's "Move only turned the
 /// model"): spacenavd stops sending to a window without focus, so the client keeps the last deflection, and a
 /// Ctrl let go in another window never reaches this one. Neither may stay seen: while the window has no focus and
-/// after it, until the puck reports again, it stands still, and a drag without Ctrl now moves the model
+/// after it, until the puck reports again, it stands still, and a drag without Ctrl now moves, not turns
 #[test]
 fn a_lost_focus_leaves_no_turn_held() {
     let dir = scratch("focus");
@@ -465,9 +465,12 @@ fn a_lost_focus_leaves_no_turn_held() {
     h.step();
     h.event(egui::Event::WindowFocused(true));
     h.step();
-    let canvas = h.state().rt.canvas;
-    let a = canvas.center() + vec2(50.0, 50.0);
-    let before = h.state().model_views.solid.clone();
+    // A press on the footprint: it moves (the model, read from no file here, is nothing to pick), nothing turns
+    let a = {
+        let st = h.state();
+        st.to_screen(st.rt.canvas, st.place.origin)
+    };
+    let before = (h.state().model_views.solid.turn, h.state().place.origin);
     h.hover_at(a);
     h.step();
     h.drag_at(a);
@@ -478,18 +481,16 @@ fn a_lost_focus_leaves_no_turn_held() {
     }
     h.drop_at(a + vec2(40.0, 0.0));
     h.step();
-    let after = h.state().model_views.solid.clone();
+    let st = h.state();
     assert!(
-        after.turn.angle_between(before.turn) < 1e-6,
+        st.model_views.solid.turn.angle_between(before.0) < 1e-6,
         "the drag turned the model"
     );
-    let (p, q) = (before.place.unwrap(), after.place.unwrap());
-    let zoom = h.state().zoom;
     assert!(
-        (q.origin[0] - p.origin[0] - 40.0 / zoom).abs() < 0.5,
-        "the drag moves the model: {:?} → {:?}",
-        p.origin,
-        q.origin
+        (st.place.origin[0] - before.1[0] - 40.0 / st.zoom).abs() < 0.5,
+        "the drag moves: {:?} → {:?}",
+        before.1,
+        st.place.origin
     );
     // The puck reports again: it turns the model again
     push(&mut h, &fake, [0, 0, 0, 0, 0, 0]);

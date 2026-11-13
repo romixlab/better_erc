@@ -1213,7 +1213,7 @@ impl FootprintReview {
     fn placement_section(&mut self, ui: &mut Ui) {
         let k = self.mm_per_point();
         let place = self.moving_mut().clone();
-        let fp = self.model_views.moves == modelviews::Moves::Footprint;
+        let fp = self.moves_now() == modelviews::Moves::Footprint;
         let summary = format!(
             "{}{:.2}, {:.2} mm · {:.0}° · {}",
             if fp {
@@ -1243,7 +1243,7 @@ impl FootprintReview {
     fn placement_controls(&mut self, ui: &mut Ui) {
         let keys = self.keys();
         let k = self.mm_per_point();
-        let fp = self.model_views.moves == modelviews::Moves::Footprint;
+        let fp = self.moves_now() == modelviews::Moves::Footprint;
         let what = self.moving_name();
         let mut place = self.moving_mut().clone();
         if !fp {
@@ -1317,7 +1317,7 @@ impl FootprintReview {
         });
         *self.moving_mut() = place;
         if centre {
-            match self.model_views.moves {
+            match self.moves_now() {
                 modelviews::Moves::Model => self.centre_model(),
                 modelviews::Moves::Footprint => self.rt.center_footprint = true,
             }
@@ -1601,7 +1601,7 @@ impl FootprintReview {
                     let k = &mut s.keys;
                     for (what, name) in [
                         ("Page at full width", &mut k.full_width),
-                        ("Move: the mouse moves the footprint", &mut k.move_tool),
+                        ("Move: a press drags what is under it", &mut k.move_tool),
                         ("Ruler: one end, then the other", &mut k.ruler),
                         ("Measure PDF", &mut k.measure_pdf),
                         ("Measure footprint", &mut k.measure_footprint),

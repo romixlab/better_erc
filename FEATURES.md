@@ -829,21 +829,25 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   temp folder; in the tab, a footprint changed on disk shown with its new pad and a stale review by Reload, F5,
   picking it again and the watcher alone; Accept reloading nothing; an override read from its library ·
   `better_erc_app/src/tabs/footprint_review/watch.rs`, `reload_tests.rs`, `better_erc/src/fp/todo.rs`
-- 🚧 `VIEW-32` Footprint review round 8: the model onto the footprint as KiCad places it (`Home`, a setting; a button
-  in the mode bar and in the Model views section): at the footprint's origin with its turn, seen from its side (the
-  bottom for a footprint in bottom view), the model entry's offset, scale and rotation already in the model's parts;
-  in Silhouettes that side's view shown and picked, in 3D the shaded model turned onto it. A hidden model or
-  footprint still moves (the mouse, the arrows, turn, mirror, the puck, Ctrl+drag): its thin outline (the
-  footprint's areas and lines, the silhouettes, the 3D model's side silhouette or picture square) is drawn while it
-  moves and 0.8 s after, named with the key that shows it. The model's own opacity, apart from the footprint's
-  (Model opacity in the View section beside Footprint opacity and in the Model views section, one value;
-  `model_opacity`, a setting, at first). Fixed: Move only turned the 3D model after the window lost its focus with the puck turned (spacenavd
-  sends to the focused window only, so the client kept the last deflection): the puck counts as at rest from a lost
-  focus until it reports again; Ctrl is read once per frame, and while it makes a drag turn the model a line on the
-  canvas says so. Tests: a lost focus with the puck twisted and with Ctrl held, then a drag that moves; the two
-  opacities apart; on the GPU, Home on a turned, mirrored footprint in Silhouettes and 3D (a model point landing on
-  the footprint's), a hidden model dragged with its outline drawn and gone after, a hidden footprint nudged ·
-  `better_erc_app/src/tabs/footprint_review/puck.rs`, `modelviews.rs`, `mod.rs`, `panel.rs`, `solid.rs`
+- 🚧 `VIEW-32` Footprint review round 8: in Move a press drags what is under it (`grab.rs`): the footprint, a
+  silhouette view or the 3D model, each hit in its own frame against its extent; where two overlap the moves switch's
+  pick (`Q`) wins, else the topmost; the empty page pans. Hovering outlines what a press would pick and the mode bar
+  names it (`drag: the footprint`). Hidden ones are never picked or dragged, and while the moves switch's pick is
+  hidden the keys, turn, mirror and the puck move the one shown (the switch shows it, the other disabled with why;
+  the choice comes back when it is shown); Ctrl+drag turns only a shown model. The model onto the footprint as KiCad
+  places it (`Home`, a setting; a button in the mode bar and in the Model views section): at the footprint's origin
+  with its turn, seen from its side (the bottom for a footprint in bottom view), the model entry's offset, scale and
+  rotation already in the model's parts; in Silhouettes that side's view shown and picked, in 3D the shaded model
+  turned onto it. The model's own opacity, apart from the footprint's (Model opacity in the View section beside
+  Footprint opacity and in the Model views section, one value; `model_opacity`, a setting, at first). Fixed: Move
+  only turned the 3D model after the window lost its focus with the puck turned (spacenavd sends to the focused
+  window only, so the client kept the last deflection): the puck counts as at rest from a lost focus until it
+  reports again; Ctrl is read once per frame, and while it makes a drag turn the model a line on the canvas says so.
+  Tests: a lost focus with the puck twisted and with Ctrl held, then a drag that moves; the two opacities apart; on
+  the GPU, Home on a turned, mirrored footprint in Silhouettes and 3D (a model point landing on the footprint's), a
+  press on each, on both with either pick, on the empty page, a hidden model never dragged and the keys moving the one
+  shown · `better_erc_app/src/tabs/footprint_review/grab.rs`, `puck.rs`, `modelviews.rs`, `mod.rs`, `panel.rs`,
+  `solid.rs`
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
   one lookup per MPN per session, on a worker thread) and its review state from the review lines (reviewed, reviewed

@@ -39,6 +39,7 @@ pub mod blend;
 mod docindex;
 mod dxf;
 mod geometry;
+mod grab;
 #[cfg(test)]
 mod mode_tests;
 pub mod model3d;
@@ -192,7 +193,9 @@ impl Tool {
     /// What the primary drag does, for the switcher's tooltip and the canvas' chip
     fn what(self) -> &'static str {
         match self {
-            Tool::Move => "the mouse moves the footprint; arrow keys nudge it (Shift: more)",
+            Tool::Move => {
+                "a press drags what is under it, the footprint or the model, the empty page pans; arrow keys nudge (Shift: more)"
+            }
             Tool::Scale => {
                 "the ruler on the drawing's lines sets the scale from a dimension: type its length, or take the \
                  number the drawing prints"
@@ -595,10 +598,10 @@ struct Runtime {
     /// The footprint, the model over the page hidden for a moment, their places kept (VIEW-28)
     fp_hidden: bool,
     model_hidden: bool,
-    /// What moves moved this frame (the mouse, the arrows, turn, mirror, the puck)
-    moved: bool,
-    /// The hidden model (true) or footprint moved: its outline drawn until this time (VIEW-32)
-    ghost: Option<(bool, f64)>,
+    /// What the press in Move drags, from its press to its let go (VIEW-32)
+    grab: Option<grab::Grab>,
+    /// What a press in Move would drag, under the pointer
+    hover_grab: Option<grab::Grab>,
     /// The peek key is held: the page alone
     peek: bool,
     /// Ctrl is held: a Measure across end snaps to the source that is not the nearer (VIEW-29)
@@ -711,8 +714,8 @@ impl Default for Runtime {
             canvas: Rect::NOTHING,
             fp_hidden: false,
             model_hidden: false,
-            moved: false,
-            ghost: None,
+            grab: None,
+            hover_grab: None,
             peek: false,
             other_source: false,
             end_snaps: [None; 2],
@@ -2299,7 +2302,7 @@ impl FootprintReview {
              {} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back · \
              {} type the ruler's length, Enter sets the scale · {} the dimension's number sets it · \
              {} · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
-             arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans · \
+             arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · a drag on the empty page, right or middle drag pans · \
              {} the model as silhouettes or 3D ({}) · {} moves the footprint or the model ({}) · {} {} · \
              3D: SpaceMouse tilt, roll and twist or Ctrl+drag turn it, letting go lands on a side (Alt: free) · \
              {} the model onto the footprint · {} hides or shows the footprint, {} the model · hold {}: the page alone · {} X-ray · {} reload from disk\n\
@@ -2539,6 +2542,16 @@ impl FootprintReview {
             }
             ui.separator();
             self.shown_switches(ui);
+            // What a press drags, in Move; its room kept in the other modes
+            let grab = Self::grab_name(self.rt.hover_grab.unwrap_or(grab::Grab::Page));
+            ui.add_visible(
+                self.tool == Tool::Move,
+                egui::Label::new(RichText::new(format!("drag: {grab}")).color(SNAP_COLOUR)),
+            )
+            .on_hover_text(
+                "In Move a press drags what is under it, the one the moves switch picks first where two overlap; \
+                 the empty page pans. The keys, turn, mirror and the SpaceMouse move what the switch picks",
+            );
             // Its room kept in Move too, so the bar never wraps differently and the canvas never jumps
             ui.add_visible(
                 self.tool != Tool::Move,
@@ -3166,12 +3179,27 @@ impl FootprintReview {
                 Tool::Move if self.ctrl_turns(other) => {
                     self.solid_drag(resp.drag_delta());
                 }
+                // What is under the press moves; the empty page pans (VIEW-32)
                 Tool::Move => {
-                    let d = resp.drag_delta() / self.zoom;
-                    let place = self.moving_mut();
-                    place.origin[0] += d.x;
-                    place.origin[1] += d.y;
-                    self.rt.moved = true;
+                    if resp.drag_started() || self.rt.grab.is_none() {
+                        let start = resp
+                            .interact_pointer_pos()
+                            .map(|s| s - resp.drag_delta())
+                            .unwrap_or_default();
+                        self.rt.grab = Some(self.grab_at(self.to_page(canvas, start)));
+                    }
+                    let delta = resp.drag_delta();
+                    let zoom = self.zoom;
+                    match self.rt.grab.and_then(|g| self.grab_place_mut(g)) {
+                        Some(place) => {
+                            place.origin[0] += delta.x / zoom;
+                            place.origin[1] += delta.y / zoom;
+                        }
+                        None => {
+                            self.pan[0] += delta.x;
+                            self.pan[1] += delta.y;
+                        }
+                    }
                 }
                 Tool::Select => {
                     if resp.drag_started() {
@@ -3239,11 +3267,20 @@ impl FootprintReview {
             self.rt.select_hover = None;
         }
         if resp.drag_stopped() {
+            self.rt.grab = None;
             self.rt.ruler_end = None;
             if !self.rt.ruler_placing {
                 self.rt.ruler_anchor = None;
             }
         }
+        // What a press in Move would drag, highlighted; the one dragged while a drag is on
+        self.rt.hover_grab = if self.tool != Tool::Move || self.ctrl_turns(other) {
+            None
+        } else if resp.dragged_by(egui::PointerButton::Primary) {
+            self.rt.grab
+        } else {
+            hover_page.map(|p| self.grab_at(p))
+        };
         // Before an end is placed: where it would snap, at the pointer
         if self.tool.ruler()
             && self.rt.snap.is_none()
@@ -3273,9 +3310,6 @@ impl FootprintReview {
             }
             if p.down {
                 place.origin[1] += step;
-            }
-            if p.left || p.right || p.up || p.down || p.rotate || p.mirror {
-                self.rt.moved = true;
             }
             for (on, action) in [
                 (p.page_up, Action::PageUp),
@@ -3332,7 +3366,9 @@ impl FootprintReview {
         if self.footprint_shown() && self.blinked(&ctx, self.blink) && !self.rt.items.is_empty() {
             self.draw_footprint(&painter, canvas, page, ui.id());
         }
-        self.ghost(&ctx, &painter, canvas);
+        if let Some(g) = self.rt.hover_grab {
+            self.draw_grab_hover(&painter, canvas, g);
+        }
         self.draw_selection(&painter, canvas);
         // The ruler
         if let Some([a, b]) = self.ruler {
@@ -3395,9 +3431,13 @@ impl FootprintReview {
         }
     }
 
-    /// A drag in Move turns the 3D model, not moves: Ctrl held (`command`, read from this frame's input) in 3D
+    /// A drag in Move turns the 3D model, not moves: Ctrl held (`command`, read from this frame's input) in 3D, the
+    /// model shown (a hidden one is never dragged, VIEW-32)
     fn ctrl_turns(&self, command: bool) -> bool {
-        command && self.tool == Tool::Move && self.model_views.look == modelviews::ModelLook::Solid
+        command
+            && self.tool == Tool::Move
+            && self.model_views.look == modelviews::ModelLook::Solid
+            && self.model_shown()
     }
 
     /// The ruler's length and its x and y spans, mm, at the scale set
@@ -3714,105 +3754,6 @@ impl FootprintReview {
         ((t * hz * 2.0).floor() as i64) % 2 == 0
     }
 
-    /// `model` (else the footprint) moved at `now`: when it is hidden, its outline is drawn for a moment, so hiding
-    /// never leaves Move doing nothing to see (VIEW-32)
-    pub(super) fn moved_hidden(&mut self, model: bool, now: f64) {
-        let hidden = if model {
-            self.rt.model_hidden
-        } else {
-            self.rt.fp_hidden
-        };
-        if hidden {
-            self.rt.ghost = Some((model, now + GHOST_S));
-        }
-    }
-
-    /// The outline of a hidden footprint or model that moved: kept while it moves and a moment after
-    fn ghost(&mut self, ctx: &egui::Context, painter: &egui::Painter, canvas: Rect) {
-        let now = ctx.input(|i| i.time);
-        if std::mem::take(&mut self.rt.moved) {
-            let model = self.model_views.moves == modelviews::Moves::Model;
-            self.moved_hidden(model, now);
-        }
-        if self.rt.solid.turned {
-            self.moved_hidden(true, now);
-        }
-        let Some((model, until)) = self.rt.ghost else {
-            return;
-        };
-        let hidden = if model {
-            self.rt.model_hidden
-        } else {
-            self.rt.fp_hidden
-        };
-        if now > until || !hidden {
-            self.rt.ghost = None;
-            return;
-        }
-        ctx.request_repaint_after(std::time::Duration::from_secs_f64(until - now));
-        if self.rt.peek {
-            return;
-        }
-        let k = self.keys();
-        let (line, at, what) = if model {
-            let [r, g, b] = self.layer_colors().model.0;
-            let line = Color32::from_rgb(r, g, b);
-            let at = self.draw_model_ghost(painter, canvas, line);
-            (
-                line,
-                at,
-                format!("model hidden · {} shows it", key_name(k.hide_model)),
-            )
-        } else {
-            let [r, g, b] = self.layer_colors().copper.0;
-            let line = Color32::from_rgb(r, g, b);
-            self.draw_footprint_ghost(painter, canvas, line);
-            let at = self.to_screen(canvas, self.place.origin);
-            (
-                line,
-                Some(at),
-                format!("footprint hidden · {} shows it", key_name(k.hide_footprint)),
-            )
-        };
-        if let Some(at) = at {
-            painter.text(
-                at + vec2(8.0, -8.0),
-                Align2::LEFT_BOTTOM,
-                what,
-                FontId::proportional(12.0),
-                line,
-            );
-        }
-    }
-
-    /// The hidden footprint's outline: its areas and lines shown, thin, and its origin
-    fn draw_footprint_ghost(&self, painter: &egui::Painter, canvas: Rect, line: Color32) {
-        let s = Stroke::new(1.0, line);
-        let screen = |p: outline::P| self.to_screen(canvas, self.fp_to_page(p));
-        for item in self.shown_items() {
-            match item {
-                Item::Area { points, .. } => {
-                    painter.add(Shape::closed_line(
-                        points.iter().map(|p| screen(*p)).collect(),
-                        s,
-                    ));
-                }
-                Item::Line { points, closed, .. } => {
-                    let pts = points.iter().map(|p| screen(*p)).collect();
-                    painter.add(if *closed {
-                        Shape::closed_line(pts, s)
-                    } else {
-                        Shape::line(pts, s)
-                    });
-                }
-                Item::Hole { .. } | Item::Number { .. } => {}
-            }
-        }
-        let o = self.to_screen(canvas, self.place.origin);
-        painter.line_segment([o - vec2(6.0, 0.0), o + vec2(6.0, 0.0)], s);
-        painter.line_segment([o - vec2(0.0, 6.0), o + vec2(0.0, 6.0)], s);
-    }
-
     /// Draws the footprint: by egui's painter in the normal mode, else by the blend pass over `page` (its rectangle
     /// on screen and its picture); holes, pad numbers and the origin by the painter on top
     fn draw_footprint(
@@ -3951,9 +3892,6 @@ impl FootprintReview {
         painter.line_segment([o - vec2(0.0, 6.0), o + vec2(0.0, 6.0)], s);
     }
 }
-
-/// How long a hidden footprint's or model's outline stays after it last moved, seconds (VIEW-32)
-const GHOST_S: f64 = 0.8;
 
 /// Mixes `mesh` (screen points, full colour) into the page (its rectangle on screen and its picture) by `mode` and
 /// `opacity` in the blend pass, under `id` (one pass per id and frame)

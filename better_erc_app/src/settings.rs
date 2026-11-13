@@ -95,7 +95,7 @@ pub struct FootprintReviewSettings {
 pub struct Keys {
     /// The page at the view's full width
     pub full_width: String,
-    /// Back to Move: the mouse moves the footprint again (Esc too)
+    /// Back to Move: a press drags what is under it again, the footprint or the model (Esc too)
     pub move_tool: String,
     /// The ruler: one end at the pointer, then the other; from Move it starts the Scale mode
     pub ruler: String,
@@ -144,7 +144,8 @@ pub struct Keys {
     pub model_view: String,
     /// How the model is shown over the page: Silhouettes (its six flat views) or 3D (the shaded model) (VIEW-27)
     pub model_look: String,
-    /// What the mouse in Move, the arrow keys, turn and mirror move: the footprint or the model (VIEW-27)
+    /// What the arrow keys, turn, mirror and the puck move, and what a press in Move picks first where the footprint
+    /// and the model overlap: the footprint or the model (VIEW-27, VIEW-32)
     pub moves: String,
     /// Hides the footprint over the page, and shows it again where it was (VIEW-28)
     pub hide_footprint: String,

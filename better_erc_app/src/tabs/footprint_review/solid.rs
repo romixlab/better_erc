@@ -255,7 +255,7 @@ impl FootprintReview {
 
     /// The picture's corners on the page, in footprint mm around the origin before the placement (x right, y down):
     /// top left, top right, bottom right, bottom left
-    pub(super) fn solid_corners(&self) -> [[f64; 2]; 4] {
+    fn solid_corners(&self) -> [[f64; 2]; 4] {
         let r = self.rt.solid.radius as f64;
         [[-r, -r], [r, -r], [r, r], [-r, r]]
     }
@@ -786,19 +786,12 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
     }
 
-    /// How many pixels of `a` and `b` differ, and the box they lie in
-    fn changed(a: &image::RgbaImage, b: &image::RgbaImage) -> usize {
-        a.pixels()
-            .zip(b.pixels())
-            .filter(|(p, q)| (0..3).map(|i| p.0[i].abs_diff(q.0[i]) as i32).sum::<i32>() > 30)
-            .count()
-    }
-
     /// Round 8 (VIEW-32): Home puts the model on the footprint as KiCad places it, at the footprint's origin with its
-    /// turn, seen from the bottom for a footprint in bottom view, in Silhouettes and in 3D; a hidden model and a
-    /// hidden footprint still move, their thin outline drawn while they move and a moment after
+    /// turn, seen from the bottom for a footprint in bottom view, in Silhouettes and in 3D. In Move a press drags what
+    /// is under it (Q's pick first where they overlap), the empty page pans; a hidden one is never dragged, the keys
+    /// move the one shown until it is shown again
     #[test]
-    fn the_model_on_the_footprint_and_moved_hidden() {
+    fn the_model_on_the_footprint_and_drags_under_the_pointer() {
         let dir = std::env::temp_dir().join(format!("berc-fp-home-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&dir);
         std::fs::create_dir_all(&dir).unwrap();
@@ -874,85 +867,87 @@ mod tests {
         steps(&mut h, 10);
         assert_eq!(h.state().solid_side(), Some((Side::Top, 0)));
 
-        // The model hidden, moving: a drag moves it, its outline drawn while it moves
-        key(&mut h, egui::Key::Q);
-        assert!(h.state().moving_solid());
-        key(&mut h, egui::Key::J);
-        assert!(!h.state().model_shown());
-        steps(&mut h, 20);
-        let hidden = h.render().unwrap();
-        let a = screen(&h, [300.0, 400.0]) + vec2(5.0, 5.0);
-        h.hover_at(a);
-        h.step();
-        h.drag_at(a);
-        h.step();
-        for i in 1..=4 {
-            h.hover_at(a + vec2(10.0 * i as f32, 0.0));
+        // A drag goes to what is under the press. The model sits on the footprint: Q's pick (the footprint) wins
+        let drag = |h: &mut H, a: egui::Pos2, d: egui::Vec2| {
+            h.hover_at(a);
             h.step();
-        }
-        assert_eq!(
-            h.state().rt.ghost.map(|g| g.0),
-            Some(true),
-            "the hidden model's outline"
-        );
-        let moving = h.render().unwrap();
-        assert!(
-            changed(&hidden, &moving) > 100,
-            "its outline drawn: {}",
-            changed(&hidden, &moving)
-        );
-        h.drop_at(a + vec2(40.0, 0.0));
+            h.drag_at(a);
+            h.step();
+            for i in 1..=4 {
+                h.hover_at(a + d * (i as f32 / 4.0));
+                h.step();
+            }
+            h.drop_at(a + d);
+            h.step();
+            h.hover_at(h.state().rt.canvas.center());
+            h.step();
+        };
+        let solid_at = |h: &H| h.state().model_views.solid.place.as_ref().unwrap().origin;
+        let fp_at = |h: &H| h.state().place.origin;
+        let near =
+            |a: [f32; 2], b: [f32; 2]| (a[0] - b[0]).abs() < 0.5 && (a[1] - b[1]).abs() < 0.5;
+        let on = screen(&h, [300.0, 400.0]) + vec2(5.0, 5.0);
+        h.hover_at(on);
         h.step();
-        let origin = h.state().model_views.solid.place.as_ref().unwrap().origin;
-        assert!(
-            (origin[0] - 340.0).abs() < 0.5 && (origin[1] - 400.0).abs() < 0.5,
-            "{origin:?}"
-        );
-        assert!(!h.state().model_shown(), "still hidden");
-        // A moment after, the outline is gone: the page and the footprint alone again
-        h.hover_at(h.state().rt.canvas.center());
-        steps(&mut h, 20);
-        assert_eq!(h.state().rt.ghost, None);
-        let after = h.render().unwrap();
-        if let Some(d) = std::env::var_os("BERC_GHOST_PNG") {
-            let d = PathBuf::from(d);
-            hidden.save(d.join("hidden.png")).unwrap();
-            moving.save(d.join("moving.png")).unwrap();
-            after.save(d.join("after.png")).unwrap();
-        }
-        assert!(
-            changed(&hidden, &after) < 20,
-            "no outline left: {}",
-            changed(&hidden, &after)
-        );
-        // J: shown again where it was put
-        key(&mut h, egui::Key::J);
-        assert!(h.state().model_shown());
         assert_eq!(
-            h.state().model_views.solid.place.as_ref().unwrap().origin,
-            origin
+            h.state().rt.hover_grab,
+            Some(grab::Grab::Footprint),
+            "hover names the pick"
         );
-
-        // The footprint hidden, moving: an arrow nudges it, its outline drawn
+        drag(&mut h, on, vec2(40.0, 0.0));
+        assert!(near(fp_at(&h), [340.0, 400.0]), "{:?}", fp_at(&h));
+        assert!(near(solid_at(&h), [300.0, 400.0]), "the model stays");
+        // Q: the model is picked first where they overlap
         key(&mut h, egui::Key::Q);
-        key(&mut h, egui::Key::H);
-        steps(&mut h, 20);
-        let fp_hidden = h.render().unwrap();
-        let before = h.state().place.origin;
+        drag(&mut h, on, vec2(0.0, 30.0));
+        assert!(near(solid_at(&h), [300.0, 430.0]), "{:?}", solid_at(&h));
+        assert!(near(fp_at(&h), [340.0, 400.0]));
+        // The footprint alone under the press (its pad 2, right of the model now): the footprint, whatever Q says
+        let pad2 = screen(&h, h.state().fp_to_page([1.27, 0.0]));
+        drag(&mut h, pad2, vec2(-40.0, 0.0));
+        assert!(near(fp_at(&h), [300.0, 400.0]), "{:?}", fp_at(&h));
+        // The empty page pans
+        let pan = h.state().pan;
+        let empty = screen(&h, [700.0, 150.0]);
+        drag(&mut h, empty, vec2(25.0, 10.0));
+        assert_eq!(h.state().rt.grab, None);
+        let p = h.state().pan;
+        assert!(
+            (p[0] - pan[0] - 25.0).abs() < 0.5 && (p[1] - pan[1] - 10.0).abs() < 0.5,
+            "{p:?}"
+        );
+        assert!(near(fp_at(&h), [300.0, 400.0]) && near(solid_at(&h), [300.0, 430.0]));
+
+        // The model hidden (J), Q on Model: never picked, the footprint under it moves; the keys move the footprint
+        // too, and the mode bar says so; J again: Q's choice back
+        key(&mut h, egui::Key::J);
+        assert!(!h.state().moving_solid() && h.state().moves_overridden().is_some());
+        let at = screen(&h, [300.0, 430.0]);
+        drag(&mut h, at, vec2(0.0, 40.0));
+        assert!(
+            near(solid_at(&h), [300.0, 430.0]),
+            "a hidden model is never dragged"
+        );
+        let fp = fp_at(&h);
         h.key_press(egui::Key::ArrowRight);
         h.step();
-        assert_eq!(h.state().place.origin[0], before[0] + 1.0);
         assert_eq!(
-            h.state().rt.ghost.map(|g| g.0),
-            Some(false),
-            "the hidden footprint's outline"
+            fp_at(&h)[0],
+            fp[0] + 1.0,
+            "the arrows move the footprint shown"
         );
-        let nudged = h.render().unwrap();
-        assert!(
-            changed(&fp_hidden, &nudged) > 50,
-            "its outline drawn: {}",
-            changed(&fp_hidden, &nudged)
-        );
+        key(&mut h, egui::Key::J);
+        assert!(h.state().moving_solid());
+        // The footprint hidden (H), Q on Footprint: the model shown moves by the keys, a press on the footprint pans
+        key(&mut h, egui::Key::Q);
+        key(&mut h, egui::Key::H);
+        assert!(h.state().moving_solid());
+        let m = solid_at(&h);
+        h.key_press(egui::Key::ArrowDown);
+        h.step();
+        assert_eq!(solid_at(&h)[1], m[1] + 1.0);
+        key(&mut h, egui::Key::H);
+        assert!(!h.state().moving_solid(), "Q's choice back");
         let _ = std::fs::remove_dir_all(&dir);
     }
 

@@ -206,7 +206,6 @@ impl FootprintReview {
                 let place = self.moving_mut();
                 place.origin[0] += d.x / zoom;
                 place.origin[1] += d.y / zoom;
-                self.rt.moved = true;
             }
         }
         let factor = (nav.zoom * dt).exp();
@@ -331,7 +330,7 @@ impl FootprintReview {
                     )
                     .disabled_if(
                         self.tool == Tool::Move,
-                        "In Move already: the mouse moves the footprint",
+                        "In Move already: a press drags what is under it",
                     ),
                 ),
                 Some(datasheet(slot(
@@ -592,7 +591,7 @@ impl FootprintReview {
                 let place = self.moving_mut();
                 place.mirror = !place.mirror;
             }
-            Action::Blink => match self.model_views.moves {
+            Action::Blink => match self.moves_now() {
                 modelviews::Moves::Model => self.model_views.blink = !self.model_views.blink,
                 modelviews::Moves::Footprint => self.blink = !self.blink,
             },

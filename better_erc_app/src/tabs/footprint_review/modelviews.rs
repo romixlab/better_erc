@@ -372,7 +372,7 @@ impl ModelLook {
     }
 }
 
-/// What the mouse in Move, the arrow keys, turn and mirror move
+/// What the arrow keys, turn, mirror and the puck move, and what a press in Move picks first where both are
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Moves {
     #[default]
@@ -413,13 +413,39 @@ impl ModelViews {
 impl FootprintReview {
     /// The silhouette view that moves, when the model moves in Silhouettes
     pub(super) fn moving_view(&self) -> Option<Side> {
-        (self.model_views.moves == Moves::Model && self.model_views.look == ModelLook::Silhouettes)
+        (self.moves_now() == Moves::Model && self.model_views.look == ModelLook::Silhouettes)
             .then_some(self.model_views.view)
     }
 
     /// The shaded model moves
     pub(super) fn moving_solid(&self) -> bool {
-        self.model_views.moves == Moves::Model && self.model_views.look == ModelLook::Solid
+        self.moves_now() == Moves::Model && self.model_views.look == ModelLook::Solid
+    }
+
+    /// What the mouse, the arrows, turn, mirror and the puck move now: the moves switch's choice, unless that one is
+    /// hidden and the other shown, then the other. A hidden overlay is never dragged; the choice comes back when
+    /// it is shown again (VIEW-32)
+    pub(super) fn moves_now(&self) -> Moves {
+        match self.model_views.moves {
+            Moves::Model if self.rt.model_hidden && !self.rt.fp_hidden => Moves::Footprint,
+            Moves::Footprint if self.rt.fp_hidden && !self.rt.model_hidden => Moves::Model,
+            m => m,
+        }
+    }
+
+    /// The moves switch's choice stands in for a hidden one: why, and which key shows it again
+    pub(super) fn moves_overridden(&self) -> Option<String> {
+        let k = self.keys();
+        (self.moves_now() != self.model_views.moves).then(|| match self.model_views.moves {
+            Moves::Model => format!(
+                "the model is hidden ({} shows it): the footprint moves until then",
+                key_name(k.hide_model)
+            ),
+            Moves::Footprint => format!(
+                "the footprint is hidden ({} shows it): the model moves until then",
+                key_name(k.hide_footprint)
+            ),
+        })
     }
 
     /// The placement the mouse, the arrow keys, turn and mirror move: the view picked's or the shaded model's
@@ -820,20 +846,25 @@ impl FootprintReview {
         if look != self.model_views.look {
             self.set_look(look);
         }
-        let mut moves = self.model_views.moves;
+        // What moves now: a hidden one's place taken by the one shown, the other disabled with why
+        let now = self.moves_now();
+        let mut moves = now;
+        let overridden = self.moves_overridden();
+        let why = |m: Moves| overridden.clone().filter(|_| m != now);
         let mut seg = Segmented::new(&mut moves).id_salt("model moves");
         if fill {
             seg = seg.fill_width();
         }
-        seg.item(
+        seg.item_if(
             Moves::Footprint,
             "Footprint",
             format!(
-                "The mouse in Move, the arrow keys, turn and mirror move the footprint; {} switches",
+                "The arrow keys, turn, mirror and the puck move the footprint, and a press on both picks it; {} switches",
                 key_name(k.moves)
             ),
+            why(Moves::Footprint),
         )
-        .item(
+        .item_if(
             Moves::Model,
             "Model",
             format!(
@@ -844,9 +875,10 @@ impl FootprintReview {
                 },
                 key_name(k.moves)
             ),
+            why(Moves::Model),
         )
         .show(ui);
-        if moves != self.model_views.moves {
+        if moves != self.moves_now() {
             self.toggle_moves();
         }
     }
@@ -964,69 +996,7 @@ impl FootprintReview {
                 self.turn_solid_to(side, now);
             }
         }
-        self.moved_hidden(true, now);
         self.usage("model on footprint");
-    }
-
-    /// The hidden model's outline, thin: the silhouettes shown, or the 3D model's (its side's silhouette while it sits
-    /// on one, else the square its picture fills); where its name goes
-    pub(super) fn draw_model_ghost(
-        &self,
-        painter: &egui::Painter,
-        canvas: Rect,
-        line: Color32,
-    ) -> Option<Pos2> {
-        let s = Stroke::new(1.0, line);
-        let mut at: Option<Pos2> = None;
-        let mut contour = |pts: Vec<Pos2>| {
-            if let Some(top) = pts
-                .iter()
-                .copied()
-                .min_by(|p, q| (p.x + p.y).total_cmp(&(q.x + q.y)))
-            {
-                at = Some(match at {
-                    Some(a) if a.x + a.y <= top.x + top.y => a,
-                    _ => top,
-                });
-            }
-            painter.add(Shape::closed_line(pts, s));
-        };
-        match self.model_views.look {
-            ModelLook::Silhouettes => {
-                for (_, place, v) in self.shown_views() {
-                    for c in &v.outline {
-                        contour(
-                            c.iter()
-                                .map(|p| self.to_screen(canvas, self.placed(place, *p)))
-                                .collect(),
-                        );
-                    }
-                }
-            }
-            ModelLook::Solid => {
-                let place = self.model_views.solid.place.clone()?;
-                let screen = |p: [f64; 2]| self.to_screen(canvas, self.placed(&place, p));
-                match self
-                    .solid_side()
-                    .and_then(|(side, k)| Some((self.projected(side)?, k)))
-                {
-                    Some((v, k)) => {
-                        for c in &v.outline {
-                            contour(
-                                c.iter()
-                                    .map(|p| screen(super::solid::quartered(*p, k)))
-                                    .collect(),
-                            );
-                        }
-                    }
-                    None => contour(self.solid_corners().map(screen).to_vec()),
-                }
-                let o = self.to_screen(canvas, place.origin);
-                painter.line_segment([o - vec2(6.0, 0.0), o + vec2(6.0, 0.0)], s);
-                painter.line_segment([o - vec2(0.0, 6.0), o + vec2(0.0, 6.0)], s);
-            }
-        }
-        at.map(|a| a + vec2(-8.0, 0.0))
     }
 
     /// The model picked into the middle of the canvas: the view picked, or the 3D model
