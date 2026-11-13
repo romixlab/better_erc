@@ -343,6 +343,11 @@ fn calibrate_from_the_tab_and_the_mapping_saved() {
     let socket = dir.join("spnav.sock");
     let fake = FakeSpacenavd::start(&socket).unwrap();
     let mut h = harness(&socket, &fake);
+    // The section sits low in the panel: scrolled to first, the scroll settled, then opened
+    h.get_by_label("SpaceMouse").scroll_to_me();
+    for _ in 0..10 {
+        h.step();
+    }
     h.get_by_label("SpaceMouse").click();
     // The section opens over a few frames; a click lands once it is open
     for _ in 0..10 {

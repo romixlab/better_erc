@@ -186,9 +186,15 @@ impl TabUi for PcbDataImport {
 fn report_ui(ui: &mut Ui, id: Id, d: &Loaded) -> bool {
     let report = &d.run.report;
     let mut close = false;
+    // Close first, the path after it cut to the room there is: a long path never pushes Close out of sight
     ui.horizontal(|ui| {
-        ui.heading(d.file.display().to_string());
-        close = ui.button("Close").clicked();
+        close = ui
+            .button("Close")
+            .on_hover_text("Unload this design")
+            .clicked();
+        let path = d.file.display().to_string();
+        ui.add(Label::new(RichText::new(&path).heading()).truncate())
+            .on_hover_text(path);
     });
     for b in &d.design.boards {
         ui.label(format!(

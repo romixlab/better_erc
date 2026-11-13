@@ -64,7 +64,11 @@ fn every_tab_draws() {
             h.run();
             h.run();
             if let Some(p) = std::env::var_os("BERC_LOOK_SNAPSHOT") {
-                let name = format!("{}.{}.png", kind.as_ref(), format!("{theme:?}").to_lowercase());
+                let name = format!(
+                    "{}.{}.png",
+                    kind.as_ref(),
+                    format!("{theme:?}").to_lowercase()
+                );
                 h.render()
                     .unwrap()
                     .save(Path::new(&p).with_extension(name))

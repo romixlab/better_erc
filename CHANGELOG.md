@@ -11,6 +11,17 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Changed
+
+- `VIEW-25`: the footprint review's side panel is rebuilt on vhrd_egui's property-panel widgets. Accept and Next to
+  review sit in a bar that stays in sight; the controls are in sections that fold and say on their header what they
+  hold: Symbol and footprint, Datasheet and page, View, Ruler and scale, Measure, Placement, Review, Notes,
+  SpaceMouse, Settings. New on the way: the footprint's position in mm as X and Y fields, a Measure section that
+  starts a measuring ruler and shows its length and dX, dY, a Notes section with the notes file and the last note.
+  Accept's button now reads just "Accept" (its tooltip says the rest), Next's "Next to review".
+- `APP-4`: the whole app takes the vhrd look (IBM Plex fonts, the brand's dark and light styles); the tab list keeps
+  each name on one line, and a loaded design's Close button comes before its path, so a long path no longer hides it.
+
 ## [0.4.48] - 2026-11-13
 
 ### Fixed

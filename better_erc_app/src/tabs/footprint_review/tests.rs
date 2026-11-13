@@ -50,7 +50,7 @@ pub(super) fn datasheet(dir: &Path) -> PathBuf {
     file
 }
 
-const ACCEPT: &str = "Accept: the footprint matches the drawing";
+use super::panel::ACCEPT;
 
 const PREVIEW: &str = "a footprint opened alone is a preview: there is no symbol to put the review hash on; pick \
                        its symbol from a library or a board's list";
@@ -286,7 +286,7 @@ fn review_a_symbol_from_its_library() {
         SymbolStatus::Ok
     );
     // Nothing else needs a review
-    assert!(disabled(&h, "Next to review ▶"));
+    assert!(disabled(&h, super::panel::NEXT));
     // A symbol without a footprint: refused, with the reason
     h.get_by_label("Rev:Generic").click();
     h.run();

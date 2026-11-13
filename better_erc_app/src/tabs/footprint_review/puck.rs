@@ -13,6 +13,8 @@ use super::*;
 use ve_spacemouse::{
     Axes, CalibrateSteps, Config, Event, PieMenu, PieState, SettingsPanel, Slot, icons,
 };
+use ve_theme::Tone;
+use ve_theme::props::{PropertyRow, Segmented, SubPane, notice};
 
 /// What the canvas does on a key or a pie slot
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -508,31 +510,43 @@ impl FootprintReview {
 
     /// The SpaceMouse in the controls: whether it is there, what the puck moves, Calibrate and the mapping
     pub(super) fn puck_controls(&mut self, ui: &mut Ui) {
-        egui::CollapsingHeader::new("SpaceMouse")
+        let (line, connected) = self.rt.puck.status();
+        let moves = match self.puck {
+            PuckMoves::Page => "moves the page",
+            PuckMoves::Footprint => "moves the footprint",
+        };
+        SubPane::new("SpaceMouse")
             .id_salt("fp spacemouse")
+            .summary(if connected { moves } else { "not connected" })
+            .tooltip(
+                "The 3D mouse through spacenavd: what its puck moves, its mapping and calibration",
+            )
             .default_open(false)
             .show(ui, |ui| {
-                let (line, connected) = self.rt.puck.status();
-                let colour = if connected {
-                    Color32::from_rgb(0, 170, 60)
-                } else {
-                    ui.visuals().warn_fg_color
-                };
-                ui.colored_label(colour, line).on_hover_text(format!(
-                    "spacenavd's socket: {}",
-                    self.rt.puck.socket_line()
-                ));
-                ui.horizontal(|ui| {
-                    ui.label("The puck moves");
-                    let k = short_key(self.keys().puck);
-                    ui.radio_value(&mut self.puck, PuckMoves::Page, "the page")
-                        .on_hover_text(format!("its slide pans the view; {k} switches"));
-                    ui.radio_value(&mut self.puck, PuckMoves::Footprint, "the footprint")
-                        .on_hover_text(format!(
-                            "its slide moves the footprint over the page; {k} switches"
-                        ));
-                });
-                ui.separator();
+                notice(ui, if connected { Tone::Good } else { Tone::Warn }, line).on_hover_text(
+                    format!("spacenavd's socket: {}", self.rt.puck.socket_line()),
+                );
+                let k = short_key(self.keys().puck);
+                PropertyRow::new("The puck moves")
+                    .tooltip(format!("{k} switches"))
+                    .show(ui, |ui| {
+                        Segmented::new(&mut self.puck)
+                            .id_salt("puck moves")
+                            .item(
+                                PuckMoves::Page,
+                                "the page",
+                                format!("its slide pans the view; {k} switches"),
+                            )
+                            .item(
+                                PuckMoves::Footprint,
+                                "the footprint",
+                                format!(
+                                    "its slide moves the footprint over the page; {k} switches"
+                                ),
+                            )
+                            .fill_width()
+                            .show(ui);
+                    });
                 let calibrating = self.rt.puck.settings.calibrating();
                 let live = self.rt.puck.axes;
                 self.rt.puck.settings.ui(ui, Some(&live));

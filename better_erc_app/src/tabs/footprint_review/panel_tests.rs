@@ -26,6 +26,7 @@ fn review_under_way(dir: &Path, theme: egui::Theme) -> Harness<'static, Footprin
             move |ui, state: &mut FootprintReview| state.ui(ui, &mut cx, Id::new("fp panel")),
             FootprintReview::with(settings, Arc::new(|_: &str| {})),
         );
+    crate::main_window::setup_look(&h.ctx);
     h.run();
     let ctx = h.ctx.clone();
     h.state_mut().open_path(&ctx, &lib);
@@ -53,10 +54,8 @@ fn review_under_way(dir: &Path, theme: egui::Theme) -> Harness<'static, Footprin
 #[test]
 fn panel_with_a_review_under_way() {
     for theme in [egui::Theme::Dark, egui::Theme::Light] {
-        let dir = std::env::temp_dir().join(format!(
-            "berc-fp-panel-{}-{theme:?}",
-            std::process::id()
-        ));
+        let dir =
+            std::env::temp_dir().join(format!("berc-fp-panel-{}-{theme:?}", std::process::id()));
         let mut h = review_under_way(&dir, theme);
         h.get_by_label("Test:Mixed_Pads");
         if let Some(p) = std::env::var_os("BERC_PANEL_SNAPSHOT") {

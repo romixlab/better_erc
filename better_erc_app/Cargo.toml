@@ -44,6 +44,8 @@ better_erc = { path = "../better_erc" }
 
 # The SpaceMouse in the footprint review: spacenavd's socket, the mapping and its calibrate step, pie menus
 ve_spacemouse = { git = "https://github.com/vhrdtech/vhrd_egui" }
+# The vhrd look: IBM Plex, the brand's dark and light styles, the property-panel widgets of the review's side panel
+ve_theme = { git = "https://github.com/vhrdtech/vhrd_egui" }
 
 # native:
 [dev-dependencies]

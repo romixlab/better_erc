@@ -320,45 +320,4 @@ impl FootprintReview {
             };
         }
     }
-
-    /// The review lines of the symbol under review, one row each: what it was reviewed against, the MPNs, and
-    /// whether its hash is the footprint's; the MPNs no line reviews; the record note
-    pub(super) fn review_lines_ui(&self, ui: &mut Ui) {
-        let rec = self.recorded();
-        if !rec.lines.is_empty() {
-            ui.label(RichText::new("Reviews").strong());
-            for l in &rec.lines {
-                let (word, colour) = line_status(l.status);
-                let mpns = if l.line.mpns.is_empty() {
-                    "every MPN".to_string()
-                } else {
-                    l.line.mpns.join(", ")
-                };
-                ui.horizontal_wrapped(|ui| {
-                    ui.colored_label(colour, word);
-                    ui.label(format!("{}: {mpns}", line_source(&l.line)));
-                })
-                .response
-                .on_hover_text(format!("{}: {}", l.property, l.value));
-            }
-        }
-        if !rec.unreviewed_mpns.is_empty() {
-            ui.colored_label(
-                Color32::from_rgb(230, 140, 0),
-                format!(
-                    "MPNs not reviewed yet: {}: accept against their datasheet",
-                    rec.unreviewed_mpns.join(", ")
-                ),
-            );
-        }
-        if rec.whole_unreviewed {
-            ui.colored_label(
-                Color32::from_rgb(230, 140, 0),
-                "the symbol has no Mpn fields, and every review line names MPNs: none reviews it as a whole",
-            );
-        }
-        if let Some(n) = &self.rt.record_note {
-            ui.colored_label(Color32::from_rgb(0, 140, 255), n);
-        }
-    }
 }

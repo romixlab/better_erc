@@ -1,8 +1,8 @@
 mod default_state;
-mod menu_bar;
-mod side_panel;
 #[cfg(test)]
 mod look_tests;
+mod menu_bar;
+mod side_panel;
 
 use crate::prelude::*;
 use crate::tabs::{Tab, TreeBehavior};
@@ -100,12 +100,14 @@ impl BetterErcApp {
     }
 }
 
-/// The app's fonts and style: the phosphor icon fonts
+/// The app's fonts and style: the vhrd look (ve_theme: IBM Plex, the brand's dark and light styles, egui following
+/// the system's choice) with the phosphor icon fonts behind Plex
 pub fn setup_look(ctx: &egui::Context) {
     let mut fonts = egui::FontDefinitions::default();
     egui_phosphor::add_to_fonts(&mut fonts, egui_phosphor::Variant::Regular);
     egui_phosphor::add_to_fonts(&mut fonts, egui_phosphor::Variant::Fill);
     ctx.set_fonts(fonts);
+    ve_theme::setup(ctx);
 }
 
 impl eframe::App for BetterErcApp {

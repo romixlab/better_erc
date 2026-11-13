@@ -5,6 +5,8 @@ use egui_tiles::{Container, Tile};
 
 impl BetterErcApp {
     pub(super) fn side_panel(&mut self, ui: &mut Ui) {
+        // One line per tab name: the panel grows to the longest rather than breaking a name
+        ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Extend);
         ui.add_space(8.0);
         for tab_kind in TabKind::iter() {
             let id = self

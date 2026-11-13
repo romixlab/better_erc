@@ -766,6 +766,18 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   spacenavd socket. Missing: a try on the device · `better_erc_app/src/tabs/footprint_review/puck.rs`,
   `puck_tests.rs`, `settings.rs`, README "With a SpaceMouse"
 
+- ✅ `VIEW-25` The footprint review's side panel on vhrd_egui's property-panel widgets (`ve_theme::props`, vhrd_egui
+  THM-17): a pane whose bar keeps Accept and Next to review in sight while the sections scroll; the sections fold and
+  say on their header what they hold (the symbol, the datasheet and page, the layer and blend, the scale, the last
+  measurement, the placement, the review status, the notes file, the SpaceMouse): Symbol and footprint (the open
+  buttons, the symbol list with its status column, the symbol's and the footprint's facts), Datasheet and page (the
+  page search's hits as one choice), View (copper, mask or paste and the blend as one choice each, the layers and
+  blink and invert as chips, opacity as a number to drag), Ruler and scale, Measure (new: start a measuring ruler,
+  its length and dX, dY, what went into the note), Placement (new: the position in mm as X and Y fields, the
+  rotation in degrees), Review, Notes (new: the notes file and the last note), SpaceMouse, Settings. Nothing the old
+  panel had is lost; each disabled control says why · `better_erc_app/src/tabs/footprint_review/panel.rs`, the panel
+  rendered by `panel_tests.rs`
+
 ## App (`APP`)
 
 - ✅ `APP-1` egui app with tiles, tabs shown and hidden from the side panel, menu bar, debug window; on the
@@ -773,6 +785,11 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - 📋 `APP-2` Sidebar with view switching; netlist load and watch status in a status bar
 - 📋 `APP-3` `better_erc --version` with version, git SHA and commit time like `berc` (the app has no command line
   options at all yet), so `just deploy` can check the installed app and not only that it is on PATH
+
+- ✅ `APP-4` The vhrd look in the whole app: `ve_theme::setup` (IBM Plex, the brand's dark and light styles, following
+  the system's choice) with the phosphor icon fonts behind it; the tab list keeps each name on one line and a design's
+  path no longer pushes Close out of sight. The PDF and canvas colours stay settings. Every tab rendered in dark and
+  light by `main_window/look_tests.rs` · `better_erc_app/src/main_window.rs`
 
 ## Tools (`TOOL`)
 
