@@ -313,7 +313,7 @@ struct SymbolList {
     filter: String,
 }
 
-/// A measurement put into the review note: `M{n} = {mm} mm`, from the ruler with these ends
+/// A measurement put into the review note by its button: `M{n} = {mm} mm`, from the ruler with these ends
 #[derive(Clone, Debug, PartialEq)]
 struct Measured {
     n: usize,
@@ -519,10 +519,10 @@ struct Runtime {
     parked_ruler: Option<[[f32; 2]; 2]>,
     /// Where the measuring ruler snaps on the footprint: its pads' centres and side middles, footprint mm
     fp_snaps: Vec<outline::SnapPoint>,
-    /// The measuring ruler's number and length as it went into the note; it is the ruler shown while its ends are
-    /// where they were
+    /// The measuring ruler's number and length as its button put it into the note; it is the ruler shown while its
+    /// ends are where they were
     measured: Option<Measured>,
-    /// How many measurements the note has had: the next is M(n+1)
+    /// How many measurements were added to the note: the next is M(n+1)
     measure_count: usize,
     /// The drawing's pieces selected (indices into the page's [`geometry::PageGeometry::prims`], sorted), on
     /// [`Runtime::selected_page`] of the datasheet open
@@ -2208,7 +2208,7 @@ impl FootprintReview {
                     .id_salt("review note")
                     .desired_width((ui.available_width() - 320.0).max(160.0))
                     .hint_text(format!(
-                        "{} here; the measuring rulers add M1, M2, …; Enter adds it to the notes file",
+                        "{} here; a measurement's + note button adds M1, M2, …; Enter adds it to the notes file",
                         key_name(k.note)
                     )),
             );
@@ -2549,13 +2549,7 @@ impl FootprintReview {
             .map_err(|e| format!("can't write {}: {e}", file.display()));
         if written.is_ok() {
             let name = file_name(&file);
-            let note = self.rt.note.trim_end().to_string();
-            let add = format!("DXF `{name}`");
-            self.rt.note = if note.is_empty() {
-                format!("{add} ")
-            } else {
-                format!("{note} {add} ")
-            };
+            self.append_to_note(&format!("DXF `{name}`"));
             self.usage("dxf");
         }
         self.rt.dxf_written = Some(written);
@@ -2890,13 +2884,6 @@ impl FootprintReview {
         {
             self.rt.snap = self.end_snap(p, false);
         }
-        // A measuring ruler let go: its length into the note
-        if !self.rt.ruler_placing
-            && self.rt.ruler_end.is_none()
-            && !resp.dragged_by(egui::PointerButton::Primary)
-        {
-            self.note_measurement();
-        }
         // Keys while the pointer is over the canvas
         if resp.hovered() && !ctx.egui_wants_keyboard_input() {
             let km = self.keys();
@@ -2979,9 +2966,9 @@ impl FootprintReview {
             }
             let (mm, dx, dy) = self.ruler_mm([a, b]);
             let label = if self.tool.measures() {
-                let name = match &self.rt.measured {
-                    Some(m) if m.ends == [a, b] => format!("M{} = ", m.n),
-                    _ => String::new(),
+                let name = match self.noted() {
+                    Some(m) => format!("M{} = ", m.n),
+                    None => String::new(),
                 };
                 format!("{name}{mm:.3} mm · dx {dx:.3} · dy {dy:.3}")
             } else {
@@ -2994,7 +2981,9 @@ impl FootprintReview {
                 .expand(2.0);
             painter.rect_filled(r, 2.0, fill);
             painter.galley(r.min + vec2(2.0, 2.0), galley, Color32::WHITE);
-            if !self.tool.measures() {
+            if self.tool.measures() {
+                self.note_chip(ui, &painter, r);
+            } else {
                 self.dimension_chip(ui, &painter, canvas, r);
             }
         }
@@ -3027,44 +3016,93 @@ impl FootprintReview {
         (dx.hypot(dy), dx.abs(), dy.abs())
     }
 
-    /// A measuring ruler laid or moved, and let go: its length into the review note as `M1 = 1.234 mm`. A new
-    /// ruler takes the next number; a ruler adjusted keeps its number, its value changed in the note (added again
-    /// when the note no longer has it).
-    fn note_measurement(&mut self) {
-        let Some(ends) = self.ruler.filter(|_| self.tool.measures()) else {
-            return;
-        };
-        let (mm, _, _) = self.ruler_mm(ends);
-        if mm <= 0.0 || self.rt.measured.as_ref().is_some_and(|m| m.ends == ends) {
-            return;
-        }
-        let n = match &self.rt.measured {
-            Some(m) if !m.text.is_empty() => m.n,
-            _ => {
-                self.rt.measure_count += 1;
-                self.rt.measure_count
-            }
-        };
-        let text = format!("M{n} = {mm:.3} mm");
-        let old = self
-            .rt
+    /// The measurement in the note that the ruler shown is: its ends where they were when its button added it
+    fn noted(&self) -> Option<&Measured> {
+        let ends = self.ruler?;
+        self.rt
             .measured
-            .take()
-            .map(|m| m.text)
-            .filter(|t| !t.is_empty());
-        match old.and_then(|o| self.rt.note.rfind(&o).map(|i| (i, o.len()))) {
-            Some((i, len)) => self.rt.note.replace_range(i..i + len, &text),
-            None => {
-                let note = self.rt.note.trim_end().to_string();
-                self.rt.note = if note.is_empty() {
-                    format!("{text} ")
-                } else {
-                    format!("{note} {text} ")
-                };
-            }
+            .as_ref()
+            .filter(|m| m.ends == ends && !m.text.is_empty())
+    }
+
+    /// Why the measuring ruler can't go into the note now, when it can't
+    fn measurement_blocker(&self) -> Option<String> {
+        if !self.tool.measures() {
+            return Some("not measuring: pick Measure PDF or Measure footprint".into());
         }
+        let Some(ends) = self.ruler else {
+            return Some("no ruler yet: drag one on the canvas".into());
+        };
+        if let Some(m) = self.noted() {
+            return Some(format!(
+                "in the note as M{}: move an end for a new one",
+                m.n
+            ));
+        }
+        if self.ruler_mm(ends).0 <= 0.0 {
+            return Some("the ruler has no length".into());
+        }
+        None
+    }
+
+    /// The text `t` at the end of the review note, a space after it for what is typed next
+    fn append_to_note(&mut self, t: &str) {
+        let note = self.rt.note.trim_end();
+        self.rt.note = if note.is_empty() {
+            format!("{t} ")
+        } else {
+            format!("{note} {t} ")
+        };
+    }
+
+    /// The measuring ruler's length into the review note as `M1 = 1.234 mm`, on request (its button on the canvas
+    /// or in the Measure section): each added takes the next number. Nothing goes in by itself.
+    fn add_measurement(&mut self) {
+        if self.measurement_blocker().is_some() {
+            return;
+        }
+        let Some(ends) = self.ruler else { return };
+        let (mm, _, _) = self.ruler_mm(ends);
+        self.rt.measure_count += 1;
+        let n = self.rt.measure_count;
+        let text = format!("M{n} = {mm:.3} mm");
+        self.append_to_note(&text);
         self.rt.measured = Some(Measured { n, ends, text });
         self.usage("measure");
+    }
+
+    /// The measuring ruler's button beside its label (`label`, on screen): adds it to the note, or says it is there
+    fn note_chip(&mut self, ui: &Ui, painter: &egui::Painter, label: Rect) {
+        let why = self.measurement_blocker();
+        let text = match self.noted() {
+            Some(m) => format!("in note as M{}", m.n),
+            None => "+ note".to_string(),
+        };
+        let galley = painter.layout_no_wrap(text.clone(), FontId::monospace(13.0), Color32::BLACK);
+        let r = Align2::LEFT_CENTER
+            .anchor_size(label.right_center() + vec2(6.0, 0.0), galley.size())
+            .expand(2.0);
+        let resp = ui.interact(r, ui.id().with("measurement note chip"), Sense::click());
+        let resp = match &why {
+            Some(w) => resp.on_hover_text(w),
+            None => resp.on_hover_text(format!(
+                "adds this measurement to the review note as M{}",
+                self.rt.measure_count + 1
+            )),
+        };
+        resp.widget_info(|| {
+            egui::WidgetInfo::labeled(egui::WidgetType::Button, why.is_none(), &text)
+        });
+        let bg = match (&why, resp.hovered()) {
+            (Some(_), _) => Color32::from_gray(150),
+            (None, true) => Color32::from_rgb(140, 255, 160),
+            (None, false) => Color32::from_rgb(90, 220, 120),
+        };
+        painter.rect_filled(r, 2.0, bg);
+        painter.galley(r.min + vec2(2.0, 2.0), galley, Color32::BLACK);
+        if resp.clicked() && why.is_none() {
+            self.add_measurement();
+        }
     }
 
     /// Where a ruler end snaps, at the pointer: the lines it snaps to drawn over, a square on a line's end, a cross

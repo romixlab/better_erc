@@ -744,8 +744,8 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   pie slot too), Enter or Add appends the note to a Markdown file (a setting, `footprint-review-notes.md` beside the
   project or library by default) with the symbol, the footprint, the datasheet as the document library names it (`tpm
   d DS13560 rev6`: number and revision, else the words that open it, else the file; the name command a setting, `tpm
-  lib open --json`), the page, the time and the text; the measuring rulers' `M1 = 1.234 mm` go into the note
-  (`VIEW-19`) · `better_erc_app/src/tabs/footprint_review/notes.rs`, `mode_tests.rs`
+  lib open --json`), the page, the time and the text; a measurement goes in only by its button (`+ note` beside the ruler's label and
+  beside the 3D view's measurement, a row in the Measure section) as `M1 = 1.234 mm`, numbered as added (`VIEW-19`) · `better_erc_app/src/tabs/footprint_review/notes.rs`, `mode_tests.rs`
 - ✅ `VIEW-22` Footprint review, select and save as DXF: a fifth mode, Select (V), picks the PDF's own pieces (each
   subpath: line, polyline, arc or curve, closed shape; a click toggles one, inside a filled shape counts, a drag
   selects by box, Shift adds), drawn highlighted; Save DXF (W, a button, a pie slot) writes them as R12 ASCII (LINE,

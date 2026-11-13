@@ -709,8 +709,8 @@ pub(super) struct Model3d {
     pub(super) view: Option<View3d>,
     /// Measure model's first pick, waiting for the second
     pub(super) first: Option<Picked>,
-    /// The last measurement and its number in the note
-    pub(super) last: Option<(usize, ModelMeasure)>,
+    /// The last measurement, and its number in the note once its button added it
+    pub(super) last: Option<(Option<usize>, ModelMeasure)>,
 }
 
 impl Model3d {
@@ -844,7 +844,8 @@ impl FootprintReview {
         view
     }
 
-    /// A click on the model in Measure model: the first pick waits, the second measures and writes the note
+    /// A click on the model in Measure model: the first pick waits, the second measures; its button adds it to the
+    /// note
     fn model_click(&mut self, pick: Option<Pick>) {
         let m = &self.rt.model;
         let picked = m
@@ -861,27 +862,57 @@ impl FootprintReview {
             return;
         };
         let mm = measure(&first, &picked);
-        self.rt.measure_count += 1;
-        let n = self.rt.measure_count;
-        let text = mm.note(n);
-        let note = self.rt.note.trim_end().to_string();
-        self.rt.note = if note.is_empty() {
-            format!("{text} ")
-        } else {
-            format!("{note} {text} ")
-        };
-        self.rt.model.last = Some((n, mm));
+        self.rt.model.last = Some((None, mm));
         self.usage("model measure");
+    }
+
+    /// The model's last measurement into the review note as `M3 = 1.270 mm (pitch, axis to axis)`, on request:
+    /// the next number, once
+    pub(super) fn add_model_measurement(&mut self) {
+        let n = self.rt.measure_count + 1;
+        let Some((at @ None, mm)) = &mut self.rt.model.last else {
+            return;
+        };
+        *at = Some(n);
+        let text = mm.note(n);
+        self.rt.measure_count = n;
+        self.append_to_note(&text);
+        self.usage("model measure note");
+    }
+
+    /// The model's last measurement with its button, for the Measure section
+    pub(super) fn model_measure_row(&mut self, ui: &mut Ui) {
+        let Some((n, mm)) = &self.rt.model.last else {
+            return;
+        };
+        let text = match n {
+            Some(n) => format!("Model: {} · in the note as M{n}", mm.value_text()),
+            None => format!(
+                "Model: {} ({}) · add as M{}",
+                mm.value_text(),
+                mm.what,
+                self.rt.measure_count + 1
+            ),
+        };
+        let r = ui.add_enabled(n.is_none(), Button::new(text));
+        let r = match n {
+            Some(_) => r.on_disabled_hover_text("in the note: pick two more for a new one"),
+            None => r.on_hover_text("the model's last measurement into the review note"),
+        };
+        if r.clicked() {
+            self.add_model_measurement();
+        }
     }
 
     /// The marks on the view: the first pick waiting, the last measurement
     fn model_marks(&self) -> Vec<Mark> {
         let mut marks = Vec::new();
         if let Some((n, mm)) = &self.rt.model.last {
+            let name = n.map_or(String::new(), |n| format!("M{n} = "));
             marks.push(Mark::segment(
                 v(mm.from),
                 v(mm.to),
-                format!("M{n} = {}", mm.value_text()),
+                format!("{name}{}", mm.value_text()),
             ));
         }
         if let Some(p) = &self.rt.model.first {
@@ -942,19 +973,45 @@ impl FootprintReview {
         {
             lines.push(describe(&p));
         }
+        let mut measured = None;
         if let Some(p) = &self.rt.model.first {
             lines.push(format!("first: {} · click the second", describe(p)));
         } else if let Some((n, mm)) = &self.rt.model.last {
-            lines.push(mm.note(*n));
+            lines.push(match n {
+                Some(n) => mm.note(*n),
+                None => format!("{} ({})", mm.value_text(), mm.what),
+            });
+            measured = Some((lines.len() - 1, n.is_some()));
         }
         let mut y = canvas.min.y + 4.0;
-        for text in lines {
+        let mut add = false;
+        for (i, text) in lines.into_iter().enumerate() {
             let galley = painter.layout_no_wrap(text, FontId::monospace(13.0), Color32::WHITE);
             let r =
                 Rect::from_min_size(pos2(canvas.min.x + 4.0, y), galley.size() + vec2(8.0, 4.0));
             painter.rect_filled(r, 3.0, Color32::from_black_alpha(170));
             painter.galley(r.min + vec2(4.0, 2.0), galley, Color32::WHITE);
+            // The measurement's button beside its line: into the note on request only
+            if let Some((_, noted)) = measured.filter(|(at, _)| *at == i) {
+                let text = if noted { "in note" } else { "+ note" };
+                let b = ui.put(
+                    Rect::from_min_size(r.right_top() + vec2(6.0, 0.0), vec2(70.0, r.height())),
+                    egui::Button::new(text).small(),
+                );
+                let b = if noted {
+                    b.on_hover_text("in the review note: pick two more for a new one")
+                } else {
+                    b.on_hover_text(format!(
+                        "adds this measurement to the review note as M{}",
+                        self.rt.measure_count + 1
+                    ))
+                };
+                add = b.clicked() && !noted;
+            }
             y = r.max.y + 2.0;
+        }
+        if add {
+            self.add_model_measurement();
         }
         // The keys, under the view
         let galley = painter.layout_no_wrap(
@@ -1137,6 +1194,7 @@ pub(super) mod tests {
     use super::super::tests::harness;
     use super::*;
     use egui_kittest::Harness;
+    use egui_kittest::kittest::Queryable;
 
     /// A two-pin part in `dir`: pads at x ±1.27, and its STEP model, a body 4 × 2 × 1.1 mm standing 0.1 mm over the
     /// board on two leads under the pads
@@ -1200,7 +1258,7 @@ pub(super) mod tests {
     }
 
     /// The 3D key shows the model over the board and its pads; Measure model's two clicks, on the body's top and on
-    /// the board, put the body's height into the note; the 3D key again goes back to the page and to Move
+    /// the board, measure the body's height, and its + note button puts it into the note; the 3D key again goes back to the page and to Move
     #[test]
     fn the_model_in_3d_measured_into_the_note() {
         let dir = std::env::temp_dir().join(format!("berc-fp-model3d-{}", std::process::id()));
@@ -1268,11 +1326,16 @@ pub(super) mod tests {
         click(&mut h, board);
         let st = h.state();
         assert!(st.rt.model.first.is_none());
+        assert_eq!(st.rt.note, "", "nothing goes in by itself");
+        h.get_by_label("+ note").click();
+        h.run();
+        let st = h.state();
         assert!(
             st.rt.note.contains("M1 = 1.200 mm (plane to plane)"),
             "{}",
             st.rt.note
         );
+        assert_eq!(st.rt.model.last.as_ref().unwrap().0, Some(1));
         assert_eq!(st.rt.model.view.as_ref().unwrap().marks.len(), 1);
 
         key(&mut h, egui::Key::Num3);

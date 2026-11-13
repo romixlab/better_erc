@@ -183,8 +183,8 @@ fn every_mode_has_a_way_back_to_move() {
 }
 
 /// Measure footprint: the ends snap to the pads' centres and to the middles of a rectangular pad's sides, never
-/// to the drawing; the length goes into the note as M1, an end moved changes M1, a new ruler is M2. The scale's
-/// ruler waits meanwhile and is back in Move.
+/// to the drawing; nothing goes into the note by itself: the + note button beside the ruler's label adds it as M1,
+/// once; an end moved is a new measurement, M2 when added. The scale's ruler waits meanwhile and is back in Move.
 #[test]
 fn measure_the_footprint_on_its_pads() {
     let dir = scratch("fp");
@@ -213,21 +213,30 @@ fn measure_the_footprint_on_its_pads() {
     };
     let [ra, rb] = h.state().ruler.unwrap();
     assert!(close(ra, p2) && close(rb, p3), "{ra:?} {rb:?}");
+    assert_eq!(h.state().rt.note, "", "nothing goes in by itself");
+    h.get_by_label("+ note").click();
+    h.run();
     assert_eq!(h.state().rt.note.trim(), "M1 = 2.000 mm");
-    // The far end onto pad 3's side, 0.6 mm on: M1 changes in the note
+    // Added once: the button says so, and the label names it
+    h.get_by_label("in note as M1");
+    assert!(h.state().measurement_blocker().is_some());
+    h.get_by_label("In the note as M1");
+    // The far end onto pad 3's side, 0.6 mm on: a new measurement, M1 stays as it was
     let side = page(&h, [2.6, -1.5]);
     let (from, to) = (screen(&h, rb), near(&h, side));
     drag(&mut h, from, to);
     let [_, rb] = h.state().ruler.unwrap();
     assert!(close(rb, side), "{rb:?} want {side:?}");
-    assert_eq!(h.state().rt.note.trim(), "M1 = 2.600 mm");
-    // A new ruler: M2
+    assert_eq!(h.state().rt.note.trim(), "M1 = 2.000 mm");
+    // A new ruler, added from the Measure section's button: M2
     h.state_mut().rt.note.push_str("pitch ");
     let (from, to) = (near(&h, p3), near(&h, p2));
     drag(&mut h, from, to);
+    h.get_by_label("Add to the note as M2").click();
+    h.run();
     assert_eq!(
         h.state().rt.note.trim(),
-        "M1 = 2.600 mm pitch M2 = 2.000 mm"
+        "M1 = 2.000 mm pitch M2 = 2.000 mm"
     );
     // Back in Move: the scale's ruler, the measuring one kept for the next time
     key(&mut h, egui::Key::M);
@@ -256,6 +265,9 @@ fn measure_the_pdf_on_its_lines() {
     );
     drag(&mut h, from, to);
     assert_eq!(h.state().ruler, Some([a, b]));
+    assert_eq!(h.state().rt.note, "");
+    h.get_by_label("+ note").click();
+    h.run();
     assert_eq!(h.state().rt.note.trim(), "M1 = 2.000 mm");
     let scale = h.state().scale.clone();
     key(&mut h, egui::Key::D);
@@ -330,6 +342,8 @@ fn a_note_with_a_measurement_into_the_notes_file() {
         screen(&h, p3) + egui::vec2(-3.0, 3.0),
     );
     drag(&mut h, from, to);
+    h.get_by_label("+ note").click();
+    h.run();
     assert_eq!(h.state().rt.note, "M1 = 2.000 mm ");
     // Enter over the canvas: the note field takes the keyboard, the text goes after the measurement
     key(&mut h, egui::Key::Enter);
@@ -363,6 +377,8 @@ fn a_note_with_a_measurement_into_the_notes_file() {
         screen(&h, p2) + egui::vec2(3.0, 3.0),
     );
     drag(&mut h, from, to);
+    h.get_by_label("+ note").click();
+    h.run();
     assert_eq!(h.state().rt.note, "M1 = 2.500 mm ");
     h.get_by_label("Add (Enter)").click();
     h.run();

@@ -1099,7 +1099,7 @@ impl FootprintReview {
         SubPane::new("Measure")
             .id_salt("fp measure")
             .summary(summary)
-            .tooltip("A ruler on the PDF or on the footprint: its length goes into the review note")
+            .tooltip("A ruler on the PDF or on the footprint: its button adds its length to the review note")
             .show(ui, |ui| {
                 let k = self.keys();
                 let pdf = self.rt.pdf.as_ref().is_some_and(|p| p.page_count() > 0);
@@ -1147,17 +1147,33 @@ impl FootprintReview {
                         f.fact("dX, dY", format!("{dx:.3}, {dy:.3} mm"), "across and down the page");
                     });
                 }
+                // The ruler's button, as beside its label on the canvas
+                let why = self.measurement_blocker();
+                let text = match self.noted() {
+                    Some(m) => format!("In the note as M{}", m.n),
+                    None => format!("Add to the note as M{}", self.rt.measure_count + 1),
+                };
+                let r = ui.add_enabled(why.is_none(), Button::new(text));
+                let r = match &why {
+                    Some(w) => r.on_disabled_hover_text(w),
+                    None => r.on_hover_text("the ruler's length into the review note"),
+                };
+                if r.clicked() {
+                    self.add_measurement();
+                }
+                self.model_measure_row(ui);
                 if let Some(m) = &self.rt.measured
                     && !m.text.is_empty()
                 {
                     Facts::new("measured").show(ui, |f| {
-                        f.fact("In the note", &m.text, "the last measurement written into the review note");
+                        f.fact("Last added", &m.text, "the last ruler added to the review note");
                     });
                 }
                 hint(
                     ui,
                     format!(
-                        "Each measuring ruler goes into the review note as M1, M2, …; {} or Esc: back to Move",
+                        "A measurement goes into the review note only by its button (+ note beside its label), as \
+                         M1, M2, …; {} or Esc: back to Move",
                         key_name(k.move_tool)
                     ),
                 );
