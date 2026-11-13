@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.43] - 2026-11-13
+
 ### Added
 
 - `IMP-21`: a footprint's `(model ...)` entries read in full (path, `offset`, `scale`, `rotate`, `hide`,
