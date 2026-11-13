@@ -1118,7 +1118,11 @@ mod tests {
             "the top's edge nearer: {edge}"
         );
         assert!(!model_at(&mut h, edge + 4.0), "nothing beyond it: {edge}");
-        assert!(model_at(&mut h, 0.0), "the origin where it was");
+        // Either side of the origin (its cross drawn on both pictures): the model about it, where it was
+        assert!(
+            model_at(&mut h, -10.0) && model_at(&mut h, 10.0),
+            "the origin where it was"
+        );
         // Measure footprint: no corner of the model to snap to
         assert_eq!(h.state().solid_snaps().count(), 0);
         mode_bar(&h, "Perspective");

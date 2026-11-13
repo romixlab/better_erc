@@ -839,14 +839,20 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   with its turn, seen from its side (the bottom for a footprint in bottom view), the model entry's offset, scale and
   rotation already in the model's parts; in Silhouettes that side's view shown and picked, in 3D the shaded model
   turned onto it. The model's own opacity, apart from the footprint's (Model opacity in the View section beside
-  Footprint opacity and in the Model views section, one value; `model_opacity`, a setting, at first). Fixed: Move
+  Footprint opacity and in the Model views section, one value; `model_opacity`, a setting, at first). Perspective (vhrd_egui V3D-5): the 3D view's camera
+  orthographic or perspective with the field of view (`view_3d_projection`, `fov_deg`, settings; in the 3D model
+  section and the view's own menu, one value), and over the page a Perspective switch for the 3D model (the mode bar,
+  disabled with why in Silhouettes, and the Model views section) that says the page's mm scale holds at the board
+  plane only; its picture is `1 + tan(fov / 2)` times the model's reach so the nearer parts fit, and Measure
+  footprint has no model corner to snap to while it is on. Fixed: Move
   only turned the 3D model after the window lost its focus with the puck turned (spacenavd sends to the focused
   window only, so the client kept the last deflection): the puck counts as at rest from a lost focus until it
   reports again; Ctrl is read once per frame, and while it makes a drag turn the model a line on the canvas says so.
   Tests: a lost focus with the puck twisted and with Ctrl held, then a drag that moves; the two opacities apart; on
   the GPU, Home on a turned, mirrored footprint in Silhouettes and 3D (a model point landing on the footprint's), a
   press on each, on both with either pick, on the empty page, a hidden model never dragged and the keys moving the one
-  shown · `better_erc_app/src/tabs/footprint_review/grab.rs`, `puck.rs`, `modelviews.rs`, `mod.rs`, `panel.rs`,
+  shown; perspective's top edge nearer by the eye's distance, orthographic again, the 3D view's camera from the
+  section's switch and the settings with its size kept · `better_erc_app/src/tabs/footprint_review/grab.rs`, `puck.rs`, `modelviews.rs`, `mod.rs`, `panel.rs`,
   `solid.rs`
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
