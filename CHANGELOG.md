@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `VIEW-26`: the footprint review's Datasheet section has a table, Datasheets by MPN: each `Mpn` field of the symbol, the library document that covers it, and its review state from the review lines (reviewed, reviewed elsewhere, stale, not yet). A click opens the document with its review line's view, else the page search runs. An MPN without a document says why, with a Fetch button. New settings: `library_mpn` (default `tpm lib mpn --json`, the MPNs appended; it prints `{"mpn", "path", "hash", "doc", "rev", "why"}` per document) and `library_fetch` (default `tpm lib fetch --mpn`). tpm has no `lib mpn` yet (ops#13nov-1420): until it does, the table says the command failed. Usage signals `app fp-review mpn datasheet` and `app fp-review mpn fetch`.
+
 ## [0.4.51] - 2026-11-13
 
 ### Added

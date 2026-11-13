@@ -777,6 +777,14 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   side panel; usage signals `app fp-review model views moves|show|blend ...`. Tests on boxes for every side and
   hidden edges, the keys and snaps on the synthetic STEP, a real datasheet and model on the GPU through
   `BERC_MODEL_VIEWS` · `better_erc_app/src/tabs/footprint_review/modelviews.rs`
+- 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
+  symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
+  one lookup per MPN per session, on a worker thread) and its review state from the review lines (reviewed, reviewed
+  elsewhere, stale, not yet). A click opens the document with its line's view, else the page search; an MPN without
+  a document says why and fetches it (`library_fetch`, `tpm lib fetch --mpn`), then asks again. Usage signals
+  `app fp-review mpn datasheet|fetch`. Tests on a fake lookup and fetch. Open: tpm's `lib mpn --json`
+  (ops#13nov-1420); until then the table shows the command's error ·
+  `better_erc_app/src/tabs/footprint_review/mpndocs.rs`
 - 🚧 `VIEW-20` Footprint review on a SpaceMouse, through spacenavd (vhrd_egui `ve_spacemouse`, pure Rust): the puck
   pans the page in screen points (one speed at every zoom) and zooms the view about the pointer, or moves the
   footprint (`P` switches); a tap of the left button lays the ruler, of the right one switches what the puck

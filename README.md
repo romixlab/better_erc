@@ -449,6 +449,16 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    index comes from a command (a setting, `tpm lib docs --json --all` by default) that prints a JSON list of
    `{"path", "hash", "doc", "rev"}`, paths relative to the library's root; the file on disk is then found through
    the library name command below, which prints full paths.
+   A symbol with `Mpn` fields gets a table, Datasheets by MPN, at the top of the Datasheet section: each MPN, the
+   library document that covers it, and its review state (reviewed, reviewed elsewhere when its line was made on
+   another document, stale, or not yet). Which document covers an MPN is the document library's answer, not
+   better_erc's: a command (a setting, `library_mpn`, `tpm lib mpn --json` by default) gets the MPNs at the end and
+   prints a JSON list of `{"mpn", "path", "hash", "doc", "rev", "why"}`, one object per document of an MPN, best
+   first, or one with no `path` and `why` it has none. A series or catalogue file may cover several MPNs. Each MPN
+   is asked once per session. Clicking a document opens it with the view of its review line, else the page search
+   runs. An MPN without a document says why, and its Fetch button runs another command (`library_fetch`,
+   `tpm lib fetch --mpn` by default) with the MPN, then asks about it again. There are no extra `Datasheet2..N`
+   fields: the library holds the mapping.
    The page search then goes to the page with the land pattern, found by words such as "recommended land pattern"
    (a setting); the pages it found are listed to pick from. F shows the page at the view's full width.
 3. **Set the scale**: R with the pointer at one end of a dimension of the drawing, R again at the other (or pick
@@ -608,7 +618,8 @@ from egui's own font.
 
 The settings (blink rate, the opacity, blend mode and colours at first, whether the page is inverted at first,
 the page search words, the finest drawing scale, the font folders, the library search command, the library name
-command and the notes file, the library docs command (`library_docs`) and the reviewer (`reviewer`) for the review
+command and the notes file, the library docs command (`library_docs`), the MPN lookup and fetch commands (`library_mpn`,
+`library_fetch`) and the reviewer (`reviewer`) for the review
 record, the allowed library nicknames (`allowed_libraries`, the app's side of `--allow`, none
 by default), how far Z zooms in, whether the ruler snaps level, how near its ends snap to the
 drawing's lines, the DXF curve tolerance, and the keys F, M, R, E, G, Z, S, D, T, X, B, C, I, P, A, N, Enter, V, W, 3, O and K

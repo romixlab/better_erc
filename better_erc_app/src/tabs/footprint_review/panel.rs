@@ -551,6 +551,7 @@ impl FootprintReview {
             }
             _ => {}
         }
+        self.mpn_table(ui, ctx);
         // Library search
         let cmd = self.rt.settings.library_search.clone();
         let blocker = if self.rt.searcher.is_some() {
@@ -722,6 +723,108 @@ impl FootprintReview {
         if page != self.page {
             self.page = page;
             self.rt.fit_page = true;
+        }
+    }
+
+    /// The symbol's datasheets by MPN (VIEW-26): each MPN, the library document that covers it (a click opens it,
+    /// with its review line's view, else the page search) and its review state; an MPN with no document says why,
+    /// with a button that fetches it
+    fn mpn_table(&mut self, ui: &mut Ui, ctx: &egui::Context) {
+        if self.symbol_mpns().is_empty() {
+            return;
+        }
+        if let Some(why) = self.mpn_lookup_blocker() {
+            hint(ui, format!("MPN datasheets: {why}"));
+            return;
+        }
+        let rows = self.mpn_rows();
+        let fetch_blocker = self.mpn_fetch_blocker();
+        let lookup_failed = self.mpn_lookup_error();
+        let t = ve_theme::Tokens::of_ui(ui);
+        let fill = ui.visuals().panel_fill;
+        let mut open = None;
+        let mut fetch = None;
+        Group::new("Datasheets by MPN")
+            .tooltip(
+                "Each MPN of the symbol, the library document that covers it and its review state (Settings: \
+                 library MPN lookup)",
+            )
+            .show(ui, |ui| {
+                if let Some(e) = &lookup_failed {
+                    notice(ui, Tone::Crit, format!("the library's MPN lookup failed: {e}"));
+                }
+                egui::Grid::new("mpn datasheets")
+                    .num_columns(3)
+                    .striped(true)
+                    .show(ui, |ui| {
+                        for r in &rows {
+                            ui.label(&r.mpn);
+                            match (&r.doc, &r.missing) {
+                                (Some(d), _) => {
+                                    let path = d.path.clone().unwrap_or_default();
+                                    let is_open = self.datasheet.as_ref() == Some(&path);
+                                    let mut tip = path.display().to_string();
+                                    if let Some(no) = d.label() {
+                                        tip = format!("{no}\n{tip}");
+                                    }
+                                    let text = format!("📄 {}", file_name(&path));
+                                    if ui
+                                        .selectable_label(is_open, text)
+                                        .on_hover_text(format!("Open it\n{tip}"))
+                                        .clicked()
+                                    {
+                                        open = Some(path);
+                                    }
+                                }
+                                (None, Some(why)) => {
+                                    ui.horizontal(|ui| {
+                                        let fetching = self
+                                            .rt
+                                            .mpn_docs
+                                            .fetching
+                                            .as_ref()
+                                            .is_some_and(|(m, _)| *m == r.mpn);
+                                        let label = if fetching { "fetching…" } else { "Fetch" };
+                                        if button_if(
+                                            ui,
+                                            label,
+                                            &format!("Fetch {}'s datasheet into the library", r.mpn),
+                                            fetch_blocker.as_deref(),
+                                        )
+                                        .clicked()
+                                        {
+                                            fetch = Some(r.mpn.clone());
+                                        }
+                                        ui.weak("no document").on_hover_text(why);
+                                    });
+                                }
+                                (None, None) => {
+                                    ui.weak("asking the library…");
+                                }
+                            }
+                            let (word, tone) = r.review.word();
+                            let ink = t.legible(tone.ink(&t), fill);
+                            ui.colored_label(ink, word).on_hover_text(r.review.detail());
+                            ui.end_row();
+                        }
+                    });
+                if let Some((m, r)) = &self.rt.mpn_docs.fetched {
+                    match r {
+                        Ok(said) => {
+                            hint(ui, format!("fetched {m}: {said}"));
+                        }
+                        Err(e) => {
+                            notice(ui, Tone::Crit, format!("fetching {m}: {e}"));
+                        }
+                    }
+                }
+            });
+        if let Some(p) = open {
+            self.open_datasheet(ctx, &p);
+            self.usage("mpn datasheet");
+        }
+        if let Some(m) = fetch {
+            self.fetch_mpn(ctx, &m);
         }
     }
 
@@ -1548,6 +1651,39 @@ impl FootprintReview {
                         .map(String::from)
                         .collect();
                     self.rt.doc_index = None;
+                }
+            });
+            PropertyRow::new(
+                "Library MPN lookup command, for the table of MPNs (the MPNs are added)",
+            )
+            .show(ui, |ui| {
+                if ui
+                    .add(TextEdit::singleline(&mut self.rt.mpn_text))
+                    .changed()
+                {
+                    s.library_mpn = self
+                        .rt
+                        .mpn_text
+                        .split_whitespace()
+                        .map(String::from)
+                        .collect();
+                    self.rt.mpn_docs.known.clear();
+                }
+            });
+            PropertyRow::new(
+                "Library fetch command, for an MPN without a document (the MPN is added)",
+            )
+            .show(ui, |ui| {
+                if ui
+                    .add(TextEdit::singleline(&mut self.rt.fetch_text))
+                    .changed()
+                {
+                    s.library_fetch = self
+                        .rt
+                        .fetch_text
+                        .split_whitespace()
+                        .map(String::from)
+                        .collect();
                 }
             });
         });

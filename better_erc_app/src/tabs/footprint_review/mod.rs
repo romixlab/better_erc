@@ -42,6 +42,7 @@ mod geometry;
 mod mode_tests;
 pub mod model3d;
 pub mod modelviews;
+mod mpndocs;
 mod notes;
 mod panel;
 use better_erc::fp::outline;
@@ -582,6 +583,11 @@ struct Runtime {
     /// What the review recorded in the symbol says about the view: restored from it, stale, its PDF not found
     record_note: Option<String>,
     docs_text: String,
+    /// The library's MPN lookup and fetch commands as text being edited (Settings)
+    mpn_text: String,
+    fetch_text: String,
+    /// The symbol's datasheets by MPN: what the library said of each, the lookup and fetch running (VIEW-26)
+    mpn_docs: mpndocs::MpnDocs,
     /// The SpaceMouse: its client, mapping, pie menu and calibrate step
     puck: Puck,
     /// The footprint's 3D model: read on a worker thread, its view, the picks of Measure model
@@ -665,6 +671,9 @@ impl Default for Runtime {
             locator: None,
             record_note: None,
             docs_text: String::new(),
+            mpn_text: String::new(),
+            fetch_text: String::new(),
+            mpn_docs: mpndocs::MpnDocs::default(),
             puck: Puck::default(),
             model: model3d::Model3d::default(),
             settings_file: Settings::file(),
@@ -854,6 +863,8 @@ impl FootprintReview {
         // Not this computer's document library: an empty one, unless the test gives its own
         r.rt.indexer = Some(Arc::new(|| Ok(Vec::new())));
         r.rt.locator = Some(Arc::new(|_: &Path| Ok(None)));
+        r.rt.mpn_docs.lookup = Some(Arc::new(|_: &[String]| Ok(Vec::new())));
+        r.rt.mpn_docs.fetch = Some(Arc::new(|_: &str| Err("no library in tests".into())));
         // Not this computer's SpaceMouse or settings file
         r.rt.puck.socket = None;
         r.rt.settings_file = None;
@@ -875,6 +886,8 @@ impl FootprintReview {
         self.rt.search_text = s.library_search.join(" ");
         self.rt.name_text = s.library_name.join(" ");
         self.rt.docs_text = s.library_docs.join(" ");
+        self.rt.mpn_text = s.library_mpn.join(" ");
+        self.rt.fetch_text = s.library_fetch.join(" ");
         self.rt.settings = s;
     }
 
@@ -954,6 +967,7 @@ impl FootprintReview {
                 self.rt.page_hits = Some(hits);
             }
         }
+        self.poll_mpn_docs(ctx);
         if let Some(rx) = &self.rt.searching
             && let Ok(r) = rx.try_recv()
         {

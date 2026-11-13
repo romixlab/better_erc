@@ -42,6 +42,14 @@ pub struct FootprintReviewSettings {
     /// symbol's datasheet is found again through it and `library_name`. Empty: no datasheet recorded but the page,
     /// scale and placement.
     pub library_docs: Vec<String>,
+    /// A command that names the library document of each part number: the program and its arguments; the
+    /// symbol's MPNs are added at the end. It prints a JSON list of `{"mpn", "path", "hash", "doc", "rev", "why"}`
+    /// (`tpm lib mpn --json`): one object per document of an MPN, best first, or one with no `path` and `why` it
+    /// has none. The Datasheet section's table of MPNs comes from it. Empty: no table.
+    pub library_mpn: Vec<String>,
+    /// A command that fetches an MPN's datasheet into the library: the program and its arguments; the MPN is added
+    /// at the end (`tpm lib fetch --mpn`). Empty: no Fetch button for an MPN without a document.
+    pub library_fetch: Vec<String>,
     /// Who reviews, written into the review record (`by=`); empty: the login name
     pub reviewer: String,
     /// The review notes file (Markdown): a path of its own, or a name for a file beside the project or library
@@ -298,6 +306,8 @@ impl Default for FootprintReviewSettings {
             library_docs: ["tpm", "lib", "docs", "--json", "--all"]
                 .map(String::from)
                 .to_vec(),
+            library_mpn: ["tpm", "lib", "mpn", "--json"].map(String::from).to_vec(),
+            library_fetch: ["tpm", "lib", "fetch", "--mpn"].map(String::from).to_vec(),
             reviewer: String::new(),
             notes_file: "footprint-review-notes.md".into(),
             blend: BlendMode::Normal,

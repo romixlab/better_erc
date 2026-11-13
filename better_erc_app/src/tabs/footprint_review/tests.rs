@@ -1730,13 +1730,16 @@ fn the_review_records_where_it_was_made() {
          by=tester on="
     );
     h.get_by_label_contains(&format!("(none) → {line}"));
-    // Ticking the other one changes what would be written; unticked again, back
-    h.get_by_label("OTHER-PART").click();
+    // Ticking the other one changes what would be written; unticked again, back (the checkbox, not the MPN's row
+    // in the Datasheets by MPN table)
+    h.get_by_role_and_label(egui::accesskit::Role::CheckBox, "OTHER-PART")
+        .click();
     h.run();
     h.get_by_label_contains(&format!(
         "(none) → {hash} mpn=TEST-PART,OTHER-PART doc=DS99"
     ));
-    h.get_by_label("OTHER-PART").click();
+    h.get_by_role_and_label(egui::accesskit::Role::CheckBox, "OTHER-PART")
+        .click();
     h.run();
     h.get_by_label_contains(&format!("(none) → {line}"));
     h.key_press(egui::Key::Enter);
@@ -1828,4 +1831,206 @@ fn the_review_records_where_it_was_made() {
     );
     h.get_by_label(&note);
     std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// The lookup and fetch still out answered and taken in: their threads may answer within a run or after it, so
+/// wait on their replies
+fn settle_mpn_docs(h: &mut Harness<'_, FootprintReview>) {
+    loop {
+        h.run();
+        let d = &mut h.state_mut().rt.mpn_docs;
+        if let Some((asked, rx)) = d.asking.take() {
+            let reply = rx.recv().expect("the lookup answers");
+            let (tx, rx) = std::sync::mpsc::channel();
+            tx.send(reply).unwrap();
+            d.asking = Some((asked, rx));
+        } else if let Some((m, rx)) = d.fetching.take() {
+            let reply = rx.recv().expect("the fetch answers");
+            let (tx, rx) = std::sync::mpsc::channel();
+            tx.send(reply).unwrap();
+            d.fetching = Some((m, rx));
+        } else {
+            break;
+        }
+    }
+}
+
+/// The symbol's datasheets by MPN (VIEW-26): each MPN with the library's document and its review state; a click
+/// opens the document with its review line's view; an MPN without one says why and fetches it, then has it
+#[test]
+fn datasheets_by_mpn() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-mpn-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(dir.join("lib/Test")).unwrap();
+    let pdf = datasheet(&dir.join("lib/Test"));
+    footprint_table(&dir);
+    let lib = dir.join("Rev.kicad_sym");
+    std::fs::write(
+        &lib,
+        format!(
+            "(kicad_symbol_lib (version 20231120) (generator \"kicad_symbol_editor\")\n{})\n",
+            symbol_text(
+                "Two",
+                &[
+                    ("Footprint", "Test:Mixed_Pads"),
+                    ("Mpn1", "TEST-PART"),
+                    ("Mpn2", "OTHER-PART"),
+                    (
+                        "Footprint_Review",
+                        "fp1:0000000000000000 mpn=TEST-PART pdf=b3:0123456789abcdef page=2 scale=0.02 at=150,230,90",
+                    ),
+                ]
+            ),
+        ),
+    )
+    .unwrap();
+    let hash = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
+    let mut h = harness("fp mpn");
+    h.state_mut().rt.indexer = Some(Arc::new(move || {
+        docindex::parse_index(&format!(
+            r#"[{{"path": "Test/TEST-PART.pdf", "doc": "DS99", "rev": "3", "hash": "{hash}"}}]"#
+        ))
+    }));
+    // The library of the test: TEST-PART's document, OTHER-PART's only once fetched
+    let fetched: Arc<Mutex<Vec<String>>> = Arc::default();
+    let asked: Arc<Mutex<Vec<Vec<String>>>> = Arc::default();
+    let lookup: mpndocs::MpnLookup = {
+        let (pdf, fetched, asked) = (pdf.clone(), fetched.clone(), asked.clone());
+        Arc::new(move |mpns: &[String]| {
+            asked.lock().unwrap().push(mpns.to_vec());
+            let have = fetched.lock().unwrap().clone();
+            let json = mpns
+                .iter()
+                .map(|m| match m.as_str() {
+                    "TEST-PART" => format!(
+                        r#"{{"mpn": "{m}", "path": "{}", "hash": "{hash}", "doc": "DS99", "rev": "3"}}"#,
+                        pdf.display()
+                    ),
+                    _ if have.contains(m) => format!(
+                        r#"{{"mpn": "{m}", "path": "{}", "hash": "ffff{}"}}"#,
+                        pdf.display(),
+                        &hash[4..]
+                    ),
+                    _ => format!(r#"{{"mpn": "{m}", "path": null, "why": "not in mx3"}}"#),
+                })
+                .collect::<Vec<_>>()
+                .join(",");
+            mpndocs::parse_lookup(&format!("[{json}]"))
+        })
+    };
+    h.state_mut().rt.mpn_docs.lookup = Some(lookup);
+    let fetch: mpndocs::MpnFetch = {
+        let fetched = fetched.clone();
+        Arc::new(move |m: &str| {
+            fetched.lock().unwrap().push(m.to_string());
+            Ok("1 MPNs: 1 in the library (1 new), 0 missing".into())
+        })
+    };
+    h.state_mut().rt.mpn_docs.fetch = Some(fetch);
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &lib);
+    h.run();
+    h.get_by_label("Rev:Two").click();
+    settle_mpn_docs(&mut h);
+    // Both MPNs asked in one lookup
+    assert_eq!(
+        asked.lock().unwrap().clone(),
+        [vec!["TEST-PART".to_string(), "OTHER-PART".to_string()]]
+    );
+    let rows = h.state().mpn_rows();
+    assert_eq!(
+        rows.iter()
+            .map(|r| (r.mpn.as_str(), r.doc.is_some(), r.review.word().0))
+            .collect::<Vec<_>>(),
+        [
+            ("TEST-PART", true, "stale"),
+            ("OTHER-PART", false, "not yet")
+        ]
+    );
+    assert_eq!(rows[1].missing.as_deref(), Some("not in mx3"));
+    h.get_by_label("Datasheets by MPN");
+    h.get_by_label("stale");
+    h.get_by_label("not yet");
+
+    // The document opens with the view of the line made on it
+    h.state_mut().close_datasheet();
+    h.run();
+    h.get_by_label("📄 TEST-PART.pdf").click();
+    h.step();
+    if let Some(p) = h.state_mut().rt.pdf.as_mut() {
+        p.wait_idle(&ctx);
+    }
+    h.run();
+    let st = h.state();
+    assert_eq!(st.datasheet.as_deref(), Some(pdf.as_path()));
+    assert_eq!(st.page, 1);
+    assert_eq!(st.scale.as_ref().map(|s| s.mm_per_point), Some(0.02));
+    assert_eq!(st.place.origin, [150.0, 230.0]);
+
+    // The MPN without a document is fetched, asked about again, and has one
+    h.get_by_label("Fetch").click();
+    settle_mpn_docs(&mut h);
+    assert_eq!(fetched.lock().unwrap().clone(), ["OTHER-PART"]);
+    assert_eq!(
+        asked.lock().unwrap().last().cloned(),
+        Some(vec!["OTHER-PART".to_string()])
+    );
+    h.get_by_label("fetched OTHER-PART: 1 MPNs: 1 in the library (1 new), 0 missing");
+    let rows = h.state().mpn_rows();
+    assert!(rows[1].doc.is_some(), "{rows:?}");
+    assert!(h.query_all_by_label("Fetch").next().is_none());
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// A lookup that fails (a library without the command) is said once over the table
+#[test]
+fn datasheets_by_mpn_lookup_fails() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-mpn-fail-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    footprint_table(&dir);
+    let lib = dir.join("Rev.kicad_sym");
+    std::fs::write(
+        &lib,
+        format!(
+            "(kicad_symbol_lib (version 20231120) (generator \"kicad_symbol_editor\")\n{})\n",
+            symbol_text(
+                "One",
+                &[("Footprint", "Test:Mixed_Pads"), ("Mpn", "TEST-PART")]
+            ),
+        ),
+    )
+    .unwrap();
+    let mut h = harness("fp mpn fail");
+    h.state_mut().rt.mpn_docs.lookup = Some(Arc::new(|_: &[String]| {
+        Err("tpm lib mpn --json failed: error: unrecognized subcommand 'mpn'".into())
+    }));
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &lib);
+    h.run();
+    h.get_by_label("Rev:One").click();
+    settle_mpn_docs(&mut h);
+    h.get_by_label(
+        "the library's MPN lookup failed: tpm lib mpn --json failed: error: unrecognized subcommand 'mpn'",
+    );
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// Without the lookup command on PATH the table says so in place of rows
+#[test]
+fn datasheets_by_mpn_without_the_command() {
+    let mut h = harness("fp mpn none");
+    h.state_mut().rt.mpn_docs.lookup = None;
+    h.state_mut().rt.settings.library_mpn = vec!["berc-no-such-lookup".into()];
+    assert_eq!(
+        h.state().mpn_lookup_blocker().as_deref(),
+        Some("berc-no-such-lookup is not on PATH (Settings: library MPN lookup)")
+    );
+    h.state_mut().rt.settings.library_mpn.clear();
+    assert_eq!(
+        h.state().mpn_lookup_blocker().as_deref(),
+        Some("no MPN lookup command is set (Settings: library MPN lookup)")
+    );
 }
