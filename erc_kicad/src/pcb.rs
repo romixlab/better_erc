@@ -376,9 +376,14 @@ impl<'a> Reader<'a> {
                         }
                         "Value" => fp.value = v.to_string(),
                         _ if v.is_empty() => {}
-                        _ => fp
-                            .fields
-                            .push(Field::new(k, Fact::new(v.to_string(), self.src()))),
+                        // A footprint may state a property twice: one field with both facts, as the dump reads it back
+                        _ => {
+                            let fact = Fact::new(v.to_string(), self.src());
+                            match fp.fields.iter_mut().find(|f| f.name == k) {
+                                Some(f) => f.value.0.push(fact),
+                                None => fp.fields.push(Field::new(k, fact)),
+                            }
+                        }
                     }
                     if item.child("layer").is_some() && !v.is_empty() {
                         fp.texts.push(text(item, v, frame));
@@ -901,6 +906,20 @@ mod tests {
                 .collect();
             assert_eq!(f.pads, back, "footprint {}", f.reference);
         }
+    }
+
+    #[test]
+    fn repeated_footprint_property_is_one_field() {
+        let text = r#"(kicad_pcb (version 20240108) (net 0 "")
+            (footprint "R" (layer "F.Cu") (at 10 10)
+              (property "Reference" "R1" (at 0 -1.5 0) (layer "F.SilkS"))
+              (property "ki_fp_filters" "R_*" (at 0 0 0))
+              (property ki_fp_filters "R_*"))
+            )"#;
+        let (lay, _) = read(text, "b.kicad_pcb").unwrap();
+        let fields = &lay.footprints[0].fields;
+        assert_eq!(fields.len(), 1);
+        assert_eq!(fields[0].value.0.len(), 2);
     }
 
     #[test]

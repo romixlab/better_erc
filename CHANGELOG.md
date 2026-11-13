@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Fixed
+
+- erc_kicad: a footprint stating the same property twice (b153a_typec_serial U701 has `ki_fp_filters` twice) is one field with both facts, so the dump reads back equal to the model.
+
 ## [0.4.47] - 2026-11-13
 
 ### Fixed
