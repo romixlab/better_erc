@@ -146,6 +146,9 @@ pub struct Keys {
     pub hide_model: String,
     /// Held: the page alone, the footprint and the model hidden until it is let go (VIEW-28)
     pub peek: String,
+    /// The Measure across mode: each ruler end snaps to the footprint or to the drawing, whichever is nearer
+    /// (VIEW-29); again: back to Move
+    pub measure_across: String,
 }
 
 impl Default for Keys {
@@ -178,6 +181,7 @@ impl Default for Keys {
             hide_footprint: "H".into(),
             hide_model: "J".into(),
             peek: "Space".into(),
+            measure_across: "Y".into(),
         }
     }
 }

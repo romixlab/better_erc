@@ -53,6 +53,20 @@ pub enum SnapKind {
     ModelCorner,
 }
 
+impl SnapKind {
+    /// What a ruler end snapped to, in words
+    pub fn name(self) -> &'static str {
+        match self {
+            SnapKind::End => "line end",
+            SnapKind::Crossing => "crossing",
+            SnapKind::Line => "line",
+            SnapKind::PadCentre => "pad centre",
+            SnapKind::PadSide => "pad side",
+            SnapKind::ModelCorner => "model corner",
+        }
+    }
+}
+
 /// Where a ruler end snapped to, and the lines that made it (indices into [`PageGeometry::segs`]), to show them
 #[derive(Clone, Debug, PartialEq)]
 pub struct Snap {

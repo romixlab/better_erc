@@ -154,6 +154,9 @@ pub enum Tool {
     /// The footprint's 3D model in place of the page: a click picks a face or an edge, a second click another, and
     /// what lies between them (plane to plane, pitch, diameter, angle) goes into the review note (VIEW-23)
     MeasureModel,
+    /// The ruler from the footprint to the drawing: each end snaps to the footprint's features (pad centres and side
+    /// middles, the model's corners) or to the drawing's lines, whichever is nearer; Ctrl takes the other (VIEW-29)
+    MeasureAcross,
 }
 
 impl Tool {
@@ -165,6 +168,7 @@ impl Tool {
             Tool::MeasureFootprint => "Measure footprint",
             Tool::Select => "Select",
             Tool::MeasureModel => "Measure model",
+            Tool::MeasureAcross => "Measure across",
         }
     }
 
@@ -175,7 +179,10 @@ impl Tool {
 
     /// A measuring mode: the ruler's length goes into the review note
     pub fn measures(self) -> bool {
-        matches!(self, Tool::MeasurePdf | Tool::MeasureFootprint)
+        matches!(
+            self,
+            Tool::MeasurePdf | Tool::MeasureFootprint | Tool::MeasureAcross
+        )
     }
 
     /// What the primary drag does, for the switcher's tooltip and the canvas' chip
@@ -200,6 +207,11 @@ impl Tool {
             Tool::MeasureModel => {
                 "the 3D model: a click picks a face or an edge, a second click another; the distance, pitch, \
                  diameter or angle between them goes into the review note"
+            }
+            Tool::MeasureAcross => {
+                "the ruler from the footprint to the drawing: each end snaps to a pad's centre or side middle, a \
+                 model corner or the drawing's lines, whichever is nearer; Ctrl takes the other; each end says what \
+                 it snapped to"
             }
         }
     }
@@ -576,6 +588,10 @@ struct Runtime {
     model_hidden: bool,
     /// The peek key is held: the page alone
     peek: bool,
+    /// Ctrl is held: a Measure across end snaps to the source that is not the nearer (VIEW-29)
+    other_source: bool,
+    /// What each ruler end snapped to when it was placed, shown at it in Measure across
+    end_snaps: [Option<SnapKind>; 2],
     /// A footprint was just opened: find its datasheet (the Datasheet field's file, else the library search)
     want_search: bool,
     /// The library search running was started for a part just picked: its first hit opens by itself
@@ -675,6 +691,8 @@ impl Default for Runtime {
             fp_hidden: false,
             model_hidden: false,
             peek: false,
+            other_source: false,
+            end_snaps: [None; 2],
             want_search: false,
             auto_open: false,
             searcher: None,
@@ -1769,6 +1787,7 @@ impl FootprintReview {
         }
         let at = self.start_point(at, lines);
         self.ruler = Some([at, at]);
+        self.rt.end_snaps = [self.rt.snap.as_ref().map(|s| s.kind); 2];
         self.rt.measured = None;
         self.rt.ruler_anchor = Some(at);
         self.rt.ruler_placing = true;
@@ -1781,8 +1800,12 @@ impl FootprintReview {
     /// (Alt not held), `p` first snaps to the drawing's lines ([`Self::line_snap`]), each coordinate on its own on
     /// a level ruler.
     fn move_ruler_end(&mut self, i: usize, p: [f32; 2], free: bool, lines: bool) {
-        let snap = self.rt.settings.ruler_snap && !free && self.tool != Tool::MeasureFootprint;
+        // Level would pull the other end off the feature it snapped to
+        let snap = self.rt.settings.ruler_snap
+            && !free
+            && !matches!(self.tool, Tool::MeasureFootprint | Tool::MeasureAcross);
         self.rt.snap = if lines { self.end_snap(p, snap) } else { None };
+        self.rt.end_snaps[i] = self.rt.snap.as_ref().map(|s| s.kind);
         let p = self.rt.snap.as_ref().map_or(p, |s| s.at);
         let anchor = self.rt.ruler_anchor;
         let Some(r) = &mut self.ruler else { return };
@@ -1811,13 +1834,30 @@ impl FootprintReview {
         g.snap(p, self.rt.settings.line_snap_px / self.zoom, level)
     }
 
-    /// Where a ruler end at `p` snaps in the current mode: to the footprint's pads when measuring the footprint,
-    /// else to the drawing's lines
+    /// Where a ruler end at `p` snaps in the current mode: to the footprint's pads when measuring the footprint, to
+    /// either when measuring across ([`Self::across_snap`]), else to the drawing's lines
     fn end_snap(&self, p: [f32; 2], level: bool) -> Option<Snap> {
-        if self.tool == Tool::MeasureFootprint {
-            self.pad_snap(p)
-        } else {
-            self.line_snap(p, level)
+        match self.tool {
+            Tool::MeasureFootprint => self.pad_snap(p),
+            Tool::MeasureAcross => self.across_snap(p),
+            _ => self.line_snap(p, level),
+        }
+    }
+
+    /// Measure across: the footprint's feature or the drawing's line nearest `p`, each within its own reach; when
+    /// both are in reach the nearer wins, and with Ctrl held the other (VIEW-29)
+    fn across_snap(&self, p: [f32; 2]) -> Option<Snap> {
+        let d = |s: &Snap| (s.at[0] - p[0]).hypot(s.at[1] - p[1]);
+        match (self.pad_snap(p), self.line_snap(p, false)) {
+            (Some(f), Some(l)) => {
+                let fp_nearer = d(&f) <= d(&l);
+                Some(if fp_nearer != self.rt.other_source {
+                    f
+                } else {
+                    l
+                })
+            }
+            (f, l) => f.or(l),
         }
     }
 
@@ -1854,6 +1894,7 @@ impl FootprintReview {
     /// shown so
     fn start_point(&mut self, p: [f32; 2], lines: bool) -> [f32; 2] {
         self.rt.snap = if lines { self.end_snap(p, false) } else { None };
+        self.rt.end_snaps = [self.rt.snap.as_ref().map(|s| s.kind); 2];
         self.rt.snap.as_ref().map_or(p, |s| s.at)
     }
 
@@ -1983,7 +2024,7 @@ impl FootprintReview {
         let n = key_name;
         format!(
             "Mode {}: {} move · {} ruler, setting the scale · {} measure the PDF · {} measure the footprint · \
-             {} select the drawing, {} saves it as DXF · a mode's key again, {} or Esc: back to Move\n\
+             {} measure across, footprint to drawing (Ctrl: the other source) · {} select the drawing, {} saves it as DXF · a mode's key again, {} or Esc: back to Move\n\
              {} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back · \
              {} type the ruler's length, Enter sets the scale · {} the dimension's number sets it · \
              {} · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
@@ -1998,6 +2039,7 @@ impl FootprintReview {
             n(k.ruler),
             n(k.measure_pdf),
             n(k.measure_footprint),
+            n(k.measure_across),
             n(k.select),
             n(k.save_dxf),
             n(k.move_tool),
@@ -2051,6 +2093,7 @@ impl FootprintReview {
         let what = match self.tool {
             Tool::MeasurePdf => "Measuring the PDF",
             Tool::MeasureFootprint => "Measuring the footprint",
+            Tool::MeasureAcross => "Measuring across",
             Tool::Select => return Some(self.select_hint()),
             Tool::MeasureModel => return None,
             Tool::Move | Tool::Scale => "Ruler",
@@ -2141,6 +2184,7 @@ impl FootprintReview {
                     (!pdf).then_some("open the datasheet first: the pieces are its drawing's"),
                 ),
                 (Tool::MeasureModel, k.measure_model, self.model_blocker()),
+                (Tool::MeasureAcross, k.measure_across, self.across_blocker()),
             ] {
                 let text = format!("{} · {}", t.name(), key_name(key));
                 let r = ui.add_enabled(
@@ -2195,11 +2239,13 @@ impl FootprintReview {
             }
             ui.separator();
             self.shown_switches(ui);
-            if self.tool != Tool::Move {
-                ui.label(
+            // Its room kept in Move too, so the bar never wraps differently and the canvas never jumps
+            ui.add_visible(
+                self.tool != Tool::Move,
+                egui::Label::new(
                     RichText::new(format!("{} or Esc: back to Move", key_name(k.move_tool))).weak(),
-                );
-            }
+                ),
+            );
         });
         if let Some(t) = pick {
             self.tool_key(t);
@@ -2788,7 +2834,9 @@ impl FootprintReview {
         let hover_page = resp.hover_pos().map(|p| self.to_page(canvas, p));
         // The ruler key's other end follows the pointer; a click leaves it there
         // Shift: the ruler at any angle, not snapped level; Alt: free of the drawing's lines
-        let (free, lines) = ui.input(|i| (i.modifiers.shift, !i.modifiers.alt));
+        let (free, lines, other) =
+            ui.input(|i| (i.modifiers.shift, !i.modifiers.alt, i.modifiers.command));
+        self.rt.other_source = other;
         self.rt.snap = None;
         if self.rt.ruler_placing
             && self.ruler.is_some()
@@ -2836,7 +2884,7 @@ impl FootprintReview {
                 }
                 // Not on the page: the 3D view has its own canvas
                 Tool::MeasureModel => {}
-                Tool::Scale | Tool::MeasurePdf | Tool::MeasureFootprint => {
+                Tool::Scale | Tool::MeasurePdf | Tool::MeasureFootprint | Tool::MeasureAcross => {
                     if let Some(p) = pointer_page {
                         if resp.drag_started() {
                             let start = resp
@@ -2939,6 +2987,7 @@ impl FootprintReview {
                 (p.ruler, Action::Ruler),
                 (p.measure_pdf, Action::Mode(Tool::MeasurePdf)),
                 (p.measure_footprint, Action::Mode(Tool::MeasureFootprint)),
+                (p.measure_across, Action::Mode(Tool::MeasureAcross)),
                 (p.ruler_zoom, Action::RulerZoom),
                 (p.scale, Action::Scale),
                 (p.dimension, Action::Dimension),
@@ -3011,6 +3060,7 @@ impl FootprintReview {
                 self.dimension_chip(ui, &painter, canvas, r);
             }
         }
+        self.draw_end_snaps(&painter, canvas);
         self.draw_snap(&painter, canvas);
         if self.rt.length_box {
             self.length_box(&ctx, canvas, ui.id());
@@ -3089,7 +3139,12 @@ impl FootprintReview {
         let (mm, _, _) = self.ruler_mm(ends);
         self.rt.measure_count += 1;
         let n = self.rt.measure_count;
-        let text = format!("M{n} = {mm:.3} mm");
+        let text = match self.rt.end_snaps {
+            [Some(a), Some(b)] if self.tool == Tool::MeasureAcross => {
+                format!("M{n} = {mm:.3} mm ({} to {})", a.name(), b.name())
+            }
+            _ => format!("M{n} = {mm:.3} mm"),
+        };
         self.append_to_note(&text);
         self.rt.measured = Some(Measured { n, ends, text });
         self.usage("measure");
@@ -3126,6 +3181,35 @@ impl FootprintReview {
         painter.galley(r.min + vec2(2.0, 2.0), galley, Color32::BLACK);
         if resp.clicked() && why.is_none() {
             self.add_measurement();
+        }
+    }
+
+    /// Why Measure across can't start, when it can't: it needs the drawing and something of the footprint's
+    fn across_blocker(&self) -> Option<&'static str> {
+        if !self.rt.pdf.as_ref().is_some_and(|p| p.page_count() > 0) {
+            Some("open the datasheet first: one end lies on its drawing")
+        } else if self.rt.items.is_empty() {
+            Some("no footprint shown: pick a symbol")
+        } else {
+            None
+        }
+    }
+
+    /// Measure across: what each ruler end snapped to, beside it (`pad centre`, `line end`, `free`)
+    fn draw_end_snaps(&self, painter: &egui::Painter, canvas: Rect) {
+        if self.tool != Tool::MeasureAcross {
+            return;
+        }
+        let Some(ends) = self.ruler else { return };
+        let (_, fill) = ruler_colours(self.tool);
+        for (i, p) in ends.into_iter().enumerate() {
+            let text = self.rt.end_snaps[i].map_or("free", SnapKind::name);
+            let at = self.to_screen(canvas, p) + vec2(8.0, 8.0);
+            let galley =
+                painter.layout_no_wrap(text.into(), FontId::proportional(11.0), Color32::WHITE);
+            let r = Rect::from_min_size(at, galley.size()).expand(2.0);
+            painter.rect_filled(r, 2.0, fill);
+            painter.galley(at, galley, Color32::WHITE);
         }
     }
 
@@ -3255,11 +3339,9 @@ impl FootprintReview {
             (true, self.rt.model_hidden, k.hide_model, "model"),
         ] {
             let name = if model { "Model" } else { "Footprint" };
+            let mut shown = !hidden && !self.rt.peek;
             let r = ui
-                .add(Button::selectable(
-                    !hidden && !self.rt.peek,
-                    format!("{name} · {}", key_name(key)),
-                ))
+                .checkbox(&mut shown, format!("{name} · {}", key_name(key)))
                 .on_hover_text(format!(
                     "the {what} {} over the page; {} {} it, where it was",
                     if hidden { "hidden" } else { "shown" },
@@ -3511,6 +3593,7 @@ struct KeyMap {
     hide_footprint: Option<egui::Key>,
     hide_model: Option<egui::Key>,
     peek: Option<egui::Key>,
+    measure_across: Option<egui::Key>,
 }
 
 impl From<&Keys> for KeyMap {
@@ -3544,6 +3627,7 @@ impl From<&Keys> for KeyMap {
             hide_footprint: key(&k.hide_footprint),
             hide_model: key(&k.hide_model),
             peek: key(&k.peek),
+            measure_across: key(&k.measure_across),
         }
     }
 }
@@ -3585,6 +3669,7 @@ struct Pressed {
     hide_model: bool,
     /// The peek key is held down (not just pressed)
     peek: bool,
+    measure_across: bool,
 }
 
 impl Pressed {
@@ -3627,6 +3712,7 @@ impl Pressed {
                 hide_footprint: pressed(km.hide_footprint),
                 hide_model: pressed(km.hide_model),
                 peek: km.peek.is_some_and(|k| i.key_down(k)),
+                measure_across: pressed(km.measure_across),
             };
             (p, i.modifiers.shift)
         })
@@ -3648,6 +3734,10 @@ fn ruler_colours(t: Tool) -> (Color32, Color32) {
         Tool::MeasureFootprint => (
             Color32::from_rgb(40, 200, 90),
             Color32::from_rgb(20, 130, 60),
+        ),
+        Tool::MeasureAcross => (
+            Color32::from_rgb(220, 90, 255),
+            Color32::from_rgb(130, 40, 170),
         ),
         // No ruler of its own: the scale's is shown
         Tool::Select | Tool::MeasureModel => ruler_colours(Tool::Scale),

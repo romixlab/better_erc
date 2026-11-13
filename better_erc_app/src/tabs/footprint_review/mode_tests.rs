@@ -98,6 +98,7 @@ fn every_mode_has_a_way_back_to_move() {
             Tool::MeasureFootprint,
             Tool::Select,
             Tool::MeasureModel,
+            Tool::MeasureAcross,
         ] {
             let k = h.state().keys();
             let key = match m {
@@ -107,6 +108,7 @@ fn every_mode_has_a_way_back_to_move() {
                 Tool::MeasureFootprint => k.measure_footprint,
                 Tool::Select => k.select,
                 Tool::MeasureModel => k.measure_model,
+                Tool::MeasureAcross => k.measure_across,
             };
             let label = format!("{} · {}", m.name(), key_name(key));
             let node = h.get_by_label(&label);
@@ -137,6 +139,7 @@ fn every_mode_has_a_way_back_to_move() {
         (egui::Key::E, Tool::MeasurePdf),
         (egui::Key::G, Tool::MeasureFootprint),
         (egui::Key::V, Tool::Select),
+        (egui::Key::Y, Tool::MeasureAcross),
     ] {
         key(&mut h, k);
         assert_eq!(h.state().tool, t);
@@ -175,6 +178,7 @@ fn every_mode_has_a_way_back_to_move() {
         "R ruler",
         "E measure the PDF",
         "G measure the footprint",
+        "Y measure across",
         "M or Esc: back to Move",
     ] {
         assert!(help.contains(k), "{k}: {help}");
@@ -640,5 +644,56 @@ fn hide_the_overlays_for_a_moment() {
     h.run();
     h.run();
     assert!(h.state().footprint_shown() && h.state().model_shown());
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// Measure across (VIEW-29): one ruler from the footprint to the drawing. Each end snaps to whichever is nearer, a
+/// pad's centre or side middle or the drawing's lines, and says what it snapped to; with both in reach Ctrl takes
+/// the other; the note names both ends' snaps
+#[test]
+fn measure_from_the_footprint_to_the_drawing() {
+    let dir = scratch("across");
+    let mut h = open("fp mode across", &dir);
+    key(&mut h, egui::Key::Y);
+    assert_eq!(h.state().tool, Tool::MeasureAcross);
+    // Pad 2 at (0, -1.5) mm is at page (150, 225); the drawing's right pad starts at x 160 (y 220..240)
+    let p2 = h.state().fp_to_page([0.0, -1.5]);
+    assert_eq!(p2, [150.0, 225.0]);
+    let near = |h: &H, p: [f32; 2]| screen(h, p) + egui::vec2(3.0, -3.0);
+    let (a, b) = (near(&h, p2), near(&h, [200.0, 200.0]));
+    drag(&mut h, a, b);
+    let close = |got: [f32; 2], want: [f32; 2]| {
+        (got[0] - want[0]).abs() < 1e-3 && (got[1] - want[1]).abs() < 1e-3
+    };
+    let [ra, rb] = h.state().ruler.unwrap();
+    assert!(close(ra, p2) && close(rb, [200.0, 200.0]), "{ra:?} {rb:?}");
+    assert_eq!(
+        h.state().rt.end_snaps,
+        [Some(SnapKind::PadCentre), Some(SnapKind::End)]
+    );
+    assert_eq!(h.state().rt.note, "", "nothing goes in by itself");
+    h.get_by_label("+ note").click();
+    h.run();
+    let mm = (50.0f64.hypot(25.0)) * 0.02;
+    assert_eq!(
+        h.state().rt.note.trim(),
+        format!("M1 = {mm:.3} mm (pad centre to line end)")
+    );
+    // Both in reach: the drawing's pad edge at x 160 is 4 points off, pad 2's centre 6: the nearer wins, Ctrl the
+    // other
+    let st = h.state_mut();
+    let at = [156.0, 225.0];
+    let snap = st.across_snap(at).unwrap();
+    assert_eq!((snap.kind, snap.at[0]), (SnapKind::Line, 160.0));
+    st.rt.other_source = true;
+    let snap = st.across_snap(at).unwrap();
+    assert_eq!((snap.kind, snap.at), (SnapKind::PadCentre, p2));
+    // Only one in reach: that one, Ctrl or not
+    let snap = st.across_snap([152.0, 225.0]).unwrap();
+    assert_eq!(snap.kind, SnapKind::PadCentre);
+    st.rt.other_source = false;
+    // The mode bar and the Measure section name the mode with its key
+    h.get_by_label("Measure across · Y");
+    h.get_by_label("Measure across");
     std::fs::remove_dir_all(&dir).unwrap();
 }

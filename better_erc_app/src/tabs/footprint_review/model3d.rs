@@ -1034,6 +1034,7 @@ impl FootprintReview {
                 (p.move_tool, Action::Mode(Tool::Move)),
                 (p.measure_pdf, Action::Mode(Tool::MeasurePdf)),
                 (p.measure_footprint, Action::Mode(Tool::MeasureFootprint)),
+                (p.measure_across, Action::Mode(Tool::MeasureAcross)),
                 (p.select, Action::Mode(Tool::Select)),
                 (p.measure_model, Action::Mode(Tool::MeasureModel)),
                 (p.view_3d, Action::View3d),

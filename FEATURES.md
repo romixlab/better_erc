@@ -796,10 +796,19 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `VIEW-28` Footprint review, hide the overlays for a moment: `H` hides the footprint over the page and shows it
   again, `J` the model (its silhouettes or the 3D model), `Space` held hides both until it is let go (all three
   settings); their places are kept, and a hidden one gives the measuring ruler nothing to snap to. The mode bar shows
-  each as a switch with its key (Over the page: Footprint · H, Model · J, hold Space: the page alone, lit while held),
+  each as a checkbox with its key (Over the page: Footprint · H, Model · J, hold Space: the page alone, lit while held),
   the help line names the keys. Usage signals `app fp-review hide footprint|show model ...`. Test: the pad's pixel
   gone and back, the snap gone, J, Space held and let go · `better_erc_app/src/tabs/footprint_review/mod.rs`,
   `mode_tests.rs`
+- ✅ `VIEW-29` Footprint review, Measure across: a mode of its own (`Y`, a setting; in the mode bar and the Measure
+  section) whose ruler measures from the footprint to the drawing. Each end snaps to whichever is nearer, the
+  footprint's features (pad centres and side middles, the model's corners as Measure footprint has them) or the
+  drawing's lines (ends, crossings, lines), each within its own reach; when both are in reach Ctrl takes the other.
+  Each end shows what it snapped to (`pad centre`, `line end`, `free`), the ruler never levels (that would pull an end
+  off its feature), and its `+ note` writes `M1 = 1.118 mm (pad centre to line end)`. The mode bar keeps the room of
+  its "back to Move" hint in every mode, so the canvas no longer jumps when a mode wraps it. Test: a pad centre to a
+  line end with both ends named and the note, the nearer source and Ctrl's other, one in reach ·
+  `better_erc_app/src/tabs/footprint_review/mod.rs`, `geometry.rs`, `mode_tests.rs`
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
   one lookup per MPN per session, on a worker thread) and its review state from the review lines (reviewed, reviewed

@@ -1119,6 +1119,12 @@ impl FootprintReview {
                             k.measure_footprint,
                             (!fp).then_some("no footprint shown: pick a symbol"),
                         ),
+                        (
+                            Tool::MeasureAcross,
+                            "Measure across",
+                            k.measure_across,
+                            self.across_blocker(),
+                        ),
                     ] {
                         let on = self.tool == t;
                         let r = ui.add_enabled(why.is_none() || on, Button::selectable(on, text));
@@ -1586,6 +1592,10 @@ impl FootprintReview {
                         ("Save the selection as DXF", &mut k.save_dxf),
                         ("The page or the 3D model", &mut k.view_3d),
                         ("Measure model", &mut k.measure_model),
+                        (
+                            "Measure across, footprint to drawing",
+                            &mut k.measure_across,
+                        ),
                         ("Hide or show the footprint", &mut k.hide_footprint),
                         ("Hide or show the model", &mut k.hide_model),
                         ("Held: the page alone", &mut k.peek),
