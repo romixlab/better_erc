@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.51] - 2026-11-13
+
 ### Added
 
 - `VIEW-24`: the footprint review draws the 3D model's top, bottom, front, back, left and right views over the
