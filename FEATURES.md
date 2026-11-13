@@ -829,7 +829,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   temp folder; in the tab, a footprint changed on disk shown with its new pad and a stale review by Reload, F5,
   picking it again and the watcher alone; Accept reloading nothing; an override read from its library ·
   `better_erc_app/src/tabs/footprint_review/watch.rs`, `reload_tests.rs`, `better_erc/src/fp/todo.rs`
-- 🚧 `VIEW-32` Footprint review round 8: in Move a press drags what is under it (`grab.rs`): the footprint, a
+- ✅ `VIEW-32` Footprint review round 8: in Move a press drags what is under it (`grab.rs`): the footprint, a
   silhouette view or the 3D model, each hit in its own frame against its extent; where two overlap the moves switch's
   pick (`Q`) wins, else the topmost; the empty page pans. Hovering outlines what a press would pick and the mode bar
   names it (`drag: the footprint`). Hidden ones are never picked or dragged, and while the moves switch's pick is

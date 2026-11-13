@@ -2907,7 +2907,7 @@ version = "0.7.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "680998035259dcfcafe653688bf2aa6d3e2dc05e98be6ab46afb089dc84f1df8"
 dependencies = [
- "proc-macro-crate 3.5.0",
+ "proc-macro-crate 1.3.1",
  "proc-macro2",
  "quote",
  "syn 2.0.119",
@@ -4886,8 +4886,8 @@ dependencies = [
 
 [[package]]
 name = "ve_basics"
-version = "0.33.1"
-source = "git+https://github.com/vhrdtech/vhrd_egui#0198efc2566eedced6518f0c01d77547e3341eab"
+version = "0.33.2"
+source = "git+https://github.com/vhrdtech/vhrd_egui#828052391c745d886fd22a7b1834d078b13bb4f3"
 dependencies = [
  "egui",
  "web-time",
@@ -4895,8 +4895,8 @@ dependencies = [
 
 [[package]]
 name = "ve_spacemouse"
-version = "0.33.1"
-source = "git+https://github.com/vhrdtech/vhrd_egui#0198efc2566eedced6518f0c01d77547e3341eab"
+version = "0.33.2"
+source = "git+https://github.com/vhrdtech/vhrd_egui#828052391c745d886fd22a7b1834d078b13bb4f3"
 dependencies = [
  "egui",
  "egui-phosphor",
@@ -4908,8 +4908,8 @@ dependencies = [
 
 [[package]]
 name = "ve_theme"
-version = "0.33.1"
-source = "git+https://github.com/vhrdtech/vhrd_egui#0198efc2566eedced6518f0c01d77547e3341eab"
+version = "0.33.2"
+source = "git+https://github.com/vhrdtech/vhrd_egui#828052391c745d886fd22a7b1834d078b13bb4f3"
 dependencies = [
  "egui",
  "serde_json",
@@ -4918,8 +4918,8 @@ dependencies = [
 
 [[package]]
 name = "ve_view3d"
-version = "0.33.1"
-source = "git+https://github.com/vhrdtech/vhrd_egui#0198efc2566eedced6518f0c01d77547e3341eab"
+version = "0.33.2"
+source = "git+https://github.com/vhrdtech/vhrd_egui#828052391c745d886fd22a7b1834d078b13bb4f3"
 dependencies = [
  "bytemuck",
  "egui",
