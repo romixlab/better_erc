@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.41] - 2026-11-13
+
 ### Added
 
 - `TOOL-11`: a footprint review records where it was made, in the symbol: one review line per datasheet, in
