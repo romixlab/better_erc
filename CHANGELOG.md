@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.40] - 2026-11-13
+
 ### Added
 
 - `TOOL-10`: placed footprint overrides, shown rather than resolved silently. `berc fp check` and `berc fp todo`
