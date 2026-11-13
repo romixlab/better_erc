@@ -292,6 +292,8 @@ impl FootprintReview {
         };
         view.camera.target = ve_view3d::glam::Vec3::ZERO;
         view.camera.rotation = turn;
+        view.xray = self.xray;
+        view.style.hidden_edges = self.rt.settings.hidden_edges;
         view.camera.set_ortho_scale(side / (2.0 * r), side);
         let Some((texture, picture)) = view.render_offscreen(&ctx, vec2(side, side)) else {
             return;
@@ -429,6 +431,39 @@ impl FootprintReview {
             .tooltip("What a turn does when the puck or the drag lets go; Settings → Save keeps it")
             .show(ui, |ui| {
                 self.rt.settings.model_snap.ui(ui);
+            });
+        self.xray_controls(ui);
+    }
+
+    /// X-ray and how it draws the hidden edges, for the Model views section (VIEW-30)
+    pub(super) fn xray_controls(&mut self, ui: &mut Ui) {
+        let k = key_name(self.keys().xray);
+        Group::new("X-ray")
+            .tooltip(format!(
+                "The 3D model see-through, in the 3D view and over the page; {k} switches"
+            ))
+            .show(ui, |ui| {
+                let mut on = self.xray;
+                ui.add(ToggleChip::new(&mut on, format!("See through · {k}")).tooltip(
+                    "the faces faded, the edges behind them drawn too, from the model's own edges",
+                ));
+                if on != self.xray {
+                    self.toggle_xray();
+                }
+                PropertyRow::new("Hidden edges")
+                    .tooltip("how the edges behind the faces look; Settings → Save keeps it")
+                    .show(ui, |ui| {
+                        Segmented::new(&mut self.rt.settings.hidden_edges)
+                            .id_salt("hidden edges")
+                            .item(ve_view3d::HiddenEdges::Thin, "Thin", "thinner solid lines")
+                            .item(
+                                ve_view3d::HiddenEdges::Dashed,
+                                "Dashed",
+                                "thinner dashed lines, as a drawing shows hidden lines",
+                            )
+                            .fill_width()
+                            .show(ui);
+                    });
             });
     }
 }
@@ -637,6 +672,45 @@ mod tests {
                 assert!(d < 12, "nothing of the model at {at:?}: {d}");
             }
         }
+
+        // U: X-ray (VIEW-30). The body fades, and its leads under it show: their inner edges at x ±1.07 mm (26.75
+        // points), hidden from the top, are drawn (thin here, so solid)
+        h.state_mut().rt.settings.hidden_edges = ve_view3d::HiddenEdges::Thin;
+        key(&mut h, egui::Key::U);
+        assert!(h.state().xray);
+        let xray = h.render().unwrap();
+        if let Some(png) = std::env::var_os("BERC_SOLID_XRAY_PNG") {
+            xray.save(png).unwrap();
+        }
+        let inside = o + vec2(10.0, -12.0);
+        let d = diff(pixel(&xray, inside), pixel(&img, inside));
+        assert!(d > 20, "the body fades: {d}");
+        // The most an edge changes the picture across a few points about x
+        let edge_at = |a: &image::RgbaImage, b: &image::RgbaImage, x: f32| {
+            (-3..=3)
+                .map(|dx| o + vec2(x + dx as f32, 5.0))
+                .map(|p| diff(pixel(a, p), pixel(b, p)))
+                .max()
+                .unwrap()
+        };
+        let beside = |x: f32| {
+            (-3..=3)
+                .map(|dx| o + vec2(x + dx as f32, 5.0))
+                .map(|p| diff(pixel(&xray, p), pixel(&xray, o + vec2(18.0, 5.0))))
+                .max()
+                .unwrap()
+        };
+        for x in [-26.75, 26.75] {
+            assert!(
+                beside(x) > 30,
+                "the lead's hidden edge at {x}: {}",
+                beside(x)
+            );
+        }
+        // Without X-ray no edge there: the body's top alike all across
+        assert!(edge_at(&img, &img, 26.75) == 0);
+        key(&mut h, egui::Key::U);
+        assert!(!h.state().xray);
 
         // Measure footprint snaps to the outline's corner (2, 1) mm: 50, 25 points from the origin
         key(&mut h, egui::Key::G);

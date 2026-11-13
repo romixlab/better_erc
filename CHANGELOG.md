@@ -15,9 +15,11 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 - Footprint review: the overlays hidden for a moment to see the drawing. `H` hides or shows the footprint, `J` the model over the page, and holding `Space` shows the page alone until it is let go (all three keys are settings). Their places are kept; the mode bar shows each switch with its key and the help line names them (`VIEW-28`).
 - Footprint review: Measure across (`Y`), a ruler from the footprint to the drawing. Each end snaps to the nearer of the footprint's features (pad centres and side middles, model corners) and the drawing's lines; Ctrl takes the other when both are near. Each end shows what it snapped to, and the note names both (`M1 = 1.118 mm (pad centre to line end)`) (`VIEW-29`).
+- Footprint review: X-ray (`U`) shows the 3D model see-through, in the 3D view and over the page: the faces fade and the model's own edges behind them are drawn too, thin or dashed (a setting). It sits in the mode bar, the Model views section and the 3D view's right-click menu (`VIEW-30`).
 
 ### Changed
 
+- better_erc_app builds on vhrd_egui 0.33.1 (ve_view3d's X-ray, V3D-4) (`VIEW-30`).
 - Footprint review: the mode bar keeps the room of its "back to Move" hint in every mode, so the canvas no longer jumps when switching modes makes the bar wrap (`VIEW-29`).
 - Footprint review: a measurement goes into the review note only on request. A `+ note` button beside the measuring ruler's label on the canvas, beside the 3D view's measurement, and in the Measure section adds it as `M1 = … mm`; nothing is added by itself any more, and the numbers follow what was added. Moving a ruler's end after adding it makes a new measurement instead of changing the old one in the note (`VIEW-21`).
 

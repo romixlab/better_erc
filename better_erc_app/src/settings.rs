@@ -70,6 +70,9 @@ pub struct FootprintReviewSettings {
     /// The shaded 3D model over the page: a turn by the SpaceMouse or Ctrl+drag finishes onto the nearest side
     /// when it lets go, over this time (VIEW-27); Alt held keeps the free angle
     pub model_snap: ve_view3d::SnapSettings,
+    /// How X-ray draws the model's edges behind its faces, in the 3D view and over the page: thin or dashed
+    /// (VIEW-30)
+    pub hidden_edges: ve_view3d::HiddenEdges,
     /// Whether the page is shown inverted (white-ish on black) at first
     pub invert: bool,
     /// How closely the DXF follows the drawing's curves, mm: a curve within it of a circle is an arc, any other is
@@ -149,6 +152,9 @@ pub struct Keys {
     /// The Measure across mode: each ruler end snaps to the footprint or to the drawing, whichever is nearer
     /// (VIEW-29); again: back to Move
     pub measure_across: String,
+    /// X-ray: the 3D model see-through, its edges behind the faces drawn too, in the 3D view and over the page
+    /// (VIEW-30)
+    pub xray: String,
 }
 
 impl Default for Keys {
@@ -182,6 +188,7 @@ impl Default for Keys {
             hide_model: "J".into(),
             peek: "Space".into(),
             measure_across: "Y".into(),
+            xray: "U".into(),
         }
     }
 }
@@ -338,6 +345,7 @@ impl Default for FootprintReviewSettings {
             ruler_snap: true,
             line_snap_px: 10.0,
             model_snap: ve_view3d::SnapSettings::default(),
+            hidden_edges: ve_view3d::HiddenEdges::default(),
             invert: false,
             dxf_tolerance_mm: 0.005,
             keys: Keys::default(),

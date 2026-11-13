@@ -277,6 +277,8 @@ pub struct FootprintReview {
     view_3d: bool,
     /// The 3D model's views over the page (VIEW-24)
     model_views: modelviews::ModelViews,
+    /// The 3D model see-through, its hidden edges drawn, in the 3D view and over the page (VIEW-30)
+    xray: bool,
     reviews: Vec<Review>,
     #[serde(skip)]
     rt: Runtime,
@@ -310,6 +312,7 @@ impl Default for FootprintReview {
             puck: PuckMoves::Page,
             view_3d: false,
             model_views: modelviews::ModelViews::default(),
+            xray: false,
             reviews: Vec::new(),
             rt: Runtime::default(),
         }
@@ -2031,7 +2034,7 @@ impl FootprintReview {
              arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans · \
              {} the model as silhouettes or 3D ({}) · {} moves the footprint or the model ({}) · {} {} · \
              3D: SpaceMouse tilt, roll and twist or Ctrl+drag turn it, letting go lands on a side (Alt: free) · \
-             {} hides or shows the footprint, {} the model · hold {}: the page alone\n\
+             {} hides or shows the footprint, {} the model · hold {}: the page alone · {} X-ray\n\
              {} accept · {} next to review · {} write a review note · SpaceMouse: the puck {} ({} switches), push away zooms out · \
              tap the left button for the ruler, the right one to switch · hold one for its ring, both for Accept",
             self.tool.name(),
@@ -2076,6 +2079,7 @@ impl FootprintReview {
             n(k.hide_footprint),
             n(k.hide_model),
             n(k.peek),
+            n(k.xray),
             n(k.accept),
             n(k.next),
             n(k.note),
@@ -2213,6 +2217,20 @@ impl FootprintReview {
             };
             if r.clicked() {
                 toggle_3d = true;
+            }
+            let r = ui.add_enabled(
+                why.is_none() || self.xray,
+                Button::selectable(self.xray, format!("X-ray · {}", key_name(k.xray))),
+            );
+            let r = match why {
+                Some(why) => r.on_disabled_hover_text(why),
+                None => r.on_hover_text(
+                    "the 3D model see-through, in the 3D view and over the page: the faces faded, the edges behind \
+                     them drawn too (thin or dashed: Settings)",
+                ),
+            };
+            if r.clicked() {
+                self.toggle_xray();
             }
             // How the model is shown over the page and what Move moves (VIEW-24, VIEW-27), always in sight
             ui.separator();
@@ -3004,6 +3022,7 @@ impl FootprintReview {
                 (p.moves, Action::Moves),
                 (p.hide_footprint, Action::HideFootprint),
                 (p.hide_model, Action::HideModel),
+                (p.xray, Action::XRay),
             ] {
                 if on {
                     self.act(&ctx, action, hover_page, shift, lines);
@@ -3594,6 +3613,7 @@ struct KeyMap {
     hide_model: Option<egui::Key>,
     peek: Option<egui::Key>,
     measure_across: Option<egui::Key>,
+    xray: Option<egui::Key>,
 }
 
 impl From<&Keys> for KeyMap {
@@ -3628,6 +3648,7 @@ impl From<&Keys> for KeyMap {
             hide_model: key(&k.hide_model),
             peek: key(&k.peek),
             measure_across: key(&k.measure_across),
+            xray: key(&k.xray),
         }
     }
 }
@@ -3670,6 +3691,7 @@ struct Pressed {
     /// The peek key is held down (not just pressed)
     peek: bool,
     measure_across: bool,
+    xray: bool,
 }
 
 impl Pressed {
@@ -3713,6 +3735,7 @@ impl Pressed {
                 hide_model: pressed(km.hide_model),
                 peek: km.peek.is_some_and(|k| i.key_down(k)),
                 measure_across: pressed(km.measure_across),
+                xray: pressed(km.xray),
             };
             (p, i.modifiers.shift)
         })

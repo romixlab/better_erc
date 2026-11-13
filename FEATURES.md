@@ -809,6 +809,14 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   its "back to Move" hint in every mode, so the canvas no longer jumps when a mode wraps it. Test: a pad centre to a
   line end with both ends named and the note, the nearer source and Ctrl's other, one in reach ·
   `better_erc_app/src/tabs/footprint_review/mod.rs`, `geometry.rs`, `mode_tests.rs`
+- ✅ `VIEW-30` Footprint review, see-through 3D: X-ray (`U`, a setting; in the mode bar beside 3D, in the Model views
+  section and in the 3D view's own right-click menu, all one switch) shows the model see-through in the 3D view and
+  in the 3D model over the page: ve_view3d's X-ray (vhrd_egui V3D-4) fades the faces and draws every edge, those
+  behind a face thinner and solid or dashed (`hidden_edges`, a setting; Thin or Dashed in the Model views section),
+  so the inside shows for real. The edges are the model's B-rep edges from erc_step, not the triangles' sides; in the
+  3D view a hidden edge picks too. Usage signals `app fp-review xray on|off`. Tests: on the GPU, the leads' inner
+  edges under the body drawn over the page and the body faded; the 3D view's body faded from the mode bar's
+  switch · `better_erc_app/src/tabs/footprint_review/solid.rs`, `model3d.rs`
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
   one lookup per MPN per session, on a worker thread) and its review state from the review lines (reviewed, reviewed

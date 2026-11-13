@@ -841,7 +841,15 @@ impl FootprintReview {
             view.set_scene(scene);
             view.view(ViewPreset::Iso);
         }
+        view.xray = self.xray;
+        view.style.hidden_edges = self.rt.settings.hidden_edges;
         view
+    }
+
+    /// X-ray on or off: the 3D model see-through, in the 3D view and over the page (VIEW-30)
+    pub(super) fn toggle_xray(&mut self) {
+        self.xray = !self.xray;
+        self.usage(if self.xray { "xray on" } else { "xray off" });
     }
 
     /// A click on the model in Measure model: the first pick waits, the second measures; its button adds it to the
@@ -941,11 +949,17 @@ impl FootprintReview {
                 view.navigate(nav);
             }
             let r = view.show(ui);
+            // The view's own menu switches X-ray too
+            let (xray, hidden) = (view.xray, view.style.hidden_edges);
             if measuring {
                 // The selection shows the first pick, not what View3d picked on its own
                 view.selection = first.into_iter().collect();
             }
             let clicked = r.response.clicked().then_some(r.clicked);
+            if xray != self.xray {
+                self.toggle_xray();
+            }
+            self.rt.settings.hidden_edges = hidden;
             (r.response, r.hovered, clicked)
         } else {
             let (rect, resp) = ui.allocate_exact_size(ui.available_size(), Sense::click());
@@ -1035,6 +1049,7 @@ impl FootprintReview {
                 (p.measure_pdf, Action::Mode(Tool::MeasurePdf)),
                 (p.measure_footprint, Action::Mode(Tool::MeasureFootprint)),
                 (p.measure_across, Action::Mode(Tool::MeasureAcross)),
+                (p.xray, Action::XRay),
                 (p.select, Action::Mode(Tool::Select)),
                 (p.measure_model, Action::Mode(Tool::MeasureModel)),
                 (p.view_3d, Action::View3d),
@@ -1072,10 +1087,11 @@ impl FootprintReview {
         format!(
             "3D model · drag turns · right or middle drag pans · wheel zooms at the pointer · double-click centres · \
              right-click: views\n{} measure the model: click a face or an edge, then another · {} back to the page · \
-             {} or Esc: Move · {} write the note",
+             {} or Esc: Move · {} X-ray: see through, the hidden edges drawn · {} write the note",
             n(k.measure_model),
             n(k.view_3d),
             n(k.move_tool),
+            n(k.xray),
             n(k.note),
         )
     }
@@ -1406,6 +1422,18 @@ pub(super) mod tests {
         );
         // The board is green
         assert!(b[1] > b[0] + 15 && b[1] > b[2] + 5, "{b:?}");
+        // X-ray (VIEW-30) from the mode bar: the view sees through, the body's top fades toward what is behind it
+        h.get_by_label("X-ray · U").click();
+        h.run();
+        h.run();
+        assert!(h.state().xray);
+        assert!(h.state().rt.model.view.as_ref().unwrap().xray);
+        let image = h.render().unwrap();
+        let x = image
+            .get_pixel((top.x * ppp) as u32, (top.y * ppp) as u32)
+            .0;
+        let d: i32 = (0..3).map(|i| (x[i] as i32 - t[i]).abs()).sum();
+        assert!(d > 30, "the body fades: {t:?} -> {x:?}");
         let _ = std::fs::remove_dir_all(&dir);
     }
 

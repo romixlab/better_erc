@@ -1596,6 +1596,7 @@ impl FootprintReview {
                             "Measure across, footprint to drawing",
                             &mut k.measure_across,
                         ),
+                        ("X-ray: the 3D model see-through", &mut k.xray),
                         ("Hide or show the footprint", &mut k.hide_footprint),
                         ("Hide or show the model", &mut k.hide_model),
                         ("Held: the page alone", &mut k.peek),
