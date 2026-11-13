@@ -1538,6 +1538,35 @@ impl FootprintReview {
                         .tooltip("The 3D model's and its silhouettes' opacity when a review starts"),
                 )
             });
+            PropertyRow::new("3D view's camera").show(ui, |ui| {
+                Segmented::new(&mut s.view_3d_projection)
+                    .id_salt("settings 3d projection")
+                    .item(
+                        ve_view3d::Projection::Orthographic,
+                        "Orthographic",
+                        "sizes don't change with depth, for measuring",
+                    )
+                    .item(
+                        ve_view3d::Projection::Perspective,
+                        "Perspective",
+                        "farther things smaller, for looking at depth",
+                    )
+                    .fill_width()
+                    .show(ui);
+            });
+            PropertyRow::new("Field of view").show(ui, |ui| {
+                ui.add(
+                    ScalarField::new(&mut s.fov_deg)
+                        .range(5.0..=120.0)
+                        .speed(0.5)
+                        .decimals(0)
+                        .unit("°")
+                        .tooltip(
+                            "The perspective's vertical field of view, in the 3D view and for the 3D model over the \
+                             page",
+                        ),
+                )
+            });
             PropertyRow::new("Finest drawing").show(ui, |ui| {
                 ui.add(
                     ScalarField::new(&mut s.max_render_scale)

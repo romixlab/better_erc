@@ -24,6 +24,10 @@ use ve_view3d::{Release, SnapAnim, View3d, ViewPreset, angle_to_nearest};
 /// The most pixels a side of the picture gets; zoomed in further, it is stretched
 const MAX_PICTURE_PX: f32 = 3072.0;
 
+/// What perspective over the page does, for its switch
+pub(super) const PERSPECTIVE_HINT: &str = "Perspective, for looking at depth: farther parts smaller, nearer ones larger; the \
+     page's mm scale holds at the board plane only (through the footprint's origin)";
+
 /// Radians the model turns per point of Ctrl+drag
 const DRAG_TURN: f32 = 0.01;
 
@@ -35,6 +39,9 @@ pub struct Solid {
     pub place: Option<Placement>,
     /// How it is turned: the camera's rotation in the model's frame; from the top at first
     pub turn: Quat,
+    /// Seen in perspective, for looking at depth: the page's mm scale then holds only on the plane through the
+    /// footprint's origin facing the view (the board's surface seen from the top or bottom) (VIEW-32)
+    pub perspective: bool,
 }
 
 impl Default for Solid {
@@ -42,6 +49,7 @@ impl Default for Solid {
         Self {
             place: None,
             turn: side_rotation(Side::Top),
+            perspective: false,
         }
     }
 }
@@ -256,8 +264,20 @@ impl FootprintReview {
     /// The picture's corners on the page, in footprint mm around the origin before the placement (x right, y down):
     /// top left, top right, bottom right, bottom left
     fn solid_corners(&self) -> [[f64; 2]; 4] {
-        let r = self.rt.solid.radius as f64;
+        let r = self.solid_half() as f64;
         [[-r, -r], [r, -r], [r, r], [-r, r]]
+    }
+
+    /// Half the picture's side at the origin's depth, mm. Orthographic: the model's reach. In perspective the eye
+    /// sits at `half / tan(fov / 2)`, and a part nearer the eye looks larger; the picture holds it at every turn
+    /// when it is `1 + tan(fov / 2)` times the reach
+    fn solid_half(&self) -> f32 {
+        let r = self.rt.solid.radius;
+        if self.model_views.solid.perspective {
+            r * (1.0 + (super::model3d::fov_radians(self.rt.settings.fov_deg) * 0.5).tan())
+        } else {
+            r
+        }
     }
 
     /// Draws the shaded model: rendered at the page's scale, mixed into the page by the blend pass in every blend
@@ -275,11 +295,13 @@ impl FootprintReview {
         let Some(place) = self.model_views.solid.place.clone() else {
             return;
         };
-        let r = self.rt.solid.radius;
+        let r = self.solid_half();
         let mm_per_point = self.mm_per_point();
         if r <= 0.0 || mm_per_point <= 0.0 {
             return;
         }
+        let perspective = self.model_views.solid.perspective;
+        let fov = super::model3d::fov_radians(self.rt.settings.fov_deg);
         let ctx = painter.ctx().clone();
         // Screen points per mm, and the picture's side in points (capped in pixels)
         let ppmm = self.zoom / mm_per_point as f32;
@@ -294,7 +316,15 @@ impl FootprintReview {
         view.camera.rotation = turn;
         view.xray = self.xray;
         view.style.hidden_edges = self.rt.settings.hidden_edges;
-        view.camera.set_ortho_scale(side / (2.0 * r), side);
+        // The page's scale at the origin's depth; perspective keeps it only there (VIEW-32)
+        if perspective {
+            view.camera.projection = ve_view3d::Projection::Perspective;
+            view.camera.fov_y = fov;
+            view.camera.set_scale(side / (2.0 * r), side);
+        } else {
+            view.camera.fov_y = fov;
+            view.camera.set_ortho_scale(side / (2.0 * r), side);
+        }
         let Some((texture, picture)) = view.render_offscreen(&ctx, vec2(side, side)) else {
             return;
         };
@@ -359,8 +389,13 @@ impl FootprintReview {
             .min_by(|p, q| (p.x + p.y).total_cmp(&(q.x + q.y)))
             .unwrap_or(corners[0]);
         let text = format!(
-            "3D model · {}{}",
+            "3D model · {}{}{}",
             self.solid_side_name(),
+            if perspective {
+                " · perspective: mm at the board plane only"
+            } else {
+                ""
+            },
             if self.moving_solid() { " · moves" } else { "" }
         );
         painter.text(
@@ -375,7 +410,8 @@ impl FootprintReview {
     /// Where Measure footprint snaps on the shaded model: while it sits on a side, the corners of that side's
     /// silhouette turned with it, page points
     pub(super) fn solid_snaps(&self) -> impl Iterator<Item = [f32; 2]> + '_ {
-        let on = (self.model_views.look == ModelLook::Solid)
+        // In perspective the outline is not the silhouette's: nothing to snap to
+        let on = (self.model_views.look == ModelLook::Solid && !self.model_views.solid.perspective)
             .then(|| self.solid_side())
             .flatten()
             .filter(|_| self.rt.solid.anim.is_none());
@@ -427,12 +463,73 @@ impl FootprintReview {
                 }
                 ui.label(format!("Now: {}", self.solid_side_name()));
             });
+        self.solid_camera_controls(ui);
         Group::new("Snap")
             .tooltip("What a turn does when the puck or the drag lets go; Settings → Save keeps it")
             .show(ui, |ui| {
                 self.rt.settings.model_snap.ui(ui);
             });
         self.xray_controls(ui);
+    }
+
+    /// The model over the page in perspective (`on`) or orthographic
+    pub(super) fn set_perspective(&mut self, on: bool) {
+        self.model_views.solid.perspective = on;
+        self.usage(if on {
+            "model 3d perspective"
+        } else {
+            "model 3d orthographic"
+        });
+    }
+
+    /// Orthographic or perspective for the model over the page, and the field of view (shared with the 3D view's)
+    /// (VIEW-32)
+    fn solid_camera_controls(&mut self, ui: &mut Ui) {
+        Group::new("Camera")
+            .tooltip(PERSPECTIVE_HINT)
+            .show(ui, |ui| {
+                let mut on = self.model_views.solid.perspective;
+                Segmented::new(&mut on)
+                    .id_salt("model 3d perspective")
+                    .item(
+                        false,
+                        "Orthographic",
+                        "sizes don't change with depth: the page's mm scale everywhere, for measuring",
+                    )
+                    .item(true, "Perspective", PERSPECTIVE_HINT)
+                    .fill_width()
+                    .show(ui);
+                if on != self.model_views.solid.perspective {
+                    self.set_perspective(on);
+                }
+                PropertyRow::new("Field of view")
+                    .tooltip("vertical, degrees, the 3D view's too; Settings → Save keeps it")
+                    .show(ui, |ui| {
+                        ui.add_enabled(
+                            on,
+                            ScalarField::new(&mut self.rt.settings.fov_deg)
+                                .range(
+                                    ve_view3d::Camera::FOV_MIN.to_degrees() as f64
+                                        ..=ve_view3d::Camera::FOV_MAX.to_degrees() as f64,
+                                )
+                                .speed(0.5)
+                                .decimals(0)
+                                .unit("°")
+                                .tooltip("wider shows depth more strongly"),
+                        )
+                        .on_disabled_hover_text(
+                            "orthographic has no field of view: pick Perspective to set it",
+                        );
+                    });
+                if on {
+                    notice(
+                        ui,
+                        Tone::Warn,
+                        "Perspective is for looking at depth: the page's mm scale holds at the board plane only, \
+                         nearer parts look larger, and Measure footprint has no corners of the model to snap to",
+                    );
+                }
+            });
     }
 
     /// X-ray and how it draws the hidden edges, for the Model views section (VIEW-30)
@@ -951,10 +1048,93 @@ mod tests {
         let _ = std::fs::remove_dir_all(&dir);
     }
 
+    /// Perspective over the page (VIEW-32): the body's top, 1.2 mm over the board, looks larger by the eye's
+    /// distance over its distance to the top, the origin stays where it is, the label says the scale holds at the
+    /// board plane only, and Measure footprint has no model corner to snap to; orthographic again as before
+    #[test]
+    fn the_3d_model_in_perspective() {
+        let dir = std::env::temp_dir().join(format!("berc-fp-persp-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let fp = two_pin(&dir);
+        let pdf = datasheet(&dir);
+        let mut h = gpu_harness("fp persp");
+        h.run();
+        let ctx = h.ctx.clone();
+        h.state_mut().open_path(&ctx, &fp);
+        h.state_mut().open_datasheet(&ctx, &pdf);
+        h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+        h.run();
+        let st = h.state_mut();
+        st.scale = Some(Scale {
+            mm_per_point: 0.04,
+            page: st.page,
+            mm: 2.0,
+            note: None,
+        });
+        st.zoom = 1.0;
+        st.pan = [0.0, 0.0];
+        st.rt.fit_page = false;
+        st.place.origin = [300.0, 400.0];
+        st.model_views.opacity = Some(1.0);
+        st.rt.settings.fov_deg = 60.0;
+        h.run();
+        let plain = h.render().unwrap();
+        key(&mut h, egui::Key::L);
+        steps(&mut h, 4);
+        let o = screen(&h, [300.0, 400.0]);
+        let model_at = |h: &mut H, x: f32| {
+            let img = h.render().unwrap();
+            diff(
+                pixel(&img, o + vec2(x, 0.0)),
+                pixel(&plain, o + vec2(x, 0.0)),
+            ) > 40
+        };
+        // Orthographic: the edge at 2 mm, 50 points
+        assert!(model_at(&mut h, 46.0) && !model_at(&mut h, 54.0));
+        // The mode bar's switch, right of the side panel's
+        let mode_bar = |h: &H, label: &str| {
+            use egui_kittest::kittest::NodeT;
+            let canvas = h.state().rt.canvas;
+            h.query_all_by_label(label)
+                .find(|n| {
+                    n.accesskit_node().bounding_box().is_some_and(|b| {
+                        b.x0 as f32 >= canvas.min.x && (b.y1 as f32) <= canvas.min.y
+                    })
+                })
+                .expect("in the mode bar")
+                .click();
+        };
+        mode_bar(&h, "Perspective");
+        steps(&mut h, 3);
+        assert!(h.state().model_views.solid.perspective);
+        // The eye at half / tan(30°) from the origin, half the picture (1 + tan 30°) times the model's reach
+        let t = 30f32.to_radians().tan();
+        let d = h.state().rt.solid.radius * (1.0 + t) / t;
+        let edge = 50.0 * d / (d - 1.2);
+        assert!(edge > 56.0, "{edge}");
+        assert!(
+            model_at(&mut h, edge - 3.0),
+            "the top's edge nearer: {edge}"
+        );
+        assert!(!model_at(&mut h, edge + 4.0), "nothing beyond it: {edge}");
+        assert!(model_at(&mut h, 0.0), "the origin where it was");
+        // Measure footprint: no corner of the model to snap to
+        assert_eq!(h.state().solid_snaps().count(), 0);
+        mode_bar(&h, "Perspective");
+        steps(&mut h, 3);
+        assert!(!h.state().model_views.solid.perspective);
+        assert!(model_at(&mut h, 46.0) && !model_at(&mut h, 54.0));
+        assert!(h.state().solid_snaps().count() > 0);
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
     /// Pictures of the review's steps for a person to look at: `BERC_FP_SHOTS` names a folder (skips without). A
     /// two-pin part over a drawing at 3 screen points per page point: a measuring ruler with its + note button,
     /// then added; the 3D model over the page, then in X-ray; the footprint hidden; the page alone; Measure across
-    /// from a pad to the drawing; the 3D view, then in X-ray.
+    /// from a pad to the drawing; the 3D view, then in X-ray; round 8: the model off the footprint and put back by
+    /// Home, in perspective, the model picked under the pointer, hidden with the footprint moving, the 3D view
+    /// orthographic.
     #[test]
     fn pictures_of_the_review() {
         let Some(out) = std::env::var_os("BERC_FP_SHOTS").map(PathBuf::from) else {
@@ -1054,6 +1234,50 @@ mod tests {
         key(&mut h, egui::Key::U);
         steps(&mut h, 2);
         shot(&mut h, "9-3d-view-xray.png");
+        key(&mut h, egui::Key::U);
+        // Round 8 (VIEW-32), back on the page: the 3D model moved off, then Home puts it onto the footprint
+        key(&mut h, egui::Key::Num3);
+        steps(&mut h, 2);
+        let fp_place = h.state().place.clone();
+        h.state_mut().model_views.solid.place = Some(Placement {
+            origin: [fp_place.origin[0] + 40.0, fp_place.origin[1] + 25.0],
+            rotation: 0.0,
+            mirror: false,
+        });
+        h.state_mut().model_views.solid.turn = side_rotation(Side::Front);
+        steps(&mut h, 2);
+        shot(&mut h, "10-model-off-the-footprint.png");
+        key(&mut h, egui::Key::Home);
+        steps(&mut h, 10);
+        shot(&mut h, "11-model-on-the-footprint-home.png");
+        // Perspective over the page, turned a little so the depth shows
+        h.state_mut().rt.settings.fov_deg = 60.0;
+        h.state_mut().set_perspective(true);
+        h.state_mut().model_views.solid.turn =
+            side_rotation(Side::Top) * Quat::from_rotation_x(0.5) * Quat::from_rotation_y(0.3);
+        h.state_mut().rt.settings.model_snap.enabled = false;
+        steps(&mut h, 3);
+        shot(&mut h, "12-model-in-perspective.png");
+        h.state_mut().set_perspective(false);
+        key(&mut h, egui::Key::Home);
+        steps(&mut h, 10);
+        // Hovering the model with Q on Model: its outline, and the mode bar names it
+        key(&mut h, egui::Key::Q);
+        h.hover_at(screen(&h, fp_place.origin) + vec2(4.0, 4.0));
+        steps(&mut h, 2);
+        shot(&mut h, "13-hover-picks-the-model.png");
+        // The model hidden: the switch shows the footprint moving, Model disabled
+        key(&mut h, egui::Key::J);
+        h.hover_at(screen(&h, fp_place.origin) + vec2(4.0, 4.0));
+        steps(&mut h, 2);
+        shot(&mut h, "13a-model-hidden-footprint-moves.png");
+        key(&mut h, egui::Key::J);
+        key(&mut h, egui::Key::Q);
+        // The 3D view orthographic
+        h.state_mut().rt.settings.view_3d_projection = ve_view3d::Projection::Orthographic;
+        key(&mut h, egui::Key::Num3);
+        steps(&mut h, 4);
+        shot(&mut h, "14-3d-view-orthographic.png");
         let _ = std::fs::remove_dir_all(&dir);
     }
 }

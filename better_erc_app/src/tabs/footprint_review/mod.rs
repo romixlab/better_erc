@@ -2540,6 +2540,24 @@ impl FootprintReview {
             if r.clicked() {
                 on_footprint = true;
             }
+            // Perspective over the page, for the 3D model (VIEW-32); always there, so the bar never wraps anew
+            let solid = self.model_views.look == modelviews::ModelLook::Solid;
+            let on = self.model_views.solid.perspective;
+            let r = ui.add_enabled(
+                why.is_none() && solid,
+                Button::selectable(on && solid, "Perspective"),
+            );
+            let r = match why {
+                Some(why) => r.on_disabled_hover_text(format!("no model: {why}")),
+                None if !solid => r.on_disabled_hover_text(format!(
+                    "the silhouettes are flat views: perspective is for the 3D model ({} switches to it)",
+                    key_name(k.model_look)
+                )),
+                None => r.on_hover_text(solid::PERSPECTIVE_HINT),
+            };
+            if r.clicked() {
+                self.set_perspective(!on);
+            }
             ui.separator();
             self.shown_switches(ui);
             // What a press drags, in Move; its room kept in the other modes

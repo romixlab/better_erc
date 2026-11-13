@@ -76,6 +76,12 @@ pub struct FootprintReviewSettings {
     /// How X-ray draws the model's edges behind its faces, in the 3D view and over the page: thin or dashed
     /// (VIEW-30)
     pub hidden_edges: ve_view3d::HiddenEdges,
+    /// The 3D view's camera: `Orthographic` (sizes don't change with depth, for measuring) or `Perspective`
+    /// (farther things smaller, for looking at depth) (VIEW-32)
+    pub view_3d_projection: ve_view3d::Projection,
+    /// The perspective's vertical field of view, degrees, in the 3D view and for the 3D model over the page;
+    /// wider shows depth more strongly (VIEW-32)
+    pub fov_deg: f32,
     /// Whether the page is shown inverted (white-ish on black) at first
     pub invert: bool,
     /// How closely the DXF follows the drawing's curves, mm: a curve within it of a circle is an arc, any other is
@@ -359,6 +365,8 @@ impl Default for FootprintReviewSettings {
             line_snap_px: 10.0,
             model_snap: ve_view3d::SnapSettings::default(),
             hidden_edges: ve_view3d::HiddenEdges::default(),
+            view_3d_projection: ve_view3d::Projection::Perspective,
+            fov_deg: 35.0,
             invert: false,
             dxf_tolerance_mm: 0.005,
             keys: Keys::default(),

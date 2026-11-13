@@ -55,6 +55,12 @@ pub(super) fn render_state(ctx: &egui::Context) -> Option<egui_wgpu::RenderState
     ctx.data(|d| d.get_temp::<egui_wgpu::RenderState>(render_state_id()))
 }
 
+/// A field of view in degrees, as the camera takes it
+pub(super) fn fov_radians(deg: f32) -> f32 {
+    deg.to_radians()
+        .clamp(ve_view3d::Camera::FOV_MIN, ve_view3d::Camera::FOV_MAX)
+}
+
 /// What a face or an edge of the scene is, exactly
 #[derive(Clone, Debug, PartialEq)]
 pub enum Exact {
@@ -860,7 +866,30 @@ impl FootprintReview {
         }
         view.xray = self.xray;
         view.style.hidden_edges = self.rt.settings.hidden_edges;
+        // The settings' camera (VIEW-32): the field of view changed keeps the scale at the target
+        let s = &self.rt.settings;
+        view.camera.projection = s.view_3d_projection;
+        let fov = fov_radians(s.fov_deg);
+        if (view.camera.fov_y - fov).abs() > 1e-6 {
+            view.camera.set_fov_y(fov);
+        }
         view
+    }
+
+    /// The 3D view's projection and field of view, kept as settings: the 3D model section's control and the view's
+    /// own menu both change them (VIEW-32)
+    fn camera_controls(&mut self, ui: &mut Ui) {
+        let s = &mut self.rt.settings;
+        let mut cam = ve_view3d::Camera {
+            projection: s.view_3d_projection,
+            fov_y: fov_radians(s.fov_deg),
+            ..Default::default()
+        };
+        if ve_view3d::projection_ui(&mut cam, ui) {
+            s.view_3d_projection = cam.projection;
+            s.fov_deg = cam.fov_y.to_degrees();
+            self.usage(&format!("model 3d view {}", cam.projection.name()));
+        }
     }
 
     /// X-ray on or off: the 3D model see-through, in the 3D view and over the page (VIEW-30)
@@ -973,10 +1002,16 @@ impl FootprintReview {
                 view.selection = first.into_iter().collect();
             }
             let clicked = r.response.clicked().then_some(r.clicked);
+            // The view's own menu switches X-ray and the camera too
+            let (projection, fov) = (view.camera.projection, view.camera.fov_y);
             if xray != self.xray {
                 self.toggle_xray();
             }
             self.rt.settings.hidden_edges = hidden;
+            self.rt.settings.view_3d_projection = projection;
+            if (fov_radians(self.rt.settings.fov_deg) - fov).abs() > 1e-6 {
+                self.rt.settings.fov_deg = fov.to_degrees();
+            }
             (r.response, r.hovered, clicked)
         } else {
             let (rect, resp) = ui.allocate_exact_size(ui.available_size(), Sense::click());
@@ -1206,6 +1241,12 @@ impl FootprintReview {
                 } else if self.rt.model.loading() {
                     ui.label("reading…");
                 }
+                Group::new("3D view's camera")
+                    .tooltip(
+                        "Orthographic for measuring, perspective for looking at depth; the size at the middle \
+                         of the view is kept. Settings → Save keeps them",
+                    )
+                    .show(ui, |ui| self.camera_controls(ui));
                 hint(
                     ui,
                     format!(
@@ -1641,6 +1682,65 @@ pub(super) mod tests {
         let mm = measure(&e, &e);
         assert_eq!(mm.note(1), "M1 = 2.540 mm (edge length)");
         assert_eq!(measure(&top, &e).what, "plane to edge");
+    }
+
+    /// The 3D view's camera as settings (VIEW-32): perspective at first, the 3D model section's switch makes it
+    /// orthographic, a new field of view keeps the size at the middle, and the view's camera follows each
+    #[test]
+    fn the_3d_views_camera() {
+        let dir = std::env::temp_dir().join(format!("berc-fp-model-cam-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let fp = two_pin(&dir);
+        let mut h = harness("fp model cam");
+        h.run();
+        let ctx = h.ctx.clone();
+        h.state_mut().open_path(&ctx, &fp);
+        h.run();
+        h.hover_at(h.state().rt.canvas.center());
+        h.run();
+        h.key_press(egui::Key::Num3);
+        h.run();
+        h.run();
+        let cam = |h: &Harness<'static, FootprintReview>| {
+            h.state().rt.model.view.as_ref().unwrap().camera
+        };
+        assert_eq!(cam(&h).projection, ve_view3d::Projection::Perspective);
+        let height = h.state().rt.canvas.height();
+        let scale = cam(&h).points_per_unit(height);
+        h.get_by_label("Orthographic").click();
+        h.run();
+        h.run();
+        assert_eq!(
+            h.state().rt.settings.view_3d_projection,
+            ve_view3d::Projection::Orthographic
+        );
+        assert_eq!(cam(&h).projection, ve_view3d::Projection::Orthographic);
+        // The section's switch, not the mode bar's Perspective (the model over the page)
+        {
+            use egui_kittest::kittest::NodeT;
+            let canvas = h.state().rt.canvas;
+            h.query_all_by_label("Perspective")
+                .find(|n| {
+                    n.accesskit_node()
+                        .bounding_box()
+                        .is_some_and(|b| (b.x1 as f32) < canvas.min.x)
+                })
+                .expect("in the 3D model section")
+                .click();
+        }
+        h.run();
+        h.state_mut().rt.settings.fov_deg = 70.0;
+        h.run();
+        h.run();
+        let c = cam(&h);
+        assert_eq!(c.projection, ve_view3d::Projection::Perspective);
+        assert!((c.fov_y.to_degrees() - 70.0).abs() < 1e-3);
+        assert!(
+            (c.points_per_unit(height) - scale).abs() < 1e-3 * scale,
+            "the size kept"
+        );
+        let _ = std::fs::remove_dir_all(&dir);
     }
 
     /// The exact kinds follow the entry's transform: turned 90° about z, moved, scaled by 2
