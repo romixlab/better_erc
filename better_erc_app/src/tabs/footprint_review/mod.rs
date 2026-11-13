@@ -42,6 +42,8 @@ mod geometry;
 mod mode_tests;
 mod notes;
 use better_erc::fp::outline;
+#[cfg(test)]
+mod panel_tests;
 mod pdf;
 mod prims;
 mod puck;
