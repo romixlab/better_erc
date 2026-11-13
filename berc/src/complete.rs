@@ -75,6 +75,31 @@ pub fn board_references() -> Vec<CompletionCandidate> {
         .collect()
 }
 
+/// What `berc fp model` takes after its target: the footprints of a `.pretty` named earlier on the command line,
+/// each with its file, else the references of the board ([`board_references`])
+pub fn model_names() -> Vec<CompletionCandidate> {
+    let lib = std::env::args()
+        .skip(1)
+        .map(std::path::PathBuf::from)
+        .find(|a| a.extension().is_some_and(|e| e == "pretty") && a.is_dir());
+    let Some(lib) = lib else {
+        return board_references();
+    };
+    let mut names: Vec<String> = std::fs::read_dir(&lib)
+        .into_iter()
+        .flatten()
+        .flatten()
+        .map(|e| e.path())
+        .filter(|p| p.extension().is_some_and(|e| e == "kicad_mod"))
+        .filter_map(|p| Some(p.file_stem()?.to_string_lossy().into_owned()))
+        .collect();
+    names.sort();
+    names
+        .into_iter()
+        .map(|n| CompletionCandidate::new(n).help(Some("footprint".into())))
+        .collect()
+}
+
 /// The symbol libraries of the sym-lib-table in the current directory and the global one, by nickname, and the
 /// paths that start with `current` (`berc fp check --lib`)
 pub fn symbol_libraries(current: &std::ffi::OsStr) -> Vec<CompletionCandidate> {

@@ -714,6 +714,13 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="lib-19"></a>⚠️ `LIB-19` Hidden symbol pin that is not grouped with a visible pin of the same meaning (an N.C. or a signal pin hidden under GND, a supply pin joining its net by name); strict: every hidden pin ≈ WIRE-10 · impl: easy (netlist) · [📖](checks/lib.md#lib-19) <!-- 6 Nov 2026; TPD6S300A pins 16 / 17 -->
 - <a id="lib-20"></a>ℹ️ `LIB-20` Board places a footprint other than the one its symbol's own `Footprint` field names (a library migration half done, or a deliberate per-instance override) · impl: easy (TOOL-10) · [📖](checks/lib.md#lib-20) <!-- 13 Nov 2026; b153a U201 -->
 - <a id="lib-21"></a>⚠️ `LIB-21` Symbol or its footprint in a library outside the project's allowed set (a vendor library migration not finished, a stock part that should be a local copy) · impl: easy (TOOL-10, CFG-2) · [📖](checks/lib.md#lib-21) <!-- 13 Nov 2026 -->
+- <a id="lib-22"></a>⚠️ `LIB-22` Footprint's 3D model file missing or unreadable (a `${VAR}` nothing sets, no file at the path, not a STEP file the reader can parse) · impl: easy (IMP-21, IMP-20) · [📖](checks/lib.md#lib-22) <!-- 13 Nov 2026, TOOL-12 -->
+- <a id="lib-23"></a>⚠️ `LIB-23` 3D model reaches out of the footprint's courtyard ≈ LAY-3 · impl: mid (TOOL-12) · [📖](checks/lib.md#lib-23) <!-- 13 Nov 2026, TOOL-12 -->
+- <a id="lib-24"></a>⚠️ `LIB-24` Copper pad with no lead of the 3D model over it: the model is offset, turned or for another package · impl: mid (TOOL-12) · [📖](checks/lib.md#lib-24) <!-- 13 Nov 2026, TOOL-12 -->
+- <a id="lib-25"></a>⚠️ `LIB-25` 3D model scaled (a scale other than 1): drawn at a size the package is not · impl: easy (IMP-21) · [📖](checks/lib.md#lib-25) <!-- 13 Nov 2026, TOOL-12 -->
+- <a id="lib-26"></a>💡 `LIB-26` 3D model file not in millimetres (metres, inches) · impl: easy (IMP-20) · [📖](checks/lib.md#lib-26) <!-- 13 Nov 2026, TOOL-12 -->
+- <a id="lib-27"></a>⚠️ `LIB-27` 3D model turned by an angle that is not a multiple of 90° · impl: easy (IMP-21) · [📖](checks/lib.md#lib-27) <!-- 13 Nov 2026, TOOL-12 -->
+- <a id="lib-28"></a>💡 `LIB-28` Footprint with copper pads and no 3D model shown (none, or every one hidden) · impl: easy (IMP-21) · [📖](checks/lib.md#lib-28) <!-- 13 Nov 2026, TOOL-12 -->
 
 ## Layout
 

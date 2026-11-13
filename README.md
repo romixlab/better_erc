@@ -40,8 +40,8 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 - **`berc fp`**: footprint review. `berc fp hash` prints a footprint's review hash, the same for a library file and
   every board copy of it; `berc fp check` checks every board footprint against the hash on its library symbol (and
   against its library footprint), `berc fp check --lib` every symbol of a symbol library against its library
-  footprint, and `berc fp todo` lists the library symbols a board uses that need a review. See
-  [Footprint review](#footprint-review).
+  footprint, and `berc fp todo` lists the library symbols a board uses that need a review; `berc fp model` reads
+  each footprint's 3D models and measures them against it. See [Footprint review](#footprint-review).
 - **The app** (`better_erc`, egui, crate `better_erc_app`): an import tab that opens any design the registry reads
   (and Altium or OrCAD files picked one by one) and shows its findings with their explanations and the checks that
   did not run, and tabs for nets (power rails, grounds and switching nodes from names and pin types), I2C buses,
@@ -388,6 +388,38 @@ symbol is ok or has no footprint, 1 otherwise, 2 when a library can't be read.
 footprint may be in: an exact name, or a prefix ending `*` (`--allow 'VHRD_*'`). A symbol's own library, or the one
 its `Footprint` names, that is none of them is reported, naming it. Given none, there is no rule and nothing is
 reported: a project only sets this once it has a library convention to enforce.
+
+### 3D models against the footprint
+
+`berc fp model` reads each footprint's 3D models (STEP) and measures them against the footprint: the third source of
+truth beside the datasheet drawing and the footprint itself.
+
+```sh
+berc fp model hw/board                          # every footprint on the project's board
+berc fp model hw/board U3 J1 --details          # these references, each pad's share under a lead
+berc fp model ~/kicad-library/footprints/VHRD_Package_SO.pretty   # every footprint of a library
+berc fp model Lib.pretty/SOT-23.kicad_mod --format json
+```
+
+Each `(model ...)` entry's file is found as KiCad finds it: `${VAR}` from the environment, KiCad's
+`kicad_common.json`, `KIPRJMOD` (the board's directory, or the directory a library is in; `--project DIR` sets
+it) and a stock KiCad's `KICADn_3DMODEL_DIR`; a `.wrl` tries `.step` and `.stp` beside it. The file is read
+(`erc_step`) and placed as KiCad places it: the scale, then the rotation about x, y and z (each by the negated angle),
+then the offset; a test holds this against `kicad-cli pcb export step`. For each model the command prints:
+
+- the file and the variables that found it, or why it was not found;
+- the file's unit, its parts and faces, and what the reader could not read (`--details` lists every warning);
+- the extents in x, y and z, the height above the board and the depth below it (THT leads);
+- the middle of the model against the middle of the pads;
+- how far the model reaches out of the courtyard;
+- whether the leads land on the pads: the model's bottom 0.2 mm seen from below against each pad's copper, how many
+  pads have a lead over them and how much of the slice is off the pads (`--details`: each pad's share).
+
+Coordinates are KiCad's 3D frame of the footprint in mm: x right, y up (the footprint editor's y negated, as the model
+offset is written), z up from the board surface. The findings are catalogue checks: `LIB-22` model file missing or
+unreadable, `LIB-23` out of the courtyard, `LIB-24` a pad without a lead, `LIB-25` scaled, `LIB-26` not in mm,
+`LIB-27` turned by an angle that is not a multiple of 90°, `LIB-28` no model shown (`berc explain LIB-24`). The exit
+code is 1 on any warning, 0 when there are only suggestions (no model, not in mm) or nothing, 2 on a read error.
 
 ### Reviewing in the app
 

@@ -14,6 +14,7 @@ pub mod measure;
 mod mesh;
 mod structure;
 mod text;
+pub mod write;
 
 pub use math::{Transform, Vec3};
 

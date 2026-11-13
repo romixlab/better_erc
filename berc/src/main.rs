@@ -67,6 +67,15 @@ nothing is written when anything fails.\n\nKiCad 8 and newer files are written; 
 berc fp accept hw/board U1 U2\n  berc fp accept hw/board R1 --dry-run\n  \
 berc fp accept hw/board --symbol Device:R --hash fp1:0123456789abcdef";
 
+const FP_MODEL_AFTER_HELP: &str = "Exit codes: 0 no warning, 1 a warning on any model (not found or not \
+read, out of the courtyard, a pad without a lead, scaled, turned by an odd angle), 2 usage or read error. \
+Suggestions (no model, not in mm) don't fail the run.\n\nFindings: LIB-22 model file missing or unreadable, \
+LIB-23 model out of the courtyard, LIB-24 a pad without a lead, LIB-25 model scaled, LIB-26 model not in mm, \
+LIB-27 model turned by an angle that is not a multiple of 90°, LIB-28 no model shown (berc explain LIB-24).\n\n\
+Examples:\n  berc fp model hw/board\n  berc fp model hw/board U3 J1 --details\n  \
+berc fp model ~/kicad-library/footprints/VHRD_Package_SO.pretty --format json\n  \
+berc fp model Lib.pretty/SOT-23.kicad_mod";
+
 /// better_erc command line tools
 ///
 /// Colour in help, errors and `check` text only on a terminal, and never with NO_COLOR set; `textconv` output is
@@ -198,6 +207,39 @@ enum FpCommand {
     /// it out. With --symbol and --hash, a hash for a library symbol given by hand.
     #[command(after_help = FP_ACCEPT_AFTER_HELP)]
     Accept(FpAcceptArgs),
+    /// Read each footprint's 3D models and measure them against the footprint
+    ///
+    /// Each `(model ...)` entry's file is found as KiCad finds it (`${VAR}` from the environment,
+    /// kicad_common.json and a stock KiCad; a `.wrl` tries `.step` and `.stp` beside it), read (STEP only) and
+    /// placed as KiCad places it: scale, rotation, offset. Then per model: the file's unit, parts and faces and
+    /// what failed to read; the extents in x, y and z; the height above the board and the depth below it; the
+    /// middle of the model against the middle of the pads; how far it reaches out of the courtyard; and whether
+    /// the leads land on the pads (the model's bottom 0.2 mm seen from below, against each pad's copper).
+    ///
+    /// Coordinates are KiCad's 3D frame of the footprint, mm: x right, y up (the footprint editor's y negated,
+    /// as the model offset is written), z up from the board surface.
+    #[command(after_help = FP_MODEL_AFTER_HELP)]
+    Model(FpModelArgs),
+}
+
+#[derive(clap::Args)]
+struct FpModelArgs {
+    /// A KiCad project (a directory, its .kicad_pro, .kicad_sch or .kicad_pcb), a footprint library (.pretty) or
+    /// one footprint (.kicad_mod)
+    #[arg(value_hint = ValueHint::AnyPath, default_value = ".")]
+    target: PathBuf,
+    /// Only these footprints: references on a board, footprint names in a library
+    #[arg(add = ArgValueCandidates::new(complete::model_names))]
+    names: Vec<String>,
+    /// The project directory model paths and KIPRJMOD are resolved against; default the board's directory, or
+    /// the directory a library is in
+    #[arg(long, value_name = "DIR", value_hint = ValueHint::DirPath)]
+    project: Option<PathBuf>,
+    /// Also print each pad's share under a lead and every warning of the STEP reader
+    #[arg(long)]
+    details: bool,
+    #[arg(long, value_enum, default_value_t = ListFormat::Text)]
+    format: ListFormat,
 }
 
 /// Libraries searched before the sym-lib-table and fp-lib-table
@@ -488,6 +530,9 @@ fn main() -> ExitCode {
         Command::Fp {
             command: FpCommand::Accept(args),
         } => fp_accept(&args),
+        Command::Fp {
+            command: FpCommand::Model(args),
+        } => fp_model(&args),
         Command::Usage => {
             let out = usage::summary(&usage::known(&Cli::command()));
             let _ = std::io::stdout().lock().write_all(out.as_bytes());
@@ -763,6 +808,31 @@ fn fp_todo(args: &FpTodoArgs) -> ExitCode {
         Err(e) => {
             error(&e.to_string());
             ExitCode::from(better_erc::fp::FpCheckError::EXIT_CODE)
+        }
+    }
+}
+
+fn fp_model(args: &FpModelArgs) -> ExitCode {
+    let spinner = progress::Delayed::start();
+    let opts = better_erc::fp::model::ModelOptions::default();
+    let run = better_erc::fp::model::run(
+        &args.target,
+        &args.names,
+        args.project.as_deref(),
+        &opts,
+        &mut |name| spinner.set(format!("reading the models of {name}")),
+    );
+    spinner.finish();
+    match run {
+        Ok(r) => show_diff(
+            args.format,
+            &r.to_text_color(args.details),
+            &r.to_json(),
+            r.is_ok(),
+        ),
+        Err(e) => {
+            error(&e.to_string());
+            ExitCode::from(better_erc::fp::FpError::EXIT_CODE)
         }
     }
 }

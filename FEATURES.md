@@ -103,8 +103,7 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   `kicad_common.json`'s `environment.vars` and `KIPRJMOD`, then a stock KiCad's `KICADn_3DMODEL_DIR`; `VHRD_3DMODEL_DIR`
   is ours, `~/sync/hw_tracking/vhrd-packages3D`), a relative result against the project directory, a missing `.wrl`
   trying `.step` and `.stp` beside it; each result says which variables resolved it or why it did not
-  (`ModelPath::Found`/`UnknownVar`/`NotFound`) · `erc_kicad/src/model3d.rs`. Not yet used by any check or tool
-  (`TOOL-12` next)
+  (`ModelPath::Found`/`UnknownVar`/`NotFound`) · `erc_kicad/src/model3d.rs`. Used by `berc fp model` (`TOOL-12`)
 - 🚧 `IMP-16` Schematic PDFs as a netlist source. Done: Altium Smart PDFs (stage 1): sheets, parts with their units,
   pins and nets from the bookmarks (`Provenance::Pdf`, `PdfConfidence::Bookmarks`, design rank), nets joined across
   sheets by power names and same-named ports, labels with their search-word position, part properties from the
@@ -871,6 +870,20 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `better_erc/src/fp/record.rs`, `better_erc/src/fp.rs`, `erc_kicad/src/symlib.rs`,
   `better_erc_app/src/tabs/footprint_review/recorded.rs`, `docindex.rs`, `berc/tests/fp_accept.rs`, README "Review
   lines"
+- ✅ `TOOL-12` `berc fp model PROJECT|LIBRARY|FILE [NAME...]`: each footprint's 3D models read and measured
+  against it (`fp::model`). Each `(model ...)` entry resolved (`IMP-21`), read (`IMP-20`, a file shared by footprints
+  read once) and placed with KiCad's transform (scale, then rotation about x, y, z by the negated angles, then the
+  offset; on a board the side's flip, the footprint's rotation and position: `placement`, `board_placement`), held to
+  0.01 mm against `kicad-cli pcb export step` on a board with offset, turned, scaled and back-side models. Reported in
+  KiCad's 3D frame of the footprint (y up): the unit, parts, faces and reader warnings; extents, height above the
+  board and depth below it; the model's middle against the pads'; how far it reaches out of the courtyard (every
+  vertex against the courtyard's outline); the leads on the pads (the bottom 0.2 mm seen from below, counted on a
+  grid against each pad's copper). Findings `LIB-22` to `LIB-28` (missing, out of the courtyard, a pad without a
+  lead, scaled, not in mm, an odd angle, no model shown); text or `--format json`, `--details` for each pad and every
+  warning, exit 1 on a warning. The footprint outline module (pad copper, graphics) moved from the app into the
+  library (`fp::outline`) for it · `better_erc/src/fp/model.rs`, `better_erc/src/fp/outline.rs`,
+  `better_erc/tests/model.rs`, `berc/tests/fp_model.rs`, `erc_step/src/write.rs`, README "3D models against the
+  footprint"
 
 ## Code generation (`GEN`)
 

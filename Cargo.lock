@@ -418,6 +418,7 @@ dependencies = [
  "erc_import",
  "erc_kicad",
  "erc_model",
+ "erc_step",
  "serde",
  "serde_json",
 ]

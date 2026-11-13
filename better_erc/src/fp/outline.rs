@@ -4,8 +4,8 @@
 //! in the footprint's own frame (x right, y down, as KiCad draws it). Vias in a package (KiCad draws them as round
 //! plated pads, thermal vias in an exposed pad) are copper with a hole, no number.
 
-use better_erc::model::LocalFootprint;
-use better_erc::model::layout::{Geom, Pad, Pt, Shape};
+use crate::model::LocalFootprint;
+use crate::model::layout::{Geom, Pad, Pt, Shape};
 use serde::{Deserialize, Serialize};
 use std::f64::consts::PI;
 
@@ -145,7 +145,7 @@ fn len(v: i64) -> f64 {
     v as f64 / 1e6
 }
 
-/// `p` turned by `deg` counter-clockwise on screen (y down), as [`better_erc::model::footprint::rotate`]
+/// `p` turned by `deg` counter-clockwise on screen (y down), as [`crate::model::footprint::rotate`]
 pub fn rotate(p: P, deg: f64) -> P {
     let (s, c) = deg.to_radians().sin_cos();
     [p[0] * c + p[1] * s, -p[0] * s + p[1] * c]
@@ -273,6 +273,24 @@ fn pad_shape(pad: &Pad, grow: f64) -> (Vec<P>, bool) {
         }
     }
     (points, pad.shape != "custom")
+}
+
+/// A pad's copper in the footprint's own frame (mm, y down): the outline of its shape, turned and placed, then the
+/// filled primitives of a custom pad, each a polygon of its own
+pub fn pad_copper(pad: &Pad) -> Vec<Vec<P>> {
+    let at = mm(pad.at);
+    let place = |p: P| {
+        let r = rotate(p, pad.rotation);
+        [r[0] + at[0], r[1] + at[1]]
+    };
+    let mut out = vec![pad_shape(pad, 0.0).0.into_iter().map(place).collect()];
+    for prim in &pad.primitives {
+        let (points, closed) = shape_points(&prim.geom);
+        if closed && points.len() > 2 {
+            out.push(points.into_iter().map(place).collect());
+        }
+    }
+    out
 }
 
 /// A drawn shape's points: a polygon, or a line with its width
@@ -553,7 +571,7 @@ mod tests {
         let p = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../erc_kicad/tests/fixtures/footprints/Test.pretty")
             .join(name);
-        better_erc::fp::read_library(&p).unwrap()
+        crate::fp::read_library(&p).unwrap()
     }
 
     /// Every pad of the test footprints becomes an outline the size of the pad, and a turned rectangle stays one

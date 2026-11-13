@@ -11,6 +11,22 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `TOOL-12`: `berc fp model PROJECT|LIBRARY|FILE [NAME...]` reads each footprint's 3D models and measures them
+  against the footprint: the file found as KiCad finds it, its unit, parts and faces, the extents and the height
+  above the board in KiCad's 3D frame of the footprint, the model's middle against the pads', how far it reaches out
+  of the courtyard, and whether its leads land on the pads. Findings are the new catalogue checks `LIB-22` to `LIB-28`;
+  `--details`, `--format json`, `--project DIR`. The library side is `better_erc::fp::model` (`placement` and
+  `board_placement` are KiCad's model transform, tested against `kicad-cli pcb export step`), and `better_erc::step`
+  re-exports `erc_step`, so berc now builds the truck tree too.
+- `erc_step::write::cuboids`: a STEP file of boxes, for tests and fixtures that may not hold a vendor model.
+
+### Changed
+
+- The footprint review tab's outline module (pad copper, mask and paste, graphics) moved into the library as
+  `better_erc::fp::outline`, with `pad_copper` for one pad's copper polygons; the app uses it from there.
+
 ### Fixed
 
 - `IMP-20`: an assembly written with `MAPPED_ITEM`s and no `NEXT_ASSEMBLY_USAGE_OCCURRENCE` (Würth's inductor

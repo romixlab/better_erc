@@ -9,6 +9,8 @@ use std::fmt;
 use std::path::{Path, PathBuf};
 
 mod library;
+pub mod model;
+pub mod outline;
 pub mod record;
 mod todo;
 pub use library::{
@@ -62,6 +64,8 @@ pub enum FpError {
     NotFootprint(PathBuf),
     /// A footprint named by its `Lib:Name` that the footprint library tables don't give
     Library(String, erc_kicad::libtable::LibError),
+    /// Neither a footprint, a footprint library nor a project with a board (`berc fp model`)
+    NoBoard(PathBuf),
 }
 
 impl FpError {
@@ -93,6 +97,11 @@ impl fmt::Display for FpError {
                 p.display()
             ),
             FpError::Library(lib_id, e) => write!(f, "footprint {lib_id}: {e}"),
+            FpError::NoBoard(p) => write!(
+                f,
+                "{}: not a footprint (.kicad_mod), a footprint library (.pretty) or a project with a board (.kicad_pcb)",
+                p.display()
+            ),
         }
     }
 }

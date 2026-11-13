@@ -664,3 +664,156 @@ on the command line or `[footprint_review] allowed_libraries` in the app's `conf
 or widen the allowed set if the library is meant to stay.
 
 **References.** None beyond the project's own convention; `TOOL-10`.
+
+## `LIB-22` 3D model file missing or unreadable <a id="lib-22"></a>
+
+⚠️ warning · needs: the footprint and the model files · [catalogue entry](../checks.md#lib-22)
+
+**Impl.** easy · depends on `IMP-21`, `IMP-20`
+
+**What it catches.** A footprint's `(model ...)` entry whose path leads nowhere: a `${VAR}` that neither the
+environment, KiCad's `kicad_common.json` nor a stock KiCad sets; an expanded path with no file (a `.wrl` without a
+`.step` or `.stp` beside it either); or a file that is there but cannot be read as STEP.
+
+**Why it matters.** KiCad shows such a footprint without a body in the 3D viewer and leaves it out of the STEP
+export without an error, so a mechanical check against the enclosure misses the part. The cause is usually a model
+library not installed on this PC, a variable set on one PC only, or a model renamed in the library.
+
+**Example.** A board whose footprints name `${KICAD10_3DMODEL_DIR}/...` on a PC where KiCad's 3D model package is
+not installed: every stock model is missing, and the STEP export of the board has bare pads.
+
+**How to check.** Resolve the path as KiCad does (`erc_kicad::model3d::resolve`), then read the file
+(`erc_step::read_file`). better_erc: `berc fp model`, `Resolved::UnknownVar` / `NotFound` and `read_error`.
+
+**Fix.** Install or point the variable at the model library, or correct the path in the footprint.
+
+**References.** KiCad documentation, "3D models" in the footprint editor chapter (path variables, `.wrl` and
+`.step` beside each other).
+
+## `LIB-23` 3D model out of the courtyard <a id="lib-23"></a>
+
+⚠️ warning · needs: the footprint's courtyard and its model · [catalogue entry](../checks.md#lib-23)
+
+**Impl.** mid · depends on `TOOL-12`
+
+**What it catches.** A model that, seen from above and placed as KiCad places it, reaches past the footprint's
+courtyard (`F.CrtYd`). The finding gives how far, and the model's point furthest out.
+
+**Why it matters.** The courtyard is what the DRC keeps parts apart by. A body wider than the courtyard means
+either the courtyard is too small (parts placed to it collide) or the model sits wrong on the footprint (offset or
+turned), so the 3D view and the STEP export show a board that will not be built that way.
+
+**Example.** A connector model offset by its own origin's distance from the first pin: the body hangs 2 mm out of
+one side of the courtyard.
+
+**How to check.** Every vertex of the placed model's mesh, projected down, tested against the courtyard's outline
+(every courtyard shape, even-odd), and its distance to the outline when outside. A finding past 0.005 mm.
+better_erc: `berc fp model`, `CourtyardFit`.
+
+**Fix.** Fix the model's offset or rotation, or grow the courtyard to the body (IPC-7351: the body plus the
+courtyard excess).
+
+**References.** IPC-7351B, courtyard excess; `LAY-3`.
+
+## `LIB-24` Copper pad with no lead of the 3D model over it <a id="lib-24"></a>
+
+⚠️ warning · needs: the footprint's pads and its model · [catalogue entry](../checks.md#lib-24)
+
+**Impl.** mid · depends on `TOOL-12`
+
+**What it catches.** A copper pad on the front (SMD or plated, not a package via) that no part of the model's bottom
+slice lies over: the model's lowest 0.2 mm, seen from below, against each pad's copper.
+
+**Why it matters.** The model is the third source of truth beside the datasheet drawing and the footprint. A pad
+without a lead over it means the model is offset, turned, mirrored or for another package, or the footprint's pads
+are where the part has none. Either way one of the three is wrong.
+
+**Example.** A SOT-23 model turned by 90° on its footprint: its three leads stand between the pads.
+
+**How to check.** Each triangle of the placed mesh clipped to the slice, projected down and counted on a grid
+(at most 2000 cells a side, 5 µm cells for a small package) against each pad's copper outline; a pad with no cell
+under a lead is the finding. better_erc: `berc fp model`, `Leads` and `PadLeads`. A body that rests on the board
+counts as a lead: the per-pad share (`--details`) tells it apart.
+
+**Fix.** Correct the model's rotation and offset, or the footprint's pads against the datasheet.
+
+**References.** None beyond the package drawing; `TOOL-12`.
+
+## `LIB-25` 3D model scaled <a id="lib-25"></a>
+
+⚠️ warning · needs: the footprint · [catalogue entry](../checks.md#lib-25)
+
+**Impl.** easy · depends on `IMP-21`
+
+**What it catches.** A model entry with a `scale` other than 1 on any axis.
+
+**Why it matters.** A STEP model is drawn at the package's real size; a scale makes it some other size, so heights
+and clearances taken from the 3D view or the export are wrong. Scales are left over from VRML models in tenths of an
+inch or from fitting a near-match model to another package.
+
+**Example.** A model of a 4 mm inductor scaled by 1.25 to stand in for the 5 mm one.
+
+**How to check.** The entry's `scale`; better_erc: `berc fp model`.
+
+**Fix.** Use a model of the actual package at scale 1.
+
+**References.** None.
+
+## `LIB-26` 3D model file not in millimetres <a id="lib-26"></a>
+
+💡 suggestion · needs: the model file · [catalogue entry](../checks.md#lib-26)
+
+**Impl.** easy · depends on `IMP-20`
+
+**What it catches.** A STEP file whose length unit is not the millimetre (metres, inches).
+
+**Why it matters.** KiCad and better_erc convert it, so the model is placed right. But some tools do not, and a
+model in metres meshed with a tolerance meant in millimetres comes out coarse; a library is easier to keep when every
+file is in one unit.
+
+**Example.** A vendor model exported in inches.
+
+**How to check.** The unit of the file's top-level shape (`erc_step::Model::unit`); better_erc: `berc fp model`.
+
+**Fix.** Export the model again in millimetres.
+
+**References.** ISO 10303-41 (units).
+
+## `LIB-27` 3D model turned by an odd angle <a id="lib-27"></a>
+
+⚠️ warning · needs: the footprint · [catalogue entry](../checks.md#lib-27)
+
+**Impl.** easy · depends on `IMP-21`
+
+**What it catches.** A model entry whose `rotate` is not a multiple of 90° about some axis.
+
+**Why it matters.** Packages are drawn square to their footprint. An odd angle is almost always a typo or a model
+fitted by eye; the few real cases (a part mounted at an angle) are worth a look anyway.
+
+**Example.** `rotate (xyz 0 0 45)` left from a trial.
+
+**How to check.** The entry's `rotate`, each angle to a millionth of a degree; better_erc: `berc fp model`.
+
+**Fix.** Turn the model by a right angle, or rotate the footprint on the board instead.
+
+**References.** None.
+
+## `LIB-28` Footprint with no 3D model shown <a id="lib-28"></a>
+
+💡 suggestion · needs: the footprint · [catalogue entry](../checks.md#lib-28)
+
+**Impl.** easy · depends on `IMP-21`
+
+**What it catches.** A footprint with copper pads that has no `(model ...)` entry, or only hidden ones. Board-only
+footprints and footprints without copper pads (logos, mounting holes) are left out.
+
+**Why it matters.** The part is missing from the 3D view and the board's STEP export, so enclosure and height checks
+pass without it.
+
+**Example.** A test point footprint drawn by hand, without a model.
+
+**How to check.** The footprint's model entries and their `hide`; better_erc: `berc fp model`.
+
+**Fix.** Add a model of the package, or mark the footprint board-only when it has no part.
+
+**References.** None.
