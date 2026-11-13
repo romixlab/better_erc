@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.39] - 2026-11-13
+
 ### Fixed
 
 - Footprint review: the once-reviewed line (the `Footprint_Review` field, old value and new) was a row of the
