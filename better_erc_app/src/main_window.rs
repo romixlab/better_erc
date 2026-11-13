@@ -1,6 +1,8 @@
 mod default_state;
 mod menu_bar;
 mod side_panel;
+#[cfg(test)]
+mod look_tests;
 
 use crate::prelude::*;
 use crate::tabs::{Tab, TreeBehavior};
@@ -57,18 +59,13 @@ impl BetterErcApp {
             crate::tabs::footprint_review::blend::register(&cc.egui_ctx, rs, 1, None);
         }
 
-        // Init fonts
-        let mut fonts = egui::FontDefinitions::default();
-        egui_phosphor::add_to_fonts(&mut fonts, egui_phosphor::Variant::Regular);
-        egui_phosphor::add_to_fonts(&mut fonts, egui_phosphor::Variant::Fill);
-        cc.egui_ctx.set_fonts(fonts);
+        setup_look(&cc.egui_ctx);
 
         Self { cx, state }
     }
-}
 
-impl eframe::App for BetterErcApp {
-    fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
+    /// The app's frame: the menu bar, the side panel, the debug window and the tabs
+    fn show(&mut self, ui: &mut egui::Ui) {
         let ctx = ui.ctx().clone();
 
         Panel::top("top_panel").show(ui, |ui| {
@@ -100,6 +97,20 @@ impl eframe::App for BetterErcApp {
         egui::CentralPanel::default().show(ui, |ui| {
             self.state.tabs.ui(&mut self.state.tabs_behavior, ui);
         });
+    }
+}
+
+/// The app's fonts and style: the phosphor icon fonts
+pub fn setup_look(ctx: &egui::Context) {
+    let mut fonts = egui::FontDefinitions::default();
+    egui_phosphor::add_to_fonts(&mut fonts, egui_phosphor::Variant::Regular);
+    egui_phosphor::add_to_fonts(&mut fonts, egui_phosphor::Variant::Fill);
+    ctx.set_fonts(fonts);
+}
+
+impl eframe::App for BetterErcApp {
+    fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
+        self.show(ui);
     }
 
     fn save(&mut self, storage: &mut dyn eframe::Storage) {
