@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.49] - 2026-11-13
+
 ### Changed
 
 - `VIEW-25`: the footprint review's side panel is rebuilt on vhrd_egui's property-panel widgets. Accept and Next to
