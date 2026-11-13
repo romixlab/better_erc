@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.42] - 2026-11-13
+
 ### Changed
 
 - `ve_spacemouse` (better_erc_app) and `exact_units` (erc_levels) no longer pin a tag or a rev: both are plain
