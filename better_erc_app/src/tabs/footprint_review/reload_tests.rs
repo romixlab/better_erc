@@ -71,6 +71,18 @@ fn add_pad(file: &Path, n: u32) {
     std::fs::write(file, format!("{}{pad}{}", &text[..at], &text[at..])).unwrap();
 }
 
+/// A frame, the datasheet's worker waited for, then frames until nothing more is asked. Reading files again sends
+/// the worker work whose replies come back one by one, each asking a frame; under load they straddle more frames
+/// than `run` steps, so the test waits for the worker to be idle first, as `open` does
+fn settle(h: &mut Harness<'static, FootprintReview>) {
+    h.step();
+    let ctx = h.ctx.clone();
+    if let Some(pdf) = h.state_mut().rt.pdf.as_mut() {
+        pdf.wait_idle(&ctx);
+    }
+    h.run();
+}
+
 fn pads(h: &Harness<'_, FootprintReview>) -> Vec<String> {
     let s = h.state().rt.sourced.as_ref().expect("a footprint shown");
     s.footprint.pads.iter().map(|p| p.number.clone()).collect()
@@ -103,14 +115,14 @@ fn harness(name: &'static str, watch: bool) -> Harness<'static, FootprintReview>
 /// The library opened, `Rev:Mixed` under review with its datasheet, the scale set and the footprint moved off its
 /// first place: the view a reload must keep
 fn open(h: &mut Harness<'static, FootprintReview>, lib: &Path) {
-    h.run();
+    settle(h);
     let ctx = h.ctx.clone();
     h.state_mut().open_path(&ctx, lib);
-    h.run();
+    settle(h);
     h.get_by_label("Rev:Mixed").click();
-    h.run();
+    settle(h);
     h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
-    h.run();
+    settle(h);
     let page = h.state().page;
     let st = h.state_mut();
     st.scale = Some(Scale {
@@ -121,7 +133,7 @@ fn open(h: &mut Harness<'static, FootprintReview>, lib: &Path) {
     });
     st.place.origin = [123.0, 45.0];
     st.place.rotation = 90.0;
-    h.run();
+    settle(h);
     assert_eq!(status(h, "Rev:Mixed"), SymbolStatus::Ok);
 }
 
@@ -152,10 +164,10 @@ fn reload_shows_the_footprint_as_it_is_on_disk() {
 
     // Not watched in this test: nothing changes until asked
     add_pad(&mixed, 7);
-    h.run();
+    settle(&mut h);
     assert!(!pads(&h).contains(&"7".to_string()));
     h.get_by_label_contains("Reload · F5").click();
-    h.run();
+    settle(&mut h);
     assert!(pads(&h).contains(&"7".to_string()), "{:?}", pads(&h));
     assert_ne!(h.state().rt.sourced.as_ref().unwrap().hash, hash);
     assert_eq!(status(&h, "Rev:Mixed"), SymbolStatus::Changed);
@@ -165,25 +177,25 @@ fn reload_shows_the_footprint_as_it_is_on_disk() {
     // The datasheet was read again, its page and scale kept
     let ctx = h.ctx.clone();
     h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
-    h.run();
+    settle(&mut h);
     assert_eq!(view(&h), before);
 
     // The key, over the canvas
     add_pad(&mixed, 8);
     let canvas = h.state().rt.canvas;
     h.hover_at(canvas.center());
-    h.run();
+    settle(&mut h);
     h.key_press(egui::Key::F5);
-    h.run();
+    settle(&mut h);
     assert!(pads(&h).contains(&"8".to_string()), "{:?}", pads(&h));
     assert_eq!(view(&h), before);
 
     // Another symbol, the footprint changed meanwhile, back: as it is on disk now, no Reload needed
     h.get_by_label("Rev:Sot").click();
-    h.run();
+    settle(&mut h);
     add_pad(&mixed, 9);
     h.get_by_label("Rev:Mixed").click();
-    h.run();
+    settle(&mut h);
     assert!(pads(&h).contains(&"9".to_string()), "{:?}", pads(&h));
     h.get_by_label_contains("the symbols and footprints changed on disk: reloaded at ");
 }
@@ -200,13 +212,13 @@ fn accept_reloads_nothing() {
     // A stale review to accept again
     add_pad(&mixed, 7);
     h.get_by_label_contains("Reload · F5").click();
-    h.run();
+    settle(&mut h);
     assert_eq!(status(&h, "Rev:Mixed"), SymbolStatus::Changed);
     let text = std::fs::read_to_string(&lib).unwrap();
     h.get_by_label(ACCEPT).click();
-    h.run();
+    settle(&mut h);
     h.key_press(egui::Key::Enter);
-    h.run();
+    settle(&mut h);
     assert!(
         matches!(h.state().rt.written, Some(Ok(_))),
         "{:?}",
@@ -218,7 +230,7 @@ fn accept_reloads_nothing() {
     // Picking it again (the list's row; the label is in what Accept wrote too) reads nothing again
     let i = h.state().symbol_row("Rev:Mixed").unwrap();
     h.state_mut().select_symbol(i, true);
-    h.run();
+    settle(&mut h);
     assert!(
         h.state()
             .rt
@@ -264,7 +276,7 @@ fn a_change_on_disk_reloads_by_itself() {
     }
     assert_eq!(status(&h, "Rev:Mixed"), SymbolStatus::Changed);
     assert_eq!(view(&h), before);
-    h.run();
+    settle(&mut h);
     h.get_by_label_contains("the symbols and footprints changed on disk: reloaded at ");
 }
 
@@ -326,14 +338,14 @@ fn an_override_is_reviewed_from_its_library() {
     let mixed = override_project(dir.path());
     add_pad(&mixed, 7);
     let mut h = harness("fp reload override", false);
-    h.run();
+    settle(&mut h);
     let ctx = h.ctx.clone();
     h.state_mut()
         .open_path(&ctx, &dir.path().join("rev.kicad_pro"));
-    h.run();
+    settle(&mut h);
     let i = h.state().symbol_row("Rev:Mixed").unwrap();
     h.state_mut().select_symbol(i, true);
-    h.run();
+    settle(&mut h);
     let st = h.state();
     let s = st.rt.sourced.as_ref().expect("a footprint shown");
     assert_eq!(s.source, FootprintSource::File(mixed.clone()));
@@ -353,7 +365,7 @@ fn an_override_is_reviewed_from_its_library() {
     // Edited in the library again: read again, as any footprint shown
     add_pad(&mixed, 8);
     h.get_by_label_contains("Reload · F5").click();
-    h.run();
+    settle(&mut h);
     assert!(pads(&h).contains(&"8".to_string()), "{:?}", pads(&h));
     assert!(
         h.state()
