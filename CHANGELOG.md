@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- Footprint review: the overlays hidden for a moment to see the drawing. `H` hides or shows the footprint, `J` the model over the page, and holding `Space` shows the page alone until it is let go (all three keys are settings). Their places are kept; the mode bar shows each switch with its key and the help line names them (`VIEW-28`).
+
 ### Changed
 
 - Footprint review: a measurement goes into the review note only on request. A `+ note` button beside the measuring ruler's label on the canvas, beside the 3D view's measurement, and in the Measure section adds it as `M1 = … mm`; nothing is added by itself any more, and the numbers follow what was added. Moving a ruler's end after adding it makes a new measurement instead of changing the old one in the note (`VIEW-21`).

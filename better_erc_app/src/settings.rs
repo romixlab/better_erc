@@ -140,6 +140,12 @@ pub struct Keys {
     pub model_look: String,
     /// What the mouse in Move, the arrow keys, turn and mirror move: the footprint or the model (VIEW-27)
     pub moves: String,
+    /// Hides the footprint over the page, and shows it again where it was (VIEW-28)
+    pub hide_footprint: String,
+    /// Hides the model over the page (its silhouettes or the 3D model), and shows it again where it was (VIEW-28)
+    pub hide_model: String,
+    /// Held: the page alone, the footprint and the model hidden until it is let go (VIEW-28)
+    pub peek: String,
 }
 
 impl Default for Keys {
@@ -169,6 +175,9 @@ impl Default for Keys {
             model_view: "K".into(),
             model_look: "L".into(),
             moves: "Q".into(),
+            hide_footprint: "H".into(),
+            hide_model: "J".into(),
+            peek: "Space".into(),
         }
     }
 }

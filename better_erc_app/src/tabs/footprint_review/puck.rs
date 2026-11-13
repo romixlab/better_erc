@@ -51,6 +51,9 @@ pub enum Action {
     ModelLook,
     /// What moves: the footprint or the model (VIEW-27)
     Moves,
+    /// The footprint or the model over the page hidden, or shown again where it was (VIEW-28)
+    HideFootprint,
+    HideModel,
     /// Accept's question answered: write, or nothing
     Write,
     Cancel,
@@ -606,6 +609,8 @@ impl FootprintReview {
             Action::ModelView => self.cycle_model_view(ctx.input(|i| i.time)),
             Action::ModelLook => self.toggle_look(),
             Action::Moves => self.toggle_moves(),
+            Action::HideFootprint => self.toggle_hidden(false),
+            Action::HideModel => self.toggle_hidden(true),
             Action::Write => self.confirmed(ctx, true),
             Action::Cancel => self.confirmed(ctx, false),
         }

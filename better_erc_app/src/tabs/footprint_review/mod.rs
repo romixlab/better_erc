@@ -571,6 +571,11 @@ struct Runtime {
     name_text: String,
     /// Where the canvas was drawn last
     canvas: Rect,
+    /// The footprint, the model over the page hidden for a moment, their places kept (VIEW-28)
+    fp_hidden: bool,
+    model_hidden: bool,
+    /// The peek key is held: the page alone
+    peek: bool,
     /// A footprint was just opened: find its datasheet (the Datasheet field's file, else the library search)
     want_search: bool,
     /// The library search running was started for a part just picked: its first hit opens by itself
@@ -667,6 +672,9 @@ impl Default for Runtime {
             search_text: String::new(),
             name_text: String::new(),
             canvas: Rect::NOTHING,
+            fp_hidden: false,
+            model_hidden: false,
+            peek: false,
             want_search: false,
             auto_open: false,
             searcher: None,
@@ -1817,7 +1825,13 @@ impl FootprintReview {
     /// pixels (at least 20) at the view's zoom
     fn pad_snap(&self, p: [f32; 2]) -> Option<Snap> {
         let reach = self.rt.settings.line_snap_px.max(10.0) * 2.0 / self.zoom;
-        let pads = self.rt.fp_snaps.iter().map(|s| {
+        let fp = if self.footprint_shown() {
+            &self.rt.fp_snaps[..]
+        } else {
+            &[]
+        };
+        let model = self.model_shown();
+        let pads = fp.iter().map(|s| {
             let kind = if s.centre {
                 SnapKind::PadCentre
             } else {
@@ -1825,7 +1839,7 @@ impl FootprintReview {
             };
             (self.fp_to_page(s.at), kind)
         });
-        pads.chain(self.model_view_snaps())
+        pads.chain(self.model_view_snaps().filter(|_| model))
             .map(|(at, kind)| (at, kind, (at[0] - p[0]).hypot(at[1] - p[1])))
             .filter(|(_, _, d)| *d <= reach)
             .min_by(|a, b| a.2.total_cmp(&b.2))
@@ -1975,7 +1989,8 @@ impl FootprintReview {
              {} · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
              arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · right or middle drag pans · \
              {} the model as silhouettes or 3D ({}) · {} moves the footprint or the model ({}) · {} {} · \
-             3D: SpaceMouse tilt, roll and twist or Ctrl+drag turn it, letting go lands on a side (Alt: free)\n\
+             3D: SpaceMouse tilt, roll and twist or Ctrl+drag turn it, letting go lands on a side (Alt: free) · \
+             {} hides or shows the footprint, {} the model · hold {}: the page alone\n\
              {} accept · {} next to review · {} write a review note · SpaceMouse: the puck {} ({} switches), push away zooms out · \
              tap the left button for the ruler, the right one to switch · hold one for its ring, both for Accept",
             self.tool.name(),
@@ -2016,6 +2031,9 @@ impl FootprintReview {
                 modelviews::ModelLook::Silhouettes => "the next model view",
                 modelviews::ModelLook::Solid => "the 3D model to the next side",
             },
+            n(k.hide_footprint),
+            n(k.hide_model),
+            n(k.peek),
             n(k.accept),
             n(k.next),
             n(k.note),
@@ -2175,6 +2193,8 @@ impl FootprintReview {
             if r.clicked() {
                 cycle_view = true;
             }
+            ui.separator();
+            self.shown_switches(ui);
             if self.tool != Tool::Move {
                 ui.label(
                     RichText::new(format!("{} or Esc: back to Move", key_name(k.move_tool))).weak(),
@@ -2885,9 +2905,11 @@ impl FootprintReview {
             self.rt.snap = self.end_snap(p, false);
         }
         // Keys while the pointer is over the canvas
+        self.rt.peek = false;
         if resp.hovered() && !ctx.egui_wants_keyboard_input() {
             let km = self.keys();
             let (pressed, shift) = Pressed::read(ui, &km);
+            self.rt.peek = pressed.peek;
             let step = if shift { 10.0 } else { 1.0 } / self.zoom;
             let p = pressed;
             let place = self.moving_mut();
@@ -2931,6 +2953,8 @@ impl FootprintReview {
                 (p.model_view, Action::ModelView),
                 (p.model_look, Action::ModelLook),
                 (p.moves, Action::Moves),
+                (p.hide_footprint, Action::HideFootprint),
+                (p.hide_model, Action::HideModel),
             ] {
                 if on {
                     self.act(&ctx, action, hover_page, shift, lines);
@@ -2945,11 +2969,11 @@ impl FootprintReview {
             )
         });
         let page = rect.zip(self.page_image(&ctx, invert));
-        if self.blinked(&ctx, self.model_views.blink) {
+        if self.model_shown() && self.blinked(&ctx, self.model_views.blink) {
             self.draw_model_views(&painter, canvas, page.clone(), ui.id());
             self.draw_solid(&painter, canvas, page.clone(), ui.id());
         }
-        if self.blinked(&ctx, self.blink) && !self.rt.items.is_empty() {
+        if self.footprint_shown() && self.blinked(&ctx, self.blink) && !self.rt.items.is_empty() {
             self.draw_footprint(&painter, canvas, page, ui.id());
         }
         self.draw_selection(&painter, canvas);
@@ -3198,6 +3222,65 @@ impl FootprintReview {
         }
     }
 
+    /// Whether the footprint is drawn over the page: not hidden by its key, the peek key not held (VIEW-28)
+    fn footprint_shown(&self) -> bool {
+        !self.rt.fp_hidden && !self.rt.peek
+    }
+
+    /// Whether the model is drawn over the page (its silhouettes or the 3D model), as [`Self::footprint_shown`]
+    fn model_shown(&self) -> bool {
+        !self.rt.model_hidden && !self.rt.peek
+    }
+
+    /// The footprint or the model hidden or shown again, where it was
+    fn toggle_hidden(&mut self, model: bool) {
+        let (hidden, what) = if model {
+            (&mut self.rt.model_hidden, "model")
+        } else {
+            (&mut self.rt.fp_hidden, "footprint")
+        };
+        *hidden = !*hidden;
+        let word = if *hidden { "hide" } else { "show" };
+        self.usage(&format!("{word} {what}"));
+    }
+
+    /// What is over the page, each with its key, in the mode bar: the footprint and the model shown or hidden for a
+    /// moment, and the key held for the page alone
+    fn shown_switches(&mut self, ui: &mut Ui) {
+        let k = self.keys();
+        ui.label("Over the page");
+        let mut toggle = None;
+        for (model, hidden, key, what) in [
+            (false, self.rt.fp_hidden, k.hide_footprint, "footprint"),
+            (true, self.rt.model_hidden, k.hide_model, "model"),
+        ] {
+            let name = if model { "Model" } else { "Footprint" };
+            let r = ui
+                .add(Button::selectable(
+                    !hidden && !self.rt.peek,
+                    format!("{name} · {}", key_name(key)),
+                ))
+                .on_hover_text(format!(
+                    "the {what} {} over the page; {} {} it, where it was",
+                    if hidden { "hidden" } else { "shown" },
+                    key_name(key),
+                    if hidden { "shows" } else { "hides" },
+                ));
+            if r.clicked() {
+                toggle = Some(model);
+            }
+        }
+        let peek = format!("hold {}: the page alone", key_name(k.peek));
+        if self.rt.peek {
+            ui.label(RichText::new(peek).strong().color(SNAP_COLOUR));
+        } else {
+            ui.label(RichText::new(peek).weak());
+        }
+        if let Some(model) = toggle {
+            self.toggle_hidden(model);
+        }
+    }
+
     /// Whether a group with a checkbox (the back side, courtyard, fab, silk, board edge) is shown
     fn group_shown(&self, name: &str) -> bool {
         !self.hidden.iter().any(|h| h == name)
@@ -3425,6 +3508,9 @@ struct KeyMap {
     model_view: Option<egui::Key>,
     model_look: Option<egui::Key>,
     moves: Option<egui::Key>,
+    hide_footprint: Option<egui::Key>,
+    hide_model: Option<egui::Key>,
+    peek: Option<egui::Key>,
 }
 
 impl From<&Keys> for KeyMap {
@@ -3455,6 +3541,9 @@ impl From<&Keys> for KeyMap {
             model_view: key(&k.model_view),
             model_look: key(&k.model_look),
             moves: key(&k.moves),
+            hide_footprint: key(&k.hide_footprint),
+            hide_model: key(&k.hide_model),
+            peek: key(&k.peek),
         }
     }
 }
@@ -3492,6 +3581,10 @@ struct Pressed {
     model_view: bool,
     model_look: bool,
     moves: bool,
+    hide_footprint: bool,
+    hide_model: bool,
+    /// The peek key is held down (not just pressed)
+    peek: bool,
 }
 
 impl Pressed {
@@ -3531,6 +3624,9 @@ impl Pressed {
                 model_view: pressed(km.model_view),
                 model_look: pressed(km.model_look),
                 moves: pressed(km.moves),
+                hide_footprint: pressed(km.hide_footprint),
+                hide_model: pressed(km.hide_model),
+                peek: km.peek.is_some_and(|k| i.key_down(k)),
             };
             (p, i.modifiers.shift)
         })

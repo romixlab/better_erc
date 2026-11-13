@@ -572,3 +572,73 @@ fn select_the_drawing_and_save_it_as_dxf() {
     assert_eq!(h.state().tool, Tool::Move);
     std::fs::remove_dir_all(&dir).unwrap();
 }
+
+/// The footprint or the model hidden for a moment to see the drawing (VIEW-28): H hides the footprint and shows it
+/// again where it was, J the model, Space held hides both until it is let go; the mode bar shows each, the help
+/// line names the keys, and a hidden footprint gives the measuring ruler nothing to snap to
+#[test]
+fn hide_the_overlays_for_a_moment() {
+    let dir = scratch("hide");
+    let mut h = open("fp mode hide", &dir);
+    let pad = h.state().fp_to_page([0.0, -1.5]);
+    let pixel = |h: &mut H| {
+        over_canvas(h);
+        let st = h.state();
+        let p = st.to_screen(st.rt.canvas, pad);
+        let img = h.render().unwrap();
+        let ppp = h.ctx.pixels_per_point();
+        img.get_pixel((p.x * ppp) as u32, (p.y * ppp) as u32).0
+    };
+    let dist = |a: [u8; 4], b: [u8; 4]| (0..3).map(|i| a[i].abs_diff(b[i]) as u32).sum::<u32>();
+    let shown = pixel(&mut h);
+    let place = h.state().place.clone();
+    let help = h.state().help_line();
+    for k in [
+        "H hides or shows the footprint",
+        "J the model",
+        "hold Space",
+    ] {
+        assert!(help.contains(k), "{k}: {help}");
+    }
+    key(&mut h, egui::Key::H);
+    assert!(!h.state().footprint_shown());
+    let hidden = pixel(&mut h);
+    assert!(dist(shown, hidden) > 60, "{shown:?} -> {hidden:?}");
+    assert_eq!(h.state().place, place, "its place kept");
+    // Nothing to snap to while hidden
+    key(&mut h, egui::Key::G);
+    h.hover_at(screen(&h, pad) + egui::vec2(3.0, 3.0));
+    h.run();
+    assert_eq!(h.state().rt.snap, None);
+    key(&mut h, egui::Key::M);
+    // The mode bar's button shows it again, where it was
+    h.get_by_label("Footprint · H").click();
+    h.run();
+    assert!(h.state().footprint_shown());
+    assert!(dist(shown, pixel(&mut h)) < 10);
+    // J: the model
+    key(&mut h, egui::Key::J);
+    assert!(h.state().rt.model_hidden && !h.state().model_shown());
+    key(&mut h, egui::Key::J);
+    assert!(h.state().model_shown());
+    // Space held: the page alone, until let go
+    over_canvas(&mut h);
+    let space = |pressed| egui::Event::Key {
+        key: egui::Key::Space,
+        physical_key: None,
+        pressed,
+        repeat: false,
+        modifiers: Default::default(),
+    };
+    h.event(space(true));
+    h.run();
+    h.run();
+    assert!(!h.state().footprint_shown() && !h.state().model_shown());
+    h.get_by_label("hold Space: the page alone");
+    assert!(dist(hidden, pixel(&mut h)) < 10, "the page alone");
+    h.event(space(false));
+    h.run();
+    h.run();
+    assert!(h.state().footprint_shown() && h.state().model_shown());
+    std::fs::remove_dir_all(&dir).unwrap();
+}

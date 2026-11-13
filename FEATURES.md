@@ -793,6 +793,13 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   quarter, a screen turn in a turned or mirrored picture; on the GPU, L and Q, the body's edge at the page mm, the
   corner snap, the puck's turn landing, K, Ctrl+drag with and without Alt; a real drawing through
   `BERC_MODEL_VIEWS` (`3d:` and `turn:`) · `better_erc_app/src/tabs/footprint_review/solid.rs`
+- ✅ `VIEW-28` Footprint review, hide the overlays for a moment: `H` hides the footprint over the page and shows it
+  again, `J` the model (its silhouettes or the 3D model), `Space` held hides both until it is let go (all three
+  settings); their places are kept, and a hidden one gives the measuring ruler nothing to snap to. The mode bar shows
+  each as a switch with its key (Over the page: Footprint · H, Model · J, hold Space: the page alone, lit while held),
+  the help line names the keys. Usage signals `app fp-review hide footprint|show model ...`. Test: the pad's pixel
+  gone and back, the snap gone, J, Space held and let go · `better_erc_app/src/tabs/footprint_review/mod.rs`,
+  `mode_tests.rs`
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
   one lookup per MPN per session, on a worker thread) and its review state from the review lines (reviewed, reviewed

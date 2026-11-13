@@ -1586,6 +1586,9 @@ impl FootprintReview {
                         ("Save the selection as DXF", &mut k.save_dxf),
                         ("The page or the 3D model", &mut k.view_3d),
                         ("Measure model", &mut k.measure_model),
+                        ("Hide or show the footprint", &mut k.hide_footprint),
+                        ("Hide or show the model", &mut k.hide_model),
+                        ("Held: the page alone", &mut k.peek),
                     ] {
                         ui.label(what);
                         let ok = egui::Key::from_name(name.trim()).is_some();
