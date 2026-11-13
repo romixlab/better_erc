@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.54] - 2026-11-13
+
 ### Added
 
 - Footprint review: the overlays hidden for a moment to see the drawing. `H` hides or shows the footprint, `J` the model over the page, and holding `Space` shows the page alone until it is let go (all three keys are settings). Their places are kept; the mode bar shows each switch with its key and the help line names them (`VIEW-28`).
