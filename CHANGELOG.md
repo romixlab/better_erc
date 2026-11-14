@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.58] - 2026-11-14
+
 ### Fixed
 
 - Footprint review: each datasheet of a symbol keeps its own view. The page, zoom, scale, footprint and model placements, X-ray, perspective, ruler and review note are kept per symbol and datasheet. Opening another datasheet (from the Datasheets by MPN table or by hand) keeps the view left, and opening it again finds it as it was. A datasheet never opened before gets its review line's view, else a fresh fit; before, it took the last datasheet's placement. Work not accepted yet survives switching and is saved with the tab. A review line changed since the view was left (accepted elsewhere, `berc fp accept`) wins over the kept view (`TOOL-11`).
