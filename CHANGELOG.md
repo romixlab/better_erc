@@ -11,18 +11,20 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.59] - 2026-11-14
+
 ### Added
 
 - The app in the desktop's launcher: `just install` puts its `.desktop` file and icon in place and updates the desktop database (`just launcher` alone does only that); the window's app id is `better_erc`, so the launcher and the dock know it (APP-6).
 - The app's colours follow the desktop theme (omarchy's accent, background and text), and change when it switches; the menu bar's *Colours* menu picks the desktop theme, the vhrd brand or a fixed accent, saved in the settings file as `colors` (APP-5).
 
-### Fixed
-
-- Footprint review: the SpaceMouse drives one thing. On the page its slide pans the view and a twist no longer turns the 3D model with it; switched to a thing (`Tab`), it moves what is under the pointer, else what `Q` picks, and turns the 3D model only when that is what it drives; the page stays (VIEW-33).
-
 ### Changed
 
 - vhrd_egui 0.33.3 (ve_spacemouse, ve_theme, ve_view3d): the SpaceMouse pie shows every name in full and its ring grows when names need the room (SPM-7); ve_theme follows the desktop theme (THM-18).
+
+### Fixed
+
+- Footprint review: the SpaceMouse drives one thing. On the page its slide pans the view and a twist no longer turns the 3D model with it; switched to a thing (`Tab`), it moves what is under the pointer, else what `Q` picks, and turns the 3D model only when that is what it drives; the page stays (VIEW-33).
 
 ## [0.4.58] - 2026-11-14
 
