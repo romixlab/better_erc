@@ -16,6 +16,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - Footprint review: the footprint's centre snaps to the drawing's lines while it moves (a drag, the arrows, the SpaceMouse): a line's end, two lines crossing, else onto a line, as near as a ruler end snaps, the target shown as the ruler's. A run of arrow presses or a drag pulls it off again once out of reach. On by default; `.` (`centre_snap` key) and *Centre snap* in the mode bar switch it, `centre_snap` in the settings is how it starts, Alt held frees a move. The centre cross is bigger: thin arms along the footprint's own X and Y, 40 screen points each way (`centre_cross_px`, a setting) (VIEW-35).
 - Footprint review: the SpaceMouse carries what a mouse drag holds. While a drag holds the footprint, a silhouette view or the 3D model, the puck (and the wheel) pan and zoom the page under it and the held thing stays under the pointer at the same spot of it, at the page's scale; letting go drops it there. While held the puck pans the page whatever it is switched to (VIEW-34).
 
+### Fixed
+
+- Footprint review: the "3D model · side" name over the page sits just over the model's top left corner on screen, following its place, turn and zoom; it was over the corner of the larger picture the model is drawn in, far from the model in perspective. A silhouette view's name goes over the top left corner of its box on screen too (VIEW-36).
+
 ## [0.4.59] - 2026-11-14
 
 ### Added

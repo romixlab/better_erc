@@ -734,7 +734,7 @@ impl FootprintReview {
                     Stroke::new(1.0, line.gamma_multiply(a.max(0.6))),
                 ));
             }
-            // The view's name over its top left corner, and its origin
+            // The view's name over the top left corner of its box on screen, and its origin
             if let Some((lo, hi)) = v.extent {
                 let corners = [
                     [lo[0], lo[1]],
@@ -743,17 +743,13 @@ impl FootprintReview {
                     [hi[0], hi[1]],
                 ]
                 .map(screen);
-                let top_left = corners
-                    .iter()
-                    .copied()
-                    .min_by(|p, q| (p.x + p.y).total_cmp(&(q.x + q.y)))
-                    .unwrap_or(corners[0]);
+                let top_left = label_corner(&corners);
                 let text = if current {
                     format!("{} view · moves", side.name())
                 } else {
                     format!("{} view", side.name())
                 };
-                labels.push((top_left - vec2(0.0, 2.0), text));
+                labels.push((top_left, text));
             }
             let o = self.to_screen(canvas, place.origin);
             let s = Stroke::new(1.0, line);
@@ -1065,6 +1061,12 @@ impl FootprintReview {
                 }
             });
     }
+}
+
+/// Where a model's label goes (VIEW-36): just over the top left corner of the box on screen around `points` (what of
+/// the model is drawn), so it stays beside the model however it is placed, turned and zoomed
+pub(super) fn label_corner(points: &[Pos2]) -> Pos2 {
+    Rect::from_points(points).left_top() - vec2(0.0, 2.0)
 }
 
 #[cfg(test)]

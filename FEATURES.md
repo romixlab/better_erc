@@ -880,6 +880,12 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   dimension's corner and the target shown, the arrows along the line, Alt, the key and the button; the puck onto a
   line and free with Alt · `centre.rs`, `mod.rs`, `puck.rs`, `mode_tests.rs`
   (`the_footprint_centre_snaps_to_the_drawing`), `puck_tests.rs` (`the_puck_snaps_the_footprint_centre`)
+- ✅ `VIEW-36` 🐛 fixed: the "3D model · side" name over the page was drawn over the corner of the picture the model
+  is rendered in (the model's reach all round, `1 + tan(fov / 2)` times that in perspective), far from the model.
+  Now the model's box (its parts' bounds) is projected through the picture's camera and its placement onto the
+  screen, and the name sits just over that box's top left corner, following its place, turn and zoom; a silhouette
+  view's name over the top left corner of its outline box on screen (`label_corner`). Test: on the GPU, the name at
+  the body's corner, and at its new corner after a quarter turn · `solid.rs`, `modelviews.rs`
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
   one lookup per MPN per session, on a worker thread) and its review state from the review lines (reviewed, reviewed

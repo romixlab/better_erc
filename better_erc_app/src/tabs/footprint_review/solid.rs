@@ -71,6 +71,8 @@ pub(super) struct SolidRt {
     pub turned: bool,
     /// Into the middle of the canvas at the next frame
     pub centre: bool,
+    /// Where its name was drawn last, screen points: its bottom left (VIEW-36)
+    pub label_at: Option<Pos2>,
 }
 
 /// The turn that shows `side` as its silhouette does (the bottom seen from below, x mirrored by looking from there)
@@ -328,6 +330,24 @@ impl FootprintReview {
         let Some((texture, picture)) = view.render_offscreen(&ctx, vec2(side, side)) else {
             return;
         };
+        // The model's box corners in the picture, points from its top left (VIEW-36)
+        let bounds = view.bounds();
+        let projector = view
+            .camera
+            .projector(Rect::from_min_size(Pos2::ZERO, vec2(side, side)), &bounds);
+        let (lo, hi) = (bounds.min, bounds.max);
+        let in_picture: Vec<Pos2> = (0..8)
+            .filter(|_| !bounds.is_empty())
+            .filter_map(|i| {
+                let pick = |bit: usize, a: f32, b: f32| if i & bit == 0 { a } else { b };
+                let p = ve_view3d::glam::Vec3::new(
+                    pick(1, lo.x, hi.x),
+                    pick(2, lo.y, hi.y),
+                    pick(4, lo.z, hi.z),
+                );
+                projector.project(p).map(|(q, _)| q)
+            })
+            .collect();
         let a = self.model_views_opacity();
         let mode = self.model_views_blend();
         let gpu = blend::available(&ctx) && page.is_some();
@@ -383,11 +403,21 @@ impl FootprintReview {
         let s = Stroke::new(1.0, line);
         painter.line_segment([o - vec2(6.0, 0.0), o + vec2(6.0, 0.0)], s);
         painter.line_segment([o - vec2(0.0, 6.0), o + vec2(0.0, 6.0)], s);
-        let top_left = corners
+        // Its name over the top left corner of the model's box on screen, the picture's when it has no box
+        let to_mm = |q: Pos2| {
+            let k = |t: f32| ((t / side) * 2.0 - 1.0) as f64 * r as f64;
+            [k(q.x), k(q.y)]
+        };
+        let on_screen: Vec<Pos2> = in_picture
             .iter()
-            .copied()
-            .min_by(|p, q| (p.x + p.y).total_cmp(&(q.x + q.y)))
-            .unwrap_or(corners[0]);
+            .map(|q| self.to_screen(canvas, self.placed(&place, to_mm(*q))))
+            .collect();
+        let top_left = super::modelviews::label_corner(if on_screen.is_empty() {
+            &corners
+        } else {
+            &on_screen
+        });
+        self.rt.solid.label_at = Some(top_left);
         let text = format!(
             "3D model · {}{}{}",
             self.solid_side_name(),
@@ -399,7 +429,7 @@ impl FootprintReview {
             if self.moving_solid() { " · moves" } else { "" }
         );
         painter.text(
-            top_left - vec2(0.0, 2.0),
+            top_left,
             Align2::LEFT_BOTTOM,
             text,
             FontId::proportional(12.0),
@@ -759,6 +789,24 @@ mod tests {
             img.save(png).unwrap();
         }
         let o = screen(&h, [300.0, 400.0]);
+        // Its name over the model's top left corner, not the larger picture's (VIEW-36)
+        let near = |h: &H, want: egui::Vec2| {
+            let got = h.state().rt.solid.label_at.expect("named") - o;
+            assert!(
+                (got - want).length() < 1.5,
+                "the name at {got:?}, want {want:?}"
+            );
+        };
+        near(&h, vec2(-50.0, -27.0));
+        // Turned a quarter (T): the body 2 x 4 mm, its name over its new corner; four turns: back
+        key(&mut h, egui::Key::T);
+        steps(&mut h, 2);
+        near(&h, vec2(-25.0, -52.0));
+        for _ in 0..3 {
+            key(&mut h, egui::Key::T);
+        }
+        steps(&mut h, 2);
+        near(&h, vec2(-50.0, -27.0));
         for (at, inside) in [
             (o + vec2(46.0, 0.0), true),
             (o + vec2(54.0, 0.0), false),
