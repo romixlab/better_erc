@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.60] - 2026-11-14
+
 ### Added
 
 - Footprint review: the footprint's centre snaps to the drawing's lines while it moves (a drag, the arrows, the SpaceMouse): a line's end, two lines crossing, else onto a line, as near as a ruler end snaps, the target shown as the ruler's. A run of arrow presses or a drag pulls it off again once out of reach. On by default; `.` (`centre_snap` key) and *Centre snap* in the mode bar switch it, `centre_snap` in the settings is how it starts, Alt held frees a move. The centre cross is bigger: thin arms along the footprint's own X and Y, 40 screen points each way (`centre_cross_px`, a setting) (VIEW-35).
