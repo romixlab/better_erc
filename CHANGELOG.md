@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- The app's colours follow the desktop theme (omarchy's accent, background and text), and change when it switches; the menu bar's *Colours* menu picks the desktop theme, the vhrd brand or a fixed accent, saved in the settings file as `colors` (APP-5).
+
 ### Fixed
 
 - Footprint review: the SpaceMouse drives one thing. On the page its slide pans the view and a twist no longer turns the 3D model with it; switched to a thing (`Tab`), it moves what is under the pointer, else what `Q` picks, and turns the 3D model only when that is what it drives; the page stays (VIEW-33).

@@ -46,7 +46,7 @@ erc_step = { path = "../erc_step" }
 # The SpaceMouse in the footprint review: spacenavd's socket, the mapping and its calibrate step, pie menus
 ve_spacemouse = { git = "https://github.com/vhrdtech/vhrd_egui" }
 # The vhrd look: IBM Plex, the brand's dark and light styles, the property-panel widgets of the review's side panel
-ve_theme = { git = "https://github.com/vhrdtech/vhrd_egui" }
+ve_theme = { git = "https://github.com/vhrdtech/vhrd_egui", features = ["serde"] }
 # The footprint's 3D model in the review: offscreen wgpu mesh view, camera, CPU picking (VIEW-23)
 ve_view3d = { git = "https://github.com/vhrdtech/vhrd_egui" }
 i_overlay = { version = "9", default-features = false }

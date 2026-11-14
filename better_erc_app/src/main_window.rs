@@ -12,6 +12,10 @@ use egui_tiles::Tile;
 pub struct BetterErcApp {
     cx: Context,
     state: State,
+    /// The colours, following the desktop theme while the setting says so; none in tests (the brand colours)
+    look: Option<ve_theme::Look>,
+    /// How the last save of the colour setting went
+    colors_note: Option<String>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -60,9 +64,15 @@ impl BetterErcApp {
             crate::tabs::footprint_review::model3d::register(&cc.egui_ctx, rs);
         }
 
-        setup_look(&cc.egui_ctx);
+        let (settings, _) = crate::settings::Settings::load();
+        let look = follow_look(&cc.egui_ctx, settings.colors);
 
-        Self { cx, state }
+        Self {
+            cx,
+            state,
+            look: Some(look),
+            colors_note: None,
+        }
     }
 
     /// The app's frame: the menu bar, the side panel, the debug window and the tabs
@@ -102,13 +112,36 @@ impl BetterErcApp {
 }
 
 /// The app's fonts and style: the vhrd look (ve_theme: IBM Plex, the brand's dark and light styles, egui following
-/// the system's choice) with the phosphor icon fonts behind Plex
+/// the system's choice) with the phosphor icon fonts behind Plex; the brand colours whatever the desktop's theme
+/// (tests)
+#[cfg(test)]
 pub fn setup_look(ctx: &egui::Context) {
+    icon_fonts(ctx);
+    ve_theme::setup(ctx);
+}
+
+/// [`setup_look`] with the colours from `source`: the desktop theme's (omarchy), followed when it switches, the
+/// brand's, or the brand's with a fixed accent
+pub fn follow_look(ctx: &egui::Context, source: ve_theme::ColorSource) -> ve_theme::Look {
+    follow_look_with(ctx, source, ve_theme::omarchy_colors_path())
+}
+
+/// [`follow_look`] with the desktop theme's colours file named; `None`: no desktop theme
+pub fn follow_look_with(
+    ctx: &egui::Context,
+    source: ve_theme::ColorSource,
+    path: Option<std::path::PathBuf>,
+) -> ve_theme::Look {
+    icon_fonts(ctx);
+    ve_theme::Look::setup_with_path(ctx, source, path)
+}
+
+/// The phosphor icon fonts behind Plex (ve_theme adds Plex in front)
+fn icon_fonts(ctx: &egui::Context) {
     let mut fonts = egui::FontDefinitions::default();
     egui_phosphor::add_to_fonts(&mut fonts, egui_phosphor::Variant::Regular);
     egui_phosphor::add_to_fonts(&mut fonts, egui_phosphor::Variant::Fill);
     ctx.set_fonts(fonts);
-    ve_theme::setup(ctx);
 }
 
 impl eframe::App for BetterErcApp {

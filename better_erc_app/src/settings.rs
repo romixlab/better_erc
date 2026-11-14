@@ -8,6 +8,10 @@ use std::path::{Path, PathBuf};
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize, Default)]
 #[serde(default)]
 pub struct Settings {
+    /// Where the app's colours come from: `"desktop"` (the desktop theme, omarchy's, followed when it switches; the
+    /// vhrd brand colours without one), `"brand"`, or `"#rrggbb"` (the brand colours with that accent). The menu
+    /// bar's Colours menu changes it
+    pub colors: ve_theme::ColorSource,
     pub footprint_review: FootprintReviewSettings,
 }
 

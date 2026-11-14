@@ -906,6 +906,12 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   the system's choice) with the phosphor icon fonts behind it; the tab list keeps each name on one line and a design's
   path no longer pushes Close out of sight. The PDF and canvas colours stay settings. Every tab rendered in dark and
   light by `main_window/look_tests.rs` · `better_erc_app/src/main_window.rs`
+- ✅ `APP-5` The colours follow the desktop theme (vhrd_egui THM-18, `ve_theme::Look`): omarchy's accent in both
+  styles, its background and text in the style of its mode, a theme switch shown at once; no desktop theme, the
+  brand's. The menu bar's *Colours* menu chooses the desktop theme, the brand or a fixed accent, says which theme and
+  file it follows, and saves the choice in the settings file (`colors`). The SpaceMouse pie takes the same accent.
+  Tested with a synthetic Tokyo Night: the colours and the menu, pictures with `BERC_LOOK_SNAPSHOT` ·
+  `better_erc_app/src/main_window.rs`, `main_window/menu_bar.rs`, `settings.rs`, `main_window/look_tests.rs`
 
 ## Tools (`TOOL`)
 

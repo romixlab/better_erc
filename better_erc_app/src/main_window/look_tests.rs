@@ -7,6 +7,7 @@ use crate::context::Loaded;
 use crate::tabs::TabKind;
 use egui::vec2;
 use egui_kittest::Harness;
+use egui_kittest::kittest::Queryable;
 use std::path::Path;
 
 /// A test design with I2C buses and power rails, so the tabs have something to show
@@ -47,6 +48,8 @@ fn app_with(kind: TabKind, cx: &Context) -> BetterErcApp {
     BetterErcApp {
         cx: cx.clone(),
         state,
+        look: None,
+        colors_note: None,
     }
 }
 
@@ -76,4 +79,48 @@ fn every_tab_draws() {
             }
         }
     }
+}
+
+/// The colours follow the desktop theme (a synthetic Tokyo Night, as omarchy writes it), and the Colours menu says
+/// so and switches to the brand's. Saved as `<stem>.<tab>.tokyo-night.png` with `BERC_LOOK_SNAPSHOT`
+#[test]
+fn follows_the_desktop_theme() {
+    let dir = std::env::temp_dir().join(format!("berc-look-theme-{}", std::process::id()));
+    std::fs::create_dir_all(&dir).unwrap();
+    let file = dir.join("colors.toml");
+    std::fs::write(
+        &file,
+        "mode = \"dark\"\naccent = \"#7aa2f7\"\nselection = \"#292e42\"\nbackground = \"#1a1b26\"\n\
+         lighter_background = \"#24283b\"\nforeground = \"#a9b1d6\"\ndark_foreground = \"#565f89\"\n",
+    )
+    .unwrap();
+    let cx = design();
+    for kind in [TabKind::FootprintReview, TabKind::Nets] {
+        let app = app_with(kind, &cx);
+        let mut h = Harness::builder()
+            .with_size(vec2(1280.0, 800.0))
+            .with_theme(egui::Theme::Dark)
+            .build_ui_state(|ui, app: &mut BetterErcApp| app.show(ui), app);
+        // The harness has a context of its own: the look goes there
+        let look = follow_look_with(&h.ctx, ve_theme::ColorSource::Desktop, Some(file.clone()));
+        h.state_mut().look = Some(look);
+        h.run();
+        assert_eq!(
+            h.ctx.style_of(egui::Theme::Dark).visuals.panel_fill,
+            ve_theme::parse_hex("#1a1b26").unwrap()
+        );
+        if let Some(p) = std::env::var_os("BERC_LOOK_SNAPSHOT") {
+            let name = format!("{}.tokyo-night.png", kind.as_ref());
+            h.render()
+                .unwrap()
+                .save(Path::new(&p).with_extension(name))
+                .unwrap();
+        }
+        if kind == TabKind::Nets {
+            h.get_by_label("Colours").click();
+            h.run();
+            h.get_by_label_contains("Following the desktop theme");
+        }
+    }
+    std::fs::remove_dir_all(&dir).ok();
 }
