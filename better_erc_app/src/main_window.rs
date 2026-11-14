@@ -16,6 +16,8 @@ pub struct BetterErcApp {
     look: Option<ve_theme::Look>,
     /// How the last save of the colour setting went
     colors_note: Option<String>,
+    /// The top bar's brand icon (`assets/icon-256.png`); `None` if it failed to decode.
+    icon: Option<egui::TextureHandle>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -66,12 +68,18 @@ impl BetterErcApp {
 
         let (settings, _) = crate::settings::Settings::load();
         let look = follow_look(&cc.egui_ctx, settings.colors);
+        let icon = ve_basics::load_icon(
+            &cc.egui_ctx,
+            "app-icon",
+            include_bytes!("../assets/icon-256.png"),
+        );
 
         Self {
             cx,
             state,
             look: Some(look),
             colors_note: None,
+            icon,
         }
     }
 
@@ -108,6 +116,19 @@ impl BetterErcApp {
         egui::CentralPanel::default().show(ui, |ui| {
             self.state.tabs.ui(&mut self.state.tabs_behavior, ui);
         });
+    }
+
+    /// The top bar's app menu (ve_theme BAS-4), confirmed: the tabs layout and the debug window's flag go back
+    /// to their defaults.
+    fn reset_storage(&mut self, ctx: &egui::Context) {
+        self.state = State::default();
+        self.state.tabs_behavior.feed_cx(self.cx.clone());
+        for (_id, tile) in self.state.tabs.tiles.iter_mut() {
+            if let Tile::Pane(tab) = tile {
+                tab.init(&self.cx);
+            }
+        }
+        ve_basics::reset_egui_memory(ctx);
     }
 }
 

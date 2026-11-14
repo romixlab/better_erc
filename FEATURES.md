@@ -942,6 +942,11 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   The window carries the app id `better_erc` (`APP_ID`), so the dock groups it with the launcher; the saved state
   stays where it was (`STORAGE_NAME`). A test keeps the file's class, icon and command on the app id ·
   `better_erc_app/deploy/better_erc.desktop`, `src/main.rs`, `src/lib.rs`, `justfile`
+- ✅ `APP-7` The menu bar starts with the shared brand strip (vhrd_egui THM-19, `ve_theme::topbar::Brand`): the
+  app icon (`assets/icon-256.png`, decoded with `ve_basics::load_icon`), the "Better ERC" wordmark and the
+  version badge, which opens the app menu (vhrd_egui BAS-4) — about, build, and *Reset storage to defaults…*,
+  which puts the tabs layout and the debug window's flag back to their defaults ·
+  `better_erc_app/src/main_window.rs`, `main_window/menu_bar.rs`
 
 ## Tools (`TOOL`)
 

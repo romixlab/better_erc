@@ -3,6 +3,13 @@ use egui::{Align, Layout, Ui};
 
 impl BetterErcApp {
     pub(super) fn menu_bar(&mut self, ctx: &egui::Context, ui: &mut Ui) {
+        let info = ve_basics::build_info!();
+        let brand = ve_theme::topbar::Brand::new("Better ERC", &info).icon(self.icon.as_ref());
+        if ve_theme::topbar::show(ui, &brand) == Some(ve_basics::AppMenuAction::ResetStorage) {
+            self.reset_storage(ctx);
+        }
+        ui.add_space(16.0);
+
         // NOTE: no File->Quit on web pages!
         let is_web = cfg!(target_arch = "wasm32");
         if !is_web {

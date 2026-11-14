@@ -50,6 +50,7 @@ fn app_with(kind: TabKind, cx: &Context) -> BetterErcApp {
         state,
         look: None,
         colors_note: None,
+        icon: None,
     }
 }
 
