@@ -51,11 +51,19 @@ check-baseline:
 netlists:
     cargo run -p generate_netlists
 
-# Build the better_erc app and the berc command line tool and install them on this PC
+# Build the better_erc app and the berc command line tool and install them on this PC, the app in the launcher
 install:
     cargo build --profile deploy --locked -p better_erc_app -p berc
     # With our release tool on PATH, it installs them (one copy on PATH, kept-releases stack); otherwise cargo install.
     if command -v tpm >/dev/null; then tpm install target/deploy/better_erc target/deploy/berc; else cargo install --locked --force --path better_erc_app && cargo install --locked --path berc; fi
+    just launcher
+
+# The app in the desktop's launcher: its icon and .desktop file (app id better_erc), then the desktop database
+launcher:
+    install -Dm644 better_erc_app/assets/icon-256.png ~/.local/share/icons/hicolor/256x256/apps/better_erc.png
+    install -Dm644 better_erc_app/deploy/better_erc.desktop ~/.local/share/applications/better_erc.desktop
+    -update-desktop-database ~/.local/share/applications
+    -gtk-update-icon-cache ~/.local/share/icons/hicolor
 
 # Refuses on local changes (names them, never discards them). No systemd units.
 

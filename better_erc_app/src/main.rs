@@ -22,15 +22,21 @@ fn main() -> eframe::Result {
         viewport: egui::ViewportBuilder::default()
             .with_inner_size([800.0, 600.0])
             .with_min_inner_size([800.0, 600.0])
+            .with_title("Better ERC")
+            // The launcher's StartupWMClass (deploy/better_erc.desktop)
+            .with_app_id(better_erc_app::APP_ID)
             .with_icon(
                 // NOTE: Adding an icon is optional
                 eframe::icon_data::from_png_bytes(&include_bytes!("../assets/icon-256.png")[..])
                     .expect("Failed to load icon"),
             ),
+        // Where the state was saved before the app had an id, so the layout stays
+        persistence_path: eframe::storage_dir(better_erc_app::STORAGE_NAME)
+            .map(|d| d.join("app.ron")),
         ..Default::default()
     };
     eframe::run_native(
-        "Better ERC",
+        better_erc_app::STORAGE_NAME,
         native_options,
         Box::new(|cc| Ok(Box::new(better_erc_app::BetterErcApp::new(cc)))),
     )

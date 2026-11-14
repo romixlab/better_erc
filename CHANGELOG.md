@@ -13,6 +13,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
+- The app in the desktop's launcher: `just install` puts its `.desktop` file and icon in place and updates the desktop database (`just launcher` alone does only that); the window's app id is `better_erc`, so the launcher and the dock know it (APP-6).
 - The app's colours follow the desktop theme (omarchy's accent, background and text), and change when it switches; the menu bar's *Colours* menu picks the desktop theme, the vhrd brand or a fixed accent, saved in the settings file as `colors` (APP-5).
 
 ### Fixed

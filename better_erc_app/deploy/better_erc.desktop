@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Better ERC
+Comment=Electrical rule checks and footprint review for KiCad designs
+Exec=better_erc
+Icon=better_erc
+Terminal=false
+Categories=Development;Electronics;
+StartupWMClass=better_erc

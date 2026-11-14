@@ -912,6 +912,12 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   file it follows, and saves the choice in the settings file (`colors`). The SpaceMouse pie takes the same accent.
   Tested with a synthetic Tokyo Night: the colours and the menu, pictures with `BERC_LOOK_SNAPSHOT` ·
   `better_erc_app/src/main_window.rs`, `main_window/menu_bar.rs`, `settings.rs`, `main_window/look_tests.rs`
+- ✅ `APP-6` The app starts from the desktop's launcher: `deploy/better_erc.desktop` (Exec `better_erc`, the icon,
+  `StartupWMClass=better_erc`) and the 256 px icon, installed by `just install` (`just launcher`: into
+  `~/.local/share/applications` and the hicolor icons, then the desktop database), as vhrd_egui's app template does.
+  The window carries the app id `better_erc` (`APP_ID`), so the dock groups it with the launcher; the saved state
+  stays where it was (`STORAGE_NAME`). A test keeps the file's class, icon and command on the app id ·
+  `better_erc_app/deploy/better_erc.desktop`, `src/main.rs`, `src/lib.rs`, `justfile`
 
 ## Tools (`TOOL`)
 
