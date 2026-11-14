@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.4.62] - 2026-11-14
+
 ### Added
 
 - The menu bar starts with the shared brand strip: the app icon, the "Better ERC" wordmark and the version badge, which opens the app menu (about, build, *Reset storage to defaults…*) (APP-7, vhrd_egui THM-19).
