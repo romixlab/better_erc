@@ -56,7 +56,7 @@ const PREVIEW: &str = "a footprint opened alone is a preview: there is no symbol
                        its symbol from a library or a board's list";
 
 /// The test footprints' library, Test.pretty, by a `fp-lib-table` in `dir`
-fn footprint_table(dir: &Path) {
+pub(super) fn footprint_table(dir: &Path) {
     let pretty = footprint().parent().unwrap().to_path_buf();
     std::fs::write(
         dir.join("fp-lib-table"),
@@ -69,7 +69,7 @@ fn footprint_table(dir: &Path) {
 }
 
 /// A library symbol in KiCad's layout, with these extra properties
-fn symbol_text(name: &str, props: &[(&str, &str)]) -> String {
+pub(super) fn symbol_text(name: &str, props: &[(&str, &str)]) -> String {
     let mut out = format!(
         "  (symbol \"{name}\" (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n"
     );

@@ -37,6 +37,7 @@ use std::sync::mpsc::Receiver;
 
 pub mod blend;
 mod docindex;
+mod docview;
 mod dxf;
 mod geometry;
 mod grab;
@@ -52,6 +53,8 @@ use better_erc::fp::outline;
 #[cfg(test)]
 mod panel_tests;
 mod pdf;
+#[cfg(test)]
+mod perdoc_tests;
 mod prims;
 mod puck;
 mod recorded;
@@ -287,6 +290,8 @@ pub struct FootprintReview {
     /// The 3D model see-through, its hidden edges drawn, in the 3D view and over the page (VIEW-30)
     xray: bool,
     reviews: Vec<Review>,
+    /// Each datasheet's view of each symbol, as it was left ([`docview`])
+    views: Vec<docview::DocView>,
     #[serde(skip)]
     rt: Runtime,
 }
@@ -321,6 +326,7 @@ impl Default for FootprintReview {
             model_views: modelviews::ModelViews::default(),
             xray: false,
             reviews: Vec::new(),
+            views: Vec::new(),
             rt: Runtime::default(),
         }
     }
@@ -622,6 +628,9 @@ struct Runtime {
     locator: Option<Locator>,
     /// What the review recorded in the symbol says about the view: restored from it, stale, its PDF not found
     record_note: Option<String>,
+    /// Whose view the canvas shows (the symbol or footprint, and the datasheet): kept under it when another
+    /// datasheet or symbol is opened ([`docview`])
+    view_key: Option<(String, PathBuf)>,
     docs_text: String,
     /// The library's MPN lookup and fetch commands as text being edited (Settings)
     mpn_text: String,
@@ -726,6 +735,7 @@ impl Default for Runtime {
             indexer: None,
             locator: None,
             record_note: None,
+            view_key: None,
             docs_text: String::new(),
             mpn_text: String::new(),
             fetch_text: String::new(),
@@ -803,13 +813,21 @@ impl FootprintReview {
             ui.set_max_width(640.0);
             ui.heading("Write the review?");
             if !c.mpns.is_empty() {
-                ui.label("Which MPNs does this datasheet cover? (found in its text: ticked)");
+                ui.label(
+                    "Which MPNs does this datasheet cover? (found in its text: ticked, unless another datasheet's \
+                     review has them)",
+                );
                 ui.horizontal_wrapped(|ui| {
                     for m in c.mpns.iter_mut() {
-                        let label = if m.in_pdf {
-                            format!("{} (in the PDF)", m.mpn)
-                        } else {
-                            m.mpn.clone()
+                        let label = match (&m.elsewhere, m.in_pdf) {
+                            (Some(o), true) => {
+                                format!("{} (in the PDF; reviewed on {o}: ticked, it moves here)", m.mpn)
+                            }
+                            (Some(o), false) => {
+                                format!("{} (reviewed on {o}: ticked, it moves here)", m.mpn)
+                            }
+                            (None, true) => format!("{} (in the PDF)", m.mpn),
+                            (None, false) => m.mpn.clone(),
                         };
                         mpns_changed |= ui.checkbox(&mut m.ticked, label).changed();
                     }
@@ -995,6 +1013,8 @@ impl FootprintReview {
             && d.is_file()
         {
             let (page, place) = (self.page, self.place.clone());
+            // The view saved with the tab is this datasheet's: kept, and restored by the open
+            self.rt.view_key = self.view_key();
             self.open_datasheet(ctx, &d);
             self.page = page;
             self.place = place;
@@ -1019,7 +1039,8 @@ impl FootprintReview {
                 // The datasheet its review was made on, where the review recorded one the library has
                 _ if self.open_recorded(ctx) => {}
                 Some(f) if self.datasheet.as_ref() != Some(&f) => self.open_datasheet(ctx, &f),
-                Some(_) => {}
+                // The same datasheet stays open: this symbol's view of it
+                Some(_) => self.enter_view(false),
                 None => {
                     // Not the last part's datasheet: the library search may find this one's
                     self.close_datasheet();
@@ -1240,6 +1261,7 @@ impl FootprintReview {
         let Some(list) = &self.rt.symbols else { return };
         let row = list.rows[i].clone();
         let from = list.from.clone();
+        self.keep_view();
         self.symbol = Some(row.symbol.clone());
         self.source = None;
         self.rt.target = Some(Target {
@@ -1347,6 +1369,8 @@ impl FootprintReview {
                 self.rt.items.clear();
             }
         }
+        // Picked afresh, the symbol's own datasheet opens next; read again, the one open stays its view
+        self.rt.view_key = if fresh { None } else { self.view_key() };
         if fresh {
             self.usage("symbol");
         }
@@ -1460,6 +1484,7 @@ impl FootprintReview {
     }
 
     fn load(&mut self, source: FootprintSource, fresh: bool) {
+        self.keep_view();
         match source.read() {
             Ok(s) => {
                 self.source = Some(source);
@@ -1468,6 +1493,7 @@ impl FootprintReview {
                 self.rt.symbol_note = None;
                 self.set_sourced(s, fresh);
                 self.rt.board_note = None;
+                self.rt.view_key = self.view_key();
             }
             Err(e) => {
                 self.rt.error = Some(e.to_string());
@@ -1667,6 +1693,7 @@ impl FootprintReview {
 
     /// No datasheet open: the page, the ruler and the scale go with it
     fn close_datasheet(&mut self) {
+        self.keep_view();
         self.rt.watch.set(watch::Group::Pdf, []);
         self.rt.pdf = None;
         self.datasheet = None;
@@ -1683,6 +1710,7 @@ impl FootprintReview {
         // A datasheet opened by hand is the one to show: no search for another
         self.rt.want_search = false;
         self.rt.auto_open = false;
+        self.keep_view();
         let fonts = &self.rt.settings.font_dirs;
         self.rt.pdf = Some(PdfDoc::open(ctx, path, fonts, self.threads_wake()));
         self.rt.watch.set(watch::Group::Pdf, [path.to_path_buf()]);
@@ -1695,7 +1723,7 @@ impl FootprintReview {
         self.ruler = None;
         self.scale = None;
         self.clear_selection();
-        self.restore_recorded();
+        self.enter_view(true);
         self.usage("datasheet");
     }
 

@@ -991,9 +991,13 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   asks which MPNs the datasheet covers, those in the PDF's text ticked; the datasheet identified through the
   library's index (`tpm lib docs --json --all`, a setting), the reviewer a setting. Opening a reviewed symbol opens
   the recorded PDF (by its hash, else its document number, through `tpm lib open --json`) and restores page,
-  scale and placement; a stale line or a PDF not found is said. `berc textconv` shows each line whole ·
+  scale and placement; a stale line or a PDF not found is said. Each datasheet keeps its own view per symbol
+  (page, zoom, scale, placements, ruler, note), saved with the tab: switching datasheets and back finds each as it
+  was left; a line changed since wins. An MPN another datasheet's line names is not ticked by itself, and a
+  whole-symbol line never replaces another datasheet's. `berc textconv` shows each line whole ·
   `better_erc/src/fp/record.rs`, `better_erc/src/fp.rs`, `erc_kicad/src/symlib.rs`,
-  `better_erc_app/src/tabs/footprint_review/recorded.rs`, `docindex.rs`, `berc/tests/fp_accept.rs`, README "Review
+  `better_erc_app/src/tabs/footprint_review/recorded.rs`, `docview.rs`, `docindex.rs`, `perdoc_tests.rs`,
+  `berc/tests/fp_accept.rs`, README "Review
   lines"
 - ✅ `TOOL-12` `berc fp model PROJECT|LIBRARY|FILE [NAME...]`: each footprint's 3D models read and measured
   against it (`fp::model`). Each `(model ...)` entry resolved (`IMP-21`), read (`IMP-20`, a file shared by footprints

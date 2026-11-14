@@ -33,7 +33,7 @@ pub struct MpnDoc {
 
 impl MpnDoc {
     /// As the library's index lists it, for matching with the review lines (`pdf=`, `doc=`)
-    fn indexed(&self) -> IndexedDoc {
+    pub(super) fn indexed(&self) -> IndexedDoc {
         IndexedDoc {
             path: self.path.clone().unwrap_or_default(),
             hash: self.hash.clone().unwrap_or_default(),

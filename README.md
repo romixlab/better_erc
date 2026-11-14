@@ -321,7 +321,8 @@ datasheet is written (see [Review lines](#review-lines-where-a-review-was-made))
 login name) and today's date. Among the symbol's other lines, a line about the same datasheet (the same `pdf=`, or
 the same document number) is replaced in its place; the MPNs it names leave the other lines, and a line left with
 none goes; a line with the hash alone goes once lines with MPNs cover every MPN; a new line goes last. Without
-them, the line is the hash alone and replaces the lines without MPNs. Every file gets the same lines, and a review
+them, the line is for the whole symbol and replaces the lines without MPNs, except another datasheet's: a line
+naming another document stays. Every file gets the same lines, and a review
 property left over past them is removed.
 
 `--footprint LIB:NAME` also sets the library symbol's own `Footprint` field to it, the value `berc fp check` showed
@@ -562,7 +563,10 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    The line records where the review was made: the datasheet by the document library's content hash and document
    number, the page, the scale, the footprint's placement, who (a setting, else the login name) and the day. It
    asks first which of the symbol's MPNs this datasheet covers, those found in the PDF's text (and those the
-   line for this datasheet already names) ticked; none ticked makes a line for the whole symbol. It shows what
+   line for this datasheet already names) ticked, except an MPN another datasheet's line names: the question says
+   which, and ticking it moves it here; none ticked makes a line for the whole symbol. Each datasheet keeps its own
+   view of the symbol (page, zoom, scale, placements, ruler, note), saved with the tab: opening another datasheet
+   and coming back finds the first as it was left, accepted or not. It shows what
    its dry run would write, following the ticks: each file, each property, the old and the new value. When the
    board places a different footprint than the symbol's own `Footprint` field, a checkbox offers to also set that
    field to the placed one, showing both; checked, it writes the same as `berc fp accept --footprint` does.

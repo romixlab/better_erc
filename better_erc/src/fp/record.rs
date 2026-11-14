@@ -296,6 +296,11 @@ impl ReviewLine {
         self.doc.is_some() || self.pdf.is_some() || self.page.is_some()
     }
 
+    /// The line names the datasheet it was reviewed on: its document number or its content hash
+    pub fn names_document(&self) -> bool {
+        self.doc.is_some() || self.pdf.is_some()
+    }
+
     /// The line reviews `mpn`: it names it, or names none (the whole symbol)
     pub fn covers(&self, mpn: &str) -> bool {
         self.mpns.is_empty() || self.mpns.iter().any(|m| m == mpn)
@@ -451,7 +456,8 @@ pub fn assess(
 /// [`review_values`] gives them) and its MPNs (`symbol_mpns`):
 ///
 /// - a line about the same datasheet ([`ReviewLine::same_document`]) is replaced, in its place;
-/// - `new` without MPNs (the whole symbol) replaces every line without MPNs;
+/// - `new` without MPNs (the whole symbol) replaces every line without MPNs, except another datasheet's: a line
+///   naming a document other than `new`'s stays (one line per datasheet, never rewritten from another's);
 /// - the MPNs `new` names leave the other lines; a line left with none goes;
 /// - a line with only a hash, no source, goes once the lines with MPNs review every MPN of the symbol;
 /// - a new line goes last.
@@ -460,7 +466,9 @@ pub fn merge(old: &[String], new: &ReviewLine, symbol_mpns: &[String]) -> Vec<St
     let mut placed = false;
     for v in old {
         let mut l = ReviewLine::parse(v);
-        let replaced = l.same_document(new) || (new.mpns.is_empty() && l.mpns.is_empty());
+        let other_document = l.names_document() && new.names_document();
+        let replaced =
+            l.same_document(new) || (new.mpns.is_empty() && l.mpns.is_empty() && !other_document);
         if replaced {
             if !placed {
                 lines.push(Some(new.clone()));
@@ -732,6 +740,18 @@ mod tests {
             ["fp1:cccccccccccccccc doc=DS9"]
         );
         assert_eq!(merge(&[], &whole, &[]), ["fp1:cccccccccccccccc doc=DS9"]);
+        // ... but not another datasheet's line: each datasheet keeps its own
+        assert_eq!(
+            merge(&["fp1:aaaaaaaaaaaaaaaa doc=DS1".to_string()], &whole, &[]),
+            [
+                "fp1:aaaaaaaaaaaaaaaa doc=DS1",
+                "fp1:cccccccccccccccc doc=DS9"
+            ]
+        );
+        assert_eq!(
+            merge(&["fp1:aaaaaaaaaaaaaaaa doc=DS9@2".to_string()], &whole, &[]),
+            ["fp1:cccccccccccccccc doc=DS9"]
+        );
     }
 
     #[test]

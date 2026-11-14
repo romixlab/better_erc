@@ -11,6 +11,13 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Fixed
+
+- Footprint review: each datasheet of a symbol keeps its own view. The page, zoom, scale, footprint and model placements, X-ray, perspective, ruler and review note are kept per symbol and datasheet. Opening another datasheet (from the Datasheets by MPN table or by hand) keeps the view left, and opening it again finds it as it was. A datasheet never opened before gets its review line's view, else a fresh fit; before, it took the last datasheet's placement. Work not accepted yet survives switching and is saved with the tab. A review line changed since the view was left (accepted elsewhere, `berc fp accept`) wins over the kept view (`TOOL-11`).
+- Footprint review: Accept on one datasheet no longer takes MPNs off another datasheet's review line by itself. An MPN in the PDF's text is ticked only when no other datasheet's line names it; the question says which datasheet has it, and ticking it by hand still moves it (`TOOL-11`).
+- `berc fp accept` and the app's Accept: a line for the whole symbol (no MPNs) no longer replaces another datasheet's whole-symbol line; each datasheet keeps its own. A line without a source (a hash given by hand) is still replaced (`TOOL-11`).
+- Footprint review: a datasheet the document library's index does not list yet (fetched since the index was read) is identified by what the MPN lookup said of that file, so its review line names it (`pdf=`, `doc=`) and its view is restored (`VIEW-26`).
+
 ## [0.4.57] - 2026-11-14
 
 ### Added

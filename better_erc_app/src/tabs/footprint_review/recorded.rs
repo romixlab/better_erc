@@ -22,6 +22,9 @@ pub(super) struct MpnChoice {
     pub ticked: bool,
     /// Found in the open PDF's text
     pub in_pdf: bool,
+    /// Another datasheet's review line names it (that datasheet, for the person): not ticked by itself, as
+    /// ticking it moves the MPN off that line
+    pub elsewhere: Option<String>,
 }
 
 /// What a line says it was reviewed against, for the person: the document, else the PDF, else that it says none
@@ -71,10 +74,24 @@ impl FootprintReview {
         }
     }
 
-    /// The datasheet open as the document library knows it
+    /// The datasheet open as the document library knows it: its index, else what the MPN lookup said of that file
+    /// (a document fetched since the index was read)
     pub(super) fn open_doc(&mut self) -> Option<IndexedDoc> {
         let path = self.datasheet.clone()?;
-        docindex::identify(self.doc_index().ok()?, &path).cloned()
+        let indexed = self
+            .doc_index()
+            .ok()
+            .and_then(|i| docindex::identify(i, &path).cloned());
+        indexed.or_else(|| {
+            self.rt
+                .mpn_docs
+                .known
+                .values()
+                .flatten()
+                .flatten()
+                .find(|d| d.path.as_deref() == Some(path.as_path()) && d.hash.is_some())
+                .map(|d| d.indexed())
+        })
     }
 
     /// The review lines of the symbol under review, each against the footprint shown; none for a preview
@@ -87,7 +104,7 @@ impl FootprintReview {
     }
 
     /// The review line made on `doc`: the one with its content hash, else the one with its document number
-    fn line_for(&self, doc: &IndexedDoc) -> Option<CheckedLine> {
+    pub(super) fn line_for(&self, doc: &IndexedDoc) -> Option<CheckedLine> {
         let rec = self.recorded();
         let pdf = doc.pdf();
         let by_pdf = rec
@@ -151,8 +168,8 @@ impl FootprintReview {
     }
 
     /// A datasheet just opened: the view of the review line made on it restored (page, scale, placement), said in
-    /// the record note with a stale hash; or why there is none to restore
-    pub(super) fn restore_recorded(&mut self) {
+    /// the record note with a stale hash; or why there is none to restore. `true` when a line's view was restored
+    pub(super) fn restore_recorded(&mut self) -> bool {
         let rec = self.recorded();
         let sourced: Vec<String> = rec
             .lines
@@ -161,7 +178,7 @@ impl FootprintReview {
             .map(|l| line_source(&l.line))
             .collect();
         if sourced.is_empty() {
-            return;
+            return false;
         }
         let Some(doc) = self.open_doc() else {
             if self.rt.record_note.is_none() {
@@ -171,7 +188,7 @@ impl FootprintReview {
                     sourced.join("; ")
                 ));
             }
-            return;
+            return false;
         };
         let Some(l) = self.line_for(&doc) else {
             if self.rt.record_note.is_none() {
@@ -180,7 +197,7 @@ impl FootprintReview {
                     sourced.join("; ")
                 ));
             }
-            return;
+            return false;
         };
         let line = &l.line;
         if let Some(p) = line.page {
@@ -219,6 +236,7 @@ impl FootprintReview {
             );
         }
         self.rt.record_note = Some(note);
+        true
     }
 
     /// Who reviews: the setting, else the login name
@@ -251,18 +269,26 @@ impl FootprintReview {
         }
     }
 
-    /// The symbol's MPNs for Accept's question, ticked when the open PDF's text has them or the review line made
-    /// on this datasheet already names them
+    /// The symbol's MPNs for Accept's question, ticked when the review line made on this datasheet already names
+    /// them, or the open PDF's text has them and no other datasheet's line does (a series document names its
+    /// siblings: accepting on it never takes them off their own datasheet's line unless ticked by hand)
     pub(super) fn mpn_choices(&mut self) -> Vec<MpnChoice> {
         let Some(s) = &self.rt.sourced else {
             return Vec::new();
         };
         let mpns = record::mpns(&s.fields);
-        let here = self
-            .open_doc()
-            .and_then(|d| self.line_for(&d))
-            .map(|l| l.line.mpns)
+        let this = self.open_doc().and_then(|d| self.line_for(&d));
+        let here = this
+            .as_ref()
+            .map(|l| l.line.mpns.clone())
             .unwrap_or_default();
+        let others: Vec<ReviewLine> = self
+            .recorded()
+            .lines
+            .into_iter()
+            .filter(|l| this.as_ref().is_none_or(|t| t.property != l.property))
+            .map(|l| l.line)
+            .collect();
         mpns.into_iter()
             .map(|mpn| {
                 let in_pdf = self
@@ -270,9 +296,14 @@ impl FootprintReview {
                     .pdf
                     .as_ref()
                     .is_some_and(|p| !p.find_pages(std::slice::from_ref(&mpn)).is_empty());
+                let elsewhere = (!here.contains(&mpn))
+                    .then(|| others.iter().find(|l| l.mpns.contains(&mpn)))
+                    .flatten()
+                    .map(line_source);
                 MpnChoice {
-                    ticked: in_pdf || here.contains(&mpn),
+                    ticked: here.contains(&mpn) || (in_pdf && elsewhere.is_none()),
                     in_pdf,
+                    elsewhere,
                     mpn,
                 }
             })
