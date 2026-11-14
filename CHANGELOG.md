@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Fixed
+
+- Footprint review: the SpaceMouse turns the 3D model the way the puck moves after a calibration. Rocking the puck right turns the model clockwise on the screen and twisting it clockwise spins the model about the screen's vertical, its right side coming towards you; before, these two were swapped. The model now takes vhrd_egui's `ve_view3d::nav_turn`, the same turn as every 3D view (vhrd_egui SPM-9). A `~/.config/spacemouse.toml` calibrated with all six motions before needs a new calibration (*Calibrate…*), or its last two `[[axes]]` blocks swapped.
+
 ## [0.4.60] - 2026-11-14
 
 ### Added

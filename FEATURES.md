@@ -784,7 +784,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   (no board, no pads) shaded with an orthographic camera at the page's mm scale into a picture around the model's
   origin, which the blend pass mixes into the page in every blend mode (`blend.rs` samples it as a layer), with the
   model views' opacity and blink; placed like a view (first on the footprint, seen from the top), moved, turned (`T`)
-  and mirrored (`X`). The SpaceMouse's tilt, roll and twist and Ctrl+drag in Move turn it; when they let go it
+  and mirrored (`X`). The SpaceMouse's tilt, rock and twist (as `ve_view3d::nav_turn` takes them, vhrd_egui SPM-9) and Ctrl+drag in Move turn it; when they let go it
   finishes onto the nearest of the 24 axis-aligned orientations, eased over the settings' snap time (`model_snap`;
   Alt held or snap off: the free angle). `K` turns it to the next side; Turn to buttons in the section. Sitting on
   a side, Measure footprint (`G`) snaps to that side's silhouette corners turned with it. The calibrate step now

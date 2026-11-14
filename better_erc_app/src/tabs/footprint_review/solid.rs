@@ -156,18 +156,14 @@ impl FootprintReview {
         self.rt.solid.turned = true;
     }
 
-    /// The puck's tilt, roll and twist turn the shaded model while 3D is shown (at the mapping's rotate speed)
+    /// The puck's tilt, rock and twist turn the shaded model while 3D is shown (at the mapping's rotate speed)
     pub(super) fn solid_puck(&mut self, nav: &ve_spacemouse::Nav, dt: f32) {
         if self.model_views.look != ModelLook::Solid || nav.rotate.iter().all(|r| *r == 0.0) {
             return;
         }
-        let [tilt, roll, turn] = nav.rotate.map(|r| r * dt);
-        // As ve_view3d's camera takes the puck: the content tilts forward, rolls right, turns clockwise
-        self.turn_solid(
-            Quat::from_rotation_x(-tilt)
-                * Quat::from_rotation_y(roll)
-                * Quat::from_rotation_z(-turn),
-        );
+        // As ve_view3d's camera takes the puck: tilt forward, spin about the screen's vertical (a twist), turn on
+        // the screen (a rock)
+        self.turn_solid(ve_view3d::nav_turn(nav, dt));
     }
 
     /// A Ctrl+drag by `delta` points turns the shaded model: sideways about the screen's up, up and down about its
