@@ -2384,10 +2384,7 @@ impl FootprintReview {
             n(k.accept),
             n(k.next),
             n(k.note),
-            match self.puck {
-                PuckMoves::Page => "moves the page",
-                PuckMoves::Footprint => "moves the footprint",
-            },
+            self.puck_moves_line(),
             n(k.puck),
         )
     }

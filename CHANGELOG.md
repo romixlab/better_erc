@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Fixed
+
+- Footprint review: the SpaceMouse drives one thing. On the page its slide pans the view and a twist no longer turns the 3D model with it; switched to a thing (`Tab`), it moves what is under the pointer, else what `Q` picks, and turns the 3D model only when that is what it drives; the page stays (VIEW-33).
+
 ## [0.4.58] - 2026-11-14
 
 ### Fixed

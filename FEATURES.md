@@ -854,6 +854,14 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   shown; perspective's top edge nearer by the eye's distance, orthographic again, the 3D view's camera from the
   section's switch and the settings with its size kept · `better_erc_app/src/tabs/footprint_review/grab.rs`, `puck.rs`, `modelviews.rs`, `mod.rs`, `panel.rs`,
   `solid.rs`
+- ✅ `VIEW-33` 🐛 fixed: the SpaceMouse moved the 3D model and the page at once (a slide always has some twist in
+  it). The puck drives one thing (`PuckMoves`, `Tab` switches): on *the page* its slide pans the view and nothing on
+  the page moves or turns; on *a thing* it drives what is under the pointer, as a drag picks it, else what the moves
+  switch (`Q`) picks: its slide moves it, and tilt, roll and twist turn it when it is the shaded 3D model; the page
+  stays. The thing is picked as the puck leaves rest and kept until it rests again, so moving it away from under the
+  pointer never hands the motion to another. Push and pull zoom the view in both. The pie's centre names the thing
+  (`Move 3D model`), the controls and the help line say what the puck moves. Tests: page, Q's pick, the thing under
+  the pointer kept · `puck.rs` (`puck_nav`, `puck_target`), `puck_tests.rs` (`the_puck_drives_one_thing`)
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
   one lookup per MPN per session, on a worker thread) and its review state from the review lines (reviewed, reviewed

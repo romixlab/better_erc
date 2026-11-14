@@ -65,13 +65,14 @@ pub enum Action {
     Cancel,
 }
 
-/// What the puck's slide moves; its push and pull always zoom the view
+/// What the puck drives; its push and pull always zoom the view. It drives one thing at a time (VIEW-33)
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum PuckMoves {
-    /// The page under the footprint and all: the view
+    /// The page under the footprint and all: the view pans, nothing on it moves or turns
     #[default]
     Page,
-    /// The footprint over the page
+    /// One thing over the page: what is under the pointer, as a drag picks it, else what the moves switch (Q)
+    /// picks; its slide moves it, and tilt, roll and twist turn it when it is the shaded 3D model
     Footprint,
 }
 
@@ -88,6 +89,9 @@ pub(super) struct Puck {
     /// again
     stale: bool,
     pub pie: PieState,
+    /// What the puck drives since it left rest: picked once as it starts, so moving a thing away from under the
+    /// pointer never hands the motion to another one; none at rest
+    pub target: Option<grab::Grab>,
     /// The mapping, its files and the calibrate step (ve_spacemouse's shared panel); no files until the tab
     /// starts ([`FootprintReview::init`]), so tests never read the host's
     pub settings: SettingsPanel,
@@ -102,6 +106,7 @@ impl Default for Puck {
             axes: Axes::default(),
             stale: false,
             pie: PieState::default(),
+            target: None,
             settings: SettingsPanel::new(Config::none(), CalibrateSteps::TwoD),
         }
     }
@@ -181,29 +186,45 @@ impl FootprintReview {
         events
     }
 
-    /// The puck this frame: its slide pans the page or moves the footprint in screen points, so a push goes as fast
-    /// at every zoom; its push and pull zoom the view about the pointer over the canvas, else the canvas' middle.
-    /// Nothing while the calibrate step measures the motions.
+    /// The puck this frame: it drives one thing (VIEW-33). On the page, its slide pans the view; on a thing, it
+    /// moves what is under the pointer as a drag picks it, else what the moves switch (Q) picks, and turns it by tilt,
+    /// roll and twist when it is the shaded 3D model. Moves are in screen points, so a push goes as fast at every
+    /// zoom; push and pull zoom the view about the pointer over the canvas, else the canvas' middle. Nothing while
+    /// the calibrate step measures the motions.
     pub(super) fn puck_nav(&mut self, ctx: &egui::Context, canvas: Rect, pointer: Option<Pos2>) {
         if self.rt.puck.settings.calibrating() {
             return;
         }
         let nav = self.rt.puck.settings.mapping().apply(&self.rt.puck.axes);
         if nav.is_zero() {
+            self.rt.puck.target = None;
             return;
         }
-        let dt = ctx.input(|i| i.stable_dt).min(0.1);
-        // Tilt, roll and twist turn the shaded model while 3D is shown (VIEW-27)
-        self.solid_puck(&nav, dt);
-        let d = nav.pan_screen() * dt;
-        match self.puck {
-            PuckMoves::Page => {
-                self.pan[0] += d.x;
-                self.pan[1] += d.y;
+        let target = match self.rt.puck.target {
+            Some(t) => t,
+            None => {
+                let t = self.puck_target(canvas, pointer);
+                self.rt.puck.target = Some(t);
+                t
             }
-            PuckMoves::Footprint => {
-                let zoom = self.zoom;
-                let place = self.moving_mut();
+        };
+        let dt = ctx.input(|i| i.stable_dt).min(0.1);
+        let d = nav.pan_screen() * dt;
+        if target == grab::Grab::Page {
+            self.pan[0] += d.x;
+            self.pan[1] += d.y;
+        } else {
+            // Tilt, roll and twist turn the shaded model when it is the one driven (VIEW-27)
+            if target == grab::Grab::Solid {
+                self.solid_puck(&nav, dt);
+            }
+            let zoom = self.zoom;
+            let place = if target == self.moves_grab() {
+                Some(self.moving_mut())
+            } else {
+                self.grab_place_mut(target)
+            };
+            if let Some(place) = place {
                 place.origin[0] += d.x / zoom;
                 place.origin[1] += d.y / zoom;
             }
@@ -220,6 +241,48 @@ impl FootprintReview {
             self.pan[1] += at.y - after.y;
         }
         ctx.request_repaint_after(std::time::Duration::from_millis(16));
+    }
+
+    /// What the puck drives as it starts from rest: the page, or the thing under the pointer as a drag picks it,
+    /// else the moves switch's pick
+    fn puck_target(&self, canvas: Rect, pointer: Option<Pos2>) -> grab::Grab {
+        if self.puck == PuckMoves::Page {
+            return grab::Grab::Page;
+        }
+        pointer
+            .filter(|p| canvas.contains(*p))
+            .map(|p| self.grab_at(self.to_page(canvas, p)))
+            .filter(|g| *g != grab::Grab::Page)
+            .unwrap_or_else(|| self.moves_grab())
+    }
+
+    /// What the moves switch (Q) picks, as what a drag would take: the footprint, a silhouette view or the 3D model
+    pub(super) fn moves_grab(&self) -> grab::Grab {
+        if self.moving_solid() {
+            grab::Grab::Solid
+        } else if let Some(side) = self.moving_view() {
+            grab::Grab::View(side)
+        } else {
+            grab::Grab::Footprint
+        }
+    }
+
+    /// The moves switch's pick in two words, for the pie: `footprint`, `3D model`, `top view`
+    fn moves_thing(&self) -> String {
+        Self::grab_name(self.moves_grab())
+            .trim_start_matches("the ")
+            .to_string()
+    }
+
+    /// What the puck moves, for the controls and the help line
+    pub(super) fn puck_moves_line(&self) -> String {
+        match self.puck {
+            PuckMoves::Page => "moves the page".into(),
+            PuckMoves::Footprint => format!(
+                "moves what is under the pointer, else {}",
+                Self::grab_name(self.moves_grab())
+            ),
+        }
     }
 
     /// The pie menus on the SpaceMouse's buttons, over everything; what fired is done at the place the menu
@@ -282,9 +345,9 @@ impl FootprintReview {
                 Ruler,
             ))),
             center_right: Some(slot(
-                match self.puck {
-                    PuckMoves::Page => "Move footprint",
-                    PuckMoves::Footprint => "Move page",
+                &match self.puck {
+                    PuckMoves::Page => format!("Move {}", self.moves_thing()),
+                    PuckMoves::Footprint => "Move page".into(),
                 },
                 short_key(k.puck),
                 icons::ARROWS_OUT_CARDINAL,
@@ -652,13 +715,10 @@ impl FootprintReview {
     /// The SpaceMouse in the controls: whether it is there, what the puck moves, Calibrate and the mapping
     pub(super) fn puck_controls(&mut self, ui: &mut Ui) {
         let (line, connected) = self.rt.puck.status();
-        let moves = match self.puck {
-            PuckMoves::Page => "moves the page",
-            PuckMoves::Footprint => "moves the footprint",
-        };
+        let moves = self.puck_moves_line();
         SubPane::new("SpaceMouse")
             .id_salt("fp spacemouse")
-            .summary(if connected { moves } else { "not connected" })
+            .summary(if connected { moves.as_str() } else { "not connected" })
             .tooltip(
                 "The 3D mouse through spacenavd: what its puck moves, its mapping and calibration",
             )
@@ -668,6 +728,10 @@ impl FootprintReview {
                     format!("spacenavd's socket: {}", self.rt.puck.socket_line()),
                 );
                 let k = short_key(self.keys().puck);
+                let (q_pick, q) = (
+                    Self::grab_name(self.moves_grab()),
+                    short_key(self.keys().moves),
+                );
                 PropertyRow::new("The puck moves")
                     .tooltip(format!("{k} switches"))
                     .show(ui, |ui| {
@@ -676,13 +740,15 @@ impl FootprintReview {
                             .item(
                                 PuckMoves::Page,
                                 "the page",
-                                format!("its slide pans the view; {k} switches"),
+                                format!("its slide pans the view; nothing on it moves or turns; {k} switches"),
                             )
                             .item(
                                 PuckMoves::Footprint,
-                                "the footprint",
+                                "a thing",
                                 format!(
-                                    "its slide moves the footprint over the page; {k} switches"
+                                    "it moves what is under the pointer, else {} (the moves switch, {}), \
+                                     and turns the 3D model; the page stays; {k} switches",
+                                    q_pick, q,
                                 ),
                             )
                             .fill_width()

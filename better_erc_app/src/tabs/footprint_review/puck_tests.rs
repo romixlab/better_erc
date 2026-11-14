@@ -11,11 +11,11 @@
 
 use super::super::tests::{datasheet, footprint};
 use super::*;
-use egui::vec2;
+use egui::{pos2, vec2};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable;
 use std::time::{Duration, Instant};
-use ve_spacemouse::{FakeSpacenavd, Mapping, PieStyle, SpaceMouse};
+use ve_spacemouse::{FakeSpacenavd, Mapping, SpaceMouse};
 
 const GUARD: Duration = Duration::from_secs(10);
 const DT: f32 = 0.05;
@@ -218,7 +218,8 @@ fn taps_and_rings_do_the_canvas_actions() {
         h.step();
     }
     assert!(h.state().rt.puck.pie.is_open(), "the ring opened");
-    let outer = PieStyle::default().outer_radius;
+    // The ring as drawn: larger than the style's when the names need the room
+    let (_, outer) = h.state().rt.puck.pie.radii().expect("open");
     for _ in 0..2 {
         for r in [60.0, 120.0, outer + 20.0] {
             h.hover_at(o - vec2(0.0, r));
@@ -429,6 +430,7 @@ fn a_lost_focus_leaves_no_turn_held() {
     let st = h.state_mut();
     st.model_views.look = modelviews::ModelLook::Solid;
     st.model_views.moves = modelviews::Moves::Model;
+    st.puck = PuckMoves::Footprint;
     st.rt.settings.model_snap.enabled = false;
     h.step();
     let full = Mapping::default().full_scale as i32;
@@ -500,6 +502,99 @@ fn a_lost_focus_leaves_no_turn_held() {
         h.state().model_views.solid.turn.angle_between(rest) > 1e-3,
         "the puck turns it again"
     );
+    drop(h);
+    drop(fake);
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// VIEW-33: the puck drives one thing. On the page it pans the view and nothing on the page moves or turns, a twist
+/// included; on a thing it drives what is under the pointer (as a drag picks it), else what Q picks, and the page
+/// stays; the thing is picked as the puck leaves rest and kept until it rests again
+#[test]
+fn the_puck_drives_one_thing() {
+    let dir = scratch("one");
+    let socket = dir.join("spnav.sock");
+    let fake = FakeSpacenavd::start(&socket).unwrap();
+    let mut h = harness(&socket, &fake);
+    open(&mut h, &dir);
+    let st = h.state_mut();
+    st.model_views.look = modelviews::ModelLook::Solid;
+    st.model_views.moves = modelviews::Moves::Model;
+    st.rt.settings.model_snap.enabled = false;
+    h.step();
+    let full = Mapping::default().full_scale as i32;
+    let solid_origin = |h: &Harness<'static, FootprintReview>| {
+        h.state()
+            .model_views
+            .solid
+            .place
+            .as_ref()
+            .expect("placed in 3D")
+            .origin
+    };
+    let snapshot = |h: &Harness<'static, FootprintReview>| {
+        let st = h.state();
+        (
+            st.pan,
+            st.place.origin,
+            solid_origin(h),
+            st.model_views.solid.turn,
+        )
+    };
+
+    // On the page: a slide with a twist in it pans the view; the model neither turns nor moves
+    let (pan0, fp0, model0, turn0) = snapshot(&h);
+    push(&mut h, &fake, [full, 0, 0, 0, 0, full / 2]);
+    push(&mut h, &fake, [full, 0, 0, 0, 0, full / 2]);
+    let (pan1, fp1, model1, turn1) = snapshot(&h);
+    assert!(pan1[0] > pan0[0], "the page pans: {pan0:?} → {pan1:?}");
+    assert_eq!((fp1, model1), (fp0, model0), "nothing on the page moves");
+    assert!(
+        turn1.angle_between(turn0) < 1e-6,
+        "the model turned with the page"
+    );
+    push(&mut h, &fake, [0; 6]);
+
+    // On a thing, the pointer off the canvas: what Q picks, the 3D model, moves and turns; the page stays
+    h.state_mut().puck = PuckMoves::Footprint;
+    h.hover_at(pos2(1.0, 1.0));
+    h.step();
+    let (pan0, fp0, model0, turn0) = snapshot(&h);
+    push(&mut h, &fake, [full, 0, 0, 0, 0, full / 2]);
+    push(&mut h, &fake, [full, 0, 0, 0, 0, full / 2]);
+    let (pan1, fp1, model1, turn1) = snapshot(&h);
+    assert_eq!(pan1, pan0, "the page stays");
+    assert_eq!(fp1, fp0, "the footprint stays");
+    assert!(
+        model1[0] > model0[0],
+        "the model moves: {model0:?} → {model1:?}"
+    );
+    assert!(turn1.angle_between(turn0) > 1e-3, "the model turns");
+    push(&mut h, &fake, [0; 6]);
+
+    // The pointer on the footprint: the footprint moves, as a drag there would, and keeps moving after it left
+    // the pointer; the model stays
+    let at = {
+        let st = h.state();
+        st.to_screen(st.rt.canvas, st.place.origin)
+    };
+    h.hover_at(at);
+    h.step();
+    let (pan0, fp0, model0, turn0) = snapshot(&h);
+    for _ in 0..30 {
+        push(&mut h, &fake, [full, 0, 0, 0, 0, full / 2]);
+    }
+    let (pan1, fp1, model1, turn1) = snapshot(&h);
+    assert_eq!(pan1, pan0, "the page stays");
+    assert_eq!(model1, model0, "the model stays");
+    assert!(turn1.angle_between(turn0) < 1e-6, "the model turned");
+    let moved = (fp1[0] - fp0[0]) * h.state().zoom;
+    assert!(
+        (moved - 30.0 * full_push_step()).abs() < 0.5,
+        "the footprint moves all the way, {moved} points"
+    );
+    push(&mut h, &fake, [0; 6]);
+    assert_eq!(h.state().rt.puck.target, None, "at rest the pick is let go");
     drop(h);
     drop(fake);
     std::fs::remove_dir_all(&dir).unwrap();
