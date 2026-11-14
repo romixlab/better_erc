@@ -1607,6 +1607,24 @@ impl FootprintReview {
                     .tooltip("horizontal or vertical; Shift held: any angle"),
             );
         });
+        Group::new("Footprint centre").show(ui, |ui| {
+            PropertyRow::new("Cross arms").show(ui, |ui| {
+                ui.add(
+                    ScalarField::new(&mut s.centre_cross_px)
+                        .range(4.0..=400.0)
+                        .speed(0.5)
+                        .decimals(0)
+                        .unit("px")
+                        .tooltip("how far each arm of the footprint's centre cross reaches, on screen; thin lines"),
+                )
+            });
+            ui.add(
+                ToggleChip::new(&mut s.centre_snap, "Snaps to lines").tooltip(
+                    "at first: while the footprint moves its centre snaps to the drawing's lines, as near as \
+                     Snaps to lines says; the mode bar's switch and its key change it; Alt held: free",
+                ),
+            );
+        });
         Group::new("DXF").show(ui, |ui| {
             PropertyRow::new("Curve tolerance").show(ui, |ui| {
                 ui.add(
@@ -1657,6 +1675,7 @@ impl FootprintReview {
                         ("X-ray: the 3D model see-through", &mut k.xray),
                         ("Reload everything from disk", &mut k.reload),
                         ("The model onto the footprint", &mut k.model_on_footprint),
+                        ("The footprint's centre snaps to lines", &mut k.centre_snap),
                         ("Hide or show the footprint", &mut k.hide_footprint),
                         ("Hide or show the model", &mut k.hide_model),
                         ("Held: the page alone", &mut k.peek),

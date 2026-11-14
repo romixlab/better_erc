@@ -869,6 +869,17 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   drops it there. A ruler end held by a drag already follows the pointer. Test: held in both puck switches, a slide
   and a pull keep it under the pointer, the page panned under it, dropped where it was carried · `mod.rs` (`held`,
   `carry`), `puck.rs` (`puck_nav`), `puck_tests.rs` (`the_puck_carries_what_a_drag_holds`)
+- ✅ `VIEW-35` Footprint review, the footprint's centre: the centre cross drawn with long thin arms along the
+  footprint's own X and Y, turned and mirrored with it (`centre_cross_px`, a setting, 40 screen points; Settings →
+  Footprint centre), and while the footprint moves (a drag, the arrows, the puck, carried by the puck under a drag)
+  its centre snaps to the drawing's lines as a ruler end does (a line's end, two lines crossing, else onto a line,
+  within the line snap's reach), the target drawn as the ruler's. The move keeps where it would be unsnapped, so a
+  drag or a run of arrow presses pulls it off once out of reach; anything else that moves it starts afresh. On by
+  default (`centre_snap`, a setting, how it starts); `.` and *Centre snap* in the mode bar switch it, the help line
+  says which; Alt held frees a move. Usage signals `app fp-review centre snap on|off`. Tests: a drag onto the
+  dimension's corner and the target shown, the arrows along the line, Alt, the key and the button; the puck onto a
+  line and free with Alt · `centre.rs`, `mod.rs`, `puck.rs`, `mode_tests.rs`
+  (`the_footprint_centre_snaps_to_the_drawing`), `puck_tests.rs` (`the_puck_snaps_the_footprint_centre`)
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
   one lookup per MPN per session, on a worker thread) and its review state from the review lines (reviewed, reviewed

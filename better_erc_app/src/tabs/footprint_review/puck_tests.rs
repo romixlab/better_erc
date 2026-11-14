@@ -124,8 +124,10 @@ fn the_puck_pans_the_page_and_moves_the_footprint_at_one_screen_speed() {
     let rest = h.state().pan;
     h.step();
     assert_eq!(h.state().pan, rest);
-    // The footprint instead: the same screen speed, in page points by the zoom; the page stays
+    // The footprint instead: the same screen speed, in page points by the zoom; the page stays (its centre free of
+    // the drawing's lines, VIEW-35)
     h.state_mut().puck = PuckMoves::Footprint;
+    h.state_mut().centre_snap = Some(false);
     for zoom in [1.0, 4.0] {
         h.state_mut().zoom = zoom;
         let (pan, origin) = (h.state().pan, h.state().place.origin);
@@ -619,6 +621,8 @@ fn the_puck_carries_what_a_drag_holds() {
     let close = |a: Pos2, b: Pos2, what: &str| {
         assert!((a - b).length() < 0.5, "{what}: {a:?} → {b:?}");
     };
+    // The footprint's centre free of the drawing's lines, so it stays under the pointer exactly (VIEW-35)
+    h.state_mut().centre_snap = Some(false);
     for moves in [PuckMoves::Page, PuckMoves::Footprint] {
         h.state_mut().puck = moves;
         let a = held(&h);
@@ -675,6 +679,46 @@ fn the_puck_carries_what_a_drag_holds() {
         h.state_mut().zoom = zoom0;
         h.step();
     }
+    drop(h);
+    drop(fake);
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// VIEW-35: the puck moving the footprint snaps its centre to the drawing's lines; Alt held frees it
+#[test]
+fn the_puck_snaps_the_footprint_centre() {
+    let dir = scratch("centre");
+    let socket = dir.join("spnav.sock");
+    let fake = FakeSpacenavd::start(&socket).unwrap();
+    let mut h = harness(&socket, &fake);
+    open(&mut h, &dir);
+    assert_eq!(
+        h.state().page,
+        1,
+        "the land pattern page, its dimension line at y 200"
+    );
+    let full = Mapping::default().full_scale as i32;
+    let st = h.state_mut();
+    st.puck = PuckMoves::Footprint;
+    st.zoom = 1.0;
+    // Off the canvas, so the puck drives what Q picks: the footprint
+    h.hover_at(pos2(1.0, 1.0));
+    h.step();
+    // 5 points above the dimension line, the snap reaching 10: a slide along it lands it on the line
+    h.state_mut().place.origin = [150.0, 195.0];
+    h.step();
+    push(&mut h, &fake, [full / 4, 0, 0, 0, 0, 0]);
+    let o = h.state().place.origin;
+    assert!(o[1] == 200.0 && o[0] > 150.0, "onto the line: {o:?}");
+    push(&mut h, &fake, [0; 6]);
+    // Alt held: free
+    h.state_mut().place.origin = [150.0, 195.0];
+    h.event(egui::Event::ModifiersChanged(egui::Modifiers::ALT));
+    h.step();
+    push(&mut h, &fake, [full / 4, 0, 0, 0, 0, 0]);
+    let o = h.state().place.origin;
+    assert!(o[1] == 195.0 && o[0] > 150.0, "Alt: free: {o:?}");
+    push(&mut h, &fake, [0; 6]);
     drop(h);
     drop(fake);
     std::fs::remove_dir_all(&dir).unwrap();

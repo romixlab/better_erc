@@ -656,6 +656,8 @@ mod tests {
             font_dirs: Vec::new(),
             library_search: Vec::new(),
             library_name: Vec::new(),
+            // The centre cross as short as before VIEW-35, so the pixels sampled beside the origin see the model
+            centre_cross_px: 6.0,
             ..Default::default()
         };
         let mut cx = Context::new();

@@ -60,6 +60,8 @@ pub enum Action {
     Reload,
     /// The model onto the footprint as KiCad places it (VIEW-32)
     ModelOnFootprint,
+    /// The footprint's centre snapping to the drawing's lines while it moves, on or off (VIEW-35)
+    CentreSnap,
     /// Accept's question answered: write, or nothing
     Write,
     Cancel,
@@ -213,6 +215,7 @@ impl FootprintReview {
             None => {
                 let t = self.puck_target(canvas, pointer);
                 self.rt.puck.target = Some(t);
+                self.centre_restart();
                 t
             }
         };
@@ -227,14 +230,20 @@ impl FootprintReview {
                 self.solid_puck(&nav, dt);
             }
             let zoom = self.zoom;
-            let place = if target == self.moves_grab() {
-                Some(self.moving_mut())
+            if target == grab::Grab::Footprint {
+                // Its centre snaps to the drawing's lines, Alt held: free (VIEW-35)
+                let (free, now) = ctx.input(|i| (i.modifiers.alt, i.time));
+                self.move_footprint([d.x / zoom, d.y / zoom], free, now);
             } else {
-                self.grab_place_mut(target)
-            };
-            if let Some(place) = place {
-                place.origin[0] += d.x / zoom;
-                place.origin[1] += d.y / zoom;
+                let place = if target == self.moves_grab() {
+                    Some(self.moving_mut())
+                } else {
+                    self.grab_place_mut(target)
+                };
+                if let Some(place) = place {
+                    place.origin[0] += d.x / zoom;
+                    place.origin[1] += d.y / zoom;
+                }
             }
         }
         let factor = (nav.zoom * dt).exp();
@@ -713,6 +722,7 @@ impl FootprintReview {
             Action::HideFootprint => self.toggle_hidden(false),
             Action::HideModel => self.toggle_hidden(true),
             Action::XRay => self.toggle_xray(),
+            Action::CentreSnap => self.toggle_centre_snap(),
             Action::Reload => self.reload_all(),
             Action::ModelOnFootprint => self.model_on_footprint(ctx.input(|i| i.time)),
             Action::Write => self.confirmed(ctx, true),

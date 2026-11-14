@@ -697,3 +697,88 @@ fn measure_from_the_footprint_to_the_drawing() {
     h.get_by_label("Measure across");
     std::fs::remove_dir_all(&dir).unwrap();
 }
+
+/// VIEW-35: while the footprint moves its centre snaps to the drawing's lines as a ruler end does. A drag that
+/// brings it near the dimension's corner puts it on the corner exactly, the target shown; the arrows nudge it off
+/// the corner onto the line once out of reach; Alt frees a drag; `.` and the mode bar's button turn it off and on
+#[test]
+fn the_footprint_centre_snaps_to_the_drawing() {
+    let dir = scratch("centre");
+    let mut h = open("fp mode centre", &dir);
+    let corner = [100.0, 200.0];
+    assert!(h.state().centre_snap_on(), "on by default");
+    // A drag from the centre to a few points off the corner: on the corner while held, and after it is let go
+    let from = screen(&h, h.state().place.origin);
+    let near = screen(&h, [corner[0] + 3.0, corner[1] + 2.0]);
+    h.hover_at(from);
+    h.run();
+    h.drag_at(from);
+    h.run();
+    for i in 1..=5 {
+        h.hover_at(from + (near - from) * (i as f32 / 5.0));
+        h.run();
+    }
+    assert_eq!(h.state().place.origin, corner, "snapped while held");
+    let (snap, _) = h
+        .state()
+        .rt
+        .centre_snapped
+        .clone()
+        .expect("the target shows");
+    assert!(
+        matches!(snap.kind, SnapKind::End | SnapKind::Crossing),
+        "{snap:?}"
+    );
+    h.drop_at(near);
+    h.run();
+    assert_eq!(h.state().place.origin, corner, "dropped on the corner");
+    // The arrows: one press stays on the corner, a run of them pulls it along the line once out of the corner's
+    // reach (10 px at 2 screen points per page point: 5 points)
+    over_canvas(&mut h);
+    h.key_press(egui::Key::ArrowRight);
+    h.run();
+    assert_eq!(h.state().place.origin, corner, "one press stays snapped");
+    for _ in 0..13 {
+        h.key_press(egui::Key::ArrowRight);
+        h.run();
+    }
+    let o = h.state().place.origin;
+    assert!(
+        (o[0] - 107.0).abs() < 0.01 && o[1] == 200.0,
+        "onto the line, 14 half points on: {o:?}"
+    );
+    // Alt held: the drag's end is where the pointer leaves it
+    h.state_mut().place.origin = [150.0, 300.0];
+    h.run();
+    h.event(egui::Event::ModifiersChanged(egui::Modifiers::ALT));
+    let start = screen(&h, [150.0, 300.0]);
+    drag(&mut h, start, near);
+    h.event(egui::Event::ModifiersChanged(egui::Modifiers::NONE));
+    h.run();
+    let o = h.state().place.origin;
+    assert!(
+        (o[0] - 103.0).abs() < 0.5 && (o[1] - 202.0).abs() < 0.5,
+        "Alt frees it: {o:?}"
+    );
+    // `.` turns it off: the same drag leaves it where the pointer is; the button turns it on again
+    key(&mut h, egui::Key::Period);
+    assert!(!h.state().centre_snap_on());
+    assert!(
+        h.state()
+            .help_line()
+            .contains("free of the drawing's lines")
+    );
+    h.state_mut().place.origin = [150.0, 300.0];
+    h.run();
+    let start = screen(&h, [150.0, 300.0]);
+    drag(&mut h, start, near);
+    let o = h.state().place.origin;
+    assert!(
+        (o[0] - 103.0).abs() < 0.5 && (o[1] - 202.0).abs() < 0.5,
+        "off: {o:?}"
+    );
+    h.get_by_label_contains("Centre snap · ").click();
+    h.run();
+    assert!(h.state().centre_snap_on(), "the button turns it on");
+    std::fs::remove_dir_all(&dir).unwrap();
+}

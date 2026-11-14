@@ -74,6 +74,12 @@ pub struct FootprintReviewSettings {
     /// How near (screen pixels) a ruler end snaps to the drawing's lines: a line's end, two lines crossing, else
     /// onto the line; 0: never. Alt held lets it go free of them.
     pub line_snap_px: f32,
+    /// The footprint's centre cross: how far each arm reaches from the centre, screen points (VIEW-35)
+    pub centre_cross_px: f32,
+    /// While the footprint moves (a drag, the arrows, the puck) its centre snaps to the drawing's lines: a line's end,
+    /// two lines crossing, else onto a line, as near as the ruler's ends do; at first, `.` switches it (VIEW-35).
+    /// Alt held frees it
+    pub centre_snap: bool,
     /// The shaded 3D model over the page: a turn by the SpaceMouse or Ctrl+drag finishes onto the nearest side
     /// when it lets go, over this time (VIEW-27); Alt held keeps the free angle
     pub model_snap: ve_view3d::SnapSettings,
@@ -175,6 +181,8 @@ pub struct Keys {
     /// The model onto the footprint as KiCad places it: at the footprint's origin with its turn, seen from its side
     /// (the bottom for a footprint in bottom view), the model entry's offset and rotation applied (VIEW-32)
     pub model_on_footprint: String,
+    /// The footprint's centre snapping to the drawing's lines while it moves, on or off (VIEW-35)
+    pub centre_snap: String,
 }
 
 impl Default for Keys {
@@ -211,6 +219,7 @@ impl Default for Keys {
             xray: "U".into(),
             reload: "F5".into(),
             model_on_footprint: "Home".into(),
+            centre_snap: "Period".into(),
         }
     }
 }
@@ -367,6 +376,8 @@ impl Default for FootprintReviewSettings {
             ruler_zoom: 8.0,
             ruler_snap: true,
             line_snap_px: 10.0,
+            centre_cross_px: 40.0,
+            centre_snap: true,
             model_snap: ve_view3d::SnapSettings::default(),
             hidden_edges: ve_view3d::HiddenEdges::default(),
             view_3d_projection: ve_view3d::Projection::Perspective,

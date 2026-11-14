@@ -36,6 +36,7 @@ use std::sync::Arc;
 use std::sync::mpsc::Receiver;
 
 pub mod blend;
+mod centre;
 mod docindex;
 mod docview;
 mod dxf;
@@ -277,6 +278,8 @@ pub struct FootprintReview {
     blink: bool,
     /// The page inverted (white-ish on black); none: the settings' default
     invert: Option<bool>,
+    /// The footprint's centre snaps to the drawing's lines while it moves; none: the settings' default (VIEW-35)
+    centre_snap: Option<bool>,
     hidden: Vec<String>,
     /// Which of copper, mask or paste is shown (the three views shown one at a time, see [`VIEWS`])
     cu_shown: Kind,
@@ -314,6 +317,7 @@ impl Default for FootprintReview {
             blend: None,
             blink: false,
             invert: None,
+            centre_snap: None,
             hidden: Kind::OWN
                 .iter()
                 .filter(|k| !k.shown_at_first())
@@ -606,6 +610,10 @@ struct Runtime {
     model_hidden: bool,
     /// What the press in Move drags, from its press to its let go (VIEW-32)
     grab: Option<grab::Grab>,
+    /// While the footprint moves: where it would be unsnapped, and the origin it was given then (VIEW-35)
+    centre_free: Option<([f32; 2], [f32; 2])>,
+    /// What the footprint's centre snapped to as it moved, and when
+    centre_snapped: Option<(Snap, f64)>,
     /// What a press in Move would drag, under the pointer
     hover_grab: Option<grab::Grab>,
     /// The peek key is held: the page alone
@@ -724,6 +732,8 @@ impl Default for Runtime {
             fp_hidden: false,
             model_hidden: false,
             grab: None,
+            centre_free: None,
+            centre_snapped: None,
             hover_grab: None,
             peek: false,
             other_source: false,
@@ -2330,7 +2340,7 @@ impl FootprintReview {
              {} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back · \
              {} type the ruler's length, Enter sets the scale · {} the dimension's number sets it · \
              {} · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
-             arrows nudge (Shift: 10×) · PgUp/PgDn page · wheel zoom · a drag on the empty page, right or middle drag pans · \
+             arrows nudge (Shift: 10×) · {} the footprint's centre {} · PgUp/PgDn page · wheel zoom · a drag on the empty page, right or middle drag pans · \
              {} the model as silhouettes or 3D ({}) · {} moves the footprint or the model ({}) · {} {} · \
              3D: SpaceMouse tilt, roll and twist or Ctrl+drag turn it, letting go lands on a side (Alt: free) · \
              {} the model onto the footprint · {} hides or shows the footprint, {} the model · hold {}: the page alone · {} X-ray · {} reload from disk\n\
@@ -2366,6 +2376,12 @@ impl FootprintReview {
             n(k.blink),
             n(k.cu_layer),
             n(k.invert),
+            n(k.centre_snap),
+            if self.centre_snap_on() {
+                "snaps to the drawing's lines as it moves, Alt: free"
+            } else {
+                "free of the drawing's lines (snap off)"
+            },
             n(k.model_look),
             self.model_views.look.name(),
             n(k.moves),
@@ -2585,6 +2601,21 @@ impl FootprintReview {
             }
             ui.separator();
             self.shown_switches(ui);
+            // The footprint's centre snapping to the drawing's lines as it moves (VIEW-35)
+            let on = self.centre_snap_on();
+            let r = ui
+                .add(Button::selectable(
+                    on,
+                    format!("Centre snap · {}", key_name(k.centre_snap)),
+                ))
+                .on_hover_text(format!(
+                    "while the footprint moves (a drag, the arrows, the SpaceMouse) its centre {} the drawing's lines: \
+                     a line's end, two lines crossing, else onto a line; Alt held frees a move",
+                    if on { "snaps to" } else { "is free of" }
+                ));
+            if r.clicked() {
+                self.toggle_centre_snap();
+            }
             // What a press drags, in Move; its room kept in the other modes
             let grab = Self::grab_name(self.rt.hover_grab.unwrap_or(grab::Grab::Page));
             ui.add_visible(
@@ -3135,7 +3166,8 @@ impl FootprintReview {
         }
         // The SpaceMouse's puck
         self.puck_nav(&ctx, canvas, resp.hover_pos(), holding);
-        self.carry(canvas, held);
+        let (now, free) = ui.input(|i| (i.time, i.modifiers.alt));
+        self.carry(canvas, held, free, now);
         // The page, inverted (white-ish on black) when asked: the picture's colours, not the footprint's
         let invert = self.page_inverted();
         if let (Some(pdf), Some([w, h])) = (&mut self.rt.pdf, page_size) {
@@ -3202,6 +3234,7 @@ impl FootprintReview {
             ui.input(|i| (i.modifiers.shift, !i.modifiers.alt, i.modifiers.command));
         self.rt.other_source = other;
         self.rt.snap = None;
+        let now = ctx.input(|i| i.time);
         if self.rt.ruler_placing
             && self.ruler.is_some()
             && let Some(p) = hover_page
@@ -3235,18 +3268,19 @@ impl FootprintReview {
                             .map(|s| s - resp.drag_delta())
                             .unwrap_or_default();
                         self.rt.grab = Some(self.grab_at(self.to_page(canvas, start)));
+                        self.centre_restart();
                     }
                     let delta = resp.drag_delta();
                     let zoom = self.zoom;
-                    match self.rt.grab.and_then(|g| self.grab_place_mut(g)) {
-                        Some(place) => {
-                            place.origin[0] += delta.x / zoom;
-                            place.origin[1] += delta.y / zoom;
-                        }
-                        None => {
-                            self.pan[0] += delta.x;
-                            self.pan[1] += delta.y;
-                        }
+                    if self.rt.grab == Some(grab::Grab::Footprint) {
+                        // Its centre snaps to the drawing's lines (VIEW-35)
+                        self.move_footprint([delta.x / zoom, delta.y / zoom], !lines, now);
+                    } else if let Some(place) = self.rt.grab.and_then(|g| self.grab_place_mut(g)) {
+                        place.origin[0] += delta.x / zoom;
+                        place.origin[1] += delta.y / zoom;
+                    } else {
+                        self.pan[0] += delta.x;
+                        self.pan[1] += delta.y;
                     }
                 }
                 Tool::Select => {
@@ -3316,6 +3350,7 @@ impl FootprintReview {
         }
         if resp.drag_stopped() {
             self.rt.grab = None;
+            self.centre_restart();
             self.rt.ruler_end = None;
             if !self.rt.ruler_placing {
                 self.rt.ruler_anchor = None;
@@ -3346,18 +3381,19 @@ impl FootprintReview {
             self.rt.peek = pressed.peek;
             let step = if shift { 10.0 } else { 1.0 } / self.zoom;
             let p = pressed;
-            let place = self.moving_mut();
-            if p.left {
-                place.origin[0] -= step;
-            }
-            if p.right {
-                place.origin[0] += step;
-            }
-            if p.up {
-                place.origin[1] -= step;
-            }
-            if p.down {
-                place.origin[1] += step;
+            let nudge = [
+                (p.right as i32 - p.left as i32) as f32 * step,
+                (p.down as i32 - p.up as i32) as f32 * step,
+            ];
+            if nudge != [0.0, 0.0] {
+                if self.moves_grab() == grab::Grab::Footprint {
+                    // Its centre snaps to the drawing's lines (VIEW-35); a run of presses pulls it off again
+                    self.move_footprint(nudge, !lines, now);
+                } else {
+                    let place = self.moving_mut();
+                    place.origin[0] += nudge[0];
+                    place.origin[1] += nudge[1];
+                }
             }
             for (on, action) in [
                 (p.page_up, Action::PageUp),
@@ -3393,6 +3429,7 @@ impl FootprintReview {
                 (p.xray, Action::XRay),
                 (p.reload, Action::Reload),
                 (p.model_on_footprint, Action::ModelOnFootprint),
+                (p.centre_snap, Action::CentreSnap),
             ] {
                 if on {
                     self.act(&ctx, action, hover_page, shift, lines);
@@ -3454,6 +3491,9 @@ impl FootprintReview {
         }
         self.draw_end_snaps(&painter, canvas);
         self.draw_snap(&painter, canvas);
+        if self.footprint_shown() {
+            self.draw_centre_snap(&painter, canvas, ctx.input(|i| i.time));
+        }
         if self.rt.length_box {
             self.length_box(&ctx, canvas, ui.id());
         }
@@ -3497,14 +3537,26 @@ impl FootprintReview {
 
     /// The thing a drag holds moved with the view (VIEW-34): by as much as the page point under the pointer moved,
     /// so the spot held stays under the pointer at the page's scale
-    fn carry(&mut self, canvas: Rect, held: Option<(grab::Grab, Pos2, [f32; 2])>) {
+    /// A carried footprint's centre snaps to the drawing's lines unless `free` (Alt held) (VIEW-35)
+    fn carry(
+        &mut self,
+        canvas: Rect,
+        held: Option<(grab::Grab, Pos2, [f32; 2])>,
+        free: bool,
+        now: f64,
+    ) {
         let Some((g, at, before)) = held else {
             return;
         };
         let after = self.to_page(canvas, at);
-        if let Some(place) = self.grab_place_mut(g) {
-            place.origin[0] += after[0] - before[0];
-            place.origin[1] += after[1] - before[1];
+        let d = [after[0] - before[0], after[1] - before[1]];
+        if g == grab::Grab::Footprint {
+            if d != [0.0, 0.0] {
+                self.move_footprint(d, free, now);
+            }
+        } else if let Some(place) = self.grab_place_mut(g) {
+            place.origin[0] += d[0];
+            place.origin[1] += d[1];
         }
     }
 
@@ -3650,7 +3702,13 @@ impl FootprintReview {
     /// Where a ruler end snaps, at the pointer: the lines it snaps to drawn over, a square on a line's end, a cross
     /// where two lines cross, a ring on a line
     fn draw_snap(&self, painter: &egui::Painter, canvas: Rect) {
-        let Some(snap) = &self.rt.snap else { return };
+        if let Some(snap) = &self.rt.snap {
+            self.draw_snap_mark(painter, canvas, snap);
+        }
+    }
+
+    /// A snap target as a ruler end's is drawn (also the footprint centre's, VIEW-35)
+    fn draw_snap_mark(&self, painter: &egui::Painter, canvas: Rect, snap: &Snap) {
         let geometry = self.rt.pdf.as_ref().and_then(|p| p.geometry(self.page));
         let stroke = Stroke::new(1.5, SNAP_COLOUR);
         if let Some(g) = geometry {
@@ -3962,11 +4020,7 @@ impl FootprintReview {
             }
             blend_pass(painter, canvas, page, id, mesh, a, mode);
         }
-        // The origin
-        let o = self.to_screen(canvas, self.place.origin);
-        let s = Stroke::new(1.0, Color32::from_rgb(0, 160, 0));
-        painter.line_segment([o - vec2(6.0, 0.0), o + vec2(6.0, 0.0)], s);
-        painter.line_segment([o - vec2(0.0, 6.0), o + vec2(0.0, 6.0)], s);
+        self.draw_centre(painter, canvas);
     }
 }
 
@@ -4031,6 +4085,7 @@ struct KeyMap {
     xray: Option<egui::Key>,
     reload: Option<egui::Key>,
     model_on_footprint: Option<egui::Key>,
+    centre_snap: Option<egui::Key>,
 }
 
 impl From<&Keys> for KeyMap {
@@ -4068,6 +4123,7 @@ impl From<&Keys> for KeyMap {
             xray: key(&k.xray),
             reload: key(&k.reload),
             model_on_footprint: key(&k.model_on_footprint),
+            centre_snap: key(&k.centre_snap),
         }
     }
 }
@@ -4113,6 +4169,7 @@ struct Pressed {
     xray: bool,
     reload: bool,
     model_on_footprint: bool,
+    centre_snap: bool,
 }
 
 impl Pressed {
@@ -4159,6 +4216,7 @@ impl Pressed {
                 xray: pressed(km.xray),
                 reload: pressed(km.reload),
                 model_on_footprint: pressed(km.model_on_footprint),
+                centre_snap: pressed(km.centre_snap),
             };
             (p, i.modifiers.shift)
         })
