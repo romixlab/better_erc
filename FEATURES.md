@@ -862,6 +862,13 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   pointer never hands the motion to another. Push and pull zoom the view in both. The pie's centre names the thing
   (`Move 3D model`), the controls and the help line say what the puck moves. Tests: page, Q's pick, the thing under
   the pointer kept · `puck.rs` (`puck_nav`, `puck_target`), `puck_tests.rs` (`the_puck_drives_one_thing`)
+- ✅ `VIEW-34` Footprint review, the puck carries what a drag holds: while a mouse drag in Move holds the footprint, a
+  silhouette view or the 3D model, the puck pans and zooms the page (whatever `Tab` switched it to) and the held thing
+  is moved by as much as the page point under the pointer moved, so the same spot of it stays under the pointer at
+  the page's scale, the way an item held while scrolling stays in hand; the wheel's zoom does the same. Letting go
+  drops it there. A ruler end held by a drag already follows the pointer. Test: held in both puck switches, a slide
+  and a pull keep it under the pointer, the page panned under it, dropped where it was carried · `mod.rs` (`held`,
+  `carry`), `puck.rs` (`puck_nav`), `puck_tests.rs` (`the_puck_carries_what_a_drag_holds`)
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
   one lookup per MPN per session, on a worker thread) and its review state from the review lines (reviewed, reviewed

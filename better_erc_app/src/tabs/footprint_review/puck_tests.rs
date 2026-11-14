@@ -599,3 +599,83 @@ fn the_puck_drives_one_thing() {
     drop(fake);
     std::fs::remove_dir_all(&dir).unwrap();
 }
+
+/// VIEW-34: a mouse drag holds the footprint and the puck pans and zooms the page under it: the footprint stays
+/// under the pointer at the same spot of it, at the page's scale, so the puck carries it across the page, and
+/// letting go drops it there. While held the puck drives the page even when switched to a thing.
+#[test]
+fn the_puck_carries_what_a_drag_holds() {
+    let dir = scratch("carry");
+    let socket = dir.join("spnav.sock");
+    let fake = FakeSpacenavd::start(&socket).unwrap();
+    let mut h = harness(&socket, &fake);
+    open(&mut h, &dir);
+    let full = Mapping::default().full_scale as i32;
+    // The screen point of the footprint's origin, the spot held
+    let held = |h: &Harness<'static, FootprintReview>| {
+        let st = h.state();
+        st.to_screen(st.rt.canvas, st.place.origin)
+    };
+    let close = |a: Pos2, b: Pos2, what: &str| {
+        assert!((a - b).length() < 0.5, "{what}: {a:?} → {b:?}");
+    };
+    for moves in [PuckMoves::Page, PuckMoves::Footprint] {
+        h.state_mut().puck = moves;
+        let a = held(&h);
+        h.hover_at(a);
+        h.step();
+        h.drag_at(a);
+        h.step();
+        for i in 1..=4 {
+            h.hover_at(a + vec2(10.0 * i as f32, 0.0));
+            h.step();
+        }
+        let at = a + vec2(40.0, 0.0);
+        close(held(&h), at, "the drag moves it under the pointer");
+        // The puck slides: the page pans under the footprint, which stays under the pointer and so moves across
+        // the page
+        let (pan0, origin0) = (h.state().pan, h.state().place.origin);
+        for _ in 0..5 {
+            push(&mut h, &fake, [full, full / 2, 0, 0, 0, 0]);
+        }
+        let st = h.state();
+        assert!(
+            st.pan[0] > pan0[0] + 1.0,
+            "{moves:?}: the page pans: {pan0:?} → {:?}",
+            st.pan
+        );
+        let page_moved = [
+            st.place.origin[0] - origin0[0],
+            st.place.origin[1] - origin0[1],
+        ];
+        let panned = [
+            (st.pan[0] - pan0[0]) / st.zoom,
+            (st.pan[1] - pan0[1]) / st.zoom,
+        ];
+        assert!(
+            (page_moved[0] + panned[0]).abs() < 0.01 && (page_moved[1] + panned[1]).abs() < 0.01,
+            "{moves:?}: the footprint moves across the page against the pan: {page_moved:?} vs {panned:?}"
+        );
+        close(held(&h), at, "a pan keeps it under the pointer");
+        // Pull: the view zooms in; the footprint stays under the pointer at the page's scale
+        let zoom0 = h.state().zoom;
+        for _ in 0..5 {
+            push(&mut h, &fake, [0, 0, full, 0, 0, 0]);
+        }
+        assert!(h.state().zoom > zoom0 * 1.1, "the view zooms");
+        close(held(&h), at, "a zoom keeps it under the pointer");
+        push(&mut h, &fake, [0; 6]);
+        // Let go: it stays where it was carried
+        let carried = h.state().place.origin;
+        h.drop_at(at);
+        h.step();
+        h.step();
+        assert_eq!(h.state().place.origin, carried, "dropped where it was");
+        close(held(&h), at, "dropped under the pointer");
+        h.state_mut().zoom = zoom0;
+        h.step();
+    }
+    drop(h);
+    drop(fake);
+    std::fs::remove_dir_all(&dir).unwrap();
+}

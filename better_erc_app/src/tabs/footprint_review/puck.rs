@@ -190,8 +190,15 @@ impl FootprintReview {
     /// moves what is under the pointer as a drag picks it, else what the moves switch (Q) picks, and turns it by tilt,
     /// roll and twist when it is the shaded 3D model. Moves are in screen points, so a push goes as fast at every
     /// zoom; push and pull zoom the view about the pointer over the canvas, else the canvas' middle. Nothing while
-    /// the calibrate step measures the motions.
-    pub(super) fn puck_nav(&mut self, ctx: &egui::Context, canvas: Rect, pointer: Option<Pos2>) {
+    /// the calibrate step measures the motions. While a mouse drag holds something (`holding`) the puck drives the
+    /// page whatever it is switched to, and the canvas carries the held thing along (VIEW-34).
+    pub(super) fn puck_nav(
+        &mut self,
+        ctx: &egui::Context,
+        canvas: Rect,
+        pointer: Option<Pos2>,
+        holding: bool,
+    ) {
         if self.rt.puck.settings.calibrating() {
             return;
         }
@@ -201,6 +208,7 @@ impl FootprintReview {
             return;
         }
         let target = match self.rt.puck.target {
+            _ if holding => grab::Grab::Page,
             Some(t) => t,
             None => {
                 let t = self.puck_target(canvas, pointer);

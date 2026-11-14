@@ -2334,7 +2334,7 @@ impl FootprintReview {
              {} the model as silhouettes or 3D ({}) · {} moves the footprint or the model ({}) · {} {} · \
              3D: SpaceMouse tilt, roll and twist or Ctrl+drag turn it, letting go lands on a side (Alt: free) · \
              {} the model onto the footprint · {} hides or shows the footprint, {} the model · hold {}: the page alone · {} X-ray · {} reload from disk\n\
-             {} accept · {} next to review · {} write a review note · SpaceMouse: the puck {} ({} switches), push away zooms out · \
+             {} accept · {} next to review · {} write a review note · SpaceMouse: the puck {} ({} switches), push away zooms out, while a drag holds something it carries it · \
              tap the left button for the ruler, the right one to switch · hold one for its ring, both for Accept",
             self.tool.name(),
             n(k.move_tool),
@@ -3102,6 +3102,10 @@ impl FootprintReview {
         }
         self.model_views_frame(&ctx, canvas);
         self.solid_frame(&ctx, canvas);
+        // What a mouse drag holds and the page point under the pointer: the view moving under it (the puck, the
+        // wheel) carries it along, the same spot of it staying under the pointer
+        let holding = resp.dragged_by(egui::PointerButton::Primary);
+        let held = self.held(&resp, canvas, ui.input(|i| i.modifiers.command));
         // Zoom at the pointer, pan with the secondary or middle button
         if resp.hovered() {
             let (scroll, zoom_delta, pointer) = ui.input(|i| {
@@ -3130,7 +3134,8 @@ impl FootprintReview {
             self.pan[1] += d.y;
         }
         // The SpaceMouse's puck
-        self.puck_nav(&ctx, canvas, resp.hover_pos());
+        self.puck_nav(&ctx, canvas, resp.hover_pos(), holding);
+        self.carry(canvas, held);
         // The page, inverted (white-ish on black) when asked: the picture's colours, not the footprint's
         let invert = self.page_inverted();
         if let (Some(pdf), Some([w, h])) = (&mut self.rt.pdf, page_size) {
@@ -3471,6 +3476,35 @@ impl FootprintReview {
             painter.rect_filled(r, 3.0, bg);
             painter.galley(r.min + vec2(4.0, 2.0), galley, Color32::WHITE);
             y = r.min.y - 2.0;
+        }
+    }
+
+    /// What a mouse drag in Move holds (the footprint, a silhouette view, the 3D model), with the pointer and the
+    /// page point under it before the view moves this frame; none for a drag that pans or turns
+    fn held(
+        &self,
+        resp: &egui::Response,
+        canvas: Rect,
+        command: bool,
+    ) -> Option<(grab::Grab, Pos2, [f32; 2])> {
+        let g = self.rt.grab.filter(|g| *g != grab::Grab::Page)?;
+        let at = resp.interact_pointer_pos()?;
+        (self.tool == Tool::Move
+            && resp.dragged_by(egui::PointerButton::Primary)
+            && !self.ctrl_turns(command))
+        .then(|| (g, at, self.to_page(canvas, at)))
+    }
+
+    /// The thing a drag holds moved with the view (VIEW-34): by as much as the page point under the pointer moved,
+    /// so the spot held stays under the pointer at the page's scale
+    fn carry(&mut self, canvas: Rect, held: Option<(grab::Grab, Pos2, [f32; 2])>) {
+        let Some((g, at, before)) = held else {
+            return;
+        };
+        let after = self.to_page(canvas, at);
+        if let Some(place) = self.grab_place_mut(g) {
+            place.origin[0] += after[0] - before[0];
+            place.origin[1] += after[1] - before[1];
         }
     }
 

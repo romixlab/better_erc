@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- Footprint review: the SpaceMouse carries what a mouse drag holds. While a drag holds the footprint, a silhouette view or the 3D model, the puck (and the wheel) pan and zoom the page under it and the held thing stays under the pointer at the same spot of it, at the page's scale; letting go drops it there. While held the puck pans the page whatever it is switched to (VIEW-34).
+
 ## [0.4.59] - 2026-11-14
 
 ### Added
