@@ -4886,8 +4886,8 @@ dependencies = [
 
 [[package]]
 name = "ve_basics"
-version = "0.33.3"
-source = "git+https://github.com/vhrdtech/vhrd_egui#b85a41b89a95a50c6ea28173a72d4b873779667c"
+version = "0.33.4"
+source = "git+https://github.com/vhrdtech/vhrd_egui#4252049897351fa1ae775db2fe04ad587fad8ff4"
 dependencies = [
  "egui",
  "web-time",
@@ -4895,8 +4895,8 @@ dependencies = [
 
 [[package]]
 name = "ve_spacemouse"
-version = "0.33.3"
-source = "git+https://github.com/vhrdtech/vhrd_egui#b85a41b89a95a50c6ea28173a72d4b873779667c"
+version = "0.33.4"
+source = "git+https://github.com/vhrdtech/vhrd_egui#4252049897351fa1ae775db2fe04ad587fad8ff4"
 dependencies = [
  "egui",
  "egui-phosphor",
@@ -4908,8 +4908,8 @@ dependencies = [
 
 [[package]]
 name = "ve_theme"
-version = "0.33.3"
-source = "git+https://github.com/vhrdtech/vhrd_egui#b85a41b89a95a50c6ea28173a72d4b873779667c"
+version = "0.33.4"
+source = "git+https://github.com/vhrdtech/vhrd_egui#4252049897351fa1ae775db2fe04ad587fad8ff4"
 dependencies = [
  "egui",
  "log",
@@ -4920,8 +4920,8 @@ dependencies = [
 
 [[package]]
 name = "ve_view3d"
-version = "0.33.3"
-source = "git+https://github.com/vhrdtech/vhrd_egui#b85a41b89a95a50c6ea28173a72d4b873779667c"
+version = "0.33.4"
+source = "git+https://github.com/vhrdtech/vhrd_egui#4252049897351fa1ae775db2fe04ad587fad8ff4"
 dependencies = [
  "bytemuck",
  "egui",
