@@ -1539,7 +1539,7 @@ dependencies = [
 [[package]]
 name = "exact_units"
 version = "0.1.0"
-source = "git+https://github.com/romixlab/exact_units#08340c5e67409df31f8ebb7d7554f903cd7ef77a"
+source = "git+https://github.com/romixlab/exact_units#cd1fd9d41a28d3a4c3634c915e5712e75fe6455d"
 
 [[package]]
 name = "fastrand"
