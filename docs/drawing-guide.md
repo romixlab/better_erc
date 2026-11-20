@@ -177,7 +177,7 @@ table, or two or three short lines.
 ```
 bad:  SLESD8D15C at the connector, R1213 680 R anti-surge, BAT54S: upper diode to a clamp bus
       held at ~3.15 V by an ATL431 (self-powered by the fault, not tied to +3V3); R1215 100 R ...
-good: Donguru rev B proposal for a 12 V claim.
+good: Portwright rev B proposal for a 12 V claim.
       1. The fault itself powers the clamp bus.
       2. The clamp bus is not tied to +3V3.
 ```
