@@ -1,7 +1,10 @@
 //! `DRAW-34` Items closer than their clearance margins (symbol bodies, power symbols, fields, labels, note boxes)
 
 use super::overlap::{close, finding, gap_text};
-use super::{CLEARANCE_PART, CLEARANCE_POWER, CLEARANCE_TEXT};
+use super::{
+    CLEARANCE_PART, CLEARANCE_POWER, CLEARANCE_TEXT, FIELDS_BODY_GAP, FIELDS_ENDS_RAISE,
+    FIELDS_GAP_MAX, FIELDS_PITCH, FIELDS_STEP,
+};
 use crate::meta::*;
 use crate::{Ctx, Finding};
 
@@ -15,7 +18,17 @@ static META: CheckMeta = CheckMeta {
     scope: Scope::Board,
     needs: &[Need::Geometry],
     overlaps: &["DRAW-9"],
-    params: &[CLEARANCE_PART, CLEARANCE_POWER, CLEARANCE_TEXT],
+    // The field layout of its fix, `berc place-fields` (TOOL-13)
+    params: &[
+        CLEARANCE_PART,
+        CLEARANCE_POWER,
+        CLEARANCE_TEXT,
+        FIELDS_PITCH,
+        FIELDS_BODY_GAP,
+        FIELDS_STEP,
+        FIELDS_GAP_MAX,
+        FIELDS_ENDS_RAISE,
+    ],
 };
 
 impl Check for Draw34 {
@@ -42,6 +55,11 @@ inventory::submit!(Registered(&Draw34));
 /// The margins this check holds items to, as the board's settings give them
 pub(super) fn margins(cx: &Ctx) -> super::overlap::Margins {
     super::overlap::Margins::of(cx, &META)
+}
+
+/// A `drawing.fields.*` setting of the board, in millimetres
+pub(super) fn field_setting(cx: &Ctx, p: &crate::meta::Param) -> f64 {
+    cx.param(&META, p.name)
 }
 
 #[cfg(test)]

@@ -2,7 +2,7 @@
 //! of [`erc_checks::place`] on every board of a design, written into the schematic files by
 //! [`erc_kicad::fields`], and the `DRAW-9` and `DRAW-34` counts before and after.
 
-use erc_checks::place::{FieldPlan, OverlapCount, count_overlaps, plan_fields};
+use erc_checks::place::{FieldPlan, OverlapCount, StyleError, count_overlaps, plan_fields};
 use erc_checks::{CheckError, Config, Ctx, Project};
 use erc_kicad::fields::{FieldChange, FieldPlace, PlaceError, place_fields};
 use erc_model::{BoardId, Design};
@@ -19,7 +19,7 @@ pub struct PlaceOptions {
     pub sheet: Option<String>,
     /// Write the moved fields into the files; else only plan them
     pub write: bool,
-    /// The settings the margins come from (`drawing.clearance.*`)
+    /// The settings the margins (`drawing.clearance.*`) and the field style (`drawing.fields.*`) come from
     pub config: Config,
 }
 
@@ -48,6 +48,8 @@ pub enum PlaceFieldsError {
     Edit { file: PathBuf, error: PlaceError },
     /// `--sheet` names no sheet of the design
     NoSheet(String),
+    /// A `drawing.fields.*` setting is out of its range
+    Style(StyleError),
 }
 
 impl fmt::Display for PlaceFieldsError {
@@ -57,6 +59,7 @@ impl fmt::Display for PlaceFieldsError {
             PlaceFieldsError::Io { file, error } => write!(f, "{}: {error}", file.display()),
             PlaceFieldsError::Edit { file, error } => write!(f, "{}: {error}", file.display()),
             PlaceFieldsError::NoSheet(s) => write!(f, "no sheet {s}"),
+            PlaceFieldsError::Style(e) => e.fmt(f),
         }
     }
 }
@@ -68,6 +71,7 @@ impl std::error::Error for PlaceFieldsError {
             PlaceFieldsError::Io { error, .. } => Some(error),
             PlaceFieldsError::Edit { error, .. } => Some(error),
             PlaceFieldsError::NoSheet(_) => None,
+            PlaceFieldsError::Style(e) => Some(e),
         }
     }
 }
@@ -93,7 +97,8 @@ pub fn place(path: &Path, opts: &PlaceOptions) -> Result<Placed, PlaceFieldsErro
     let mut plan = FieldPlan::default();
     for bi in 0..design.boards.len() {
         let cx = Ctx::new(design, BoardId::from_index(bi), None, &opts.config);
-        plan.symbols.extend(plan_fields(&cx, sheet).symbols);
+        let board = plan_fields(&cx, sheet).map_err(PlaceFieldsError::Style)?;
+        plan.symbols.extend(board.symbols);
     }
     let edited = edit(&project.dir, &plan)?;
     let after_project = project

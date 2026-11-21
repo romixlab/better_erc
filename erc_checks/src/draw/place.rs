@@ -1,30 +1,103 @@
 //! `TOOL-13`: the fix side of `DRAW-9` and `DRAW-34` for symbol fields. Each symbol whose shown fields overlap
 //! something, or come closer than its margin, gets them stacked in one column beside its body, on the side where
-//! the column hits nothing, judged by the same pair tests the two checks use.
+//! the column hits nothing, judged by the same pair tests the two checks use. The layout follows one style, the
+//! `drawing.fields.*` settings: a column that overlaps nothing but strays from it is placed again.
 
-use super::draw_34;
 use super::overlap::{Margins, bare_hit, close_hit, exempt};
+use super::{
+    FIELDS_BODY_GAP, FIELDS_ENDS_RAISE, FIELDS_GAP_MAX, FIELDS_PITCH, FIELDS_STEP, MM, draw_34,
+};
 use crate::Ctx;
+use crate::meta::Param;
 use erc_analysis::scene::{Item, ItemKind as K, Scene};
 use erc_model::Pt;
 use erc_model::geometry::{DrawnField, DrawnSymbol, HAlign, Rect, VAlign, text_rect};
 
-/// The step fields are placed on: fine enough to sit close to a body, coarse enough to line up by hand
-const STEP: i64 = 250_000;
-/// Space between two lines of a column, past the text's height, before rounding up to [`STEP`]
-const LINE_GAP: i64 = 500_000;
-/// Least space between a column and the symbol's body and pins
-const BODY_GAP: i64 = 635_000;
 /// Margin of the drawing frame inside the paper edge, as KiCad's default page layout draws it
 const FRAME: i64 = 10_000_000;
-/// How many steps a column may slide along its side when it does not fit centred
-const SLIDE_STEPS_MAX: i64 = 20;
-/// How many steps farther out from the body a column may stand when it does not fit next to it
-const OUT_STEPS_MAX: i64 = 10;
-/// How far above a horizontal part's pin line its Reference and Value sit, clear of the wire
-const ENDS_RAISE: i64 = 1_270_000;
-/// Fields whose nearest one is farther than this from their body read as another part's: they are placed again
-const FIELD_GAP_MAX: i64 = 2_000_000;
+/// How far a column may slide along its side when it does not fit centred
+const SLIDE_REACH: i64 = 5_000_000;
+/// How much farther out from the body a column may stand when it does not fit next to it
+const OUT_REACH: i64 = 2_500_000;
+/// The finest step fields may be placed on: a finer one multiplies the columns to try past use
+const STEP_MIN: f64 = 0.05;
+
+/// The field layout the placer makes, from the `drawing.fields.*` settings, in nanometres
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct FieldStyle {
+    /// Baseline-to-baseline distance between the lines of a column
+    pub pitch: i64,
+    /// Space between a column, or a packed part's Reference and Value, and the body and pins
+    pub body_gap: i64,
+    /// The grid anchors are placed on, and the step a column slides or moves out by
+    pub step: i64,
+    /// Fields whose nearest one is farther than this from their body read as another part's: they are placed again
+    pub gap_max: i64,
+    /// How far above a horizontal packed part's pin line its Reference and Value sit, clear of the wire
+    pub ends_raise: i64,
+}
+
+/// A `drawing.fields.*` setting out of its range
+#[derive(Clone, Debug, PartialEq)]
+pub struct StyleError {
+    pub setting: &'static str,
+    pub value: f64,
+    /// The least value it may take, in millimetres
+    pub least: f64,
+}
+
+impl std::fmt::Display for StyleError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{} = {}: must be a number of at least {} mm",
+            self.setting, self.value, self.least
+        )
+    }
+}
+
+impl std::error::Error for StyleError {}
+
+impl FieldStyle {
+    /// The style the board's settings give
+    pub fn of(cx: &Ctx) -> Result<FieldStyle, StyleError> {
+        let get = |p: &Param, least: f64| {
+            let value = draw_34::field_setting(cx, p);
+            if value.is_finite() && value >= least {
+                Ok((value * MM).round() as i64)
+            } else {
+                Err(StyleError {
+                    setting: p.name,
+                    value,
+                    least,
+                })
+            }
+        };
+        Ok(FieldStyle {
+            pitch: get(&FIELDS_PITCH, STEP_MIN)?,
+            body_gap: get(&FIELDS_BODY_GAP, 0.0)?,
+            step: get(&FIELDS_STEP, STEP_MIN)?,
+            gap_max: get(&FIELDS_GAP_MAX, 0.0)?,
+            ends_raise: get(&FIELDS_ENDS_RAISE, 0.0)?,
+        })
+    }
+
+    /// `v` rounded up to the step
+    fn up(self, v: i64) -> i64 {
+        let step = self.step;
+        v.div_euclid(step) * step + if v.rem_euclid(step) == 0 { 0 } else { step }
+    }
+
+    /// `v` rounded down to the step
+    fn down(self, v: i64) -> i64 {
+        v.div_euclid(self.step) * self.step
+    }
+
+    /// `v` rounded to the nearest step
+    fn nearest(self, v: i64) -> i64 {
+        self.down(v + self.step / 2)
+    }
+}
 
 /// Where a symbol's fields go
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -145,15 +218,16 @@ pub fn count_overlaps(cx: &Ctx, sheet: Option<&str>) -> OverlapCount {
     out
 }
 
-/// Plans the fields of the board of `cx`, on one sheet or all. Symbols whose fields overlap nothing are left out;
-/// power symbols, free text and everything that is not a field stay where they are.
-pub fn plan_fields(cx: &Ctx, sheet: Option<&str>) -> FieldPlan {
+/// Plans the fields of the board of `cx`, on one sheet or all. Symbols whose fields overlap nothing and follow the
+/// style are left out; power symbols, free text and everything that is not a field stay where they are.
+pub fn plan_fields(cx: &Ctx, sheet: Option<&str>) -> Result<FieldPlan, StyleError> {
     let m = draw_34::margins(cx);
+    let style = FieldStyle::of(cx)?;
     let mut plan = FieldPlan::default();
     for scene in cx.scenes().iter().filter(|s| on_sheet(cx, s, sheet)) {
-        plan_scene(scene, m, &mut plan.symbols);
+        plan_scene(scene, m, style, &mut plan.symbols);
     }
-    plan
+    Ok(plan)
 }
 
 /// The conflicts of a set of boxes: how many pairs, and their summed overlap, so fewer pairs win first
@@ -183,6 +257,7 @@ struct Board<'s, 'a> {
     /// By symbol: its fields are in the way of something and the placer has not been to it yet
     pending: Vec<bool>,
     margins: Margins,
+    style: FieldStyle,
     /// Inside the drawing frame; `None` when the paper's size is not known
     frame: Option<Rect>,
 }
@@ -190,6 +265,8 @@ struct Board<'s, 'a> {
 /// A layout to try: where it puts each field it shows (by index into the shown fields), and which it hides
 struct Layout {
     side: Side,
+    /// How many steps farther out from the body than the gap a column stands; 0 for any other layout
+    out: i64,
     lines: Vec<(usize, Pt, HAlign, Rect)>,
     hidden: Vec<usize>,
 }
@@ -295,14 +372,14 @@ impl Board<'_, '_> {
             .collect()
     }
 
-    /// Whether the shown fields `own` all stand farther than [`FIELD_GAP_MAX`] from the symbol's outline
+    /// Whether the shown fields `own` all stand farther than [`FieldStyle::gap_max`] from the symbol's outline
     fn detached(&self, sym: &DrawnSymbol, own: &[usize]) -> bool {
         let outline = sym.outline();
         own.iter()
             .filter(|i| !self.gone[**i])
             .map(|i| self.items[*i].rect.gap(outline))
             .min()
-            .is_some_and(|g| g > FIELD_GAP_MAX)
+            .is_some_and(|g| g > self.style.gap_max)
     }
 
     /// The shown fields of symbol `s` where they are now
@@ -318,7 +395,7 @@ impl Board<'_, '_> {
 /// neighbours' fields have moved
 const PASSES_MAX: usize = 3;
 
-fn plan_scene(scene: &Scene, margins: Margins, out: &mut Vec<SymbolPlan>) {
+fn plan_scene(scene: &Scene, margins: Margins, style: FieldStyle, out: &mut Vec<SymbolPlan>) {
     let g = scene.geometry;
     let (w, h) = g.paper_size;
     let frame = (w > 2 * FRAME && h > 2 * FRAME)
@@ -329,6 +406,7 @@ fn plan_scene(scene: &Scene, margins: Margins, out: &mut Vec<SymbolPlan>) {
         gone: vec![false; scene.items.len()],
         pending: vec![false; g.symbols.len()],
         margins,
+        style,
         frame,
     };
     for s in 0..g.symbols.len() {
@@ -370,7 +448,8 @@ fn plan_scene(scene: &Scene, margins: Margins, out: &mut Vec<SymbolPlan>) {
 /// Moves the fields of symbol `s` when they conflict with something, by the first that clears them of: hiding
 /// rating fields that only touch a power symbol, a full column, Reference and Value at the ends of a packed
 /// two-pin part, a column shortened by its last rating fields; else the full column that conflicts least, when
-/// it conflicts less than where they are. `plan` keeps the last change. Whether the fields changed.
+/// it conflicts less than where they are. Fields clear of everything are placed again when they stray from the
+/// style (see [`restyle`]). `plan` keeps the last change. Whether the fields changed.
 fn place_symbol(
     board: &mut Board,
     s: usize,
@@ -390,26 +469,32 @@ fn place_symbol(
         .is_some_and(|p| p.side.is_some_and(Side::is_column));
     let (now, now_hits) = board.cost(&own, &board.shown_now(&own), column);
     let detached = board.detached(sym, &own);
-    if now.pairs == 0 && !detached {
-        return false;
-    }
     let shown: Vec<&DrawnField> = sym
         .fields
         .iter()
         .filter(|f| !f.hidden && !f.text.text.is_empty())
         .collect();
     debug_assert_eq!(shown.len(), own.len(), "one field item per shown field");
-    let rating = |k: usize| !matches!(shown[k].name.as_str(), "Reference" | "Value");
     let order = column_order(&shown);
-    let placed = |l: &Layout| -> Vec<(usize, Rect)> {
-        l.lines.iter().map(|(k, _, _, r)| (own[*k], *r)).collect()
-    };
-    let score = |l: &Layout| board.cost(&own, &placed(l), l.side.is_column()).0;
+    if now.pairs == 0 && !detached {
+        // Fields the placer moved follow the style; others are placed again only when they stray from it
+        let restyled = plan
+            .is_none()
+            .then(|| restyle(board, sym, &shown, &own, &order))
+            .flatten();
+        return restyled.is_some_and(|l| {
+            apply(board, sym, &shown, &own, plan, l);
+            true
+        });
+    }
+    let rating = |k: usize| !matches!(shown[k].name.as_str(), "Reference" | "Value");
+    let score = |l: &Layout| board.cost(&own, &placed(&own, l), l.side.is_column()).0;
     // A packed horizontal two-pin part always takes its ends: a short column squeezed above a row of them reads
     // as the neighbour's
     let ends_first = (two_pin(sym) == Some(true))
         .then(|| ends_layout(board, s, sym, &shown, &own, &order))
         .flatten();
+    let style = board.style;
     let chosen = ends_first
         .or_else(|| in_place(&now_hits, &rating))
         .or_else(|| {
@@ -419,7 +504,7 @@ fn place_symbol(
             for drop in 0..=ratings {
                 let kept = &order[..order.len() - drop];
                 let mut best: Option<(Cost, Layout)> = None;
-                for l in columns(sym, &shown, kept, &order[order.len() - drop..]) {
+                for l in columns(style, sym, &shown, kept, &order[order.len() - drop..]) {
                     let c = score(&l);
                     if best.as_ref().is_none_or(|b| c < b.0) {
                         best = Some((c, l));
@@ -445,7 +530,37 @@ fn place_symbol(
             }
             fallback.filter(|f| f.0 < now || detached).map(|f| f.1)
         });
-    let p = plan.get_or_insert_with(|| SymbolPlan {
+    match chosen {
+        // Fields the placer has not been to that stand where it would put them again stay out of the plan
+        Some(l) if plan.is_none() && unchanged(&shown, &l) => false,
+        Some(l) => {
+            apply(board, sym, &shown, &own, plan, l);
+            true
+        }
+        None => {
+            // Nothing is clearer: a column off the style still takes it where that is no worse
+            let restyled = plan
+                .is_none()
+                .then(|| restyle(board, sym, &shown, &own, &order))
+                .flatten();
+            if let Some(l) = restyled {
+                apply(board, sym, &shown, &own, plan, l);
+                return true;
+            }
+            plan.get_or_insert_with(|| new_plan(board, sym));
+            false
+        }
+    }
+}
+
+/// The boxes a layout gives the symbol's field items `own`
+fn placed(own: &[usize], l: &Layout) -> Vec<(usize, Rect)> {
+    l.lines.iter().map(|(k, _, _, r)| (own[*k], *r)).collect()
+}
+
+/// A plan for a symbol whose fields stay where they are
+fn new_plan(board: &Board, sym: &DrawnSymbol) -> SymbolPlan {
+    SymbolPlan {
         file: board.scene.geometry.file.clone(),
         reference: sym.reference.clone(),
         uuid: sym.uuid.clone(),
@@ -453,14 +568,25 @@ fn place_symbol(
         moves: Vec::new(),
         hidden: Vec::new(),
         left: Vec::new(),
-    });
-    let Some(l) = chosen else { return false };
-    for (i, r) in placed(&l) {
+    }
+}
+
+/// Puts the symbol's fields where layout `l` says, on the board and in its plan
+fn apply(
+    board: &mut Board,
+    sym: &DrawnSymbol,
+    shown: &[&DrawnField],
+    own: &[usize],
+    plan: &mut Option<SymbolPlan>,
+    l: Layout,
+) {
+    for (i, r) in placed(own, &l) {
         board.items[i].rect = r;
     }
     for k in &l.hidden {
         board.gone[own[*k]] = true;
     }
+    let p = plan.get_or_insert_with(|| new_plan(board, sym));
     p.side = Some(l.side);
     p.hidden = l.hidden.iter().map(|k| shown[*k].name.clone()).collect();
     p.moves = l
@@ -473,7 +599,104 @@ fn place_symbol(
             rect: *rect,
         })
         .collect();
-    true
+}
+
+/// For fields that stand in a column, or at a packed part's ends, off the style: the same layout in style, where
+/// it conflicts no more than the fields do now, judged the same way (a wire through a column counts). A column keeps its side when it fits there next to the
+/// body, else takes the first side where it does, then a step or more farther out. `None` when the fields follow
+/// the style, stand some other way, or nothing in style is as clear.
+fn restyle(
+    board: &Board,
+    sym: &DrawnSymbol,
+    shown: &[&DrawnField],
+    own: &[usize],
+    order: &[usize],
+) -> Option<Layout> {
+    let now = shape(sym, shown)?;
+    let style = board.style;
+    let cost = board.cost(own, &board.shown_now(own), now.is_column()).0;
+    let clear = |l: &Layout| board.cost(own, &placed(own, l), l.side.is_column()).0 <= cost;
+    let same = |l: &Layout| unchanged(shown, l);
+    if now == Side::Ends {
+        let l = ends_lines(style, sym, shown)?;
+        return (!same(&l) && clear(&l)).then_some(l);
+    }
+    let mut all = columns(style, sym, shown, order, &[]);
+    if all.iter().any(|l| l.out == 0 && l.side == now && same(l)) {
+        return None;
+    }
+    all.sort_by_key(|l| (l.out, l.side != now));
+    let l = all.into_iter().find(clear)?;
+    (!same(&l)).then_some(l)
+}
+
+/// Whether layout `l` leaves the fields `shown` where they stand, as drawn in the file
+fn unchanged(shown: &[&DrawnField], l: &Layout) -> bool {
+    l.hidden.is_empty()
+        && l.lines.iter().all(|(k, at, halign, _)| {
+            let t = &shown[*k].text;
+            t.at == *at && t.halign == *halign && !t.vertical && t.valign == VAlign::Center
+        })
+}
+
+/// How the shown fields stand when they make a layout like the placer's: a two-pin part's ends (Reference before
+/// and Value after a horizontal part on one line, centred above and below a vertical one) or a column: two or more
+/// upright lines on one anchor line with one justification, clear of the body on one side, or a part's one field.
+/// Other fields of a column's part may stand anywhere: the placer puts them into the column.
+fn shape(sym: &DrawnSymbol, shown: &[&DrawnField]) -> Option<Side> {
+    let body = sym.outline();
+    if let (Some(horizontal), [a, b]) = (two_pin(sym), shown) {
+        let rv = match (a.name.as_str(), b.name.as_str()) {
+            ("Reference", "Value") => Some((a, b)),
+            ("Value", "Reference") => Some((b, a)),
+            _ => None,
+        };
+        let ends = rv.is_some_and(|(r, v)| {
+            if horizontal {
+                let line = sym.body.unwrap_or(body);
+                r.text.halign == HAlign::Right
+                    && v.text.halign == HAlign::Left
+                    && r.text.at.y == v.text.at.y
+                    && r.text.bbox.max.x <= line.min.x
+                    && v.text.bbox.min.x >= line.max.x
+            } else {
+                r.text.halign == HAlign::Center
+                    && v.text.halign == HAlign::Center
+                    && r.text.bbox.max.y <= body.min.y
+                    && v.text.bbox.min.y >= body.max.y
+            }
+        });
+        if ends {
+            return Some(Side::Ends);
+        }
+    }
+    let anchor = |f: &DrawnField| (f.text.halign, f.text.at.x);
+    let line = shown
+        .iter()
+        .filter(|f| !f.text.vertical && f.text.valign == VAlign::Center)
+        .max_by_key(|f| shown.iter().filter(|g| anchor(g) == anchor(f)).count())?;
+    let column: Vec<Rect> = shown
+        .iter()
+        .filter(|f| !f.text.vertical && anchor(f) == anchor(line))
+        .map(|f| f.text.bbox)
+        .collect();
+    if column.len() < shown.len().min(2) {
+        return None;
+    }
+    let hull = column.into_iter().reduce(Rect::union)?;
+    // The side it stands farthest out on, a corner of it over the body's box at most
+    if hull.contains(body.center()) {
+        return None;
+    }
+    [
+        (hull.min.x - body.max.x, Side::Right),
+        (body.min.x - hull.max.x, Side::Left),
+        (body.min.y - hull.max.y, Side::Above),
+        (hull.min.y - body.max.y, Side::Below),
+    ]
+    .into_iter()
+    .max_by_key(|(gap, _)| *gap)
+    .map(|(_, side)| side)
 }
 
 /// When rating fields touch a power symbol and nothing else overlaps the fields (closeness alone is no reason
@@ -492,6 +715,7 @@ fn in_place(hits: &[Hit], rating: &dyn Fn(usize) -> bool) -> Option<Layout> {
     hidden.dedup();
     Some(Layout {
         side: Side::InPlace,
+        out: 0,
         lines: Vec::new(),
         hidden,
     })
@@ -499,16 +723,18 @@ fn in_place(hits: &[Hit], rating: &dyn Fn(usize) -> bool) -> Option<Layout> {
 
 /// Every column of the fields `kept` (by index into `shown`, in column order), the fields `dropped` hidden
 fn columns(
+    style: FieldStyle,
     sym: &DrawnSymbol,
     shown: &[&DrawnField],
     kept: &[usize],
     dropped: &[usize],
 ) -> Vec<Layout> {
     let fields: Vec<&DrawnField> = kept.iter().map(|k| shown[*k]).collect();
-    candidates(sym, &fields)
+    candidates(style, sym, &fields)
         .into_iter()
-        .map(|(side, places)| Layout {
+        .map(|(side, out, places)| Layout {
             side,
+            out,
             lines: kept
                 .iter()
                 .zip(places)
@@ -540,10 +766,8 @@ fn two_pin(sym: &DrawnSymbol) -> Option<bool> {
 }
 
 /// For a two-pin part packed against its neighbours (the full column on a side across its axis does not fit in
-/// the gap: it overlaps another part's body or settled fields): Reference and Value at the ends of the body, upright.
-/// A horizontal part has them before and after the body on the line above its axis, so they sit beside its own
-/// wire; a vertical one has them centred above and below its pins. Every other field hidden. `None` for any
-/// other symbol, or one without Reference and Value shown.
+/// the gap: it overlaps another part's body or settled fields): its [`ends_lines`]. `None` for any other symbol,
+/// or one without Reference and Value shown.
 fn ends_layout(
     board: &Board,
     s: usize,
@@ -554,7 +778,6 @@ fn ends_layout(
 ) -> Option<Layout> {
     let horizontal = two_pin(sym)?;
     let reference = shown.iter().position(|f| f.name == "Reference")?;
-    let value = shown.iter().position(|f| f.name == "Value")?;
     let across = if horizontal {
         [Side::Above, Side::Below]
     } else {
@@ -563,7 +786,7 @@ fn ends_layout(
     let field = &board.items[own[reference]];
     let packed = across.iter().any(|side| {
         // The first column of each side is the one centred on the body
-        columns(sym, shown, order, &[])
+        columns(board.style, sym, shown, order, &[])
             .into_iter()
             .find(|l| l.side == *side)
             .is_some_and(|l| {
@@ -574,34 +797,46 @@ fn ends_layout(
     if !packed {
         return None;
     }
+    ends_lines(board.style, sym, shown)
+}
+
+/// Reference and Value of a two-pin part at the ends of its body, upright. A horizontal part has them before and
+/// after the body on the line above its axis, so they sit beside its own wire; a vertical one has them centred
+/// above and below its pins. Every other field hidden. `None` for any other symbol, or one without Reference and
+/// Value shown.
+fn ends_lines(style: FieldStyle, sym: &DrawnSymbol, shown: &[&DrawnField]) -> Option<Layout> {
+    let horizontal = two_pin(sym)?;
+    let reference = shown.iter().position(|f| f.name == "Reference")?;
+    let value = shown.iter().position(|f| f.name == "Value")?;
     let line = |k: usize, at: Pt, halign: HAlign| {
         let rect = text_rect(at, false, shown[k].text.extent(), halign, VAlign::Center);
         (k, at, halign, rect)
     };
+    let gap = style.body_gap;
     let lines = if horizontal {
         let body = sym.body.unwrap_or_else(|| sym.outline());
-        let y = nearest(body.center().y - ENDS_RAISE);
+        let y = style.nearest(body.center().y - style.ends_raise);
         vec![
             line(
                 reference,
-                Pt::new(down(body.min.x - BODY_GAP), y),
+                Pt::new(style.down(body.min.x - gap), y),
                 HAlign::Right,
             ),
-            line(value, Pt::new(up(body.max.x + BODY_GAP), y), HAlign::Left),
+            line(value, Pt::new(style.up(body.max.x + gap), y), HAlign::Left),
         ]
     } else {
         let outline = sym.outline();
-        let x = nearest(outline.center().x);
+        let x = style.nearest(outline.center().x);
         let half = |k: usize| shown[k].text.extent().1 / 2;
         vec![
             line(
                 reference,
-                Pt::new(x, down(outline.min.y - BODY_GAP - half(reference))),
+                Pt::new(x, style.down(outline.min.y - gap - half(reference))),
                 HAlign::Center,
             ),
             line(
                 value,
-                Pt::new(x, up(outline.max.y + BODY_GAP + half(value))),
+                Pt::new(x, style.up(outline.max.y + gap + half(value))),
                 HAlign::Center,
             ),
         ]
@@ -611,6 +846,7 @@ fn ends_layout(
         .collect();
     Some(Layout {
         side: Side::Ends,
+        out: 0,
         lines,
         hidden,
     })
@@ -635,40 +871,45 @@ fn column_order(shown: &[&DrawnField]) -> Vec<usize> {
 /// A column's anchors, alignments and boxes, line by line
 type Column = Vec<(Pt, HAlign, Rect)>;
 
-/// Every column to try, best first: centred right, left, above, below the body, then slid along each side, then
-/// the same a step or two farther out
-fn candidates(sym: &DrawnSymbol, fields: &[&DrawnField]) -> Vec<(Side, Column)> {
+/// Every column to try, best first, with how many steps out it stands: centred right, left, above, below the
+/// body, then slid along each side, then the same a step or more farther out. Lines are [`FieldStyle::pitch`]
+/// apart whatever the text's size.
+fn candidates(
+    style: FieldStyle,
+    sym: &DrawnSymbol,
+    fields: &[&DrawnField],
+) -> Vec<(Side, i64, Column)> {
     let body = sym.outline();
     let extents: Vec<(i64, i64)> = fields.iter().map(|f| f.text.extent()).collect();
-    let tallest = extents.iter().map(|e| e.1).max().unwrap_or(STEP);
-    let pitch = up(tallest + LINE_GAP);
+    let tallest = extents.iter().map(|e| e.1).max().unwrap_or(style.step);
+    let (pitch, gap) = (style.pitch, style.body_gap);
     let n = fields.len() as i64;
     let middle = body.center();
-    let top_centred = nearest(middle.y - (n - 1) * pitch / 2);
+    let top_centred = style.nearest(middle.y - (n - 1) * pitch / 2);
     let column = |side: Side, slide: i64, out: i64| -> Column {
         let (x0, y0, halign) = match side {
             Side::Right => (
-                up(body.max.x + BODY_GAP) + out,
+                style.up(body.max.x + gap) + out,
                 top_centred + slide,
                 HAlign::Left,
             ),
             Side::Left => (
-                down(body.min.x - BODY_GAP) - out,
+                style.down(body.min.x - gap) - out,
                 top_centred + slide,
                 HAlign::Right,
             ),
             Side::Above => {
-                let last = down(body.min.y - BODY_GAP - tallest / 2) - out;
+                let last = style.down(body.min.y - gap - tallest / 2) - out;
                 (
-                    nearest(middle.x) + slide,
+                    style.nearest(middle.x) + slide,
                     last - (n - 1) * pitch,
                     HAlign::Center,
                 )
             }
             Side::Ends | Side::InPlace => unreachable!("a column stands on one of the four sides"),
             Side::Below => {
-                let first = up(body.max.y + BODY_GAP + tallest / 2) + out;
-                (nearest(middle.x) + slide, first, HAlign::Center)
+                let first = style.up(body.max.y + gap + tallest / 2) + out;
+                (style.nearest(middle.x) + slide, first, HAlign::Center)
             }
         };
         extents
@@ -681,35 +922,21 @@ fn candidates(sym: &DrawnSymbol, fields: &[&DrawnField]) -> Vec<(Side, Column)> 
             .collect()
     };
     let sides = [Side::Right, Side::Left, Side::Above, Side::Below];
+    let step = style.step;
     let mut all = Vec::new();
-    for o in 0..=OUT_STEPS_MAX {
+    for o in 0..=OUT_REACH / step {
         for s in sides {
-            all.push((s, column(s, 0, o * STEP)));
+            all.push((s, o, column(s, 0, o * step)));
         }
-        for k in 1..=SLIDE_STEPS_MAX {
+        for k in 1..=SLIDE_REACH / step {
             for s in sides {
-                for slide in [k * STEP, -k * STEP] {
-                    all.push((s, column(s, slide, o * STEP)));
+                for slide in [k * step, -k * step] {
+                    all.push((s, o, column(s, slide, o * step)));
                 }
             }
         }
     }
     all
-}
-
-/// `v` rounded up to the step
-fn up(v: i64) -> i64 {
-    v.div_euclid(STEP) * STEP + if v.rem_euclid(STEP) == 0 { 0 } else { STEP }
-}
-
-/// `v` rounded down to the step
-fn down(v: i64) -> i64 {
-    v.div_euclid(STEP) * STEP
-}
-
-/// `v` rounded to the nearest step
-fn nearest(v: i64) -> i64 {
-    down(v + STEP / 2)
 }
 
 #[cfg(test)]
@@ -718,10 +945,17 @@ mod tests {
 
     #[test]
     fn rounding() {
-        assert_eq!(up(250_001), 500_000);
-        assert_eq!(up(-200_000), 0);
-        assert_eq!(down(-1), -250_000);
-        assert_eq!(nearest(370_000), 250_000);
-        assert_eq!(nearest(375_000), 500_000);
+        let style = FieldStyle {
+            pitch: 2_000_000,
+            body_gap: 635_000,
+            step: 250_000,
+            gap_max: 2_000_000,
+            ends_raise: 1_270_000,
+        };
+        assert_eq!(style.up(250_001), 500_000);
+        assert_eq!(style.up(-200_000), 0);
+        assert_eq!(style.down(-1), -250_000);
+        assert_eq!(style.nearest(370_000), 250_000);
+        assert_eq!(style.nearest(375_000), 500_000);
     }
 }

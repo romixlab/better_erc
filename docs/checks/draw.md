@@ -43,6 +43,11 @@ project file (`CFG-2`); see [clearance margins](../drawing-guide.md#room-around-
 | `drawing.group_heading_size` | 1.905 mm | text size of a group heading (a table's title, a group of directives), bold (`DRAW-32`) |
 | `drawing.leader.clear` | 0.635 mm | gap from a leader's tip to the part's outline, along the leader's line (`DRAW-46`) |
 | `drawing.leader.aim` | 2.54 mm | how far from the body centre a leader's line may pass (`DRAW-46`) |
+| `drawing.fields.pitch` | 2 mm | baseline-to-baseline distance between the lines of a field column, the same on every part (`berc place-fields`) |
+| `drawing.fields.body_gap` | 0.635 mm | space between a field column (or a packed part's Reference and Value) and the body and pins (`berc place-fields`) |
+| `drawing.fields.step` | 0.25 mm | grid field anchors are placed on, and the step a column slides or moves out by (`berc place-fields`) |
+| `drawing.fields.gap_max` | 2 mm | fields farther than this from their body are placed again (`berc place-fields`) |
+| `drawing.fields.ends_raise` | 1.27 mm | how far above a horizontal packed part's pin line its Reference and Value sit (`berc place-fields`) |
 | `drawing.leader.angle_slack` | 3° | how far the last segment may be off 45° (`DRAW-46`) |
 | `drawing.leader.reach` | 5.08 mm | how far from a part a leader's tip still counts as ending at it (`DRAW-46`) |
 | `DRAW-46.max_pins` | 4 | most pins of a small part (`DRAW-46`) |

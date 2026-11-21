@@ -115,8 +115,10 @@ enum Command {
     /// the drawing.clearance margins, gets the first that clears them: rating fields touching a power symbol
     /// hidden in place; a column (Reference, Value, the rest) on the first side where it hits nothing; Reference
     /// and Value at the ends of a packed two-pin part, the rest hidden; a column shortened by its last rating
-    /// fields. Text stays upright, on 0.25 mm steps; fields more than 2 mm from their body are placed again. Bodies, wires, labels, power symbols and notes never move. A
-    /// dry run by default; --write edits the .kicad_sch files in place.
+    /// fields. Text stays upright. The layout follows the drawing.fields settings (line pitch 2 mm, 0.635 mm from
+    /// the body, on 0.25 mm steps); a column clear of everything but off that style is placed again, and fields
+    /// more than 2 mm from their body too. Bodies, wires, labels, power symbols and notes never move. A dry run by
+    /// default; --write edits the .kicad_sch files in place.
     #[command(after_help = PLACE_FIELDS_AFTER_HELP)]
     PlaceFields(PlaceFieldsArgs),
     /// Compare two designs: their placements (--pnp) or their nets (--nets)
@@ -412,7 +414,7 @@ struct PlaceFieldsArgs {
     /// Edit the .kicad_sch files in place; without it nothing is written
     #[arg(long)]
     write: bool,
-    /// A setting over its default, repeatable: `drawing.clearance.text=0.5`
+    /// A setting over its default, repeatable: `drawing.clearance.text=0.5`, `drawing.fields.pitch=2.54`
     #[arg(long = "set", value_name = "NAME=VALUE")]
     set: Vec<String>,
 }

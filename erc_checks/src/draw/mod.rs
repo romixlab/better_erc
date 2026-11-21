@@ -94,6 +94,41 @@ pub(crate) const COLOUR_SLACK: Param = Param {
     doc: "difference per colour channel a note box's or leader's stroke may have from its colour",
 };
 
+pub(crate) const FIELDS_PITCH: Param = Param {
+    name: "drawing.fields.pitch",
+    default: 2.0,
+    unit: "mm",
+    doc: "baseline-to-baseline distance between the lines of a field column, the same on every part",
+};
+
+pub(crate) const FIELDS_BODY_GAP: Param = Param {
+    name: "drawing.fields.body_gap",
+    default: 0.635,
+    unit: "mm",
+    doc: "space between a field column (or a packed part's Reference and Value) and the body and pins",
+};
+
+pub(crate) const FIELDS_STEP: Param = Param {
+    name: "drawing.fields.step",
+    default: 0.25,
+    unit: "mm",
+    doc: "grid field anchors are placed on, and the step a column slides or moves out by",
+};
+
+pub(crate) const FIELDS_GAP_MAX: Param = Param {
+    name: "drawing.fields.gap_max",
+    default: 2.0,
+    unit: "mm",
+    doc: "fields farther than this from their body are placed again",
+};
+
+pub(crate) const FIELDS_ENDS_RAISE: Param = Param {
+    name: "drawing.fields.ends_raise",
+    default: 1.27,
+    unit: "mm",
+    doc: "how far above a horizontal packed part's pin line its Reference and Value sit",
+};
+
 /// The words a simulator directive starts with, as in ngspice and KiCad's simulator
 const DIRECTIVES: &[&str] = &[
     ".ac", ".control", ".csparam", ".dc", ".disto", ".end", ".endc", ".ends", ".four", ".func",

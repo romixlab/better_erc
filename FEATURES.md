@@ -1066,11 +1066,14 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   fields. Each symbol whose shown fields overlap something or come closer than the clearance margins gets the first
   layout that clears them, judged by the checks' own pair tests (a wire through a column and the sheet frame counted
   too): rating fields touching a power symbol hidden in place (closeness alone does not move a column that fits); a
-  column (Reference, Value, the rest top to bottom), upright, justified toward the body, on 1.27 mm steps; for a
+  column (Reference, Value, the rest top to bottom), upright, justified toward the body, its lines one pitch apart
+  whatever the text size; for a
   packed two-pin part (R, C, D, L, FB; its column does not fit in the gap to a neighbour's body or settled fields)
   Reference and Value at its ends, the rest hidden, beside a horizontal part's axis or centred above and below a
   vertical one where clear; a column shortened by its last rating fields; else the least bad, in up to three passes
-  over a sheet (`erc_checks::place`). Field text is never turned. What still overlaps is reported per check once the
+  over a sheet (`erc_checks::place`). The layout follows the `drawing.fields.*` settings (pitch, body gap, step,
+  gap_max, ends_raise; declared on `DRAW-34`): a column or packed part's ends clear of everything but off that
+  style is placed again where it conflicts no more, on its own side first. Field text is never turned. What still overlaps is reported per check once the
   sheet is placed. Written with a formatting-preserving edit of each field's `(at ...)` and justify, `(hide yes)`
   where the file's version keeps it, the symbol's `fields_autoplaced` dropped (`erc_kicad::fields`); the counts before
   and after come from the edited files read again (`Project::reopen_with`) · `erc_checks/src/draw/place.rs`,

@@ -1,10 +1,11 @@
 //! `berc place-fields` on a schematic written here: moved fields end up clear of everything, drawn where the plan
 //! put them, and symbols with nothing in the way stay byte for byte
 
+use better_erc::Config;
 use better_erc::Project;
 use better_erc::model::geometry::DrawnSymbol;
 use better_erc::model::geometry::HAlign;
-use better_erc::place::{PlaceOptions, Side, place};
+use better_erc::place::{PlaceOptions, Placed, Side, place};
 use std::path::{Path, PathBuf};
 
 const LIB: &str = r#"(lib_symbols
@@ -44,7 +45,8 @@ fn resistor(
     s
 }
 
-/// Four resistors: three with their fields piled on each other at several turns, one with its fields clear
+/// Four resistors: three with their fields piled on each other at several turns, one with its fields clear and in
+/// the style
 fn schematic() -> String {
     let mut s = String::from(
         "(kicad_sch (version 20231120) (generator \"eeschema\") (generator_version \"8.0\")\n\
@@ -83,9 +85,10 @@ fn schematic() -> String {
         "(mirror x) ",
         &name(3, piled(153.67, 50.8)),
     );
+    // In the style: a column 0.635 mm past the pins, on 0.25 mm steps, 2 mm apart
     let clear = vec![
-        ("Reference", "R4", 53.34, 100.33, 0),
-        ("Value", "1k", 53.34, 102.87, 0),
+        ("Reference", "R4", 52.5, 100.5, 0),
+        ("Value", "1k", 52.5, 102.5, 0),
     ];
     s += &resistor(4, (50.8, 101.6, 0), "", &clear);
     // A wire past R1's right side, so its column goes elsewhere
@@ -183,7 +186,7 @@ fn moves_only_what_overlaps() {
     assert_eq!(
         symbol_text(&after, r4),
         symbol_text(&before, r4),
-        "R4 overlaps nothing and stays"
+        "R4 overlaps nothing, follows the style and stays"
     );
     // Outside the moved symbols' properties nothing changed: same line count, the library and wire untouched
     assert_eq!(after.lines().count(), before.lines().count());
@@ -287,6 +290,9 @@ fn packed_parts_lie_along() {
             );
         }
     }
+    // Ends in the style stay
+    let again = place(&file, &opts).unwrap();
+    assert!(again.plan.symbols.is_empty(), "{:?}", again.plan);
 }
 
 const GND: &str = r##"(symbol "power:GND" (power) (pin_numbers (hide yes)) (pin_names (hide yes)) (exclude_from_sim no) (in_bom yes) (on_board yes)
@@ -441,6 +447,177 @@ fn far_fields_come_back_beside_their_body() {
             f.text.bbox
         );
     }
+    let again = place(&file, &opts).unwrap();
+    assert!(again.plan.symbols.is_empty(), "{:?}", again.plan);
+}
+
+/// A sheet of vertical resistors at `x`, each with its fields' font size and `fields` (name, value, x, y), and
+/// nothing else
+type Part<'f> = (u32, f64, f64, Vec<(&'f str, &'f str, f64, f64)>);
+
+fn columns_sheet(parts: &[Part]) -> String {
+    let mut s = String::from(
+        "(kicad_sch (version 20231120) (generator \"eeschema\") (generator_version \"8.0\")\n\
+         (uuid \"a0000000-0000-4000-8000-000000000000\")\n(paper \"A4\")\n",
+    );
+    s += LIB;
+    for (n, x, size, fields) in parts {
+        let fields: Vec<_> = fields
+            .iter()
+            .map(|(k, v, fx, fy)| (*k, *v, *fx, *fy, 0))
+            .collect();
+        s += &resistor(*n, (*x, 50.8, 0), "", &fields)
+            .replace("(size 1.27 1.27)", &format!("(size {size} {size})"));
+    }
+    s += "(sheet_instances (path \"/\" (page \"1\")))\n)\n";
+    s
+}
+
+/// The distances between the anchors of each moved column, by reference
+fn pitches(placed: &Placed) -> Vec<(String, Vec<i64>)> {
+    placed
+        .plan
+        .symbols
+        .iter()
+        .map(|s| {
+            let ys: Vec<i64> = s.moves.iter().map(|m| m.at.y).collect();
+            (
+                s.reference.clone(),
+                ys.windows(2).map(|w| w[1] - w[0]).collect(),
+            )
+        })
+        .collect()
+}
+
+/// Two resistors with their fields piled up, one in 1.27 mm text and one in 2 mm text
+fn two_sizes() -> String {
+    let piled = |r: &'static str, x: f64| {
+        vec![
+            ("Reference", r, x, 50.8),
+            ("Value", "10k", x, 50.8),
+            ("Power", "63mW", x, 51.3),
+        ]
+    };
+    columns_sheet(&[
+        (1, 50.8, 1.27, piled("R1", 52.07)),
+        (2, 101.6, 2.0, piled("R2", 102.87)),
+    ])
+}
+
+#[test]
+fn every_column_has_the_same_pitch() {
+    let dir = scratch("place_fields_pitch");
+    let file = dir.join("pitch.kicad_sch");
+    std::fs::write(&file, two_sizes()).unwrap();
+    let placed = place(&file, &PlaceOptions::default()).unwrap();
+    let want = vec![2_000_000, 2_000_000];
+    assert_eq!(
+        pitches(&placed),
+        [("R1".to_owned(), want.clone()), ("R2".to_owned(), want)],
+        "{:?}",
+        placed.plan
+    );
+    let height = |s: usize| placed.plan.symbols[s].moves[0].rect.height();
+    assert_eq!((height(0), height(1)), (1_270_000, 2_000_000));
+
+    let mut config = Config::default();
+    config.set("drawing.fields.pitch", 2.54).unwrap();
+    let opts = PlaceOptions {
+        write: true,
+        config,
+        ..PlaceOptions::default()
+    };
+    let placed = place(&file, &opts).unwrap();
+    let want = vec![2_540_000, 2_540_000];
+    assert_eq!(
+        pitches(&placed),
+        [("R1".to_owned(), want.clone()), ("R2".to_owned(), want)]
+    );
+    // Read back at 2.54 mm; run again with the same setting, it is in style and stays
+    let drawn = symbols(&file);
+    let ys: Vec<i64> = drawn[0]
+        .fields
+        .iter()
+        .filter(|f| !f.hidden && !f.text.text.is_empty())
+        .map(|f| f.text.at.y)
+        .collect();
+    assert_eq!(ys[1] - ys[0], 2_540_000, "{ys:?}");
+    let again = place(&file, &opts).unwrap();
+    assert!(again.plan.symbols.is_empty(), "{:?}", again.plan);
+    // With the default pitch the same columns stray from the style and are placed again
+    let back = place(&file, &PlaceOptions::default()).unwrap();
+    assert_eq!(back.plan.symbols.len(), 2, "{:?}", back.plan);
+}
+
+#[test]
+fn a_bad_setting_is_an_error() {
+    let dir = scratch("place_fields_bad_setting");
+    let file = dir.join("bad.kicad_sch");
+    std::fs::write(&file, two_sizes()).unwrap();
+    let mut config = Config::default();
+    config.set("drawing.fields.step", 0.0).unwrap();
+    let opts = PlaceOptions {
+        config,
+        ..PlaceOptions::default()
+    };
+    let e = place(&file, &opts).unwrap_err().to_string();
+    assert_eq!(
+        e,
+        "drawing.fields.step = 0: must be a number of at least 0.05 mm"
+    );
+}
+
+/// Two resistors whose columns overlap nothing: R1's 2.54 mm apart (KiCad's own spacing), R2's in the style
+fn odd_and_even() -> String {
+    columns_sheet(&[
+        (
+            1,
+            50.8,
+            1.27,
+            vec![
+                ("Reference", "R1", 53.34, 49.53),
+                ("Value", "10k", 53.34, 52.07),
+            ],
+        ),
+        (
+            2,
+            101.6,
+            1.27,
+            vec![
+                ("Reference", "R2", 103.5, 48.75),
+                ("Value", "10k", 103.5, 50.75),
+                ("Power", "63mW", 103.5, 52.75),
+            ],
+        ),
+    ])
+}
+
+#[test]
+fn odd_columns_are_placed_again() {
+    let dir = scratch("place_fields_odd");
+    let file = dir.join("odd.kicad_sch");
+    let before = odd_and_even();
+    std::fs::write(&file, &before).unwrap();
+    let opts = PlaceOptions {
+        write: true,
+        ..PlaceOptions::default()
+    };
+    let placed = place(&file, &opts).unwrap();
+    assert_eq!(placed.before.draw_9_fields, 0, "{:?}", placed.before);
+    assert_eq!(
+        pitches(&placed),
+        [("R1".to_owned(), vec![2_000_000])],
+        "{:?}",
+        placed.plan
+    );
+    // R1 keeps its side, next to its pins
+    let r1 = &placed.plan.symbols[0];
+    assert_eq!(r1.side, Some(Side::Right));
+    assert_eq!(r1.moves[0].at.x, 52_500_000);
+    let after = std::fs::read_to_string(&file).unwrap();
+    let r2 = "a0000000-0000-4000-8000-000000000002";
+    assert_eq!(symbol_text(&after, r2), symbol_text(&before, r2));
+    assert_eq!(after.lines().count(), before.lines().count());
     let again = place(&file, &opts).unwrap();
     assert!(again.plan.symbols.is_empty(), "{:?}", again.plan);
 }

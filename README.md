@@ -184,9 +184,10 @@ the `drawing.clearance` margins (`DRAW-34`), gets the first of these that clears
 1. Rating fields (anything but Reference and Value) that touch a power symbol, when nothing else overlaps the fields:
    those fields hidden, the column left where it is. Closeness alone is no reason to move a column that fits.
 2. A column: Reference, Value, then the rest top to bottom as they stood, justified toward the body, anchored on
-   0.25 mm steps 0.635 mm from the body, one line pitch apart, on the first side (right, left, above, below) where
-   it hits nothing and no wire runs through it, slid along the side or set a little farther out when it must.
-   Fields that overlap nothing but stand more than 2 mm from their body are placed again the same way.
+   the field step 0.635 mm from the body, lines 2 mm apart whatever the text size, on the first side (right, left,
+   above, below) where it hits nothing and no wire runs through it, slid along the side (up to 5 mm) or set a
+   little farther out (up to 2.5 mm) when it must. Fields that overlap nothing but stand more than 2 mm from their
+   body are placed again the same way.
 3. A packed two-pin part (resistor, capacitor, diode, inductor, ferrite bead), whose column on a side across its
    axis does not fit in the gap to a neighbour's body or settled fields, a horizontal one before any column:
    Reference and Value at the ends of the part,
@@ -195,8 +196,23 @@ the `drawing.clearance` margins (`DRAW-34`), gets the first of these that clears
 4. A column shortened by hiding its last rating fields, the fewest that clear it.
 5. Else the column with the least overlap, or the fields stay when nothing is better.
 
-Field text is always upright, never turned (`DRAW-8`). Symbols whose fields overlap nothing are not touched; bodies,
-wires, labels, power symbols and notes never move.
+Field text is always upright, never turned (`DRAW-8`). Bodies, wires, labels, power symbols and notes never move.
+
+Every layout follows one style, set by the `drawing.fields` settings (`--set`, or the project file):
+
+| Setting | Default | Meaning |
+|---|---|---|
+| `drawing.fields.pitch` | 2 mm | baseline-to-baseline distance between the lines of a column |
+| `drawing.fields.body_gap` | 0.635 mm | space between a column (or a packed part's Reference and Value) and the body and pins |
+| `drawing.fields.step` | 0.25 mm | grid the anchors are placed on, and the step a column slides or moves out by |
+| `drawing.fields.gap_max` | 2 mm | fields farther than this from their body are placed again |
+| `drawing.fields.ends_raise` | 1.27 mm | how far above a horizontal packed part's pin line its Reference and Value sit |
+
+Fields that overlap nothing are left alone when they follow the style or stand in some other arrangement. A column
+(lines on one anchor line, one justification, on one side of the body) or a packed part's ends off the style, by
+pitch, body gap or grid, is placed again in the style: on the same side when it fits there next to the body, else
+the first side where it does, and only where that conflicts no more than where it stands. One run evens out the
+columns of a sheet; a second finds nothing to do.
 
 The default is a dry run: each symbol with its layout, the fields it hides and what still overlaps (`DRAW-9`) or is
 too close (`DRAW-34`) once the whole sheet is placed, then both counts before and after (the edited files read
