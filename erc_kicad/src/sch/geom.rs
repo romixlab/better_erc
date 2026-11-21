@@ -201,7 +201,7 @@ fn shown(text: &str) -> String {
     font::plain(&super::unescape(text))
 }
 
-/// The box of a text on its anchor. A vertical text reads upwards: its start is at the bottom.
+/// The box of a text on its anchor, its extent from KiCad's stroke font
 fn text_box(
     text: &str,
     at: Pt,
@@ -216,28 +216,7 @@ fn text_box(
         .map(|l| font::line_width(l, size.1 as f64))
         .fold(0.0, f64::max) as i64;
     let height = (size.0 as f64 * (1.0 + (lines - 1.0) * font::LINE_PITCH)) as i64;
-    // Along the reading direction, then across it towards the top of the letters
-    let (along0, along1) = match halign {
-        HAlign::Left => (0, width),
-        HAlign::Center => (-width / 2, width - width / 2),
-        HAlign::Right => (-width, 0),
-    };
-    let (across0, across1) = match valign {
-        VAlign::Bottom => (0, height),
-        VAlign::Center => (-height / 2, height - height / 2),
-        VAlign::Top => (-height, 0),
-    };
-    if vertical {
-        Rect::of(
-            Pt::new(at.x - across1, at.y - along1),
-            Pt::new(at.x - across0, at.y - along0),
-        )
-    } else {
-        Rect::of(
-            Pt::new(at.x + along0, at.y - across1),
-            Pt::new(at.x + along1, at.y - across0),
-        )
-    }
+    text_rect(at, vertical, (width, height), halign, valign)
 }
 
 fn make_text(text: String, at: Pt, vertical: bool, e: &Effects) -> Text {
@@ -849,27 +828,10 @@ fn place_pin(p: &LibPinDrawing, lib: &LibDrawing, sym: &RawSymbol, t: Transform)
     pin
 }
 
-/// The field as drawn: its position is on the sheet, its angle and justification relative to the symbol, so the
-/// justification follows the side the text's own axes end up on, with the text kept readable
+/// The field as drawn: its position is on the sheet, its angle and justification relative to the symbol
 fn place_field(f: &RawField, text: String, sym: &RawSymbol, t: Transform) -> DrawnField {
-    let vertical = is_vertical(f.angle + sym.rotation);
-    let (reading, up) = if is_vertical(f.angle) {
-        ((0, 1), (-1, 0))
-    } else {
-        ((1, 0), (0, 1))
-    };
-    let reading = dir_of(t.apply(reading));
-    let up = dir_of(t.apply(up));
-    let halign = match (f.effects.halign, matches!(reading, Dir::Left | Dir::Down)) {
-        (HAlign::Left, true) => HAlign::Right,
-        (HAlign::Right, true) => HAlign::Left,
-        (h, _) => h,
-    };
-    let valign = match (f.effects.valign, matches!(up, Dir::Right | Dir::Down)) {
-        (VAlign::Top, true) => VAlign::Bottom,
-        (VAlign::Bottom, true) => VAlign::Top,
-        (v, _) => v,
-    };
+    let (vertical, halign, valign) =
+        drawn_align(f.angle, f.effects.halign, f.effects.valign, sym.rotation, t);
     let e = Effects {
         halign,
         valign,
@@ -880,6 +842,37 @@ fn place_field(f: &RawField, text: String, sym: &RawSymbol, t: Transform) -> Dra
         text: make_text(text, f.at, vertical, &e),
         hidden: f.hidden,
     }
+}
+
+/// How a field of a symbol placed with `rotation` and transform `t` is drawn, from its angle and justification in
+/// the file: whether it reads vertically, and its alignment on the sheet. The justification follows the side the
+/// text's own axes end up on, with the text kept readable.
+fn drawn_align(
+    angle: i32,
+    halign: HAlign,
+    valign: VAlign,
+    rotation: i32,
+    t: Transform,
+) -> (bool, HAlign, VAlign) {
+    let vertical = is_vertical(angle + rotation);
+    let (reading, up) = if is_vertical(angle) {
+        ((0, 1), (-1, 0))
+    } else {
+        ((1, 0), (0, 1))
+    };
+    let reading = dir_of(t.apply(reading));
+    let up = dir_of(t.apply(up));
+    let halign = match (halign, matches!(reading, Dir::Left | Dir::Down)) {
+        (HAlign::Left, true) => HAlign::Right,
+        (HAlign::Right, true) => HAlign::Left,
+        (h, _) => h,
+    };
+    let valign = match (valign, matches!(up, Dir::Right | Dir::Down)) {
+        (VAlign::Top, true) => VAlign::Bottom,
+        (VAlign::Bottom, true) => VAlign::Top,
+        (v, _) => v,
+    };
+    (vertical, halign, valign)
 }
 
 /// Places the symbols of a sheet file by what one instance of the sheet resolved

@@ -236,6 +236,48 @@ pub struct Text {
     pub bbox: Rect,
 }
 
+impl Text {
+    /// The size of the box along the reading direction and across it, whichever way the text reads
+    pub fn extent(&self) -> (i64, i64) {
+        let (w, h) = (self.bbox.width(), self.bbox.height());
+        if self.vertical { (h, w) } else { (w, h) }
+    }
+}
+
+/// The box of a text of `extent` (along its reading direction, across it) on its anchor. A vertical text reads
+/// upwards: its start is at the bottom.
+pub fn text_rect(
+    at: Pt,
+    vertical: bool,
+    extent: (i64, i64),
+    halign: HAlign,
+    valign: VAlign,
+) -> Rect {
+    let (width, height) = extent;
+    // Along the reading direction, then across it towards the top of the letters
+    let (along0, along1) = match halign {
+        HAlign::Left => (0, width),
+        HAlign::Center => (-width / 2, width - width / 2),
+        HAlign::Right => (-width, 0),
+    };
+    let (across0, across1) = match valign {
+        VAlign::Bottom => (0, height),
+        VAlign::Center => (-height / 2, height - height / 2),
+        VAlign::Top => (-height, 0),
+    };
+    if vertical {
+        Rect::of(
+            Pt::new(at.x - across1, at.y - along1),
+            Pt::new(at.x - across0, at.y - along0),
+        )
+    } else {
+        Rect::of(
+            Pt::new(at.x + along0, at.y - across1),
+            Pt::new(at.x + along1, at.y - across0),
+        )
+    }
+}
+
 /// A stroke as a file writes it
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 pub struct Stroke {
