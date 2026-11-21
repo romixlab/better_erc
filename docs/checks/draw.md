@@ -139,7 +139,8 @@ is field angle plus symbol rotation, so horizontal text on a part rotated by 90Â
 
 **What it catches.** A field, label, pin name or number, or note box whose box overlaps another text, a symbol body
 or a wire, with no margin: the hard overlap. Closeness within the clearance margins is `DRAW-34`. Bodies overlap
-only where what they draw does (two test points whose boxes cross but whose drawings stay apart do not).
+only where what they draw does (two test points whose boxes cross but whose drawings stay apart do not); a text box
+around parts overlaps them only where its text or its border touches them (see **Boxes** at the top).
 
 **Why it matters.** Overlapping text cannot be read in print or PDF; it is the most common reason a sheet looks
 messy.
@@ -440,7 +441,7 @@ or more lines of `name: value` or `name = value`, or runs of two or more spaces 
 **What it catches.** Two items whose boxes, each grown by its own margin (`drawing.clearance.part`, `.power`,
 `.text`), overlap, when the bare boxes do not (that is `DRAW-9`). With the defaults: two parts less than 2.54 mm
 apart, a field less than 1.905 mm from another part, two labels less than 1.27 mm apart. A body is measured by its
-drawn primitives with their strokes (see **Boxes** at the top); two boxes are
+drawn primitives with their strokes, a text box around an item by its text (see **Boxes** at the top); two boxes are
 apart by the larger of the x and y gaps, anything else by the straight distance between the drawn outlines.
 
 **Why it matters.** A sheet where every gap is the minimum reads as one block, and a field close to the next part is

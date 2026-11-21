@@ -123,8 +123,12 @@ pub(super) fn bare<'s>(scene: &'s Scene, wire_through: bool) -> Vec<(&'s Item, &
     pairs(scene, |a, b| bare_hit(a, b, wire_through))
 }
 
-/// What of `a` counts against `b`: a body its drawn shapes, anything else its box; `None` when nothing does
-fn outline<'a>(a: &'a Item, _b: &Item) -> Option<Cow<'a, [Shape]>> {
+/// What of `a` counts against `b`: a text box wholly around `b` only its text, a body its drawn shapes, anything
+/// else its box; `None` when nothing does
+fn outline<'a>(a: &'a Item, b: &Item) -> Option<Cow<'a, [Shape]>> {
+    if a.kind == K::TextBox && a.rect.encloses(b.rect) {
+        return a.text.map(|t| Cow::Owned(vec![Shape::Box(t)]));
+    }
     if a.shapes.is_empty() {
         Some(Cow::Owned(vec![Shape::Box(a.rect)]))
     } else {
@@ -294,6 +298,15 @@ mod tests {
         )
     }
 
+    /// A text box `Note` with its corner at `x`, `y`
+    fn text_box(x: f64, y: f64, w: f64, h: f64) -> String {
+        format!(
+            "(text_box \"Note\" (exclude_from_sim no) (at {x} {y} 0) (size {w} {h}) \
+             (stroke (width 0.1524) (type dot)) (fill (type none)) \
+             (effects (font (size 1.27 1.27)) (justify left top)) (uuid \"e9000000-0000-4000-8000-000000000200\"))"
+        )
+    }
+
     #[test]
     fn bodies_count_by_what_they_draw() {
         // Diagonal bars 2.54 mm apart: their boxes overlap, the bars do not
@@ -309,6 +322,22 @@ mod tests {
             [
                 "DRAW-9:item TP1 body|item TP2 body|sheet /",
                 "DRAW-9:item TP1 body|item TP2.1 pin|sheet /",
+            ]
+        );
+    }
+
+    #[test]
+    fn a_text_box_around_parts_counts_by_its_text() {
+        let parts = symbol("R", "R1", 60.0, 60.0, 1) + &symbol("R", "R2", 70.0, 60.0, 2);
+        let around = sheet(&(parts.clone() + &text_box(55.0, 50.0, 20.0, 20.0)));
+        assert_eq!(fingerprints_of(&Draw9, &around), Vec::<String>::new());
+        // The border through the middle of both bodies
+        let across = sheet(&(parts + &text_box(55.0, 60.0, 20.0, 10.0)));
+        assert_eq!(
+            fingerprints_of(&Draw9, &across),
+            [
+                "DRAW-9:item R1 body|item text box \"Note\"|sheet /",
+                "DRAW-9:item R2 body|item text box \"Note\"|sheet /",
             ]
         );
     }
