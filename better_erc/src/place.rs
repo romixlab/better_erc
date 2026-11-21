@@ -4,7 +4,7 @@
 
 use erc_checks::place::{FieldPlan, OverlapCount, count_overlaps, plan_fields};
 use erc_checks::{CheckError, Config, Ctx, Project};
-use erc_kicad::fields::{FieldPlace, PlaceError, place_fields};
+use erc_kicad::fields::{FieldChange, FieldPlace, PlaceError, place_fields};
 use erc_model::{BoardId, Design};
 use std::collections::BTreeMap;
 use std::fmt;
@@ -137,12 +137,20 @@ fn count(design: &Design, config: &Config, sheet: Option<&str>) -> OverlapCount 
 fn edit(dir: &Path, plan: &FieldPlan) -> Result<BTreeMap<String, Vec<u8>>, PlaceFieldsError> {
     let mut by_file: BTreeMap<&str, Vec<FieldPlace>> = BTreeMap::new();
     for s in &plan.symbols {
-        for m in &s.moves {
+        let moves = s.moves.iter().map(|m| {
+            let change = FieldChange::Move {
+                at: m.at,
+                vertical: m.vertical,
+                halign: m.halign,
+            };
+            (m.field.clone(), change)
+        });
+        let hides = s.hidden.iter().map(|h| (h.clone(), FieldChange::Hide));
+        for (field, change) in moves.chain(hides) {
             by_file.entry(&s.file).or_default().push(FieldPlace {
                 symbol: s.uuid.clone(),
-                field: m.field.clone(),
-                at: m.at,
-                halign: m.halign,
+                field,
+                change,
             });
         }
     }
@@ -173,6 +181,9 @@ pub fn render(p: &Placed) -> String {
             None => "fields stay: no side is clearer".to_owned(),
         };
         out += &format!("{} ({}): {what}\n", s.reference, s.file);
+        if !s.hidden.is_empty() {
+            out += &format!("  hides: {}\n", s.hidden.join(", "));
+        }
         for (a, b) in &s.left {
             out += &format!("  still: {a} and {b}\n");
         }

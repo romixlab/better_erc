@@ -186,9 +186,15 @@ through it, slid along the side or set a step or two farther out when it must; e
 overlap, or the fields stay when no side is better. Symbols whose fields overlap nothing are not touched; bodies,
 wires, labels, power symbols and notes never move.
 
-The default is a dry run: each symbol to move with its side and what still overlaps, and the `DRAW-9` and `DRAW-34`
+A two-pin part (resistor, capacitor, diode, inductor, ferrite bead) with no clean column, packed against a
+neighbour (the column line next to its body, above or below a horizontal part, left or right of a vertical one,
+would hit another part's body or settled fields), gets its fields along the part instead: Reference before the
+body, Value after it, on the line beside its axis, reading the way the part lies; its other shown fields are
+hidden.
+
+The default is a dry run: each symbol to move with its side, the fields it hides and what still overlaps, and the `DRAW-9` and `DRAW-34`
 counts before and after (the edited files read again). `--write` edits the `.kicad_sch` files in place: only the
-moved fields' `(at ...)` and `justify` change, and their symbols lose `(fields_autoplaced yes)` so KiCad keeps the
+moved fields' `(at ...)` and `justify` change, hidden fields get `(hide yes)`, and their symbols lose `(fields_autoplaced yes)` so KiCad keeps the
 new places. Close the schematic in KiCad first. `PROJECT` is a directory or a `.kicad_pro` as for `berc check`;
 `--sheet` takes a sheet's name or file.
 

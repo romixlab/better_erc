@@ -1,23 +1,36 @@
-//! Moving the fields of placed symbols in a schematic (`TOOL-13`): a field's position, angle and justification
-//! written new, every other byte kept as it was ([`crate::edit`]).
+//! Moving and hiding the fields of placed symbols in a schematic (`TOOL-13`): a field's position, angle and
+//! justification written new, or the field hidden, every other byte kept as it was ([`crate::edit`]).
 
 use crate::edit::{Edits, Kind, Node, Tree, items};
-use crate::sch::geom::upright_field;
+use crate::sch::geom::field_orientation;
 use crate::sexpr::ParseError;
 use erc_model::Pt;
 use erc_model::geometry::HAlign;
 use erc_model::layout::Nm;
 use std::fmt;
 
-/// Where a field goes: drawn upright, vertically centred on `at`, with `halign` on the sheet
+/// What happens to one field of a placed symbol
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct FieldPlace {
     /// The UUID of the placed symbol
     pub symbol: String,
     /// The field's name (`Reference`, `Value`, `Power`)
     pub field: String,
-    pub at: Pt,
-    pub halign: HAlign,
+    pub change: FieldChange,
+}
+
+/// A field moved or hidden
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum FieldChange {
+    /// Drawn centred across its reading direction on `at`, reading upwards when `vertical`, with `halign` on the
+    /// sheet
+    Move {
+        at: Pt,
+        vertical: bool,
+        halign: HAlign,
+    },
+    /// No longer shown
+    Hide,
 }
 
 /// Why [`place_fields`] could not move a field
@@ -57,8 +70,8 @@ impl std::error::Error for PlaceError {
     }
 }
 
-/// `text`, a schematic, with each field of `places` moved. A field's `(at ...)` and the justification in its
-/// `(effects ...)` are written; a symbol with a moved field loses its `(fields_autoplaced yes)`, as when a field is
+/// `text`, a schematic, with each field of `places` moved or hidden. A moved field's `(at ...)` and the
+/// justification in its `(effects ...)` are written, a hidden one gets `(hide yes)`; a symbol with a moved field loses its `(fields_autoplaced yes)`, as when a field is
 /// moved by hand in KiCad, so KiCad does not place its fields again when the symbol moves.
 pub fn place_fields(text: &str, places: &[FieldPlace]) -> Result<String, PlaceError> {
     let tree = Tree::parse(text).map_err(PlaceError::Parse)?;
@@ -78,23 +91,32 @@ pub fn place_fields(text: &str, places: &[FieldPlace]) -> Result<String, PlaceEr
             .children(sym, "property")
             .find(|f| tree.arg(f, 0).as_deref() == Some(p.field.as_str()))
             .ok_or_else(no_field)?;
-        let place = tree.child(sym, "at");
-        let rotation = place
-            .and_then(|a| tree.arg(a, 2))
-            .and_then(|r| r.parse::<f64>().ok())
-            .map_or(0, |r| r.round() as i32);
-        let mirror = tree
-            .child(sym, "mirror")
-            .and_then(|m| tree.arg(m, 0))
-            .and_then(|m| m.chars().next());
-        let (angle, justify) = upright_field(rotation, mirror, p.halign);
         let at = tree.child(prop, "at").ok_or_else(no_field)?;
-        edits.replace(
-            at.span.clone(),
-            format!("(at {} {} {angle})", Nm(p.at.x), Nm(p.at.y)),
-        );
         let effects = tree.child(prop, "effects").ok_or_else(no_field)?;
-        justification(&tree, effects, justify, &mut edits);
+        match &p.change {
+            FieldChange::Move {
+                at: to,
+                vertical,
+                halign,
+            } => {
+                let rotation = tree
+                    .child(sym, "at")
+                    .and_then(|a| tree.arg(a, 2))
+                    .and_then(|r| r.parse::<f64>().ok())
+                    .map_or(0, |r| r.round() as i32);
+                let mirror = tree
+                    .child(sym, "mirror")
+                    .and_then(|m| tree.arg(m, 0))
+                    .and_then(|m| m.chars().next());
+                let (angle, justify) = field_orientation(rotation, mirror, *vertical, *halign);
+                edits.replace(
+                    at.span.clone(),
+                    format!("(at {} {} {angle})", Nm(to.x), Nm(to.y)),
+                );
+                justification(&tree, effects, justify, &mut edits);
+            }
+            FieldChange::Hide => hide(&tree, prop, at, effects, &mut edits),
+        }
         if !unflagged.contains(&p.symbol.as_str())
             && let Some(flag) = tree.child(sym, "fields_autoplaced")
         {
@@ -114,6 +136,37 @@ fn uuid(tree: &Tree, sym: &Node) -> Option<String> {
         .map(|u| u.into_owned())
 }
 
+/// `(hide yes)` where the file keeps it: on the property (KiCad 9 and newer, which write `show_name` and
+/// `do_not_autoplace` there too) or in its effects (KiCad 8); an old `(hide no)` is turned
+fn hide(tree: &Tree, prop: &Node, at: &Node, effects: &Node, edits: &mut Edits) {
+    let old = tree
+        .child(prop, "hide")
+        .or_else(|| tree.child(effects, "hide"));
+    if let Some(old) = old {
+        edits.replace(old.span.clone(), "(hide yes)");
+    } else if tree.child(prop, "show_name").is_some()
+        || tree.child(prop, "do_not_autoplace").is_some()
+    {
+        edits.insert(at.span.end, after(tree, at, "(hide yes)"));
+    } else {
+        let last = items(effects)
+            .last()
+            .expect("a list with a head has an item");
+        edits.insert(last.span.end, after(tree, last, "(hide yes)"));
+    }
+}
+
+/// `new` to go after `item`: on a line of its own when `item` is a list on one, else after a space
+fn after(tree: &Tree, item: &Node, new: &str) -> String {
+    match tree
+        .indent(item)
+        .filter(|_| matches!(item.kind, Kind::List(_)))
+    {
+        Some(indent) => format!("{}{indent}{new}", tree.newline()),
+        None => format!(" {new}"),
+    }
+}
+
 /// `(justify left)` or `(justify right)` in place of the old one, or after the font; no justification for centred
 /// text
 fn justification(tree: &Tree, effects: &Node, halign: HAlign, edits: &mut Edits) {
@@ -129,14 +182,7 @@ fn justification(tree: &Tree, effects: &Node, halign: HAlign, edits: &mut Edits)
             let last = items(effects)
                 .last()
                 .expect("a list with a head has an item");
-            let text = match tree
-                .indent(last)
-                .filter(|_| matches!(last.kind, Kind::List(_)))
-            {
-                Some(indent) => format!("{}{indent}{new}", tree.newline()),
-                None => format!(" {new}"),
-            };
-            edits.insert(last.span.end, text);
+            edits.insert(last.span.end, after(tree, last, new));
         }
         (None, None) => {}
     }
@@ -176,8 +222,11 @@ mod tests {
         FieldPlace {
             symbol: "u1".into(),
             field: field.into(),
-            at: Pt::new((x * 1e6) as i64, 21_270_000),
-            halign,
+            change: FieldChange::Move {
+                at: Pt::new((x * 1e6) as i64, 21_270_000),
+                vertical: false,
+                halign,
+            },
         }
     }
 
@@ -204,6 +253,36 @@ mod tests {
             1,
         );
         assert_eq!(out, want);
+    }
+
+    fn hidden(field: &str) -> FieldPlace {
+        FieldPlace {
+            symbol: "u1".into(),
+            field: field.into(),
+            change: FieldChange::Hide,
+        }
+    }
+
+    /// KiCad 8 hides a field in its effects; KiCad 9 and newer on the property, beside show_name
+    #[test]
+    fn hides_where_the_file_does() {
+        let out = place_fields(SCH, &[hidden("Value")]).unwrap();
+        let want = SCH.replace("\t\t(fields_autoplaced yes)\n", "").replace(
+            "(justify left bottom)",
+            "(justify left bottom)\n\t\t\t\t(hide yes)",
+        );
+        assert_eq!(out, want);
+
+        let nine = SCH.replace("(at 3 4 90)", "(at 3 4 90)\n\t\t\t(show_name no)");
+        let out = place_fields(&nine, &[hidden("Value")]).unwrap();
+        let want = nine
+            .replace("\t\t(fields_autoplaced yes)\n", "")
+            .replace("(at 3 4 90)", "(at 3 4 90)\n\t\t\t(hide yes)");
+        assert_eq!(out, want);
+
+        let shown = nine.replace("(show_name no)", "(hide no)");
+        let out = place_fields(&shown, &[hidden("Value")]).unwrap();
+        assert!(out.contains("(at 3 4 90)\n\t\t\t(hide yes)\n"), "{out}");
     }
 
     #[test]

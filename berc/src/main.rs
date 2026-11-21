@@ -79,7 +79,7 @@ berc fp model Lib.pretty/SOT-23.kicad_mod";
 /// Exit codes of `berc place-fields`, under its --help
 const PLACE_FIELDS_AFTER_HELP: &str = "Exit codes: 0 planned (or written), 2 usage, read or write error; nothing \
 is written when any file fails to edit.\n\nA written file differs only in the moved fields' (at ...) and justify, \
-and its moved symbols lose (fields_autoplaced yes), so KiCad keeps the new places. Close the schematic in KiCad \
+the hidden fields' (hide yes), and its moved symbols lose (fields_autoplaced yes), so KiCad keeps the new places. Close the schematic in KiCad \
 before --write.\n\nExamples:\n  berc place-fields hw/board\n  berc place-fields hw/board --sheet power --write";
 
 /// better_erc command line tools
@@ -114,8 +114,9 @@ enum Command {
     /// Each placed symbol whose shown fields overlap text, a body, a wire or the sheet edge, or come closer than
     /// the drawing.clearance margins, gets them stacked in one column: Reference, Value, then the rest in their
     /// order. Upright, justified toward the body, on 1.27 mm steps, on the first side (right, left, above, below)
-    /// where the column hits nothing, else the side with the least overlap. Bodies, wires, labels, power symbols
-    /// and notes never move. A dry run by default; --write edits the .kicad_sch files in place.
+    /// where the column hits nothing, else the side with the least overlap. A packed two-pin part with no clean
+    /// column gets Reference before and Value after its body along the part, its other fields hidden. Bodies,
+    /// wires, labels, power symbols and notes never move. A dry run by default; --write edits the .kicad_sch files in place.
     #[command(after_help = PLACE_FIELDS_AFTER_HELP)]
     PlaceFields(PlaceFieldsArgs),
     /// Compare two designs: their placements (--pnp) or their nets (--nets)

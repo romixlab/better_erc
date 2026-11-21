@@ -3,7 +3,8 @@
 
 use better_erc::Project;
 use better_erc::model::geometry::DrawnSymbol;
-use better_erc::place::{PlaceOptions, place};
+use better_erc::model::geometry::HAlign;
+use better_erc::place::{PlaceOptions, Side, place};
 use std::path::{Path, PathBuf};
 
 const LIB: &str = r#"(lib_symbols
@@ -88,8 +89,8 @@ fn schematic() -> String {
     s
 }
 
-fn scratch() -> PathBuf {
-    let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join("place_fields");
+fn scratch(name: &str) -> PathBuf {
+    let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join(name);
     let _ = std::fs::remove_dir_all(&dir);
     std::fs::create_dir_all(&dir).unwrap();
     dir
@@ -111,7 +112,7 @@ fn symbols(file: &Path) -> Vec<DrawnSymbol> {
 
 #[test]
 fn moves_only_what_overlaps() {
-    let dir = scratch();
+    let dir = scratch("place_fields");
     let file = dir.join("place.kicad_sch");
     let before = schematic();
     std::fs::write(&file, &before).unwrap();
@@ -190,4 +191,101 @@ fn moves_only_what_overlaps() {
         "{:?}",
         again.plan
     );
+}
+
+/// Three horizontal resistors stacked one grid step apart, wired on both sides, their fields piled up: the outer
+/// two have room for a column, the middle one is packed and gets Reference before and Value after the body, on
+/// the line above its wire, with Power hidden
+fn packed() -> String {
+    let mut s = String::from(
+        "(kicad_sch (version 20231120) (generator \"eeschema\") (generator_version \"8.0\")\n\
+         (uuid \"a0000000-0000-4000-8000-000000000000\")\n(paper \"A4\")\n",
+    );
+    s += LIB;
+    for (n, y) in [(5, 50.8), (6, 53.34), (7, 55.88)] {
+        let reference = ["R5", "R6", "R7"][n as usize - 5];
+        let fields = [
+            ("Reference", reference, 101.6, y, 0),
+            ("Value", "100R", 101.6, y, 0),
+            ("Power", "63mW", 101.6, y + 0.5, 0),
+        ];
+        s += &resistor(n, (101.6, y, 90), "", &fields);
+        for (a, b) in [(91.44, 96.52), (106.68, 111.76)] {
+            s += &format!(
+                "(wire (pts (xy {a} {y}) (xy {b} {y})) (stroke (width 0) (type default)) \
+                 (uuid \"c{n}000000-0000-4000-8000-0000000000{}\"))\n",
+                (a as u32) % 100
+            );
+        }
+    }
+    s += "(sheet_instances (path \"/\" (page \"1\")))\n)\n";
+    s
+}
+
+#[test]
+fn packed_parts_lie_along() {
+    let dir = scratch("place_fields_packed");
+    let file = dir.join("packed.kicad_sch");
+    std::fs::write(&file, packed()).unwrap();
+    let opts = PlaceOptions {
+        write: true,
+        ..PlaceOptions::default()
+    };
+    let placed = place(&file, &opts).unwrap();
+    let side = |r: &str| {
+        let s = placed
+            .plan
+            .symbols
+            .iter()
+            .find(|s| s.reference == r)
+            .unwrap();
+        (s.side, s.hidden.clone())
+    };
+    for r in ["R5", "R7"] {
+        let (end, hidden) = side(r);
+        assert!(
+            end.is_some_and(|t| t != Side::Along) && hidden.is_empty(),
+            "{r} {end:?}"
+        );
+    }
+    assert_eq!(side("R6"), (Some(Side::Along), vec!["Power".to_owned()]));
+    assert!(
+        placed.after.draw_9_fields < placed.before.draw_9_fields,
+        "{placed:?}"
+    );
+
+    let drawn = symbols(&file);
+    for s in placed
+        .plan
+        .symbols
+        .iter()
+        .filter(|s| s.side == Some(Side::Along))
+    {
+        let sym = drawn.iter().find(|d| d.uuid == s.uuid).unwrap();
+        let body = sym.body.unwrap();
+        let field = |name: &str| sym.fields.iter().find(|f| f.name == name).unwrap();
+        assert!(field("Power").hidden, "{}", s.reference);
+        let (r, v) = (field("Reference"), field("Value"));
+        assert_eq!((r.hidden, v.hidden), (false, false));
+        assert_eq!(
+            (r.text.halign, v.text.halign),
+            (HAlign::Right, HAlign::Left)
+        );
+        assert!(r.text.bbox.max.x <= body.min.x && v.text.bbox.min.x >= body.max.x);
+        // On the line above the part's axis, clear of its own wire
+        let axis = body.center().y;
+        assert_eq!(r.text.at.y, v.text.at.y);
+        assert!(
+            r.text.bbox.max.y < axis && r.text.bbox.max.y > axis - 1_270_000,
+            "{:?}",
+            r.text.bbox
+        );
+        for m in &s.moves {
+            let f = field(&m.field);
+            assert_eq!(
+                (f.text.at, f.text.vertical, f.text.bbox),
+                (m.at, m.vertical, m.rect)
+            );
+        }
+    }
 }
