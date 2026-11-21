@@ -13,6 +13,10 @@ check = "DRAW-28"
 subjects = ["item label FF", "sheet /"]
 
 [[finding]]
+check = "DRAW-9"
+subjects = ["item U1 Reference", "item U1 body", "sheet /"]
+
+[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.1"]
 

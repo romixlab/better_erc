@@ -32,3 +32,19 @@ pub fn fingerprints_with(
     f.sort();
     f
 }
+
+/// The fingerprints of what `check` finds on a schematic given as its text, sorted
+pub fn fingerprints_of(check: &'static dyn Check, schematic: &str) -> Vec<String> {
+    let files = erc_model::MemFiles::default().with("sheet.kicad_sch", schematic);
+    let imported =
+        erc_kicad::project::read(&files, "sheet.kicad_sch", &ImportOptions::default()).unwrap();
+    let report = run_with(&[check], &imported.design, &RunOptions::default()).unwrap();
+    let mut f: Vec<String> = report
+        .findings
+        .iter()
+        .chain(&report.candidates)
+        .map(|f| f.fingerprint.clone())
+        .collect();
+    f.sort();
+    f
+}

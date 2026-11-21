@@ -2,7 +2,7 @@
 //! pins and labels that touch joined into [`Tie`]s. The geometry names things and links nothing, so this is where
 //! a sheet's file meets its [`SheetId`] and a wire learns what it is joined to.
 
-use erc_model::geometry::{Dir, DrawnPin, DrawnSymbol, Rect, Segment, SheetGeometry};
+use erc_model::geometry::{Dir, DrawnPin, DrawnSymbol, Rect, Segment, Shape, SheetGeometry};
 use erc_model::{Board, Pt, SheetId};
 use std::collections::BTreeMap;
 
@@ -58,6 +58,10 @@ pub struct Item {
     /// What a person calls it: `R1 body`, `R1 Value`, `label SDA`, `wire of R1.2`
     pub name: String,
     pub rect: Rect,
+    /// What a body draws, one shape per primitive within `rect`; empty when the box is the shape
+    pub shapes: Vec<Shape>,
+    /// A text box's text, the extent it fills inside the box; `None` for an empty one and for other items
+    pub text: Option<Rect>,
     /// The index of the symbol or sheet symbol it belongs to, in the scene's geometry
     pub owner: Option<usize>,
     /// The tie a wire, a pin or a label is on
@@ -126,6 +130,8 @@ impl<'a> Scene<'a> {
                 kind: ItemKind::Wire,
                 name: format!("wire of {}", name_of(of_wire[i])),
                 rect: w.bbox(),
+                shapes: Vec::new(),
+                text: None,
                 owner: None,
                 tie: Some(of_wire[i]),
                 uuid: w.uuid.clone(),
@@ -137,6 +143,8 @@ impl<'a> Scene<'a> {
                 kind: ItemKind::Bus,
                 name: format!("bus at {}", place(b.a)),
                 rect: b.bbox(),
+                shapes: Vec::new(),
+                text: None,
                 owner: None,
                 tie: None,
                 uuid: b.uuid.clone(),
@@ -148,6 +156,8 @@ impl<'a> Scene<'a> {
                 kind: ItemKind::Label,
                 name: format!("label {}", l.text.text),
                 rect: l.bbox,
+                shapes: Vec::new(),
+                text: None,
                 owner: None,
                 tie: Some(of_label[i]),
                 uuid: l.uuid.clone(),
@@ -158,6 +168,8 @@ impl<'a> Scene<'a> {
             kind,
             name: format!("{what} \"{}\"", gist(text)),
             rect,
+            shapes: Vec::new(),
+            text: None,
             owner: None,
             tie: None,
             uuid: uuid.to_string(),
@@ -169,14 +181,10 @@ impl<'a> Scene<'a> {
         }
         for t in &g.text_boxes {
             let (text, rect) = (&t.text.text, t.rect);
-            items.push(free(
-                ItemKind::TextBox,
-                "text box",
-                text,
-                rect,
-                &t.uuid,
-                t.line,
-            ));
+            items.push(Item {
+                text: (!text.trim().is_empty()).then_some(t.text.bbox),
+                ..free(ItemKind::TextBox, "text box", text, rect, &t.uuid, t.line)
+            });
         }
         for t in &g.tables {
             let first = t.cells.first().map_or("", |c| c.text.text.as_str());
@@ -194,6 +202,8 @@ impl<'a> Scene<'a> {
                 kind,
                 name,
                 rect,
+                shapes: Vec::new(),
+                text: None,
                 owner: Some(i),
                 tie: None,
                 uuid: s.uuid.clone(),
@@ -297,6 +307,8 @@ fn symbol_items(
         kind,
         name,
         rect,
+        shapes: Vec::new(),
+        text: None,
         owner: Some(index),
         tie,
         uuid: s.uuid.clone(),
@@ -320,12 +332,16 @@ fn symbol_items(
         return;
     }
     if let Some(body) = s.body {
-        items.push(item(
-            ItemKind::Body,
-            format!("{} body", s.reference),
-            body,
-            None,
-        ));
+        let drawn = s.shapes.iter().map(Shape::bbox).reduce(Rect::union);
+        items.push(Item {
+            shapes: s.shapes.clone(),
+            ..item(
+                ItemKind::Body,
+                format!("{} body", s.reference),
+                drawn.unwrap_or(body),
+                None,
+            )
+        });
     }
     for (i, p) in s.pins.iter().enumerate() {
         if p.hidden {

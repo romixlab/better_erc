@@ -6,6 +6,8 @@ use super::{
 use crate::meta::CheckMeta;
 use crate::{Ctx, Finding};
 use erc_analysis::scene::{Item, ItemKind as K, Scene, mm};
+use erc_model::geometry::{Rect, Shape};
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 
 /// Whether a pair can never be a finding: two wires, two pins, two things of one symbol as the library drew them,
@@ -121,6 +123,34 @@ pub(super) fn bare<'s>(scene: &'s Scene, wire_through: bool) -> Vec<(&'s Item, &
     pairs(scene, |a, b| bare_hit(a, b, wire_through))
 }
 
+/// What of `a` counts against `b`: a body its drawn shapes, anything else its box; `None` when nothing does
+fn outline<'a>(a: &'a Item, _b: &Item) -> Option<Cow<'a, [Shape]>> {
+    if a.shapes.is_empty() {
+        Some(Cow::Owned(vec![Shape::Box(a.rect)]))
+    } else {
+        Some(Cow::Borrowed(&a.shapes))
+    }
+}
+
+/// How far apart the two items are, as [`Shape::separation`] measures it, when it is under `limit`: negative when
+/// they share area. The boxes go first: they are never farther apart than what is drawn in them.
+fn separation(a: &Item, b: &Item, limit: i64) -> Option<i64> {
+    if a.rect.separation(b.rect) >= limit {
+        return None;
+    }
+    let (sa, sb) = (outline(a, b)?, outline(b, a)?);
+    let mut best = i64::MAX;
+    for x in sa.iter() {
+        let bx = x.bbox();
+        for y in sb.iter() {
+            if bx.separation(y.bbox()) < best.min(limit) {
+                best = best.min(x.separation(y));
+            }
+        }
+    }
+    (best < limit).then_some(best)
+}
+
 /// The shared area of a pair that is not exempt, for `DRAW-7` when `wire_through`, else for `DRAW-9`
 pub(super) fn bare_hit(a: &Item, b: &Item, wire_through: bool) -> Option<i64> {
     let by_wire =
@@ -128,8 +158,10 @@ pub(super) fn bare_hit(a: &Item, b: &Item, wire_through: bool) -> Option<i64> {
     if by_wire != wire_through || in_free_room(a, b) {
         return None;
     }
-    let i = a.rect.intersection(b.rect)?;
-    Some(i.width().max(1) * i.height().max(1))
+    separation(a, b, 0)?;
+    let reach = |x: &Item, y: &Item| outline(x, y)?.iter().map(Shape::bbox).reduce(Rect::union);
+    let shared = reach(a, b)?.intersection(reach(b, a)?);
+    Some(shared.map_or(1, |i| i.width().max(1) * i.height().max(1)))
 }
 
 /// The clearance margins of `DRAW-34`, in nanometres
@@ -177,14 +209,12 @@ pub(super) fn close_with<'s>(scene: &'s Scene, m: Margins) -> Vec<(&'s Item, &'s
 
 /// How far a pair that is not exempt falls short of its margins, when the boxes stay apart bare
 pub(super) fn close_hit(scene: &Scene, m: Margins, a: &Item, b: &Item) -> Option<i64> {
-    if a.rect.overlaps(b.rect) || own(a, b) || tied(scene, a, b) || one_unit(a, b) {
+    if own(a, b) || tied(scene, a, b) || one_unit(a, b) {
         return None;
     }
     let (ma, mb) = (m.around(a), m.around(b));
-    if !a.rect.grown(ma).overlaps(b.rect.grown(mb)) {
-        return None;
-    }
-    Some(ma + mb - a.rect.gap(b.rect))
+    let apart = separation(a, b, ma + mb)?;
+    (apart >= 0).then_some(ma + mb - apart)
 }
 
 /// A finding on the pair, naming both with their positions
@@ -213,4 +243,73 @@ pub(super) fn finding(
 /// `0.42 mm`
 pub(super) fn gap_text(nm: i64) -> String {
     format!("{} mm", mm(nm))
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::draw::draw_9::Draw9;
+    use crate::testing::fingerprints_of;
+
+    /// A sheet with these library symbols and items
+    fn sheet(items: &str) -> String {
+        let field = |name: &str| {
+            format!(
+                "(property \"{name}\" \"\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))"
+            )
+        };
+        let fields = ["Reference", "Value", "Footprint", "Datasheet"]
+            .map(field)
+            .join("");
+        let pin = |at: &str| {
+            format!(
+                "(pin passive line (at {at}) (length 2.54) (name \"~\" (effects (font (size 1.27 1.27)))) \
+                 (number \"1\" (effects (font (size 1.27 1.27)))))"
+            )
+        };
+        format!(
+            "(kicad_sch (version 20231120) (generator \"eeschema\") (generator_version \"8.0\") \
+             (uuid \"e9000000-0000-4000-8000-000000000000\") (paper \"A4\") (lib_symbols \
+             (symbol \"Test:R\" (pin_numbers (hide yes)) (pin_names (hide yes)) {fields} \
+             (symbol \"R_0_1\" (rectangle (start -1.016 -2.54) (end 1.016 2.54) (stroke (width 0.254) (type default)) (fill (type none)))) \
+             (symbol \"R_1_1\" {} {})) \
+             (symbol \"Test:Probe\" (pin_numbers (hide yes)) (pin_names (hide yes)) {fields} \
+             (symbol \"Probe_0_1\" (polyline (pts (xy 0 0) (xy 0.5 0) (xy 3 2.5) (xy 3 3) (xy 2.5 3) (xy 0 0.5) (xy 0 0)) \
+             (stroke (width 0) (type default)) (fill (type background)))) \
+             (symbol \"Probe_1_1\" (pin passive line (at 0 0 90) (length 0) (name \"1\" (effects (font (size 1.27 1.27)))) \
+             (number \"1\" (effects (font (size 1.27 1.27)))))))) \
+             {items} (sheet_instances (path \"/\" (page \"1\"))))",
+            pin("0 5.08 270"),
+            pin("0 -5.08 90"),
+        )
+    }
+
+    /// A placed symbol of `lib` with reference `reference` at `x`, `y`
+    fn symbol(lib: &str, reference: &str, x: f64, y: f64, n: u32) -> String {
+        format!(
+            "(symbol (lib_id \"Test:{lib}\") (at {x} {y} 0) (unit 1) (in_bom yes) (on_board yes) \
+             (uuid \"e9000000-0000-4000-8000-0000000001{n:02}\") \
+             (property \"Reference\" \"{reference}\" (at {x} {y} 0) (effects (font (size 1.27 1.27)) (hide yes))) \
+             (property \"Value\" \"x\" (at {x} {y} 0) (effects (font (size 1.27 1.27)) (hide yes))) \
+             (instances (project \"t\" (path \"/e9000000-0000-4000-8000-000000000000\" (reference \"{reference}\") (unit 1)))))"
+        )
+    }
+
+    #[test]
+    fn bodies_count_by_what_they_draw() {
+        // Diagonal bars 2.54 mm apart: their boxes overlap, the bars do not
+        let apart = sheet(
+            &(symbol("Probe", "TP1", 50.0, 50.0, 1) + &symbol("Probe", "TP2", 52.54, 50.0, 2)),
+        );
+        assert_eq!(fingerprints_of(&Draw9, &apart), Vec::<String>::new());
+        let onto = sheet(
+            &(symbol("Probe", "TP1", 50.0, 50.0, 1) + &symbol("Probe", "TP2", 50.3, 50.0, 2)),
+        );
+        assert_eq!(
+            fingerprints_of(&Draw9, &onto),
+            [
+                "DRAW-9:item TP1 body|item TP2 body|sheet /",
+                "DRAW-9:item TP1 body|item TP2.1 pin|sheet /",
+            ]
+        );
+    }
 }

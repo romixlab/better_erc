@@ -155,20 +155,30 @@ fn last_segment(g: &DrawnGraphic, heads: &[&DrawnGraphic]) -> Option<Last> {
     }
 }
 
+/// A body's outline: the box of its library graphics, strokes left out
+fn outline(scene: &Scene, body: &Item) -> Rect {
+    body.owner
+        .and_then(|s| scene.geometry.symbols[s].body)
+        .unwrap_or(body.rect)
+}
+
 /// What a leader's tip points at: the body its line aims at within reach, else the nearest; `None` when a block's
 /// rectangle is nearer than any body
 fn target<'s>(scene: &'s Scene, last: Last, reach: f64, aim: f64, slack: f64) -> Option<&'s Item> {
-    let aimed = |i: &Item| last.miss(i.rect.center()).is_some_and(|m| m <= aim);
+    let aimed = |i: &Item| {
+        last.miss(outline(scene, i).center())
+            .is_some_and(|m| m <= aim)
+    };
     let body = scene
         .items
         .iter()
-        .filter(|i| i.kind == K::Body && distance(last.tip, i.rect) <= reach)
+        .filter(|i| i.kind == K::Body && distance(last.tip, outline(scene, i)) <= reach)
         .min_by(|a, b| {
-            let key = |i: &Item| (!aimed(i), distance(last.tip, i.rect));
+            let key = |i: &Item| (!aimed(i), distance(last.tip, outline(scene, i)));
             let ((a_off, a_d), (b_off, b_d)) = (key(a), key(b));
             a_off.cmp(&b_off).then(a_d.total_cmp(&b_d))
         })?;
-    let d = distance(last.tip, body.rect);
+    let d = distance(last.tip, outline(scene, body));
     let rects = scene
         .geometry
         .graphics
@@ -217,7 +227,8 @@ impl Check for Draw46 {
                         "its last segment is {off:.0} degrees off a diagonal"
                     ));
                 }
-                match last.miss(body.rect.center()) {
+                let rect = outline(scene, body);
+                match last.miss(rect.center()) {
                     Some(m) if m > aim => wrong.push(format!(
                         "its line passes {} mm from the body's centre",
                         mm(m as i64)
@@ -226,7 +237,7 @@ impl Check for Draw46 {
                     _ => {}
                 }
                 // To the micron: a tip drawn at 0.449 on both axes is 0.635 along a diagonal
-                let gap = (last.gap(body.rect) / 1e3).round() as i64 * 1000;
+                let gap = (last.gap(rect) / 1e3).round() as i64 * 1000;
                 if gap == 0 {
                     wrong.push("its tip is on or inside the outline".to_string());
                 } else if gap < clear {

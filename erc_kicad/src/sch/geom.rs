@@ -13,6 +13,8 @@ use std::collections::HashMap;
 
 /// Default font size, as KiCad's
 const DEFAULT_TEXT: i64 = 1_270_000;
+/// KiCad's stroke width for a library graphic of width 0
+const DEFAULT_LINE_WIDTH: i64 = 152_400;
 /// Where a pin's name sits from the body when the library does not say
 const DEFAULT_PIN_NAME_OFFSET: i64 = 508_000;
 /// Gap between a pin and the name or number drawn along it
@@ -53,8 +55,16 @@ struct LibDrawing {
     numbers_shown: bool,
 }
 
-/// A library graphic: unit, body style and the points that bound it
-type LibGraphic = (u32, u32, Vec<(i64, i64)>);
+/// A library graphic in library coordinates
+#[derive(Debug, Clone)]
+struct LibGraphic {
+    unit: u32,
+    body: u32,
+    /// The points that bound it
+    points: Vec<(i64, i64)>,
+    /// What it draws, its stroke included
+    shapes: Vec<Shape>,
+}
 
 #[derive(Debug, Clone)]
 struct LibPinDrawing {
@@ -287,6 +297,96 @@ fn title_block(item: &Sexp) -> TitleBlock {
     }
 }
 
+/// The stroke width of a library graphic, KiCad's default for 0
+fn line_width(g: &Sexp) -> i64 {
+    match stroke(g).width {
+        0 => DEFAULT_LINE_WIDTH,
+        w => w,
+    }
+}
+
+/// What a library rectangle, polyline, arc or bezier draws, from its `points` in library coordinates: a
+/// rectangle and a bezier's control points as a box, a closed or filled polyline as an area, an open one and an
+/// arc as lines
+fn lib_shapes(g: &Sexp, points: &[(i64, i64)]) -> Vec<Shape> {
+    let width = line_width(g);
+    let pts: Vec<Pt> = points.iter().map(|(x, y)| Pt::new(*x, *y)).collect();
+    let lines = |pts: &[Pt]| -> Vec<Shape> {
+        pts.windows(2)
+            .map(|w| Shape::Line {
+                a: w[0],
+                b: w[1],
+                width,
+            })
+            .collect()
+    };
+    let filled = g
+        .child("fill")
+        .and_then(|f| f.value("type"))
+        .is_some_and(|t| t != "none");
+    match g.head() {
+        Some("polyline") => {
+            let closed = pts.len() > 3 && pts.first() == pts.last();
+            if (closed || filled) && pts.len() > 2 {
+                let mut points = pts;
+                if closed {
+                    points.pop();
+                }
+                vec![Shape::Area { points, width }]
+            } else {
+                lines(&pts)
+            }
+        }
+        Some("arc") => match pts.as_slice() {
+            [start, mid, end] => lines(&arc_points(*start, *mid, *end)),
+            _ => lines(&pts),
+        },
+        _ => Rect::around(pts)
+            .map(|r| Shape::Box(r.grown(width / 2)))
+            .into_iter()
+            .collect(),
+    }
+}
+
+/// Points along the arc through `start`, `mid` and `end`, close enough that the chords between them follow it;
+/// the three points themselves when they lie on a line
+fn arc_points(start: Pt, mid: Pt, end: Pt) -> Vec<Pt> {
+    const SPLITS: u32 = 2;
+    let f = |p: Pt| (p.x as f64, p.y as f64);
+    let ((ax, ay), (bx, by), (cx, cy)) = (f(start), f(mid), f(end));
+    let d = 2.0 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by));
+    if d == 0.0 {
+        return vec![start, mid, end];
+    }
+    let sq = |x: f64, y: f64| x * x + y * y;
+    let ux = (sq(ax, ay) * (by - cy) + sq(bx, by) * (cy - ay) + sq(cx, cy) * (ay - by)) / d;
+    let uy = (sq(ax, ay) * (cx - bx) + sq(bx, by) * (ax - cx) + sq(cx, cy) * (bx - ax)) / d;
+    let r = sq(ax - ux, ay - uy).sqrt();
+    // The middle of the arc between two points of it less than half a turn apart
+    let between = |p: Pt, q: Pt| {
+        let (mx, my) = ((p.x + q.x) as f64 / 2.0, (p.y + q.y) as f64 / 2.0);
+        let len = sq(mx - ux, my - uy).sqrt();
+        if len == 0.0 {
+            return Pt::new(mx.round() as i64, my.round() as i64);
+        }
+        let k = r / len;
+        Pt::new(
+            (ux + (mx - ux) * k).round() as i64,
+            (uy + (my - uy) * k).round() as i64,
+        )
+    };
+    let mut pts = vec![start, mid, end];
+    for _ in 0..SPLITS {
+        let mut next = vec![pts[0]];
+        for w in pts.windows(2) {
+            next.push(between(w[0], w[1]));
+            next.push(w[1]);
+        }
+        pts = next;
+    }
+    pts
+}
+
 /// `NAME_U_B` of a library sub-symbol: unit and body style
 fn unit_body(name: &str) -> (u32, u32) {
     let mut it = name.rsplitn(3, '_');
@@ -359,10 +459,15 @@ fn lib_drawing(s: &Sexp) -> LibDrawing {
             match g.head() {
                 Some("pin") => l.pins.push(lib_pin(g, unit, body)),
                 Some("rectangle" | "polyline" | "arc" | "bezier") => {
-                    let pts = graphic_points(g);
+                    let points: Vec<_> = graphic_points(g).iter().filter_map(lib_point).collect();
                     l.colour = l.colour.or(stroke(g).colour);
-                    l.graphics
-                        .push((unit, body, pts.iter().filter_map(lib_point).collect()));
+                    let shapes = lib_shapes(g, &points);
+                    l.graphics.push(LibGraphic {
+                        unit,
+                        body,
+                        points,
+                        shapes,
+                    });
                 }
                 Some("circle") => {
                     if let (Some((x, y)), Some(r)) = (
@@ -370,8 +475,14 @@ fn lib_drawing(s: &Sexp) -> LibDrawing {
                         nm(g.child("radius"), 0),
                     ) {
                         l.colour = l.colour.or(stroke(g).colour);
-                        l.graphics
-                            .push((unit, body, vec![(x - r, y - r), (x + r, y + r)]));
+                        let centre = Pt::new(x, y);
+                        let radius = r + line_width(g) / 2;
+                        l.graphics.push(LibGraphic {
+                            unit,
+                            body,
+                            points: vec![(x - r, y - r), (x + r, y + r)],
+                            shapes: vec![Shape::Disc { centre, radius }],
+                        });
                     }
                 }
                 _ => {}
@@ -913,16 +1024,16 @@ pub(crate) fn place(raw: RawSheet, res: &[SymRes], file: &str) -> SheetGeometry 
         let unit = res.get(i).map_or(1, |r| r.unit);
         let t = Transform::new(s.rotation, s.mirror);
         let shows = |u: u32, b: u32| (u == 0 || u == unit) && (b == 0 || b == s.body_style);
-        let body = Rect::around(
-            base.graphics
-                .iter()
-                .filter(|(u, b, _)| shows(*u, *b))
-                .flat_map(|(_, _, pts)| pts)
-                .map(|p| {
-                    let (x, y) = t.apply(*p);
-                    Pt::new(s.at.x + x, s.at.y + y)
-                }),
-        );
+        let place = |p: (i64, i64)| {
+            let (x, y) = t.apply(p);
+            Pt::new(s.at.x + x, s.at.y + y)
+        };
+        let shown_graphics = || base.graphics.iter().filter(|g| shows(g.unit, g.body));
+        let body = Rect::around(shown_graphics().flat_map(|g| &g.points).map(|p| place(*p)));
+        let shapes = shown_graphics()
+            .flat_map(|g| &g.shapes)
+            .map(|sh| sh.map(|p| place((p.x, p.y))))
+            .collect();
         let pins = base
             .pins
             .iter()
@@ -963,6 +1074,7 @@ pub(crate) fn place(raw: RawSheet, res: &[SymRes], file: &str) -> SheetGeometry 
             rotation: s.rotation,
             mirror: s.mirror,
             body,
+            shapes,
             colour: base.colour,
             pins,
             fields,

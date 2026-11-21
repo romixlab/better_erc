@@ -20,6 +20,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Changed
 
+- `DRAW-7`, `DRAW-9`, `DRAW-34`: a symbol body counts by its drawn shapes with their strokes, not one box (NET-26).
 - Docs name the Portwright repo `portwright` (was `typec_dongle`, renamed).
 
 ## [0.4.62] - 2026-11-14

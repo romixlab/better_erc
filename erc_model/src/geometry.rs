@@ -75,6 +75,19 @@ impl Rect {
         })
     }
 
+    /// How far apart the two boxes are on the axis they are farthest apart on: negative when they share area, 0
+    /// when they only touch
+    pub fn separation(self, o: Rect) -> i64 {
+        let dx = (o.min.x - self.max.x).max(self.min.x - o.max.x);
+        let dy = (o.min.y - self.max.y).max(self.min.y - o.max.y);
+        dx.max(dy)
+    }
+
+    /// Whether `o` lies wholly inside, clear of the edges
+    pub fn encloses(self, o: Rect) -> bool {
+        self.min.x < o.min.x && self.min.y < o.min.y && o.max.x < self.max.x && o.max.y < self.max.y
+    }
+
     /// The gap between the two boxes, 0 when they touch or overlap
     pub fn gap(self, o: Rect) -> i64 {
         let dx = (o.min.x - self.max.x).max(self.min.x - o.max.x).max(0);
@@ -97,6 +110,176 @@ impl Rect {
     pub fn contains(self, p: Pt) -> bool {
         p.x >= self.min.x && p.x <= self.max.x && p.y >= self.min.y && p.y <= self.max.y
     }
+}
+
+/// One drawn primitive of a symbol's body, its stroke included
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub enum Shape {
+    /// A rectangle, or the control box of a bezier, inside included
+    Box(Rect),
+    /// A circle, inside included
+    Disc { centre: Pt, radius: i64 },
+    /// A stroke `width` wide: a segment of an open polyline or a piece of an arc
+    Line { a: Pt, b: Pt, width: i64 },
+    /// A closed or filled polyline, inside included, its outline `width` wide
+    Area { points: Vec<Pt>, width: i64 },
+}
+
+/// A piece of a shape's outline: a segment and how far its stroke reaches from it
+type Edge = (Pt, Pt, f64);
+
+impl Shape {
+    /// The box the shape fills
+    pub fn bbox(&self) -> Rect {
+        match self {
+            Shape::Box(r) => *r,
+            Shape::Disc { centre, radius } => Rect::of(*centre, *centre).grown(*radius),
+            Shape::Line { a, b, width } => Rect::of(*a, *b).grown(width / 2),
+            Shape::Area { points, width } => Rect::around(points.iter().copied())
+                .unwrap_or_default()
+                .grown(width / 2),
+        }
+    }
+
+    /// The shape with each point moved by `f`, a rotation, mirror or shift
+    pub fn map(&self, f: impl Fn(Pt) -> Pt) -> Shape {
+        match self {
+            Shape::Box(r) => Shape::Box(Rect::of(f(r.min), f(r.max))),
+            Shape::Disc { centre, radius } => Shape::Disc {
+                centre: f(*centre),
+                radius: *radius,
+            },
+            Shape::Line { a, b, width } => Shape::Line {
+                a: f(*a),
+                b: f(*b),
+                width: *width,
+            },
+            Shape::Area { points, width } => Shape::Area {
+                points: points.iter().map(|p| f(*p)).collect(),
+                width: *width,
+            },
+        }
+    }
+
+    /// How far apart the two shapes are: negative when they share area, 0 when they only touch. Two boxes are
+    /// measured as [`Rect::separation`] does, everything else by the straight distance between the drawn outlines.
+    pub fn separation(&self, o: &Shape) -> i64 {
+        if let (Shape::Box(a), Shape::Box(b)) = (self, o) {
+            return a.separation(*b);
+        }
+        let mut gap = f64::INFINITY;
+        let mut crossed = false;
+        for (p, q, ra) in self.edges() {
+            for (s, t, rb) in o.edges() {
+                crossed |= crosses(p, q, s, t);
+                gap = gap.min(segment_distance(p, q, s, t) - ra - rb);
+            }
+        }
+        // One inside the other, outlines apart: the inner one's first point is inside the outer
+        let inside = self.covers(o.first()) || o.covers(self.first());
+        if crossed || inside {
+            gap = gap.min(-1.0);
+        }
+        gap.floor() as i64
+    }
+
+    fn edges(&self) -> Vec<Edge> {
+        match self {
+            Shape::Box(r) => {
+                let c = [
+                    r.min,
+                    Pt::new(r.max.x, r.min.y),
+                    r.max,
+                    Pt::new(r.min.x, r.max.y),
+                ];
+                (0..4).map(|i| (c[i], c[(i + 1) % 4], 0.0)).collect()
+            }
+            Shape::Disc { centre, radius } => vec![(*centre, *centre, *radius as f64)],
+            Shape::Line { a, b, width } => vec![(*a, *b, *width as f64 / 2.0)],
+            Shape::Area { points, width } => {
+                let n = points.len();
+                let r = *width as f64 / 2.0;
+                (0..n)
+                    .map(|i| (points[i], points[(i + 1) % n], r))
+                    .collect()
+            }
+        }
+    }
+
+    fn first(&self) -> Pt {
+        match self {
+            Shape::Box(r) => r.min,
+            Shape::Disc { centre, .. } => *centre,
+            Shape::Line { a, .. } => *a,
+            Shape::Area { points, .. } => points.first().copied().unwrap_or_default(),
+        }
+    }
+
+    /// Whether `p` is strictly inside the area the shape fills; a disc and a line answer through their edges
+    fn covers(&self, p: Pt) -> bool {
+        match self {
+            Shape::Box(r) => r.min.x < p.x && p.x < r.max.x && r.min.y < p.y && p.y < r.max.y,
+            Shape::Area { points, .. } => in_polygon(points, p),
+            Shape::Disc { .. } | Shape::Line { .. } => false,
+        }
+    }
+}
+
+/// Whether `p` is inside the polygon, by the even-odd rule
+fn in_polygon(points: &[Pt], p: Pt) -> bool {
+    let n = points.len();
+    let mut inside = false;
+    for i in 0..n {
+        let (a, b) = (points[i], points[(i + 1) % n]);
+        if (a.y > p.y) != (b.y > p.y) {
+            let x = a.x as f64 + (p.y - a.y) as f64 * (b.x - a.x) as f64 / (b.y - a.y) as f64;
+            if (p.x as f64) < x {
+                inside = !inside;
+            }
+        }
+    }
+    inside
+}
+
+/// Twice the signed area of the triangle `a`, `b`, `c`: which side of `a`-`b` the point `c` is on
+fn orient(a: Pt, b: Pt, c: Pt) -> i128 {
+    (b.x - a.x) as i128 * (c.y - a.y) as i128 - (b.y - a.y) as i128 * (c.x - a.x) as i128
+}
+
+/// Whether the segments cross at a point inside both, not at an end
+fn crosses(p: Pt, q: Pt, s: Pt, t: Pt) -> bool {
+    let (d1, d2) = (orient(p, q, s), orient(p, q, t));
+    let (d3, d4) = (orient(s, t, p), orient(s, t, q));
+    d1.signum() * d2.signum() < 0 && d3.signum() * d4.signum() < 0
+}
+
+/// The distance from `p` to the segment `a`-`b`
+fn point_distance(p: Pt, a: Pt, b: Pt) -> f64 {
+    let (dx, dy) = ((b.x - a.x) as f64, (b.y - a.y) as f64);
+    let (px, py) = ((p.x - a.x) as f64, (p.y - a.y) as f64);
+    let len2 = dx * dx + dy * dy;
+    let t = if len2 == 0.0 {
+        0.0
+    } else {
+        ((px * dx + py * dy) / len2).clamp(0.0, 1.0)
+    };
+    let (ex, ey) = (px - t * dx, py - t * dy);
+    (ex * ex + ey * ey).sqrt()
+}
+
+/// The distance between two segments, 0 where they meet
+fn segment_distance(p: Pt, q: Pt, s: Pt, t: Pt) -> f64 {
+    if crosses(p, q, s, t) {
+        return 0.0;
+    }
+    [
+        point_distance(p, s, t),
+        point_distance(q, s, t),
+        point_distance(s, p, q),
+        point_distance(t, p, q),
+    ]
+    .into_iter()
+    .fold(f64::INFINITY, f64::min)
 }
 
 /// One of the four directions on the sheet
@@ -339,6 +522,9 @@ pub struct DrawnSymbol {
     pub mirror: Option<char>,
     /// The library graphics as placed, pins left out; `None` for a symbol drawn with pins alone
     pub body: Option<Rect>,
+    /// The library graphics as placed, one shape per primitive with its stroke
+    #[serde(default)]
+    pub shapes: Vec<Shape>,
     /// The stroke colour the library graphics set; `None` for the theme's
     pub colour: Option<Colour>,
     pub pins: Vec<DrawnPin>,
@@ -520,4 +706,41 @@ pub struct SheetGeometry {
     pub graphics: Vec<DrawnGraphic>,
     pub sheets: Vec<DrawnSheet>,
     pub groups: Vec<DrawnGroup>,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn line(a: (i64, i64), b: (i64, i64), width: i64) -> Shape {
+        Shape::Line {
+            a: Pt::new(a.0, a.1),
+            b: Pt::new(b.0, b.1),
+            width,
+        }
+    }
+
+    #[test]
+    fn shapes_are_measured_by_their_outlines() {
+        let square = Shape::Box(Rect::of(Pt::new(0, 0), Pt::new(10, 10)));
+        // Through the box, inside it, beside it by 5 less the half stroke
+        assert!(square.separation(&line((-5, 5), (15, 5), 0)) < 0);
+        assert!(square.separation(&line((2, 2), (8, 8), 0)) < 0);
+        assert_eq!(square.separation(&line((15, 0), (15, 10), 2)), 4);
+        // The diagonal of a box that a box-only test would call overlapping
+        assert_eq!(
+            line((0, 0), (10, 10), 0).separation(&line((10, 0), (20, 10), 0)),
+            7
+        );
+        let disc = Shape::Disc {
+            centre: Pt::new(30, 5),
+            radius: 5,
+        };
+        assert_eq!(square.separation(&disc), 15);
+        let triangle = Shape::Area {
+            points: vec![Pt::new(-20, -20), Pt::new(40, -20), Pt::new(10, 40)],
+            width: 0,
+        };
+        assert!(triangle.separation(&square) < 0);
+    }
 }
