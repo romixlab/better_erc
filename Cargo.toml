@@ -34,9 +34,11 @@ opt-level = 2 # fast and small wasm
 inherits = "release"
 incremental = true
 
+[profile.dev]
+debug = false
+
 # Optimize all dependencies even in debug builds:
 [profile.dev.package."*"]
-debug = false
 opt-level = 2
 
 
