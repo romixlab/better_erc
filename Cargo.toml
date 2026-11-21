@@ -36,6 +36,7 @@ incremental = true
 
 # Optimize all dependencies even in debug builds:
 [profile.dev.package."*"]
+debug = false
 opt-level = 2
 
 
