@@ -242,7 +242,7 @@ high.
 
 **Example.** On B153A, PA9 (`DATA_CUT`) selects the USB data switch for the device under test, with a pull-down for
 "connected". PA9 is USART1_TX of the G0B1 ROM bootloader, which drives it high while it runs, so every firmware update
-through the ROM disconnects the DUT's USB data (typec_dongle FW-50; B153 rev B change list).
+through the ROM disconnects the DUT's USB data (portwright FW-50; B153 rev B change list).
 
 **How to check.** For each programmable part, take its ROM and reset-time pin table (part data per family, `NET-12`),
 then follow each listed pin to what it controls (`NET-10`) and evaluate the bootloader's level there; the board's wanted

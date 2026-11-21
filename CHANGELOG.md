@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Changed
+
+- Docs name the Portwright repo `portwright` (was `typec_dongle`, renamed).
+
 ## [0.4.62] - 2026-11-14
 
 ### Added
