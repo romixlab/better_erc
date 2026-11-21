@@ -1073,7 +1073,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   vertical one where clear; a column shortened by its last rating fields; else the least bad, in up to three passes
   over a sheet (`erc_checks::place`). The layout follows the `drawing.fields.*` settings (pitch, body gap, step,
   gap_max, ends_raise; declared on `DRAW-34`): a column or packed part's ends clear of everything but off that
-  style is placed again where it conflicts no more, on its own side first. Field text is never turned. What still overlaps is reported per check once the
+  style is placed again where it conflicts no more, on its own side first. Sides by part: a horizontal two-pin part
+  above, below, right, left; others right first; a one- or two-pin part tries every slide on a side before the next;
+  a column above or below is centred on the body. A two-pin part counts as packed when its centred column across
+  its axis overlaps a neighbour's body, or something settled on both sides. Field text is never turned. What still overlaps is reported per check once the
   sheet is placed. Written with a formatting-preserving edit of each field's `(at ...)` and justify, `(hide yes)`
   where the file's version keeps it, the symbol's `fields_autoplaced` dropped (`erc_kicad::fields`); the counts before
   and after come from the edited files read again (`Project::reopen_with`) · `erc_checks/src/draw/place.rs`,

@@ -184,12 +184,14 @@ the `drawing.clearance` margins (`DRAW-34`), gets the first of these that clears
 1. Rating fields (anything but Reference and Value) that touch a power symbol, when nothing else overlaps the fields:
    those fields hidden, the column left where it is. Closeness alone is no reason to move a column that fits.
 2. A column: Reference, Value, then the rest top to bottom as they stood, justified toward the body, anchored on
-   the field step 0.635 mm from the body, lines 2 mm apart whatever the text size, on the first side (right, left,
-   above, below) where it hits nothing and no wire runs through it, slid along the side (up to 5 mm) or set a
-   little farther out (up to 2.5 mm) when it must. Fields that overlap nothing but stand more than 2 mm from their
-   body are placed again the same way.
-3. A packed two-pin part (resistor, capacitor, diode, inductor, ferrite bead), whose column on a side across its
-   axis does not fit in the gap to a neighbour's body or settled fields, a horizontal one before any column:
+   the field step 0.635 mm from the body, lines 2 mm apart whatever the text size, on the first side where it hits
+   nothing and no wire runs through it, slid along the side (up to 5 mm) or set a little farther out (up to 2.5 mm)
+   when it must. A horizontal two-pin part tries above, below, right, left, off the line its wires run along; every
+   other part right, left, above, below. A one- or two-pin part (a test point, a resistor) tries every slide on a
+   side before the next side; a column above or below is centred on the body. Fields that overlap nothing but
+   stand more than 2 mm from their body are placed again the same way.
+3. A packed two-pin part (resistor, capacitor, diode, inductor, ferrite bead), whose centred column across its axis
+   overlaps a neighbour's body on one side, or a body or settled fields on both, a horizontal one before any column:
    Reference and Value at the ends of the part,
    the other fields hidden. A horizontal part has them before and after its body on the line above its axis; a
    vertical one has them centred above and below its pins, only where that spot is clear.
@@ -210,8 +212,8 @@ Every layout follows one style, set by the `drawing.fields` settings (`--set`, o
 
 Fields that overlap nothing are left alone when they follow the style or stand in some other arrangement. A column
 (lines on one anchor line, one justification, on one side of the body) or a packed part's ends off the style, by
-pitch, body gap or grid, is placed again in the style: on the same side when it fits there next to the body, else
-the first side where it does, and only where that conflicts no more than where it stands. One run evens out the
+pitch, body gap or grid, is placed again in the style: a one- or two-pin part's on the first of its sides that fits,
+any other part's on the same side when it fits there next to the body, else the first side where it does, and only where that conflicts no more than where it stands. One run evens out the
 columns of a sheet; a second finds nothing to do.
 
 The default is a dry run: each symbol with its layout, the fields it hides and what still overlaps (`DRAW-9`) or is

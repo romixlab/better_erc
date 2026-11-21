@@ -342,9 +342,9 @@ impl Board<'_, '_> {
         (cost, hits)
     }
 
-    /// Whether any of the boxes overlaps the body of another symbol or a field of one whose fields are settled:
-    /// whether a column fits in the gap to the neighbours
-    fn hits_neighbour(&self, s: usize, field: &Item, rects: &[Rect]) -> bool {
+    /// What the boxes overlap of the neighbours: the body of another symbol ([`K::Body`]) before a field of one
+    /// whose fields are settled ([`K::Field`]); `None` when a column there fits in the gap to them
+    fn hits_neighbour(&self, s: usize, field: &Item, rects: &[Rect]) -> Option<K> {
         let neighbour = |j: usize, b: &Item| {
             let other = b.owner.filter(|o| *o != s);
             !self.gone[j]
@@ -354,15 +354,22 @@ impl Board<'_, '_> {
                     _ => false,
                 })
         };
-        rects.iter().any(|r| {
+        let hits = rects.iter().flat_map(|r| {
             let a = Item {
                 rect: *r,
                 ..field.clone()
             };
-            self.items.iter().enumerate().any(|(j, b)| {
-                neighbour(j, b) && !exempt(self.scene, &a, b) && bare_hit(&a, b, false).is_some()
-            })
-        })
+            self.items
+                .iter()
+                .enumerate()
+                .filter(move |(j, b)| {
+                    neighbour(*j, b)
+                        && !exempt(self.scene, &a, b)
+                        && bare_hit(&a, b, false).is_some()
+                })
+                .map(|(_, b)| b.kind)
+        });
+        hits.min_by_key(|k| *k != K::Body)
     }
 
     /// The field items of symbol `s`, hidden ones included
@@ -602,9 +609,10 @@ fn apply(
 }
 
 /// For fields that stand in a column, or at a packed part's ends, off the style: the same layout in style, where
-/// it conflicts no more than the fields do now, judged the same way (a wire through a column counts). A column keeps its side when it fits there next to the
-/// body, else takes the first side where it does, then a step or more farther out. `None` when the fields follow
-/// the style, stand some other way, or nothing in style is as clear.
+/// it conflicts no more than the fields do now, judged the same way (a wire through a column counts). A one- or
+/// two-pin part's column takes the first of its [`sides`] that fits next to the body; any other keeps its side when
+/// it fits there, else takes the first side where it does; then a step or more farther out. `None` when the fields
+/// follow the style, stand some other way, or nothing in style is as clear.
 fn restyle(
     board: &Board,
     sym: &DrawnSymbol,
@@ -625,7 +633,11 @@ fn restyle(
     if all.iter().any(|l| l.out == 0 && l.side == now && same(l)) {
         return None;
     }
-    all.sort_by_key(|l| (l.out, l.side != now));
+    if sides_fixed(sym) {
+        all.sort_by_key(|l| l.out);
+    } else {
+        all.sort_by_key(|l| (l.out, l.side != now));
+    }
     let l = all.into_iter().find(clear)?;
     (!same(&l)).then_some(l)
 }
@@ -765,8 +777,8 @@ fn two_pin(sym: &DrawnSymbol) -> Option<bool> {
     (ha == hb && a.outward != b.outward).then_some(ha)
 }
 
-/// For a two-pin part packed against its neighbours (the full column on a side across its axis does not fit in
-/// the gap: it overlaps another part's body or settled fields): its [`ends_lines`]. `None` for any other symbol,
+/// For a two-pin part packed against its neighbours (the full column centred on a side across its axis overlaps
+/// another part's body, or both such columns overlap a body or settled fields): its [`ends_lines`]. `None` for any other symbol,
 /// or one without Reference and Value shown.
 fn ends_layout(
     board: &Board,
@@ -784,16 +796,16 @@ fn ends_layout(
         [Side::Right, Side::Left]
     };
     let field = &board.items[own[reference]];
-    let packed = across.iter().any(|side| {
+    let all = columns(board.style, sym, shown, order, &[]);
+    let hits = across.map(|side| {
         // The first column of each side is the one centred on the body
-        columns(board.style, sym, shown, order, &[])
-            .into_iter()
-            .find(|l| l.side == *side)
-            .is_some_and(|l| {
-                let rects: Vec<Rect> = l.lines.iter().map(|line| line.3).collect();
-                board.hits_neighbour(s, field, &rects)
-            })
+        all.iter().find(|l| l.side == side).and_then(|l| {
+            let rects: Vec<Rect> = l.lines.iter().map(|line| line.3).collect();
+            board.hits_neighbour(s, field, &rects)
+        })
     });
+    // Another part's body across it, or something settled on both sides
+    let packed = hits.contains(&Some(K::Body)) || hits.iter().all(Option::is_some);
     if !packed {
         return None;
     }
@@ -826,7 +838,7 @@ fn ends_lines(style: FieldStyle, sym: &DrawnSymbol, shown: &[&DrawnField]) -> Op
         ]
     } else {
         let outline = sym.outline();
-        let x = style.nearest(outline.center().x);
+        let x = outline.center().x;
         let half = |k: usize| shown[k].text.extent().1 / 2;
         vec![
             line(
@@ -868,12 +880,30 @@ fn column_order(shown: &[&DrawnField]) -> Vec<usize> {
     order
 }
 
+/// The sides a column tries, best first: a horizontal two-pin part's above and below, off the line its wires run
+/// along; every other part's right, left, above, below
+fn sides(sym: &DrawnSymbol) -> [Side; 4] {
+    if two_pin(sym) == Some(true) {
+        [Side::Above, Side::Below, Side::Right, Side::Left]
+    } else {
+        [Side::Right, Side::Left, Side::Above, Side::Below]
+    }
+}
+
+/// Whether the symbol's fields belong on the first of its [`sides`] that fits, whatever side they stand on now:
+/// a two-pin part, or a one-pin part such as a test point
+fn sides_fixed(sym: &DrawnSymbol) -> bool {
+    two_pin(sym).is_some() || sym.pins.iter().filter(|p| !p.hidden).count() == 1
+}
+
 /// A column's anchors, alignments and boxes, line by line
 type Column = Vec<(Pt, HAlign, Rect)>;
 
-/// Every column to try, best first, with how many steps out it stands: centred right, left, above, below the
-/// body, then slid along each side, then the same a step or more farther out. Lines are [`FieldStyle::pitch`]
-/// apart whatever the text's size.
+/// Every column to try, best first, with how many steps out it stands: centred on each of the [`sides`], then slid
+/// along each side, then the same a step or more farther out. A one- or two-pin part tries every slide on a side
+/// before the next side. Lines are [`FieldStyle::pitch`]
+/// apart whatever the text's size. A column above or below is centred on the body itself, off the step grid when
+/// the body's centre is.
 fn candidates(
     style: FieldStyle,
     sym: &DrawnSymbol,
@@ -900,16 +930,12 @@ fn candidates(
             ),
             Side::Above => {
                 let last = style.down(body.min.y - gap - tallest / 2) - out;
-                (
-                    style.nearest(middle.x) + slide,
-                    last - (n - 1) * pitch,
-                    HAlign::Center,
-                )
+                (middle.x + slide, last - (n - 1) * pitch, HAlign::Center)
             }
             Side::Ends | Side::InPlace => unreachable!("a column stands on one of the four sides"),
             Side::Below => {
                 let first = style.up(body.max.y + gap + tallest / 2) + out;
-                (style.nearest(middle.x) + slide, first, HAlign::Center)
+                (middle.x + slide, first, HAlign::Center)
             }
         };
         extents
@@ -921,17 +947,22 @@ fn candidates(
             })
             .collect()
     };
-    let sides = [Side::Right, Side::Left, Side::Above, Side::Below];
     let step = style.step;
+    let slides: Vec<i64> = std::iter::once(0)
+        .chain((1..=SLIDE_REACH / step).flat_map(|k| [k * step, -k * step]))
+        .collect();
     let mut all = Vec::new();
     for o in 0..=OUT_REACH / step {
-        for s in sides {
-            all.push((s, o, column(s, 0, o * step)));
-        }
-        for k in 1..=SLIDE_REACH / step {
-            for s in sides {
-                for slide in [k * step, -k * step] {
-                    all.push((s, o, column(s, slide, o * step)));
+        if sides_fixed(sym) {
+            for s in sides(sym) {
+                for slide in &slides {
+                    all.push((s, o, column(s, *slide, o * step)));
+                }
+            }
+        } else {
+            for slide in &slides {
+                for s in sides(sym) {
+                    all.push((s, o, column(s, *slide, o * step)));
                 }
             }
         }

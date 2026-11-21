@@ -621,3 +621,111 @@ fn odd_columns_are_placed_again() {
     let again = place(&file, &opts).unwrap();
     assert!(again.plan.symbols.is_empty(), "{:?}", again.plan);
 }
+
+/// A horizontal resistor R1 wired on both sides with its fields piled up, a vertical one R2 below it whose fields
+/// stand in R1's column below: R1 is not packed, so it takes a column above, centred on its body
+fn horizontal_free_above() -> String {
+    let mut s = String::from(
+        "(kicad_sch (version 20231120) (generator \"eeschema\") (generator_version \"8.0\")\n\
+         (uuid \"a0000000-0000-4000-8000-000000000000\")\n(paper \"A4\")\n",
+    );
+    s += LIB;
+    let piled = [
+        ("Reference", "R1", 101.6, 50.8, 0),
+        ("Value", "10k", 101.6, 50.8, 0),
+    ];
+    s += &resistor(1, (101.6, 50.8, 90), "", &piled);
+    for (a, b) in [(91.44, 96.52), (106.68, 111.76)] {
+        s += &format!(
+            "(wire (pts (xy {a} 50.8) (xy {b} 50.8)) (stroke (width 0) (type default)) \
+             (uuid \"c1000000-0000-4000-8000-0000000000{}\"))\n",
+            (a as u32) % 100
+        );
+    }
+    // Clear of everything, so settled when R1 is placed
+    let below = [
+        ("Reference", "R2", 100.5, 54.5, 0),
+        ("Value", "1k", 100.5, 63.5, 0),
+    ];
+    s += &resistor(2, (99.06, 63.5, 0), "", &below);
+    s += "(sheet_instances (path \"/\" (page \"1\")))\n)\n";
+    s
+}
+
+#[test]
+fn horizontal_part_takes_a_column_above() {
+    let dir = scratch("place_fields_above");
+    let file = dir.join("above.kicad_sch");
+    std::fs::write(&file, horizontal_free_above()).unwrap();
+    let opts = PlaceOptions {
+        write: true,
+        ..PlaceOptions::default()
+    };
+    let placed = place(&file, &opts).unwrap();
+    let r1 = placed
+        .plan
+        .symbols
+        .iter()
+        .find(|s| s.reference == "R1")
+        .unwrap();
+    assert_eq!(r1.side, Some(Side::Above), "{:?}", placed.plan);
+    assert!(r1.hidden.is_empty() && r1.left.is_empty(), "{r1:?}");
+    let drawn = symbols(&file);
+    let body = drawn
+        .iter()
+        .find(|d| d.reference == "R1")
+        .unwrap()
+        .outline();
+    for m in &r1.moves {
+        assert_eq!(m.halign, HAlign::Center);
+        assert_eq!(m.at.x, body.center().x, "{} centred on the body", m.field);
+        assert!(m.rect.max.y < body.min.y);
+    }
+}
+
+const TP: &str = r#"(symbol "Connector:TestPoint" (pin_numbers (hide yes)) (pin_names (offset 0.762) (hide yes)) (exclude_from_sim no) (in_bom yes) (on_board yes)
+(property "Reference" "TP" (at 0 0 0) (effects (font (size 1.27 1.27))))
+(property "Value" "TestPoint" (at 0 0 0) (effects (font (size 1.27 1.27))))
+(symbol "TestPoint_0_1" (circle (center 0 3.302) (radius 0.762) (stroke (width 0) (type default)) (fill (type none))))
+(symbol "TestPoint_1_1" (pin passive line (at 0 0 90) (length 2.54) (name "1" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))))
+"#;
+
+/// A test point whose Reference and Value stand above it, clear of everything but 2.54 mm apart and far from its
+/// circle
+fn test_point() -> String {
+    let mut s = String::from(
+        "(kicad_sch (version 20231120) (generator \"eeschema\") (generator_version \"8.0\")\n\
+         (uuid \"a0000000-0000-4000-8000-000000000000\")\n(paper \"A4\")\n",
+    );
+    s += &LIB.replace("(lib_symbols\n", &format!("(lib_symbols\n{TP}"));
+    s += "(symbol (lib_id \"Connector:TestPoint\") (at 101.6 50.8 0) (unit 1) (exclude_from_sim no) (in_bom yes) \
+          (on_board yes) (dnp no) (uuid \"a0000000-0000-4000-8000-000000000001\")\n\
+          (property \"Reference\" \"TP1\" (at 101.6 41.91 0) (effects (font (size 1.27 1.27))))\n\
+          (property \"Value\" \"TestPoint\" (at 101.6 44.45 0) (effects (font (size 1.27 1.27))))\n\
+          (pin \"1\" (uuid \"b1000000-0000-4000-8000-000000000001\"))\n\
+          (instances (project \"place\" (path \"/a0000000-0000-4000-8000-000000000000\" (reference \"TP1\") (unit 1)))))\n";
+    s += "(sheet_instances (path \"/\" (page \"1\")))\n)\n";
+    s
+}
+
+#[test]
+fn test_point_fields_go_right() {
+    let dir = scratch("place_fields_test_point");
+    let file = dir.join("tp.kicad_sch");
+    std::fs::write(&file, test_point()).unwrap();
+    let opts = PlaceOptions {
+        write: true,
+        ..PlaceOptions::default()
+    };
+    let placed = place(&file, &opts).unwrap();
+    let plans: Vec<_> = placed
+        .plan
+        .symbols
+        .iter()
+        .map(|s| (s.reference.as_str(), s.side))
+        .collect();
+    assert_eq!(plans, [("TP1", Some(Side::Right))], "{:?}", placed.plan);
+    assert_eq!(pitches(&placed), [("TP1".to_owned(), vec![2_000_000])]);
+    let again = place(&file, &opts).unwrap();
+    assert!(again.plan.symbols.is_empty(), "{:?}", again.plan);
+}

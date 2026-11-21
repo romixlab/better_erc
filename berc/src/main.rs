@@ -113,9 +113,9 @@ enum Command {
     ///
     /// Each placed symbol whose shown fields overlap text, a body, a wire or the sheet edge, or come closer than
     /// the drawing.clearance margins, gets the first that clears them: rating fields touching a power symbol
-    /// hidden in place; a column (Reference, Value, the rest) on the first side where it hits nothing; Reference
-    /// and Value at the ends of a packed two-pin part, the rest hidden; a column shortened by its last rating
-    /// fields. Text stays upright. The layout follows the drawing.fields settings (line pitch 2 mm, 0.635 mm from
+    /// hidden in place; a column (Reference, Value, the rest) on the first side where it hits nothing (above
+    /// first for a horizontal two-pin part, else right); Reference and Value at the ends of a packed two-pin part,
+    /// the rest hidden; a column shortened by its last rating fields. Text stays upright. The layout follows the drawing.fields settings (line pitch 2 mm, 0.635 mm from
     /// the body, on 0.25 mm steps); a column clear of everything but off that style is placed again, and fields
     /// more than 2 mm from their body too. Bodies, wires, labels, power symbols and notes never move. A dry run by
     /// default; --write edits the .kicad_sch files in place.
