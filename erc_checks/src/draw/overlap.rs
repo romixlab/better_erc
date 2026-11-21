@@ -252,6 +252,7 @@ pub(super) fn gap_text(nm: i64) -> String {
 #[cfg(test)]
 mod tests {
     use crate::draw::draw_9::Draw9;
+    use crate::draw::draw_34::Draw34;
     use crate::testing::fingerprints_of;
 
     /// A sheet with these library symbols and items
@@ -276,6 +277,10 @@ mod tests {
              (symbol \"Test:R\" (pin_numbers (hide yes)) (pin_names (hide yes)) {fields} \
              (symbol \"R_0_1\" (rectangle (start -1.016 -2.54) (end 1.016 2.54) (stroke (width 0.254) (type default)) (fill (type none)))) \
              (symbol \"R_1_1\" {} {})) \
+             (symbol \"Test:C\" (pin_numbers (hide yes)) (pin_names (hide yes)) {fields} \
+             (symbol \"C_0_1\" (polyline (pts (xy -2.032 0.762) (xy 2.032 0.762)) (stroke (width 0.508) (type default)) (fill (type none))) \
+             (polyline (pts (xy -2.032 -0.762) (xy 2.032 -0.762)) (stroke (width 0.508) (type default)) (fill (type none)))) \
+             (symbol \"C_1_1\" {} {})) \
              (symbol \"Test:Probe\" (pin_numbers (hide yes)) (pin_names (hide yes)) {fields} \
              (symbol \"Probe_0_1\" (polyline (pts (xy 0 0) (xy 0.5 0) (xy 3 2.5) (xy 3 3) (xy 2.5 3) (xy 0 0.5) (xy 0 0)) \
              (stroke (width 0) (type default)) (fill (type background)))) \
@@ -284,6 +289,8 @@ mod tests {
              {items} (sheet_instances (path \"/\" (page \"1\"))))",
             pin("0 5.08 270"),
             pin("0 -5.08 90"),
+            pin("0 3.81 270"),
+            pin("0 -3.81 90"),
         )
     }
 
@@ -308,6 +315,21 @@ mod tests {
     }
 
     #[test]
+    fn shapes_are_never_stricter_than_the_box() {
+        // Bodies exactly the two part margins (2 x 1.27 mm) apart, edge to edge of the library boxes: a resistor's
+        // rectangle and a capacitor's thick plates, whose strokes do not count
+        let at = |r2: f64| {
+            let r = symbol("R", "R1", 60.0, 60.0, 1) + &symbol("R", "R2", r2, 60.0, 2);
+            sheet(&(r + &symbol("C", "C1", 54.412, 60.0, 3)))
+        };
+        assert_eq!(fingerprints_of(&Draw34, &at(64.572)), Vec::<String>::new());
+        assert_eq!(
+            fingerprints_of(&Draw34, &at(64.472)),
+            ["DRAW-34:item R1 body|item R2 body|sheet /"]
+        );
+    }
+
+    #[test]
     fn bodies_count_by_what_they_draw() {
         // Diagonal bars 2.54 mm apart: their boxes overlap, the bars do not
         let apart = sheet(
@@ -319,10 +341,7 @@ mod tests {
         );
         assert_eq!(
             fingerprints_of(&Draw9, &onto),
-            [
-                "DRAW-9:item TP1 body|item TP2 body|sheet /",
-                "DRAW-9:item TP1 body|item TP2.1 pin|sheet /",
-            ]
+            ["DRAW-9:item TP1 body|item TP2 body|sheet /"]
         );
     }
 

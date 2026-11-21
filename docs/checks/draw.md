@@ -12,16 +12,15 @@ text, text boxes, tables and groups, paper size, title block, symbol body extent
 symbol and text extents must be computed, `judgement` where better_erc can only list candidates.
 
 **Boxes.** Several checks compare item boxes: a symbol's body with its pins (from the library graphics, placed by its
-rotation and mirror), a field's or label's text box (from font size, text length, justification and the angle
-relative to its symbol), a power symbol with its name, a note box, a wire as a thin box. A symbol body is not one
-box but the set of what its library draws, each with its stroke: a rectangle, a circle, a closed or filled polyline
-as a filled shape, an open polyline segment or a piece of an arc as a line, a bezier by its control points' box. Two
-bodies, or a body and a box, are as far apart as their nearest primitives; the outer boxes are compared first, so a
-pair far apart costs one test. A text box drawn wholly around an item counts against it by its text alone: the
-border is a frame around the parts a note is about, not something in their way. An item the border crosses (partly
-inside) still overlaps the box. A prototype of this
-measure (Python, run on a real board's sheets) is kept with our house-style notes; it is the reference for
-`NET-26`.
+rotation and mirror), a field's or label's text box (from font size, text length, justification and the angle relative
+to its symbol), a power symbol with its name, a note box, a wire as a thin box. A symbol body is not one box but the
+set of what its library draws, each on the centreline of its stroke, the width left out: a rectangle, a circle, a
+closed or filled polyline as a filled shape, an open polyline segment or a piece of an arc as a line, a bezier by its
+control points' box. Two bodies, or a body and a box, are as far apart as their nearest primitives; the outer boxes
+are compared first, so a pair far apart costs one test. A text box drawn wholly around an item counts against it by
+its text alone: the border is a frame around the parts a note is about, not something in their way. An item the border
+crosses (partly inside) still overlaps the box. A prototype of this measure (Python, run on a real board's sheets) is
+kept with our house-style notes; it is the reference for `NET-26`.
 
 **Drawing settings.** The spacing checks share named settings with defaults, set per project in its better_erc
 project file (`CFG-2`); see [clearance margins](../drawing-guide.md#room-around-everything-clearance-margins):
@@ -441,8 +440,9 @@ or more lines of `name: value` or `name = value`, or runs of two or more spaces 
 **What it catches.** Two items whose boxes, each grown by its own margin (`drawing.clearance.part`, `.power`,
 `.text`), overlap, when the bare boxes do not (that is `DRAW-9`). With the defaults: two parts less than 2.54 mm
 apart, a field less than 1.905 mm from another part, two labels less than 1.27 mm apart. A body is measured by its
-drawn primitives with their strokes, a text box around an item by its text (see **Boxes** at the top); two boxes are
-apart by the larger of the x and y gaps, anything else by the straight distance between the drawn outlines.
+drawn primitives, never closer than the box of the same primitives would be; a text box around an item by its text
+(see **Boxes** at the top); two boxes are apart by the larger of the x and y gaps, anything else by the straight
+distance between the drawn outlines.
 
 **Why it matters.** A sheet where every gap is the minimum reads as one block, and a field close to the next part is
 read as belonging to it. The margins are settings because how much air a sheet needs is taste: Roman's own dense

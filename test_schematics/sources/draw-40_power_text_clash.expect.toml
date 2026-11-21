@@ -17,14 +17,6 @@ check = "DRAW-36"
 subjects = ["item power +3V3_LDO", "item power +3V3_VIO", "sheet /"]
 
 [[finding]]
-check = "DRAW-9"
-subjects = ["item U1 Reference", "item U1 body", "sheet /"]
-
-[[finding]]
-check = "DRAW-9"
-subjects = ["item U1 Value", "item U1 body", "sheet /"]
-
-[[finding]]
 check = "TEST-1"
 subjects = ["part U1", "pin U1.1", "pin U1.2"]
 

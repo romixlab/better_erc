@@ -13,8 +13,6 @@ use std::collections::HashMap;
 
 /// Default font size, as KiCad's
 const DEFAULT_TEXT: i64 = 1_270_000;
-/// KiCad's stroke width for a library graphic of width 0
-const DEFAULT_LINE_WIDTH: i64 = 152_400;
 /// Where a pin's name sits from the body when the library does not say
 const DEFAULT_PIN_NAME_OFFSET: i64 = 508_000;
 /// Gap between a pin and the name or number drawn along it
@@ -297,27 +295,14 @@ fn title_block(item: &Sexp) -> TitleBlock {
     }
 }
 
-/// The stroke width of a library graphic, KiCad's default for 0
-fn line_width(g: &Sexp) -> i64 {
-    match stroke(g).width {
-        0 => DEFAULT_LINE_WIDTH,
-        w => w,
-    }
-}
-
-/// What a library rectangle, polyline, arc or bezier draws, from its `points` in library coordinates: a
-/// rectangle and a bezier's control points as a box, a closed or filled polyline as an area, an open one and an
-/// arc as lines
+/// What a library rectangle, polyline, arc or bezier draws, from its `points` in library coordinates, on the
+/// centreline of its stroke: a rectangle and a bezier's control points as a box, a closed or filled polyline as an
+/// area, an open one and an arc as lines
 fn lib_shapes(g: &Sexp, points: &[(i64, i64)]) -> Vec<Shape> {
-    let width = line_width(g);
     let pts: Vec<Pt> = points.iter().map(|(x, y)| Pt::new(*x, *y)).collect();
     let lines = |pts: &[Pt]| -> Vec<Shape> {
         pts.windows(2)
-            .map(|w| Shape::Line {
-                a: w[0],
-                b: w[1],
-                width,
-            })
+            .map(|w| Shape::Line { a: w[0], b: w[1] })
             .collect()
     };
     let filled = g
@@ -332,7 +317,7 @@ fn lib_shapes(g: &Sexp, points: &[(i64, i64)]) -> Vec<Shape> {
                 if closed {
                     points.pop();
                 }
-                vec![Shape::Area { points, width }]
+                vec![Shape::Area { points }]
             } else {
                 lines(&pts)
             }
@@ -341,10 +326,7 @@ fn lib_shapes(g: &Sexp, points: &[(i64, i64)]) -> Vec<Shape> {
             [start, mid, end] => lines(&arc_points(*start, *mid, *end)),
             _ => lines(&pts),
         },
-        _ => Rect::around(pts)
-            .map(|r| Shape::Box(r.grown(width / 2)))
-            .into_iter()
-            .collect(),
+        _ => Rect::around(pts).map(Shape::Box).into_iter().collect(),
     }
 }
 
@@ -476,7 +458,7 @@ fn lib_drawing(s: &Sexp) -> LibDrawing {
                     ) {
                         l.colour = l.colour.or(stroke(g).colour);
                         let centre = Pt::new(x, y);
-                        let radius = r + line_width(g) / 2;
+                        let radius = r;
                         l.graphics.push(LibGraphic {
                             unit,
                             body,

@@ -112,20 +112,20 @@ impl Rect {
     }
 }
 
-/// One drawn primitive of a symbol's body, its stroke included
+/// One drawn primitive of a symbol's body, on the centreline of its stroke as the library gives it
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Shape {
     /// A rectangle, or the control box of a bezier, inside included
     Box(Rect),
     /// A circle, inside included
     Disc { centre: Pt, radius: i64 },
-    /// A stroke `width` wide: a segment of an open polyline or a piece of an arc
-    Line { a: Pt, b: Pt, width: i64 },
-    /// A closed or filled polyline, inside included, its outline `width` wide
-    Area { points: Vec<Pt>, width: i64 },
+    /// A segment of an open polyline or a piece of an arc
+    Line { a: Pt, b: Pt },
+    /// A closed or filled polyline, inside included
+    Area { points: Vec<Pt> },
 }
 
-/// A piece of a shape's outline: a segment and how far its stroke reaches from it
+/// A piece of a shape's outline: a segment and how far the shape reaches from it (a disc's radius)
 type Edge = (Pt, Pt, f64);
 
 impl Shape {
@@ -134,10 +134,8 @@ impl Shape {
         match self {
             Shape::Box(r) => *r,
             Shape::Disc { centre, radius } => Rect::of(*centre, *centre).grown(*radius),
-            Shape::Line { a, b, width } => Rect::of(*a, *b).grown(width / 2),
-            Shape::Area { points, width } => Rect::around(points.iter().copied())
-                .unwrap_or_default()
-                .grown(width / 2),
+            Shape::Line { a, b } => Rect::of(*a, *b),
+            Shape::Area { points } => Rect::around(points.iter().copied()).unwrap_or_default(),
         }
     }
 
@@ -149,14 +147,9 @@ impl Shape {
                 centre: f(*centre),
                 radius: *radius,
             },
-            Shape::Line { a, b, width } => Shape::Line {
-                a: f(*a),
-                b: f(*b),
-                width: *width,
-            },
-            Shape::Area { points, width } => Shape::Area {
+            Shape::Line { a, b } => Shape::Line { a: f(*a), b: f(*b) },
+            Shape::Area { points } => Shape::Area {
                 points: points.iter().map(|p| f(*p)).collect(),
-                width: *width,
             },
         }
     }
@@ -175,8 +168,16 @@ impl Shape {
                 gap = gap.min(segment_distance(p, q, s, t) - ra - rb);
             }
         }
-        // One inside the other, outlines apart: the inner one's first point is inside the outer
-        let inside = self.covers(o.first()) || o.covers(self.first());
+        // One inside the other, outlines apart or touching: a vertex or an edge's middle of one is inside the other
+        let probes = |sh: &Shape| {
+            let edges = sh.edges();
+            let mids = edges
+                .iter()
+                .map(|(p, q, _)| Pt::new((p.x + q.x) / 2, (p.y + q.y) / 2));
+            edges.iter().map(|e| e.0).chain(mids).collect::<Vec<_>>()
+        };
+        let inside = probes(o).into_iter().any(|p| self.covers(p))
+            || probes(self).into_iter().any(|p| o.covers(p));
         if crossed || inside {
             gap = gap.min(-1.0);
         }
@@ -195,23 +196,13 @@ impl Shape {
                 (0..4).map(|i| (c[i], c[(i + 1) % 4], 0.0)).collect()
             }
             Shape::Disc { centre, radius } => vec![(*centre, *centre, *radius as f64)],
-            Shape::Line { a, b, width } => vec![(*a, *b, *width as f64 / 2.0)],
-            Shape::Area { points, width } => {
+            Shape::Line { a, b } => vec![(*a, *b, 0.0)],
+            Shape::Area { points } => {
                 let n = points.len();
-                let r = *width as f64 / 2.0;
                 (0..n)
-                    .map(|i| (points[i], points[(i + 1) % n], r))
+                    .map(|i| (points[i], points[(i + 1) % n], 0.0))
                     .collect()
             }
-        }
-    }
-
-    fn first(&self) -> Pt {
-        match self {
-            Shape::Box(r) => r.min,
-            Shape::Disc { centre, .. } => *centre,
-            Shape::Line { a, .. } => *a,
-            Shape::Area { points, .. } => points.first().copied().unwrap_or_default(),
         }
     }
 
@@ -712,24 +703,23 @@ pub struct SheetGeometry {
 mod tests {
     use super::*;
 
-    fn line(a: (i64, i64), b: (i64, i64), width: i64) -> Shape {
+    fn line(a: (i64, i64), b: (i64, i64)) -> Shape {
         Shape::Line {
             a: Pt::new(a.0, a.1),
             b: Pt::new(b.0, b.1),
-            width,
         }
     }
 
     #[test]
     fn shapes_are_measured_by_their_outlines() {
         let square = Shape::Box(Rect::of(Pt::new(0, 0), Pt::new(10, 10)));
-        // Through the box, inside it, beside it by 5 less the half stroke
-        assert!(square.separation(&line((-5, 5), (15, 5), 0)) < 0);
-        assert!(square.separation(&line((2, 2), (8, 8), 0)) < 0);
-        assert_eq!(square.separation(&line((15, 0), (15, 10), 2)), 4);
+        // Through the box, inside it, beside it by 5
+        assert!(square.separation(&line((-5, 5), (15, 5))) < 0);
+        assert!(square.separation(&line((2, 2), (8, 8))) < 0);
+        assert_eq!(square.separation(&line((15, 0), (15, 10))), 5);
         // The diagonal of a box that a box-only test would call overlapping
         assert_eq!(
-            line((0, 0), (10, 10), 0).separation(&line((10, 0), (20, 10), 0)),
+            line((0, 0), (10, 10)).separation(&line((10, 0), (20, 10))),
             7
         );
         let disc = Shape::Disc {
@@ -739,7 +729,6 @@ mod tests {
         assert_eq!(square.separation(&disc), 15);
         let triangle = Shape::Area {
             points: vec![Pt::new(-20, -20), Pt::new(40, -20), Pt::new(10, 40)],
-            width: 0,
         };
         assert!(triangle.separation(&square) < 0);
     }
