@@ -76,6 +76,12 @@ Examples:\n  berc fp model hw/board\n  berc fp model hw/board U3 J1 --details\n 
 berc fp model ~/kicad-library/footprints/VHRD_Package_SO.pretty --format json\n  \
 berc fp model Lib.pretty/SOT-23.kicad_mod";
 
+/// Exit codes of `berc place-fields`, under its --help
+const PLACE_FIELDS_AFTER_HELP: &str = "Exit codes: 0 planned (or written), 2 usage, read or write error; nothing \
+is written when any file fails to edit.\n\nA written file differs only in the moved fields' (at ...) and justify, \
+and its moved symbols lose (fields_autoplaced yes), so KiCad keeps the new places. Close the schematic in KiCad \
+before --write.\n\nExamples:\n  berc place-fields hw/board\n  berc place-fields hw/board --sheet power --write";
+
 /// better_erc command line tools
 ///
 /// Colour in help, errors and `check` text only on a terminal, and never with NO_COLOR set; `textconv` output is
@@ -103,6 +109,15 @@ enum Command {
         #[arg(long, value_enum, default_value_t = ExplainFormat::Text)]
         format: ExplainFormat,
     },
+    /// Move symbol fields that overlap something into a column beside their body (DRAW-9, DRAW-34)
+    ///
+    /// Each placed symbol whose shown fields overlap text, a body, a wire or the sheet edge, or come closer than
+    /// the drawing.clearance margins, gets them stacked in one column: Reference, Value, then the rest in their
+    /// order. Upright, justified toward the body, on 1.27 mm steps, on the first side (right, left, above, below)
+    /// where the column hits nothing, else the side with the least overlap. Bodies, wires, labels, power symbols
+    /// and notes never move. A dry run by default; --write edits the .kicad_sch files in place.
+    #[command(after_help = PLACE_FIELDS_AFTER_HELP)]
+    PlaceFields(PlaceFieldsArgs),
     /// Compare two designs: their placements (--pnp) or their nets (--nets)
     ///
     /// --pnp: A and B are PnP files (KiCad, Altium, Allegro CSV), board files (.kicad_pcb) or KiCad projects with
@@ -386,6 +401,22 @@ struct CheckArgs {
 }
 
 #[derive(clap::Args)]
+struct PlaceFieldsArgs {
+    /// The design: a directory with one .kicad_pro, or the .kicad_pro
+    #[arg(value_hint = ValueHint::AnyPath)]
+    project: PathBuf,
+    /// Only this sheet: its name in the parent sheet or its file
+    #[arg(long, value_name = "NAME")]
+    sheet: Option<String>,
+    /// Edit the .kicad_sch files in place; without it nothing is written
+    #[arg(long)]
+    write: bool,
+    /// A setting over its default, repeatable: `drawing.clearance.text=0.5`
+    #[arg(long = "set", value_name = "NAME=VALUE")]
+    set: Vec<String>,
+}
+
+#[derive(clap::Args)]
 #[command(group(clap::ArgGroup::new("mode").required(true).args(["pnp", "nets"])))]
 struct DiffArgs {
     /// The first design: a file or a directory
@@ -503,6 +534,7 @@ fn main() -> ExitCode {
         Command::Check(args) => check(args),
         Command::Explain { id, format } => explain(&id, format),
         Command::Diff(args) => diff(args),
+        Command::PlaceFields(args) => place_fields(&args),
         Command::Checks {
             command:
                 ChecksCommand::List {
@@ -565,6 +597,50 @@ fn main() -> ExitCode {
     }
 }
 
+/// The settings of `--set NAME=VALUE` flags over the defaults
+fn settings(sets: &[String]) -> Result<better_erc::Config, String> {
+    let mut config = better_erc::Config::default();
+    for set in sets {
+        let parsed = set
+            .split_once('=')
+            .and_then(|(k, v)| Some((k, v.parse().ok()?)));
+        parsed.map_or(Err(format!("--set {set}: not NAME=VALUE")), |(k, v)| {
+            config.set(k, v)
+        })?;
+    }
+    Ok(config)
+}
+
+fn place_fields(args: &PlaceFieldsArgs) -> ExitCode {
+    let config = match settings(&args.set) {
+        Ok(c) => c,
+        Err(e) => {
+            error(&e);
+            return ExitCode::from(CheckError::EXIT_CODE);
+        }
+    };
+    let opts = better_erc::place::PlaceOptions {
+        sheet: args.sheet.clone(),
+        write: args.write,
+        config,
+    };
+    let spinner = progress::Delayed::start();
+    spinner.set("placing fields".into());
+    let placed = better_erc::place::place(&args.project, &opts);
+    spinner.finish();
+    match placed {
+        Ok(p) => {
+            let out = better_erc::place::render(&p);
+            let _ = anstream::stdout().lock().write_all(out.as_bytes());
+            ExitCode::SUCCESS
+        }
+        Err(e) => {
+            error(&e.to_string());
+            ExitCode::from(CheckError::EXIT_CODE)
+        }
+    }
+}
+
 fn check(args: CheckArgs) -> ExitCode {
     if args.state.is_some() {
         error(
@@ -578,19 +654,13 @@ fn check(args: CheckArgs) -> ExitCode {
         Some(Err(e)) => return check_error(&e),
         None => None,
     };
-    let mut config = better_erc::Config::default();
-    for set in &args.set {
-        let parsed = set
-            .split_once('=')
-            .and_then(|(k, v)| Some((k, v.parse().ok()?)));
-        let done = parsed.map_or(Err(format!("--set {set}: not NAME=VALUE")), |(k, v)| {
-            config.set(k, v)
-        });
-        if let Err(e) = done {
+    let mut config = match settings(&args.set) {
+        Ok(c) => c,
+        Err(e) => {
             error(&e);
             return ExitCode::from(CheckError::EXIT_CODE);
         }
-    }
+    };
     for path in &args.theme {
         let read = std::fs::read_to_string(path).map_err(|e| e.to_string());
         match read.and_then(|text| better_erc::kicad::theme::read(&text)) {

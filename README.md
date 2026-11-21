@@ -37,6 +37,8 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
   compared footprint by footprint (position, rotation, side, value, package), with tolerances.
 - **`berc diff --nets A B`**: the nets of any two designs (a schematic, a netlist, an Altium export, a Smart PDF)
   compared as the pins each net connects, whatever their names: renamed, removed and added nets.
+- **`berc place-fields PROJECT`**: symbol fields that overlap something (`DRAW-9`, `DRAW-34`) moved into a column
+  beside their body; a dry run by default, `--write` edits the schematic. See [Placing fields](#placing-fields).
 - **`berc fp`**: footprint review. `berc fp hash` prints a footprint's review hash, the same for a library file and
   every board copy of it; `berc fp check` checks every board footprint against the hash on its library symbol (and
   against its library footprint), `berc fp check --lib` every symbol of a symbol library against its library
@@ -169,6 +171,26 @@ commit a baseline (`berc check hw/board --format json > hw/board/berc-baseline.j
 
 In this repository `just check` runs `berc check` on the test schematics against the committed
 `test_schematics/berc-baseline.json` (they have findings on purpose), and `just check-baseline` rewrites it.
+
+## Placing fields
+
+```sh
+berc place-fields PROJECT [--sheet NAME] [--write] [--set NAME=VALUE]
+```
+
+Each placed symbol whose shown fields overlap text, a body, a wire or the sheet edge (`DRAW-9`), or come closer than
+the `drawing.clearance` margins (`DRAW-34`), gets its fields stacked in one column: Reference, Value, then the rest
+top to bottom as they stood. The text is upright, justified toward the body, anchored on 1.27 mm steps, one line
+pitch apart. The column goes on the first side (right, left, above, below) where it hits nothing and no wire runs
+through it, slid along the side or set a step or two farther out when it must; else on the side with the least
+overlap, or the fields stay when no side is better. Symbols whose fields overlap nothing are not touched; bodies,
+wires, labels, power symbols and notes never move.
+
+The default is a dry run: each symbol to move with its side and what still overlaps, and the `DRAW-9` and `DRAW-34`
+counts before and after (the edited files read again). `--write` edits the `.kicad_sch` files in place: only the
+moved fields' `(at ...)` and `justify` change, and their symbols lose `(fields_autoplaced yes)` so KiCad keeps the
+new places. Close the schematic in KiCad first. `PROJECT` is a directory or a `.kicad_pro` as for `berc check`;
+`--sheet` takes a sheet's name or file.
 
 ## Footprint review
 

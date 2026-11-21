@@ -21,6 +21,7 @@
 //! [`erc_model::ImportOptions::kicad_version`], bugs of older releases (kicad-cli 9.0.9's) are not copied.
 
 pub mod edit;
+pub mod fields;
 pub mod footprint;
 pub mod libtable;
 pub mod model3d;

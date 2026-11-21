@@ -26,6 +26,7 @@ mod draw_47;
 mod draw_7;
 mod draw_9;
 mod overlap;
+pub mod place;
 mod section;
 
 const MM: f64 = 1e6;

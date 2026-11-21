@@ -12,6 +12,7 @@ use erc_model::{
     Confidence, DirFiles, Files, ImportError, ImportOptions, Imported, MemFiles, Source,
 };
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 use std::fmt;
 use std::path::{Path, PathBuf};
 
@@ -24,6 +25,25 @@ pub struct Project {
     /// The importer's name (`kicad`, `altium`)
     pub importer: &'static str,
     pub imported: Imported,
+}
+
+/// A directory's files with some replaced
+struct Overlay<'e> {
+    dir: DirFiles,
+    edited: &'e BTreeMap<String, Vec<u8>>,
+}
+
+impl Files for Overlay<'_> {
+    fn read(&self, path: &str) -> Option<Vec<u8>> {
+        self.edited
+            .get(path)
+            .cloned()
+            .or_else(|| self.dir.read(path))
+    }
+
+    fn list(&self) -> Vec<String> {
+        self.dir.list()
+    }
 }
 
 /// What a check run does besides the engine's [`RunOptions`]
@@ -237,6 +257,22 @@ impl Project {
             _ => PathBuf::from("."),
         };
         Project::import(&Registry::default(), dir, main_name, &files, &mut |_| {})
+    }
+
+    /// The same design read again with some of its files replaced: `edited` by path relative to [`Project::dir`],
+    /// the rest from the directory. What a change to the files would make of the design, before writing it.
+    pub fn reopen_with(&self, edited: &BTreeMap<String, Vec<u8>>) -> Result<Project, CheckError> {
+        let files = Overlay {
+            dir: DirFiles(self.dir.clone()),
+            edited,
+        };
+        Project::import(
+            &Registry::default(),
+            self.dir.clone(),
+            self.main.clone(),
+            &files,
+            &mut |_| {},
+        )
     }
 
     fn import(

@@ -10,6 +10,8 @@
 //! - [`step`] ([`erc_step`]): STEP models into parts, faces and edges in mm, and measurements on them.
 //! - [`fp`]: footprint review hashes of library footprints and board copies, their 3D models against them, the
 //!   library side of `berc fp`.
+//! - [`place`]: symbol fields moved clear of what they overlap (`DRAW-9`, `DRAW-34`), the library side of
+//!   `berc place-fields`.
 //!
 //! The run entry is re-exported at the top: [`Project::open`] reads a design from a path (a directory with one
 //! design, or a design file) through the registry, [`Project::check`] runs the checks into a [`CheckRun`] with its
@@ -37,6 +39,7 @@ pub use erc_step as step;
 
 pub mod diff;
 pub mod fp;
+pub mod place;
 pub mod usage;
 
 pub use erc_checks::{

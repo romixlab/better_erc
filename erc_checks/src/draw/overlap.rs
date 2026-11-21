@@ -11,7 +11,7 @@ use std::collections::BTreeMap;
 /// Whether a pair can never be a finding: two wires, two pins, two things of one symbol as the library drew them,
 /// a wire on the thing it connects to, a label along its own wire or on its own pin, two things grouped on purpose (a
 /// note heading and its box)
-fn exempt(scene: &Scene, a: &Item, b: &Item) -> bool {
+pub(super) fn exempt(scene: &Scene, a: &Item, b: &Item) -> bool {
     if (a.kind.is_wire() && b.kind.is_wire()) || (a.kind == K::Pin && b.kind == K::Pin) {
         return true;
     }
@@ -118,23 +118,44 @@ fn pairs<'s>(
 
 /// `DRAW-7`: a wire through a body, a power symbol or a pin stub it is not on. `DRAW-9`: every other bare overlap
 pub(super) fn bare<'s>(scene: &'s Scene, wire_through: bool) -> Vec<(&'s Item, &'s Item, i64)> {
-    pairs(scene, |a, b| {
-        let by_wire =
-            (a.kind.is_wire() && !b.kind.is_text()) || (b.kind.is_wire() && !a.kind.is_text());
-        if by_wire != wire_through || in_free_room(a, b) {
-            return None;
-        }
-        let i = a.rect.intersection(b.rect)?;
-        Some(i.width().max(1) * i.height().max(1))
-    })
+    pairs(scene, |a, b| bare_hit(a, b, wire_through))
 }
 
-fn margin(cx: &Ctx, meta: &CheckMeta, i: &Item) -> i64 {
-    match i.kind {
-        K::Body | K::Pin | K::Sheet => nm(cx, meta, &CLEARANCE_PART),
-        K::Power => nm(cx, meta, &CLEARANCE_POWER),
-        K::Wire | K::Bus => 0,
-        _ => nm(cx, meta, &CLEARANCE_TEXT),
+/// The shared area of a pair that is not exempt, for `DRAW-7` when `wire_through`, else for `DRAW-9`
+pub(super) fn bare_hit(a: &Item, b: &Item, wire_through: bool) -> Option<i64> {
+    let by_wire =
+        (a.kind.is_wire() && !b.kind.is_text()) || (b.kind.is_wire() && !a.kind.is_text());
+    if by_wire != wire_through || in_free_room(a, b) {
+        return None;
+    }
+    let i = a.rect.intersection(b.rect)?;
+    Some(i.width().max(1) * i.height().max(1))
+}
+
+/// The clearance margins of `DRAW-34`, in nanometres
+#[derive(Clone, Copy, Debug)]
+pub(super) struct Margins {
+    pub part: i64,
+    pub power: i64,
+    pub text: i64,
+}
+
+impl Margins {
+    pub(super) fn of(cx: &Ctx, meta: &CheckMeta) -> Margins {
+        Margins {
+            part: nm(cx, meta, &CLEARANCE_PART),
+            power: nm(cx, meta, &CLEARANCE_POWER),
+            text: nm(cx, meta, &CLEARANCE_TEXT),
+        }
+    }
+
+    fn around(self, i: &Item) -> i64 {
+        match i.kind {
+            K::Body | K::Pin | K::Sheet => self.part,
+            K::Power => self.power,
+            K::Wire | K::Bus => 0,
+            _ => self.text,
+        }
     }
 }
 
@@ -144,18 +165,26 @@ pub(super) fn close<'s>(
     meta: &CheckMeta,
     scene: &'s Scene,
 ) -> Vec<(&'s Item, &'s Item, i64)> {
-    let mut found = pairs(scene, |a, b| {
-        if a.rect.overlaps(b.rect) || own(a, b) || tied(scene, a, b) || one_unit(a, b) {
-            return None;
-        }
-        let (ma, mb) = (margin(cx, meta, a), margin(cx, meta, b));
-        if !a.rect.grown(ma).overlaps(b.rect.grown(mb)) {
-            return None;
-        }
-        Some(ma + mb - a.rect.gap(b.rect))
-    });
+    close_with(scene, Margins::of(cx, meta))
+}
+
+/// [`close`] with the margins given
+pub(super) fn close_with<'s>(scene: &'s Scene, m: Margins) -> Vec<(&'s Item, &'s Item, i64)> {
+    let mut found = pairs(scene, |a, b| close_hit(scene, m, a, b));
     found.sort_by_key(|p| std::cmp::Reverse(p.2));
     found
+}
+
+/// How far a pair that is not exempt falls short of its margins, when the boxes stay apart bare
+pub(super) fn close_hit(scene: &Scene, m: Margins, a: &Item, b: &Item) -> Option<i64> {
+    if a.rect.overlaps(b.rect) || own(a, b) || tied(scene, a, b) || one_unit(a, b) {
+        return None;
+    }
+    let (ma, mb) = (m.around(a), m.around(b));
+    if !a.rect.grown(ma).overlaps(b.rect.grown(mb)) {
+        return None;
+    }
+    Some(ma + mb - a.rect.gap(b.rect))
 }
 
 /// A finding on the pair, naming both with their positions

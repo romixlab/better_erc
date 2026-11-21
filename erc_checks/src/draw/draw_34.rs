@@ -39,6 +39,11 @@ impl Check for Draw34 {
 
 inventory::submit!(Registered(&Draw34));
 
+/// The margins this check holds items to, as the board's settings give them
+pub(super) fn margins(cx: &Ctx) -> super::overlap::Margins {
+    super::overlap::Margins::of(cx, &META)
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

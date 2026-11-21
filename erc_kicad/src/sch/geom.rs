@@ -875,6 +875,23 @@ fn drawn_align(
     (vertical, halign, valign)
 }
 
+/// The angle and justification a field's file entry needs to be drawn upright, vertically centred, with
+/// `halign` on the sheet, on a symbol placed with `rotation` and `mirror`: the inverse of [`drawn_align`]
+pub(crate) fn upright_field(rotation: i32, mirror: Option<char>, halign: HAlign) -> (i32, HAlign) {
+    let t = Transform::new(rotation, mirror);
+    let angle = if is_vertical(rotation) { 90 } else { 0 };
+    let file = [HAlign::Left, HAlign::Center, HAlign::Right]
+        .into_iter()
+        .find(|h| {
+            drawn_align(angle, *h, VAlign::Center, rotation, t) == (false, halign, VAlign::Center)
+        });
+    // Each justification is drawn as itself or as its mirror image, so one of the three always matches
+    (
+        angle,
+        file.expect("a justification draws as each alignment"),
+    )
+}
+
 /// Places the symbols of a sheet file by what one instance of the sheet resolved
 pub(crate) fn place(raw: RawSheet, res: &[SymRes], file: &str) -> SheetGeometry {
     let RawSheet {

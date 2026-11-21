@@ -1062,6 +1062,15 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   library (`fp::outline`) for it · `better_erc/src/fp/model.rs`, `better_erc/src/fp/outline.rs`,
   `better_erc/tests/model.rs`, `berc/tests/fp_model.rs`, `erc_step/src/write.rs`, README "3D models against the
   footprint"
+- ✅ `TOOL-13` `berc place-fields PROJECT [--sheet NAME] [--write]`: the fix side of `DRAW-9` and `DRAW-34`
+  for symbol fields. Each symbol whose shown fields overlap something or come closer than the clearance margins gets
+  them stacked in one column (Reference, Value, the rest top to bottom), upright, justified toward the body, on
+  1.27 mm steps, on the first side where the column hits nothing (by the checks' own pair tests, a wire through the
+  column and the sheet frame counted too), else the least bad, in up to three passes over a sheet
+  (`erc_checks::place`). Written with a formatting-preserving edit of each field's `(at ...)` and justify, the
+  symbol's `fields_autoplaced` dropped (`erc_kicad::fields`); the counts before and after come from the edited files
+  read again (`Project::reopen_with`) · `erc_checks/src/draw/place.rs`, `erc_kicad/src/fields.rs`,
+  `better_erc/src/place.rs`, `better_erc/tests/place.rs`, README "Placing fields"
 
 ## Code generation (`GEN`)
 

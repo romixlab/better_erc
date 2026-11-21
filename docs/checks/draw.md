@@ -141,6 +141,9 @@ messy.
 on and a part's own pin names against its own body. Text extents from the KiCad stroke font: width about 0.9 × the
 font size per character is close enough for overlap, exact widths come from the font's glyph table.
 
+**Fix.** `berc place-fields PROJECT` moves the fields of each symbol in the way into a column beside its body, on
+the side where the column hits nothing (see the README, "Placing fields").
+
 ## `DRAW-10` Labels stacked next to each other but not aligned (anchors a grid step or two apart) <a id="draw-10"></a>
 
 💡 suggestion · needs: the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-10)
@@ -441,6 +444,9 @@ resistor's body.
 **How to check.** The item boxes at the top of this page, grown by their margins; exempt a part's own fields and pin
 names against its own body, a label against its own wire, a heading against its parameter box. Report per sheet,
 closest pairs first.
+
+**Fix.** `berc place-fields PROJECT` moves the fields of each symbol in the way into a column beside its body, on
+the side where the column hits nothing (see the README, "Placing fields").
 
 ## `DRAW-35` Two- to four-pin part tied to a supply or ground drawn horizontal <a id="draw-35"></a>
 

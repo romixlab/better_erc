@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `berc place-fields`: moves symbol fields that overlap something into a column beside the body, dry run or `--write` (TOOL-13).
+
 ### Changed
 
 - Docs name the Portwright repo `portwright` (was `typec_dongle`, renamed).
