@@ -184,10 +184,12 @@ the `drawing.clearance` margins (`DRAW-34`), gets the first of these that clears
 1. Rating fields (anything but Reference and Value) that touch a power symbol, when nothing else overlaps the fields:
    those fields hidden, the column left where it is. Closeness alone is no reason to move a column that fits.
 2. A column: Reference, Value, then the rest top to bottom as they stood, justified toward the body, anchored on
-   1.27 mm steps, one line pitch apart, on the first side (right, left, above, below) where it hits nothing and no
-   wire runs through it, slid along the side or set a step or two farther out when it must.
+   0.25 mm steps 0.635 mm from the body, one line pitch apart, on the first side (right, left, above, below) where
+   it hits nothing and no wire runs through it, slid along the side or set a little farther out when it must.
+   Fields that overlap nothing but stand more than 2 mm from their body are placed again the same way.
 3. A packed two-pin part (resistor, capacitor, diode, inductor, ferrite bead), whose column on a side across its
-   axis does not fit in the gap to a neighbour's body or settled fields: Reference and Value at the ends of the part,
+   axis does not fit in the gap to a neighbour's body or settled fields, a horizontal one before any column:
+   Reference and Value at the ends of the part,
    the other fields hidden. A horizontal part has them before and after its body on the line above its axis; a
    vertical one has them centred above and below its pins, only where that spot is clear.
 4. A column shortened by hiding its last rating fields, the fewest that clear it.

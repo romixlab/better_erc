@@ -198,9 +198,8 @@ fn moves_only_what_overlaps() {
     );
 }
 
-/// Three horizontal resistors stacked one grid step apart, wired on both sides, their fields piled up: the outer
-/// two have room for a column, the middle one is packed and gets Reference before and Value after the body, on
-/// the line above its wire, with Power hidden
+/// Three horizontal resistors stacked one grid step apart, wired on both sides, their fields piled up: all three
+/// are packed and get Reference before and Value after the body, on the line above their wire, with Power hidden
 fn packed() -> String {
     let mut s = String::from(
         "(kicad_sch (version 20231120) (generator \"eeschema\") (generator_version \"8.0\")\n\
@@ -246,14 +245,9 @@ fn packed_parts_lie_along() {
             .unwrap();
         (s.side, s.hidden.clone())
     };
-    for r in ["R5", "R7"] {
-        let (end, hidden) = side(r);
-        assert!(
-            end.is_some_and(|t| t != Side::Ends) && hidden.is_empty(),
-            "{r} {end:?}"
-        );
+    for r in ["R5", "R6", "R7"] {
+        assert_eq!(side(r), (Some(Side::Ends), vec!["Power".to_owned()]), "{r}");
     }
-    assert_eq!(side("R6"), (Some(Side::Ends), vec!["Power".to_owned()]));
     assert!(
         placed.after.draw_9_fields < placed.before.draw_9_fields,
         "{placed:?}"
@@ -401,4 +395,52 @@ fn rating_on_power_symbol_is_hidden() {
         );
         assert_eq!(symbol_text(&after, s), want);
     }
+}
+
+/// One vertical resistor whose fields overlap nothing but stand 10 mm to its right, as if they were another
+/// part's
+fn detached() -> String {
+    let mut s = String::from(
+        "(kicad_sch (version 20231120) (generator \"eeschema\") (generator_version \"8.0\")\n\
+         (uuid \"a0000000-0000-4000-8000-000000000000\")\n(paper \"A4\")\n",
+    );
+    s += LIB;
+    let fields = [
+        ("Reference", "R8", 111.76, 49.53, 0),
+        ("Value", "10k", 111.76, 52.07, 0),
+    ];
+    s += &resistor(8, (101.6, 50.8, 0), "", &fields);
+    s += "(sheet_instances (path \"/\" (page \"1\")))\n)\n";
+    s
+}
+
+#[test]
+fn far_fields_come_back_beside_their_body() {
+    let dir = scratch("place_fields_detached");
+    let file = dir.join("detached.kicad_sch");
+    std::fs::write(&file, detached()).unwrap();
+    let opts = PlaceOptions {
+        write: true,
+        ..PlaceOptions::default()
+    };
+    let placed = place(&file, &opts).unwrap();
+    assert_eq!(placed.plan.symbols.len(), 1, "{:?}", placed.plan);
+    let drawn = symbols(&file);
+    let sym = &drawn[0];
+    let body = sym.body.unwrap();
+    for f in sym
+        .fields
+        .iter()
+        .filter(|f| !f.hidden && !f.text.text.is_empty())
+    {
+        // Within a millimetre of the body, the column's own gap
+        assert!(
+            f.text.bbox.gap(body) <= 1_000_000,
+            "{} {:?} {body:?}",
+            f.name,
+            f.text.bbox
+        );
+    }
+    let again = place(&file, &opts).unwrap();
+    assert!(again.plan.symbols.is_empty(), "{:?}", again.plan);
 }

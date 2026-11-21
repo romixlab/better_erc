@@ -115,7 +115,7 @@ enum Command {
     /// the drawing.clearance margins, gets the first that clears them: rating fields touching a power symbol
     /// hidden in place; a column (Reference, Value, the rest) on the first side where it hits nothing; Reference
     /// and Value at the ends of a packed two-pin part, the rest hidden; a column shortened by its last rating
-    /// fields. Text stays upright, on 1.27 mm steps. Bodies, wires, labels, power symbols and notes never move. A
+    /// fields. Text stays upright, on 0.25 mm steps; fields more than 2 mm from their body are placed again. Bodies, wires, labels, power symbols and notes never move. A
     /// dry run by default; --write edits the .kicad_sch files in place.
     #[command(after_help = PLACE_FIELDS_AFTER_HELP)]
     PlaceFields(PlaceFieldsArgs),

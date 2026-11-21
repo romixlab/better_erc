@@ -13,6 +13,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
+- `berc place-fields`: columns sit next to the body on 0.25 mm steps; far fields are pulled back (TOOL-13).
 - `berc place-fields`: rating fields on a power symbol hidden in place; field text never turned; leftovers named per check (TOOL-13).
 - `berc place-fields`: a packed two-pin part gets Reference and Value at its ends, its other fields hidden (TOOL-13).
 - `berc place-fields`: moves symbol fields that overlap something into a column beside the body, dry run or `--write` (TOOL-13).

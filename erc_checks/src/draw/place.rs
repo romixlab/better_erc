@@ -9,8 +9,8 @@ use erc_analysis::scene::{Item, ItemKind as K, Scene};
 use erc_model::Pt;
 use erc_model::geometry::{DrawnField, DrawnSymbol, HAlign, Rect, VAlign, text_rect};
 
-/// The step fields are placed on: half of the 50 mil grid
-const STEP: i64 = 1_270_000;
+/// The step fields are placed on: fine enough to sit close to a body, coarse enough to line up by hand
+const STEP: i64 = 250_000;
 /// Space between two lines of a column, past the text's height, before rounding up to [`STEP`]
 const LINE_GAP: i64 = 500_000;
 /// Least space between a column and the symbol's body and pins
@@ -18,9 +18,13 @@ const BODY_GAP: i64 = 635_000;
 /// Margin of the drawing frame inside the paper edge, as KiCad's default page layout draws it
 const FRAME: i64 = 10_000_000;
 /// How many steps a column may slide along its side when it does not fit centred
-const SLIDE_STEPS_MAX: i64 = 4;
+const SLIDE_STEPS_MAX: i64 = 20;
 /// How many steps farther out from the body a column may stand when it does not fit next to it
-const OUT_STEPS_MAX: i64 = 2;
+const OUT_STEPS_MAX: i64 = 10;
+/// How far above a horizontal part's pin line its Reference and Value sit, clear of the wire
+const ENDS_RAISE: i64 = 1_270_000;
+/// Fields whose nearest one is farther than this from their body read as another part's: they are placed again
+const FIELD_GAP_MAX: i64 = 2_000_000;
 
 /// Where a symbol's fields go
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -291,6 +295,16 @@ impl Board<'_, '_> {
             .collect()
     }
 
+    /// Whether the shown fields `own` all stand farther than [`FIELD_GAP_MAX`] from the symbol's outline
+    fn detached(&self, sym: &DrawnSymbol, own: &[usize]) -> bool {
+        let outline = sym.outline();
+        own.iter()
+            .filter(|i| !self.gone[**i])
+            .map(|i| self.items[*i].rect.gap(outline))
+            .min()
+            .is_some_and(|g| g > FIELD_GAP_MAX)
+    }
+
     /// The shown fields of symbol `s` where they are now
     fn shown_now(&self, own: &[usize]) -> Vec<(usize, Rect)> {
         own.iter()
@@ -375,7 +389,8 @@ fn place_symbol(
         .as_ref()
         .is_some_and(|p| p.side.is_some_and(Side::is_column));
     let (now, now_hits) = board.cost(&own, &board.shown_now(&own), column);
-    if now.pairs == 0 {
+    let detached = board.detached(sym, &own);
+    if now.pairs == 0 && !detached {
         return false;
     }
     let shown: Vec<&DrawnField> = sym
@@ -390,39 +405,46 @@ fn place_symbol(
         l.lines.iter().map(|(k, _, _, r)| (own[*k], *r)).collect()
     };
     let score = |l: &Layout| board.cost(&own, &placed(l), l.side.is_column()).0;
-    let chosen = in_place(&now_hits, &rating).or_else(|| {
-        // Full columns, then each shortened by one more rating field from its end
-        let ratings = order.iter().filter(|k| rating(**k)).count();
-        let mut fallback: Option<(Cost, Layout)> = None;
-        for drop in 0..=ratings {
-            let kept = &order[..order.len() - drop];
-            let mut best: Option<(Cost, Layout)> = None;
-            for l in columns(sym, &shown, kept, &order[order.len() - drop..]) {
-                let c = score(&l);
-                if best.as_ref().is_none_or(|b| c < b.0) {
-                    best = Some((c, l));
-                }
-            }
-            let best = best?;
-            if best.0.pairs == 0 {
-                return Some(best.1);
-            }
-            if drop == 0 {
-                // A packed part takes its ends when nothing full fits
-                if let Some(ends) = ends_layout(board, s, sym, &shown, &own, &order) {
-                    let c = score(&ends);
-                    let horizontal = two_pin(sym) == Some(true);
-                    // Before and after a horizontal part is its style even with a neighbour close; above and
-                    // below a vertical one only where the spot is clear
-                    if c.pairs == 0 || (horizontal && c < now) {
-                        return Some(ends);
+    // A packed horizontal two-pin part always takes its ends: a short column squeezed above a row of them reads
+    // as the neighbour's
+    let ends_first = (two_pin(sym) == Some(true))
+        .then(|| ends_layout(board, s, sym, &shown, &own, &order))
+        .flatten();
+    let chosen = ends_first
+        .or_else(|| in_place(&now_hits, &rating))
+        .or_else(|| {
+            // Full columns, then each shortened by one more rating field from its end
+            let ratings = order.iter().filter(|k| rating(**k)).count();
+            let mut fallback: Option<(Cost, Layout)> = None;
+            for drop in 0..=ratings {
+                let kept = &order[..order.len() - drop];
+                let mut best: Option<(Cost, Layout)> = None;
+                for l in columns(sym, &shown, kept, &order[order.len() - drop..]) {
+                    let c = score(&l);
+                    if best.as_ref().is_none_or(|b| c < b.0) {
+                        best = Some((c, l));
                     }
                 }
-                fallback = Some(best);
+                let best = best?;
+                if best.0.pairs == 0 {
+                    return Some(best.1);
+                }
+                if drop == 0 {
+                    // A packed part takes its ends when nothing full fits
+                    if let Some(ends) = ends_layout(board, s, sym, &shown, &own, &order) {
+                        let c = score(&ends);
+                        let horizontal = two_pin(sym) == Some(true);
+                        // Before and after a horizontal part is its style even with a neighbour close; above and
+                        // below a vertical one only where the spot is clear
+                        if c.pairs == 0 || (horizontal && c < now) {
+                            return Some(ends);
+                        }
+                    }
+                    fallback = Some(best);
+                }
             }
-        }
-        fallback.filter(|f| f.0 < now).map(|f| f.1)
-    });
+            fallback.filter(|f| f.0 < now || detached).map(|f| f.1)
+        });
     let p = plan.get_or_insert_with(|| SymbolPlan {
         file: board.scene.geometry.file.clone(),
         reference: sym.reference.clone(),
@@ -558,7 +580,7 @@ fn ends_layout(
     };
     let lines = if horizontal {
         let body = sym.body.unwrap_or_else(|| sym.outline());
-        let y = nearest(body.center().y) - STEP;
+        let y = nearest(body.center().y - ENDS_RAISE);
         vec![
             line(
                 reference,
@@ -696,10 +718,10 @@ mod tests {
 
     #[test]
     fn rounding() {
-        assert_eq!(up(1_270_001), 2_540_000);
-        assert_eq!(up(-1_000_000), 0);
-        assert_eq!(down(-1), -1_270_000);
-        assert_eq!(nearest(1_900_000), 1_270_000);
-        assert_eq!(nearest(1_905_000), 2_540_000);
+        assert_eq!(up(250_001), 500_000);
+        assert_eq!(up(-200_000), 0);
+        assert_eq!(down(-1), -250_000);
+        assert_eq!(nearest(370_000), 250_000);
+        assert_eq!(nearest(375_000), 500_000);
     }
 }
