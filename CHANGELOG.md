@@ -13,7 +13,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
-- `berc place-fields`: a packed two-pin part gets Reference and Value along it, its other fields hidden (TOOL-13).
+- `berc place-fields`: rating fields on a power symbol hidden in place; field text never turned; leftovers named per check (TOOL-13).
+- `berc place-fields`: a packed two-pin part gets Reference and Value at its ends, its other fields hidden (TOOL-13).
 - `berc place-fields`: moves symbol fields that overlap something into a column beside the body, dry run or `--write` (TOOL-13).
 
 ### Changed

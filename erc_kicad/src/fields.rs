@@ -2,7 +2,7 @@
 //! justification written new, or the field hidden, every other byte kept as it was ([`crate::edit`]).
 
 use crate::edit::{Edits, Kind, Node, Tree, items};
-use crate::sch::geom::field_orientation;
+use crate::sch::geom::upright_field;
 use crate::sexpr::ParseError;
 use erc_model::Pt;
 use erc_model::geometry::HAlign;
@@ -22,13 +22,8 @@ pub struct FieldPlace {
 /// A field moved or hidden
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum FieldChange {
-    /// Drawn centred across its reading direction on `at`, reading upwards when `vertical`, with `halign` on the
-    /// sheet
-    Move {
-        at: Pt,
-        vertical: bool,
-        halign: HAlign,
-    },
+    /// Drawn upright, vertically centred on `at`, with `halign` on the sheet
+    Move { at: Pt, halign: HAlign },
     /// No longer shown
     Hide,
 }
@@ -94,11 +89,7 @@ pub fn place_fields(text: &str, places: &[FieldPlace]) -> Result<String, PlaceEr
         let at = tree.child(prop, "at").ok_or_else(no_field)?;
         let effects = tree.child(prop, "effects").ok_or_else(no_field)?;
         match &p.change {
-            FieldChange::Move {
-                at: to,
-                vertical,
-                halign,
-            } => {
+            FieldChange::Move { at: to, halign } => {
                 let rotation = tree
                     .child(sym, "at")
                     .and_then(|a| tree.arg(a, 2))
@@ -108,7 +99,7 @@ pub fn place_fields(text: &str, places: &[FieldPlace]) -> Result<String, PlaceEr
                     .child(sym, "mirror")
                     .and_then(|m| tree.arg(m, 0))
                     .and_then(|m| m.chars().next());
-                let (angle, justify) = field_orientation(rotation, mirror, *vertical, *halign);
+                let (angle, justify) = upright_field(rotation, mirror, *halign);
                 edits.replace(
                     at.span.clone(),
                     format!("(at {} {} {angle})", Nm(to.x), Nm(to.y)),
@@ -224,7 +215,6 @@ mod tests {
             field: field.into(),
             change: FieldChange::Move {
                 at: Pt::new((x * 1e6) as i64, 21_270_000),
-                vertical: false,
                 halign,
             },
         }

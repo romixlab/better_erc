@@ -179,24 +179,29 @@ berc place-fields PROJECT [--sheet NAME] [--write] [--set NAME=VALUE]
 ```
 
 Each placed symbol whose shown fields overlap text, a body, a wire or the sheet edge (`DRAW-9`), or come closer than
-the `drawing.clearance` margins (`DRAW-34`), gets its fields stacked in one column: Reference, Value, then the rest
-top to bottom as they stood. The text is upright, justified toward the body, anchored on 1.27 mm steps, one line
-pitch apart. The column goes on the first side (right, left, above, below) where it hits nothing and no wire runs
-through it, slid along the side or set a step or two farther out when it must; else on the side with the least
-overlap, or the fields stay when no side is better. Symbols whose fields overlap nothing are not touched; bodies,
+the `drawing.clearance` margins (`DRAW-34`), gets the first of these that clears them:
+
+1. Rating fields (anything but Reference and Value) that touch a power symbol, when nothing else overlaps the fields:
+   those fields hidden, the column left where it is. Closeness alone is no reason to move a column that fits.
+2. A column: Reference, Value, then the rest top to bottom as they stood, justified toward the body, anchored on
+   1.27 mm steps, one line pitch apart, on the first side (right, left, above, below) where it hits nothing and no
+   wire runs through it, slid along the side or set a step or two farther out when it must.
+3. A packed two-pin part (resistor, capacitor, diode, inductor, ferrite bead), whose column on a side across its
+   axis does not fit in the gap to a neighbour's body or settled fields: Reference and Value at the ends of the part,
+   the other fields hidden. A horizontal part has them before and after its body on the line above its axis; a
+   vertical one has them centred above and below its pins, only where that spot is clear.
+4. A column shortened by hiding its last rating fields, the fewest that clear it.
+5. Else the column with the least overlap, or the fields stay when nothing is better.
+
+Field text is always upright, never turned (`DRAW-8`). Symbols whose fields overlap nothing are not touched; bodies,
 wires, labels, power symbols and notes never move.
 
-A two-pin part (resistor, capacitor, diode, inductor, ferrite bead) with no clean column, packed against a
-neighbour (the column line next to its body, above or below a horizontal part, left or right of a vertical one,
-would hit another part's body or settled fields), gets its fields along the part instead: Reference before the
-body, Value after it, on the line beside its axis, reading the way the part lies; its other shown fields are
-hidden.
-
-The default is a dry run: each symbol to move with its side, the fields it hides and what still overlaps, and the `DRAW-9` and `DRAW-34`
-counts before and after (the edited files read again). `--write` edits the `.kicad_sch` files in place: only the
-moved fields' `(at ...)` and `justify` change, hidden fields get `(hide yes)`, and their symbols lose `(fields_autoplaced yes)` so KiCad keeps the
-new places. Close the schematic in KiCad first. `PROJECT` is a directory or a `.kicad_pro` as for `berc check`;
-`--sheet` takes a sheet's name or file.
+The default is a dry run: each symbol with its layout, the fields it hides and what still overlaps (`DRAW-9`) or is
+too close (`DRAW-34`) once the whole sheet is placed, then both counts before and after (the edited files read
+again). `--write` edits the `.kicad_sch` files in place: only the moved fields' `(at ...)` and `justify` change,
+hidden fields get `(hide yes)`, and their symbols lose `(fields_autoplaced yes)` so KiCad keeps the new places.
+Close the schematic in KiCad first. `PROJECT` is a directory or a `.kicad_pro` as for `berc check`; `--sheet` takes a
+sheet's name or file.
 
 ## Footprint review
 

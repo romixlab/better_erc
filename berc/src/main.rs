@@ -112,11 +112,11 @@ enum Command {
     /// Move symbol fields that overlap something into a column beside their body (DRAW-9, DRAW-34)
     ///
     /// Each placed symbol whose shown fields overlap text, a body, a wire or the sheet edge, or come closer than
-    /// the drawing.clearance margins, gets them stacked in one column: Reference, Value, then the rest in their
-    /// order. Upright, justified toward the body, on 1.27 mm steps, on the first side (right, left, above, below)
-    /// where the column hits nothing, else the side with the least overlap. A packed two-pin part with no clean
-    /// column gets Reference before and Value after its body along the part, its other fields hidden. Bodies,
-    /// wires, labels, power symbols and notes never move. A dry run by default; --write edits the .kicad_sch files in place.
+    /// the drawing.clearance margins, gets the first that clears them: rating fields touching a power symbol
+    /// hidden in place; a column (Reference, Value, the rest) on the first side where it hits nothing; Reference
+    /// and Value at the ends of a packed two-pin part, the rest hidden; a column shortened by its last rating
+    /// fields. Text stays upright, on 1.27 mm steps. Bodies, wires, labels, power symbols and notes never move. A
+    /// dry run by default; --write edits the .kicad_sch files in place.
     #[command(after_help = PLACE_FIELDS_AFTER_HELP)]
     PlaceFields(PlaceFieldsArgs),
     /// Compare two designs: their placements (--pnp) or their nets (--nets)

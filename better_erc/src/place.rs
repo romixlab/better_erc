@@ -10,7 +10,7 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::path::{Path, PathBuf};
 
-pub use erc_checks::place::{FieldMove, Side, SymbolPlan};
+pub use erc_checks::place::{FieldMove, Remaining, Side, SymbolPlan};
 
 /// What to place
 #[derive(Clone, Debug, Default)]
@@ -140,7 +140,6 @@ fn edit(dir: &Path, plan: &FieldPlan) -> Result<BTreeMap<String, Vec<u8>>, Place
         let moves = s.moves.iter().map(|m| {
             let change = FieldChange::Move {
                 at: m.at,
-                vertical: m.vertical,
                 halign: m.halign,
             };
             (m.field.clone(), change)
@@ -184,8 +183,13 @@ pub fn render(p: &Placed) -> String {
         if !s.hidden.is_empty() {
             out += &format!("  hides: {}\n", s.hidden.join(", "));
         }
-        for (a, b) in &s.left {
-            out += &format!("  still: {a} and {b}\n");
+        for r in &s.left {
+            let (what, id) = if r.close {
+                ("is too close to", "DRAW-34")
+            } else {
+                ("overlaps", "DRAW-9")
+            };
+            out += &format!("  still: {} {what} {} ({id})\n", r.field, r.other);
         }
     }
     let line = |id: &str, before: usize, after: usize, bf: usize, af: usize| {

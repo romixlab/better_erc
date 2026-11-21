@@ -15,7 +15,8 @@ const LIB: &str = r#"(lib_symbols
 (symbol "R_1_1" (pin passive line (at 0 5.08 270) (length 2.54) (name "~" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27))))) (pin passive line (at 0 -5.08 90) (length 2.54) (name "~" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27))))))))
 "#;
 
-/// A resistor at `x`, `y` turned and mirrored, with its fields where `fields` puts them: name, value, x, y, angle
+/// A two-pin part drawn as a resistor at `x`, `y` turned and mirrored, with its fields where `fields` puts them:
+/// name, value, x, y, angle; its reference is its Reference field's
 fn resistor(
     n: u32,
     at: (f64, f64, u32),
@@ -32,9 +33,13 @@ fn resistor(
             "  (property \"{name}\" \"{value}\" (at {fx} {fy} {a}) (effects (font (size 1.27 1.27)) (justify left)))\n"
         );
     }
+    let reference = fields
+        .iter()
+        .find(|f| f.0 == "Reference")
+        .map_or_else(|| format!("R{n}"), |f| f.1.to_owned());
     s += &format!(
         "  (pin \"1\" (uuid \"b{n}000000-0000-4000-8000-000000000001\")) (pin \"2\" (uuid \"b{n}000000-0000-4000-8000-000000000002\"))\n  \
-         (instances (project \"place\" (path \"/a0000000-0000-4000-8000-000000000000\" (reference \"R{n}\") (unit 1)))))\n"
+         (instances (project \"place\" (path \"/a0000000-0000-4000-8000-000000000000\" (reference \"{reference}\") (unit 1)))))\n"
     );
     s
 }
@@ -244,11 +249,11 @@ fn packed_parts_lie_along() {
     for r in ["R5", "R7"] {
         let (end, hidden) = side(r);
         assert!(
-            end.is_some_and(|t| t != Side::Along) && hidden.is_empty(),
+            end.is_some_and(|t| t != Side::Ends) && hidden.is_empty(),
             "{r} {end:?}"
         );
     }
-    assert_eq!(side("R6"), (Some(Side::Along), vec!["Power".to_owned()]));
+    assert_eq!(side("R6"), (Some(Side::Ends), vec!["Power".to_owned()]));
     assert!(
         placed.after.draw_9_fields < placed.before.draw_9_fields,
         "{placed:?}"
@@ -259,7 +264,7 @@ fn packed_parts_lie_along() {
         .plan
         .symbols
         .iter()
-        .filter(|s| s.side == Some(Side::Along))
+        .filter(|s| s.side == Some(Side::Ends))
     {
         let sym = drawn.iter().find(|d| d.uuid == s.uuid).unwrap();
         let body = sym.body.unwrap();
@@ -284,8 +289,116 @@ fn packed_parts_lie_along() {
             let f = field(&m.field);
             assert_eq!(
                 (f.text.at, f.text.vertical, f.text.bbox),
-                (m.at, m.vertical, m.rect)
+                (m.at, false, m.rect)
             );
         }
+    }
+}
+
+const GND: &str = r##"(symbol "power:GND" (power) (pin_numbers (hide yes)) (pin_names (hide yes)) (exclude_from_sim no) (in_bom yes) (on_board yes)
+(property "Reference" "#PWR" (at 0 0 0) (effects (font (size 1.27 1.27))))
+(property "Value" "GND" (at 0 0 0) (effects (font (size 1.27 1.27))))
+(symbol "GND_0_1" (polyline (pts (xy 0 0) (xy 0 -1.27) (xy 1.27 -1.27) (xy 0 -2.54) (xy -1.27 -1.27) (xy 0 -1.27)) (stroke (width 0) (type default)) (fill (type none))))
+(symbol "GND_1_1" (pin power_in line (at 0 0 270) (length 0) (name "GND" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))))
+"##;
+
+/// Two vertical capacitors 10.16 mm apart, each with a ground symbol on its lower pin and a column of four fields
+/// on its right whose last line, the dielectric, comes too close to the ground symbol
+fn caps_over_ground() -> String {
+    let mut s = String::from(
+        "(kicad_sch (version 20231120) (generator \"eeschema\") (generator_version \"8.0\")\n\
+         (uuid \"a0000000-0000-4000-8000-000000000000\")\n(paper \"A4\")\n",
+    );
+    s += &LIB.replace("(lib_symbols\n", &format!("(lib_symbols\n{GND}"));
+    for (n, x) in [(8, 50.8), (9, 60.96)] {
+        let reference = ["C8", "C9"][n as usize - 8];
+        let fields = [
+            ("Reference", reference, x + 2.54, 46.99, 0),
+            ("Value", "100nF", x + 2.54, 49.53, 0),
+            ("Voltage", "50V", x + 2.54, 52.07, 0),
+            ("Dielectric", "X5R", x + 2.54, 55.88, 0),
+        ];
+        s += &resistor(n, (x, 50.8, 0), "", &fields);
+        s += &format!(
+            "(symbol (lib_id \"power:GND\") (at {x} 55.88 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) \
+             (dnp no) (uuid \"d{n}000000-0000-4000-8000-000000000000\") \
+             (property \"Reference\" \"#PWR0{n}\" (at {x} 62.23 0) (effects (font (size 1.27 1.27)) (hide yes))) \
+             (property \"Value\" \"GND\" (at {x} 60.96 0) (effects (font (size 1.27 1.27)))) \
+             (pin \"1\" (uuid \"e{n}000000-0000-4000-8000-000000000000\")) \
+             (instances (project \"place\" (path \"/a0000000-0000-4000-8000-000000000000\" (reference \"#PWR0{n}\") (unit 1)))))\n"
+        );
+    }
+    s += "(sheet_instances (path \"/\" (page \"1\")))\n)\n";
+    s
+}
+
+/// Vertical parts whose columns fit beside them are not packed: the column stays, and only the rating field that
+/// touches the ground symbol below is hidden; the rest of the file is as it was
+#[test]
+fn rating_on_power_symbol_is_hidden() {
+    let dir = scratch("place_fields_ground");
+    let file = dir.join("ground.kicad_sch");
+    let before = caps_over_ground();
+    std::fs::write(&file, &before).unwrap();
+    let opts = PlaceOptions {
+        write: true,
+        ..PlaceOptions::default()
+    };
+    let placed = place(&file, &opts).unwrap();
+    let plans: Vec<_> = placed
+        .plan
+        .symbols
+        .iter()
+        .map(|s| {
+            (
+                s.reference.as_str(),
+                s.side,
+                s.moves.len(),
+                s.hidden.clone(),
+            )
+        })
+        .collect();
+    let hidden = vec!["Dielectric".to_owned()];
+    assert_eq!(
+        plans,
+        [
+            ("C8", Some(Side::InPlace), 0, hidden.clone()),
+            ("C9", Some(Side::InPlace), 0, hidden)
+        ]
+    );
+    // Nothing overlaps; the column beside C8 fits, only within the part margin of C9
+    assert_eq!(placed.after.draw_9_fields, 0, "{:?}", placed.plan);
+    let left: Vec<(&str, &str, bool)> = placed
+        .plan
+        .symbols
+        .iter()
+        .flat_map(|s| s.left.iter())
+        .map(|r| (r.field.as_str(), r.other.as_str(), r.close))
+        .collect();
+    assert_eq!(
+        left,
+        [
+            ("C8 Value", "C9 body", true),
+            ("C8 Value", "C9.1 pin", true)
+        ]
+    );
+    let after = std::fs::read_to_string(&file).unwrap();
+    let drawn = symbols(&file);
+    for (s, x) in [
+        ("a0000000-0000-4000-8000-000000000008", 50.8),
+        ("a0000000-0000-4000-8000-000000000009", 60.96),
+    ] {
+        let sym = drawn.iter().find(|d| d.uuid == s).unwrap();
+        for f in &sym.fields {
+            assert!(!f.text.vertical, "{}", f.name);
+            assert_eq!(f.hidden, f.name == "Dielectric", "{}", f.name);
+        }
+        // Only the dielectric changed, and the autoplaced flag went
+        let was = symbol_text(&before, s).replace(" (fields_autoplaced yes)", "");
+        let want = was.replace(
+            &format!("\"X5R\" (at {} 55.88 0) (effects (font (size 1.27 1.27)) (justify left))", x + 2.54),
+            &format!("\"X5R\" (at {} 55.88 0) (effects (font (size 1.27 1.27)) (justify left) (hide yes))", x + 2.54),
+        );
+        assert_eq!(symbol_text(&after, s), want);
     }
 }

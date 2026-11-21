@@ -30,9 +30,11 @@ pub enum Side {
     Left,
     Above,
     Below,
-    /// A two-pin part packed against its neighbours: Reference before the body and Value after it along the
-    /// part's axis, the other fields hidden
-    Along,
+    /// A two-pin part packed against its neighbours: Reference and Value at the two ends of the body (before and
+    /// after a horizontal part, above and below a vertical one), the other fields hidden
+    Ends,
+    /// Where they are, the rating fields in the way hidden
+    InPlace,
 }
 
 impl Side {
@@ -42,23 +44,37 @@ impl Side {
             Side::Left => "left",
             Side::Above => "above",
             Side::Below => "below",
-            Side::Along => "along the part",
+            Side::Ends => "at the ends of the part",
+            Side::InPlace => "in place",
         }
+    }
+
+    fn is_column(self) -> bool {
+        matches!(self, Side::Right | Side::Left | Side::Above | Side::Below)
     }
 }
 
-/// One field moved
+/// One field moved; field text is always upright
 #[derive(Clone, Debug, PartialEq)]
 pub struct FieldMove {
     /// The field's name (`Value`)
     pub field: String,
-    /// The anchor: the text is centred across its reading direction on it
+    /// The anchor: the text is vertically centred on it
     pub at: Pt,
-    /// Reads upwards, not left to right
-    pub vertical: bool,
     pub halign: HAlign,
     /// The text's box at its new place
     pub rect: Rect,
+}
+
+/// Something a field still overlaps (`DRAW-9`) or comes too close to (`DRAW-34`)
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Remaining {
+    /// `R1 Value`
+    pub field: String,
+    /// `C3 body`, `the sheet edge`
+    pub other: String,
+    /// Within the margins only, not overlapping
+    pub close: bool,
 }
 
 /// A symbol whose fields overlap something: where they go, or why they stay
@@ -75,8 +91,8 @@ pub struct SymbolPlan {
     pub moves: Vec<FieldMove>,
     /// The shown fields to hide, by name
     pub hidden: Vec<String>,
-    /// What the fields still overlap or come too close to, where they end up: `R1 Value` and `C3 body`
-    pub left: Vec<(String, String)>,
+    /// What the fields still overlap or come too close to once every symbol of the sheet is placed
+    pub left: Vec<Remaining>,
 }
 
 /// The fields of a design to move
@@ -143,6 +159,17 @@ struct Cost {
     amount: i64,
 }
 
+/// One conflict of a placed field
+#[derive(Clone, Debug)]
+struct Hit {
+    /// Index into the placed boxes
+    line: usize,
+    other: String,
+    /// `None` for the sheet edge
+    kind: Option<K>,
+    close: bool,
+}
+
 /// A sheet as the placer changes it: the scene's items, the fields of moved symbols at their new places
 struct Board<'s, 'a> {
     scene: &'s Scene<'a>,
@@ -159,22 +186,15 @@ struct Board<'s, 'a> {
 /// A layout to try: where it puts each field it shows (by index into the shown fields), and which it hides
 struct Layout {
     side: Side,
-    lines: Vec<(usize, Pt, bool, HAlign, Rect)>,
+    lines: Vec<(usize, Pt, HAlign, Rect)>,
     hidden: Vec<usize>,
 }
 
 impl Board<'_, '_> {
     /// The conflicts of a symbol's fields at new boxes `placed` (item index and box), against every other item but
-    /// the symbol's fields `own`, against each other and the frame; with the names of what they hit when `names`.
-    /// For a new column a wire through the gap between two lines counts too: a person never stacks fields across
-    /// a wire.
-    fn cost(
-        &self,
-        own: &[usize],
-        placed: &[(usize, Rect)],
-        column: bool,
-        names: Option<&mut Vec<(String, String)>>,
-    ) -> Cost {
+    /// the symbol's fields `own`, against each other and the frame. For a column a wire through the gap between
+    /// two lines counts too: a person never stacks fields across a wire.
+    fn cost(&self, own: &[usize], placed: &[(usize, Rect)], column: bool) -> (Cost, Vec<Hit>) {
         let mut cost = Cost::default();
         let mut hits = Vec::new();
         let placed: Vec<Item> = placed
@@ -184,10 +204,15 @@ impl Board<'_, '_> {
                 ..self.items[*i].clone()
             })
             .collect();
-        let mut add = |a: &Item, b: &Item, amount: i64| {
+        let mut add = |line: usize, b: Option<&Item>, amount: i64, close: bool| {
             cost.pairs += 1;
             cost.amount += amount;
-            hits.push((a.name.clone(), b.name.clone()));
+            hits.push(Hit {
+                line,
+                other: b.map_or_else(|| "the sheet edge".to_owned(), |b| b.name.clone()),
+                kind: b.map(|b| b.kind),
+                close,
+            });
         };
         // Nothing farther than both margins can be in the way
         let m = self.margins;
@@ -202,30 +227,25 @@ impl Board<'_, '_> {
                 {
                     continue;
                 }
-                let hit =
-                    bare_hit(a, b, false).or_else(|| close_hit(self.scene, self.margins, a, b));
-                if let Some(amount) = hit {
-                    add(a, b, amount);
+                if let Some(amount) = bare_hit(a, b, false) {
+                    add(k, Some(b), amount, false);
+                } else if let Some(amount) = close_hit(self.scene, self.margins, a, b) {
+                    add(k, Some(b), amount, true);
                 }
             }
             for b in &placed[k + 1..] {
                 if let Some(amount) = bare_hit(a, b, false) {
-                    add(a, b, amount);
+                    add(k, Some(b), amount, false);
                 }
             }
             if let Some(frame) = self.frame
                 && !(frame.contains(a.rect.min) && frame.contains(a.rect.max))
             {
-                let edge = Item {
-                    name: "the sheet edge".to_owned(),
-                    ..a.clone()
-                };
-                add(a, &edge, a.rect.width() * a.rect.height());
+                add(k, None, a.rect.width() * a.rect.height(), false);
             }
         }
         let hull = placed.iter().map(|p| p.rect).reduce(Rect::union);
-        if let (true, Some(hull), Some(first)) = (column && placed.len() > 1, hull, placed.first())
-        {
+        if let (true, Some(hull)) = (column && placed.len() > 1, hull) {
             let across = |w: &Item| {
                 w.kind.is_wire()
                     && hull.overlaps(w.rect)
@@ -235,17 +255,14 @@ impl Board<'_, '_> {
                 let i = hull
                     .intersection(w.rect)
                     .expect("the hull overlaps the wire");
-                add(first, w, i.width().max(1) * i.height().max(1));
+                add(0, Some(w), i.width().max(1) * i.height().max(1), false);
             }
         }
-        if let Some(names) = names {
-            *names = hits;
-        }
-        cost
+        (cost, hits)
     }
 
-    /// Whether any of the boxes overlaps, or comes within the margins of, the body of another symbol or a field
-    /// of one whose fields are settled
+    /// Whether any of the boxes overlaps the body of another symbol or a field of one whose fields are settled:
+    /// whether a column fits in the gap to the neighbours
     fn hits_neighbour(&self, s: usize, field: &Item, rects: &[Rect]) -> bool {
         let neighbour = |j: usize, b: &Item| {
             let other = b.owner.filter(|o| *o != s);
@@ -262,12 +279,24 @@ impl Board<'_, '_> {
                 ..field.clone()
             };
             self.items.iter().enumerate().any(|(j, b)| {
-                neighbour(j, b)
-                    && !exempt(self.scene, &a, b)
-                    && (bare_hit(&a, b, false).is_some()
-                        || close_hit(self.scene, self.margins, &a, b).is_some())
+                neighbour(j, b) && !exempt(self.scene, &a, b) && bare_hit(&a, b, false).is_some()
             })
         })
+    }
+
+    /// The field items of symbol `s`, hidden ones included
+    fn own(&self, s: usize) -> Vec<usize> {
+        (0..self.items.len())
+            .filter(|i| self.items[*i].owner == Some(s) && self.items[*i].kind == K::Field)
+            .collect()
+    }
+
+    /// The shown fields of symbol `s` where they are now
+    fn shown_now(&self, own: &[usize]) -> Vec<(usize, Rect)> {
+        own.iter()
+            .filter(|i| !self.gone[**i])
+            .map(|i| (*i, self.items[*i].rect))
+            .collect()
     }
 }
 
@@ -289,11 +318,8 @@ fn plan_scene(scene: &Scene, margins: Margins, out: &mut Vec<SymbolPlan>) {
         frame,
     };
     for s in 0..g.symbols.len() {
-        let own: Vec<usize> = (0..board.items.len())
-            .filter(|i| board.items[*i].owner == Some(s) && board.items[*i].kind == K::Field)
-            .collect();
-        let shown: Vec<(usize, Rect)> = own.iter().map(|i| (*i, board.items[*i].rect)).collect();
-        board.pending[s] = board.cost(&own, &shown, false, None).pairs > 0;
+        let own = board.own(s);
+        board.pending[s] = board.cost(&own, &board.shown_now(&own), false).0.pairs > 0;
     }
     let mut plans: Vec<Option<SymbolPlan>> = vec![None; g.symbols.len()];
     for _ in 0..PASSES_MAX {
@@ -308,33 +334,47 @@ fn plan_scene(scene: &Scene, margins: Margins, out: &mut Vec<SymbolPlan>) {
             break;
         }
     }
+    // What is left is judged once everything stands where it ends up
+    for (s, plan) in plans.iter_mut().enumerate() {
+        let Some(p) = plan else { continue };
+        let own = board.own(s);
+        let shown = board.shown_now(&own);
+        let column = p.side.is_some_and(Side::is_column);
+        let (_, hits) = board.cost(&own, &shown, column);
+        p.left = hits
+            .into_iter()
+            .map(|h| Remaining {
+                field: board.items[shown[h.line].0].name.clone(),
+                other: h.other,
+                close: h.close,
+            })
+            .collect();
+    }
     out.extend(plans.into_iter().flatten());
 }
 
-/// Moves the fields of symbol `s` when they conflict with something and another layout conflicts less: along a
-/// packed two-pin part, else a column beside the body. `plan` keeps the last move and what is still in the way.
-/// Whether the fields moved.
+/// Moves the fields of symbol `s` when they conflict with something, by the first that clears them of: hiding
+/// rating fields that only touch a power symbol, a full column, Reference and Value at the ends of a packed
+/// two-pin part, a column shortened by its last rating fields; else the full column that conflicts least, when
+/// it conflicts less than where they are. `plan` keeps the last change. Whether the fields changed.
 fn place_symbol(
     board: &mut Board,
     s: usize,
     sym: &DrawnSymbol,
     plan: &mut Option<SymbolPlan>,
 ) -> bool {
-    let own: Vec<usize> = (0..board.items.len())
-        .filter(|i| board.items[*i].owner == Some(s) && board.items[*i].kind == K::Field)
-        .collect();
-    let shown_now: Vec<(usize, Rect)> = own
-        .iter()
-        .filter(|i| !board.gone[**i])
-        .map(|i| (*i, board.items[*i].rect))
-        .collect();
-    // A column this placer made is held to its own rule about wires through it
-    // A part laid along stays so: its hidden fields are gone, and a column would have to show them again
-    if plan.as_ref().is_some_and(|p| p.side == Some(Side::Along)) {
+    // Hidden fields are gone: a symbol whose fields were hidden keeps that layout
+    if plan
+        .as_ref()
+        .is_some_and(|p| matches!(p.side, Some(Side::Ends | Side::InPlace)))
+    {
         return false;
     }
-    let column = plan.as_ref().is_some_and(|p| p.side.is_some());
-    let now = board.cost(&own, &shown_now, column, None);
+    let own = board.own(s);
+    let column = plan
+        .as_ref()
+        .is_some_and(|p| p.side.is_some_and(Side::is_column));
+    let (now, now_hits) = board.cost(&own, &board.shown_now(&own), column);
     if now.pairs == 0 {
         return false;
     }
@@ -344,40 +384,45 @@ fn place_symbol(
         .filter(|f| !f.hidden && !f.text.text.is_empty())
         .collect();
     debug_assert_eq!(shown.len(), own.len(), "one field item per shown field");
+    let rating = |k: usize| !matches!(shown[k].name.as_str(), "Reference" | "Value");
     let order = column_order(&shown);
-    let in_order: Vec<&DrawnField> = order.iter().map(|k| shown[*k]).collect();
-    let columns: Vec<Layout> = candidates(sym, &in_order)
-        .into_iter()
-        .map(|(side, places)| Layout {
-            side,
-            lines: order
-                .iter()
-                .zip(places)
-                .map(|(k, (at, halign, rect))| (*k, at, false, halign, rect))
-                .collect(),
-            hidden: Vec::new(),
-        })
-        .collect();
-    let rects = |l: &Layout| -> Vec<(usize, Rect)> {
-        l.lines
-            .iter()
-            .map(|(k, _, _, _, r)| (own[*k], *r))
-            .collect()
+    let placed = |l: &Layout| -> Vec<(usize, Rect)> {
+        l.lines.iter().map(|(k, _, _, r)| (own[*k], *r)).collect()
     };
-    let scored = |l: Layout| {
-        let column = l.side != Side::Along;
-        (board.cost(&own, &rects(&l), column, None), l)
-    };
-    let packed = packed_layout(board, s, sym, &shown, &own, &columns);
-    let columns: Vec<Layout> = columns;
-    // A column that fits wins; else a packed part takes the layout along it or none, a column beside it would
-    // only meet its neighbours
-    let column_best = columns.into_iter().map(scored).min_by_key(|c| c.0);
-    let best = match (column_best, packed) {
-        (Some(c), _) if c.0.pairs == 0 => Some(c),
-        (_, Some(l)) => Some(scored(l)),
-        (c, None) => c,
-    };
+    let score = |l: &Layout| board.cost(&own, &placed(l), l.side.is_column()).0;
+    let chosen = in_place(&now_hits, &rating).or_else(|| {
+        // Full columns, then each shortened by one more rating field from its end
+        let ratings = order.iter().filter(|k| rating(**k)).count();
+        let mut fallback: Option<(Cost, Layout)> = None;
+        for drop in 0..=ratings {
+            let kept = &order[..order.len() - drop];
+            let mut best: Option<(Cost, Layout)> = None;
+            for l in columns(sym, &shown, kept, &order[order.len() - drop..]) {
+                let c = score(&l);
+                if best.as_ref().is_none_or(|b| c < b.0) {
+                    best = Some((c, l));
+                }
+            }
+            let best = best?;
+            if best.0.pairs == 0 {
+                return Some(best.1);
+            }
+            if drop == 0 {
+                // A packed part takes its ends when nothing full fits
+                if let Some(ends) = ends_layout(board, s, sym, &shown, &own, &order) {
+                    let c = score(&ends);
+                    let horizontal = two_pin(sym) == Some(true);
+                    // Before and after a horizontal part is its style even with a neighbour close; above and
+                    // below a vertical one only where the spot is clear
+                    if c.pairs == 0 || (horizontal && c < now) {
+                        return Some(ends);
+                    }
+                }
+                fallback = Some(best);
+            }
+        }
+        fallback.filter(|f| f.0 < now).map(|f| f.1)
+    });
     let p = plan.get_or_insert_with(|| SymbolPlan {
         file: board.scene.geometry.file.clone(),
         reference: sym.reference.clone(),
@@ -387,40 +432,72 @@ fn place_symbol(
         hidden: Vec::new(),
         left: Vec::new(),
     });
-    match best {
-        Some((cost, l)) if cost < now => {
-            let placed = rects(&l);
-            board.cost(&own, &placed, l.side != Side::Along, Some(&mut p.left));
-            for (i, r) in &placed {
-                board.items[*i].rect = *r;
-                board.gone[*i] = false;
-            }
-            for k in &l.hidden {
-                board.gone[own[*k]] = true;
-            }
-            p.side = Some(l.side);
-            p.hidden = l.hidden.iter().map(|k| shown[*k].name.clone()).collect();
-            p.moves = l
-                .lines
-                .iter()
-                .map(|(k, at, vertical, halign, rect)| FieldMove {
-                    field: shown[*k].name.clone(),
-                    at: *at,
-                    vertical: *vertical,
-                    halign: *halign,
-                    rect: *rect,
-                })
-                .collect();
-            true
-        }
-        _ => {
-            board.cost(&own, &shown_now, column, Some(&mut p.left));
-            false
-        }
+    let Some(l) = chosen else { return false };
+    for (i, r) in placed(&l) {
+        board.items[i].rect = r;
     }
+    for k in &l.hidden {
+        board.gone[own[*k]] = true;
+    }
+    p.side = Some(l.side);
+    p.hidden = l.hidden.iter().map(|k| shown[*k].name.clone()).collect();
+    p.moves = l
+        .lines
+        .iter()
+        .map(|(k, at, halign, rect)| FieldMove {
+            field: shown[*k].name.clone(),
+            at: *at,
+            halign: *halign,
+            rect: *rect,
+        })
+        .collect();
+    true
 }
 
-/// Reference prefixes of the two-pin parts that are laid out along their axis when packed: resistors,
+/// When rating fields touch a power symbol and nothing else overlaps the fields (closeness alone is no reason
+/// to move a column that fits): those rating fields hidden, the rest left where it is
+fn in_place(hits: &[Hit], rating: &dyn Fn(usize) -> bool) -> Option<Layout> {
+    let on_power = |h: &Hit| h.kind == Some(K::Power) && rating(h.line);
+    if !hits.iter().any(on_power) || !hits.iter().all(|h| on_power(h) || h.close) {
+        return None;
+    }
+    let mut hidden: Vec<usize> = hits
+        .iter()
+        .filter(|h| on_power(h))
+        .map(|h| h.line)
+        .collect();
+    hidden.sort_unstable();
+    hidden.dedup();
+    Some(Layout {
+        side: Side::InPlace,
+        lines: Vec::new(),
+        hidden,
+    })
+}
+
+/// Every column of the fields `kept` (by index into `shown`, in column order), the fields `dropped` hidden
+fn columns(
+    sym: &DrawnSymbol,
+    shown: &[&DrawnField],
+    kept: &[usize],
+    dropped: &[usize],
+) -> Vec<Layout> {
+    let fields: Vec<&DrawnField> = kept.iter().map(|k| shown[*k]).collect();
+    candidates(sym, &fields)
+        .into_iter()
+        .map(|(side, places)| Layout {
+            side,
+            lines: kept
+                .iter()
+                .zip(places)
+                .map(|(k, (at, halign, rect))| (*k, at, halign, rect))
+                .collect(),
+            hidden: dropped.to_vec(),
+        })
+        .collect()
+}
+
+/// Reference prefixes of the two-pin parts that get their fields at their ends when packed: resistors,
 /// capacitors, diodes and LEDs, inductors, ferrite beads
 const TWO_PIN_PREFIXES: &[&str] = &["R", "C", "D", "LED", "LD", "L", "FB"];
 
@@ -440,16 +517,18 @@ fn two_pin(sym: &DrawnSymbol) -> Option<bool> {
     (ha == hb && a.outward != b.outward).then_some(ha)
 }
 
-/// For a two-pin part packed against its neighbours (a column on either side across its axis would hit another
-/// part's body or settled fields; used when no column fits cleanly): Reference before the body and Value after it, reading along the part on the line beside its axis,
-/// every other field hidden. `None` for any other symbol, or one without Reference and Value shown.
-fn packed_layout(
+/// For a two-pin part packed against its neighbours (the full column on a side across its axis does not fit in
+/// the gap: it overlaps another part's body or settled fields): Reference and Value at the ends of the body, upright.
+/// A horizontal part has them before and after the body on the line above its axis, so they sit beside its own
+/// wire; a vertical one has them centred above and below its pins. Every other field hidden. `None` for any
+/// other symbol, or one without Reference and Value shown.
+fn ends_layout(
     board: &Board,
     s: usize,
     sym: &DrawnSymbol,
     shown: &[&DrawnField],
     own: &[usize],
-    columns: &[Layout],
+    order: &[usize],
 ) -> Option<Layout> {
     let horizontal = two_pin(sym)?;
     let reference = shown.iter().position(|f| f.name == "Reference")?;
@@ -460,40 +539,26 @@ fn packed_layout(
         [Side::Right, Side::Left]
     };
     let field = &board.items[own[reference]];
-    let outline = sym.outline();
-    let blocked = across.iter().any(|side| {
-        // The first candidate of each side is the column centred on the body; its lines next to the body tell
-        columns.iter().find(|l| l.side == *side).is_some_and(|l| {
-            let rects: Vec<Rect> = l.lines.iter().map(|line| line.4).collect();
-            let next: Vec<Rect> = match side {
-                Side::Above => rects.last().copied().into_iter().collect(),
-                Side::Below => rects.first().copied().into_iter().collect(),
-                _ => rects
-                    .into_iter()
-                    .filter(|r| r.min.y < outline.max.y && r.max.y > outline.min.y)
-                    .collect(),
-            };
-            board.hits_neighbour(s, field, &next)
-        })
+    let packed = across.iter().any(|side| {
+        // The first column of each side is the one centred on the body
+        columns(sym, shown, order, &[])
+            .into_iter()
+            .find(|l| l.side == *side)
+            .is_some_and(|l| {
+                let rects: Vec<Rect> = l.lines.iter().map(|line| line.3).collect();
+                board.hits_neighbour(s, field, &rects)
+            })
     });
-    if !blocked {
+    if !packed {
         return None;
     }
-    let body = sym.body.unwrap_or_else(|| sym.outline());
-    let middle = body.center();
     let line = |k: usize, at: Pt, halign: HAlign| {
-        let rect = text_rect(
-            at,
-            !horizontal,
-            shown[k].text.extent(),
-            halign,
-            VAlign::Center,
-        );
-        (k, at, !horizontal, halign, rect)
+        let rect = text_rect(at, false, shown[k].text.extent(), halign, VAlign::Center);
+        (k, at, halign, rect)
     };
-    // One step off the axis, so the text sits beside the part's own wire, not on it
     let lines = if horizontal {
-        let y = nearest(middle.y) - STEP;
+        let body = sym.body.unwrap_or_else(|| sym.outline());
+        let y = nearest(body.center().y) - STEP;
         vec![
             line(
                 reference,
@@ -503,22 +568,27 @@ fn packed_layout(
             line(value, Pt::new(up(body.max.x + BODY_GAP), y), HAlign::Left),
         ]
     } else {
-        // A vertical text reads upwards: Left starts at the anchor and runs up
-        let x = nearest(middle.x) - STEP;
+        let outline = sym.outline();
+        let x = nearest(outline.center().x);
+        let half = |k: usize| shown[k].text.extent().1 / 2;
         vec![
             line(
                 reference,
-                Pt::new(x, down(body.min.y - BODY_GAP)),
-                HAlign::Left,
+                Pt::new(x, down(outline.min.y - BODY_GAP - half(reference))),
+                HAlign::Center,
             ),
-            line(value, Pt::new(x, up(body.max.y + BODY_GAP)), HAlign::Right),
+            line(
+                value,
+                Pt::new(x, up(outline.max.y + BODY_GAP + half(value))),
+                HAlign::Center,
+            ),
         ]
     };
     let hidden = (0..shown.len())
         .filter(|k| *k != reference && *k != value)
         .collect();
     Some(Layout {
-        side: Side::Along,
+        side: Side::Ends,
         lines,
         hidden,
     })
@@ -573,7 +643,7 @@ fn candidates(sym: &DrawnSymbol, fields: &[&DrawnField]) -> Vec<(Side, Column)> 
                     HAlign::Center,
                 )
             }
-            Side::Along => unreachable!("a column stands on one of the four sides"),
+            Side::Ends | Side::InPlace => unreachable!("a column stands on one of the four sides"),
             Side::Below => {
                 let first = up(body.max.y + BODY_GAP + tallest / 2) + out;
                 (nearest(middle.x) + slide, first, HAlign::Center)

@@ -1063,16 +1063,18 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `better_erc/tests/model.rs`, `berc/tests/fp_model.rs`, `erc_step/src/write.rs`, README "3D models against the
   footprint"
 - ✅ `TOOL-13` `berc place-fields PROJECT [--sheet NAME] [--write]`: the fix side of `DRAW-9` and `DRAW-34` for symbol
-  fields. Each symbol whose shown fields overlap something or come closer than the clearance margins gets them stacked
-  in one column (Reference, Value, the rest top to bottom), upright, justified toward the body, on 1.27 mm steps, on
-  the first side where the column hits nothing (by the checks' own pair tests, a wire through the column and the sheet
-  frame counted too), else the least bad, in up to three passes over a sheet (`erc_checks::place`). A two-pin part (R,
-  C, D, L, FB) with no clean column and a neighbour's body or settled fields next to it across its axis is laid along
-  instead: Reference before, Value after the body beside its axis, the other shown fields hidden. Written with a
-  formatting-preserving edit of each field's `(at ...)` and justify, `(hide yes)` where the file's version keeps it,
-  the symbol's `fields_autoplaced` dropped (`erc_kicad::fields`); the counts before and after come from the edited
-  files read again (`Project::reopen_with`) · `erc_checks/src/draw/place.rs`, `erc_kicad/src/fields.rs`,
-  `better_erc/src/place.rs`, `better_erc/tests/place.rs`, README "Placing fields"
+  fields. Each symbol whose shown fields overlap something or come closer than the clearance margins gets the first
+  layout that clears them, judged by the checks' own pair tests (a wire through a column and the sheet frame counted
+  too): rating fields touching a power symbol hidden in place (closeness alone does not move a column that fits); a
+  column (Reference, Value, the rest top to bottom), upright, justified toward the body, on 1.27 mm steps; for a
+  packed two-pin part (R, C, D, L, FB; its column does not fit in the gap to a neighbour's body or settled fields)
+  Reference and Value at its ends, the rest hidden, beside a horizontal part's axis or centred above and below a
+  vertical one where clear; a column shortened by its last rating fields; else the least bad, in up to three passes
+  over a sheet (`erc_checks::place`). Field text is never turned. What still overlaps is reported per check once the
+  sheet is placed. Written with a formatting-preserving edit of each field's `(at ...)` and justify, `(hide yes)`
+  where the file's version keeps it, the symbol's `fields_autoplaced` dropped (`erc_kicad::fields`); the counts before
+  and after come from the edited files read again (`Project::reopen_with`) · `erc_checks/src/draw/place.rs`,
+  `erc_kicad/src/fields.rs`, `better_erc/src/place.rs`, `better_erc/tests/place.rs`, README "Placing fields"
 
 ## Code generation (`GEN`)
 
