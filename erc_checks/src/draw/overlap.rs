@@ -144,10 +144,10 @@ pub(super) fn bare<'s>(scene: &'s Scene, wire_through: bool) -> Vec<(&'s Item, &
     pairs(scene, |a, b| bare_hit(a, b, wire_through))
 }
 
-/// What of `a` counts against `b`: a text box wholly around `b` only its text, a body its drawn shapes, anything
-/// else its box; `None` when nothing does
+/// What of `a` counts against `b`: a text box wholly around `b`, or against a wire, only its text (the border marks
+/// what the note covers), a body its drawn shapes, anything else its box; `None` when nothing does
 fn outline<'a>(a: &'a Item, b: &Item) -> Option<Cow<'a, [Shape]>> {
-    if a.kind == K::TextBox && a.rect.encloses(b.rect) {
+    if a.kind == K::TextBox && (a.rect.encloses(b.rect) || b.kind.is_wire()) {
         return a.text.map(|t| Cow::Owned(vec![Shape::Box(t)]));
     }
     if a.shapes.is_empty() {

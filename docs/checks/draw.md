@@ -19,7 +19,8 @@ closed or filled polyline as a filled shape, an open polyline segment or a piece
 control points' box. Two bodies, or a body and a box, are as far apart as their nearest primitives; the outer boxes
 are compared first, so a pair far apart costs one test. A text box drawn wholly around an item counts against it by
 its text alone: the border is a frame around the parts a note is about, not something in their way. An item the border
-crosses (partly inside) still overlaps the box. A prototype of this measure (Python, run on a real board's sheets) is
+crosses (partly inside) still overlaps the box. Against a wire a text box always counts by its text: its border
+may cross or run beside wires, its text may not. A prototype of this measure (Python, run on a real board's sheets) is
 kept with our house-style notes; it is the reference for `NET-26`.
 
 **Drawing settings.** The spacing checks share named settings with defaults, set per project in its better_erc

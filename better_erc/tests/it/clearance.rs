@@ -115,3 +115,25 @@ fn a_wire_on_a_sheets_own_pin_is_not_near_its_box() {
         ["DRAW-34:item sheet A|item wire of x 59.5 y 25|sheet /"]
     );
 }
+
+#[test]
+fn a_text_box_border_over_a_wire_is_not_a_finding() {
+    // The border crosses a wire at x 60 and runs 0.3 mm beside one at y 79.7; the text sits at the top left
+    let wires = wire(1, (60.0, 40.0), (60.0, 90.0)) + &wire(2, (45.0, 79.7), (58.0, 79.7));
+    let around = wires.clone() + &text_box(1, "Note", (50.0, 50.0), (20.0, 30.0));
+    assert_eq!(
+        findings("box_border", &around, Config::default()),
+        Vec::<String>::new()
+    );
+    // The text itself across the wire, and 0.3 mm beside it
+    let over = wires.clone() + &text_box(1, "A long note", (55.0, 50.0), (20.0, 10.0));
+    assert_eq!(
+        findings("box_text_over", &over, Config::default()),
+        ["DRAW-9:item text box \"A long note\"|item wire of x 60 y 40|sheet /"]
+    );
+    let beside = wires + &text_box(1, "Note", (60.3, 60.0), (10.0, 10.0));
+    assert_eq!(
+        findings("box_text_beside", &beside, Config::default()),
+        ["DRAW-34:item text box \"Note\"|item wire of x 60 y 40|sheet /"]
+    );
+}
