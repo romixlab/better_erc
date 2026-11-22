@@ -24,6 +24,7 @@ static META: CheckMeta = CheckMeta {
         default: 100.0,
         unit: "ohm",
         doc: "highest resistance of a series tie in an SCL or SDA line",
+        choices: &[],
     }],
 };
 

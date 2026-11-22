@@ -15,6 +15,7 @@ const CLEAR: Param = Param {
     default: 0.635,
     unit: "mm",
     doc: "gap from a leader's tip to the part's outline",
+    choices: &[],
 };
 
 const AIM: Param = Param {
@@ -22,6 +23,7 @@ const AIM: Param = Param {
     default: 2.54,
     unit: "mm",
     doc: "how far from the body's centre the line of a leader's last segment may pass",
+    choices: &[],
 };
 
 const ANGLE_SLACK: Param = Param {
@@ -29,6 +31,7 @@ const ANGLE_SLACK: Param = Param {
     default: 3.0,
     unit: "degrees",
     doc: "how far a leader's last segment may be off 45 degrees",
+    choices: &[],
 };
 
 const REACH: Param = Param {
@@ -36,6 +39,7 @@ const REACH: Param = Param {
     default: 5.08,
     unit: "mm",
     doc: "how far from a leader's tip a part counts as what it points at",
+    choices: &[],
 };
 
 const MAX_PINS: Param = Param {
@@ -43,6 +47,7 @@ const MAX_PINS: Param = Param {
     default: 4.0,
     unit: "",
     doc: "pins of the largest part a leader goes into on a diagonal",
+    choices: &[],
 };
 
 static META: CheckMeta = CheckMeta {

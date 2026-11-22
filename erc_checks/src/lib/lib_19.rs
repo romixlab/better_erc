@@ -11,6 +11,7 @@ const STRICT: Param = Param {
     default: 0.0,
     unit: "",
     doc: "1: also report hidden pins grouped with a visible pin of the same meaning, and hidden no-connect pins",
+    choices: &[],
 };
 
 static META: CheckMeta = CheckMeta {

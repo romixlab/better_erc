@@ -22,6 +22,7 @@ static META: CheckMeta = CheckMeta {
         default: 1e-6,
         unit: "F",
         doc: "the largest capacitor counted as a pin's local decoupling",
+        choices: &[],
     }],
 };
 

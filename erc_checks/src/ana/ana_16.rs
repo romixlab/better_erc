@@ -24,18 +24,21 @@ static META: CheckMeta = CheckMeta {
             default: 1e3,
             unit: "ohm",
             doc: "a gain or feedback resistor below this loads the output",
+            choices: &[],
         },
         Param {
             name: "max_resistance",
             default: 1e6,
             unit: "ohm",
             doc: "a gain or feedback resistor above this lets bias current and leakage set the result",
+            choices: &[],
         },
         Param {
             name: "min_capacitance",
             default: 1e-12,
             unit: "F",
             doc: "a feedback capacitor below this is in the range of the board's parasitics",
+            choices: &[],
         },
     ],
 };

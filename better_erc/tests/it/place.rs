@@ -340,6 +340,29 @@ fn rating_on_power_symbol_is_hidden() {
     let file = dir.join("ground.kicad_sch");
     let before = caps_over_ground();
     std::fs::write(&file, &before).unwrap();
+    // Sparse spacing: the column beside C8 fits, only within the part margin of C9, and is left so
+    let mut config = Config::default();
+    config
+        .set_text("drawing.clearance.spacing", "sparse")
+        .unwrap();
+    let sparse = PlaceOptions {
+        config,
+        ..PlaceOptions::default()
+    };
+    let left = |placed: &Placed| -> Vec<(String, String, bool)> {
+        placed
+            .plan
+            .symbols
+            .iter()
+            .flat_map(|s| s.left.iter())
+            .map(|r| (r.field.clone(), r.other.clone(), r.close))
+            .collect()
+    };
+    let close = |field: &str, other: &str| (field.to_owned(), other.to_owned(), true);
+    assert_eq!(
+        left(&place(&file, &sparse).unwrap()),
+        [close("C8 Value", "C9 body"), close("C8 Value", "C9.1 pin")]
+    );
     let opts = PlaceOptions {
         write: true,
         ..PlaceOptions::default()
@@ -366,22 +389,9 @@ fn rating_on_power_symbol_is_hidden() {
             ("C9", Some(Side::InPlace), 0, hidden)
         ]
     );
-    // Nothing overlaps; the column beside C8 fits, only within the part margin of C9
+    // Nothing overlaps; in tight spacing the column beside C8 keeps the packed margin to C9
     assert_eq!(placed.after.draw_9_fields, 0, "{:?}", placed.plan);
-    let left: Vec<(&str, &str, bool)> = placed
-        .plan
-        .symbols
-        .iter()
-        .flat_map(|s| s.left.iter())
-        .map(|r| (r.field.as_str(), r.other.as_str(), r.close))
-        .collect();
-    assert_eq!(
-        left,
-        [
-            ("C8 Value", "C9 body", true),
-            ("C8 Value", "C9.1 pin", true)
-        ]
-    );
+    assert_eq!(left(&placed), []);
     let after = std::fs::read_to_string(&file).unwrap();
     let drawn = symbols(&file);
     for (s, x) in [

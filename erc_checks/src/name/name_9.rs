@@ -29,6 +29,7 @@ static META: CheckMeta = CheckMeta {
         default: 3.0,
         unit: "",
         doc: "the fewest nets of one numbered family on one part's GPIOs that are compared",
+        choices: &[],
     }],
 };
 

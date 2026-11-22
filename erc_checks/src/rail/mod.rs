@@ -21,6 +21,7 @@ pub(crate) const MAX_FEED: Param = Param {
     default: MAX_FEED_OHMS,
     unit: "Ω",
     doc: "the largest series resistor that still feeds a rail (an RC filter, a shunt)",
+    choices: &[],
 };
 
 /// Whether a link carries power for the rail checks: anything but a resistor above `max_feed` (or of unknown

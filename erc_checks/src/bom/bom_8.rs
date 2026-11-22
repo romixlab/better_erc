@@ -21,6 +21,7 @@ static META: CheckMeta = CheckMeta {
         default: 2.0,
         unit: "parts",
         doc: "how many series resistors or ferrites the walk from an LED pin to a rail or ground goes through",
+        choices: &[],
     }],
 };
 

@@ -382,7 +382,8 @@ struct CheckArgs {
     #[arg(long, value_name = "CAT,ID", value_delimiter = ',',
           add = ArgValueCandidates::new(complete::check_ids_and_categories))]
     only: Vec<String>,
-    /// A setting over its default, repeatable: `drawing.clearance.part=2`, `I2C-9.min_pull_up=1000`
+    /// A setting over its default, repeatable: `drawing.clearance.part=2`, `drawing.clearance.spacing=sparse`,
+    /// `I2C-9.min_pull_up=1000`
     #[arg(long = "set", value_name = "NAME=VALUE")]
     set: Vec<String>,
     /// A KiCad colour theme (`colors/*.json`), repeatable: what `DRAW-42` looks at the sheets on
@@ -414,7 +415,8 @@ struct PlaceFieldsArgs {
     /// Edit the .kicad_sch files in place; without it nothing is written
     #[arg(long)]
     write: bool,
-    /// A setting over its default, repeatable: `drawing.clearance.text=0.5`, `drawing.fields.pitch=2.54`
+    /// A setting over its default, repeatable: `drawing.clearance.text=0.5`, `drawing.clearance.spacing=sparse`,
+    /// `drawing.fields.pitch=2.54`
     #[arg(long = "set", value_name = "NAME=VALUE")]
     set: Vec<String>,
 }
@@ -604,12 +606,10 @@ fn main() -> ExitCode {
 fn settings(sets: &[String]) -> Result<better_erc::Config, String> {
     let mut config = better_erc::Config::default();
     for set in sets {
-        let parsed = set
+        let (k, v) = set
             .split_once('=')
-            .and_then(|(k, v)| Some((k, v.parse().ok()?)));
-        parsed.map_or(Err(format!("--set {set}: not NAME=VALUE")), |(k, v)| {
-            config.set(k, v)
-        })?;
+            .ok_or_else(|| format!("--set {set}: not NAME=VALUE"))?;
+        config.set_text(k, v)?;
     }
     Ok(config)
 }

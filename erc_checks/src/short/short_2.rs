@@ -21,6 +21,7 @@ static META: CheckMeta = CheckMeta {
         default: 4.0,
         unit: "",
         doc: "the longest chain of parts followed from a net back to itself",
+        choices: &[],
     }],
 };
 

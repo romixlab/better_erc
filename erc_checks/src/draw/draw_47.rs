@@ -14,6 +14,7 @@ const ITEM_WORDS: Param = Param {
     default: 15.0,
     unit: "words",
     doc: "most words in a sentence of a note item",
+    choices: &[],
 };
 
 const ITEM_MARKS: Param = Param {
@@ -21,6 +22,7 @@ const ITEM_MARKS: Param = Param {
     default: 3.0,
     unit: "marks",
     doc: "most `;`, `:` and `(` in one sentence of a note",
+    choices: &[],
 };
 
 static META: CheckMeta = CheckMeta {

@@ -1,7 +1,8 @@
 //! The pairs of items that matter to `DRAW-7`, `DRAW-9` and `DRAW-34`, with what each check exempts
 
 use super::{
-    CLEARANCE_PART, CLEARANCE_POWER, CLEARANCE_TEXT, at, location, near_point, nm, sheet_subject,
+    CLEARANCE_PACKED, CLEARANCE_PART, CLEARANCE_POWER, CLEARANCE_SPACING, CLEARANCE_TEXT, at,
+    location, near_point, nm, sheet_subject,
 };
 use crate::meta::CheckMeta;
 use crate::{Ctx, Finding};
@@ -102,6 +103,18 @@ fn in_free_room(a: &Item, b: &Item) -> bool {
     inside(a, b) || inside(b, a)
 }
 
+/// A body, pin, pin text or field each, of two different parts; power symbols and sheets are not parts here
+fn two_parts(a: &Item, b: &Item) -> bool {
+    let of_part = |i: &Item| {
+        i.owner.is_some()
+            && matches!(
+                i.kind,
+                K::Body | K::Pin | K::PinName | K::PinNumber | K::Field
+            )
+    };
+    of_part(a) && of_part(b) && a.owner != b.owner
+}
+
 /// Two text boxes side by side with a shared edge: one unit in two columns
 fn one_unit(a: &Item, b: &Item) -> bool {
     a.kind == K::TextBox && b.kind == K::TextBox && a.rect.touches(b.rect)
@@ -189,20 +202,47 @@ pub(super) fn bare_hit(a: &Item, b: &Item, wire_through: bool) -> Option<i64> {
     Some(shared.map_or(1, |i| i.width().max(1) * i.height().max(1)))
 }
 
+/// How much room two parts need between them (`drawing.clearance.spacing`)
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(super) enum Spacing {
+    /// Parts packed on purpose: two parts' bodies, pins and fields keep only the packed margin
+    Tight,
+    /// Every item keeps its own margin
+    Sparse,
+}
+
 /// The clearance margins of `DRAW-34`, in nanometres
 #[derive(Clone, Copy, Debug)]
 pub(super) struct Margins {
     pub part: i64,
     pub power: i64,
     pub text: i64,
+    /// Around a part's body, pins and fields against another part's, in tight spacing
+    pub packed: i64,
+    pub spacing: Spacing,
 }
 
 impl Margins {
     pub(super) fn of(cx: &Ctx, meta: &CheckMeta) -> Margins {
+        let spacing = match cx.choice(meta, CLEARANCE_SPACING.name) {
+            "sparse" => Spacing::Sparse,
+            _ => Spacing::Tight,
+        };
         Margins {
             part: nm(cx, meta, &CLEARANCE_PART),
             power: nm(cx, meta, &CLEARANCE_POWER),
             text: nm(cx, meta, &CLEARANCE_TEXT),
+            packed: nm(cx, meta, &CLEARANCE_PACKED),
+            spacing,
+        }
+    }
+
+    /// The margins of the two items against each other
+    fn between(self, a: &Item, b: &Item) -> (i64, i64) {
+        if self.spacing == Spacing::Tight && two_parts(a, b) {
+            (self.packed, self.packed)
+        } else {
+            (self.around(a), self.around(b))
         }
     }
 
@@ -237,7 +277,7 @@ pub(super) fn close_hit(scene: &Scene, m: Margins, a: &Item, b: &Item) -> Option
     if own(a, b) || tied(scene, a, b) || one_unit(a, b) {
         return None;
     }
-    let (ma, mb) = (m.around(a), m.around(b));
+    let (ma, mb) = m.between(a, b);
     let apart = separation(a, b, ma + mb)?;
     (apart >= 0).then_some(ma + mb - apart)
 }
@@ -274,7 +314,16 @@ pub(super) fn gap_text(nm: i64) -> String {
 mod tests {
     use crate::draw::draw_9::Draw9;
     use crate::draw::draw_34::Draw34;
-    use crate::testing::fingerprints_of;
+    use crate::testing::{fingerprints_of, fingerprints_of_with};
+
+    /// What `check` finds on `schematic` in sparse spacing, where every item keeps its own margin
+    fn sparse(check: &'static dyn crate::Check, schematic: &str) -> Vec<String> {
+        let mut opts = crate::RunOptions::default();
+        opts.config
+            .set_text("drawing.clearance.spacing", "sparse")
+            .unwrap();
+        fingerprints_of_with(check, schematic, &opts)
+    }
 
     /// A sheet with these library symbols and items
     fn sheet(items: &str) -> String {
@@ -343,11 +392,13 @@ mod tests {
             let r = symbol("R", "R1", 60.0, 60.0, 1) + &symbol("R", "R2", r2, 60.0, 2);
             sheet(&(r + &symbol("C", "C1", 54.412, 60.0, 3)))
         };
-        assert_eq!(fingerprints_of(&Draw34, &at(64.572)), Vec::<String>::new());
+        assert_eq!(sparse(&Draw34, &at(64.572)), Vec::<String>::new());
         assert_eq!(
-            fingerprints_of(&Draw34, &at(64.472)),
+            sparse(&Draw34, &at(64.472)),
             ["DRAW-34:item R1 body|item R2 body|sheet /"]
         );
+        // Tight spacing holds two parts only to the packed margin
+        assert_eq!(fingerprints_of(&Draw34, &at(64.472)), Vec::<String>::new());
     }
 
     #[test]

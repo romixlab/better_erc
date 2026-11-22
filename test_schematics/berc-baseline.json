@@ -16,7 +16,7 @@
     "variant": null,
     "errors": 9,
     "warnings": 56,
-    "suggestions": 229,
+    "suggestions": 166,
     "infos": 0,
     "candidates": 0,
     "ran": 157,
@@ -45,7 +45,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 98
+      "micros": 158
     },
     {
       "id": "PIN-4",
@@ -70,7 +70,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 78
+      "micros": 1
     },
     {
       "id": "PIN-7",
@@ -156,7 +156,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 615
+      "micros": 495
     },
     {
       "id": "RAIL-2",
@@ -186,7 +186,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 530
+      "micros": 250
     },
     {
       "id": "RAIL-6",
@@ -288,7 +288,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 489
+      "micros": 286
     },
     {
       "id": "RAIL-20",
@@ -346,7 +346,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 149
+      "micros": 84
     },
     {
       "id": "DEC-2",
@@ -369,7 +369,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 28
+      "micros": 12
     },
     {
       "id": "DEC-5",
@@ -392,7 +392,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 11
+      "micros": 10
     },
     {
       "id": "DEC-8",
@@ -401,7 +401,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 19
+      "micros": 23
     },
     {
       "id": "DEC-9",
@@ -417,7 +417,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 62
+      "micros": 118
     },
     {
       "id": "DEC-11",
@@ -426,7 +426,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 12
     },
     {
       "id": "DEC-12",
@@ -435,7 +435,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 11
     },
     {
       "id": "DEC-13",
@@ -479,7 +479,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1
+      "micros": 2
     },
     {
       "id": "SEQ-6",
@@ -530,7 +530,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 3
+      "micros": 4
     },
     {
       "id": "GND-4",
@@ -560,7 +560,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 14
     },
     {
       "id": "DRV-1",
@@ -597,7 +597,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 10
+      "micros": 15
     },
     {
       "id": "DRV-6",
@@ -606,7 +606,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 16
+      "micros": 26
     },
     {
       "id": "DRV-7",
@@ -615,7 +615,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 20
+      "micros": 40
     },
     {
       "id": "DRV-8",
@@ -631,7 +631,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 10
     },
     {
       "id": "DRV-10",
@@ -654,7 +654,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 9
     },
     {
       "id": "DRV-13",
@@ -670,7 +670,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 9
     },
     {
       "id": "DRV-15",
@@ -693,7 +693,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 12
     },
     {
       "id": "DRV-18",
@@ -772,7 +772,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 67
+      "micros": 138
     },
     {
       "id": "SHORT-2",
@@ -781,7 +781,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 205
+      "micros": 342
     },
     {
       "id": "SHORT-3",
@@ -790,7 +790,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 108
+      "micros": 180
     },
     {
       "id": "SHORT-4",
@@ -799,7 +799,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 88
+      "micros": 148
     },
     {
       "id": "SHORT-5",
@@ -808,7 +808,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 437
+      "micros": 684
     },
     {
       "id": "SHORT-6",
@@ -817,7 +817,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 26
+      "micros": 55
     },
     {
       "id": "SHORT-7",
@@ -826,7 +826,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 90
+      "micros": 689
     },
     {
       "id": "SHORT-8",
@@ -856,7 +856,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 43
+      "micros": 81
     },
     {
       "id": "SHORT-12",
@@ -865,7 +865,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1237
+      "micros": 1502
     },
     {
       "id": "WIRE-1",
@@ -874,7 +874,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 290
+      "micros": 350
     },
     {
       "id": "WIRE-2",
@@ -883,7 +883,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 93
+      "micros": 161
     },
     {
       "id": "WIRE-3",
@@ -948,7 +948,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 2
+      "micros": 4
     },
     {
       "id": "WIRE-12",
@@ -964,7 +964,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 66
+      "micros": 126
     },
     {
       "id": "WIRE-14",
@@ -973,7 +973,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 401
+      "micros": 586
     },
     {
       "id": "WIRE-15",
@@ -1087,7 +1087,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 81
+      "micros": 145
     },
     {
       "id": "LEAK-2",
@@ -1159,7 +1159,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 478
+      "micros": 1984
     },
     {
       "id": "LVL-5",
@@ -1182,7 +1182,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 1199
+      "micros": 1802
     },
     {
       "id": "LVL-8",
@@ -1198,7 +1198,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 26
+      "micros": 52
     },
     {
       "id": "LVL-10",
@@ -1249,7 +1249,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 11,
-      "micros": 194
+      "micros": 363
     },
     {
       "id": "IO-2",
@@ -1286,7 +1286,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 165
+      "micros": 291
     },
     {
       "id": "IO-7",
@@ -1295,7 +1295,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 11
     },
     {
       "id": "IO-8",
@@ -1304,7 +1304,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 346
+      "micros": 575
     },
     {
       "id": "IO-9",
@@ -1320,7 +1320,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 153
+      "micros": 247
     },
     {
       "id": "IO-11",
@@ -1329,7 +1329,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 10
+      "micros": 17
     },
     {
       "id": "IO-12",
@@ -1359,7 +1359,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 331
+      "micros": 514
     },
     {
       "id": "IO-16",
@@ -1368,7 +1368,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 59
+      "micros": 107
     },
     {
       "id": "IO-17",
@@ -1405,7 +1405,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 433
+      "micros": 593
     },
     {
       "id": "LOGIC-4",
@@ -1435,7 +1435,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 89
+      "micros": 158
     },
     {
       "id": "LOGIC-8",
@@ -1444,7 +1444,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 127
+      "micros": 210
     },
     {
       "id": "MUX-1",
@@ -1453,7 +1453,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 2394
+      "micros": 9175
     },
     {
       "id": "MUX-2",
@@ -1595,7 +1595,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 13
     },
     {
       "id": "CLK-4",
@@ -1611,7 +1611,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 312
+      "micros": 571
     },
     {
       "id": "CLK-6",
@@ -1620,7 +1620,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 945
+      "micros": 472
     },
     {
       "id": "CLK-7",
@@ -1629,7 +1629,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 315
+      "micros": 612
     },
     {
       "id": "CLK-8",
@@ -1680,7 +1680,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 928
+      "micros": 460
     },
     {
       "id": "CLK-15",
@@ -1689,7 +1689,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 911
+      "micros": 467
     },
     {
       "id": "CLK-16",
@@ -1712,7 +1712,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 944
+      "micros": 467
     },
     {
       "id": "CLK-19",
@@ -1728,7 +1728,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 46
+      "micros": 45
     },
     {
       "id": "I2C-2",
@@ -1737,7 +1737,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 3,
-      "micros": 226
+      "micros": 137
     },
     {
       "id": "I2C-3",
@@ -1746,7 +1746,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 49
+      "micros": 78
     },
     {
       "id": "I2C-4",
@@ -1755,7 +1755,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 38
+      "micros": 60
     },
     {
       "id": "I2C-5",
@@ -1778,7 +1778,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 57
+      "micros": 100
     },
     {
       "id": "I2C-8",
@@ -1794,7 +1794,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 138
+      "micros": 240
     },
     {
       "id": "I2C-10",
@@ -1803,7 +1803,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 121
+      "micros": 205
     },
     {
       "id": "I2C-11",
@@ -1861,7 +1861,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 19
+      "micros": 23
     },
     {
       "id": "I2C-19",
@@ -1989,7 +1989,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 16
     },
     {
       "id": "SER-15",
@@ -2082,7 +2082,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 249
+      "micros": 428
     },
     {
       "id": "ETH-4",
@@ -2168,7 +2168,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 18
+      "micros": 31
     },
     {
       "id": "MEM-2",
@@ -2184,7 +2184,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 15
+      "micros": 21
     },
     {
       "id": "MEM-4",
@@ -2221,7 +2221,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 252
+      "micros": 424
     },
     {
       "id": "MEM-9",
@@ -2237,7 +2237,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 11
     },
     {
       "id": "MEM-11",
@@ -2281,7 +2281,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 161
+      "micros": 241
     },
     {
       "id": "HS-5",
@@ -2304,7 +2304,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7
+      "micros": 11
     },
     {
       "id": "HS-8",
@@ -2320,7 +2320,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 11
     },
     {
       "id": "HS-10",
@@ -2364,7 +2364,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 836
+      "micros": 1363
     },
     {
       "id": "HS-16",
@@ -2443,7 +2443,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 16
     },
     {
       "id": "USB-2",
@@ -2466,7 +2466,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 11
+      "micros": 47
     },
     {
       "id": "USB-5",
@@ -2503,7 +2503,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 30
+      "micros": 48
     },
     {
       "id": "USB-10",
@@ -2512,7 +2512,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 34
     },
     {
       "id": "USB-11",
@@ -2521,7 +2521,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 24
+      "micros": 56
     },
     {
       "id": "USB-12",
@@ -2558,7 +2558,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 22
     },
     {
       "id": "USB-17",
@@ -2595,7 +2595,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 101
+      "micros": 576
     },
     {
       "id": "CONN-3",
@@ -2611,7 +2611,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 21
     },
     {
       "id": "CONN-5",
@@ -2641,7 +2641,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 28
     },
     {
       "id": "CONN-9",
@@ -2657,7 +2657,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 12
+      "micros": 33
     },
     {
       "id": "CONN-11",
@@ -2701,7 +2701,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 16
     },
     {
       "id": "CONN-17",
@@ -2710,7 +2710,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7
+      "micros": 16
     },
     {
       "id": "CONN-18",
@@ -2754,7 +2754,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 16
     },
     {
       "id": "ANA-4",
@@ -2763,7 +2763,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 192
+      "micros": 333
     },
     {
       "id": "ANA-5",
@@ -2807,7 +2807,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 12
     },
     {
       "id": "ANA-11",
@@ -2816,7 +2816,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 10
     },
     {
       "id": "ANA-12",
@@ -2825,7 +2825,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 10
     },
     {
       "id": "ANA-13",
@@ -2855,7 +2855,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 11
     },
     {
       "id": "ANA-17",
@@ -2892,7 +2892,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 14
+      "micros": 416
     },
     {
       "id": "ANA-22",
@@ -2901,7 +2901,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 58
+      "micros": 3011
     },
     {
       "id": "ANA-23",
@@ -3442,7 +3442,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 848
+      "micros": 3928
     },
     {
       "id": "DBG-2",
@@ -3451,7 +3451,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 141
+      "micros": 235
     },
     {
       "id": "DBG-3",
@@ -3460,7 +3460,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 36
+      "micros": 48
     },
     {
       "id": "DBG-4",
@@ -3469,7 +3469,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 19
+      "micros": 39
     },
     {
       "id": "DBG-5",
@@ -3492,7 +3492,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 309
+      "micros": 3018
     },
     {
       "id": "DBG-8",
@@ -3501,7 +3501,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1057
+      "micros": 561
     },
     {
       "id": "DBG-9",
@@ -3517,7 +3517,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 84
+      "micros": 54
     },
     {
       "id": "DBG-11",
@@ -3526,7 +3526,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1014
+      "micros": 562
     },
     {
       "id": "DBG-12",
@@ -3549,7 +3549,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 160
+      "micros": 185
     },
     {
       "id": "DBG-15",
@@ -3565,7 +3565,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 15
+      "micros": 14
     },
     {
       "id": "DBG-17",
@@ -3574,7 +3574,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 274
+      "micros": 269
     },
     {
       "id": "DBG-18",
@@ -3583,7 +3583,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 14,
-      "micros": 504
+      "micros": 595
     },
     {
       "id": "DBG-19",
@@ -3634,7 +3634,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 20,
-      "micros": 487
+      "micros": 538
     },
     {
       "id": "TEST-2",
@@ -3643,7 +3643,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 28
+      "micros": 40
     },
     {
       "id": "TEST-3",
@@ -3659,7 +3659,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 40
+      "micros": 57
     },
     {
       "id": "TEST-5",
@@ -3668,7 +3668,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 28,
-      "micros": 631
+      "micros": 781
     },
     {
       "id": "TEST-6",
@@ -3691,7 +3691,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 273
+      "micros": 570
     },
     {
       "id": "BOM-2",
@@ -3707,7 +3707,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 208
+      "micros": 300
     },
     {
       "id": "BOM-4",
@@ -3716,7 +3716,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 12,
-      "micros": 330
+      "micros": 716
     },
     {
       "id": "BOM-5",
@@ -3725,7 +3725,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 351
+      "micros": 602
     },
     {
       "id": "BOM-6",
@@ -3734,7 +3734,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 323
+      "micros": 530
     },
     {
       "id": "BOM-7",
@@ -3750,7 +3750,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 12
     },
     {
       "id": "BOM-9",
@@ -3759,7 +3759,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 306
+      "micros": 525
     },
     {
       "id": "BOM-10",
@@ -3768,7 +3768,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 20
+      "micros": 42
     },
     {
       "id": "BOM-11",
@@ -3777,7 +3777,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 11
+      "micros": 21
     },
     {
       "id": "BOM-12",
@@ -3800,7 +3800,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 111
+      "micros": 218
     },
     {
       "id": "BOM-15",
@@ -3823,7 +3823,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 78
+      "micros": 123
     },
     {
       "id": "BOM-18",
@@ -3846,7 +3846,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 66
+      "micros": 3161
     },
     {
       "id": "NAME-2",
@@ -3855,7 +3855,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 43
+      "micros": 77
     },
     {
       "id": "NAME-3",
@@ -3871,7 +3871,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 62
+      "micros": 102
     },
     {
       "id": "NAME-5",
@@ -3880,7 +3880,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 113
+      "micros": 211
     },
     {
       "id": "NAME-6",
@@ -3889,7 +3889,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 62
+      "micros": 135
     },
     {
       "id": "NAME-7",
@@ -3898,7 +3898,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 1696
+      "micros": 2271
     },
     {
       "id": "NAME-8",
@@ -3914,7 +3914,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 57
+      "micros": 112
     },
     {
       "id": "NAME-10",
@@ -3923,7 +3923,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 63
+      "micros": 110
     },
     {
       "id": "NAME-11",
@@ -3932,7 +3932,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 133
+      "micros": 215
     },
     {
       "id": "NAME-12",
@@ -3941,7 +3941,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 39
+      "micros": 72
     },
     {
       "id": "NAME-13",
@@ -3950,7 +3950,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 2,
-      "micros": 10
+      "micros": 27
     },
     {
       "id": "DRAW-1",
@@ -4001,7 +4001,7 @@
       "tier": "hard",
       "status": "ran",
       "findings": 0,
-      "micros": 17581
+      "micros": 15345
     },
     {
       "id": "DRAW-8",
@@ -4017,7 +4017,7 @@
       "tier": "hard",
       "status": "ran",
       "findings": 0,
-      "micros": 31117
+      "micros": 15153
     },
     {
       "id": "DRAW-10",
@@ -4145,7 +4145,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 1,
-      "micros": 250
+      "micros": 392
     },
     {
       "id": "DRAW-29",
@@ -4154,7 +4154,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 1453
+      "micros": 1672
     },
     {
       "id": "DRAW-30",
@@ -4163,7 +4163,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 262
+      "micros": 539
     },
     {
       "id": "DRAW-31",
@@ -4179,7 +4179,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 18
+      "micros": 381
     },
     {
       "id": "DRAW-33",
@@ -4194,8 +4194,8 @@
       "severity": "suggestion",
       "tier": "hard",
       "status": "ran",
-      "findings": 123,
-      "micros": 22936
+      "findings": 60,
+      "micros": 30479
     },
     {
       "id": "DRAW-35",
@@ -4204,7 +4204,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 135
+      "micros": 224
     },
     {
       "id": "DRAW-36",
@@ -4213,7 +4213,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 17,
-      "micros": 8086
+      "micros": 10470
     },
     {
       "id": "DRAW-37",
@@ -4243,7 +4243,7 @@
       "tier": "hard",
       "status": "ran",
       "findings": 0,
-      "micros": 1242
+      "micros": 1742
     },
     {
       "id": "DRAW-41",
@@ -4252,7 +4252,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 2,
-      "micros": 2646
+      "micros": 7792
     },
     {
       "id": "DRAW-42",
@@ -4271,7 +4271,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 122
+      "micros": 217
     },
     {
       "id": "DRAW-44",
@@ -4280,7 +4280,7 @@
       "tier": "hard",
       "status": "ran",
       "findings": 0,
-      "micros": 129
+      "micros": 2137
     },
     {
       "id": "DRAW-45",
@@ -4289,7 +4289,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 125
+      "micros": 2012
     },
     {
       "id": "DRAW-46",
@@ -4298,7 +4298,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 2
+      "micros": 1597
     },
     {
       "id": "DRAW-47",
@@ -4307,7 +4307,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 11
+      "micros": 2797
     },
     {
       "id": "LIB-1",
@@ -4330,7 +4330,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 7
+      "micros": 44
     },
     {
       "id": "LIB-4",
@@ -4409,7 +4409,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 6
+      "micros": 21
     },
     {
       "id": "LIB-15",
@@ -4418,7 +4418,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 510
+      "micros": 700
     },
     {
       "id": "LIB-16",
@@ -4448,7 +4448,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 8
+      "micros": 32
     },
     {
       "id": "LIB-21",
@@ -16294,929 +16294,6 @@
           "subject": {
             "Sheet": [
               0,
-              1
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C20: I2C no pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              1
-            ]
-          },
-          "kind": "item",
-          "name": "R201 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              1
-            ]
-          },
-          "kind": "item",
-          "name": "R202 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R202 body at x 149.86 y 95.25 is 0.2 mm short of its margin to R201 Reference at x 144.69 y 93.98",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R201 Reference|item R202 body|sheet /C20: I2C no pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-1_no_pull_ups.kicad_sch",
-          "what": "R201 Reference",
-          "line": 2824,
-          "at": [
-            144.689285,
-            93.9799
-          ]
-        },
-        {
-          "file": "i2c-1_no_pull_ups.kicad_sch",
-          "what": "R202 body",
-          "line": 2280,
-          "at": [
-            149.86,
-            95.25
-          ]
-        },
-        {
-          "file": "i2c-1_no_pull_ups.kicad_sch",
-          "what": "sheet /C20: I2C no pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              1
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C20: I2C no pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              1
-            ]
-          },
-          "kind": "item",
-          "name": "R201 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              1
-            ]
-          },
-          "kind": "item",
-          "name": "R202.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R202.1 name at x 148.97 y 92.08 is 0.07 mm short of its margin to R201 Reference at x 144.69 y 93.98",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R201 Reference|item R202.1 name|sheet /C20: I2C no pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-1_no_pull_ups.kicad_sch",
-          "what": "R201 Reference",
-          "line": 2824,
-          "at": [
-            144.689285,
-            93.9799
-          ]
-        },
-        {
-          "file": "i2c-1_no_pull_ups.kicad_sch",
-          "what": "R202.1 name",
-          "line": 2280,
-          "at": [
-            148.971,
-            92.075
-          ]
-        },
-        {
-          "file": "i2c-1_no_pull_ups.kicad_sch",
-          "what": "sheet /C20: I2C no pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              1
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C20: I2C no pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              1
-            ]
-          },
-          "kind": "item",
-          "name": "R203 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              1
-            ]
-          },
-          "kind": "item",
-          "name": "R204 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R203 Reference at x 215.81 y 93.98 is 0.2 mm short of its margin to R204 body at x 220.98 y 95.25",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R203 Reference|item R204 body|sheet /C20: I2C no pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-1_no_pull_ups.kicad_sch",
-          "what": "R203 Reference",
-          "line": 2482,
-          "at": [
-            215.809285,
-            93.9799
-          ]
-        },
-        {
-          "file": "i2c-1_no_pull_ups.kicad_sch",
-          "what": "R204 body",
-          "line": 2688,
-          "at": [
-            220.98,
-            95.25
-          ]
-        },
-        {
-          "file": "i2c-1_no_pull_ups.kicad_sch",
-          "what": "sheet /C20: I2C no pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              1
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C20: I2C no pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              1
-            ]
-          },
-          "kind": "item",
-          "name": "R203 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              1
-            ]
-          },
-          "kind": "item",
-          "name": "R204.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R203 Reference at x 215.81 y 93.98 is 0.07 mm short of its margin to R204.1 name at x 220.09 y 92.08",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R203 Reference|item R204.1 name|sheet /C20: I2C no pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-1_no_pull_ups.kicad_sch",
-          "what": "R203 Reference",
-          "line": 2482,
-          "at": [
-            215.809285,
-            93.9799
-          ]
-        },
-        {
-          "file": "i2c-1_no_pull_ups.kicad_sch",
-          "what": "R204.1 name",
-          "line": 2688,
-          "at": [
-            220.091,
-            92.075
-          ]
-        },
-        {
-          "file": "i2c-1_no_pull_ups.kicad_sch",
-          "what": "sheet /C20: I2C no pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              3
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C20: I2C non standard pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              3
-            ]
-          },
-          "kind": "item",
-          "name": "R301 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              3
-            ]
-          },
-          "kind": "item",
-          "name": "R302 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R301 Reference at x 101.51 y 60.96 is 0.2 mm short of its margin to R302 body at x 106.68 y 62.23",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R301 Reference|item R302 body|sheet /C20: I2C non standard pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
-          "what": "R301 Reference",
-          "line": 1557,
-          "at": [
-            101.509285,
-            60.9599
-          ]
-        },
-        {
-          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
-          "what": "R302 body",
-          "line": 1913,
-          "at": [
-            106.68,
-            62.23
-          ]
-        },
-        {
-          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
-          "what": "sheet /C20: I2C non standard pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              3
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C20: I2C non standard pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              3
-            ]
-          },
-          "kind": "item",
-          "name": "R301 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              3
-            ]
-          },
-          "kind": "item",
-          "name": "R302.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R301 Reference at x 101.51 y 60.96 is 0.07 mm short of its margin to R302.1 name at x 105.79 y 59.06",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R301 Reference|item R302.1 name|sheet /C20: I2C non standard pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
-          "what": "R301 Reference",
-          "line": 1557,
-          "at": [
-            101.509285,
-            60.9599
-          ]
-        },
-        {
-          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
-          "what": "R302.1 name",
-          "line": 1913,
-          "at": [
-            105.791,
-            59.055
-          ]
-        },
-        {
-          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
-          "what": "sheet /C20: I2C non standard pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R401 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R403 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R403 body at x 157.48 y 64.77 is 0.2 mm short of its margin to R401 Reference at x 152.31 y 63.5",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R401 Reference|item R403 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R401 Reference",
-          "line": 7111,
-          "at": [
-            152.309285,
-            63.4999
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R403 body",
-          "line": 4123,
-          "at": [
-            157.48,
-            64.77
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R401 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R403.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R403.1 name at x 156.59 y 61.6 is 0.07 mm short of its margin to R401 Reference at x 152.31 y 63.5",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R401 Reference|item R403.1 name|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R401 Reference",
-          "line": 7111,
-          "at": [
-            152.309285,
-            63.4999
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R403.1 name",
-          "line": 4123,
-          "at": [
-            156.591,
-            61.595
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R402 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R404 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R402 Reference at x 152.31 y 99.06 is 0.2 mm short of its margin to R404 body at x 157.48 y 100.33",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R402 Reference|item R404 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R402 Reference",
-          "line": 4763,
-          "at": [
-            152.309285,
-            99.0599
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R404 body",
-          "line": 6777,
-          "at": [
-            157.48,
-            100.33
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R402 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R404.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R402 Reference at x 152.31 y 99.06 is 0.07 mm short of its margin to R404.1 name at x 156.59 y 97.16",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R402 Reference|item R404.1 name|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R402 Reference",
-          "line": 4763,
-          "at": [
-            152.309285,
-            99.0599
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R404.1 name",
-          "line": 6777,
-          "at": [
-            156.591,
-            97.155
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R405 Value"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R406 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R406 body at x 182.88 y 121.92 is 1.02 mm short of its margin to R405 Value at x 182.88 y 119.38",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R405 Value|item R406 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R405 Value",
-          "line": 6710,
-          "at": [
-            182.88,
-            119.38
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R406 body",
-          "line": 6153,
-          "at": [
-            182.88,
-            121.92
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R405 body"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R406 Value"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R406 Value at x 182.88 y 121.92 is 1.02 mm short of its margin to R405 body at x 182.88 y 119.38",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R405 body|item R406 Value|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R405 body",
-          "line": 6710,
-          "at": [
-            182.88,
-            119.38
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R406 Value",
-          "line": 6153,
-          "at": [
-            182.88,
-            121.92
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R405 body"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R406 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R406 body at x 182.88 y 121.92 is 2.03 mm short of its margin to R405 body at x 182.88 y 119.38",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R405 body|item R406 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R405 body",
-          "line": 6710,
-          "at": [
-            182.88,
-            119.38
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R406 body",
-          "line": 6153,
-          "at": [
-            182.88,
-            121.92
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
               4
             ]
           },
@@ -17246,7 +16323,7 @@
       ],
       "variant": null,
       "state": null,
-      "message": "R406.1 name at x 179.71 y 121.03 is 1.72 mm short of its margin to R405 body at x 182.88 y 119.38",
+      "message": "R406.1 name at x 179.71 y 121.03 is 0.07 mm short of its margin to R405 body at x 182.88 y 119.38",
       "facts": [],
       "fingerprint": "DRAW-34:item R405 body|item R406.1 name|sheet /C22: I2C Segments/",
       "explain": "docs/checks/draw.md#draw-34",
@@ -17312,83 +16389,12 @@
             ]
           },
           "kind": "item",
-          "name": "R406.1 pin"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R406.1 pin at x 179.71 y 121.92 is 1.02 mm short of its margin to R405 body at x 182.88 y 119.38",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R405 body|item R406.1 pin|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R405 body",
-          "line": 6710,
-          "at": [
-            182.88,
-            119.38
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R406.1 pin",
-          "line": 6153,
-          "at": [
-            179.705,
-            121.92
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R405 body"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
           "name": "R406.2 name"
         }
       ],
       "variant": null,
       "state": null,
-      "message": "R406.2 name at x 186.06 y 121.03 is 1.72 mm short of its margin to R405 body at x 182.88 y 119.38",
+      "message": "R406.2 name at x 186.06 y 121.03 is 0.07 mm short of its margin to R405 body at x 182.88 y 119.38",
       "facts": [],
       "fingerprint": "DRAW-34:item R405 body|item R406.2 name|sheet /C22: I2C Segments/",
       "explain": "docs/checks/draw.md#draw-34",
@@ -17444,1284 +16450,6 @@
             ]
           },
           "kind": "item",
-          "name": "R405 body"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R406.2 pin"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R406.2 pin at x 186.06 y 121.92 is 1.02 mm short of its margin to R405 body at x 182.88 y 119.38",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R405 body|item R406.2 pin|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R405 body",
-          "line": 6710,
-          "at": [
-            182.88,
-            119.38
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R406.2 pin",
-          "line": 6153,
-          "at": [
-            186.055,
-            121.92
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R405.1 name"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R406 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R406 body at x 182.88 y 121.92 is 0.13 mm short of its margin to R405.1 name at x 179.71 y 118.49",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R405.1 name|item R406 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R405.1 name",
-          "line": 6710,
-          "at": [
-            179.705,
-            118.491
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R406 body",
-          "line": 6153,
-          "at": [
-            182.88,
-            121.92
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R405.1 pin"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R406 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R406 body at x 182.88 y 121.92 is 1.02 mm short of its margin to R405.1 pin at x 179.71 y 119.38",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R405.1 pin|item R406 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R405.1 pin",
-          "line": 6710,
-          "at": [
-            179.705,
-            119.38
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R406 body",
-          "line": 6153,
-          "at": [
-            182.88,
-            121.92
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R405.1 pin"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R406.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R406.1 name at x 179.71 y 121.03 is 0.89 mm short of its margin to R405.1 pin at x 179.71 y 119.38",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R405.1 pin|item R406.1 name|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R405.1 pin",
-          "line": 6710,
-          "at": [
-            179.705,
-            119.38
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R406.1 name",
-          "line": 6153,
-          "at": [
-            179.705,
-            121.031
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R405.2 name"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R406 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R406 body at x 182.88 y 121.92 is 0.13 mm short of its margin to R405.2 name at x 186.06 y 118.49",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R405.2 name|item R406 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R405.2 name",
-          "line": 6710,
-          "at": [
-            186.055,
-            118.491
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R406 body",
-          "line": 6153,
-          "at": [
-            182.88,
-            121.92
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R405.2 pin"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R406 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R406 body at x 182.88 y 121.92 is 1.02 mm short of its margin to R405.2 pin at x 186.06 y 119.38",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R405.2 pin|item R406 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R405.2 pin",
-          "line": 6710,
-          "at": [
-            186.055,
-            119.38
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R406 body",
-          "line": 6153,
-          "at": [
-            182.88,
-            121.92
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R405.2 pin"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R406.2 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R406.2 name at x 186.06 y 121.03 is 0.89 mm short of its margin to R405.2 pin at x 186.06 y 119.38",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R405.2 pin|item R406.2 name|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R405.2 pin",
-          "line": 6710,
-          "at": [
-            186.055,
-            119.38
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R406.2 name",
-          "line": 6153,
-          "at": [
-            186.055,
-            121.031
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R407 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R408 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R407 Reference at x 236.13 y 148.59 is 0.2 mm short of its margin to R408 body at x 241.3 y 149.86",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R407 Reference|item R408 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R407 Reference",
-          "line": 3921,
-          "at": [
-            236.129285,
-            148.5899
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R408 body",
-          "line": 5097,
-          "at": [
-            241.3,
-            149.86
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R407 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R408.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R407 Reference at x 236.13 y 148.59 is 0.07 mm short of its margin to R408.1 name at x 240.41 y 146.69",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R407 Reference|item R408.1 name|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R407 Reference",
-          "line": 3921,
-          "at": [
-            236.129285,
-            148.5899
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R408.1 name",
-          "line": 5097,
-          "at": [
-            240.411,
-            146.685
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R409 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R411 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R411 body at x 252.73 y 52.07 is 0.2 mm short of its margin to R409 Reference at x 247.56 y 50.8",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R409 Reference|item R411 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R409 Reference",
-          "line": 7387,
-          "at": [
-            247.559285,
-            50.7999
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R411 body",
-          "line": 4693,
-          "at": [
-            252.73,
-            52.07
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R409 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R411.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R411.1 name at x 251.84 y 48.9 is 0.07 mm short of its margin to R409 Reference at x 247.56 y 50.8",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R409 Reference|item R411.1 name|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R409 Reference",
-          "line": 7387,
-          "at": [
-            247.559285,
-            50.7999
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R411.1 name",
-          "line": 4693,
-          "at": [
-            251.841,
-            48.895
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R410 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R412 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R412 body at x 254 y 196.85 is 0.2 mm short of its margin to R410 Reference at x 248.83 y 195.58",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R410 Reference|item R412 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R410 Reference",
-          "line": 4403,
-          "at": [
-            248.829285,
-            195.5799
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R412 body",
-          "line": 4193,
-          "at": [
-            254.0,
-            196.85
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R410 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R412.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R412.1 name at x 253.11 y 193.68 is 0.07 mm short of its margin to R410 Reference at x 248.83 y 195.58",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R410 Reference|item R412.1 name|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R410 Reference",
-          "line": 4403,
-          "at": [
-            248.829285,
-            195.5799
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R412.1 name",
-          "line": 4193,
-          "at": [
-            253.111,
-            193.675
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R413 Value"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R414 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R414 body at x 182.88 y 254 is 1.02 mm short of its margin to R413 Value at x 182.88 y 251.46",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R413 Value|item R414 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R413 Value",
-          "line": 6511,
-          "at": [
-            182.88,
-            251.46
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R414 body",
-          "line": 6290,
-          "at": [
-            182.88,
-            254.0
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R413 Value"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R414.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R414.1 name at x 179.71 y 253.11 is 0.39 mm short of its margin to R413 Value at x 182.88 y 251.46",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R413 Value|item R414.1 name|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R413 Value",
-          "line": 6511,
-          "at": [
-            182.88,
-            251.46
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R414.1 name",
-          "line": 6290,
-          "at": [
-            179.705,
-            253.111
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R413 Value"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R414.2 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R414.2 name at x 186.06 y 253.11 is 0.39 mm short of its margin to R413 Value at x 182.88 y 251.46",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R413 Value|item R414.2 name|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R413 Value",
-          "line": 6511,
-          "at": [
-            182.88,
-            251.46
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R414.2 name",
-          "line": 6290,
-          "at": [
-            186.055,
-            253.111
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R413 body"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R414 Value"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R414 Value at x 182.88 y 254 is 1.02 mm short of its margin to R413 body at x 182.88 y 251.46",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R413 body|item R414 Value|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R413 body",
-          "line": 6511,
-          "at": [
-            182.88,
-            251.46
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R414 Value",
-          "line": 6290,
-          "at": [
-            182.88,
-            254.0
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R413 body"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R414 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R414 body at x 182.88 y 254 is 2.03 mm short of its margin to R413 body at x 182.88 y 251.46",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R413 body|item R414 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R413 body",
-          "line": 6511,
-          "at": [
-            182.88,
-            251.46
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R414 body",
-          "line": 6290,
-          "at": [
-            182.88,
-            254.0
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
           "name": "R413 body"
         },
         {
@@ -18737,7 +16465,7 @@
       ],
       "variant": null,
       "state": null,
-      "message": "R414.1 name at x 179.71 y 253.11 is 1.72 mm short of its margin to R413 body at x 182.88 y 251.46",
+      "message": "R414.1 name at x 179.71 y 253.11 is 0.07 mm short of its margin to R413 body at x 182.88 y 251.46",
       "facts": [],
       "fingerprint": "DRAW-34:item R413 body|item R414.1 name|sheet /C22: I2C Segments/",
       "explain": "docs/checks/draw.md#draw-34",
@@ -18803,83 +16531,12 @@
             ]
           },
           "kind": "item",
-          "name": "R414.1 pin"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R414.1 pin at x 179.71 y 254 is 1.02 mm short of its margin to R413 body at x 182.88 y 251.46",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R413 body|item R414.1 pin|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R413 body",
-          "line": 6511,
-          "at": [
-            182.88,
-            251.46
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R414.1 pin",
-          "line": 6290,
-          "at": [
-            179.705,
-            254.0
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R413 body"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
           "name": "R414.2 name"
         }
       ],
       "variant": null,
       "state": null,
-      "message": "R414.2 name at x 186.06 y 253.11 is 1.72 mm short of its margin to R413 body at x 182.88 y 251.46",
+      "message": "R414.2 name at x 186.06 y 253.11 is 0.07 mm short of its margin to R413 body at x 182.88 y 251.46",
       "facts": [],
       "fingerprint": "DRAW-34:item R413 body|item R414.2 name|sheet /C22: I2C Segments/",
       "explain": "docs/checks/draw.md#draw-34",
@@ -18906,1142 +16563,6 @@
         {
           "file": "i2c-7_segments.kicad_sch",
           "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R413 body"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R414.2 pin"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R414.2 pin at x 186.06 y 254 is 1.02 mm short of its margin to R413 body at x 182.88 y 251.46",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R413 body|item R414.2 pin|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R413 body",
-          "line": 6511,
-          "at": [
-            182.88,
-            251.46
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R414.2 pin",
-          "line": 6290,
-          "at": [
-            186.055,
-            254.0
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R413.1 name"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R414 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R414 body at x 182.88 y 254 is 0.13 mm short of its margin to R413.1 name at x 179.71 y 250.57",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R413.1 name|item R414 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R413.1 name",
-          "line": 6511,
-          "at": [
-            179.705,
-            250.571
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R414 body",
-          "line": 6290,
-          "at": [
-            182.88,
-            254.0
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R413.1 pin"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R414 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R414 body at x 182.88 y 254 is 1.02 mm short of its margin to R413.1 pin at x 179.71 y 251.46",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R413.1 pin|item R414 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R413.1 pin",
-          "line": 6511,
-          "at": [
-            179.705,
-            251.46
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R414 body",
-          "line": 6290,
-          "at": [
-            182.88,
-            254.0
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R413.1 pin"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R414.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R414.1 name at x 179.71 y 253.11 is 0.89 mm short of its margin to R413.1 pin at x 179.71 y 251.46",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R413.1 pin|item R414.1 name|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R413.1 pin",
-          "line": 6511,
-          "at": [
-            179.705,
-            251.46
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R414.1 name",
-          "line": 6290,
-          "at": [
-            179.705,
-            253.111
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R413.2 name"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R414 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R414 body at x 182.88 y 254 is 0.13 mm short of its margin to R413.2 name at x 186.06 y 250.57",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R413.2 name|item R414 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R413.2 name",
-          "line": 6511,
-          "at": [
-            186.055,
-            250.571
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R414 body",
-          "line": 6290,
-          "at": [
-            182.88,
-            254.0
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R413.2 pin"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R414 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R414 body at x 182.88 y 254 is 1.02 mm short of its margin to R413.2 pin at x 186.06 y 251.46",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R413.2 pin|item R414 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R413.2 pin",
-          "line": 6511,
-          "at": [
-            186.055,
-            251.46
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R414 body",
-          "line": 6290,
-          "at": [
-            182.88,
-            254.0
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R413.2 pin"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R414.2 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R414.2 name at x 186.06 y 253.11 is 0.89 mm short of its margin to R413.2 pin at x 186.06 y 251.46",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R413.2 pin|item R414.2 name|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R413.2 pin",
-          "line": 6511,
-          "at": [
-            186.055,
-            251.46
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R414.2 name",
-          "line": 6290,
-          "at": [
-            186.055,
-            253.111
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R415 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R416 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R416 body at x 212.09 y 243.84 is 0.2 mm short of its margin to R415 Reference at x 206.92 y 242.57",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R415 Reference|item R416 body|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R415 Reference",
-          "line": 6220,
-          "at": [
-            206.919285,
-            242.5699
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R416 body",
-          "line": 5612,
-          "at": [
-            212.09,
-            243.84
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C22: I2C Segments/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R415 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              4
-            ]
-          },
-          "kind": "item",
-          "name": "R416.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R416.1 name at x 211.2 y 240.67 is 0.07 mm short of its margin to R415 Reference at x 206.92 y 242.57",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R415 Reference|item R416.1 name|sheet /C22: I2C Segments/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R415 Reference",
-          "line": 6220,
-          "at": [
-            206.919285,
-            242.5699
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "R416.1 name",
-          "line": 5612,
-          "at": [
-            211.201,
-            240.665
-          ]
-        },
-        {
-          "file": "i2c-7_segments.kicad_sch",
-          "what": "sheet /C22: I2C Segments/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R501 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R503 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R501 Reference at x 112.94 y 50.8 is 0.2 mm short of its margin to R503 body at x 118.11 y 52.07",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R501 Reference|item R503 body|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R501 Reference",
-          "line": 2895,
-          "at": [
-            112.939285,
-            50.7999
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R503 body",
-          "line": 3469,
-          "at": [
-            118.11,
-            52.07
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R501 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R503.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R501 Reference at x 112.94 y 50.8 is 0.07 mm short of its margin to R503.1 name at x 117.22 y 48.9",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R501 Reference|item R503.1 name|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R501 Reference",
-          "line": 2895,
-          "at": [
-            112.939285,
-            50.7999
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R503.1 name",
-          "line": 3469,
-          "at": [
-            117.221,
-            48.895
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R502 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R504 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R504 body at x 181.61 y 92.71 is 0.2 mm short of its margin to R502 Reference at x 176.44 y 91.44",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R502 Reference|item R504 body|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R502 Reference",
-          "line": 3759,
-          "at": [
-            176.439285,
-            91.4399
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R504 body",
-          "line": 3189,
-          "at": [
-            181.61,
-            92.71
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R502 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R504.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R504.1 name at x 180.72 y 89.54 is 0.07 mm short of its margin to R502 Reference at x 176.44 y 91.44",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R502 Reference|item R504.1 name|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R502 Reference",
-          "line": 3759,
-          "at": [
-            176.439285,
-            91.4399
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R504.1 name",
-          "line": 3189,
-          "at": [
-            180.721,
-            89.535
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R505 Value"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R506 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R506 body at x 143.51 y 109.22 is 1.02 mm short of its margin to R505 Value at x 143.51 y 106.68",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R505 Value|item R506 body|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R505 Value",
-          "line": 4438,
-          "at": [
-            143.51,
-            106.68
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R506 body",
-          "line": 2626,
-          "at": [
-            143.51,
-            109.22
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R505 body"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R506 Value"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R506 Value at x 143.51 y 109.22 is 1.02 mm short of its margin to R505 body at x 143.51 y 106.68",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R505 body|item R506 Value|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R505 body",
-          "line": 4438,
-          "at": [
-            143.51,
-            106.68
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R506 Value",
-          "line": 2626,
-          "at": [
-            143.51,
-            109.22
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R505 body"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R506 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R506 body at x 143.51 y 109.22 is 2.03 mm short of its margin to R505 body at x 143.51 y 106.68",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R505 body|item R506 body|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R505 body",
-          "line": 4438,
-          "at": [
-            143.51,
-            106.68
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R506 body",
-          "line": 2626,
-          "at": [
-            143.51,
-            109.22
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
           "at": null
         }
       ],
@@ -20086,7 +16607,7 @@
       ],
       "variant": null,
       "state": null,
-      "message": "R506.1 name at x 140.34 y 108.33 is 1.72 mm short of its margin to R505 body at x 143.51 y 106.68",
+      "message": "R506.1 name at x 140.34 y 108.33 is 0.07 mm short of its margin to R505 body at x 143.51 y 106.68",
       "facts": [],
       "fingerprint": "DRAW-34:item R505 body|item R506.1 name|sheet /C107: I2C multiple pull-ups/",
       "explain": "docs/checks/draw.md#draw-34",
@@ -20152,83 +16673,12 @@
             ]
           },
           "kind": "item",
-          "name": "R506.1 pin"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R506.1 pin at x 140.34 y 109.22 is 1.02 mm short of its margin to R505 body at x 143.51 y 106.68",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R505 body|item R506.1 pin|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R505 body",
-          "line": 4438,
-          "at": [
-            143.51,
-            106.68
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R506.1 pin",
-          "line": 2626,
-          "at": [
-            140.335,
-            109.22
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R505 body"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
           "name": "R506.2 name"
         }
       ],
       "variant": null,
       "state": null,
-      "message": "R506.2 name at x 146.69 y 108.33 is 1.72 mm short of its margin to R505 body at x 143.51 y 106.68",
+      "message": "R506.2 name at x 146.69 y 108.33 is 0.07 mm short of its margin to R505 body at x 143.51 y 106.68",
       "facts": [],
       "fingerprint": "DRAW-34:item R505 body|item R506.2 name|sheet /C107: I2C multiple pull-ups/",
       "explain": "docs/checks/draw.md#draw-34",
@@ -20255,929 +16705,6 @@
         {
           "file": "i2c-2_multiple_pull_ups.kicad_sch",
           "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R505 body"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R506.2 pin"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R506.2 pin at x 146.69 y 109.22 is 1.02 mm short of its margin to R505 body at x 143.51 y 106.68",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R505 body|item R506.2 pin|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R505 body",
-          "line": 4438,
-          "at": [
-            143.51,
-            106.68
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R506.2 pin",
-          "line": 2626,
-          "at": [
-            146.685,
-            109.22
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R505.1 name"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R506 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R506 body at x 143.51 y 109.22 is 0.13 mm short of its margin to R505.1 name at x 140.34 y 105.79",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R505.1 name|item R506 body|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R505.1 name",
-          "line": 4438,
-          "at": [
-            140.335,
-            105.791
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R506 body",
-          "line": 2626,
-          "at": [
-            143.51,
-            109.22
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R505.1 pin"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R506 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R506 body at x 143.51 y 109.22 is 1.02 mm short of its margin to R505.1 pin at x 140.34 y 106.68",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R505.1 pin|item R506 body|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R505.1 pin",
-          "line": 4438,
-          "at": [
-            140.335,
-            106.68
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R506 body",
-          "line": 2626,
-          "at": [
-            143.51,
-            109.22
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R505.1 pin"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R506.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R506.1 name at x 140.34 y 108.33 is 0.89 mm short of its margin to R505.1 pin at x 140.34 y 106.68",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R505.1 pin|item R506.1 name|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R505.1 pin",
-          "line": 4438,
-          "at": [
-            140.335,
-            106.68
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R506.1 name",
-          "line": 2626,
-          "at": [
-            140.335,
-            108.331
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R505.2 name"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R506 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R506 body at x 143.51 y 109.22 is 0.13 mm short of its margin to R505.2 name at x 146.69 y 105.79",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R505.2 name|item R506 body|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R505.2 name",
-          "line": 4438,
-          "at": [
-            146.685,
-            105.791
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R506 body",
-          "line": 2626,
-          "at": [
-            143.51,
-            109.22
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R505.2 pin"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R506 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R506 body at x 143.51 y 109.22 is 1.02 mm short of its margin to R505.2 pin at x 146.69 y 106.68",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R505.2 pin|item R506 body|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R505.2 pin",
-          "line": 4438,
-          "at": [
-            146.685,
-            106.68
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R506 body",
-          "line": 2626,
-          "at": [
-            143.51,
-            109.22
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R505.2 pin"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R506.2 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R506.2 name at x 146.69 y 108.33 is 0.89 mm short of its margin to R505.2 pin at x 146.69 y 106.68",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R505.2 pin|item R506.2 name|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R505.2 pin",
-          "line": 4438,
-          "at": [
-            146.685,
-            106.68
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R506.2 name",
-          "line": 2626,
-          "at": [
-            146.685,
-            108.331
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R507 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R508 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R507 Reference at x 30.39 y 180.34 is 0.2 mm short of its margin to R508 body at x 35.56 y 181.61",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R507 Reference|item R508 body|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R507 Reference",
-          "line": 2556,
-          "at": [
-            30.389285,
-            180.3399
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R508 body",
-          "line": 3119,
-          "at": [
-            35.56,
-            181.61
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R507 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R508.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R507 Reference at x 30.39 y 180.34 is 0.07 mm short of its margin to R508.1 name at x 34.67 y 178.44",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R507 Reference|item R508.1 name|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R507 Reference",
-          "line": 2556,
-          "at": [
-            30.389285,
-            180.3399
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R508.1 name",
-          "line": 3119,
-          "at": [
-            34.671,
-            178.435
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R509 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R511 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R509 Reference at x 208.19 y 38.1 is 0.2 mm short of its margin to R511 body at x 213.36 y 39.37",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R509 Reference|item R511 body|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R509 Reference",
-          "line": 2759,
-          "at": [
-            208.189285,
-            38.0999
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R511 body",
-          "line": 3259,
-          "at": [
-            213.36,
-            39.37
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R509 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "R511.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R509 Reference at x 208.19 y 38.1 is 0.07 mm short of its margin to R511.1 name at x 212.47 y 36.2",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R509 Reference|item R511.1 name|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R509 Reference",
-          "line": 2759,
-          "at": [
-            208.189285,
-            38.0999
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "R511.1 name",
-          "line": 3259,
-          "at": [
-            212.471,
-            36.195
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              2
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C20: I2C non equal pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              2
-            ]
-          },
-          "kind": "item",
-          "name": "R601 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              2
-            ]
-          },
-          "kind": "item",
-          "name": "R602 body"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R602 body at x 101.6 y 57.15 is 0.2 mm short of its margin to R601 Reference at x 96.43 y 55.88",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R601 Reference|item R602 body|sheet /C20: I2C non equal pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
-          "what": "R601 Reference",
-          "line": 1656,
-          "at": [
-            96.429285,
-            55.8799
-          ]
-        },
-        {
-          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
-          "what": "R602 body",
-          "line": 1300,
-          "at": [
-            101.6,
-            57.15
-          ]
-        },
-        {
-          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
-          "what": "sheet /C20: I2C non equal pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              2
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C20: I2C non equal pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              2
-            ]
-          },
-          "kind": "item",
-          "name": "R601 Reference"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              2
-            ]
-          },
-          "kind": "item",
-          "name": "R602.1 name"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "R602.1 name at x 100.71 y 53.98 is 0.07 mm short of its margin to R601 Reference at x 96.43 y 55.88",
-      "facts": [],
-      "fingerprint": "DRAW-34:item R601 Reference|item R602.1 name|sheet /C20: I2C non equal pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
-          "what": "R601 Reference",
-          "line": 1656,
-          "at": [
-            96.429285,
-            55.8799
-          ]
-        },
-        {
-          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
-          "what": "R602.1 name",
-          "line": 1300,
-          "at": [
-            100.711,
-            53.975
-          ]
-        },
-        {
-          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
-          "what": "sheet /C20: I2C non equal pull-ups/",
           "at": null
         }
       ],
@@ -24833,7 +20360,7 @@
     }
   ],
   "timing": {
-    "checks_micros": 38179,
-    "total_micros": 42092
+    "checks_micros": 39202,
+    "total_micros": 42987
   }
 }

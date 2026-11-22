@@ -20,6 +20,7 @@ static META: CheckMeta = CheckMeta {
         default: 5.0,
         unit: "",
         doc: "the most parts a rail feeds directly before a branch footprint is suggested",
+        choices: &[],
     }],
 };
 

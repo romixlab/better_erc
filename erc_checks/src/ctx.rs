@@ -34,16 +34,49 @@ impl Config {
     /// Sets a threshold by its key: a setting of `CHECK-ID.param`, or a shared one by its own name. A key no
     /// registered check declares is refused.
     pub fn set(&mut self, key: &str, value: f64) -> Result<(), String> {
-        let known = crate::meta::registered().into_iter().any(|c| {
-            let m = c.meta();
-            m.params.iter().any(|p| param_key(m, p.name) == key)
-        });
-        if !known {
-            return Err(format!("no check has the setting {key}"));
+        let p = declared(key)?;
+        let index = value as usize;
+        if !p.choices.is_empty()
+            && (value.fract() != 0.0 || value < 0.0 || index >= p.choices.len())
+        {
+            return Err(format!(
+                "{key} takes {}, not {value}",
+                p.choices.join(" or ")
+            ));
         }
         self.params.insert(key.to_string(), value);
         Ok(())
     }
+
+    /// Sets a setting from its text: a number, or one of a word setting's words (`drawing.clearance.spacing=sparse`)
+    pub fn set_text(&mut self, key: &str, value: &str) -> Result<(), String> {
+        let p = declared(key)?;
+        if let Some(i) = p.choices.iter().position(|c| *c == value) {
+            return self.set(key, i as f64);
+        }
+        match value.parse() {
+            Ok(v) => self.set(key, v),
+            Err(_) if !p.choices.is_empty() => Err(format!(
+                "{key} takes {}, not {value}",
+                p.choices.join(" or ")
+            )),
+            Err(_) => Err(format!("{key} takes a number, not {value}")),
+        }
+    }
+}
+
+/// The setting a registered check declares under `key`
+fn declared(key: &str) -> Result<crate::meta::Param, String> {
+    crate::meta::registered()
+        .into_iter()
+        .find_map(|c| {
+            let m = c.meta();
+            m.params
+                .iter()
+                .find(|p| param_key(m, p.name) == key)
+                .copied()
+        })
+        .ok_or_else(|| format!("no check has the setting {key}"))
 }
 
 /// Whether a board has the data a [`Need`] asks for
@@ -352,6 +385,28 @@ impl<'a> Ctx<'a> {
             .get(&param_key(meta, name))
             .copied()
             .unwrap_or(default)
+    }
+
+    /// A word setting: the word it is set to, or its default
+    ///
+    /// # Panics
+    ///
+    /// When the check declares no word setting `name`.
+    pub fn choice(&self, meta: &CheckMeta, name: &str) -> &'static str {
+        let p = meta
+            .param(name)
+            .unwrap_or_else(|| panic!("{} declares no param {name}", meta.id));
+        assert!(
+            !p.choices.is_empty(),
+            "{} param {name} is a number",
+            meta.id
+        );
+        // `Config::set` holds a word setting to an index of its words; a default off the list is the declaration's bug
+        let i = self.param(meta, name) as usize;
+        p.choices
+            .get(i)
+            .copied()
+            .unwrap_or_else(|| panic!("{} param {name}: index {i} past its words", meta.id))
     }
 
     /// Where a threshold came from, for a finding's facts

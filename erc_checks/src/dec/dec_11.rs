@@ -21,6 +21,7 @@ static META: CheckMeta = CheckMeta {
         default: 10.0,
         unit: "",
         doc: "neighbouring capacitor values on a rail this many times apart or more are a gap",
+        choices: &[],
     }],
 };
 

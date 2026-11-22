@@ -23,6 +23,7 @@ static META: CheckMeta = CheckMeta {
         default: 0.2,
         unit: "ratio",
         doc: "a group of parts at most this share of its kind (mount type, case size, connector family, side) is a minority",
+        choices: &[],
     }],
 };
 

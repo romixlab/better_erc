@@ -30,12 +30,14 @@ static META: CheckMeta = CheckMeta {
             default: 50.0,
             unit: "V",
             doc: "the rail voltage (magnitude) above which a net is no longer safe to touch",
+            choices: &[],
         },
         Param {
             name: "max_chain",
             default: 4.0,
             unit: "",
             doc: "the most resistors (and LEDs) in series followed from the rail to a ground",
+            choices: &[],
         },
     ],
 };

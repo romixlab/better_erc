@@ -247,11 +247,14 @@ at page width.
 | `drawing.clearance.part` | 1.27 mm | a symbol's body and its pins |
 | `drawing.clearance.power` | 1.27 mm | a power or ground symbol and its name |
 | `drawing.clearance.text` | 0.635 mm | a field, a label, a pin name or number, a note box |
+| `drawing.clearance.packed` | 0.127 mm | a part's body, pins and fields against another part's, in tight spacing |
 
 Two items are too close when their boxes, each grown by its own margin, overlap: two parts closer than 2.54 mm (one
 major grid), a field closer than 1.905 mm to another part, two labels closer than 1.27 mm. A part's own fields and
 pin names against its own body are exempt (they sit next to it on purpose); a label against the wire it lies on is
-exempt, and so is a wire against the sheet box whose pin it ends on.
+exempt, and so is a wire against the sheet box whose pin it ends on. `drawing.clearance.spacing` is `tight` by
+default: parts packed on purpose (a resistor pair at grid pitch, a column of test points) keep only the packed margin
+between their bodies, pins and fields; `sparse` holds them to the full margins.
 
 ```
 bad:    +3V3 ┬                      good:        ┬ +3V3

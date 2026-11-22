@@ -14,6 +14,7 @@ const MAX_PINS: Param = Param {
     default: 4.0,
     unit: "",
     doc: "pins of the largest part that stands on the voltage axis",
+    choices: &[],
 };
 
 static META: CheckMeta = CheckMeta {

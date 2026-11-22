@@ -22,12 +22,14 @@ static META: CheckMeta = CheckMeta {
             default: 0.05,
             unit: "A",
             doc: "the current a resistor path from a rail to ground may draw",
+            choices: &[],
         },
         Param {
             name: "max_chain",
             default: 3.0,
             unit: "",
             doc: "the most resistors in series followed from a rail to a ground",
+            choices: &[],
         },
     ],
 };

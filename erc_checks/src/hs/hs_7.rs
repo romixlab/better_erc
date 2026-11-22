@@ -27,6 +27,7 @@ static META: CheckMeta = CheckMeta {
         default: 3.0,
         unit: "parts",
         doc: "how many series parts (resistors, ferrites, inductors, ties) the path from the connector may pass",
+        choices: &[],
     }],
 };
 

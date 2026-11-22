@@ -20,6 +20,7 @@ static META: CheckMeta = CheckMeta {
         default: 1.0,
         unit: "ohm",
         doc: "a resistor below this value is a current shunt",
+        choices: &[],
     }],
 };
 

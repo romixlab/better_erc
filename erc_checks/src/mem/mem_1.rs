@@ -25,12 +25,14 @@ static META: CheckMeta = CheckMeta {
             default: 10_000.0,
             unit: "ohm",
             doc: "lower end of the CMD and DAT pull-up window, inside it",
+            choices: &[],
         },
         Param {
             name: "max_pull_up",
             default: 100_000.0,
             unit: "ohm",
             doc: "upper end of the CMD and DAT pull-up window, inside it",
+            choices: &[],
         },
     ],
 };

@@ -576,7 +576,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   - 📋 `DRAW-31` Section without a heading (candidates only)
   - ✅ `DRAW-32` Free-standing text, or a note box not of the six kinds
   - 📋 `DRAW-33` Note laid out as a plain-text table (candidates only)
-  - ✅ `DRAW-34` Items closer than their clearance margins (`drawing.clearance.*`)
+  - ✅ `DRAW-34` Items closer than their clearance margins (`drawing.clearance.*`; tight or sparse spacing between parts)
   - ✅ `DRAW-35` Two- to four-pin part tied to a rail or ground drawn horizontal
   - ✅ `DRAW-36` Near-miss alignment within a window, under the snap distance (`drawing.align.*`)
   - 📋 `DRAW-37` Note box naming a part with no leader to it (candidates only)

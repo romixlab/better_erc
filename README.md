@@ -200,6 +200,15 @@ the `drawing.clearance` margins (`DRAW-34`), gets the first of these that clears
 
 Field text is always upright, never turned (`DRAW-8`). Bodies, wires, labels, power symbols and notes never move.
 
+The margins follow `drawing.clearance.spacing` (`--set drawing.clearance.spacing=sparse`, here and in `berc check`):
+
+| Spacing | Two parts' bodies, pins and fields keep between them |
+|---|---|
+| `tight` (default) | only `drawing.clearance.packed`, 0.127 mm each: parts packed at grid pitch pass, overlaps still count |
+| `sparse` | their own margins, `drawing.clearance.part` and `.text` (2.54 mm body to body, 1.905 mm field to body) |
+
+Everything else (wires, labels, power symbols, notes, sheets) keeps its own margins in both.
+
 Every layout follows one style, set by the `drawing.fields` settings (`--set`, or the project file):
 
 | Setting | Default | Meaning |

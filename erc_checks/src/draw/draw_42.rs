@@ -16,6 +16,7 @@ const PAIR_MIN: Param = Param {
     default: 20.0,
     unit: "CIEDE2000",
     doc: "least difference between touching items",
+    choices: &[],
 };
 
 static META: CheckMeta = CheckMeta {

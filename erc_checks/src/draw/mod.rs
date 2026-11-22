@@ -36,6 +36,7 @@ pub(crate) const CLEARANCE_PART: Param = Param {
     default: 1.27,
     unit: "mm",
     doc: "margin around a symbol's body and its pins",
+    choices: &[],
 };
 
 pub(crate) const CLEARANCE_POWER: Param = Param {
@@ -43,6 +44,23 @@ pub(crate) const CLEARANCE_POWER: Param = Param {
     default: 1.27,
     unit: "mm",
     doc: "margin around a power or ground symbol and its name",
+    choices: &[],
+};
+
+pub(crate) const CLEARANCE_SPACING: Param = Param {
+    name: "drawing.clearance.spacing",
+    default: 0.0,
+    unit: "",
+    doc: "tight: two parts' bodies, pins and fields need only the packed margin between them; sparse: their own margins",
+    choices: &["tight", "sparse"],
+};
+
+pub(crate) const CLEARANCE_PACKED: Param = Param {
+    name: "drawing.clearance.packed",
+    default: 0.127,
+    unit: "mm",
+    doc: "margin around a part's body, pins and fields against another part's, in tight spacing",
+    choices: &[],
 };
 
 pub(crate) const CLEARANCE_TEXT: Param = Param {
@@ -50,6 +68,7 @@ pub(crate) const CLEARANCE_TEXT: Param = Param {
     default: 0.635,
     unit: "mm",
     doc: "margin around a field, a label, a pin name or number, a note box",
+    choices: &[],
 };
 
 pub(crate) const ALIGN_WINDOW: Param = Param {
@@ -57,6 +76,7 @@ pub(crate) const ALIGN_WINDOW: Param = Param {
     default: 20.32,
     unit: "mm",
     doc: "neighbourhood within which items must align exactly",
+    choices: &[],
 };
 
 pub(crate) const ALIGN_SNAP: Param = Param {
@@ -64,6 +84,7 @@ pub(crate) const ALIGN_SNAP: Param = Param {
     default: 5.08,
     unit: "mm",
     doc: "offsets below this (and above zero) are near misses",
+    choices: &[],
 };
 
 pub(crate) const PIN_LEAD: Param = Param {
@@ -71,6 +92,7 @@ pub(crate) const PIN_LEAD: Param = Param {
     default: 2.54,
     unit: "mm",
     doc: "straight wire at a pin or power symbol before the first bend",
+    choices: &[],
 };
 
 pub(crate) const HEADING_SIZE: Param = Param {
@@ -78,6 +100,7 @@ pub(crate) const HEADING_SIZE: Param = Param {
     default: 2.54,
     unit: "mm",
     doc: "height of a section heading; larger bold text is a title",
+    choices: &[],
 };
 
 pub(crate) const SECTION_REACH: Param = Param {
@@ -85,6 +108,7 @@ pub(crate) const SECTION_REACH: Param = Param {
     default: 5.08,
     unit: "mm",
     doc: "how far left of its heading a section's parts may stand",
+    choices: &[],
 };
 
 pub(crate) const COLOUR_SLACK: Param = Param {
@@ -92,6 +116,7 @@ pub(crate) const COLOUR_SLACK: Param = Param {
     default: 8.0,
     unit: "counts",
     doc: "difference per colour channel a note box's or leader's stroke may have from its colour",
+    choices: &[],
 };
 
 pub(crate) const FIELDS_PITCH: Param = Param {
@@ -99,6 +124,7 @@ pub(crate) const FIELDS_PITCH: Param = Param {
     default: 2.0,
     unit: "mm",
     doc: "baseline-to-baseline distance between the lines of a field column, the same on every part",
+    choices: &[],
 };
 
 pub(crate) const FIELDS_BODY_GAP: Param = Param {
@@ -106,6 +132,7 @@ pub(crate) const FIELDS_BODY_GAP: Param = Param {
     default: 0.635,
     unit: "mm",
     doc: "space between a field column (or a packed part's Reference and Value) and the body and pins",
+    choices: &[],
 };
 
 pub(crate) const FIELDS_STEP: Param = Param {
@@ -113,6 +140,7 @@ pub(crate) const FIELDS_STEP: Param = Param {
     default: 0.25,
     unit: "mm",
     doc: "grid field anchors are placed on, and the step a column slides or moves out by",
+    choices: &[],
 };
 
 pub(crate) const FIELDS_GAP_MAX: Param = Param {
@@ -120,6 +148,7 @@ pub(crate) const FIELDS_GAP_MAX: Param = Param {
     default: 2.0,
     unit: "mm",
     doc: "fields farther than this from their body are placed again",
+    choices: &[],
 };
 
 pub(crate) const FIELDS_ENDS_RAISE: Param = Param {
@@ -127,6 +156,7 @@ pub(crate) const FIELDS_ENDS_RAISE: Param = Param {
     default: 1.27,
     unit: "mm",
     doc: "how far above a horizontal packed part's pin line its Reference and Value sit",
+    choices: &[],
 };
 
 /// The words a simulator directive starts with, as in ngspice and KiCad's simulator

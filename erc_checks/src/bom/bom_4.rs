@@ -23,6 +23,7 @@ static META: CheckMeta = CheckMeta {
         default: 2.0,
         unit: "parts",
         doc: "the smallest group of identical resistors worth an array (arrays come with 2, 4 or 8 elements)",
+        choices: &[],
     }],
 };
 

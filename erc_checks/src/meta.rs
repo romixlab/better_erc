@@ -251,6 +251,9 @@ pub struct Param {
     /// `ohm`, `V`, `A`, or empty for a plain number
     pub unit: &'static str,
     pub doc: &'static str,
+    /// The words a word setting takes, in order; it holds the index of its word, `default` included. Empty for a
+    /// number.
+    pub choices: &'static [&'static str],
 }
 
 /// Everything about a check but its code. Id, severity and tier must match the catalogue line (a test asserts it).

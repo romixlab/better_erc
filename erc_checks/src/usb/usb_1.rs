@@ -26,12 +26,14 @@ static META: CheckMeta = CheckMeta {
             default: 5100.0,
             unit: "ohm",
             doc: "the sink termination Rd on each CC pin",
+            choices: &[],
         },
         Param {
             name: "tolerance",
             default: 0.2,
             unit: "",
             doc: "how far Rd may be from its value, as a fraction (±20 %; ±10 % for a sink that reads the advertised current)",
+            choices: &[],
         },
     ],
 };

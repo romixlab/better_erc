@@ -14,6 +14,7 @@ const GROUP_HEADING_SIZE: Param = Param {
     default: 1.905,
     unit: "mm",
     doc: "height of a group heading inside a section",
+    choices: &[],
 };
 
 static META: CheckMeta = CheckMeta {

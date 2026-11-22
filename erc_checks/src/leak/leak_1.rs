@@ -28,12 +28,14 @@ static META: CheckMeta = CheckMeta {
             default: 100e-6,
             unit: "A",
             doc: "the current an always-on divider may draw from its rail (the project's budget)",
+            choices: &[],
         },
         Param {
             name: "max_chain",
             default: 3.0,
             unit: "",
             doc: "the most resistors in series followed from a rail to a ground",
+            choices: &[],
         },
     ],
 };

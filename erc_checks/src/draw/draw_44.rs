@@ -14,6 +14,7 @@ const SECTION_GAP: Param = Param {
     default: 10.0,
     unit: "mm",
     doc: "gap that separates two sections",
+    choices: &[],
 };
 
 static META: CheckMeta = CheckMeta {

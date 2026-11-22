@@ -20,6 +20,7 @@ const fn weight(name: &'static str, default: f64, doc: &'static str) -> Param {
         default,
         unit: "",
         doc,
+        choices: &[],
     }
 }
 
@@ -75,6 +76,7 @@ const STEP: Param = Param {
     default: 2.54,
     unit: "mm",
     doc: "the grid step wire is counted in",
+    choices: &[],
 };
 
 static META: CheckMeta = CheckMeta {

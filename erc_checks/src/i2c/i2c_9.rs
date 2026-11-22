@@ -22,12 +22,14 @@ static META: CheckMeta = CheckMeta {
             default: 2200.0,
             unit: "ohm",
             doc: "lower end of the pull-up window, inside it",
+            choices: &[],
         },
         Param {
             name: "max_pull_up",
             default: 10_000.0,
             unit: "ohm",
             doc: "upper end of the pull-up window, inside it",
+            choices: &[],
         },
     ],
 };

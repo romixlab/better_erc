@@ -21,6 +21,7 @@ static META: CheckMeta = CheckMeta {
         default: 4.0,
         unit: "",
         doc: "the most pins an auto-named net may have",
+        choices: &[],
     }],
 };
 

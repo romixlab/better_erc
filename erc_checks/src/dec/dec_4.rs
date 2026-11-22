@@ -22,6 +22,7 @@ static META: CheckMeta = CheckMeta {
         default: 1e-6,
         unit: "H",
         doc: "low-frequency inductance assumed for a bead while its part data is not known",
+        choices: &[],
     }],
 };
 

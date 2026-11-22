@@ -22,12 +22,14 @@ static META: CheckMeta = CheckMeta {
             default: 8.0,
             unit: "inputs",
             doc: "inputs on one driver from which a buffer is suggested",
+            choices: &[],
         },
         Param {
             name: "clock_fan_out",
             default: 3.0,
             unit: "inputs",
             doc: "inputs on one clock driver from which a buffer is suggested",
+            choices: &[],
         },
     ],
 };

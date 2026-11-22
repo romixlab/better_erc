@@ -14,6 +14,7 @@ const SECTION_SNAP: Param = Param {
     default: 10.16,
     unit: "mm",
     doc: "offsets of section tops or left edges below this (and above zero) are near misses",
+    choices: &[],
 };
 
 static META: CheckMeta = CheckMeta {

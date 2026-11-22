@@ -25,12 +25,14 @@ static META: CheckMeta = CheckMeta {
             default: 240.0,
             unit: "ohm",
             doc: "the ZQ calibration resistor",
+            choices: &[],
         },
         Param {
             name: "tolerance",
             default: 0.01,
             unit: "",
             doc: "how far the ZQ resistor may be from its value, and the tolerance it must have where its value states one, as a fraction",
+            choices: &[],
         },
     ],
 };

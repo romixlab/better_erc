@@ -21,6 +21,7 @@ static META: CheckMeta = CheckMeta {
         default: 2.0,
         unit: "parts",
         doc: "how many resistors, diodes or ferrites in series a pull-up may go through to its rail (an LED and its resistor)",
+        choices: &[],
     }],
 };
 

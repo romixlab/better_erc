@@ -31,6 +31,8 @@ project file (`CFG-2`); see [clearance margins](../drawing-guide.md#room-around-
 | `drawing.clearance.part` | 1.27 mm | margin around a symbol's body and its pins |
 | `drawing.clearance.power` | 1.27 mm | margin around a power or ground symbol and its name |
 | `drawing.clearance.text` | 0.635 mm | margin around a field, a label, a pin name or number, a note box |
+| `drawing.clearance.spacing` | tight | `tight`: two parts' bodies, pins and fields need only the packed margin between them; `sparse`: their own margins |
+| `drawing.clearance.packed` | 0.127 mm | margin around a part's body, pins and fields against another part's, in tight spacing |
 | `drawing.section_gap` | 10 mm | gap that separates two sections (`DRAW-31`, `DRAW-16`) |
 | `drawing.bus_hint.places` | 3 | places each net of a group must reach before `DRAW-39` suggests a bus |
 | `drawing.bus_hint.members` | 4 | nets a group needs before `DRAW-39` suggests a bus |
@@ -445,7 +447,9 @@ or more lines of `name: value` or `name = value`, or runs of two or more spaces 
 
 **What it catches.** Two items whose boxes, each grown by its own margin (`drawing.clearance.part`, `.power`,
 `.text`), overlap, when the bare boxes do not (that is `DRAW-9`). With the defaults: two parts less than 2.54 mm
-apart, a field less than 1.905 mm from another part, two labels less than 1.27 mm apart. A body is measured by its
+apart, a field less than 1.905 mm from another part, two labels less than 1.27 mm apart. In tight spacing
+(`drawing.clearance.spacing`, the default) two parts' bodies, pins and fields are held only to
+`drawing.clearance.packed` each, so parts packed at grid pitch pass; `sparse` holds them to their own margins. A body is measured by its
 drawn primitives, never closer than the box of the same primitives would be; a text box around an item by its text
 (see **Boxes** at the top); two boxes are apart by the larger of the x and y gaps, anything else by the straight
 distance between the drawn outlines.

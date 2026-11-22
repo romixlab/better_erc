@@ -13,6 +13,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
+- `DRAW-34`: `drawing.clearance.spacing` tight (default) holds parts packed at grid pitch to a 0.127 mm margin; sparse as before (NET-26).
 - `berc place-fields`: horizontal two-pin parts take a centred column above first, test points right; packed needs a body across (TOOL-13).
 - `berc place-fields`: one field style from `drawing.fields.*` settings, 2 mm line pitch; off-style columns placed again (TOOL-13).
 - `berc place-fields`: columns sit next to the body on 0.25 mm steps; far fields are pulled back (TOOL-13).

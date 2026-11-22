@@ -27,12 +27,14 @@ static META: CheckMeta = CheckMeta {
             default: 50.0,
             unit: "ohm",
             doc: "lower end of one half of a split termination",
+            choices: &[],
         },
         Param {
             name: "max_half",
             default: 70.0,
             unit: "ohm",
             doc: "upper end of one half of a split termination",
+            choices: &[],
         },
     ],
 };

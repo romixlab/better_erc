@@ -13,6 +13,7 @@ const STUB_EXTRA: Param = Param {
     default: 1.27,
     unit: "mm",
     doc: "wire a label's stub has beyond its text",
+    choices: &[],
 };
 
 static META: CheckMeta = CheckMeta {

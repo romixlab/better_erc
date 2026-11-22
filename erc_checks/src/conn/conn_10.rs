@@ -20,18 +20,21 @@ static META: CheckMeta = CheckMeta {
             default: 10.0,
             unit: "pins",
             doc: "a connector with fewer signal pins is not judged",
+            choices: &[],
         },
         Param {
             name: "max_signals_per_ground",
             default: 6.0,
             unit: "pins",
             doc: "signal pins per ground pin above this are too few grounds",
+            choices: &[],
         },
         Param {
             name: "max_distance",
             default: 8.0,
             unit: "pins",
             doc: "a signal pin further than this from the nearest ground in pin order has a large loop",
+            choices: &[],
         },
     ],
 };

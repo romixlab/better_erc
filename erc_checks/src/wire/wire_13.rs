@@ -20,6 +20,7 @@ static META: CheckMeta = CheckMeta {
         default: 3.0,
         unit: "",
         doc: "how many series parts (R, C, L, ferrite, jumper) the search for a load looks through",
+        choices: &[],
     }],
 };
 

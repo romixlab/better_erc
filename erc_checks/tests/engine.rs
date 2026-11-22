@@ -30,6 +30,7 @@ static PLACEHOLDER: CheckMeta = CheckMeta {
         default: 1.0,
         unit: "",
         doc: "a threshold",
+        choices: &[],
     }],
 };
 impl Check for Placeholder {

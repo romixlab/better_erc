@@ -137,3 +137,73 @@ fn a_text_box_border_over_a_wire_is_not_a_finding() {
         ["DRAW-34:item text box \"Note\"|item wire of x 60 y 40|sheet /"]
     );
 }
+
+/// Config in this spacing
+fn spacing(word: &str) -> Config {
+    let mut c = Config::default();
+    c.set_text("drawing.clearance.spacing", word).unwrap();
+    c
+}
+
+#[test]
+fn tight_spacing_lets_parts_pack() {
+    // Two horizontal resistors one grid step apart, bodies 0.508 mm apart; R2's Value just right of R1's pin end
+    let packed = resistor(1, "R1", (50.0, 50.0, 90), None)
+        + &resistor(2, "R2", (50.0, 52.54, 90), Some((56.2, 50.0)));
+    assert_eq!(
+        findings("packed_tight", &packed, Config::default()),
+        Vec::<String>::new()
+    );
+    assert_eq!(
+        findings("packed_tight_set", &packed, spacing("tight")),
+        Vec::<String>::new()
+    );
+    assert_eq!(
+        findings("packed_sparse", &packed, spacing("sparse")),
+        [
+            "DRAW-34:item R1 body|item R2 body|sheet /",
+            "DRAW-34:item R1 body|item R2.1 pin|sheet /",
+            "DRAW-34:item R1 body|item R2.2 pin|sheet /",
+            "DRAW-34:item R1.1 pin|item R2 body|sheet /",
+            "DRAW-34:item R1.2 pin|item R2 Value|sheet /",
+            "DRAW-34:item R1.2 pin|item R2 body|sheet /",
+        ]
+    );
+}
+
+#[test]
+fn tight_spacing_still_finds_overlaps_and_fields_on_wires() {
+    // Bodies sharing area: a real overlap in both spacings
+    let onto =
+        resistor(1, "R1", (50.0, 50.0, 90), None) + &resistor(2, "R2", (50.0, 51.5, 90), None);
+    for word in ["tight", "sparse"] {
+        let found = findings(&format!("onto_{word}"), &onto, spacing(word));
+        assert!(
+            found.contains(&"DRAW-9:item R1 body|item R2 body|sheet /".to_owned()),
+            "{word}: {found:?}"
+        );
+    }
+    // A field just left of a wire it is not on: too close in both spacings
+    let near_wire = resistor(1, "R1", (50.0, 50.0, 90), Some((60.0, 50.0)))
+        + &wire(1, (61.0, 45.0), (61.0, 52.0));
+    for word in ["tight", "sparse"] {
+        let found = findings(&format!("near_wire_{word}"), &near_wire, spacing(word));
+        assert!(
+            found
+                .iter()
+                .any(|f| f.starts_with("DRAW-34:item R1 Value|item wire")),
+            "{word}: {found:?}"
+        );
+    }
+}
+
+#[test]
+fn spacing_takes_only_its_words() {
+    let mut c = Config::default();
+    assert_eq!(
+        c.set_text("drawing.clearance.spacing", "loose"),
+        Err("drawing.clearance.spacing takes tight or sparse, not loose".to_owned())
+    );
+    assert!(c.set("drawing.clearance.spacing", 2.0).is_err());
+    assert!(c.set_text("drawing.clearance.packed", "0.2").is_ok());
+}

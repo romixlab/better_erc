@@ -15,6 +15,7 @@ const MAX_PER_GROUP: Param = Param {
     default: 1.0,
     unit: "",
     doc: "power or ground symbols a pin group may have",
+    choices: &[],
 };
 
 static META: CheckMeta = CheckMeta {

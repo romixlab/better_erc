@@ -26,12 +26,14 @@ static META: CheckMeta = CheckMeta {
             default: 1000.0,
             unit: "ohm",
             doc: "lower end of the MDIO pull-up window, inside it",
+            choices: &[],
         },
         Param {
             name: "max_pull_up",
             default: 10_000.0,
             unit: "ohm",
             doc: "upper end of the MDIO pull-up window, inside it",
+            choices: &[],
         },
     ],
 };
