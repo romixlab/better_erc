@@ -11,8 +11,8 @@ use std::borrow::Cow;
 use std::collections::BTreeMap;
 
 /// Whether a pair can never be a finding: two wires, two pins, two things of one symbol as the library drew them,
-/// a wire on the thing it connects to, a label along its own wire or on its own pin, two things grouped on purpose (a
-/// note heading and its box)
+/// a wire on the thing it connects to (a part's pin, a sheet's pin), a label along its own wire or on its own pin, two
+/// things grouped on purpose (a note heading and its box)
 pub(super) fn exempt(scene: &Scene, a: &Item, b: &Item) -> bool {
     if (a.kind.is_wire() && b.kind.is_wire()) || (a.kind == K::Pin && b.kind == K::Pin) {
         return true;
@@ -30,6 +30,7 @@ pub(super) fn exempt(scene: &Scene, a: &Item, b: &Item) -> bool {
         | (K::Label, K::Pin | K::Power)
         | (K::Pin | K::Power, K::Label) => joined,
         (K::Wire, K::Body) => on_part(scene, first, second),
+        (K::Wire, K::Sheet) => on_sheet_pin(scene, first, second),
         (K::Wire, K::Label) => joined && along(scene, first, second),
         _ => false,
     }
@@ -40,6 +41,26 @@ fn on_part(scene: &Scene, w: &Item, body: &Item) -> bool {
     w.tie
         .zip(body.owner)
         .is_some_and(|(tie, part)| scene.ties[tie].pins.iter().any(|p| p.symbol == part))
+}
+
+/// Whether the wire `w` ends on a pin of the sheet box `sheet` and stays outside the box: it comes in from the pin's
+/// side
+fn on_sheet_pin(scene: &Scene, w: &Item, sheet: &Item) -> bool {
+    let Some(s) = sheet.owner.and_then(|i| scene.geometry.sheets.get(i)) else {
+        return false;
+    };
+    let wires = &scene.geometry.wires;
+    let Some(seg) = wires
+        .iter()
+        .find(|g| g.uuid == w.uuid && g.bbox() == w.rect)
+    else {
+        return false;
+    };
+    s.pins.iter().any(|p| {
+        let (dx, dy) = p.side.step();
+        let outward = |q: erc_model::Pt| (q.x - p.at.x) * dx + (q.y - p.at.y) * dy >= 0;
+        (seg.a == p.at || seg.b == p.at) && outward(seg.a) && outward(seg.b)
+    })
 }
 
 /// Whether one of the two is wired to the symbol the other belongs to; its fields do not count, they are placed by

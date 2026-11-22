@@ -457,8 +457,8 @@ real-board sheets were too dense at zero, the defaults stay small.
 resistor's body.
 
 **How to check.** The item boxes at the top of this page, grown by their margins; exempt a part's own fields and pin
-names against its own body, a label against its own wire, a heading against its parameter box. Report per sheet,
-closest pairs first.
+names against its own body, a label against its own wire, a heading against its parameter box, a wire against the
+sheet box whose pin it ends on (coming in from outside). Report per sheet, closest pairs first.
 
 **Fix.** `berc place-fields PROJECT` moves the fields of each symbol in the way into a column beside its body, on
 the side where the column hits nothing (see the README, "Placing fields").

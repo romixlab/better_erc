@@ -251,7 +251,7 @@ at page width.
 Two items are too close when their boxes, each grown by its own margin, overlap: two parts closer than 2.54 mm (one
 major grid), a field closer than 1.905 mm to another part, two labels closer than 1.27 mm. A part's own fields and
 pin names against its own body are exempt (they sit next to it on purpose); a label against the wire it lies on is
-exempt.
+exempt, and so is a wire against the sheet box whose pin it ends on.
 
 ```
 bad:    +3V3 ┬                      good:        ┬ +3V3
