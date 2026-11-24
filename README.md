@@ -181,7 +181,11 @@ berc place-fields PROJECT [--sheet NAME] [--write] [--set NAME=VALUE]
 Each placed symbol whose shown fields overlap text, a body, a wire or the sheet edge (`DRAW-9`), or come closer than
 the `drawing.clearance` margins (`DRAW-34`), gets the first of these that clears them:
 
-1. Rating fields (anything but Reference and Value) that touch a power symbol, when nothing else overlaps the fields:
+Only a rating that holds its kind's default may be hidden (see the defaults below): a resistor's Package or Power,
+a capacitor's Package or Dielectric. Any other field, and any other value, stays shown, so a 250mW resistor or a
+C0G capacitor keeps its rating on the sheet.
+
+1. Hideable rating fields that touch a power symbol, when nothing else overlaps the fields:
    those fields hidden, the column left where it is. Closeness alone is no reason to move a column that fits.
 2. A column: Reference, Value, then the rest top to bottom as they stood, justified toward the body, anchored on
    the field step 0.635 mm from the body, lines 2 mm apart whatever the text size, on the first side where it hits
@@ -193,9 +197,9 @@ the `drawing.clearance` margins (`DRAW-34`), gets the first of these that clears
 3. A packed two-pin part (resistor, capacitor, diode, inductor, ferrite bead), whose centred column across its axis
    overlaps a neighbour's body on one side, or a body or settled fields on both, a horizontal one before any column:
    Reference and Value at the ends of the part,
-   the other fields hidden. A horizontal part has them before and after its body on the line above its axis; a
+   the other fields hidden; only when all of them are hideable. A horizontal part has them before and after its body on the line above its axis; a
    vertical one has them centred above and below its pins, only where that spot is clear.
-4. A column shortened by hiding its last rating fields, the fewest that clear it.
+4. A column shortened by hiding its last hideable fields, the fewest that clear it.
 5. Else the column with the least overlap, or the fields stay when nothing is better.
 
 Field text is always upright, never turned (`DRAW-8`). Bodies, wires, labels, power symbols and notes never move.
@@ -218,6 +222,10 @@ Every layout follows one style, set by the `drawing.fields` settings (`--set`, o
 | `drawing.fields.step` | 0.25 mm | grid the anchors are placed on, and the step a column slides or moves out by |
 | `drawing.fields.gap_max` | 2 mm | fields farther than this from their body are placed again |
 | `drawing.fields.ends_raise` | 1.27 mm | how far above a horizontal packed part's pin line its Reference and Value sit |
+| `drawing.fields.r_package` | `0402` | a resistor's Package that may be hidden (`none`, `0201`, `0402`, `0603`, `0805`) |
+| `drawing.fields.r_power` | `63mW` | a resistor's Power that may be hidden (`none`, `50mW`, `63mW`, `100mW`, `125mW`, `250mW`) |
+| `drawing.fields.c_package` | `0402` | a capacitor's Package that may be hidden (`none`, `0201`, `0402`, `0603`, `0805`) |
+| `drawing.fields.c_dielectric` | `X5R` | a capacitor's Dielectric that may be hidden (`none`, `X5R`, `X7R`, `X7S`, `C0G`) |
 
 Fields that overlap nothing are left alone when they follow the style or stand in some other arrangement. A column
 (lines on one anchor line, one justification, on one side of the body) or a packed part's ends off the style, by

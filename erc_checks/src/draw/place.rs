@@ -5,7 +5,8 @@
 
 use super::overlap::{Margins, bare_hit, close_hit, exempt};
 use super::{
-    FIELDS_BODY_GAP, FIELDS_ENDS_RAISE, FIELDS_GAP_MAX, FIELDS_PITCH, FIELDS_STEP, MM, draw_34,
+    FIELDS_BODY_GAP, FIELDS_C_DIELECTRIC, FIELDS_C_PACKAGE, FIELDS_ENDS_RAISE, FIELDS_GAP_MAX,
+    FIELDS_PITCH, FIELDS_R_PACKAGE, FIELDS_R_POWER, FIELDS_STEP, MM, draw_34,
 };
 use crate::Ctx;
 use crate::meta::Param;
@@ -35,6 +36,37 @@ pub struct FieldStyle {
     pub gap_max: i64,
     /// How far above a horizontal packed part's pin line its Reference and Value sit, clear of the wire
     pub ends_raise: i64,
+    pub defaults: FieldDefaults,
+}
+
+/// The rating values the placer may hide when a symbol's fields need room, from the `drawing.fields.*` defaults:
+/// the values most parts of their kind carry, so a rating left shown reads as a choice. `None`: never hidden.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct FieldDefaults {
+    pub r_package: Option<&'static str>,
+    pub r_power: Option<&'static str>,
+    pub c_package: Option<&'static str>,
+    pub c_dielectric: Option<&'static str>,
+}
+
+impl FieldDefaults {
+    /// Whether the placer may hide `field` of the part `reference`: a resistor's or capacitor's rating that holds
+    /// its default, compared without case or spaces
+    pub fn hideable(&self, reference: &str, field: &DrawnField) -> bool {
+        let prefix: String = reference
+            .chars()
+            .take_while(char::is_ascii_alphabetic)
+            .collect();
+        let default = match (prefix.as_str(), field.name.as_str()) {
+            ("R", "Package") => self.r_package,
+            ("R", "Power") => self.r_power,
+            ("C", "Package") => self.c_package,
+            ("C", "Dielectric") => self.c_dielectric,
+            _ => None,
+        };
+        let plain = |v: &str| v.split_whitespace().collect::<String>().to_lowercase();
+        default.is_some_and(|d| plain(&field.text.text) == plain(d))
+    }
 }
 
 /// A `drawing.fields.*` setting out of its range
@@ -73,12 +105,19 @@ impl FieldStyle {
                 })
             }
         };
+        let word = |p: &Param| Some(draw_34::field_choice(cx, p)).filter(|w| *w != "none");
         Ok(FieldStyle {
             pitch: get(&FIELDS_PITCH, STEP_MIN)?,
             body_gap: get(&FIELDS_BODY_GAP, 0.0)?,
             step: get(&FIELDS_STEP, STEP_MIN)?,
             gap_max: get(&FIELDS_GAP_MAX, 0.0)?,
             ends_raise: get(&FIELDS_ENDS_RAISE, 0.0)?,
+            defaults: FieldDefaults {
+                r_package: word(&FIELDS_R_PACKAGE),
+                r_power: word(&FIELDS_R_POWER),
+                c_package: word(&FIELDS_C_PACKAGE),
+                c_dielectric: word(&FIELDS_C_DIELECTRIC),
+            },
         })
     }
 
@@ -494,7 +533,9 @@ fn place_symbol(
             true
         });
     }
-    let rating = |k: usize| !matches!(shown[k].name.as_str(), "Reference" | "Value");
+    // Only a rating that holds its default may be hidden: any other value is a choice the reader must see
+    let defaults = board.style.defaults;
+    let hideable = |k: usize| defaults.hideable(&sym.reference, shown[k]);
     let score = |l: &Layout| board.cost(&own, &placed(&own, l), l.side.is_column()).0;
     // A packed horizontal two-pin part always takes its ends: a short column squeezed above a row of them reads
     // as the neighbour's
@@ -503,15 +544,20 @@ fn place_symbol(
         .flatten();
     let style = board.style;
     let chosen = ends_first
-        .or_else(|| in_place(&now_hits, &rating))
+        .or_else(|| in_place(&now_hits, &hideable))
         .or_else(|| {
-            // Full columns, then each shortened by one more rating field from its end
-            let ratings = order.iter().filter(|k| rating(**k)).count();
+            // Full columns, then each without one more hideable field, from the column's end
+            let droppable: Vec<usize> = order.iter().copied().filter(|k| hideable(*k)).collect();
             let mut fallback: Option<(Cost, Layout)> = None;
-            for drop in 0..=ratings {
-                let kept = &order[..order.len() - drop];
+            for drop in 0..=droppable.len() {
+                let dropped = &droppable[droppable.len() - drop..];
+                let kept: Vec<usize> = order
+                    .iter()
+                    .copied()
+                    .filter(|k| !dropped.contains(k))
+                    .collect();
                 let mut best: Option<(Cost, Layout)> = None;
-                for l in columns(style, sym, &shown, kept, &order[order.len() - drop..]) {
+                for l in columns(style, sym, &shown, &kept, dropped) {
                     let c = score(&l);
                     if best.as_ref().is_none_or(|b| c < b.0) {
                         best = Some((c, l));
@@ -711,10 +757,10 @@ fn shape(sym: &DrawnSymbol, shown: &[&DrawnField]) -> Option<Side> {
     .map(|(_, side)| side)
 }
 
-/// When rating fields touch a power symbol and nothing else overlaps the fields (closeness alone is no reason
-/// to move a column that fits): those rating fields hidden, the rest left where it is
-fn in_place(hits: &[Hit], rating: &dyn Fn(usize) -> bool) -> Option<Layout> {
-    let on_power = |h: &Hit| h.kind == Some(K::Power) && rating(h.line);
+/// When hideable rating fields touch a power symbol and nothing else overlaps the fields (closeness alone is no
+/// reason to move a column that fits): those fields hidden, the rest left where it is
+fn in_place(hits: &[Hit], hideable: &dyn Fn(usize) -> bool) -> Option<Layout> {
+    let on_power = |h: &Hit| h.kind == Some(K::Power) && hideable(h.line);
     if !hits.iter().any(on_power) || !hits.iter().all(|h| on_power(h) || h.close) {
         return None;
     }
@@ -814,12 +860,18 @@ fn ends_layout(
 
 /// Reference and Value of a two-pin part at the ends of its body, upright. A horizontal part has them before and
 /// after the body on the line above its axis, so they sit beside its own wire; a vertical one has them centred
-/// above and below its pins. Every other field hidden. `None` for any other symbol, or one without Reference and
-/// Value shown.
+/// above and below its pins. Every other field hidden. `None` for any other symbol, one without Reference and
+/// Value shown, or one with another field shown that holds no default ([`FieldDefaults::hideable`]).
 fn ends_lines(style: FieldStyle, sym: &DrawnSymbol, shown: &[&DrawnField]) -> Option<Layout> {
     let horizontal = two_pin(sym)?;
     let reference = shown.iter().position(|f| f.name == "Reference")?;
     let value = shown.iter().position(|f| f.name == "Value")?;
+    let others_go = (0..shown.len())
+        .filter(|k| *k != reference && *k != value)
+        .all(|k| style.defaults.hideable(&sym.reference, shown[k]));
+    if !others_go {
+        return None;
+    }
     let line = |k: usize, at: Pt, halign: HAlign| {
         let rect = text_rect(at, false, shown[k].text.extent(), halign, VAlign::Center);
         (k, at, halign, rect)
@@ -982,6 +1034,7 @@ mod tests {
             step: 250_000,
             gap_max: 2_000_000,
             ends_raise: 1_270_000,
+            defaults: FieldDefaults::default(),
         };
         assert_eq!(style.up(250_001), 500_000);
         assert_eq!(style.up(-200_000), 0);

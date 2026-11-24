@@ -3,7 +3,8 @@
 use super::overlap::{close, finding, gap_text};
 use super::{
     CLEARANCE_PACKED, CLEARANCE_PART, CLEARANCE_POWER, CLEARANCE_SPACING, CLEARANCE_TEXT,
-    FIELDS_BODY_GAP, FIELDS_ENDS_RAISE, FIELDS_GAP_MAX, FIELDS_PITCH, FIELDS_STEP,
+    FIELDS_BODY_GAP, FIELDS_C_DIELECTRIC, FIELDS_C_PACKAGE, FIELDS_ENDS_RAISE, FIELDS_GAP_MAX,
+    FIELDS_PITCH, FIELDS_R_PACKAGE, FIELDS_R_POWER, FIELDS_STEP,
 };
 use crate::meta::*;
 use crate::{Ctx, Finding};
@@ -30,6 +31,10 @@ static META: CheckMeta = CheckMeta {
         FIELDS_STEP,
         FIELDS_GAP_MAX,
         FIELDS_ENDS_RAISE,
+        FIELDS_R_PACKAGE,
+        FIELDS_R_POWER,
+        FIELDS_C_PACKAGE,
+        FIELDS_C_DIELECTRIC,
     ],
 };
 
@@ -62,6 +67,11 @@ pub(super) fn margins(cx: &Ctx) -> super::overlap::Margins {
 /// A `drawing.fields.*` setting of the board, in millimetres
 pub(super) fn field_setting(cx: &Ctx, p: &crate::meta::Param) -> f64 {
     cx.param(&META, p.name)
+}
+
+/// A `drawing.fields.*` word setting of the board
+pub(super) fn field_choice(cx: &Ctx, p: &crate::meta::Param) -> &'static str {
+    cx.choice(&META, p.name)
 }
 
 #[cfg(test)]

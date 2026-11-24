@@ -739,3 +739,57 @@ fn test_point_fields_go_right() {
     let again = place(&file, &opts).unwrap();
     assert!(again.plan.symbols.is_empty(), "{:?}", again.plan);
 }
+
+/// The plans of `file`'s symbols after a run with `config`: reference and the fields hidden
+fn hidden_by_place(name: &str, text: &str, config: Config) -> Vec<(String, Vec<String>)> {
+    let file = scratch(name).join("defaults.kicad_sch");
+    std::fs::write(&file, text).unwrap();
+    let opts = PlaceOptions {
+        config,
+        ..PlaceOptions::default()
+    };
+    let placed = place(&file, &opts).unwrap();
+    placed
+        .plan
+        .symbols
+        .iter()
+        .map(|s| (s.reference.clone(), s.hidden.clone()))
+        .collect()
+}
+
+/// A rating off its default is a choice: packed resistors rated 250mW keep their Power shown, a C0G capacitor its
+/// Dielectric, and a default set to none hides nothing of that field
+#[test]
+fn only_default_ratings_are_hidden() {
+    let shown = |plans: &[(String, Vec<String>)], field: &str| {
+        plans
+            .iter()
+            .all(|(_, hidden)| !hidden.iter().any(|h| h == field))
+    };
+    let power = hidden_by_place(
+        "place_fields_power",
+        &packed().replace("\"63mW\"", "\"250mW\""),
+        Config::default(),
+    );
+    assert_eq!(power.len(), 3, "{power:?}");
+    assert!(shown(&power, "Power"), "{power:?}");
+
+    let c0g = hidden_by_place(
+        "place_fields_c0g",
+        &caps_over_ground().replace("\"X5R\"", "\"C0G\""),
+        Config::default(),
+    );
+    assert!(shown(&c0g, "Dielectric"), "{c0g:?}");
+
+    let mut config = Config::default();
+    config
+        .set_text("drawing.fields.c_dielectric", "none")
+        .unwrap();
+    let none = hidden_by_place("place_fields_none", &caps_over_ground(), config);
+    assert!(shown(&none, "Dielectric"), "{none:?}");
+
+    let mut config = Config::default();
+    config
+        .set_text("drawing.fields.c_dielectric", "x5r")
+        .unwrap_err();
+}
