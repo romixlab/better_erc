@@ -1078,7 +1078,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `drawing.fields.hide_defaults=always` hides every shown default rating first (`plan_default_hides`), then the
   placer runs on the design without them. The layout follows the `drawing.fields.*` settings (pitch, body gap, step,
   gap_max, ends_raise; declared on `DRAW-34`): a column or packed part's ends clear of everything but off that
-  style is placed again where it conflicts no more, on its own side first. Sides by part: a horizontal two-pin part
+  style (a column slid off the middle of its side counts) is placed again where it conflicts no more, on its own side first. Sides by part: a horizontal two-pin part
   above, below, right, left; others right first; a one- or two-pin part tries every slide on a side before the next;
   a column above or below is centred on the body. A two-pin part counts as packed when its centred column across
   its axis overlaps a neighbour's body, or something settled on both sides. Field text is never turned. What still overlaps is reported per check once the

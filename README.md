@@ -229,7 +229,7 @@ Every layout follows one style, set by the `drawing.fields` settings (`--set`, o
 
 Fields that overlap nothing are left alone when they follow the style or stand in some other arrangement. A column
 (lines on one anchor line, one justification, on one side of the body) or a packed part's ends off the style, by
-pitch, body gap or grid, is placed again in the style: a one- or two-pin part's on the first of its sides that fits,
+pitch, body gap, grid or a column slid off the middle of its side, is placed again in the style: a one- or two-pin part's on the first of its sides that fits,
 any other part's on the same side when it fits there next to the body, else the first side where it does, and only where that conflicts no more than where it stands. One run evens out the
 columns of a sheet; a second finds nothing to do.
 

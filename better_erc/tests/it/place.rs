@@ -647,6 +647,41 @@ fn odd_columns_are_placed_again() {
     assert!(again.plan.symbols.is_empty(), "{:?}", again.plan);
 }
 
+/// A column in style but slid off the middle of its part, as hiding its last lines leaves it, is centred again
+#[test]
+fn slid_columns_are_centred_again() {
+    let file = scratch("place_fields_slid").join("slid.kicad_sch");
+    let slid = columns_sheet(&[(
+        1,
+        50.8,
+        1.27,
+        vec![
+            ("Reference", "R1", 52.5, 48.75),
+            ("Value", "10k", 52.5, 50.75),
+        ],
+    )]);
+    std::fs::write(&file, slid).unwrap();
+    let opts = PlaceOptions {
+        write: true,
+        ..PlaceOptions::default()
+    };
+    let placed = place(&file, &opts).unwrap();
+    let ys: Vec<(String, i64)> = placed.plan.symbols[0]
+        .moves
+        .iter()
+        .map(|m| (m.field.clone(), m.at.y))
+        .collect();
+    assert_eq!(
+        ys,
+        [
+            ("Reference".to_owned(), 49_750_000),
+            ("Value".to_owned(), 51_750_000)
+        ]
+    );
+    let again = place(&file, &opts).unwrap();
+    assert!(again.plan.symbols.is_empty(), "{:?}", again.plan);
+}
+
 /// A horizontal resistor R1 wired on both sides with its fields piled up, a vertical one R2 below it whose fields
 /// stand in R1's column below: R1 is not packed, so it takes a column above, centred on its body
 fn horizontal_free_above() -> String {

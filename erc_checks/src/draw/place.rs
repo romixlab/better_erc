@@ -739,7 +739,12 @@ fn restyle(
         return (!same(&l) && clear(&l)).then_some(l);
     }
     let mut all = columns(style, sym, shown, order, &[]);
-    if all.iter().any(|l| l.out == 0 && l.side == now && same(l)) {
+    // In style means centred on its side as well: the first column of a side is the centred one, next to the body
+    if all
+        .iter()
+        .find(|l| l.out == 0 && l.side == now)
+        .is_some_and(same)
+    {
         return None;
     }
     if sides_fixed(sym) {
