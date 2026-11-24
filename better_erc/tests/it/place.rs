@@ -5,7 +5,7 @@ use better_erc::Config;
 use better_erc::Project;
 use better_erc::model::geometry::DrawnSymbol;
 use better_erc::model::geometry::HAlign;
-use better_erc::place::{PlaceOptions, Placed, Side, place};
+use better_erc::place::{PlaceOptions, Placed, Side, place, render};
 use std::path::{Path, PathBuf};
 
 const LIB: &str = r#"(lib_symbols
@@ -299,9 +299,14 @@ fn packed_parts_lie_along() {
             );
         }
     }
-    // Ends in the style stay
+    // Ends in the style stay, and a write with nothing to move says so, not "Dry run"
     let again = place(&file, &opts).unwrap();
     assert!(again.plan.symbols.is_empty(), "{:?}", again.plan);
+    let report = render(&again);
+    assert!(
+        report.ends_with("Nothing to move: no file changed.\n"),
+        "{report}"
+    );
 }
 
 const GND: &str = r##"(symbol "power:GND" (power) (pin_numbers (hide yes)) (pin_names (hide yes)) (exclude_from_sim no) (in_bom yes) (on_board yes)

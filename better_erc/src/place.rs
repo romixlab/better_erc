@@ -32,8 +32,10 @@ pub struct Placed {
     pub before: OverlapCount,
     /// With the moves made: read again from the written files, or from the edited text in a dry run
     pub after: OverlapCount,
-    /// The files written; empty in a dry run
+    /// The files written; empty in a dry run, and with `--write` when nothing needed a change
     pub written: Vec<PathBuf>,
+    /// Whether the run was to write ([`PlaceOptions::write`]), not a dry run
+    pub write: bool,
 }
 
 /// Why fields could not be placed
@@ -136,6 +138,7 @@ pub fn place(path: &Path, opts: &PlaceOptions) -> Result<Placed, PlaceFieldsErro
         before,
         after,
         written,
+        write: opts.write,
     })
 }
 
@@ -279,7 +282,9 @@ pub fn render(p: &Placed) -> String {
         .filter(|s| s.side.is_some())
         .map(|s| s.file.as_str())
         .collect();
-    if p.written.is_empty() {
+    if p.write && p.written.is_empty() {
+        out += "Nothing to move: no file changed.\n";
+    } else if !p.write {
         out += &format!(
             "Dry run: {moved} symbols in {} files to move; --write edits them.\n",
             files.len()

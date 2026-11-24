@@ -31,6 +31,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `DRAW-9`, `DRAW-34`: a text box wholly around an item counts by its text; its border only where it crosses.
 - Docs name the Portwright repo `portwright` (was `typec_dongle`, renamed).
 
+### Fixed
+
+- `berc place-fields --write` with nothing to move says so instead of "Dry run" (TOOL-13).
+
 ## [0.4.62] - 2026-11-14
 
 ### Added
