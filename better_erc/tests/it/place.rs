@@ -813,3 +813,41 @@ fn only_default_ratings_are_hidden() {
         .set_text("drawing.fields.c_dielectric", "x5r")
         .unwrap_err();
 }
+
+/// `drawing.fields.hide_defaults = always`: a rating at its default goes even on a part whose fields are clear of
+/// everything, and the placer works on the fields left; a rating off its default stays
+#[test]
+fn always_hides_every_default() {
+    let value = "\"1k\" (at 52.5 102.5 0) (effects (font (size 1.27 1.27)) (justify left)))\n";
+    let with_power = |power: &str| {
+        schematic().replace(
+            value,
+            &format!(
+                "{value}  (property \"Power\" \"{power}\" (at 52.5 104.5 0) (effects (font (size 1.27 1.27)) (justify left)))\n"
+            ),
+        )
+    };
+    let mut config = Config::default();
+    config
+        .set_text("drawing.fields.hide_defaults", "always")
+        .unwrap();
+    let hides = |plans: &[(String, Vec<String>)], r: &str| {
+        plans
+            .iter()
+            .find(|(reference, _)| reference == r)
+            .is_some_and(|(_, hidden)| hidden.iter().any(|h| h == "Power"))
+    };
+    let at_default = hidden_by_place("place_fields_always", &with_power("63mW"), config.clone());
+    for r in ["R1", "R2", "R3", "R4"] {
+        assert!(hides(&at_default, r), "{r} {at_default:?}");
+    }
+    let other = hidden_by_place("place_fields_always_250", &with_power("250mW"), config);
+    assert!(!hides(&other, "R4"), "{other:?}");
+    // In the way only, the default: R4's clear column keeps its Power
+    let in_the_way = hidden_by_place(
+        "place_fields_in_the_way",
+        &with_power("63mW"),
+        Config::default(),
+    );
+    assert!(!hides(&in_the_way, "R4"), "{in_the_way:?}");
+}

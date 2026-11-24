@@ -183,7 +183,8 @@ the `drawing.clearance` margins (`DRAW-34`), gets the first of these that clears
 
 Only a rating that holds its kind's default may be hidden (see the defaults below): a resistor's Package or Power,
 a capacitor's Package, Dielectric or Voltage. Any other field, and any other value, stays shown, so a 250mW resistor or a
-C0G capacitor keeps its rating on the sheet.
+C0G capacitor keeps its rating on the sheet. With `drawing.fields.hide_defaults=always` every shown rating at its
+default is hidden first, wherever it stands, and the fields left are then placed as below.
 
 1. Hideable rating fields that touch a power symbol, when nothing else overlaps the fields:
    those fields hidden, the column left where it is. Closeness alone is no reason to move a column that fits.
@@ -226,6 +227,7 @@ Every layout follows one style, set by the `drawing.fields` settings (`--set`, o
 | `drawing.fields.r_power` | `63mW` | a resistor's Power that may be hidden (`none`, `50mW`, `63mW`, `100mW`, `125mW`, `250mW`) |
 | `drawing.fields.c_package` | `0402` | a capacitor's Package that may be hidden (`none`, `0201`, `0402`, `0603`, `0805`) |
 | `drawing.fields.c_dielectric` | `X5R` | a capacitor's Dielectric that may be hidden (`none`, `X5R`, `X7R`, `X7S`, `C0G`) |
+| `drawing.fields.hide_defaults` | `in_the_way` | `in_the_way`: a default rating is hidden only where the fields need room; `always`: wherever it is shown |
 | `drawing.fields.c_voltage` | `50V` | a capacitor's Voltage that may be hidden (`none`, `6.3V`, `10V`, `16V`, `25V`, `35V`, `50V`, `100V`) |
 
 Fields that overlap nothing are left alone when they follow the style or stand in some other arrangement. A column

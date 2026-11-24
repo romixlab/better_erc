@@ -13,6 +13,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
+- `berc place-fields`: `drawing.fields.hide_defaults=always` hides every rating at its default, not only those in the way (TOOL-13).
 - `berc place-fields`: a capacitor's Voltage at the `drawing.fields.c_voltage` default (50V) may be hidden too (TOOL-13).
 - `berc place-fields`: hides only ratings at their default (`drawing.fields.r_package`, `r_power`, `c_package`, `c_dielectric`) (TOOL-13).
 - `DRAW-34`: `drawing.clearance.spacing` tight (default) holds parts packed at grid pitch to a 0.127 mm margin; sparse as before (NET-26).

@@ -6,7 +6,8 @@
 use super::overlap::{Margins, bare_hit, close_hit, exempt};
 use super::{
     FIELDS_BODY_GAP, FIELDS_C_DIELECTRIC, FIELDS_C_PACKAGE, FIELDS_C_VOLTAGE, FIELDS_ENDS_RAISE,
-    FIELDS_GAP_MAX, FIELDS_PITCH, FIELDS_R_PACKAGE, FIELDS_R_POWER, FIELDS_STEP, MM, draw_34,
+    FIELDS_GAP_MAX, FIELDS_HIDE_DEFAULTS, FIELDS_PITCH, FIELDS_R_PACKAGE, FIELDS_R_POWER,
+    FIELDS_STEP, MM, draw_34,
 };
 use crate::Ctx;
 use crate::meta::Param;
@@ -48,6 +49,8 @@ pub struct FieldDefaults {
     pub c_package: Option<&'static str>,
     pub c_dielectric: Option<&'static str>,
     pub c_voltage: Option<&'static str>,
+    /// Hide every shown rating at its default, not only those in the way ([`plan_default_hides`])
+    pub always: bool,
 }
 
 impl FieldDefaults {
@@ -120,6 +123,7 @@ impl FieldStyle {
                 c_package: word(&FIELDS_C_PACKAGE),
                 c_dielectric: word(&FIELDS_C_DIELECTRIC),
                 c_voltage: word(&FIELDS_C_VOLTAGE),
+                always: draw_34::field_choice(cx, &FIELDS_HIDE_DEFAULTS) == "always",
             },
         })
     }
@@ -268,6 +272,40 @@ pub fn plan_fields(cx: &Ctx, sheet: Option<&str>) -> Result<FieldPlan, StyleErro
     let mut plan = FieldPlan::default();
     for scene in cx.scenes().iter().filter(|s| on_sheet(cx, s, sheet)) {
         plan_scene(scene, m, style, &mut plan.symbols);
+    }
+    Ok(plan)
+}
+
+/// With `drawing.fields.hide_defaults = always`, every shown rating of the board of `cx` that holds its default,
+/// hidden where it stands; an empty plan otherwise. The placer runs after it, on the design with them gone.
+pub fn plan_default_hides(cx: &Ctx, sheet: Option<&str>) -> Result<FieldPlan, StyleError> {
+    let defaults = FieldStyle::of(cx)?.defaults;
+    let mut plan = FieldPlan::default();
+    if !defaults.always {
+        return Ok(plan);
+    }
+    for scene in cx.scenes().iter().filter(|s| on_sheet(cx, s, sheet)) {
+        for sym in scene.geometry.symbols.iter().filter(|s| !s.power) {
+            let hidden: Vec<String> = sym
+                .fields
+                .iter()
+                .filter(|f| !f.hidden && !f.text.text.is_empty())
+                .filter(|f| defaults.hideable(&sym.reference, f))
+                .map(|f| f.name.clone())
+                .collect();
+            if hidden.is_empty() {
+                continue;
+            }
+            plan.symbols.push(SymbolPlan {
+                file: scene.geometry.file.clone(),
+                reference: sym.reference.clone(),
+                uuid: sym.uuid.clone(),
+                side: Some(Side::InPlace),
+                moves: Vec::new(),
+                hidden,
+                left: Vec::new(),
+            });
+        }
     }
     Ok(plan)
 }

@@ -2,7 +2,9 @@
 //! of [`erc_checks::place`] on every board of a design, written into the schematic files by
 //! [`erc_kicad::fields`], and the `DRAW-9` and `DRAW-34` counts before and after.
 
-use erc_checks::place::{FieldPlan, OverlapCount, StyleError, count_overlaps, plan_fields};
+use erc_checks::place::{
+    FieldPlan, OverlapCount, StyleError, count_overlaps, plan_default_hides, plan_fields,
+};
 use erc_checks::{CheckError, Config, Ctx, Project};
 use erc_kicad::fields::{FieldChange, FieldPlace, PlaceError, place_fields};
 use erc_model::{BoardId, Design};
@@ -94,13 +96,26 @@ pub fn place(path: &Path, opts: &PlaceOptions) -> Result<Placed, PlaceFieldsErro
     }
     let sheet = opts.sheet.as_deref();
     let before = count(design, &opts.config, sheet);
-    let mut plan = FieldPlan::default();
-    for bi in 0..design.boards.len() {
-        let cx = Ctx::new(design, BoardId::from_index(bi), None, &opts.config);
-        let board = plan_fields(&cx, sheet).map_err(PlaceFieldsError::Style)?;
-        plan.symbols.extend(board.symbols);
-    }
-    let edited = edit(&project.dir, &plan)?;
+    // drawing.fields.hide_defaults = always: the default ratings go first, then the placer sees the design without them
+    let hides = plan_all(design, &opts.config, sheet, plan_default_hides)?;
+    let hidden = edit(&project.dir, &hides, &BTreeMap::new())?;
+    let hidden_project = if hidden.is_empty() {
+        None
+    } else {
+        Some(
+            project
+                .reopen_with(&hidden)
+                .map_err(PlaceFieldsError::Open)?,
+        )
+    };
+    let placing = hidden_project
+        .as_ref()
+        .map_or(design, |p| &p.imported.design);
+    let moves = plan_all(placing, &opts.config, sheet, plan_fields)?;
+    let mut edited = hidden;
+    let moved = edit(&project.dir, &moves, &edited)?;
+    edited.extend(moved);
+    let plan = merge(hides, moves);
     let after_project = project
         .reopen_with(&edited)
         .map_err(PlaceFieldsError::Open)?;
@@ -124,6 +139,38 @@ pub fn place(path: &Path, opts: &PlaceOptions) -> Result<Placed, PlaceFieldsErro
     })
 }
 
+/// The plan `planner` makes for every board, in one
+fn plan_all(
+    design: &Design,
+    config: &Config,
+    sheet: Option<&str>,
+    planner: fn(&Ctx, Option<&str>) -> Result<FieldPlan, StyleError>,
+) -> Result<FieldPlan, PlaceFieldsError> {
+    let mut plan = FieldPlan::default();
+    for bi in 0..design.boards.len() {
+        let cx = Ctx::new(design, BoardId::from_index(bi), None, config);
+        let board = planner(&cx, sheet).map_err(PlaceFieldsError::Style)?;
+        plan.symbols.extend(board.symbols);
+    }
+    Ok(plan)
+}
+
+/// The hides and the moves after them as one plan: a symbol in both takes the moves' plan, with both its hides
+fn merge(mut hides: FieldPlan, moves: FieldPlan) -> FieldPlan {
+    for s in moves.symbols {
+        let same = |h: &&mut SymbolPlan| h.file == s.file && h.uuid == s.uuid;
+        match hides.symbols.iter_mut().find(same) {
+            Some(h) => {
+                let mut hidden = std::mem::take(&mut h.hidden);
+                hidden.extend(s.hidden.iter().cloned());
+                *h = SymbolPlan { hidden, ..s };
+            }
+            None => hides.symbols.push(s),
+        }
+    }
+    hides
+}
+
 /// The counts summed over every board
 fn count(design: &Design, config: &Config, sheet: Option<&str>) -> OverlapCount {
     let mut total = OverlapCount::default();
@@ -138,8 +185,13 @@ fn count(design: &Design, config: &Config, sheet: Option<&str>) -> OverlapCount 
     total
 }
 
-/// The text of every sheet file with a moved field, edited, by file relative to `dir`
-fn edit(dir: &Path, plan: &FieldPlan) -> Result<BTreeMap<String, Vec<u8>>, PlaceFieldsError> {
+/// The text of every sheet file with a moved field, edited, by file relative to `dir`: from its text in `base`
+/// when an earlier edit made one, else from the file
+fn edit(
+    dir: &Path,
+    plan: &FieldPlan,
+    base: &BTreeMap<String, Vec<u8>>,
+) -> Result<BTreeMap<String, Vec<u8>>, PlaceFieldsError> {
     let mut by_file: BTreeMap<&str, Vec<FieldPlace>> = BTreeMap::new();
     for s in &plan.symbols {
         let moves = s.moves.iter().map(|m| {
@@ -161,10 +213,15 @@ fn edit(dir: &Path, plan: &FieldPlan) -> Result<BTreeMap<String, Vec<u8>>, Place
     let mut out = BTreeMap::new();
     for (file, places) in by_file {
         let path = dir.join(file);
-        let text = std::fs::read_to_string(&path).map_err(|error| PlaceFieldsError::Io {
-            file: path.clone(),
-            error,
-        })?;
+        let text = match base.get(file) {
+            Some(b) => {
+                String::from_utf8(b.clone()).expect("an earlier edit wrote this text from a String")
+            }
+            None => std::fs::read_to_string(&path).map_err(|error| PlaceFieldsError::Io {
+                file: path.clone(),
+                error,
+            })?,
+        };
         let edited = place_fields(&text, &places)
             .map_err(|error| PlaceFieldsError::Edit { file: path, error })?;
         out.insert(file.to_owned(), edited.into_bytes());
