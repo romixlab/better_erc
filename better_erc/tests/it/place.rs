@@ -758,7 +758,7 @@ fn hidden_by_place(name: &str, text: &str, config: Config) -> Vec<(String, Vec<S
 }
 
 /// A rating off its default is a choice: packed resistors rated 250mW keep their Power shown, a C0G capacitor its
-/// Dielectric, and a default set to none hides nothing of that field
+/// Dielectric, a 16V one its Voltage, and a default set to none hides nothing of that field
 #[test]
 fn only_default_ratings_are_hidden() {
     let shown = |plans: &[(String, Vec<String>)], field: &str| {
@@ -780,6 +780,26 @@ fn only_default_ratings_are_hidden() {
         Config::default(),
     );
     assert!(shown(&c0g, "Dielectric"), "{c0g:?}");
+
+    // The voltage as the line on the ground symbol: the 50V default goes, a 16V rating stays
+    let volts_last = caps_over_ground()
+        .replace("\"Voltage\" \"50V\"", "\"Dielectric\" \"C0G\"")
+        .replace("\"Dielectric\" \"X5R\"", "\"Voltage\" \"50V\"");
+    let at_default = hidden_by_place("place_fields_50v", &volts_last, Config::default());
+    let voltage = vec!["Voltage".to_owned()];
+    assert_eq!(
+        at_default,
+        [
+            ("C8".to_owned(), voltage.clone()),
+            ("C9".to_owned(), voltage)
+        ]
+    );
+    let other = hidden_by_place(
+        "place_fields_16v",
+        &volts_last.replace("\"50V\"", "\"16V\""),
+        Config::default(),
+    );
+    assert!(shown(&other, "Voltage"), "{other:?}");
 
     let mut config = Config::default();
     config

@@ -1072,8 +1072,8 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   Reference and Value at its ends, the rest hidden, beside a horizontal part's axis or centred above and below a
   vertical one where clear; a column shortened by its last rating fields; else the least bad, in up to three passes
   over a sheet (`erc_checks::place`). Only a rating that holds its default is ever hidden: a resistor's
-  Package and Power, a capacitor's Package and Dielectric, by the `drawing.fields.r_package`, `r_power`,
-  `c_package` and `c_dielectric` word settings (0402, 63mW, 0402, X5R; `none` turns one off). The layout follows the `drawing.fields.*` settings (pitch, body gap, step,
+  Package and Power, a capacitor's Package, Dielectric and Voltage, by the `drawing.fields.r_package`, `r_power`,
+  `c_package`, `c_dielectric` and `c_voltage` word settings (0402, 63mW, 0402, X5R, 50V; `none` turns one off). The layout follows the `drawing.fields.*` settings (pitch, body gap, step,
   gap_max, ends_raise; declared on `DRAW-34`): a column or packed part's ends clear of everything but off that
   style is placed again where it conflicts no more, on its own side first. Sides by part: a horizontal two-pin part
   above, below, right, left; others right first; a one- or two-pin part tries every slide on a side before the next;

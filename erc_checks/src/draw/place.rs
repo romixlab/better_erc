@@ -5,8 +5,8 @@
 
 use super::overlap::{Margins, bare_hit, close_hit, exempt};
 use super::{
-    FIELDS_BODY_GAP, FIELDS_C_DIELECTRIC, FIELDS_C_PACKAGE, FIELDS_ENDS_RAISE, FIELDS_GAP_MAX,
-    FIELDS_PITCH, FIELDS_R_PACKAGE, FIELDS_R_POWER, FIELDS_STEP, MM, draw_34,
+    FIELDS_BODY_GAP, FIELDS_C_DIELECTRIC, FIELDS_C_PACKAGE, FIELDS_C_VOLTAGE, FIELDS_ENDS_RAISE,
+    FIELDS_GAP_MAX, FIELDS_PITCH, FIELDS_R_PACKAGE, FIELDS_R_POWER, FIELDS_STEP, MM, draw_34,
 };
 use crate::Ctx;
 use crate::meta::Param;
@@ -47,6 +47,7 @@ pub struct FieldDefaults {
     pub r_power: Option<&'static str>,
     pub c_package: Option<&'static str>,
     pub c_dielectric: Option<&'static str>,
+    pub c_voltage: Option<&'static str>,
 }
 
 impl FieldDefaults {
@@ -62,6 +63,7 @@ impl FieldDefaults {
             ("R", "Power") => self.r_power,
             ("C", "Package") => self.c_package,
             ("C", "Dielectric") => self.c_dielectric,
+            ("C", "Voltage") => self.c_voltage,
             _ => None,
         };
         let plain = |v: &str| v.split_whitespace().collect::<String>().to_lowercase();
@@ -117,6 +119,7 @@ impl FieldStyle {
                 r_power: word(&FIELDS_R_POWER),
                 c_package: word(&FIELDS_C_PACKAGE),
                 c_dielectric: word(&FIELDS_C_DIELECTRIC),
+                c_voltage: word(&FIELDS_C_VOLTAGE),
             },
         })
     }

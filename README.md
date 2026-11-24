@@ -182,7 +182,7 @@ Each placed symbol whose shown fields overlap text, a body, a wire or the sheet 
 the `drawing.clearance` margins (`DRAW-34`), gets the first of these that clears them:
 
 Only a rating that holds its kind's default may be hidden (see the defaults below): a resistor's Package or Power,
-a capacitor's Package or Dielectric. Any other field, and any other value, stays shown, so a 250mW resistor or a
+a capacitor's Package, Dielectric or Voltage. Any other field, and any other value, stays shown, so a 250mW resistor or a
 C0G capacitor keeps its rating on the sheet.
 
 1. Hideable rating fields that touch a power symbol, when nothing else overlaps the fields:
@@ -226,6 +226,7 @@ Every layout follows one style, set by the `drawing.fields` settings (`--set`, o
 | `drawing.fields.r_power` | `63mW` | a resistor's Power that may be hidden (`none`, `50mW`, `63mW`, `100mW`, `125mW`, `250mW`) |
 | `drawing.fields.c_package` | `0402` | a capacitor's Package that may be hidden (`none`, `0201`, `0402`, `0603`, `0805`) |
 | `drawing.fields.c_dielectric` | `X5R` | a capacitor's Dielectric that may be hidden (`none`, `X5R`, `X7R`, `X7S`, `C0G`) |
+| `drawing.fields.c_voltage` | `50V` | a capacitor's Voltage that may be hidden (`none`, `6.3V`, `10V`, `16V`, `25V`, `35V`, `50V`, `100V`) |
 
 Fields that overlap nothing are left alone when they follow the style or stand in some other arrangement. A column
 (lines on one anchor line, one justification, on one side of the body) or a packed part's ends off the style, by

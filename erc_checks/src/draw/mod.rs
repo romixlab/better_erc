@@ -191,6 +191,14 @@ pub(crate) const FIELDS_C_DIELECTRIC: Param = Param {
     choices: &["none", "X5R", "X7R", "X7S", "C0G"],
 };
 
+pub(crate) const FIELDS_C_VOLTAGE: Param = Param {
+    name: "drawing.fields.c_voltage",
+    default: 6.0,
+    unit: "",
+    doc: "a capacitor's Voltage the placer may hide when its fields need room (none: never hidden)",
+    choices: &["none", "6.3V", "10V", "16V", "25V", "35V", "50V", "100V"],
+};
+
 /// The words a simulator directive starts with, as in ngspice and KiCad's simulator
 const DIRECTIVES: &[&str] = &[
     ".ac", ".control", ".csparam", ".dc", ".disto", ".end", ".endc", ".ends", ".four", ".func",
