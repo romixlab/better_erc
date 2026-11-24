@@ -1072,8 +1072,9 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   Reference and Value at its ends, the rest hidden, beside a horizontal part's axis or centred above and below a
   vertical one where clear; a column shortened by its last rating fields; else the least bad, in up to three passes
   over a sheet (`erc_checks::place`). Only a rating that holds its default is ever hidden: a resistor's
-  Package and Power, a capacitor's Package, Dielectric and Voltage, by the `drawing.fields.r_package`, `r_power`,
-  `c_package`, `c_dielectric` and `c_voltage` word settings (0402, 63mW, 0402, X5R, 50V; `none` turns one off).
+  Package and Power, a capacitor's Package, Dielectric and Voltage, at the project's `DEFAULT_R_PACKAGE`, `DEFAULT_R_POWER`,
+  `DEFAULT_C_PACKAGE`, `DEFAULT_C_DIELECTRIC` and `DEFAULT_C_VOLTAGE` text variables (`FieldDefaults`); a rating
+  without its variable is never hidden.
   `drawing.fields.hide_defaults=always` hides every shown default rating first (`plan_default_hides`), then the
   placer runs on the design without them. The layout follows the `drawing.fields.*` settings (pitch, body gap, step,
   gap_max, ends_raise; declared on `DRAW-34`): a column or packed part's ends clear of everything but off that

@@ -5,8 +5,7 @@
 
 use super::overlap::{Margins, bare_hit, close_hit, exempt};
 use super::{
-    FIELDS_BODY_GAP, FIELDS_C_DIELECTRIC, FIELDS_C_PACKAGE, FIELDS_C_VOLTAGE, FIELDS_ENDS_RAISE,
-    FIELDS_GAP_MAX, FIELDS_HIDE_DEFAULTS, FIELDS_PITCH, FIELDS_R_PACKAGE, FIELDS_R_POWER,
+    FIELDS_BODY_GAP, FIELDS_ENDS_RAISE, FIELDS_GAP_MAX, FIELDS_HIDE_DEFAULTS, FIELDS_PITCH,
     FIELDS_STEP, MM, draw_34,
 };
 use crate::Ctx;
@@ -37,23 +36,44 @@ pub struct FieldStyle {
     pub gap_max: i64,
     /// How far above a horizontal packed part's pin line its Reference and Value sit, clear of the wire
     pub ends_raise: i64,
-    pub defaults: FieldDefaults,
 }
 
-/// The rating values the placer may hide when a symbol's fields need room, from the `drawing.fields.*` defaults:
-/// the values most parts of their kind carry, so a rating left shown reads as a choice. `None`: never hidden.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+/// The rating values the placer may hide when a symbol's fields need room: the values most parts of their kind
+/// carry, so a rating left shown reads as a choice. They come from the project's text variables
+/// `DEFAULT_R_PACKAGE`, `DEFAULT_R_POWER`, `DEFAULT_C_PACKAGE`, `DEFAULT_C_DIELECTRIC` and `DEFAULT_C_VOLTAGE`,
+/// the ones the drawing sheet's Defaults box shows. `None` (no variable, or an empty one): never hidden.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct FieldDefaults {
-    pub r_package: Option<&'static str>,
-    pub r_power: Option<&'static str>,
-    pub c_package: Option<&'static str>,
-    pub c_dielectric: Option<&'static str>,
-    pub c_voltage: Option<&'static str>,
+    pub r_package: Option<String>,
+    pub r_power: Option<String>,
+    pub c_package: Option<String>,
+    pub c_dielectric: Option<String>,
+    pub c_voltage: Option<String>,
     /// Hide every shown rating at its default, not only those in the way ([`plan_default_hides`])
     pub always: bool,
 }
 
 impl FieldDefaults {
+    /// The defaults of the board of `cx`: its project's text variables, and `drawing.fields.hide_defaults`
+    pub fn of(cx: &Ctx) -> FieldDefaults {
+        let vars = &cx.board().settings.text_vars;
+        let var = |name: &str| {
+            vars.iter()
+                .find(|v| v.key == name)
+                .and_then(|v| v.value.get())
+                .map(|v| v.trim().to_owned())
+                .filter(|v| !v.is_empty())
+        };
+        FieldDefaults {
+            r_package: var("DEFAULT_R_PACKAGE"),
+            r_power: var("DEFAULT_R_POWER"),
+            c_package: var("DEFAULT_C_PACKAGE"),
+            c_dielectric: var("DEFAULT_C_DIELECTRIC"),
+            c_voltage: var("DEFAULT_C_VOLTAGE"),
+            always: draw_34::field_choice(cx, &FIELDS_HIDE_DEFAULTS) == "always",
+        }
+    }
+
     /// Whether the placer may hide `field` of the part `reference`: a resistor's or capacitor's rating that holds
     /// its default, compared without case or spaces
     pub fn hideable(&self, reference: &str, field: &DrawnField) -> bool {
@@ -62,15 +82,17 @@ impl FieldDefaults {
             .take_while(char::is_ascii_alphabetic)
             .collect();
         let default = match (prefix.as_str(), field.name.as_str()) {
-            ("R", "Package") => self.r_package,
-            ("R", "Power") => self.r_power,
-            ("C", "Package") => self.c_package,
-            ("C", "Dielectric") => self.c_dielectric,
-            ("C", "Voltage") => self.c_voltage,
-            _ => None,
+            ("R", "Package") => &self.r_package,
+            ("R", "Power") => &self.r_power,
+            ("C", "Package") => &self.c_package,
+            ("C", "Dielectric") => &self.c_dielectric,
+            ("C", "Voltage") => &self.c_voltage,
+            _ => &None,
         };
         let plain = |v: &str| v.split_whitespace().collect::<String>().to_lowercase();
-        default.is_some_and(|d| plain(&field.text.text) == plain(d))
+        default
+            .as_deref()
+            .is_some_and(|d| plain(&field.text.text) == plain(d))
     }
 }
 
@@ -110,21 +132,12 @@ impl FieldStyle {
                 })
             }
         };
-        let word = |p: &Param| Some(draw_34::field_choice(cx, p)).filter(|w| *w != "none");
         Ok(FieldStyle {
             pitch: get(&FIELDS_PITCH, STEP_MIN)?,
             body_gap: get(&FIELDS_BODY_GAP, 0.0)?,
             step: get(&FIELDS_STEP, STEP_MIN)?,
             gap_max: get(&FIELDS_GAP_MAX, 0.0)?,
             ends_raise: get(&FIELDS_ENDS_RAISE, 0.0)?,
-            defaults: FieldDefaults {
-                r_package: word(&FIELDS_R_PACKAGE),
-                r_power: word(&FIELDS_R_POWER),
-                c_package: word(&FIELDS_C_PACKAGE),
-                c_dielectric: word(&FIELDS_C_DIELECTRIC),
-                c_voltage: word(&FIELDS_C_VOLTAGE),
-                always: draw_34::field_choice(cx, &FIELDS_HIDE_DEFAULTS) == "always",
-            },
         })
     }
 
@@ -269,9 +282,10 @@ pub fn count_overlaps(cx: &Ctx, sheet: Option<&str>) -> OverlapCount {
 pub fn plan_fields(cx: &Ctx, sheet: Option<&str>) -> Result<FieldPlan, StyleError> {
     let m = draw_34::margins(cx);
     let style = FieldStyle::of(cx)?;
+    let defaults = FieldDefaults::of(cx);
     let mut plan = FieldPlan::default();
     for scene in cx.scenes().iter().filter(|s| on_sheet(cx, s, sheet)) {
-        plan_scene(scene, m, style, &mut plan.symbols);
+        plan_scene(scene, m, style, &defaults, &mut plan.symbols);
     }
     Ok(plan)
 }
@@ -279,7 +293,7 @@ pub fn plan_fields(cx: &Ctx, sheet: Option<&str>) -> Result<FieldPlan, StyleErro
 /// With `drawing.fields.hide_defaults = always`, every shown rating of the board of `cx` that holds its default,
 /// hidden where it stands; an empty plan otherwise. The placer runs after it, on the design with them gone.
 pub fn plan_default_hides(cx: &Ctx, sheet: Option<&str>) -> Result<FieldPlan, StyleError> {
-    let defaults = FieldStyle::of(cx)?.defaults;
+    let defaults = FieldDefaults::of(cx);
     let mut plan = FieldPlan::default();
     if !defaults.always {
         return Ok(plan);
@@ -338,6 +352,7 @@ struct Board<'s, 'a> {
     pending: Vec<bool>,
     margins: Margins,
     style: FieldStyle,
+    defaults: FieldDefaults,
     /// Inside the drawing frame; `None` when the paper's size is not known
     frame: Option<Rect>,
 }
@@ -482,7 +497,13 @@ impl Board<'_, '_> {
 /// neighbours' fields have moved
 const PASSES_MAX: usize = 3;
 
-fn plan_scene(scene: &Scene, margins: Margins, style: FieldStyle, out: &mut Vec<SymbolPlan>) {
+fn plan_scene(
+    scene: &Scene,
+    margins: Margins,
+    style: FieldStyle,
+    defaults: &FieldDefaults,
+    out: &mut Vec<SymbolPlan>,
+) {
     let g = scene.geometry;
     let (w, h) = g.paper_size;
     let frame = (w > 2 * FRAME && h > 2 * FRAME)
@@ -494,6 +515,7 @@ fn plan_scene(scene: &Scene, margins: Margins, style: FieldStyle, out: &mut Vec<
         pending: vec![false; g.symbols.len()],
         margins,
         style,
+        defaults: defaults.clone(),
         frame,
     };
     for s in 0..g.symbols.len() {
@@ -575,7 +597,7 @@ fn place_symbol(
         });
     }
     // Only a rating that holds its default may be hidden: any other value is a choice the reader must see
-    let defaults = board.style.defaults;
+    let defaults = board.defaults.clone();
     let hideable = |k: usize| defaults.hideable(&sym.reference, shown[k]);
     let score = |l: &Layout| board.cost(&own, &placed(&own, l), l.side.is_column()).0;
     // A packed horizontal two-pin part always takes its ends: a short column squeezed above a row of them reads
@@ -713,7 +735,7 @@ fn restyle(
     let clear = |l: &Layout| board.cost(own, &placed(own, l), l.side.is_column()).0 <= cost;
     let same = |l: &Layout| unchanged(shown, l);
     if now == Side::Ends {
-        let l = ends_lines(style, sym, shown)?;
+        let l = ends_lines(style, &board.defaults, sym, shown)?;
         return (!same(&l) && clear(&l)).then_some(l);
     }
     let mut all = columns(style, sym, shown, order, &[]);
@@ -896,20 +918,25 @@ fn ends_layout(
     if !packed {
         return None;
     }
-    ends_lines(board.style, sym, shown)
+    ends_lines(board.style, &board.defaults, sym, shown)
 }
 
 /// Reference and Value of a two-pin part at the ends of its body, upright. A horizontal part has them before and
 /// after the body on the line above its axis, so they sit beside its own wire; a vertical one has them centred
 /// above and below its pins. Every other field hidden. `None` for any other symbol, one without Reference and
 /// Value shown, or one with another field shown that holds no default ([`FieldDefaults::hideable`]).
-fn ends_lines(style: FieldStyle, sym: &DrawnSymbol, shown: &[&DrawnField]) -> Option<Layout> {
+fn ends_lines(
+    style: FieldStyle,
+    defaults: &FieldDefaults,
+    sym: &DrawnSymbol,
+    shown: &[&DrawnField],
+) -> Option<Layout> {
     let horizontal = two_pin(sym)?;
     let reference = shown.iter().position(|f| f.name == "Reference")?;
     let value = shown.iter().position(|f| f.name == "Value")?;
     let others_go = (0..shown.len())
         .filter(|k| *k != reference && *k != value)
-        .all(|k| style.defaults.hideable(&sym.reference, shown[k]));
+        .all(|k| defaults.hideable(&sym.reference, shown[k]));
     if !others_go {
         return None;
     }
@@ -1075,7 +1102,6 @@ mod tests {
             step: 250_000,
             gap_max: 2_000_000,
             ends_raise: 1_270_000,
-            defaults: FieldDefaults::default(),
         };
         assert_eq!(style.up(250_001), 500_000);
         assert_eq!(style.up(-200_000), 0);

@@ -159,46 +159,6 @@ pub(crate) const FIELDS_ENDS_RAISE: Param = Param {
     choices: &[],
 };
 
-pub(crate) const FIELDS_R_PACKAGE: Param = Param {
-    name: "drawing.fields.r_package",
-    default: 2.0,
-    unit: "",
-    doc: "a resistor's Package the placer may hide when its fields need room (none: never hidden)",
-    choices: &["none", "0201", "0402", "0603", "0805"],
-};
-
-pub(crate) const FIELDS_R_POWER: Param = Param {
-    name: "drawing.fields.r_power",
-    default: 2.0,
-    unit: "",
-    doc: "a resistor's Power the placer may hide when its fields need room (none: never hidden)",
-    choices: &["none", "50mW", "63mW", "100mW", "125mW", "250mW"],
-};
-
-pub(crate) const FIELDS_C_PACKAGE: Param = Param {
-    name: "drawing.fields.c_package",
-    default: 2.0,
-    unit: "",
-    doc: "a capacitor's Package the placer may hide when its fields need room (none: never hidden)",
-    choices: &["none", "0201", "0402", "0603", "0805"],
-};
-
-pub(crate) const FIELDS_C_DIELECTRIC: Param = Param {
-    name: "drawing.fields.c_dielectric",
-    default: 1.0,
-    unit: "",
-    doc: "a capacitor's Dielectric the placer may hide when its fields need room (none: never hidden)",
-    choices: &["none", "X5R", "X7R", "X7S", "C0G"],
-};
-
-pub(crate) const FIELDS_C_VOLTAGE: Param = Param {
-    name: "drawing.fields.c_voltage",
-    default: 6.0,
-    unit: "",
-    doc: "a capacitor's Voltage the placer may hide when its fields need room (none: never hidden)",
-    choices: &["none", "6.3V", "10V", "16V", "25V", "35V", "50V", "100V"],
-};
-
 pub(crate) const FIELDS_HIDE_DEFAULTS: Param = Param {
     name: "drawing.fields.hide_defaults",
     default: 0.0,

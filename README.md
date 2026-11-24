@@ -181,8 +181,10 @@ berc place-fields PROJECT [--sheet NAME] [--write] [--set NAME=VALUE]
 Each placed symbol whose shown fields overlap text, a body, a wire or the sheet edge (`DRAW-9`), or come closer than
 the `drawing.clearance` margins (`DRAW-34`), gets the first of these that clears them:
 
-Only a rating that holds its kind's default may be hidden (see the defaults below): a resistor's Package or Power,
-a capacitor's Package, Dielectric or Voltage. Any other field, and any other value, stays shown, so a 250mW resistor or a
+Only a rating that holds its kind's default may be hidden: a resistor's Package or Power, a capacitor's Package,
+Dielectric or Voltage. The defaults are the project's text variables `DEFAULT_R_PACKAGE`, `DEFAULT_R_POWER`,
+`DEFAULT_C_PACKAGE`, `DEFAULT_C_DIELECTRIC` and `DEFAULT_C_VOLTAGE`, which a drawing sheet can show; a rating
+without its variable is never hidden. Any other field, and any other value, stays shown, so a 250mW resistor or a
 C0G capacitor keeps its rating on the sheet. With `drawing.fields.hide_defaults=always` every shown rating at its
 default is hidden first, wherever it stands, and the fields left are then placed as below.
 
@@ -223,12 +225,7 @@ Every layout follows one style, set by the `drawing.fields` settings (`--set`, o
 | `drawing.fields.step` | 0.25 mm | grid the anchors are placed on, and the step a column slides or moves out by |
 | `drawing.fields.gap_max` | 2 mm | fields farther than this from their body are placed again |
 | `drawing.fields.ends_raise` | 1.27 mm | how far above a horizontal packed part's pin line its Reference and Value sit |
-| `drawing.fields.r_package` | `0402` | a resistor's Package that may be hidden (`none`, `0201`, `0402`, `0603`, `0805`) |
-| `drawing.fields.r_power` | `63mW` | a resistor's Power that may be hidden (`none`, `50mW`, `63mW`, `100mW`, `125mW`, `250mW`) |
-| `drawing.fields.c_package` | `0402` | a capacitor's Package that may be hidden (`none`, `0201`, `0402`, `0603`, `0805`) |
-| `drawing.fields.c_dielectric` | `X5R` | a capacitor's Dielectric that may be hidden (`none`, `X5R`, `X7R`, `X7S`, `C0G`) |
 | `drawing.fields.hide_defaults` | `in_the_way` | `in_the_way`: a default rating is hidden only where the fields need room; `always`: wherever it is shown |
-| `drawing.fields.c_voltage` | `50V` | a capacitor's Voltage that may be hidden (`none`, `6.3V`, `10V`, `16V`, `25V`, `35V`, `50V`, `100V`) |
 
 Fields that overlap nothing are left alone when they follow the style or stand in some other arrangement. A column
 (lines on one anchor line, one justification, on one side of the body) or a packed part's ends off the style, by

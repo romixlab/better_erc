@@ -97,6 +97,14 @@ fn schematic() -> String {
     s
 }
 
+/// The project file beside `sheet`, with the drawing sheet's default ratings as text variables: the values the
+/// placer may hide
+fn defaults_pro(sheet: &Path) {
+    let pro = r#"{"text_variables": {"DEFAULT_R_PACKAGE": "0402", "DEFAULT_R_POWER": "63mW",
+        "DEFAULT_C_PACKAGE": "0402", "DEFAULT_C_DIELECTRIC": "X5R", "DEFAULT_C_VOLTAGE": "50V"}}"#;
+    std::fs::write(sheet.with_extension("kicad_pro"), pro).unwrap();
+}
+
 fn scratch(name: &str) -> PathBuf {
     let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join(name);
     let _ = std::fs::remove_dir_all(&dir);
@@ -234,6 +242,7 @@ fn packed_parts_lie_along() {
     let dir = scratch("place_fields_packed");
     let file = dir.join("packed.kicad_sch");
     std::fs::write(&file, packed()).unwrap();
+    defaults_pro(&file);
     let opts = PlaceOptions {
         write: true,
         ..PlaceOptions::default()
@@ -340,6 +349,7 @@ fn rating_on_power_symbol_is_hidden() {
     let file = dir.join("ground.kicad_sch");
     let before = caps_over_ground();
     std::fs::write(&file, &before).unwrap();
+    defaults_pro(&file);
     // Sparse spacing: the column beside C8 fits, only within the part margin of C9, and is left so
     let mut config = Config::default();
     config
@@ -744,6 +754,7 @@ fn test_point_fields_go_right() {
 fn hidden_by_place(name: &str, text: &str, config: Config) -> Vec<(String, Vec<String>)> {
     let file = scratch(name).join("defaults.kicad_sch");
     std::fs::write(&file, text).unwrap();
+    defaults_pro(&file);
     let opts = PlaceOptions {
         config,
         ..PlaceOptions::default()
@@ -758,7 +769,7 @@ fn hidden_by_place(name: &str, text: &str, config: Config) -> Vec<(String, Vec<S
 }
 
 /// A rating off its default is a choice: packed resistors rated 250mW keep their Power shown, a C0G capacitor its
-/// Dielectric, a 16V one its Voltage, and a default set to none hides nothing of that field
+/// Dielectric, a 16V one its Voltage, and a project without the DEFAULT_* variables hides nothing
 #[test]
 fn only_default_ratings_are_hidden() {
     let shown = |plans: &[(String, Vec<String>)], field: &str| {
@@ -801,17 +812,15 @@ fn only_default_ratings_are_hidden() {
     );
     assert!(shown(&other, "Voltage"), "{other:?}");
 
-    let mut config = Config::default();
-    config
-        .set_text("drawing.fields.c_dielectric", "none")
-        .unwrap();
-    let none = hidden_by_place("place_fields_none", &caps_over_ground(), config);
-    assert!(shown(&none, "Dielectric"), "{none:?}");
-
-    let mut config = Config::default();
-    config
-        .set_text("drawing.fields.c_dielectric", "x5r")
-        .unwrap_err();
+    // A project without the variables has no defaults: nothing is hidden
+    let file = scratch("place_fields_no_defaults").join("bare.kicad_sch");
+    std::fs::write(&file, caps_over_ground()).unwrap();
+    let bare = place(&file, &PlaceOptions::default()).unwrap();
+    assert!(
+        bare.plan.symbols.iter().all(|s| s.hidden.is_empty()),
+        "{:?}",
+        bare.plan
+    );
 }
 
 /// `drawing.fields.hide_defaults = always`: a rating at its default goes even on a part whose fields are clear of
