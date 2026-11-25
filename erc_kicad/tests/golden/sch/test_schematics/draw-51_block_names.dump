@@ -1,0 +1,131 @@
+board draw-51_block_names
+net unconnected-(L1-Pad1) class = Default @ sch draw-51_block_names.kicad_sch note "effective net class"
+net unconnected-(L1-Pad1) kind unconnected
+net unconnected-(L1-Pad2) class = Default @ sch draw-51_block_names.kicad_sch note "effective net class"
+net unconnected-(L1-Pad2) kind unconnected
+net unconnected-(L2-Pad1) class = Default @ sch draw-51_block_names.kicad_sch note "effective net class"
+net unconnected-(L2-Pad1) kind unconnected
+net unconnected-(L2-Pad2) class = Default @ sch draw-51_block_names.kicad_sch note "effective net class"
+net unconnected-(L2-Pad2) kind unconnected
+net unconnected-(U1-Pad1) class = Default @ sch draw-51_block_names.kicad_sch note "effective net class"
+net unconnected-(U1-Pad1) kind unconnected
+net unconnected-(U1-Pad2) class = Default @ sch draw-51_block_names.kicad_sch note "effective net class"
+net unconnected-(U1-Pad2) kind unconnected
+net unconnected-(U2-Pad1) class = Default @ sch draw-51_block_names.kicad_sch note "effective net class"
+net unconnected-(U2-Pad1) kind unconnected
+net unconnected-(U2-Pad2) class = Default @ sch draw-51_block_names.kicad_sch note "effective net class"
+net unconnected-(U2-Pad2) kind unconnected
+net unconnected-(U3-Pad1) class = Default @ sch draw-51_block_names.kicad_sch note "effective net class"
+net unconnected-(U3-Pad1) kind unconnected
+net unconnected-(U3-Pad2) class = Default @ sch draw-51_block_names.kicad_sch note "effective net class"
+net unconnected-(U3-Pad2) kind unconnected
+net unconnected-(U4-Pad1) class = Default @ sch draw-51_block_names.kicad_sch note "effective net class"
+net unconnected-(U4-Pad1) kind unconnected
+net unconnected-(U4-Pad2) class = Default @ sch draw-51_block_names.kicad_sch note "effective net class"
+net unconnected-(U4-Pad2) kind unconnected
+part L1 field Block = "1V8 LDO" @ sch draw-51_block_names.kicad_sch
+part L1 field Value = 10uH @ sch draw-51_block_names.kicad_sch
+part L1 flag dnp = no @ sch draw-51_block_names.kicad_sch
+part L1 flag exclude_from_sim = no @ sch draw-51_block_names.kicad_sch
+part L1 flag in_bom = yes @ sch draw-51_block_names.kicad_sch
+part L1 flag on_board = yes @ sch draw-51_block_names.kicad_sch
+part L1 lib Device:L sheet / symbol Device:L
+part L1 unit 1 sheet / uuid d51000000-0000-4000-8000-000000000012 line 45 at 119.38,38.1 rot 0
+part L1 value = qty 0.00001 H @ sch draw-51_block_names.kicad_sch note "from the Value field"
+part L2 field Block = "5V buck" @ sch draw-51_block_names.kicad_sch
+part L2 field Value = 4.7uH @ sch draw-51_block_names.kicad_sch
+part L2 flag dnp = no @ sch draw-51_block_names.kicad_sch
+part L2 flag exclude_from_sim = no @ sch draw-51_block_names.kicad_sch
+part L2 flag in_bom = yes @ sch draw-51_block_names.kicad_sch
+part L2 flag on_board = yes @ sch draw-51_block_names.kicad_sch
+part L2 lib Device:L sheet / symbol Device:L
+part L2 unit 1 sheet / uuid d51000000-0000-4000-8000-000000000021 line 50 at 38.1,114.3 rot 0
+part L2 value = qty 0.0000047 H @ sch draw-51_block_names.kicad_sch note "from the Value field"
+part U1 field Block = "3V8 DC-DC 500mA" @ sch draw-51_block_names.kicad_sch
+part U1 field Value = LDO @ sch draw-51_block_names.kicad_sch
+part U1 flag dnp = no @ sch draw-51_block_names.kicad_sch
+part U1 flag exclude_from_sim = no @ sch draw-51_block_names.kicad_sch
+part U1 flag in_bom = yes @ sch draw-51_block_names.kicad_sch
+part U1 flag on_board = yes @ sch draw-51_block_names.kicad_sch
+part U1 lib Regulator_Linear:LDO sheet / symbol Regulator_Linear:LDO
+part U1 unit 1 sheet / uuid d51000000-0000-4000-8000-000000000003 line 40 at 25.4,38.1 rot 0
+part U1 value = text LDO @ sch draw-51_block_names.kicad_sch note "from the Value field"
+part U2 field Block = "1V8 LDO" @ sch draw-51_block_names.kicad_sch
+part U2 field Value = LDO @ sch draw-51_block_names.kicad_sch
+part U2 flag dnp = no @ sch draw-51_block_names.kicad_sch
+part U2 flag exclude_from_sim = no @ sch draw-51_block_names.kicad_sch
+part U2 flag in_bom = yes @ sch draw-51_block_names.kicad_sch
+part U2 flag on_board = yes @ sch draw-51_block_names.kicad_sch
+part U2 lib Regulator_Linear:LDO sheet / symbol Regulator_Linear:LDO
+part U2 unit 1 sheet / uuid d51000000-0000-4000-8000-000000000009 line 44 at 106.68,38.1 rot 0
+part U2 value = text LDO @ sch draw-51_block_names.kicad_sch note "from the Value field"
+part U3 field Block = "5V buck" @ sch draw-51_block_names.kicad_sch
+part U3 field Value = BUCK @ sch draw-51_block_names.kicad_sch
+part U3 flag dnp = no @ sch draw-51_block_names.kicad_sch
+part U3 flag exclude_from_sim = no @ sch draw-51_block_names.kicad_sch
+part U3 flag in_bom = yes @ sch draw-51_block_names.kicad_sch
+part U3 flag on_board = yes @ sch draw-51_block_names.kicad_sch
+part U3 lib Regulator_Switching:BUCK sheet / symbol Regulator_Switching:BUCK
+part U3 unit 1 sheet / uuid d51000000-0000-4000-8000-000000000018 line 49 at 25.4,114.3 rot 0
+part U3 value = text BUCK @ sch draw-51_block_names.kicad_sch note "from the Value field"
+part U4 field Block = "3V3 LDO" @ sch draw-51_block_names.kicad_sch
+part U4 field Value = LDO @ sch draw-51_block_names.kicad_sch
+part U4 flag dnp = no @ sch draw-51_block_names.kicad_sch
+part U4 flag exclude_from_sim = no @ sch draw-51_block_names.kicad_sch
+part U4 flag in_bom = yes @ sch draw-51_block_names.kicad_sch
+part U4 flag on_board = yes @ sch draw-51_block_names.kicad_sch
+part U4 lib Regulator_Linear:LDO sheet / symbol Regulator_Linear:LDO
+part U4 unit 1 sheet / uuid d51000000-0000-4000-8000-000000000027 line 54 at 106.68,114.3 rot 0
+part U4 value = text LDO @ sch draw-51_block_names.kicad_sch note "from the Value field"
+pin L1 1 name "" unit 1 net unconnected-(L1-Pad1)
+pin L1 1 type = passive @ sch draw-51_block_names.kicad_sch
+pin L1 2 name "" unit 1 net unconnected-(L1-Pad2)
+pin L1 2 type = passive @ sch draw-51_block_names.kicad_sch
+pin L2 1 name "" unit 1 net unconnected-(L2-Pad1)
+pin L2 1 type = passive @ sch draw-51_block_names.kicad_sch
+pin L2 2 name "" unit 1 net unconnected-(L2-Pad2)
+pin L2 2 type = passive @ sch draw-51_block_names.kicad_sch
+pin U1 1 name "" unit 1 net unconnected-(U1-Pad1)
+pin U1 1 type = passive @ sch draw-51_block_names.kicad_sch
+pin U1 2 name "" unit 1 net unconnected-(U1-Pad2)
+pin U1 2 type = passive @ sch draw-51_block_names.kicad_sch
+pin U2 1 name "" unit 1 net unconnected-(U2-Pad1)
+pin U2 1 type = passive @ sch draw-51_block_names.kicad_sch
+pin U2 2 name "" unit 1 net unconnected-(U2-Pad2)
+pin U2 2 type = passive @ sch draw-51_block_names.kicad_sch
+pin U3 1 name "" unit 1 net unconnected-(U3-Pad1)
+pin U3 1 type = passive @ sch draw-51_block_names.kicad_sch
+pin U3 2 name "" unit 1 net unconnected-(U3-Pad2)
+pin U3 2 type = passive @ sch draw-51_block_names.kicad_sch
+pin U4 1 name "" unit 1 net unconnected-(U4-Pad1)
+pin U4 1 type = passive @ sch draw-51_block_names.kicad_sch
+pin U4 2 name "" unit 1 net unconnected-(U4-Pad2)
+pin U4 2 type = passive @ sch draw-51_block_names.kicad_sch
+sheet / name "" file draw-51_block_names.kicad_sch uuid /
+source file draw-51_block_names.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:L field Reference L
+symbol Device:L field Value L
+symbol Device:L hash 4c9d925e18877350
+symbol Device:L pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:L pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:L units 1
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 3e34c61bed684ede
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Regulator_Linear:LDO field Reference U
+symbol Regulator_Linear:LDO field Value LDO
+symbol Regulator_Linear:LDO hash e1fda4d58e883964
+symbol Regulator_Linear:LDO pin 1 unit 1 body 1 name "" type passive style line
+symbol Regulator_Linear:LDO pin 2 unit 1 body 1 name "" type passive style line
+symbol Regulator_Linear:LDO units 1
+symbol Regulator_Switching:BUCK field Reference U
+symbol Regulator_Switching:BUCK field Value BUCK
+symbol Regulator_Switching:BUCK hash 00cf4a514ecaedb3
+symbol Regulator_Switching:BUCK pin 1 unit 1 body 1 name "" type passive style line
+symbol Regulator_Switching:BUCK pin 2 unit 1 body 1 name "" type passive style line
+symbol Regulator_Switching:BUCK units 1
