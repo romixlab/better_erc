@@ -3,7 +3,7 @@
 
 use crate::mpn::mpns;
 use erc_model::layout::FootprintId;
-use erc_model::{Design, VariantId, View, fphash, natural_cmp};
+use erc_model::{Board, Design, PartId, VariantId, View, fphash, natural_cmp};
 use std::collections::{BTreeMap, BTreeSet};
 
 /// The MPNs and footprint pairs of a design
@@ -21,6 +21,32 @@ pub struct HashedFootprint {
     /// The `Lib:Name` of the first footprint with this hash, by reference
     pub lib_id: String,
     pub mpns: BTreeSet<String>,
+}
+
+/// The MPNs of `part` in every view of `board` (the base design and each variant) it is fitted in, each once in
+/// first-seen order; `None` when it is fitted in none
+pub fn part_mpns(board: &Board, part: PartId) -> Option<Vec<String>> {
+    let mut fitted = false;
+    let mut out: Vec<String> = Vec::new();
+    for view in views(board) {
+        if !view.fitted(part) {
+            continue;
+        }
+        fitted = true;
+        for (_, m) in mpns(view, part) {
+            if !out.iter().any(|o| o == m) {
+                out.push(m.to_owned());
+            }
+        }
+    }
+    fitted.then_some(out)
+}
+
+/// The base design's view of `board`, then each variant's
+fn views(board: &Board) -> impl Iterator<Item = View<'_>> {
+    std::iter::once(None)
+        .chain((0..board.variants.len()).map(|i| Some(VariantId::from_index(i))))
+        .map(move |v| View::new(board, v))
 }
 
 impl BoardMpns {
@@ -44,10 +70,7 @@ impl BoardMpns {
                         .push((hash, f.lib_id.clone()));
                 }
             }
-            let variants = std::iter::once(None)
-                .chain((0..board.variants.len()).map(|i| Some(VariantId::from_index(i))));
-            for variant in variants {
-                let view = View::new(board, variant);
+            for view in views(board) {
                 for p in view.fitted_components() {
                     let part_mpns = mpns(view, p);
                     for (_, mpn) in &part_mpns {

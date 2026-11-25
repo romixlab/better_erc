@@ -1,7 +1,6 @@
 //! Each datasheet's view of a symbol, kept apart: the page, the zoom, the scale, the footprint's and the model's
 //! placement, the ruler and the measurements made on one datasheet are its own. Opening another datasheet (or
-//! another symbol) keeps the view left; opening it again restores that view, else its review line's, else a fresh
-//! fit. The views are saved with the tab, so work not accepted yet survives a restart too.
+//! another row) keeps the view left; opening it again restores that view, else its review's, else a fresh fit. The views are saved with the tab, so work not accepted yet survives a restart too.
 
 use super::*;
 
@@ -12,11 +11,11 @@ const KEPT: usize = 200;
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct DocView {
-    /// The symbol under review (`Lib:Name`), or the footprint opened alone
+    /// The row under review ([`super::rows::Row::key`]), or the footprint opened alone
     pub symbol: String,
     pub datasheet: PathBuf,
-    /// The review line made on this datasheet when the view was left: a line changed since (accepted elsewhere,
-    /// written by `berc fp accept`) is newer than the view, and its view is restored instead
+    /// The review made on this datasheet when the view was left (`#id`): a review recorded since (accepted
+    /// elsewhere, by `berc fp accept`) is newer than the view, and its view is restored instead
     pub line: Option<String>,
     /// 0-based
     pub page: usize,
@@ -33,21 +32,20 @@ pub struct DocView {
 }
 
 impl FootprintReview {
-    /// Whose view the datasheet open is: the symbol under review, else the footprint opened alone, and the
-    /// datasheet
+    /// Whose view the datasheet open is: the row under review, else the footprint opened alone, and the datasheet
     pub(super) fn view_key(&self) -> Option<(String, PathBuf)> {
         let d = self.datasheet.clone()?;
         let who = match &self.rt.target {
-            Some(t) => t.symbol.clone(),
+            Some(t) => t.key.clone(),
             None => self.rt.sourced.as_ref()?.lib_id().to_string(),
         };
         Some((who, d))
     }
 
-    /// The value of the review line made on the datasheet open, when there is one
+    /// The review made on the datasheet open (`#id`), when there is one
     fn open_line(&mut self) -> Option<String> {
         let doc = self.open_doc()?;
-        self.line_for(&doc).map(|l| l.value)
+        self.review_on(&doc).map(|r| format!("#{}", r.review.id))
     }
 
     /// The view shown is left: kept as its datasheet's, for when it is opened again
@@ -81,7 +79,7 @@ impl FootprintReview {
     }
 
     /// The datasheet just opened (or the symbol just picked, its datasheet staying open) gets its own view: the
-    /// one kept for it, else its review line's ([`Self::restore_recorded`]), else (`fresh`) a fresh fit, nothing
+    /// one kept for it, else its review's ([`Self::restore_recorded`]), else (`fresh`) a fresh fit, nothing
     /// of the last datasheet's placement, scale or measurements carried over
     pub(super) fn enter_view(&mut self, fresh: bool) {
         let key = self.view_key();

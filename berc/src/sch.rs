@@ -230,9 +230,8 @@ fn field_line(name: &str, value: &str) -> String {
     format!("{}={}", q(name), q(value))
 }
 
-/// A library symbol cached in `lib_symbols`: its fields (`Footprint_Review` written by `berc fp accept`,
-/// `Datasheet`, `Footprint`, ...) as readable lines, so a review or a field edit shows what changed instead of
-/// an opaque hash; a hash for the rest (pins, graphics, sub-symbols, flags) so those stay diff-sized, not line
+/// A library symbol cached in `lib_symbols`: its fields (`Datasheet`, `Footprint`, `Mpn1`, ...) as readable lines,
+/// so a field edit shows what changed instead of an opaque hash; a hash for the rest (pins, graphics, sub-symbols, flags) so those stay diff-sized, not line
 /// by line
 fn lib_symbol(s: &Sexp, opts: Options) -> String {
     let name = s.arg(0).unwrap_or("?");
@@ -732,49 +731,28 @@ mod tests {
         render(&v[0], Options::default())
     }
 
-    /// A library symbol's fields show as readable lines - in particular `Footprint_Review`, written by `berc fp
-    /// accept` - instead of folding into the symbol's hash; the hash (pins and sub-symbols) is unmoved by a field
-    /// edit, so accepting a review is a one-line diff, not a changed hash to take on faith
+    /// A library symbol's fields show as readable lines instead of folding into the symbol's hash; the hash (pins
+    /// and sub-symbols) is unmoved by a field edit, so a field edit is a one-line diff, not a changed hash to take
+    /// on faith
     #[test]
     fn lib_symbol_fields_are_readable() {
-        let sym = |review: &str| {
+        let sym = |field: &str| {
             format!(
                 r#"(kicad_sch (lib_symbols (symbol "Device:R"
                     (property "Reference" "R" (at 0 0 0))
-                    {review}
+                    {field}
                     (symbol "R_1_1" (pin passive line (at 0 3.81 270) (length 1.27) (name "~") (number "1"))))))"#
             )
         };
         let before = render_str(&sym(""));
-        let after = render_str(&sym(
-            r#"(property "Footprint_Review" "fp1:0123456789abcdef" (at 0 0 0))"#,
-        ));
+        let after = render_str(&sym(r#"(property "Mpn1" "RC0402FR-0710KL" (at 0 0 0))"#));
         assert!(before.contains("  Reference=R\n"), "{before}");
-        assert!(!before.contains("Footprint_Review"), "{before}");
-        assert!(
-            after.contains("  Footprint_Review=fp1:0123456789abcdef\n"),
-            "{after}"
-        );
+        assert!(!before.contains("Mpn1"), "{before}");
+        assert!(after.contains("  Mpn1=RC0402FR-0710KL\n"), "{after}");
         fn hash_of(out: &str) -> &str {
             out.lines().find(|l| l.starts_with("lib ")).unwrap()
         }
         assert_eq!(hash_of(&before), hash_of(&after), "{before}\n{after}");
-        // Review lines with their source, one per datasheet: each property whole on its own line
-        let lines = render_str(&sym(
-            r#"(property "Footprint_Review" "fp1:0123456789abcdef mpn=A-7-F doc=DS1@Rev2 pdf=b3:0123456789abcdef page=3 scale=0.3528 at=12.5,40.2,90,mirror by=roman on=13nov2026" (at 0 0 0))
-               (property "Footprint_Review2" "fp1:0123456789abcdef mpn=B%2C115 doc=DS2" (at 0 0 0))"#,
-        ));
-        let shown: Vec<&str> = lines
-            .lines()
-            .filter(|l| l.contains("Footprint_Review"))
-            .collect();
-        assert_eq!(shown.len(), 2, "{lines}");
-        assert!(
-            shown[0].contains("page=3 scale=0.3528 at=12.5,40.2,90,mirror by=roman on=13nov2026"),
-            "{lines}"
-        );
-        assert!(shown[1].contains("mpn=B%2C115 doc=DS2"), "{lines}");
-        assert_eq!(hash_of(&before), hash_of(&lines), "{before}\n{lines}");
     }
 
     #[test]

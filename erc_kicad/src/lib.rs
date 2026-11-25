@@ -9,7 +9,7 @@
 //!   `Lib:Name` to a library symbol's fields or a parsed library footprint.
 //! - [`model3d`]: a footprint's `(model ...)` path resolved: the same `${VAR}` as [`libtable::KicadVars`], a
 //!   `.wrl` falling back to `.step`/`.stp`.
-//! - [`symlib`]: the fields of a symbol in a `.kicad_sym`, for the footprint review, and a property written back.
+//! - [`symlib`]: the fields of a symbol in a `.kicad_sym`, for the footprint checks, and a property written back.
 //! - [`edit`]: formatting-preserving edits: only the changed tokens are written, the rest stays byte for byte.
 //! - [`pro`]: the project file: net classes, text variables, variants, ERC and DRC settings, bus aliases.
 //! - [`netlist`]: the KiCad netlist (`kicad-cli sch export netlist`), the oracle of the schematic importer.

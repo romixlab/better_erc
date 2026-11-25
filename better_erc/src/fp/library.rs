@@ -1,10 +1,16 @@
-//! `berc fp check --lib`: every symbol of a symbol library against the review hash of the library footprint its
-//! `Footprint` field names, before any board uses it.
+//! `berc fp check --lib`: every symbol of a symbol library that names its MPNs, each (library footprint hash,
+//! MPN) pair judged against the reviews a part source holds, before any board uses the symbol. A generic symbol
+//! (MPNs on the instances) is reviewed on each board instead.
 
-use super::{FIELD, field_of, record, review_notes};
+use super::check::field_of;
+use super::pairs::{self, Overall, Pair};
 use erc_kicad::libtable::{FootprintLibraries, LibError, SymbolLibraries, SymbolLibrary};
 use erc_model::fphash;
+use erc_parts::PartsLock;
+use erc_parts::lock::LockedReview;
+use erc_parts::source::{MPNS_PER_CALL_MAX, Source, SourceError};
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 use std::fmt;
 use std::path::{Path, PathBuf};
 
@@ -12,38 +18,35 @@ use std::path::{Path, PathBuf};
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum SymbolStatus {
-    /// The review hash matches the library footprint
+    /// A review of the footprint's hash covers every MPN of the symbol
     Ok,
-    /// The footprint changed since the review
+    /// Some MPN is covered only by a review of another hash: the footprint changed since
     Changed,
-    /// No review hash on the symbol
-    Unreviewed,
+    /// Some MPN is covered only by reviews of another version of the review hash
+    OtherVersion,
+    /// Some MPNs covered, others not yet
+    Partial,
+    /// No MPN covered
+    Uncovered,
     /// The `Footprint` field names a footprint the footprint libraries don't give
     Missing,
-    /// A review hash on a symbol that sets no footprint: it reviews nothing
-    Refused,
-    /// The hash was made by another version of berc's review hash
-    OtherVersion,
-    /// The field holds something that is no review hash
-    Malformed,
-    /// The symbol sets no footprint and has no hash (a generic part, a power symbol): nothing to review, not a
-    /// failure
+    /// A footprint but no MPN: a generic symbol, reviewed on each board with the MPNs its instances carry
+    NoMpn,
+    /// No part source given to judge the MPNs against
+    Unjudged,
+    /// The symbol sets no footprint (a generic part, a power symbol): nothing to review, not a failure
     NoFootprint,
-    /// Every review line's hash matches, but some of the symbol's MPNs have no line: their datasheets not
-    /// reviewed yet
-    Partial,
 }
 
 impl SymbolStatus {
-    /// The footprint needs a review: never reviewed, changed since, or a hash berc can't compare
+    /// The footprint needs a review: some MPN not covered by a review of its hash now
     pub fn needs_review(self) -> bool {
         matches!(
             self,
             SymbolStatus::Changed
                 | SymbolStatus::OtherVersion
-                | SymbolStatus::Malformed
-                | SymbolStatus::Unreviewed
                 | SymbolStatus::Partial
+                | SymbolStatus::Uncovered
         )
     }
 
@@ -51,25 +54,44 @@ impl SymbolStatus {
         match self {
             SymbolStatus::Ok => "ok",
             SymbolStatus::Changed => "changed",
-            SymbolStatus::Unreviewed => "unreviewed",
-            SymbolStatus::Missing => "missing",
-            SymbolStatus::Refused => "refused",
             SymbolStatus::OtherVersion => "other version",
-            SymbolStatus::Malformed => "malformed",
-            SymbolStatus::NoFootprint => "no footprint",
             SymbolStatus::Partial => "partial",
+            SymbolStatus::Uncovered => "uncovered",
+            SymbolStatus::Missing => "missing",
+            SymbolStatus::NoMpn => "no MPN",
+            SymbolStatus::Unjudged => "unjudged",
+            SymbolStatus::NoFootprint => "no footprint",
+        }
+    }
+
+    /// Nothing to do here: reviewed, or nothing to review on the library side
+    pub fn is_ok(self) -> bool {
+        matches!(
+            self,
+            SymbolStatus::Ok | SymbolStatus::NoMpn | SymbolStatus::NoFootprint
+        )
+    }
+
+    fn of(o: Overall) -> SymbolStatus {
+        match o {
+            Overall::Ok => SymbolStatus::Ok,
+            Overall::Changed => SymbolStatus::Changed,
+            Overall::OtherVersion => SymbolStatus::OtherVersion,
+            // A pair the source gave no entry for is one it did not cover
+            Overall::Partial => SymbolStatus::Partial,
+            Overall::NotInLock | Overall::Uncovered => SymbolStatus::Uncovered,
         }
     }
 
     const ALL: [SymbolStatus; 9] = [
         SymbolStatus::Ok,
         SymbolStatus::Changed,
-        SymbolStatus::Partial,
-        SymbolStatus::Unreviewed,
-        SymbolStatus::Missing,
-        SymbolStatus::Refused,
         SymbolStatus::OtherVersion,
-        SymbolStatus::Malformed,
+        SymbolStatus::Partial,
+        SymbolStatus::Uncovered,
+        SymbolStatus::Missing,
+        SymbolStatus::Unjudged,
+        SymbolStatus::NoMpn,
         SymbolStatus::NoFootprint,
     ];
 }
@@ -84,11 +106,12 @@ pub struct SymbolEntry {
     pub status: SymbolStatus,
     /// The footprint's review hash now, when it was found
     pub hash: Option<String>,
-    /// The review hash on the symbol: its first stale review line's, else its first line's
-    pub stored: Option<String>,
-    /// The symbol's review lines, each against the footprint, and its MPNs no line reviews
+    /// The symbol's MPNs (`Mpn1`, `Mpn2`, ...), in field order
     #[serde(default)]
-    pub reviews: record::Assessed,
+    pub mpns: Vec<String>,
+    /// Each MPN against the source's reviews of [`hash`](Self::hash)
+    #[serde(default)]
+    pub pairs: Vec<Pair>,
     /// The `.kicad_mod` read
     pub footprint_file: Option<PathBuf>,
     /// The symbol's `Datasheet` field, what the footprint is reviewed against
@@ -107,7 +130,7 @@ pub struct SymbolEntry {
 impl SymbolEntry {
     /// Ok, or nothing to review, and no library outside what is allowed
     pub fn is_ok(&self) -> bool {
-        matches!(self.status, SymbolStatus::Ok | SymbolStatus::NoFootprint)
+        self.status.is_ok()
             && self.symbol_library_disallowed.is_none()
             && self.footprint_library_disallowed.is_none()
     }
@@ -133,14 +156,17 @@ pub struct CheckedLibrary {
     pub symbols: usize,
 }
 
-/// Every symbol of some symbol libraries against its library footprint's review hash
+/// Every symbol of some symbol libraries, its MPNs against the reviews of its library footprint's hash
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct LibCheck {
-    /// The symbol field read ([`FIELD`])
-    pub field: String,
+    /// The part source judged against, `None` when none was given
+    pub source: Option<String>,
     pub libraries: Vec<CheckedLibrary>,
     /// Library by library in the order given, symbols in natural order
     pub symbols: Vec<SymbolEntry>,
+    /// Every review a symbol's pairs name, by id
+    #[serde(default)]
+    pub reviews: Vec<LockedReview>,
     /// Every file this was made from, sorted: the library tables looked at, the symbol libraries checked and the
     /// files read from them, the footprint files used or looked for in vain. When one of them changes the check is
     /// out of date (the review tab watches them)
@@ -161,6 +187,8 @@ pub enum LibCheckError {
     NoFootprints(PathBuf),
     /// A `--symbols` path that is no symbol library and has none in it
     NoSymbols(PathBuf),
+    /// The part source gave no answer
+    Source(SourceError),
 }
 
 impl LibCheckError {
@@ -193,11 +221,20 @@ impl fmt::Display for LibCheckError {
                 "{}: no symbol library (.kicad_sym, .kicad_symdir) there or in it",
                 p.display()
             ),
+            LibCheckError::Source(e) => e.fmt(f),
         }
     }
 }
 
-impl std::error::Error for LibCheckError {}
+impl std::error::Error for LibCheckError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            LibCheckError::NoLibrary(_, e) => Some(e),
+            LibCheckError::Source(e) => Some(e),
+            _ => None,
+        }
+    }
+}
 
 /// Where library symbols and footprints are found besides a project's own tables: libraries given by path,
 /// searched first, and the global tables in KiCad's configuration directory
@@ -212,7 +249,8 @@ pub struct LibrarySearch {
     /// their directory names
     pub footprints: Vec<PathBuf>,
     /// The library nicknames a symbol and the footprint its `Footprint` field names may be in (an exact name, or a
-    /// prefix with a trailing `*`, [`lib_allowed`]): `berc fp check --lib` and `berc fp todo` report any other.
+    /// prefix with a trailing `*`, [`lib_allowed`]): `berc fp check` (board and `--lib`) and `berc fp todo` report
+    /// any other.
     /// Empty: no rule
     pub allowed: Vec<String>,
 }
@@ -321,8 +359,12 @@ fn resolve(
     Ok(vec![(arg.to_string(), path)])
 }
 
-/// Checks every symbol of `opts.libraries` against the review hash of its library footprint
-pub fn check_libraries(opts: &LibCheckOptions) -> Result<LibCheck, LibCheckError> {
+/// Checks every symbol of `opts.libraries`: its MPNs against the reviews `source` holds for its library footprint's
+/// hash. No source: the footprints are read and hashed, the MPNs not judged ([`SymbolStatus::Unjudged`]).
+pub fn check_libraries(
+    opts: &LibCheckOptions,
+    source: Option<&dyn Source>,
+) -> Result<LibCheck, LibCheckError> {
     let (mut sym_tables, mut fps) = opts.search.open(&opts.project)?;
     let mut libraries = Vec::new();
     for arg in &opts.libraries {
@@ -343,7 +385,7 @@ pub fn check_libraries(opts: &LibCheckOptions) -> Result<LibCheck, LibCheckError
         });
         for name in names {
             let fields = lib.fields(&name);
-            symbols.push(check_symbol(
+            symbols.push(read_symbol(
                 &format!("{nick}:{name}"),
                 fields,
                 &mut fps,
@@ -352,20 +394,87 @@ pub fn check_libraries(opts: &LibCheckOptions) -> Result<LibCheck, LibCheckError
         }
         files.extend(lib.files());
     }
+    let reviews = match source {
+        Some(source) => judge_all(&mut symbols, source).map_err(LibCheckError::Source)?,
+        None => {
+            for e in symbols
+                .iter_mut()
+                .filter(|e| e.status == SymbolStatus::Uncovered)
+            {
+                e.status = SymbolStatus::Unjudged;
+            }
+            Vec::new()
+        }
+    };
     files.extend(fps.files());
     files.sort();
     files.dedup();
     Ok(LibCheck {
-        field: FIELD.to_string(),
+        source: source.map(Source::name),
         libraries: checked,
         symbols,
+        reviews,
         files,
     })
 }
 
-/// Library symbol `symbol` (`Lib:Name`) with its `fields` as read, against its library footprint; `allowed` lists
-/// the library nicknames it and its footprint may be in ([`lib_allowed`])
-pub(super) fn check_symbol(
+/// The symbols' pairs judged against `source`: their MPNs' parts asked once, then each hash's reviews once. The
+/// reviews the pairs name, by id.
+fn judge_all(
+    symbols: &mut [SymbolEntry],
+    source: &dyn Source,
+) -> Result<Vec<LockedReview>, SourceError> {
+    let mut by_hash: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    for e in symbols
+        .iter()
+        .filter(|e| e.status == SymbolStatus::Uncovered)
+    {
+        if let Some(h) = &e.hash {
+            let mpns = by_hash.entry(h.clone()).or_default();
+            mpns.extend(e.mpns.iter().cloned());
+        }
+    }
+    let mut lock = PartsLock::default();
+    let mut all: Vec<String> = by_hash.values().flatten().cloned().collect();
+    all.sort();
+    all.dedup();
+    for chunk in all.chunks(MPNS_PER_CALL_MAX) {
+        lock.parts.extend(source.parts(chunk, &[])?.parts);
+    }
+    for (hash, mut mpns) in by_hash {
+        mpns.sort();
+        mpns.dedup();
+        for chunk in mpns.chunks(MPNS_PER_CALL_MAX) {
+            let a = source.reviews(&hash, chunk)?;
+            lock.footprints.extend(a.pairs);
+            lock.reviews.extend(a.reviews);
+        }
+    }
+    lock.sort();
+    for e in symbols
+        .iter_mut()
+        .filter(|e| e.status == SymbolStatus::Uncovered)
+    {
+        let Some(hash) = &e.hash else { continue };
+        e.pairs = e
+            .mpns
+            .iter()
+            .map(|m| pairs::judge(&lock, hash, m))
+            .collect();
+        if let Some(o) = pairs::overall(&e.pairs) {
+            e.status = SymbolStatus::of(o);
+        }
+    }
+    let mut reviews = lock.reviews;
+    reviews.sort_by_key(|r| r.id);
+    reviews.dedup_by_key(|r| r.id);
+    Ok(reviews)
+}
+
+/// Library symbol `symbol` (`Lib:Name`) with its `fields` as read, its library footprint read and hashed, its
+/// pairs not judged yet (status [`SymbolStatus::Uncovered`] when there are some); `allowed` lists the library
+/// nicknames it and its footprint may be in ([`lib_allowed`])
+pub(super) fn read_symbol(
     symbol: &str,
     fields: Result<Vec<(String, String)>, LibError>,
     fps: &mut FootprintLibraries,
@@ -376,8 +485,8 @@ pub(super) fn check_symbol(
         footprint: None,
         status: SymbolStatus::NoFootprint,
         hash: None,
-        stored: None,
-        reviews: record::Assessed::default(),
+        mpns: Vec::new(),
+        pairs: Vec::new(),
         footprint_file: None,
         datasheet: None,
         note: None,
@@ -406,12 +515,17 @@ pub(super) fn check_symbol(
     e.datasheet = field_of(&fields, "Datasheet")
         .filter(|d| *d != "~")
         .map(String::from);
-    e.reviews = record::assess(&fields, None);
-    e.stored = e.reviews.stored();
-    let Some(footprint) = e.footprint.clone() else {
-        if e.stored.is_some() {
-            e.status = SymbolStatus::Refused;
+    for (k, v) in &fields {
+        let v = v.trim();
+        if erc_parts::mpn::mpn_field(k)
+            && !v.is_empty()
+            && v != "~"
+            && !e.mpns.iter().any(|m| m == v)
+        {
+            e.mpns.push(v.to_owned());
         }
+    }
+    let Some(footprint) = e.footprint.clone() else {
         return e;
     };
     let found = match fps.footprint(&footprint) {
@@ -424,16 +538,10 @@ pub(super) fn check_symbol(
     };
     e.footprint_file = Some(found.path.clone());
     e.hash = Some(fphash::hash(&found.footprint));
-    let compare = |stored: &str| fphash::compare(stored, &found.footprint);
-    e.reviews = record::assess(&fields, Some(&compare));
-    e.stored = e.reviews.stored();
-    e.status = match e.reviews.overall() {
-        record::Overall::Ok => SymbolStatus::Ok,
-        record::Overall::Unreviewed => SymbolStatus::Unreviewed,
-        record::Overall::Partial => SymbolStatus::Partial,
-        record::Overall::Changed => SymbolStatus::Changed,
-        record::Overall::OtherVersion => SymbolStatus::OtherVersion,
-        record::Overall::Malformed => SymbolStatus::Malformed,
+    e.status = if e.mpns.is_empty() {
+        SymbolStatus::NoMpn
+    } else {
+        SymbolStatus::Uncovered
     };
     e
 }
@@ -458,21 +566,19 @@ impl LibCheck {
     }
 
     /// One line per symbol and a summary, statuses in colour (the caller's stream drops it off a terminal).
-    /// Symbols without a footprint are listed last under their own heading; `details`: every review line under its
-    /// symbol
+    /// Symbols without a footprint are listed last under their own heading; `details`: every MPN under its symbol,
+    /// covered ones too
     pub fn to_text_color(&self, details: bool) -> String {
         use anstyle::{AnsiColor, Style};
         use std::fmt::Write as _;
         let style = |s: SymbolStatus| match s {
             SymbolStatus::Ok => AnsiColor::Green.on_default(),
-            SymbolStatus::Changed | SymbolStatus::Malformed | SymbolStatus::Missing => {
-                AnsiColor::Red.on_default().bold()
-            }
-            SymbolStatus::Unreviewed | SymbolStatus::OtherVersion | SymbolStatus::Partial => {
+            SymbolStatus::Changed | SymbolStatus::Missing => AnsiColor::Red.on_default().bold(),
+            SymbolStatus::OtherVersion | SymbolStatus::Partial | SymbolStatus::Uncovered => {
                 AnsiColor::Yellow.on_default().bold()
             }
-            SymbolStatus::Refused => AnsiColor::Cyan.on_default(),
-            SymbolStatus::NoFootprint => Style::new().dimmed(),
+            SymbolStatus::Unjudged => AnsiColor::Cyan.on_default(),
+            SymbolStatus::NoMpn | SymbolStatus::NoFootprint => Style::new().dimmed(),
         };
         let dim = Style::new().dimmed();
         let width = self
@@ -508,38 +614,32 @@ impl LibCheck {
                 e.status.name(),
                 e.symbol,
             );
-            let stored = e.stored.as_deref().unwrap_or("");
             let now = e.hash.as_deref().unwrap_or("");
             match e.status {
-                SymbolStatus::Ok | SymbolStatus::NoFootprint | SymbolStatus::Partial => {}
-                SymbolStatus::Changed => {
-                    let _ = write!(
-                        out,
-                        "  {dim}reviewed{dim:#} {stored}  {dim}now{dim:#} {now}"
-                    );
-                }
-                SymbolStatus::Unreviewed => {
-                    let _ = write!(out, "  {dim}hash now{dim:#} {now}  {dim}for {FIELD}{dim:#}");
-                }
+                SymbolStatus::Ok | SymbolStatus::NoFootprint => {}
                 SymbolStatus::Missing => {
                     let _ = write!(out, "  {dim}{}{dim:#}", e.note.as_deref().unwrap_or(""));
                 }
-                SymbolStatus::Refused => {
+                SymbolStatus::NoMpn => {
                     let _ = write!(
                         out,
-                        "  {dim}{FIELD} is{dim:#} {stored}  {dim}but the symbol sets no footprint{dim:#}"
+                        "  {dim}no Mpn field: reviewed on each board with its instances' MPNs{dim:#}"
                     );
                 }
-                SymbolStatus::OtherVersion | SymbolStatus::Malformed => {
+                SymbolStatus::Unjudged => {
                     let _ = write!(
                         out,
-                        "  {dim}{FIELD} is{dim:#} {stored}  {dim}now{dim:#} {now}"
+                        "  {dim}hash now{dim:#} {now}  {dim}no part source to judge {} MPNs against{dim:#}",
+                        e.mpns.len()
                     );
+                }
+                _ => {
+                    let _ = write!(out, "  {dim}hash now{dim:#} {now}");
                 }
             }
             // The footprint column's padding, where nothing follows it
             out.truncate(out.trim_end_matches(' ').len());
-            for l in review_notes(&e.reviews, details) {
+            for l in super::check::pair_notes(&e.pairs, details) {
                 let _ = write!(out, "\n{:13} {:width$} {l}", "", "");
             }
             if let Some(lib) = &e.symbol_library_disallowed {

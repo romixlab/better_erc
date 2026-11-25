@@ -1,11 +1,12 @@
 //! Each datasheet of a symbol keeps its own review: the view (page, scale, placement, ruler, model) is kept per
 //! symbol and datasheet, so switching to another datasheet and back finds the first as it was left; Accept on one
-//! datasheet writes that datasheet's review line and leaves the others' lines as they are
+//! datasheet records a review made on it and leaves the others' reviews as they are
 
 use super::panel::ACCEPT;
 use super::testpdf::{TestPage, write};
-use super::tests::{datasheet, footprint_table, harness, symbol_text};
+use super::tests::{datasheet, footprint_table, harness, parts_file, symbol_text};
 use super::*;
+use better_erc::parts::lock::{Cover, LockedReview};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable;
 
@@ -85,20 +86,46 @@ fn accept(h: &mut Harness<'_, FootprintReview>) -> Vec<(String, bool)> {
     mpns
 }
 
-/// The symbol's review lines in the library file, in order
-fn lines(lib: &Path) -> Vec<String> {
-    let text = std::fs::read_to_string(lib).unwrap();
-    text.lines()
-        .filter_map(|l| {
-            let rest = l.trim().strip_prefix("(property \"Footprint_Review")?;
-            let value = rest.split_once("\" \"")?.1;
-            Some(value.split_once('"')?.0.to_string())
-        })
-        .collect()
+/// The reviews of the part source `parts`, in order
+fn reviews(parts: &Path) -> Vec<LockedReview> {
+    better_erc::parts::PartsLock::read(parts).unwrap().reviews
+}
+
+/// What a review records of where it was made, for comparing
+#[derive(Debug, PartialEq)]
+struct Made {
+    doc: Option<String>,
+    page: Option<u32>,
+    /// Rounded to 4 decimals
+    scale: Option<f64>,
+    /// x, y, rotation
+    at: Option<(f64, f64, f64)>,
+    covers: Vec<String>,
+}
+
+fn made(r: &LockedReview) -> Made {
+    Made {
+        doc: r.doc.clone(),
+        page: r.page,
+        scale: r.scale.map(|s| (s * 1e4).round() / 1e4),
+        at: r.at.map(|a| (a.x, a.y, a.rotation)),
+        covers: r.covers.iter().map(Cover::describe).collect(),
+    }
+}
+
+/// The review expected: made on `doc` page 2 at `scale`, the footprint at `at`, covering `mpn`
+fn expect(doc: &str, scale: f64, at: (f64, f64, f64), mpn: &str) -> Made {
+    Made {
+        doc: Some(doc.to_owned()),
+        page: Some(2),
+        scale: Some(scale),
+        at: Some(at),
+        covers: vec![mpn.to_owned()],
+    }
 }
 
 /// Two datasheets of one symbol with two MPNs, each at its own scale: aligned and accepted on A, then on B, then
-/// back to A. A's view and line are as A left them, B's line is its own, and the symbol has a line per datasheet.
+/// back to A. A's view and review are as A left them, B's review is its own, and each datasheet has its review.
 /// Work not accepted on a datasheet survives switching away and back, and is saved with the tab
 #[test]
 fn each_datasheet_keeps_its_own_review() {
@@ -124,8 +151,10 @@ fn each_datasheet_keeps_its_own_review() {
         ),
     )
     .unwrap();
+    let parts = parts_file(&dir, &["TEST-PART", "OTHER-PART"]);
     let mut h = harness("fp perdoc");
     h.state_mut().rt.settings.reviewer = "tester".into();
+    h.state_mut().rt.settings.parts_source = Some(parts.clone());
     h.state_mut().rt.indexer = Some(Arc::new(|| {
         docindex::parse_index(
             r#"[{"path": "Test/TEST-PART.pdf", "doc": "DS99", "rev": "3",
@@ -159,12 +188,16 @@ fn each_datasheet_keeps_its_own_review() {
             ("OTHER-PART".to_string(), false)
         ]
     );
-    let line_a = format!(
-        "{hash} mpn=TEST-PART doc=DS99@rev3 pdf=b3:0123456789abcdef page=2 scale=0.02 at=150,230,90 by=tester on="
-    );
-    let after_a = lines(&lib);
+    let after_a = reviews(&parts);
     assert_eq!(after_a.len(), 1, "{after_a:?}");
-    assert!(after_a[0].starts_with(&line_a), "{after_a:?}");
+    assert_eq!(
+        made(&after_a[0]),
+        expect("DS99", 0.02, (150.0, 230.0, 90.0), "TEST-PART")
+    );
+    assert_eq!(
+        (after_a[0].hash.as_str(), after_a[0].reviewer.as_str()),
+        (hash.as_str(), "tester")
+    );
 
     // B: a fresh view, nothing of A's carried over
     open(&mut h, &b);
@@ -175,8 +208,8 @@ fn each_datasheet_keeps_its_own_review() {
         assert_eq!(st.ruler, None, "A's ruler carried over to B");
         assert_ne!(st.place, place_a, "A's placement carried over to B");
     }
-    // Aligned on B at its own scale and accepted: B names TEST-PART too, but A's line has it, so only OTHER-PART
-    // is ticked
+    // Aligned on B at its own scale and accepted: B names TEST-PART too, but A's review covers it, so only
+    // OTHER-PART is ticked
     let place_b = Placement {
         origin: [300.0, 420.0],
         rotation: 0.0,
@@ -190,15 +223,14 @@ fn each_datasheet_keeps_its_own_review() {
             ("OTHER-PART".to_string(), true)
         ]
     );
-    let after_b = lines(&lib);
-    assert_eq!(after_b.len(), 2, "one line per datasheet: {after_b:?}");
-    assert_eq!(after_b[0], after_a[0], "accepting on B rewrote A's line");
-    assert!(
-        after_b[1].starts_with(&format!(
-            "{hash} mpn=OTHER-PART doc=OT-7@rev1 pdf=b3:fedcba9876543210 page=2 scale=0.04 at=300,420,0 by=tester on="
-        )),
-        "{after_b:?}"
+    let after_b = reviews(&parts);
+    assert_eq!(after_b.len(), 2, "one review per datasheet: {after_b:?}");
+    assert_eq!(after_b[0], after_a[0], "accepting on B changed A's review");
+    assert_eq!(
+        made(&after_b[1]),
+        expect("OT-7", 0.04, (300.0, 420.0, 0.0), "OTHER-PART")
     );
+    assert_eq!(after_b[1].doc_rev.as_deref(), Some("rev1"));
 
     // More alignment on B, not accepted
     let place_b2 = Placement {
@@ -221,7 +253,7 @@ fn each_datasheet_keeps_its_own_review() {
         assert_eq!(st.place, place_a);
         assert_eq!(st.ruler, Some([[100.0, 200.0], [200.0, 200.0]]));
     }
-    assert_eq!(lines(&lib), after_b, "switching rewrote a line");
+    assert_eq!(reviews(&parts), after_b, "switching recorded a review");
 
     // Back to B: the work not accepted is still there
     open(&mut h, &b);
@@ -231,7 +263,7 @@ fn each_datasheet_keeps_its_own_review() {
         assert_eq!(st.scale.as_ref().map(|s| s.mm_per_point), Some(0.04));
         assert_eq!(st.place, place_b2);
     }
-    // Accepting on B again replaces B's line alone
+    // Accepting on B again records another review on B; the earlier ones stay
     assert_eq!(
         accept(&mut h),
         [
@@ -239,10 +271,10 @@ fn each_datasheet_keeps_its_own_review() {
             ("OTHER-PART".to_string(), true)
         ]
     );
-    let again = lines(&lib);
-    assert_eq!(again.len(), 2, "{again:?}");
-    assert_eq!(again[0], after_a[0]);
-    assert!(again[1].contains(" at=310,425,0 "), "{again:?}");
+    let again = reviews(&parts);
+    assert_eq!(again.len(), 3, "{again:?}");
+    assert_eq!(again[..2], after_b[..]);
+    assert_eq!(made(&again[2]).at, Some((310.0, 425.0, 0.0)), "{again:?}");
 
     // Saved with the tab: A's view comes back from the saved state too
     let saved = serde_json::to_string(h.state()).unwrap();
@@ -254,5 +286,9 @@ fn each_datasheet_keeps_its_own_review() {
         .expect("A's view saved");
     assert_eq!(kept.place, place_a);
     assert_eq!(kept.symbol, "Rev:Two");
+    assert!(
+        !std::fs::read_to_string(&lib).unwrap().contains("Review"),
+        "the library is not written"
+    );
     std::fs::remove_dir_all(&dir).unwrap();
 }

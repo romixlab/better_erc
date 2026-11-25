@@ -8,7 +8,7 @@
 //!   schematics only KiCad 10 (older kicad-cli has no `sch upgrade`). KiCad's saves are cached in the target folder.
 //! - The extended set, where the folders are there: every KiCad file of `~/git/kicad-library`
 //!   (`BERC_KICAD_LIBRARY_DIR`) and `~/git/hw` (`BERC_HW_DIR`) read and written unchanged is the same bytes, and
-//!   every symbol of every library and schematic gets the review hash as a pure insertion, then a pure value
+//!   every symbol of every library and schematic gets a property as a pure insertion, then a pure value
 //!   change.
 
 use erc_kicad::edit::{Edits, Tree};
@@ -20,9 +20,9 @@ use generate_netlists::project::{Kicad, podman_available};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-const FIELD: &str = "Footprint_Review";
-const HASH: &str = "fp1:0123456789abcdef";
-const HASH2: &str = "fp1:fedcba9876543210";
+const FIELD: &str = "Berc_Note";
+const VALUE: &str = "fp1:0123456789abcdef";
+const VALUE2: &str = "fp1:fedcba9876543210";
 
 /// A KiCad 10 symbol library with one symbol, as the symbol editor writes it
 const LIB10: &str = "(kicad_symbol_lib
@@ -344,28 +344,28 @@ fn props(text: &str, name: &str) -> Vec<(String, String)> {
 fn check_insert(text: &str, symbol: &str) -> String {
     let before = props(text, symbol);
     assert!(before.iter().all(|(k, _)| k != FIELD));
-    let e = set_property(text, symbol, FIELD, HASH).unwrap();
+    let e = set_property(text, symbol, FIELD, VALUE).unwrap();
     assert!(e.changed);
     assert_eq!(e.old, None);
     let (removed, added) = one_hunk(text, &e.text);
     assert_eq!(removed, "", "{symbol}: a pure insertion");
-    assert!(added.contains(HASH), "{added}");
+    assert!(added.contains(VALUE), "{added}");
     let mut after = props(&e.text, symbol);
     let i = after.iter().position(|(k, _)| k == FIELD).unwrap();
-    assert_eq!(after.remove(i).1, HASH);
+    assert_eq!(after.remove(i).1, VALUE);
     assert_eq!(after, before);
     // Right after the symbol's last own property. KiCad 10 writes its ki_ properties after the own ones, but a
     // hand-edited file may hold one earlier (`ki_keywords` before `Mpn1`): that one stays where it is
     let last_own = before.iter().rposition(|(k, _)| !k.starts_with("ki_"));
     assert_eq!(i, last_own.map_or(0, |n| n + 1), "{symbol}: {before:?}");
-    let again = set_property(&e.text, symbol, FIELD, HASH).unwrap();
+    let again = set_property(&e.text, symbol, FIELD, VALUE).unwrap();
     assert!(!again.changed);
     assert_eq!(again.text, e.text);
-    let other = set_property(&e.text, symbol, FIELD, HASH2).unwrap();
-    assert_eq!(other.old.as_deref(), Some(HASH));
+    let other = set_property(&e.text, symbol, FIELD, VALUE2).unwrap();
+    assert_eq!(other.old.as_deref(), Some(VALUE));
     assert_eq!(
         one_hunk(&e.text, &other.text),
-        (&HASH[4..], &HASH2[4..]),
+        (&VALUE[4..], &VALUE2[4..]),
         "only the value changes"
     );
     e.text
@@ -385,7 +385,7 @@ fn kicad10_library_insert() {
         LIB10,
         &out,
         "\t\t)\n\t\t(property \"ki_keywords\"",
-        "\n\t\t(property \"Footprint_Review\" \"fp1:0123456789abcdef\"\n\t\t\t(at 0 0 0)\n\t\t\t(show_name no)\n\t\t\t\
+        "\n\t\t(property \"Berc_Note\" \"fp1:0123456789abcdef\"\n\t\t\t(at 0 0 0)\n\t\t\t(show_name no)\n\t\t\t\
          (do_not_autoplace no)\n\t\t\t(hide yes)\n\t\t\t(effects\n\t\t\t\t(font\n\t\t\t\t\t(size 1.27 1.27)\n\t\t\t\t)\n\t\t\t)\n\t\t)",
     );
 }
@@ -399,7 +399,7 @@ fn kicad8_and_9_library_insert() {
             &text,
             &out,
             "\t\t)\n\t\t(property \"ki_fp_filters\"",
-            "\n\t\t(property \"Footprint_Review\" \"fp1:0123456789abcdef\"\n\t\t\t(at 0 0 0)\n\t\t\t(effects\n\t\t\t\t\
+            "\n\t\t(property \"Berc_Note\" \"fp1:0123456789abcdef\"\n\t\t\t(at 0 0 0)\n\t\t\t(effects\n\t\t\t\t\
              (font\n\t\t\t\t\t(size 1.27 1.27)\n\t\t\t\t)\n\t\t\t\t(hide yes)\n\t\t\t)\n\t\t)",
         );
     }
@@ -417,13 +417,13 @@ fn schematic_lib_symbols_insert() {
         let out = check_insert(&sch, name);
         // One level deeper than in the library
         assert!(
-            out.contains("\t\t\t)\n\t\t\t(property \"Footprint_Review\""),
+            out.contains("\t\t\t)\n\t\t\t(property \"Berc_Note\""),
             "{out}"
         );
         // The library's own name is not the schematic's: only the library id is found
         let bare = name.trim_start_matches("Test:");
         assert_eq!(
-            set_property(&sch, bare, FIELD, HASH).unwrap_err(),
+            set_property(&sch, bare, FIELD, VALUE).unwrap_err(),
             EditError::NoSymbol(bare.into())
         );
     }
@@ -469,7 +469,7 @@ fn symdir_file_and_derived_symbol() {
         _ => None,
     })
     .unwrap();
-    assert!(fields.contains(&(FIELD.to_string(), HASH.to_string())));
+    assert!(fields.contains(&(FIELD.to_string(), VALUE.to_string())));
     assert!(fields.contains(&(
         "Footprint".to_string(),
         "Package_TO_SOT_SMD:SOT-23-5".to_string()
@@ -484,7 +484,7 @@ fn unusual_symbols() {
     // No property at all: after the settings, before the units, in the version's layout
     let bare = "(kicad_symbol_lib\n\t(version 20251024)\n\t(symbol \"B\"\n\t\t(in_bom yes)\n\t\t(symbol \"B_1_1\")\n\t)\n)\n";
     let out = check_insert(bare, "B");
-    assert!(out.contains("\t\t(in_bom yes)\n\t\t(property \"Footprint_Review\" \"fp1:0123456789abcdef\"\n\t\t\t(at 0 0 0)\n\t\t\t(show_name no)"), "{out}");
+    assert!(out.contains("\t\t(in_bom yes)\n\t\t(property \"Berc_Note\" \"fp1:0123456789abcdef\"\n\t\t\t(at 0 0 0)\n\t\t\t(show_name no)"), "{out}");
     let bare_old = bare.replace("20251024", "20241209");
     let out = check_insert(&bare_old, "B");
     assert!(out.contains("(at 0 0 0)\n\t\t\t(effects"), "{out}");
@@ -504,19 +504,19 @@ fn unusual_symbols() {
 #[test]
 fn refusals() {
     assert_eq!(
-        set_property(&lib9(20230121), "R", FIELD, HASH).unwrap_err(),
+        set_property(&lib9(20230121), "R", FIELD, VALUE).unwrap_err(),
         EditError::TooOld(20230121)
     );
     assert_eq!(
-        set_property(LIB10, "Nope", FIELD, HASH).unwrap_err(),
+        set_property(LIB10, "Nope", FIELD, VALUE).unwrap_err(),
         EditError::NoSymbol("Nope".into())
     );
     assert_eq!(
-        set_property("(kicad_pcb (version 20241229))", "R", FIELD, HASH).unwrap_err(),
+        set_property("(kicad_pcb (version 20241229))", "R", FIELD, VALUE).unwrap_err(),
         EditError::NotSymbolFile
     );
     assert!(matches!(
-        set_property("(kicad_symbol_lib (version", "R", FIELD, HASH),
+        set_property("(kicad_symbol_lib (version", "R", FIELD, VALUE),
         Err(EditError::Parse(_))
     ));
 }
@@ -678,10 +678,10 @@ fn check_oracle(kicad: Kicad, text: &str, ext: &str, symbol: &str, scratch: &Pat
     if !opens(m, version_of(text)) || ext == "kicad_sch" && m < 10 {
         return false;
     }
-    let edited = set_property(text, symbol, FIELD, HASH).unwrap().text;
+    let edited = set_property(text, symbol, FIELD, VALUE).unwrap().text;
     let saved = kicad_save(kicad, text, ext, scratch);
     let saved_edited = kicad_save(kicad, &edited, ext, scratch);
-    let ours = set_property(&saved, symbol, FIELD, HASH).unwrap().text;
+    let ours = set_property(&saved, symbol, FIELD, VALUE).unwrap().text;
     if ours != saved_edited {
         let (a, b) = one_hunk(&ours, &saved_edited);
         panic!("{kicad:?} {symbol}: ours\n{a}\nKiCad's\n{b}");
@@ -810,7 +810,7 @@ fn extended_set_round_trips() {
             let take = if full() { names.len() } else { 3 };
             for name in names.into_iter().take(take) {
                 let has = props(&text, &name).iter().any(|(k, _)| k == FIELD);
-                match set_property(&text, &name, FIELD, HASH) {
+                match set_property(&text, &name, FIELD, VALUE) {
                     Err(EditError::TooOld(_)) => {
                         too_old += 1;
                         break;
@@ -838,7 +838,7 @@ fn full() -> bool {
 }
 
 /// KiCad as the oracle on a sample of the extended set's libraries and schematics (8 files spread over them, every
-/// 10th with `BERC_HW_FULL`), the first symbol of each without a review hash
+/// 10th with `BERC_HW_FULL`), the first symbol of each without the property
 #[test]
 fn extended_set_kicad_oracle() {
     let kicads = oracle_kicads();
@@ -881,7 +881,7 @@ fn extended_set_kicad_oracle() {
             continue;
         };
         if matches!(
-            set_property(&text, &name, FIELD, HASH),
+            set_property(&text, &name, FIELD, VALUE),
             Err(EditError::TooOld(_))
         ) {
             continue;

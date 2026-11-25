@@ -1,15 +1,18 @@
-//! Footprint review (VIEW-19): a library symbol's footprint drawn over its datasheet drawing. The drawing's scale
-//! is set with a ruler along one of its dimensions; the footprint is moved, turned and mirrored onto the drawing,
-//! shown half see-through or blinking; when it matches, Accept writes its review hash (`fp1:`, [`better_erc::fp`])
-//! into the symbol's `Footprint_Review` field.
+//! Footprint review (VIEW-19): a footprint drawn over its datasheet drawing. The drawing's scale is set with a
+//! ruler along one of its dimensions; the footprint is moved, turned and mirrored onto the drawing, shown half
+//! see-through or blinking; when it matches, Accept records a review of its review hash (`fp1:`,
+//! [`better_erc::fp`]) for the MPNs it fits in the part source, as `berc fp accept` does, and refreshes the
+//! board's parts snapshot. Nothing is written into the schematic or the libraries, except a symbol's `Footprint`
+//! when asked.
 //!
-//! The review starts from a library symbol, since the symbol is what a schematic places and what holds the hash:
-//! picked from a symbol library (a `.kicad_sym`, a `.kicad_symdir`, a nickname in the `sym-lib-table`s), or from
-//! a board's list of the library symbols it uses ([`better_erc::fp::todo`]), stepping through those to review.
-//! The footprint is the library footprint the symbol's `Footprint` field names, the datasheet the file its
-//! `Datasheet` field names, else a local library search (a setting), else a file picker; the page search finds the
-//! land pattern page by words that are a setting too. A footprint opened alone (a `.kicad_mod`, a board's copy) is
-//! a preview: there is no symbol to write the hash into, so Accept is off and says so.
+//! The list to step through comes from a board, one row per board footprint hash and what one review of it
+//! covers (a family, else one MPN), as `berc fp todo` lists them; or from a symbol library (a `.kicad_sym`, a
+//! `.kicad_symdir`, a nickname in the `sym-lib-table`s), one row per symbol, as `berc fp check --lib` judges it.
+//! A board row shows the board's copy of the footprint, which is what is reviewed; a library row the library
+//! footprint its `Footprint` field names. The datasheet is the file its `Datasheet` field names, else a local
+//! library search (a setting), else a file picker; the page search finds the land pattern page by words that are
+//! a setting too. A footprint opened alone (a `.kicad_mod`, a board's copy) is a preview: there are no MPNs to
+//! review it for, so Accept is off and says so.
 //!
 //! The canvas has a key for each step (settings, `[footprint_review.keys]`; a help line under the canvas names
 //! them): the page at full width; the ruler placed coarsely at the pointer, then each end zoomed in on to place it
@@ -19,11 +22,13 @@ use crate::prelude::*;
 use crate::settings::{BlendMode, FootprintReviewSettings, Keys, LayerColors, Rgb, Settings};
 use crate::tabs::TabUi;
 use better_erc::fp::{
-    AcceptRun, AcceptWhat, FIELD, FootprintSource, HashSource, LibCheckOptions, LibrarySearch,
-    Sourced, SymbolLibraries, SymbolStatus, TodoEntry,
+    AcceptRun, AcceptWhat, FootprintSource, LibCheckOptions, LibrarySearch, Sourced, SymbolEntry,
+    SymbolLibraries, SymbolStatus, TodoEntry, TodoStatus, Written,
 };
 use better_erc::kicad::libtable::FootprintLibraries;
 use better_erc::model::layout::{FootprintId, Layout};
+use better_erc::parts::lock::LockedReview;
+use better_erc::parts::{FileSource, Source};
 use egui::{Align2, FontId, Pos2, Rect, Shape, Stroke, pos2, vec2};
 use geometry::{DimNumber, Snap, SnapKind};
 use outline::{Item, Kind};
@@ -31,6 +36,7 @@ use pdf::{PageHit, PdfDoc};
 pub use puck::PuckMoves;
 use puck::{Action, Puck};
 use recorded::{Indexer, Locator, MpnChoice};
+use rows::Row;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::mpsc::Receiver;
@@ -61,6 +67,7 @@ mod puck;
 mod recorded;
 #[cfg(test)]
 mod reload_tests;
+mod rows;
 #[cfg(test)]
 mod testpdf;
 #[cfg(test)]
@@ -336,12 +343,14 @@ impl Default for FootprintReview {
     }
 }
 
-/// The library symbols to review, one row each
+/// What to review, one row each: a board's footprint hashes and their covers, or a library's symbols
 struct SymbolList {
     from: SymbolsFrom,
     /// A line on where they come from
     title: String,
-    rows: Vec<TodoEntry>,
+    rows: Vec<Row>,
+    /// The reviews the rows name, from the parts snapshot or the part source
+    reviews: Vec<LockedReview>,
     filter: String,
     /// The files the list was made from ([`better_erc::fp::FpTodo::files`]), watched
     files: Vec<PathBuf>,
@@ -356,33 +365,42 @@ struct Measured {
     text: String,
 }
 
-/// Accept's question before it writes: what its dry run would write where, and whether KiCad may overwrite that
+/// Accept's question before it records: what its dry run would record in the part source, and which MPNs it covers
 struct Confirm {
     review: Review,
     target: Target,
-    run: AcceptRun,
-    /// Why KiCad may overwrite the change on its next save, one line each
-    warnings: Vec<String>,
+    /// The review recorded: where it was made, who made it
+    new: better_erc::parts::NewReview,
+    /// The dry run: what the review covers, the MPNs left out; or why it would record nothing
+    run: Result<AcceptRun, String>,
     /// The board places this footprint instead of what the symbol's own `Footprint` names, the same for every
-    /// reference: offered as an extra write into the library symbol
+    /// reference: offered as a write into the library symbol and the schematic's copies
     footprint: Option<String>,
     /// The symbol's own `Footprint` now, shown next to `footprint`
     footprint_now: Option<String>,
     /// The checkbox's state: whether to write `footprint` too
     write_footprint: bool,
-    /// The review line written, its MPNs from [`mpns`](Self::mpns)
-    line: better_erc::fp::record::ReviewLine,
-    /// The symbol's MPNs: which the datasheet covers
+    /// The files the symbol's `Footprint` would be written into, from a dry run
+    footprint_files: Vec<Written>,
+    /// Why KiCad may overwrite the `Footprint` write on its next save, one line each
+    warnings: Vec<String>,
+    /// The row's MPNs: which the datasheet covers, alone or by family
     mpns: Vec<MpnChoice>,
 }
 
-/// Why KiCad may overwrite what `run` writes: a file it would change is open in KiCad, by its lock file (see
+/// What Accept recorded, and the symbol's `Footprint` written when asked
+#[derive(Clone, Debug)]
+struct Accepted {
+    run: AcceptRun,
+    footprint: Vec<Written>,
+}
+
+/// Why KiCad may overwrite what is `written`: a file it would change is open in KiCad, by its lock file (see
 /// [`kicad_lock`]), one line each naming the lock file. A KiCad running without a lock beside the file is no warning.
-fn kicad_warnings(run: &AcceptRun, running: bool) -> Vec<String> {
+fn kicad_warnings(written: &[Written], running: bool) -> Vec<String> {
     let host = this_host();
-    run.symbols
+    written
         .iter()
-        .flat_map(|a| &a.files)
         .filter(|w| w.changed)
         .filter_map(|w| {
             let lock = kicad_lock(&w.file, host.as_deref(), running)?;
@@ -467,10 +485,13 @@ fn kicad_running() -> bool {
     })
 }
 
-/// The library symbol under review: Accept writes the review hash into it
+/// The row under review: Accept records a review of its footprint for its MPNs
 #[derive(Clone, Debug)]
 struct Target {
-    symbol: String,
+    /// The row's key ([`Row::key`])
+    key: String,
+    /// What it is for the person and in file names: the symbol, else the row's title
+    name: String,
     from: SymbolsFrom,
 }
 
@@ -596,8 +617,10 @@ struct Runtime {
     /// The symbol libraries the tables name: the directory they were read for, and the nicknames
     tables: Option<(PathBuf, Vec<String>)>,
     tables_filter: String,
-    /// What Accept wrote into the symbols, or why it could not
-    written: Option<Result<AcceptRun, String>>,
+    /// What Accept recorded, or why it could not
+    written: Option<Result<Accepted, String>>,
+    /// The part source in place of the settings' file (tests)
+    parts: Option<Arc<dyn Source + Send + Sync>>,
     /// The settings as text being edited: page search words and font folders one per line, the search command
     words_text: String,
     fonts_text: String,
@@ -724,6 +747,7 @@ impl Default for Runtime {
             tables: None,
             tables_filter: String::new(),
             written: None,
+            parts: None,
             words_text: String::new(),
             fonts_text: String::new(),
             search_text: String::new(),
@@ -811,131 +835,125 @@ impl TabUi for FootprintReview {
 }
 
 impl FootprintReview {
-    /// Accept's confirmation, when it waits for one: each file, the field, its old and new value; Enter writes, Esc
-    /// or Cancel writes nothing
+    /// Accept's confirmation, when it waits for one: the part source, the footprint's hash, what the review
+    /// covers (each MPN ticked, by its family or alone), the MPNs left out; Enter records, Esc or Cancel records
+    /// nothing
     fn confirm_ui(&mut self, ctx: &egui::Context, id: Id) {
         let Some(c) = self.rt.confirm.as_mut() else {
             return;
         };
         let mut answer = None;
-        let mut mpns_changed = false;
+        let mut changed = false;
         let modal = egui::Modal::new(id.with("confirm accept")).show(ctx, |ui| {
             ui.set_max_width(640.0);
-            ui.heading("Write the review?");
-            if !c.mpns.is_empty() {
-                ui.label(
-                    "Which MPNs does this datasheet cover? (found in its text: ticked, unless another datasheet's \
-                     review has them)",
-                );
+            ui.heading("Record the review?");
+            ui.label(format!(
+                "{} ({}) fits the datasheet for these MPNs:",
+                c.review.lib_id, c.review.hash
+            ));
+            for m in c.mpns.iter_mut() {
                 ui.horizontal_wrapped(|ui| {
-                    for m in c.mpns.iter_mut() {
-                        let label = match (&m.elsewhere, m.in_pdf) {
-                            (Some(o), true) => {
-                                format!("{} (in the PDF; reviewed on {o}: ticked, it moves here)", m.mpn)
-                            }
-                            (Some(o), false) => {
-                                format!("{} (reviewed on {o}: ticked, it moves here)", m.mpn)
-                            }
-                            (None, true) => format!("{} (in the PDF)", m.mpn),
-                            (None, false) => m.mpn.clone(),
-                        };
-                        mpns_changed |= ui.checkbox(&mut m.ticked, label).changed();
+                    let label = if m.in_pdf {
+                        format!("{} (in the PDF)", m.mpn)
+                    } else {
+                        m.mpn.clone()
+                    };
+                    changed |= ui.checkbox(&mut m.ticked, label).changed();
+                    if let Some(f) = &m.family
+                        && m.ticked
+                    {
+                        changed |= ui
+                            .checkbox(&mut m.by_family, format!("every part of its family ({f})"))
+                            .changed();
                     }
                 });
-                if c.mpns.iter().all(|m| !m.ticked) {
-                    ui.colored_label(
-                        Color32::from_rgb(230, 140, 0),
-                        "none ticked: the review line is for the whole symbol, every MPN",
-                    );
+            }
+            match &c.run {
+                Ok(run) => {
+                    let covers: Vec<String> = run.covers.iter().map(|c| c.describe()).collect();
+                    ui.label(format!(
+                        "Records in {} a review covering {}",
+                        run.source,
+                        covers.join("; ")
+                    ));
+                    if !run.references.is_empty() {
+                        ui.label(format!("for {}", run.references.join(" ")));
+                    }
+                    if !run.skipped.is_empty() {
+                        ui.colored_label(
+                            Color32::from_rgb(230, 140, 0),
+                            format!(
+                                "Left out, the part source has no part of them and they decode into no family: {}",
+                                run.skipped.join(", ")
+                            ),
+                        );
+                    }
+                }
+                Err(e) => {
+                    ui.colored_label(Color32::from_rgb(220, 50, 50), e);
                 }
             }
-            ui.label(format!(
-                "Accepting {} writes its review line into these files:",
-                c.review.lib_id
-            ));
-            for a in &c.run.symbols {
-                ui.label(RichText::new(&a.symbol).strong());
-                Grid::new(("confirm files", &a.symbol))
-                    .num_columns(3)
-                    .striped(true)
-                    .show(ui, |ui| {
-                        for w in &a.files {
-                            let kind = match w.source {
-                                HashSource::Library => "library",
-                                HashSource::Schematic => "schematic copy",
-                            };
-                            ui.label(format!("{} ({kind})", file_name(&w.file)))
-                                .on_hover_text(w.file.display().to_string());
-                            ui.label(&w.property);
-                            let new = w.new.as_deref().unwrap_or("(removed)");
-                            let change = match (&w.old, w.changed) {
-                                (_, false) => format!("{new}, already"),
-                                (None, true) => format!("(none) → {new}"),
-                                (Some(old), true) => format!("{old} → {new}"),
-                            };
-                            ui.add(Label::new(RichText::new(change).monospace()).wrap());
-                            ui.end_row();
-                        }
-                    });
-                if let Some(n) = &a.library_note {
-                    ui.colored_label(Color32::ORANGE, format!("Library symbol not written: {n}"));
+            if let Some(fp) = &c.footprint {
+                changed |= ui
+                    .checkbox(
+                        &mut c.write_footprint,
+                        format!(
+                            "Also set the symbol's Footprint to {fp} (now {}): the board places it, not the \
+                             symbol's own",
+                            c.footprint_now.as_deref().unwrap_or("none")
+                        ),
+                    )
+                    .changed();
+                if c.write_footprint {
+                    for w in &c.footprint_files {
+                        let kind = if w.library { "library" } else { "schematic copy" };
+                        ui.label(format!("{} ({kind})", file_name(&w.file)))
+                            .on_hover_text(w.file.display().to_string());
+                    }
                 }
             }
             for w in &c.warnings {
                 ui.colored_label(Color32::from_rgb(230, 140, 0), format!("⚠ {w}"));
             }
-            if let Some(fp) = &c.footprint {
-                ui.checkbox(
-                    &mut c.write_footprint,
-                    format!(
-                        "Also set the library symbol's Footprint to {fp} (now {}): the board places it, not the \
-                         symbol's own",
-                        c.footprint_now.as_deref().unwrap_or("none")
-                    ),
-                );
-            }
             ui.horizontal(|ui| {
-                if ui.button("Write (Enter)").clicked() {
+                let ok = c.run.is_ok();
+                if ui.add_enabled(ok, Button::new("Record (Enter)")).clicked() {
                     answer = Some(true);
                 }
                 if ui.button("Cancel (Esc)").clicked() {
                     answer = Some(false);
                 }
             });
-            if ui.input(|i| i.key_pressed(egui::Key::Enter)) {
+            if c.run.is_ok() && ui.input(|i| i.key_pressed(egui::Key::Enter)) {
                 answer = Some(true);
             }
         });
         if modal.should_close() {
             answer.get_or_insert(false);
         }
-        if mpns_changed && answer.is_none() {
-            self.confirm_mpns_changed();
+        if changed && answer.is_none() {
+            self.confirm_changed();
         }
         if let Some(write) = answer {
             self.confirmed(ctx, write);
         }
     }
 
-    /// The MPNs ticked in Accept's question changed: the line and the dry run follow
-    fn confirm_mpns_changed(&mut self) {
+    /// A choice in Accept's question changed: the dry run, the files and the warnings follow
+    fn confirm_changed(&mut self) {
         let Some(mut c) = self.rt.confirm.take() else {
             return;
         };
-        c.line.mpns = ticked(&c.mpns);
-        match self.write(&c.target, &c.review.hash, None, &c.line, true) {
-            Ok(run) => {
-                c.warnings = kicad_warnings(&run, (self.rt.kicad_running)());
-                c.run = run;
-                self.rt.confirm = Some(c);
-            }
-            Err(e) => {
-                let review = c.review;
-                self.rt.accepted = Some(review.hash.clone());
-                self.rt.written = Some(Err(e));
-                self.reviews.push(review);
-            }
-        }
+        let covers = recorded::covers_of(&c.mpns);
+        c.run = self.record(&c.target, &c.new, &covers, true);
+        c.footprint_files = match (&c.footprint, c.write_footprint) {
+            (Some(fp), true) => self
+                .write_footprint(&c.target, fp, true)
+                .unwrap_or_default(),
+            _ => Vec::new(),
+        };
+        c.warnings = kicad_warnings(&c.footprint_files, (self.rt.kicad_running)());
+        self.rt.confirm = Some(c);
     }
 
     /// A review tab with these settings, recording usage through `usage` (tests)
@@ -1139,71 +1157,67 @@ impl FootprintReview {
         s
     }
 
-    /// Opens the list of library symbols to review, and for a project the board's footprints to preview
+    /// Opens the list to review, and for a project the board's footprints to preview
     fn open_symbols(&mut self, from: SymbolsFrom) {
         let search = self.library_search_for(&from);
         let list = match &from {
             SymbolsFrom::Project(p) => better_erc::fp::todo(p, &search)
                 .map(|t| {
                     let title = format!(
-                        "{} library symbols on {}, {} to review",
-                        t.symbols.len(),
-                        file_name(&t.board),
-                        t.to_review().count()
+                        "{} of {} to review on {}",
+                        t.to_review().count(),
+                        t.entries.len(),
+                        file_name(&t.board)
                     );
-                    (title, t.symbols, Some(t.board), t.files)
+                    let rows = t
+                        .entries
+                        .into_iter()
+                        .map(|e| Row::Board(Box::new(e)))
+                        .collect();
+                    (title, rows, t.reviews, Some(t.board), t.files)
                 })
                 .map_err(|e| e.to_string()),
             SymbolsFrom::Library { library, project } => {
-                better_erc::fp::check_libraries(&LibCheckOptions {
-                    libraries: vec![library.clone()],
-                    project: project.clone(),
-                    search,
-                })
+                let source = self.part_source().ok();
+                better_erc::fp::check_libraries(
+                    &LibCheckOptions {
+                        libraries: vec![library.clone()],
+                        project: project.clone(),
+                        search,
+                    },
+                    source.as_deref().map(|s| s as &dyn Source),
+                )
                 .map(|c| {
-                    let rows: Vec<TodoEntry> = c
+                    let rows: Vec<Row> = c
                         .symbols
                         .into_iter()
-                        .map(|e| TodoEntry {
-                            symbol: e.symbol,
-                            status: e.status,
-                            footprint: e.footprint,
-                            footprint_file: e.footprint_file,
-                            hash: e.hash,
-                            stored: e.stored,
-                            reviews: e.reviews,
-                            datasheet: e.datasheet,
-                            references: Vec::new(),
-                            overridden: Vec::new(),
-                            placed: None,
-                            placed_file: None,
-                            placed_hash: None,
-                            placed_note: None,
-                            symbol_library_disallowed: e.symbol_library_disallowed,
-                            footprint_library_disallowed: e.footprint_library_disallowed,
-                            note: e.note,
-                        })
+                        .map(|e| Row::Library(Box::new(e)))
                         .collect();
                     let names: Vec<String> =
                         c.libraries.iter().map(|l| l.nickname.clone()).collect();
+                    let judged = match &c.source {
+                        Some(s) => format!("against {s}"),
+                        None => "no part source to judge against (Settings)".to_owned(),
+                    };
                     let title = format!(
-                        "{} symbols in {}, {} to review",
+                        "{} symbols in {}, {} to review, {judged}",
                         rows.len(),
                         names.join(", "),
                         rows.iter().filter(|r| r.needs_review()).count()
                     );
-                    (title, rows, None, c.files)
+                    (title, rows, c.reviews, None, c.files)
                 })
                 .map_err(|e| e.to_string())
             }
         };
         match list {
-            Ok((title, rows, board, files)) => {
+            Ok((title, rows, reviews, board, files)) => {
                 self.symbols_from = Some(from.clone());
                 self.rt.symbols = Some(SymbolList {
                     from,
                     title,
                     rows,
+                    reviews,
                     filter: String::new(),
                     files,
                 });
@@ -1217,13 +1231,30 @@ impl FootprintReview {
         }
     }
 
-    fn symbol_row(&self, symbol: &str) -> Option<usize> {
+    /// The part source Accept records in and a library is judged against: the test's, else the settings' file
+    fn part_source(&self) -> Result<Arc<dyn Source + Send + Sync>, String> {
+        if let Some(s) = &self.rt.parts {
+            return Ok(s.clone());
+        }
+        let Some(path) = &self.rt.settings.parts_source else {
+            return Err(
+                "no part source is set to record reviews in (Settings, Review record: part source)"
+                    .into(),
+            );
+        };
+        FileSource::open(path)
+            .map(|s| Arc::new(s) as Arc<dyn Source + Send + Sync>)
+            .map_err(|e| e.to_string())
+    }
+
+    /// The row with key `key` ([`Row::key`])
+    fn symbol_row(&self, key: &str) -> Option<usize> {
         self.rt
             .symbols
             .as_ref()?
             .rows
             .iter()
-            .position(|r| r.symbol == symbol)
+            .position(|r| r.key() == key)
     }
 
     /// The row after the current one that needs a review, from the top again at the end
@@ -1233,7 +1264,7 @@ impl FootprintReview {
             .rt
             .target
             .as_ref()
-            .and_then(|t| self.symbol_row(&t.symbol));
+            .and_then(|t| self.symbol_row(&t.key));
         let start = at.map_or(0, |i| i + 1);
         (0..rows.len())
             .map(|k| (start + k) % rows.len())
@@ -1249,7 +1280,7 @@ impl FootprintReview {
             .symbols
             .as_ref()
             .and_then(|l| l.rows.get(i))
-            .map(|r| r.symbol.clone())
+            .map(Row::key)
         else {
             return;
         };
@@ -1265,17 +1296,20 @@ impl FootprintReview {
         self.show_symbol(i, fresh);
     }
 
-    /// Puts row `i` of the symbol list under review: its footprint from its `Footprint` field, its datasheet from
-    /// its `Datasheet` field (`fresh`: looked for again), or the reason it has no footprint to review
+    /// Puts row `i` of the list under review: a board row's footprint as the board places it, a library row's
+    /// from its `Footprint` field; its datasheet from its `Datasheet` field (`fresh`: looked for again), or the
+    /// reason it has no footprint to review
     fn show_symbol(&mut self, i: usize, fresh: bool) {
         let Some(list) = &self.rt.symbols else { return };
         let row = list.rows[i].clone();
         let from = list.from.clone();
         self.keep_view();
-        self.symbol = Some(row.symbol.clone());
+        let key = row.key();
+        self.symbol = Some(key.clone());
         self.source = None;
         self.rt.target = Some(Target {
-            symbol: row.symbol.clone(),
+            key,
+            name: row.symbol().map_or_else(|| row.title(), String::from),
             from: from.clone(),
         });
         self.rt.symbol_note = None;
@@ -1283,60 +1317,47 @@ impl FootprintReview {
         self.rt.accepted = None;
         self.rt.written = None;
         let no_footprint = |why: String| (None, Some(why));
-        // An overridden footprint (the board places one other than the symbol's own `Footprint`): review follows
-        // the board, shown in `board_note` rather than silently resolved to the symbol's default. What is reviewed
-        // is the placed footprint as its library has it (the review hash is of the library footprint); the board's
-        // copy only where the library has none, and a copy that differs is named: the board is not updated yet
-        let overridden = row
-            .overridden_footprint()
-            .map(|fp| (fp.to_string(), row.overridden[0].0.clone()));
-        let mut override_note = None;
-        let own = row.footprint.as_deref().unwrap_or("none").to_string();
-        let (sourced, note) = match (&overridden, &row.placed_file, &self.board) {
-            (Some((placed, reference)), Some(file), _) => {
-                match FootprintSource::File(file.clone()).read() {
+        let mut board_note = row.note();
+        let (sourced, note) = match &row {
+            // What is reviewed is the footprint as the board places it: its hash is what the pairs are of
+            Row::Board(e) => match (&self.board, e.references.first()) {
+                (Some(board), Some(reference)) => match (FootprintSource::Board {
+                    board: board.clone(),
+                    reference: reference.clone(),
+                })
+                .read()
+                {
                     Ok(s) => {
-                        let copy = self.board_copy_note(reference, &s.hash);
-                        override_note = Some(format!(
-                            "placed on {reference} as {placed}, not the symbol's own Footprint ({own}): reviewing \
-                             {placed} from its library{copy}"
-                        ));
+                        if let (Some(own), Some(placed)) =
+                            (row.symbol_footprint(), row.overridden_footprint())
+                        {
+                            let over = format!(
+                                "placed as {placed}, not the symbol's own Footprint ({own}): the board's footprint is \
+                                 reviewed"
+                            );
+                            board_note = Some(match board_note {
+                                Some(n) => format!("{over}; {n}"),
+                                None => over,
+                            });
+                        }
                         (Some(s), None)
                     }
                     Err(e) => no_footprint(e.to_string()),
-                }
-            }
-            (Some((placed, reference)), None, Some(board)) => match (FootprintSource::Board {
-                board: board.clone(),
-                reference: reference.clone(),
-            })
-            .read()
-            {
-                Ok(s) => {
-                    override_note = Some(format!(
-                        "placed on {reference} as {placed}, not the symbol's own Footprint ({own}): reviewing the \
-                         board's copy, the library footprint was not found ({})",
-                        row.placed_note
-                            .as_deref()
-                            .unwrap_or("no footprint library table names it")
-                    ));
-                    (Some(s), None)
-                }
-                Err(e) => no_footprint(e.to_string()),
+                },
+                _ => no_footprint("no board open to take the footprint from".into()),
             },
-            _ => match (&row.footprint, &row.footprint_file) {
-                (None, _) if row.status == SymbolStatus::Missing => no_footprint(format!(
+            Row::Library(e) => match (&e.footprint, &e.footprint_file) {
+                (None, _) if e.status == SymbolStatus::Missing => no_footprint(format!(
                     "the library symbol was not found: {}",
-                    row.note.as_deref().unwrap_or("")
+                    e.note.as_deref().unwrap_or("")
                 )),
                 (None, _) => no_footprint(format!(
-                    "{} sets no footprint (its Footprint field is empty): nothing to review, and no review hash \
-                     to give it",
-                    row.symbol
+                    "{} sets no footprint (its Footprint field is empty): nothing to review",
+                    e.symbol
                 )),
                 (Some(fp), None) => no_footprint(format!(
                     "its footprint {fp} was not found: {}",
-                    row.note.as_deref().unwrap_or("no such library footprint")
+                    e.note.as_deref().unwrap_or("no such library footprint")
                 )),
                 (Some(_), Some(file)) => match FootprintSource::File(file.clone()).read() {
                     Ok(s) => (Some(s), None),
@@ -1344,19 +1365,21 @@ impl FootprintReview {
                 },
             },
         };
-        self.rt.board_note = override_note;
+        self.rt.board_note = board_note;
         match sourced {
             Some(mut s) => {
-                // The symbol's fields first (Datasheet, part numbers, Footprint_Review), then the footprint's
+                // The symbol's fields first (Datasheet, part numbers), then the footprint's
                 let search = self.library_search_for(&from);
-                let mut fields = search
-                    .open(&from.dir())
-                    .ok()
-                    .and_then(|(mut syms, _)| syms.fields(&row.symbol).ok())
+                let mut fields = row
+                    .symbol()
+                    .and_then(|sym| {
+                        let (mut syms, _) = search.open(&from.dir()).ok()?;
+                        syms.fields(sym).ok()
+                    })
                     .unwrap_or_else(|| {
-                        row.datasheet
+                        row.datasheet()
                             .iter()
-                            .map(|d| ("Datasheet".to_string(), d.clone()))
+                            .map(|d| ("Datasheet".to_string(), (*d).to_owned()))
                             .collect()
                     });
                 fields.retain(|(k, v)| {
@@ -1510,32 +1533,6 @@ impl FootprintReview {
                 self.rt.sourced = None;
                 self.rt.items.clear();
             }
-        }
-    }
-
-    /// How the open board's copy of footprint `reference` compares with the library footprint of review hash
-    /// `hash`: `; the board copy … differs …` when it is older (the board not updated from the library yet), else
-    /// nothing
-    fn board_copy_note(&self, reference: &str, hash: &str) -> String {
-        let Some(b) = &self.rt.board else {
-            return String::new();
-        };
-        let Some(i) = b
-            .layout
-            .footprints
-            .iter()
-            .position(|f| f.reference == reference)
-        else {
-            return String::new();
-        };
-        let copy = Sourced::from_board(&b.path, &b.layout, FootprintId::from_index(i));
-        if copy.hash == hash {
-            String::new()
-        } else {
-            format!(
-                "; the board copy {reference} differs from the library ({}): update the board from the library",
-                copy.hash
-            )
         }
     }
 
@@ -1842,10 +1839,27 @@ impl FootprintReview {
         }
         if self.rt.target.is_none() {
             return Some(
-                "a footprint opened alone is a preview: there is no symbol to put the review hash on; pick its \
-                 symbol from a library or a board's list"
+                "a footprint opened alone is a preview: there are no MPNs to review it for; pick it from a board's \
+                 list or a symbol library"
                     .into(),
             );
+        }
+        if let Some(row) = self.target_row() {
+            if row.mpns().is_empty() {
+                return Some(
+                    "no MPN to review the footprint for: give the symbol its Mpn1 field first"
+                        .into(),
+                );
+            }
+            let now = self.rt.sourced.as_ref().map(|s| s.hash.as_str());
+            if row.hash() != now {
+                return Some(
+                    "the footprint shown is not the one listed (it changed on disk): read the list again".into(),
+                );
+            }
+        }
+        if let Err(e) = self.part_source() {
+            return Some(e);
         }
         if self.rt.pdf.as_ref().is_none_or(|p| p.page_count() == 0) {
             return Some("open the datasheet first".into());
@@ -1860,77 +1874,67 @@ impl FootprintReview {
         }
     }
 
-    /// Accept: the review recorded and its hash copied; for a symbol, first the question whether to write it there,
-    /// with the dry run's files (when the dry run fails, the review is recorded with why nothing was written)
+    /// Accept: first the question what to record (the dry run's covers), then the review recorded in the part
+    /// source and its hash copied; a preview's hash is only copied and kept
     fn accept(&mut self, ctx: &egui::Context) {
         let Some(review) = self.review() else { return };
         let Some(target) = self.rt.target.clone() else {
             self.finish_accept(ctx, review, None);
             return;
         };
-        let footprint = self.overridden_footprint(&target.symbol);
-        let footprint_now = footprint.as_ref().and_then(|_| {
-            self.rt
-                .symbols
-                .as_ref()?
-                .rows
-                .iter()
-                .find(|r| r.symbol == target.symbol)?
-                .footprint
-                .clone()
-        });
+        let row = self.target_row().cloned();
+        let footprint = row
+            .as_ref()
+            .and_then(Row::overridden_footprint)
+            .map(String::from);
+        let footprint_now = footprint
+            .as_ref()
+            .and_then(|_| row.as_ref()?.symbol_footprint().map(String::from));
         let mpns = self.mpn_choices();
-        let mut line = self.review_line();
-        line.mpns = ticked(&mpns);
-        match self.write(&target, &review.hash, None, &line, true) {
-            Ok(run) => {
-                let warnings = kicad_warnings(&run, (self.rt.kicad_running)());
-                self.rt.confirm = Some(Confirm {
-                    review,
-                    target,
-                    run,
-                    warnings,
-                    footprint,
-                    footprint_now,
-                    write_footprint: false,
-                    line,
-                    mpns,
-                });
-                self.usage("confirm");
-            }
-            Err(e) => self.finish_accept(ctx, review, Some(Err(e))),
-        }
+        let new = self.new_review();
+        let run = self.record(&target, &new, &recorded::covers_of(&mpns), true);
+        self.rt.confirm = Some(Confirm {
+            review,
+            target,
+            new,
+            run,
+            footprint,
+            footprint_now,
+            write_footprint: false,
+            footprint_files: Vec::new(),
+            warnings: Vec::new(),
+            mpns,
+        });
+        self.usage("confirm");
     }
 
-    /// The footprint the board places for every reference of `symbol`, when it is the same for all of them and
-    /// differs from the symbol's own `Footprint` ([`TodoEntry::overridden_footprint`]); `None` when there is
-    /// none, or they disagree among themselves
-    fn overridden_footprint(&self, symbol: &str) -> Option<String> {
-        self.rt
-            .symbols
-            .as_ref()?
-            .rows
-            .iter()
-            .find(|r| r.symbol == symbol)?
-            .overridden_footprint()
-            .map(String::from)
-    }
-
-    /// The confirmation's answer: write (Enter), or nothing at all (Esc)
+    /// The confirmation's answer: record (Enter), or nothing at all (Esc)
     fn confirmed(&mut self, ctx: &egui::Context, write: bool) {
         let Some(c) = self.rt.confirm.take() else {
             return;
         };
-        if write {
-            let footprint = c
-                .write_footprint
-                .then_some(c.footprint.as_deref())
-                .flatten();
-            let written = self.write(&c.target, &c.review.hash, footprint, &c.line, false);
-            self.finish_accept(ctx, c.review, Some(written));
-        } else {
+        if !write {
             self.usage("cancel");
+            return;
         }
+        let covers = recorded::covers_of(&c.mpns);
+        let written = self
+            .record(&c.target, &c.new, &covers, false)
+            .and_then(|run| {
+                let footprint = match (&c.footprint, c.write_footprint) {
+                    (Some(fp), true) => {
+                        self.write_footprint(&c.target, fp, false).map_err(|e| {
+                            format!(
+                                "review #{} recorded, the symbol's Footprint not written: {e}",
+                                review_id(&run)
+                            )
+                        })?
+                    }
+                    _ => Vec::new(),
+                };
+                Ok(Accepted { run, footprint })
+            });
+        self.finish_accept(ctx, c.review, Some(written));
     }
 
     /// The review of what is shown now
@@ -1951,70 +1955,106 @@ impl FootprintReview {
         Some(review)
     }
 
-    /// The review accepted: its hash copied and kept, with what was written into the symbol
+    /// The review accepted: its hash copied and kept, with what was recorded; the list read again, as the parts
+    /// snapshot now has the review
     fn finish_accept(
         &mut self,
         ctx: &egui::Context,
         review: Review,
-        written: Option<Result<AcceptRun, String>>,
+        written: Option<Result<Accepted, String>>,
     ) {
         ctx.copy_text(review.hash.clone());
-        self.rt.accepted = Some(review.hash.clone());
-        self.rt.written = written;
-        if let Some(Ok(run)) = &self.rt.written {
-            let lines = run
-                .symbols
-                .first()
-                .map(|a| a.lines.clone())
-                .unwrap_or_default();
+        let recorded = matches!(&written, Some(Ok(_)));
+        if let Some(Ok(a)) = &written {
             // The files written are as the tab knows them: their change on disk is no reason to reload
-            let written: Vec<PathBuf> = run
-                .symbols
+            let mut files: Vec<PathBuf> = a
+                .footprint
                 .iter()
-                .flat_map(|a| &a.files)
                 .filter(|w| w.changed)
                 .map(|w| w.file.clone())
                 .collect();
+            files.extend(
+                a.run
+                    .lock
+                    .iter()
+                    .filter(|l| l.written)
+                    .map(|l| l.path.clone()),
+            );
             self.usage("write");
-            self.reviewed(&lines);
-            self.rt.watch.restamp(written.iter().map(PathBuf::as_path));
+            self.reload_list();
+            self.rt.watch.restamp(files.iter().map(PathBuf::as_path));
         }
+        self.rt.accepted = Some(review.hash.clone());
+        self.rt.written = written;
         self.reviews.push(review);
         self.usage("accept");
+        if recorded {
+            self.rt.record_note = None;
+        }
     }
 
-    /// Writes `hash` into the symbol under review as review line `line` among its others, `footprint` into it too
-    /// when given; `dry_run` says what it would write
-    fn write(
+    /// Records the review `new` of the row under review in the part source, covering `covers` (none: every MPN,
+    /// each by its family where it decodes); for a board the parts snapshot is refreshed after it. `dry_run`
+    /// says what it would record.
+    fn record(
         &self,
         t: &Target,
-        hash: &str,
-        footprint: Option<&str>,
-        line: &better_erc::fp::record::ReviewLine,
+        new: &better_erc::parts::NewReview,
+        covers: &better_erc::fp::Covers,
         dry_run: bool,
     ) -> Result<AcceptRun, String> {
-        match &t.from {
-            SymbolsFrom::Project(p) => {
-                let config = self.rt.config.clone();
-                better_erc::fp::accept(
-                    p,
-                    &AcceptWhat::Symbol {
-                        symbol: t.symbol.clone(),
-                        hash: hash.to_string(),
-                    },
-                    &mut |dir| SymbolLibraries::new(dir, config.as_deref()),
-                    footprint,
-                    line,
-                    dry_run,
-                )
-            }
-            SymbolsFrom::Library { project, .. } => {
-                let search = self.library_search_for(&t.from);
-                let (mut syms, _) = search.open(project).map_err(|e| e.to_string())?;
-                better_erc::fp::accept_library(&mut syms, &t.symbol, hash, footprint, line, dry_run)
-            }
+        let source = self.part_source()?;
+        let row = self
+            .symbol_row(&t.key)
+            .and_then(|i| self.rt.symbols.as_ref()?.rows.get(i).cloned())
+            .ok_or_else(|| format!("{} is no longer in the list", t.name))?;
+        let (project, what) = match (&t.from, &row) {
+            (SymbolsFrom::Project(p), Row::Board(e)) => (
+                Some(p.as_path()),
+                AcceptWhat::References(e.references.clone()),
+            ),
+            (_, r) => (
+                None,
+                AcceptWhat::Hash {
+                    hash: r
+                        .hash()
+                        .ok_or("the symbol's footprint has no hash")?
+                        .to_owned(),
+                    footprint: r.footprint().unwrap_or_default().to_owned(),
+                },
+            ),
+        };
+        better_erc::fp::accept(project, &what, &*source, new, covers, dry_run)
+            .map_err(|e| e.to_string())
+    }
+
+    /// Sets the `Footprint` of the symbol of the row under review to `footprint`, in its library and the
+    /// schematic's copies; `dry_run` says where it would
+    fn write_footprint(
+        &self,
+        t: &Target,
+        footprint: &str,
+        dry_run: bool,
+    ) -> Result<Vec<Written>, String> {
+        let SymbolsFrom::Project(p) = &t.from else {
+            return Err("only a board places a footprint other than its symbol's".into());
+        };
+        let refs: Vec<String> = self
+            .target_row()
+            .map(|r| r.references().to_vec())
+            .unwrap_or_default();
+        let (sheets, symbols) =
+            better_erc::fp::sheets_and_symbols(p, &refs).map_err(|e| e.to_string())?;
+        let search = self.library_search_for(&t.from);
+        let (mut syms, _) = search.open(&t.from.dir()).map_err(|e| e.to_string())?;
+        let mut out = Vec::new();
+        for sym in symbols {
+            out.extend(
+                better_erc::fp::set_symbol_footprint(&mut syms, &sheets, &sym, footprint, dry_run)
+                    .map_err(|e| e.to_string())?,
+            );
         }
-        .map_err(|e| e.to_string())
+        Ok(out)
     }
 
     fn set_scale_from_ruler(&mut self) {
@@ -2768,13 +2808,9 @@ impl FootprintReview {
     /// The footprint shown as the symbol's Footprint field names it; a footprint alone by its own name
     fn footprint_name(&self) -> Option<String> {
         let s = self.rt.sourced.as_ref()?;
-        let field = self.rt.target.as_ref().and_then(|t| {
-            let rows = &self.rt.symbols.as_ref()?.rows;
-            rows.iter()
-                .find(|r| r.symbol == t.symbol)?
-                .footprint
-                .clone()
-        });
+        let field = self
+            .target_row()
+            .and_then(|r| r.footprint().map(String::from));
         Some(field.unwrap_or_else(|| match &s.source {
             FootprintSource::Library { lib_id, .. } => lib_id.clone(),
             _ => s.lib_id().to_string(),
@@ -2795,7 +2831,7 @@ impl FootprintReview {
             .duration_since(std::time::UNIX_EPOCH)
             .map_or(0, |d| d.as_secs() as i64);
         let note = notes::Note {
-            symbol: self.rt.target.as_ref().map(|t| t.symbol.clone()),
+            symbol: self.rt.target.as_ref().map(|t| t.name.clone()),
             footprint,
             page: datasheet.as_ref().map(|_| self.page + 1),
             datasheet,
@@ -2939,7 +2975,7 @@ impl FootprintReview {
     fn dxf_file(&self) -> Option<PathBuf> {
         let dir = self.notes_file()?.parent()?.to_path_buf();
         let name = match (&self.rt.target, &self.rt.sourced) {
-            (Some(t), _) => t.symbol.clone(),
+            (Some(t), _) => t.name.clone(),
             (None, Some(s)) => s.lib_id().to_string(),
             (None, None) => return None,
         };
@@ -2984,7 +3020,7 @@ impl FootprintReview {
             picked.len()
         )];
         if let Some(t) = &self.rt.target {
-            comments.push(format!("symbol {}", t.symbol));
+            comments.push(format!("symbol {}", t.name));
         }
         comments.push(format!("footprint {footprint}"));
         if let Some(d) = &self.datasheet {
@@ -4254,11 +4290,9 @@ fn key_name(k: Option<egui::Key>) -> String {
 }
 
 /// The MPNs ticked in Accept's question
-fn ticked(mpns: &[MpnChoice]) -> Vec<String> {
-    mpns.iter()
-        .filter(|m| m.ticked)
-        .map(|m| m.mpn.clone())
-        .collect()
+/// The id of the review `run` recorded, 0 on a dry run
+fn review_id(run: &AcceptRun) -> i64 {
+    run.review.as_ref().map_or(0, |r| r.id)
 }
 
 /// `a`, `a and b`, `a, b and c`

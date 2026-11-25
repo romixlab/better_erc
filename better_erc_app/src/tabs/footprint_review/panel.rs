@@ -7,9 +7,9 @@
 
 use super::*;
 use crate::settings::{FootprintReviewSettings, Settings};
-use better_erc::fp::record::LineStatus;
 use egui::Response;
-use recorded::{line_source, line_status};
+use recorded::review_word;
+use rows::review_source;
 use ve_theme::props::*;
 use ve_theme::{Tone, UiExt as _};
 
@@ -18,25 +18,6 @@ pub(super) const ACCEPT: &str = "Accept";
 
 /// Next's button: the next symbol in the list that needs a review
 pub(super) const NEXT: &str = "Next to review";
-
-/// What a symbol's review status means, as a tone (the word says it, the tone backs it up)
-fn status_tone(s: SymbolStatus) -> Tone {
-    match s {
-        SymbolStatus::Ok => Tone::Good,
-        SymbolStatus::Changed | SymbolStatus::Malformed | SymbolStatus::Missing => Tone::Crit,
-        SymbolStatus::Unreviewed | SymbolStatus::OtherVersion | SymbolStatus::Partial => Tone::Warn,
-        SymbolStatus::Refused => Tone::Accent,
-        SymbolStatus::NoFootprint => Tone::Off,
-    }
-}
-
-fn line_tone(s: LineStatus) -> Tone {
-    match s {
-        LineStatus::Ok => Tone::Good,
-        LineStatus::Changed | LineStatus::Malformed => Tone::Crit,
-        LineStatus::OtherVersion => Tone::Warn,
-    }
-}
 
 /// A button that is off with a reason: the reason on hover
 fn button_if(ui: &mut Ui, text: impl Into<WidgetText>, tip: &str, why: Option<&str>) -> Response {
@@ -57,26 +38,27 @@ impl FootprintReview {
         let blocker = self.accept_blocker();
         let accept_tip = match &self.rt.target {
             Some(Target {
-                symbol,
+                name,
                 from: SymbolsFrom::Project(_),
                 ..
             }) => format!(
-                "The footprint matches the drawing: writes the review hash into the {FIELD} field of {symbol}, the \
-                 library symbol and the schematic's copies, after showing what it writes where; copies it too ({})",
+                "The footprint matches the drawing: records a review of its hash for the MPNs of {name} in the part \
+                 source and refreshes the board's parts snapshot, after showing what it covers; copies the hash too \
+                 ({})",
                 key_name(keys.accept)
             ),
             Some(t) => format!(
-                "The footprint matches the drawing: writes the review hash into the {FIELD} field of library symbol \
-                 {}, after showing what it writes where; copies it too ({})",
-                t.symbol,
+                "The footprint matches the drawing: records a review of its hash for the MPNs of {} in the part \
+                 source, after showing what it covers; copies the hash too ({})",
+                t.name,
                 key_name(keys.accept)
             ),
             None => String::new(),
         };
         let next = self.rt.symbols.as_ref().map(|l| {
             self.next_to_review()
-                .map(|i| (i, l.rows[i].symbol.clone()))
-                .ok_or("no other symbol in the list needs a review")
+                .map(|i| (i, l.rows[i].title()))
+                .ok_or("no other row in the list needs a review")
         });
         let (mut accept, mut go_next) = (false, false);
         Pane::new()
@@ -139,7 +121,7 @@ impl FootprintReview {
 
     fn source_section(&mut self, ui: &mut Ui, ctx: &egui::Context) {
         let summary = match (&self.rt.target, &self.rt.sourced) {
-            (Some(t), _) => t.symbol.clone(),
+            (Some(t), _) => t.name.clone(),
             (None, Some(s)) => format!("{} (preview)", s.lib_id()),
             (None, None) => "nothing open".into(),
         };
@@ -282,75 +264,75 @@ impl FootprintReview {
         }
     }
 
-    /// The symbols to review, each with what it needs
+    /// The rows to review, each with what it needs
     fn symbol_list(&mut self, ui: &mut Ui) {
         let mut picked = None;
-        let current = self.rt.target.as_ref().map(|t| t.symbol.clone());
+        let current = self.rt.target.as_ref().map(|t| t.key.clone());
         let Some(l) = &mut self.rt.symbols else {
             hint(
                 ui,
-                "Open a board or a symbol library: the review is of a library symbol, which holds the hash",
+                "Open a board or a symbol library: the review is of a footprint for the MPNs it is placed with",
             );
             return;
         };
-        let to_review = l
-            .rows
-            .iter()
-            .filter(|r| !matches!(r.status, SymbolStatus::Ok | SymbolStatus::NoFootprint))
-            .count();
+        let to_review = l.rows.iter().filter(|r| !r.is_done()).count();
         SubPane::new(l.title.clone())
             .id_salt("symbols")
             .summary(format!("{to_review} open"))
-            .tooltip("The symbols, each with its review status; click one to review it")
+            .tooltip("The footprints to review, each with its status; click one to review it")
             .show(ui, |ui| {
-                filter_field(ui, &mut l.filter, "filter: symbol, footprint or reference");
+                filter_field(
+                    ui,
+                    &mut l.filter,
+                    "filter: footprint, symbol, reference or MPN",
+                );
                 let f = l.filter.to_lowercase();
                 ListView::new("symbol rows")
                     .max_height(260.0)
                     .show(ui, |list| {
                         for (i, r) in l.rows.iter().enumerate() {
-                            let hit = |t: &str| t.to_lowercase().contains(&f);
-                            if !f.is_empty()
-                                && !hit(&r.symbol)
-                                && !r.footprint.as_deref().is_some_and(hit)
-                                && !r.references.iter().any(|x| hit(x))
-                            {
+                            if !r.matches(&f) {
                                 continue;
                             }
                             let mut hover = String::new();
-                            if let Some(fp) = &r.footprint {
-                                hover.push_str(&format!("Footprint {fp}"));
+                            if let Some(s) = r.symbol() {
+                                hover.push_str(&format!("Symbol {s}"));
                             }
-                            if !r.references.is_empty() {
-                                hover.push_str(&format!("\non {}", r.references.join(", ")));
+                            if let Some(fp) = r.footprint() {
+                                hover.push_str(&format!("\nFootprint {fp}"));
+                            }
+                            if !r.mpns().is_empty() {
+                                hover.push_str(&format!("\nMPNs {}", r.mpns().join(", ")));
+                            }
+                            if !r.references().is_empty() {
+                                hover.push_str(&format!("\non {}", r.references().join(", ")));
                             }
                             if let Some(fp) = r.overridden_footprint() {
-                                hover.push_str(&format!("\nplaced as {fp}, not its own Footprint"));
+                                hover.push_str(&format!(
+                                    "\nplaced as {fp}, not its symbol's own Footprint"
+                                ));
                             }
-                            for lib in [
-                                &r.symbol_library_disallowed,
-                                &r.footprint_library_disallowed,
-                            ]
-                            .into_iter()
-                            .flatten()
-                            {
+                            for lib in r.disallowed() {
                                 hover.push_str(&format!(
                                     "\nlibrary {lib} is not in the allowed libraries"
                                 ));
                             }
-                            if let Some(n) = &r.note {
+                            if let Some(n) = r.note() {
                                 hover.push_str(&format!("\n{n}"));
                             }
-                            let row = ListRow::new(&r.symbol)
-                                .lead(r.status.name(), status_tone(r.status))
-                                .selected(current.as_deref() == Some(r.symbol.as_str()))
+                            let key = r.key();
+                            let row = ListRow::new(r.title())
+                                .lead(r.status_name(), r.tone())
+                                .selected(current.as_deref() == Some(key.as_str()))
                                 .tooltip(hover.trim_start().to_string());
                             if list.row(row).clicked() {
                                 picked = Some(i);
                             }
                         }
                         if list.is_empty() {
-                            list.empty("no symbol, footprint or reference has the filter's text");
+                            list.empty(
+                                "no footprint, symbol, reference or MPN has the filter's text",
+                            );
                         }
                     });
             });
@@ -359,49 +341,55 @@ impl FootprintReview {
         }
     }
 
-    /// The symbol under review: its footprint and datasheet fields, or why it has no footprint to review
+    /// The row under review: its symbol, footprint, MPNs and references, or why it has no footprint to review
     fn symbol_info(&self, ui: &mut Ui) {
         let Some(t) = &self.rt.target else { return };
-        let row = self
-            .symbol_row(&t.symbol)
-            .and_then(|i| self.rt.symbols.as_ref().map(|l| &l.rows[i]));
+        let row = self.target_row();
         Group::untitled().show(ui, |ui| {
             Facts::new("symbol").show(ui, |f| {
-                f.fact("Symbol", &t.symbol, "");
+                f.fact("Under review", &t.name, "");
                 if let Some(r) = row {
-                    f.fact_tone("Status", r.status.name(), status_tone(r.status), "");
+                    f.fact_tone("Status", r.status_name(), r.tone(), "");
                     f.fact(
                         "Footprint",
-                        r.footprint.as_deref().unwrap_or("(none)"),
-                        "its Footprint field",
+                        r.footprint().unwrap_or("(none)"),
+                        "placed on the board, or the symbol's Footprint field",
                     );
-                    if let Some(d) = &r.datasheet {
-                        f.fact("Datasheet", d, "its Datasheet field");
+                    if !r.mpns().is_empty() {
+                        f.fact("MPNs", r.mpns().join(", "), "what a review covers");
                     }
-                    if !r.references.is_empty() {
-                        f.fact("On the board", r.references.join(", "), "");
+                    if let Some(d) = r.datasheet() {
+                        f.fact("Datasheet", d, "the symbol's Datasheet field");
                     }
-                    if let Some(fp) = r.overridden_footprint() {
+                    if !r.references().is_empty() {
+                        f.fact("On the board", r.references().join(", "), "");
+                    }
+                    if let (Some(fp), Some(own)) = (r.overridden_footprint(), r.symbol_footprint()) {
                         f.fact(
                             "Placed",
                             fp,
-                            "the board places this instead of the symbol's own Footprint above",
+                            format!("the board places this instead of the symbol's own Footprint {own}"),
                         );
                     }
                 }
             });
             if let Some(r) = row {
-                for lib in [
-                    &r.symbol_library_disallowed,
-                    &r.footprint_library_disallowed,
-                ]
-                .into_iter()
-                .flatten()
-                {
+                for lib in r.disallowed() {
                     notice(
                         ui,
                         Tone::Warn,
                         format!("library {lib} is not in the allowed libraries"),
+                    );
+                }
+                let unknown = r.unknown_mpns();
+                if !unknown.is_empty() {
+                    notice(
+                        ui,
+                        Tone::Accent,
+                        format!(
+                            "the part source has no part of {}: add it there first, then `berc parts refresh`",
+                            unknown.join(", ")
+                        ),
                     );
                 }
             }
@@ -463,7 +451,7 @@ impl FootprintReview {
                 notice(
                     ui,
                     Tone::Warn,
-                    "Preview: no symbol to write the review hash into",
+                    "Preview: no MPNs to review the footprint for",
                 );
             }
             Facts::new("fp").show(ui, |f| {
@@ -472,26 +460,17 @@ impl FootprintReview {
                 f.fact_mono(
                     "Review hash",
                     &s.hash,
-                    "what Accept writes: a hash of the footprint's pads and outline",
+                    "what Accept records a review of: a hash of the footprint's pads and outline",
                 );
-                // Every review line's hash against this footprint's: the first that differs, else the one they share
+                // The reviews of earlier hashes: the footprint changed since
                 let rec = self.recorded();
-                if let Some(stored) = rec.stored() {
-                    if rec.stale().is_empty() {
-                        f.fact_tone(
-                            FIELD,
-                            format!("{stored}, the same: reviewed"),
-                            Tone::Good,
-                            "the symbol's review hash",
-                        );
-                    } else {
-                        f.fact_tone(
-                            FIELD,
-                            format!("{stored}: not this footprint, review it again"),
-                            Tone::Warn,
-                            "the symbol's review hash",
-                        );
-                    }
+                if let Some(old) = rec.iter().find(|r| !r.current) {
+                    f.fact_tone(
+                        "Reviewed as",
+                        format!("{}: not this footprint, review it again", old.review.hash),
+                        Tone::Warn,
+                        "a review of an earlier hash of the footprint",
+                    );
                 }
             });
             if let Some(n) = &self.rt.board_note {
@@ -1328,21 +1307,16 @@ impl FootprintReview {
     // Review
 
     fn review_section(&mut self, ui: &mut Ui, ctx: &egui::Context) {
-        let row = self
-            .rt
-            .target
-            .as_ref()
-            .and_then(|t| self.symbol_row(&t.symbol))
-            .and_then(|i| self.rt.symbols.as_ref().map(|l| l.rows[i].status));
-        let summary = match (row, &self.rt.accepted) {
+        let status = self.target_row().map(rows::Row::status_name);
+        let summary = match (status, &self.rt.accepted) {
             (_, Some(_)) => "accepted".to_string(),
-            (Some(s), None) => s.name().to_string(),
+            (Some(s), None) => s.to_string(),
             (None, None) => "nothing to accept".into(),
         };
         SubPane::new("Review")
             .id_salt("fp review")
             .summary(summary)
-            .tooltip("The symbol's review lines, its MPNs, what Accept wrote and why it is off")
+            .tooltip("The reviews of the part source that name the footprint, what Accept recorded and why it is off")
             .show(ui, |ui| self.review_controls(ui, ctx));
     }
 
@@ -1352,7 +1326,7 @@ impl FootprintReview {
         }
         self.review_lines_ui(ui);
         if let Some(h) = &self.rt.accepted {
-            ui.label(format!("Accepted. {FIELD} = {h} (copied)"));
+            ui.label("Accepted, the review hash copied:");
             ui.horizontal(|ui| {
                 ui.label(RichText::new(h).monospace());
                 if ui
@@ -1365,29 +1339,53 @@ impl FootprintReview {
             });
         }
         match &self.rt.written {
-            Some(Ok(run)) => {
-                for a in &run.symbols {
-                    ui.label(format!("{}: written into", a.symbol));
-                    for w in &a.files {
-                        let kind = match w.source {
-                            HashSource::Library => "library",
-                            HashSource::Schematic => "schematic copy",
-                        };
-                        let what = if w.changed { "" } else { ", had it already" };
-                        let name = file_name(&w.file);
-                        ui.add(
-                            Label::new(RichText::new(format!("  {name} ({kind}{what})")).small())
-                                .truncate(),
+            Some(Ok(a)) => {
+                let covers: Vec<String> = a.run.covers.iter().map(|c| c.describe()).collect();
+                let id = a.run.review.as_ref().map_or(0, |r| r.id);
+                notice(
+                    ui,
+                    Tone::Good,
+                    format!(
+                        "Review #{id} recorded in {}: {}",
+                        a.run.source,
+                        covers.join("; ")
+                    ),
+                );
+                if let Some(l) = &a.run.lock {
+                    hint(
+                        ui,
+                        format!(
+                            "{} {}: {} of {} pairs covered",
+                            file_name(&l.path),
+                            if l.written {
+                                "refreshed"
+                            } else {
+                                "had it already"
+                            },
+                            l.covered,
+                            l.pairs
+                        ),
+                    );
+                }
+                for w in &a.footprint {
+                    let kind = if w.library {
+                        "library"
+                    } else {
+                        "schematic copy"
+                    };
+                    let what = if w.changed { "" } else { ", had it already" };
+                    let name = file_name(&w.file);
+                    ui.add(
+                        Label::new(
+                            RichText::new(format!("  Footprint: {name} ({kind}{what})")).small(),
                         )
-                        .on_hover_text(w.file.display().to_string());
-                    }
-                    if let Some(n) = &a.library_note {
-                        notice(ui, Tone::Warn, format!("Library symbol not written: {n}"));
-                    }
+                        .truncate(),
+                    )
+                    .on_hover_text(w.file.display().to_string());
                 }
             }
             Some(Err(e)) => {
-                notice(ui, Tone::Crit, format!("Not written into the symbols: {e}"));
+                notice(ui, Tone::Crit, format!("Not recorded: {e}"));
             }
             None => {}
         }
@@ -1410,48 +1408,58 @@ impl FootprintReview {
             });
     }
 
-    /// The symbol's review lines with their status, the MPNs no line reviews yet, and the review record's note
+    /// The reviews that name the row with their status, the MPNs no review covers yet, and the review record's
+    /// note
     fn review_lines_ui(&self, ui: &mut Ui) {
         let rec = self.recorded();
-        if !rec.lines.is_empty() {
+        if !rec.is_empty() {
             Group::new("Reviews")
-                .tooltip("The review lines in the symbol's Footprint_Review field")
+                .tooltip("The part source's reviews of this footprint, and of its earlier hashes")
                 .show(ui, |ui| {
-                    for l in &rec.lines {
-                        let (word, _) = line_status(l.status);
-                        let mpns = if l.line.mpns.is_empty() {
-                            "every MPN".to_string()
-                        } else {
-                            l.line.mpns.join(", ")
-                        };
-                        let tone = line_tone(l.status);
+                    for r in &rec {
+                        let (word, tone) = review_word(r);
                         let t = ve_theme::Tokens::of_ui(ui);
                         let ink = t.legible(tone.ink(&t), ui.visuals().panel_fill);
                         ui.horizontal_wrapped(|ui| {
                             ui.colored_label(ink, word);
-                            ui.label(format!("{}: {mpns}", line_source(&l.line)));
+                            ui.label(format!(
+                                "{}: {}",
+                                review_source(&r.review),
+                                r.mpns.join(", ")
+                            ));
                         })
                         .response
-                        .on_hover_text(format!("{}: {}", l.property, l.value));
+                        .on_hover_text(format!(
+                            "{} by {} on {}{}",
+                            r.review.hash,
+                            r.review.reviewer,
+                            r.review.reviewed_on,
+                            r.review
+                                .retracted
+                                .as_ref()
+                                .map(|x| format!(", retracted: {x}"))
+                                .unwrap_or_default()
+                        ));
                     }
                 });
         }
-        if !rec.unreviewed_mpns.is_empty() {
-            notice(
-                ui,
-                Tone::Warn,
-                format!(
-                    "MPNs not reviewed yet: {}: accept against their datasheet",
-                    rec.unreviewed_mpns.join(", ")
-                ),
-            );
-        }
-        if rec.whole_unreviewed {
-            notice(
-                ui,
-                Tone::Warn,
-                "the symbol has no Mpn fields, and every review line names MPNs: none reviews it as a whole",
-            );
+        if let Some(row) = self.target_row() {
+            let open: Vec<&String> = row
+                .mpns()
+                .iter()
+                .filter(|m| !rec.iter().any(|r| r.current && r.mpns.contains(m)))
+                .collect();
+            if !open.is_empty() && row.needs_review() {
+                let open: Vec<&str> = open.iter().map(|m| m.as_str()).collect();
+                notice(
+                    ui,
+                    Tone::Warn,
+                    format!(
+                        "MPNs not reviewed yet: {}: accept against their datasheet",
+                        open.join(", ")
+                    ),
+                );
+            }
         }
         if let Some(n) = &self.rt.record_note {
             notice(ui, Tone::Accent, n);
@@ -1797,8 +1805,24 @@ impl FootprintReview {
             });
         });
         Group::new("Review record").show(ui, |ui| {
-            PropertyRow::new("Reviewer, written into the review record; empty: the login name")
+            PropertyRow::new("Reviewer, recorded with the review; empty: the login name")
                 .show(ui, |ui| ui.add(TextEdit::singleline(&mut s.reviewer)));
+            PropertyRow::new(
+                "Part source: the parts file Accept records reviews in (berc fp accept --from)",
+            )
+            .show(ui, |ui| {
+                let mut t = s
+                    .parts_source
+                    .as_ref()
+                    .map(|p| p.display().to_string())
+                    .unwrap_or_default();
+                let r = ui.add(TextEdit::singleline(&mut t));
+                if r.changed() {
+                    s.parts_source =
+                        Some(PathBuf::from(t.trim())).filter(|p| !p.as_os_str().is_empty());
+                }
+                r
+            });
             PropertyRow::new("Review notes file: a path, or a name beside the project or library")
                 .show(ui, |ui| ui.add(TextEdit::singleline(&mut s.notes_file)));
         });

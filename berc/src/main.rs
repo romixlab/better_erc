@@ -42,35 +42,35 @@ const FP_HASH_AFTER_HELP: &str = "Exit codes: 0 hashed, 2 usage or read error.\n
 berc fp hash Lib.pretty/SOT-23.kicad_mod\n  berc fp hash board.kicad_pcb U3 --canonical";
 
 /// Exit codes of `berc fp check`, under its --help
-const FP_CHECK_AFTER_HELP: &str = "Exit codes: 0 every footprint ok (with --lib: every symbol ok or without \
-a footprint), 1 any other status, a schematic copy older than its library or a board copy that differs from its library \
-footprint, 2 usage or read error.\n\nStatuses: ok, \
-changed (the footprint differs from the one reviewed), unreviewed (no hash on the symbol), refused (the symbol sets \
-no footprint, so a review means nothing), no symbol (a footprint without a schematic symbol, not marked board-only), \
-other version, malformed. Board-only footprints without a symbol (logos, mounting holes) are listed last under their \
-own heading and don't fail the run. A board copy that differs from its library footprint (found through \
---footprints and the fp-lib-table) fails the run too: the board was not updated from the library.\n\nWith --lib, \
-each symbol of the library is checked against the footprint its \
-Footprint field names, read through --footprints and the fp-lib-table: ok, changed, unreviewed, missing (the \
-footprint is not found), refused (a hash on a symbol without a footprint), other version, malformed. Symbols without \
-a footprint and without a hash are listed last and don't fail the run.\n\nExamples:\n  berc fp check\n  \
-berc fp check hw/board --format json\n  berc fp check hw/board --symbols ~/kicad-library/symbols --footprints ~/kicad-library/footprints\n  berc fp check --lib symbols/Lib.kicad_symdir --footprints footprints\n  \
-berc fp check --lib symbols --footprints footprints";
+const FP_CHECK_AFTER_HELP: &str = "Exit codes: 0 every footprint ok (with --lib: every symbol ok, without an MPN \
+or without a footprint), 1 any other status, a board copy that differs from its library footprint or a footprint \
+placed under another Lib:Name than its symbol names, 2 usage or read error.\n\nStatuses: ok (a review of the \
+footprint's hash covers every MPN of its part), changed (an MPN is covered only by a review of another hash: the \
+footprint differs from the one reviewed), other version, not in lock (run `berc parts refresh`), partial (some MPNs \
+covered), uncovered, no MPN, no symbol (a footprint without a schematic symbol, not marked board-only). Board-only \
+footprints and parts fitted in no variant don't fail the run.\n\nWith --lib, each symbol that names its MPNs is \
+judged against the reviews --from holds for the footprint its Footprint field names: ok, changed, other version, \
+partial, uncovered, missing (the footprint is not found), unjudged (no --from); symbols without an MPN or a \
+footprint don't fail the run.\n\nExamples:\n  berc fp check\n  berc fp check hw/board --format json --details\n  \
+berc fp check hw/board --footprints ~/kicad-library/footprints\n  \
+berc fp check --lib symbols/Lib.kicad_symdir --footprints footprints --from parts.toml";
 
 /// Exit codes of `berc fp todo`, under its --help
-const FP_TODO_AFTER_HELP: &str = "Exit codes: 0 nothing to review, 1 symbols to review or that can't be \
-reviewed, 2 usage or read error.\n\nOrder: changed first (reviewed before, the footprint moved on), then other \
-version, malformed, unreviewed; then missing (the library symbol or its footprint is not found) and refused (a hash \
-on a symbol without a footprint), which need fixing before a review; by symbol within each. --all lists the ok \
-ones and those without a footprint too; --format json always has every symbol, with its footprint file, the hash \
-to write and the datasheet.\n\nExamples:\n  berc fp todo\n  berc fp todo hw/board --format json\n  \
-berc fp todo hw/board --symbols ~/kicad-library/symbols --footprints ~/kicad-library/footprints";
+const FP_TODO_AFTER_HELP: &str = "Exit codes: 0 nothing to review, 1 footprints to review or that can't be \
+reviewed, 2 usage or read error.\n\nOne line per board footprint hash and family (or MPN reviewed alone), with \
+the MPNs and references it stands for. Order: changed first (reviewed before, the footprint moved on), then other \
+version, uncovered; then not in lock (refresh the snapshot), unknown MPN (the part source has no part of it) and \
+no MPN, which need fixing before a review. --all lists the reviewed ones too; --format json always has every \
+entry, with the hash, what a review covers and the datasheet.\n\nExamples:\n  berc fp todo\n  \
+berc fp todo hw/board --format json\n  berc fp todo hw/board --all";
 
-const FP_ACCEPT_AFTER_HELP: &str = "Exit codes: 0 written (or nothing to change), 2 usage, read or write error; \
-nothing is written when anything fails.\n\nKiCad 8 and newer files are written; an older file is refused until KiCad \
-8+ saved it. A library KiCad has open is read again by KiCad only when it is reopened.\n\nExamples:\n  \
-berc fp accept hw/board U1 U2\n  berc fp accept hw/board R1 --dry-run\n  \
-berc fp accept hw/board --symbol Device:R --hash fp1:0123456789abcdef";
+/// Exit codes of `berc fp accept`, under its --help
+const FP_ACCEPT_AFTER_HELP: &str = "Exit codes: 0 recorded (or a dry run), 2 usage, read or source error; \
+nothing is recorded when anything before the record fails.\n\nCovers: every MPN of the references, each by its \
+family where its MPN decodes into one (scheme and package, as `berc fp todo` lists it), else alone. --mpn and \
+--family-of pick MPNs instead.\n\nExamples:\n  berc fp accept hw/board R1 R7 --from parts.toml --doc RC_Series@rev12 --page 4\n  \
+berc fp accept hw/board U3 --from parts.toml --mpn TPS62840DLCR --dry-run\n  \
+berc fp accept --hash fp1:0123456789abcdef --footprint-id Resistor_SMD:R_0402 --family-of RC0402FR-0710KL --from parts.toml";
 
 const FP_MODEL_AFTER_HELP: &str = "Exit codes: 0 no warning, 1 a warning on any model (not found or not \
 read, out of the courtyard, a pad without a lead, scaled, turned by an odd angle), 2 usage or read error. \
@@ -230,8 +230,7 @@ enum FpCommand {
     /// The hash (`fp1:` and 16 hex digits) covers what a footprint review checks against the datasheet: pads,
     /// copper, mask, paste, courtyard and board-edge graphics, zones and keepouts, clearance and mask settings.
     /// Silk, fab, texts, the 3D model and the footprint's place on the board don't count, so a board copy has the
-    /// hash of its library file. Put it in the library symbol's `Footprint_Review` field once the footprint is
-    /// reviewed.
+    /// hash of its library file. `berc fp accept` records a review of it.
     #[command(after_help = FP_HASH_AFTER_HELP)]
     Hash {
         /// A library footprint (.kicad_mod) or a board (.kicad_pcb)
@@ -246,35 +245,35 @@ enum FpCommand {
         #[arg(long, value_enum, default_value_t = ListFormat::Text)]
         format: ListFormat,
     },
-    /// Check every footprint of a board against the review hash on its library symbol, or every symbol of a library
+    /// Check every footprint of a board against the footprint reviews of its parts snapshot, or every symbol of a
+    /// library
     ///
-    /// Each board footprint's review hash (as `berc fp hash` prints it) is compared with the review lines of its
-    /// symbol's library symbol (`Footprint_Review`, `Footprint_Review2`, ..., one per datasheet, the hash first):
-    /// in the .kicad_sym found through the project's or the global sym-lib-table, else in the schematic's copy of
-    /// it. Ok when every line's hash is the footprint's and every MPN of the symbol (`Mpn1`, `Mpn2`, ...) is on a
-    /// line; partial when some MPN is on none. A schematic copy that holds another hash than the library
-    /// is reported too: the schematic was not updated from the library. So is a board copy that differs from its
-    /// library footprint: the board was not updated from the library.
+    /// Each board footprint's review hash (as `berc fp hash` prints it) and each MPN of its part (`Mpn1`, `Mpn2`,
+    /// ..., in every variant it is fitted in) make a pair; parts.lock.toml (`berc parts refresh`) holds the reviews
+    /// covering each pair. Ok when a review of the hash covers every MPN, by the MPN or by its family. A board copy
+    /// that differs from its library footprint is reported too (the board was not updated from the library), and a
+    /// footprint placed under another Lib:Name than its symbol's Footprint field names.
     ///
-    /// With --lib, the symbols of a symbol library instead: each against the library footprint its `Footprint`
-    /// field names, so a library is checked before any board uses it.
+    /// With --lib, the symbols of a symbol library instead: each symbol's MPNs against the reviews a part source
+    /// (--from) holds for the library footprint its Footprint field names, so a library is checked before any
+    /// board uses it.
     #[command(after_help = FP_CHECK_AFTER_HELP)]
     Check(FpCheckArgs),
-    /// List the library symbols of a board's footprints that need a footprint review, in review order
+    /// List what a board's footprints need reviewed: one line per footprint and family or MPN
     ///
-    /// Each library symbol a board footprint comes from, once, checked as `berc fp check --lib` checks a library:
-    /// its `Footprint_Review` field against the library footprint its `Footprint` field names. Those unreviewed or
-    /// changed since their review are the review's steps; the review is of the library, so every board using the
-    /// symbol gains from it.
+    /// Each board footprint hash with the MPNs of the parts placed with it, grouped by what one review covers: a
+    /// family (an MPN scheme and its package segments, `yageo.rc case_eia=0402`) or an MPN alone. A review is of
+    /// the footprint against the family's datasheet, recorded in the part store, so every board using the
+    /// footprint with parts of that family gains from it.
     #[command(after_help = FP_TODO_AFTER_HELP)]
     Todo(FpTodoArgs),
-    /// Write the review hash of reviewed footprints into their library symbols
+    /// Record a footprint review in the part source and refresh the parts snapshot
     ///
-    /// Each board footprint's review hash now goes into the `Footprint_Review` field of its schematic symbol's
-    /// library symbol: in the .kicad_sym (or .kicad_symdir file) found through the project's or the global
-    /// sym-lib-table, and in every schematic sheet's copy of it, so `berc fp check` finds them ok. Only the field
-    /// is written: the rest of each file stays byte for byte as it was, and a new field is laid out as KiCad lays
-    /// it out. With --symbol and --hash, a hash for a library symbol given by hand.
+    /// The board footprints given were checked against a datasheet: their review hash now (one for all of them)
+    /// is recorded as reviewed for their parts' MPNs, by family or alone, with where the review was made (document,
+    /// PDF, page) and who made it. The project's parts.lock.toml is then written again from the source, so
+    /// `berc fp check` finds them ok. Nothing is written into the schematic or the libraries, except the symbol's
+    /// Footprint with --footprint.
     #[command(after_help = FP_ACCEPT_AFTER_HELP)]
     Accept(FpAcceptArgs),
     /// Read each footprint's 3D models and measure them against the footprint
@@ -348,7 +347,7 @@ struct FpTodoArgs {
     project: PathBuf,
     #[command(flatten)]
     libraries: LibraryArgs,
-    /// Also list the symbols reviewed and unchanged, and those without a footprint
+    /// Also list the footprints and families reviewed
     #[arg(long)]
     all: bool,
     #[arg(long, value_enum, default_value_t = ListFormat::Text)]
@@ -356,42 +355,50 @@ struct FpTodoArgs {
 }
 
 #[derive(clap::Args)]
-#[command(group(clap::ArgGroup::new("what").required(true).args(["references", "symbol"])))]
+#[command(group(clap::ArgGroup::new("what").required(true).args(["references", "hash"])))]
 struct FpAcceptArgs {
     /// The KiCad project: a directory, its .kicad_pro, .kicad_sch or .kicad_pcb
-    #[arg(value_hint = ValueHint::AnyPath)]
+    #[arg(value_hint = ValueHint::AnyPath, default_value = ".")]
     project: PathBuf,
     /// The board footprints reviewed, by reference
     #[arg(add = ArgValueCandidates::new(complete::board_references))]
     references: Vec<String>,
-    /// The library symbol (`Lib:Name`) to write --hash into, instead of board footprints
-    #[arg(long, value_name = "LIB:NAME", requires = "hash")]
-    symbol: Option<String>,
-    /// The review hash for --symbol, as `berc fp hash` prints it
-    #[arg(long, value_name = "HASH", requires = "symbol")]
+    /// The part source the review is recorded in, a file in the shape of parts.lock.toml
+    #[arg(long, value_name = "FILE", value_hint = ValueHint::FilePath)]
+    from: Option<PathBuf>,
+    /// A footprint by its review hash instead of board footprints (a library footprint, as `berc fp hash`
+    /// prints it); needs --mpn or --family-of
+    #[arg(long, value_name = "HASH", requires = "footprint_id")]
     hash: Option<String>,
-    /// Also set the library symbol's Footprint to this (`Lib:Name`): offered by `berc fp check` as the placed
-    /// footprint, when it differs from what the symbol itself names
-    #[arg(long, value_name = "LIB:NAME")]
-    footprint: Option<String>,
-    /// An MPN the datasheet reviewed against covers (one of the symbol's Mpn fields), repeatable: the review line
-    /// is that datasheet's, and the MPNs leave any other line. None: a line for the whole symbol
+    /// The `Lib:Name` of the footprint --hash names, for display
+    #[arg(long, value_name = "LIB:NAME", requires = "hash")]
+    footprint_id: Option<String>,
+    /// Cover this MPN alone (one part), repeatable
     #[arg(long, value_name = "MPN")]
     mpn: Vec<String>,
+    /// Cover this MPN's family (its scheme and package segments), repeatable
+    #[arg(long, value_name = "MPN")]
+    family_of: Vec<String>,
+    /// Also set the symbol's Footprint to this (`Lib:Name`), in its library and every schematic copy: offered by
+    /// `berc fp check` as the placed footprint, when it differs from what the symbol itself names
+    #[arg(long, value_name = "LIB:NAME", conflicts_with = "hash")]
+    footprint: Option<String>,
     /// The datasheet's document number and revision, `DS30154@Rev16`
     #[arg(long, value_name = "NO@REV")]
     doc: Option<String>,
-    /// The datasheet PDF by the document library's content hash: `b3:` and 16 hex digits of its blake3
+    /// The datasheet PDF by the document library's content hash: `b3:` and its blake3 hex
     #[arg(long, value_name = "b3:HEX")]
     pdf: Option<String>,
     /// The datasheet page the land pattern is on, 1-based
     #[arg(long, value_name = "N", value_parser = clap::value_parser!(u32).range(1..))]
     page: Option<u32>,
-    /// Who reviewed it, written with today's date once a source (--mpn, --doc, --pdf, --page) is given; default
-    /// the login name
+    /// Who reviewed it; default the login name
     #[arg(long, value_name = "NAME")]
     by: Option<String>,
-    /// Show what would be written, write nothing
+    /// A note kept with the review
+    #[arg(long, value_name = "TEXT")]
+    note: Option<String>,
+    /// Show what would be recorded, record nothing
     #[arg(long)]
     dry_run: bool,
     #[arg(long, value_enum, default_value_t = ListFormat::Text)]
@@ -409,10 +416,13 @@ struct FpCheckArgs {
     #[arg(long, value_name = "LIB",
           add = ArgValueCompleter::new(complete::symbol_libraries))]
     lib: Vec<String>,
+    /// With --lib: the part source whose reviews the symbols' MPNs are judged against, a file in the shape of
+    /// parts.lock.toml
+    #[arg(long, value_name = "FILE", value_hint = ValueHint::FilePath, requires = "lib")]
+    from: Option<PathBuf>,
     #[command(flatten)]
     libraries: LibraryArgs,
-    /// Also print every review line under its footprint or symbol: the hash, the MPNs, the datasheet, page,
-    /// scale and placement it was checked at, who and when
+    /// Also print the covered MPNs under each footprint or symbol, with the reviews that cover them
     #[arg(long)]
     details: bool,
     #[arg(long, value_enum, default_value_t = ListFormat::Text)]
@@ -1033,9 +1043,24 @@ fn fp_check_libraries(args: &FpCheckArgs) -> ExitCode {
         project,
         search: args.libraries.search(),
     };
+    let source = match args
+        .from
+        .as_deref()
+        .map(better_erc::parts::FileSource::open)
+    {
+        None => None,
+        Some(Ok(s)) => Some(s),
+        Some(Err(e)) => {
+            error(&e.to_string());
+            return ExitCode::from(LibCheckError::EXIT_CODE);
+        }
+    };
     let spinner = progress::Delayed::start();
     spinner.set(format!("reading {}", args.lib.join(", ")));
-    let run = better_erc::fp::check_libraries(&opts);
+    let run = better_erc::fp::check_libraries(
+        &opts,
+        source.as_ref().map(|s| s as &dyn better_erc::parts::Source),
+    );
     spinner.finish();
     match run {
         Ok(r) => show_diff(
@@ -1096,60 +1121,129 @@ fn fp_model(args: &FpModelArgs) -> ExitCode {
 }
 
 fn fp_accept(args: &FpAcceptArgs) -> ExitCode {
-    use better_erc::fp::{AcceptError, AcceptWhat, SymbolLibraries, kicad_config_dir};
-    let what = match (&args.symbol, &args.hash) {
-        (Some(symbol), Some(hash)) => AcceptWhat::Symbol {
-            symbol: symbol.clone(),
+    use better_erc::fp::{AcceptError, AcceptWhat, Covers};
+    use better_erc::parts::{FileSource, NewReview};
+    let fail = |e: &dyn std::fmt::Display| {
+        error(&e.to_string());
+        ExitCode::from(AcceptError::EXIT_CODE)
+    };
+    let Some(from) = &args.from else {
+        return fail(
+            &"no part source to record the review in: name a file with --from (this berc has no other \
+             part source built in)",
+        );
+    };
+    let source = match FileSource::open(from) {
+        Ok(s) => s,
+        Err(e) => return fail(&e),
+    };
+    let what = match (&args.hash, &args.footprint_id) {
+        (Some(hash), Some(footprint)) => AcceptWhat::Hash {
             hash: hash.clone(),
+            footprint: footprint.clone(),
         },
         _ => AcceptWhat::References(args.references.clone()),
     };
-    let mut source = better_erc::fp::record::ReviewLine {
-        mpns: args.mpn.clone(),
-        doc: args.doc.clone(),
-        pdf: args.pdf.clone(),
-        page: args.page,
-        ..Default::default()
+    let covers = Covers {
+        alone: args.mpn.clone(),
+        family_of: args.family_of.clone(),
     };
-    if !source.mpns.is_empty() || source.has_source() {
-        source.by = args
+    if matches!(what, AcceptWhat::Hash { .. })
+        && covers.alone.is_empty()
+        && covers.family_of.is_empty()
+    {
+        return fail(&"--hash needs the MPNs it covers: --mpn or --family-of");
+    }
+    let (doc, doc_rev) = match args.doc.as_deref().map(|d| d.split_once('@')) {
+        Some(Some((no, rev))) => (Some(no.to_owned()), Some(rev.to_owned())),
+        Some(None) => (args.doc.clone(), None),
+        None => (None, None),
+    };
+    let review = NewReview {
+        doc,
+        doc_rev,
+        pdf_blake3: args
+            .pdf
+            .as_deref()
+            .map(|p| p.strip_prefix("b3:").unwrap_or(p).to_owned()),
+        page: args.page,
+        reviewer: args
             .by
             .clone()
             .or_else(|| std::env::var("USER").ok())
-            .filter(|b| !b.trim().is_empty());
-        source.on = Some(better_erc::fp::record::today());
-    }
+            .filter(|b| !b.trim().is_empty())
+            .unwrap_or_default(),
+        reviewed_on: better_erc::fp::today(),
+        note: args.note.clone().unwrap_or_default(),
+        ..NewReview::default()
+    };
+    let project = matches!(what, AcceptWhat::References(_)).then_some(args.project.as_path());
     let spinner = progress::Delayed::start();
     spinner.set(format!("reading {}", args.project.display()));
-    let config = kicad_config_dir();
-    let run = better_erc::fp::accept(
-        &args.project,
-        &what,
-        &mut |dir| SymbolLibraries::new(dir, config.as_deref()),
-        args.footprint.as_deref(),
-        &source,
-        args.dry_run,
-    );
+    let run = better_erc::fp::accept(project, &what, &source, &review, &covers, args.dry_run);
     spinner.finish();
-    match run {
-        Ok(r) => {
-            match args.format {
-                ListFormat::Text => {
-                    let _ = anstream::stdout()
-                        .lock()
-                        .write_all(r.to_text_color().as_bytes());
-                }
-                ListFormat::Json => {
-                    let _ = writeln!(std::io::stdout().lock(), "{}", r.to_json());
-                }
-            }
-            ExitCode::SUCCESS
-        }
-        Err(e) => {
-            error(&e.to_string());
-            ExitCode::from(AcceptError::EXIT_CODE)
+    let run = match run {
+        Ok(r) => r,
+        Err(e) => return fail(&e),
+    };
+    let mut symbol = Vec::new();
+    if let Some(footprint) = &args.footprint {
+        match set_footprint(&args.project, &args.references, footprint, args.dry_run) {
+            Ok(w) => symbol = w,
+            Err(e) => return fail(&e),
         }
     }
+    match args.format {
+        ListFormat::Text => {
+            let mut text = run.to_text_color();
+            for w in &symbol {
+                let what = match (&w.old, w.changed) {
+                    (_, false) => "Footprint already set".to_owned(),
+                    (None, true) => "Footprint added".to_owned(),
+                    (Some(old), true) => format!("Footprint was {old}"),
+                };
+                text += &format!("  {}: {what}\n", w.file.display());
+            }
+            let _ = anstream::stdout().lock().write_all(text.as_bytes());
+        }
+        ListFormat::Json => {
+            let mut v = serde_json::to_value(&run).expect("serialises");
+            v["symbol_footprint"] = serde_json::to_value(&symbol).expect("serialises");
+            let _ = writeln!(
+                std::io::stdout().lock(),
+                "{}",
+                serde_json::to_string_pretty(&v).expect("serialises")
+            );
+        }
+    }
+    ExitCode::SUCCESS
+}
+
+/// The symbol of board footprints `refs` given `footprint` as its Footprint, in its library and every schematic
+/// copy; refused for references of several symbols
+fn set_footprint(
+    project: &Path,
+    refs: &[String],
+    footprint: &str,
+    dry_run: bool,
+) -> Result<Vec<better_erc::fp::Written>, String> {
+    use better_erc::fp::{
+        SymbolLibraries, kicad_config_dir, set_symbol_footprint, sheets_and_symbols,
+    };
+    let (sheets, symbols) = sheets_and_symbols(project, refs).map_err(|e| e.to_string())?;
+    let [symbol] = symbols.as_slice() else {
+        return Err(format!(
+            "--footprint names a Footprint for several symbols ({}): accept one symbol's footprints at a time",
+            symbols.join(", ")
+        ));
+    };
+    let dir = if project.is_dir() {
+        project.to_path_buf()
+    } else {
+        project.parent().unwrap_or(Path::new(".")).to_path_buf()
+    };
+    let mut libs = SymbolLibraries::new(&dir, kicad_config_dir().as_deref());
+    set_symbol_footprint(&mut libs, &sheets, symbol, footprint, dry_run).map_err(|e| e.to_string())
 }
 
 fn parts_refresh(args: &PartsRefreshArgs) -> ExitCode {

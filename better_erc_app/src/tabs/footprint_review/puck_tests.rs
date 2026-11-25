@@ -256,8 +256,8 @@ fn taps_and_rings_do_the_canvas_actions() {
 }
 
 /// Accept's reason for a footprint alone, shown under the ring while the pointer is on its slice
-const PREVIEW_WHY: &str = "a footprint opened alone is a preview: there is no symbol to put the review hash on; pick \
-                           its symbol from a library or a board's list";
+const PREVIEW_WHY: &str = "a footprint opened alone is a preview: there are no MPNs to review it for; pick it from a \
+                           board's list or a symbol library";
 
 /// Every slot names its action and its key (from the settings), and a disabled one says why
 #[test]

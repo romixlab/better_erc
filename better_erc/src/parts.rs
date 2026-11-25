@@ -141,5 +141,3 @@ pub fn refresh_project(
         lock,
     })
 }
-
-

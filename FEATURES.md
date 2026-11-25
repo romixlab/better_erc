@@ -738,11 +738,12 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   only; pink), paste (the apertures only; gray); holes and pad numbers over every view; back pads (the back
   side in the same views), courtyard, fab, silk and board edge each by its checkbox; colours are settings only,
   no picker in the tab. Accept disabled with its reason
-  until a symbol with a footprint is picked and the scale is set on the page shown, asks first with its dry run
-  (each file, field, old and new value; Enter writes, Esc not; a warning per file whose KiCad lock file is held, naming it),
-  writes the hash into the
-  library symbol (and a project's schematic copies, `fp::accept` / `fp::accept_library`), copies it, keeps the
-  review, listing the files written or why nothing was. Found datasheets in a panel of their own, the first
+  until a row with MPNs and a footprint is picked, a part source is set (`parts_source`) and the scale is set on the
+  page shown, asks first with its dry run (what the review covers, alone or by family, the references, the MPNs
+  left out; Enter records, Esc not; the symbol's `Footprint` for an override as a checkbox, a warning per file
+  whose KiCad lock file is held, naming it), records the review in the part source and refreshes the board's parts
+  snapshot (`fp::accept`), reads the list again, copies the hash, keeps the review. The list is a board's footprint
+  hashes and covers (`fp::todo`), the board's copy shown, or a symbol library's symbols (`fp::check_libraries`). Found datasheets in a panel of their own, the first
   opening by itself; another part opens its own datasheet or closes the last one. Keys for each step, each a
   setting and named in a help line: F full width, R the ruler at one end and the other, Z zoom on each ruler end
   to place it exactly and back to type its length (the ruler snapped level unless Shift or the setting; S: a box in the middle of the canvas, the number large), T turn, X mirror, B blink, C copper/mask/paste, I invert. Four
@@ -902,8 +903,8 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   the body's corner, and at its new corner after a quarter turn · `solid.rs`, `modelviews.rs`
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
-  one lookup per MPN per session, on a worker thread) and its review state from the review lines (reviewed, reviewed
-  elsewhere, stale, not yet). A click opens the document with its line's view, else the page search; an MPN without
+  one lookup per MPN per session, on a worker thread) and its review state from the part source's reviews (reviewed,
+  reviewed elsewhere, stale, not yet). A click opens the document with its review's view, else the page search; an MPN without
   a document says why and fetches it (`library_fetch`, `tpm lib fetch --mpn`), then asks again. Usage signals
   `app fp-review mpn datasheet|fetch`. Tests on a fake lookup and fetch. Open: tpm's `lib mpn --json`
   (ops#13nov-1420); until then the table shows the command's error ·
@@ -975,8 +976,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   KiCad-default-looking settings folded per section, the fold line itself carrying no count so a newer KiCad's
   extra defaults don't move it (`--all` shows them); a few comma-joined settings KiCad rebuilds from a set, not a
   sequence (`schematic.used_designators`), are sorted naturally so a plain re-save alone never reorders them. A
-  `.kicad_sch`'s `lib_symbols` print each library symbol's fields (`Datasheet`, `Footprint`, `Footprint_Review`
-  (`TOOL-8`), ...) as readable `Name=value` lines, a hash for the rest (pins, graphics, sub-symbols); for git's
+  `.kicad_sch`'s `lib_symbols` print each library symbol's fields (`Datasheet`, `Footprint`, `Mpn1`, ...) as readable `Name=value` lines, a hash for the rest (pins, graphics, sub-symbols); for git's
   `diff.kicad.textconv` · `berc/src/sch.rs`, `pcb.rs`, `pro.rs`, README "Readable git diffs"
 - ✅ `TOOL-4` `berc` CLI basics: `--version` with version, git SHA (`-dirty`) and commit time (`berc/build.rs`); shell
   completion for bash, zsh and fish (`COMPLETE=bash berc`, file paths completed), told in `--help`; colour in help
@@ -995,42 +995,43 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   ground orientation, grid, label alignment and scope, field and label direction, text sizes, paper size, fill and
   centring, title blocks, notes, connectors at the edge, DNP, hand-set colours) and prints the table of
   [docs/drawing-guide.md](docs/drawing-guide.md#house-style-measured), per sheet with `--sheets`; on `NET-26`
-- ✅ `TOOL-8` Footprint review: a versioned review hash (`fp1:` and 16 hex digits) of what a review checks against
-  the datasheet (pads with every property, copper, mask, paste, courtyard and `Edge.Cuts` graphics, zones and
-  keepouts, clearance and mask settings; not silk, fab, texts, the 3D model or the placement), over a canonical text
-  that a re-save, a reorder or a placement never changes (100 nm grid, sorted items, arcs and polygons in one form,
-  symmetric pads by their shape, KiCad's left-out defaults left out); `berc fp hash FILE.kicad_mod` and
-  `berc fp hash BOARD.kicad_pcb REF` print it, `--canonical` the text, `--format json`, references completed from the
-  board. `berc fp check [PROJECT]` checks every board footprint against the `Footprint_Review` field of its library
-  symbol (the `.kicad_sym` through the project's or global `sym-lib-table`, else the schematic's copy): ok, changed,
-  unreviewed, refused (the symbol sets no footprint), no symbol, other version, malformed, board-only (no symbol and
-  marked board-only: listed last under its own heading, not a failure), and a schematic copy older than the library;
-  text and JSON, exit 1 on anything but ok and board-only. `berc fp check --lib LIB` checks every symbol of a symbol
-  library (a `.kicad_sym`, a `.kicad_symdir`, a folder of them, or a `sym-lib-table` nickname) against the library
-  footprint its `Footprint` field names (`--footprints DIR`, then the `fp-lib-table`): ok, changed, unreviewed,
-  missing, refused, other version, malformed, no footprint (not a failure). `berc fp check` also compares each board
-  copy with its library footprint and reports one that differs (both hashes; the board not updated from the library).
-  `berc fp todo [PROJECT]` (`fp::todo`): the library symbols a board uses, once each with their references, those to
-  review first in review order (changed, other version, malformed, unreviewed), then those that can't be (missing,
-  refused), ok ones with `--all`; JSON with footprint file, hash and datasheet for the review tab. `--symbols` and
-  `--footprints` put libraries ahead of the tables; every `berc` run recorded in a local
-  usage file (`berc usage`). The hash is written onto the symbol by `berc fp accept` (`TOOL-9`) or the app's
-  Accept (`VIEW-19`) · `erc_model/src/fphash.rs`, `erc_kicad/src/symlib.rs`, `erc_kicad/src/libtable.rs`, `better_erc/src/fp.rs`,
-  `better_erc/src/fp/library.rs`, `better_erc/src/fp/todo.rs`, `berc/src/usage.rs`, `berc/tests/fp.rs`, README "Footprint review"
-- ✅ `TOOL-9` `berc fp accept PROJECT REF...`: each board footprint's review hash written into the
-  `Footprint_Review` field of its schematic symbol's library symbol (the `.kicad_sym`, or the symbol's file in a
-  `.kicad_symdir`, through the `sym-lib-table`) and of every sheet's `lib_symbols` copy, through the
-  formatting-preserving writer (`IMP-19`); `--symbol LIB:NAME --hash HASH` for a hash given by hand, `--dry-run`,
-  `--format json`. Refused, writing nothing: a symbol placed with more than one footprint, footprints of one symbol
-  that differ, a symbol without a footprint, a footprint without a symbol, a malformed hash · `better_erc/src/fp.rs`
-  (`accept`), `berc/tests/fp_accept.rs`, README "Accepting a review"
+- ✅ `TOOL-8` Footprint review on (footprint hash, MPN) pairs: a versioned review hash (`fp1:` and 16 hex digits)
+  of what a review checks against the datasheet (pads with every property, copper, mask, paste, courtyard and
+  `Edge.Cuts` graphics, zones and keepouts, clearance and mask settings; not silk, fab, texts, the 3D model or the
+  placement), over a canonical text that a re-save, a reorder or a placement never changes (100 nm grid, sorted
+  items, arcs and polygons in one form, symmetric pads by their shape, KiCad's left-out defaults left out);
+  `berc fp hash FILE.kicad_mod` and `berc fp hash BOARD.kicad_pcb REF` print it, `--canonical` the text. A review is
+  kept in the part source (`Source::accept`, `FileSource` writes its file; the lab's store `PART-6` waits on its
+  client), covering MPNs alone or families by decoding (`Cover::family_of`: scheme and `case_eia`/`package`), and
+  the parts snapshot holds per board footprint hash and MPN the covering reviews (`CFG-9`). `berc fp check
+  [PROJECT]` judges each board footprint from the snapshot (`fp::pairs::judge`): ok when a review of its hash now
+  covers every MPN of its part in every variant it is fitted in; changed, other version, not in lock, partial,
+  uncovered, no MPN, no symbol, not fitted and board-only (not failures); a board copy that differs from its library
+  footprint reported with both hashes; `--details` the covering reviews; no snapshot: exit 2 naming `berc parts
+  refresh`. `berc fp check --lib LIB --from FILE` judges every symbol of a symbol library that names its MPNs,
+  its library footprint's hash against the source's reviews: ok, changed, other version, partial, uncovered,
+  missing, unjudged (no `--from`), no MPN and no footprint (not failures). `berc fp todo [PROJECT]` (`fp::todo`):
+  one entry per board footprint hash and cover (a family, else one MPN) with its MPNs and references, review order
+  (changed, other version, uncovered), then what can't be reviewed yet (not in lock, unknown MPN, no MPN), reviewed
+  ones with `--all`; JSON with the covering and earlier reviews (`covered_by`, `other`, `reviews`), the library
+  footprint file and hash, the datasheet and the files read. `--symbols` and `--footprints` put libraries ahead of
+  the tables. Nothing is stored on symbols: the `Footprint_Review` field and its review lines are gone, not
+  migrated · `erc_model/src/fphash.rs`, `erc_parts/src/source.rs`, `erc_parts/src/lock.rs`,
+  `better_erc/src/fp/pairs.rs`, `check.rs`, `library.rs`, `todo.rs`, `berc/tests/fp.rs`, README "Footprint review"
+- ✅ `TOOL-9` `berc fp accept PROJECT REF... --from FILE`: a review of the references' one review hash recorded in
+  the part source (`fp::accept` through `Source::accept`), then the project's parts snapshot refreshed. Covers by
+  default every MPN of their parts, each by its family where it decodes, else alone (an MPN the source lacks with no
+  family left out, named); `--mpn` and `--family-of` pick instead. `--hash --footprint-id` reviews a footprint by
+  hash (a library footprint). Where it was made: `--doc NO@REV`, `--pdf`, `--page`, `--by`, `--note`; `--dry-run`,
+  `--format json`. Refused, recording nothing: footprints that differ, a footprint without a symbol, a part without
+  an MPN, an MPN no reference carries, a family of an MPN that decodes into none, a malformed hash · `better_erc/src/fp/accept.rs`,
+  `berc/tests/fp.rs`, README "Accepting a review"
 - ✅ `TOOL-10` Placed footprint overrides, shown rather than resolved silently: `berc fp check` and `berc fp todo`
   name a board footprint placed under a different `Lib:Name` than its symbol's own `Footprint` field (a library
   migration half done, or a deliberate per-instance override), naming both (`FpEntry::footprint_overridden`,
   `TodoEntry::overridden`); a footprint placed with no library nickname at all is not an override, a legitimate
-  case `library_footprint` already fell back on. The app's Footprint Review tab follows the board: it reviews the
-  footprint actually placed when it differs, not the symbol's stale default, noted on the canvas rather than left
-  unsaid. `berc fp accept --footprint LIB:NAME` (and the app's Accept confirmation, a checkbox offering the placed
+  case `library_footprint` already fell back on. The app's Footprint Review tab reviews the footprint as the board
+  places it, the override noted on the canvas rather than left unsaid. `berc fp accept --footprint LIB:NAME` (and the app's Accept confirmation, a checkbox offering the placed
   one) also sets the library symbol's own `Footprint` to it, through `IMP-19`'s writer, into the library and every
   schematic copy; refused when references of more than one symbol are accepted together, one value can't hold for
   several. A setting lists the library nicknames a symbol and its footprint may be in (`--allow NICKNAME`,
@@ -1038,30 +1039,17 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   rule); `berc fp check --lib` and `berc fp todo` report any other
   (`SymbolEntry::symbol_library_disallowed`/`footprint_library_disallowed`) · `better_erc/src/fp.rs`,
   `better_erc/src/fp/todo.rs`, `better_erc/src/fp/library.rs` (`lib_allowed`), `berc/src/main.rs`,
-  `better_erc_app/src/tabs/footprint_review/mod.rs`, `better_erc_app/src/settings.rs`, `berc/tests/fp.rs`,
-  `berc/tests/fp_accept.rs`
-- ✅ `TOOL-11` Footprint review lines, where a review was made recorded in the symbol: one line per datasheet, each
-  in a property of its own (`Footprint_Review`, `Footprint_Review2`, ...), the review hash first and then `mpn=`
-  (the MPNs it covers, as strings; a comma in one escaped `%2C`), `doc=` (number and revision), `pdf=` (`b3:` and 16
-  hex digits of the document library's blake3), `page=`, `scale=`, `at=` (placement), `by=`, `on=`; unknown keys
-  kept (`fp::record`). `berc fp check` (board and `--lib`) and `berc fp todo` read the first token of each line as
-  its hash: ok when every line's hash is the footprint's and every `Mpn`/`MpnN` of the symbol is on a line (a
-  symbol without them: a line without `mpn=`), `partial` listing the MPNs not reviewed yet, `changed` naming the
-  stale lines; a hash alone stays valid (no source recorded); `--details` prints every line, JSON `reviews`.
-  `berc fp accept --mpn --doc --pdf --page --by` and the app's Accept write a datasheet's line among the others
-  (`record::merge`: the same document replaced in place, its MPNs leave other lines, a line left without any
-  removed through `symlib::remove_property`) into the library and every schematic copy. The review tab's Accept
-  asks which MPNs the datasheet covers, those in the PDF's text ticked; the datasheet identified through the
-  library's index (`tpm lib docs --json --all`, a setting), the reviewer a setting. Opening a reviewed symbol opens
-  the recorded PDF (by its hash, else its document number, through `tpm lib open --json`) and restores page,
-  scale and placement; a stale line or a PDF not found is said. Each datasheet keeps its own view per symbol
-  (page, zoom, scale, placements, ruler, note), saved with the tab: switching datasheets and back finds each as it
-  was left; a line changed since wins. An MPN another datasheet's line names is not ticked by itself, and a
-  whole-symbol line never replaces another datasheet's. `berc textconv` shows each line whole ·
-  `better_erc/src/fp/record.rs`, `better_erc/src/fp.rs`, `erc_kicad/src/symlib.rs`,
-  `better_erc_app/src/tabs/footprint_review/recorded.rs`, `docview.rs`, `docindex.rs`, `perdoc_tests.rs`,
-  `berc/tests/fp_accept.rs`, README "Review
-  lines"
+  `better_erc_app/src/tabs/footprint_review/mod.rs`, `better_erc_app/src/settings.rs`, `berc/tests/fp.rs`
+- ✅ `TOOL-11` Where a footprint review was made, kept with the review in the part source: the document number and
+  revision, the PDF's blake3 from the document library's index (`tpm lib docs --json --all`, a setting), the page,
+  the scale, the footprint's placement, the reviewer (a setting), the day and the review note. The review tab's
+  Accept asks which MPNs the datasheet covers, alone or by family: a board row's all ticked, a library row's those
+  in the PDF's text or covered by a review made on it, not one a review on another datasheet covers. Opening a
+  reviewed row opens the recorded PDF (by its hash, else its document number, through `tpm lib open --json`) and
+  restores page, scale and placement; a review of an earlier hash or a PDF not found is said. Each datasheet keeps
+  its own view per row (page, zoom, scale, placements, ruler, note), saved with the tab: switching datasheets and
+  back finds each as it was left; a review recorded since wins · `better_erc_app/src/tabs/footprint_review/recorded.rs`,
+  `rows.rs`, `docview.rs`, `docindex.rs`, `perdoc_tests.rs`, README "Where a review was made"
 - ✅ `TOOL-12` `berc fp model PROJECT|LIBRARY|FILE [NAME...]`: each footprint's 3D models read and measured
   against it (`fp::model`). Each `(model ...)` entry resolved (`IMP-21`), read (`IMP-20`, a file shared by footprints
   read once) and placed with KiCad's transform (scale, then rotation about x, y, z by the negated angles, then the

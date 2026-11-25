@@ -52,8 +52,8 @@ pub(super) fn datasheet(dir: &Path) -> PathBuf {
 
 use super::panel::ACCEPT;
 
-const PREVIEW: &str = "a footprint opened alone is a preview: there is no symbol to put the review hash on; pick \
-                       its symbol from a library or a board's list";
+const PREVIEW: &str = "a footprint opened alone is a preview: there are no MPNs to review it for; pick it from a \
+                       board's list or a symbol library";
 
 /// The test footprints' library, Test.pretty, by a `fp-lib-table` in `dir`
 pub(super) fn footprint_table(dir: &Path) {
@@ -108,6 +108,17 @@ pub(super) fn symbol_library(dir: &Path, pdf: &Path) -> PathBuf {
     lib
 }
 
+/// A part source in `dir`, `parts.toml`, with a part of each of `mpns` and no reviews
+pub(super) fn parts_file(dir: &Path, mpns: &[&str]) -> PathBuf {
+    let mut text = String::from("version = 1\nsource = \"hand\"\n");
+    for m in mpns {
+        text += &format!("\n[[part]]\nmpn = \"{m}\"\nmatch = \"found\"\n");
+    }
+    let path = dir.join("parts.toml");
+    std::fs::write(&path, text).unwrap();
+    path
+}
+
 fn disabled(h: &Harness<'_, FootprintReview>, label: &str) -> bool {
     use egui_kittest::kittest::NodeT;
     h.get_by_label(label).accesskit_node().is_disabled()
@@ -118,8 +129,8 @@ fn button<'a>(h: &'a Harness<'_, FootprintReview>, label: &'a str) -> egui_kitte
 }
 
 /// A symbol picked from a symbol library: its footprint and its datasheet follow, the page search finds the land
-/// pattern, the ruler sets the scale, Accept writes the review hash into the library symbol; a symbol without a
-/// footprint is refused with the reason
+/// pattern, the ruler sets the scale, Accept records a review of the library footprint's hash for its MPN in the
+/// part source; a symbol without a footprint is refused with the reason
 #[test]
 fn review_a_symbol_from_its_library() {
     let dir = std::env::temp_dir().join(format!("berc-fp-review-{}", std::process::id()));
@@ -127,6 +138,7 @@ fn review_a_symbol_from_its_library() {
     std::fs::create_dir_all(&dir).unwrap();
     let pdf = datasheet(&dir);
     let lib = symbol_library(&dir, &pdf);
+    let parts = parts_file(&dir, &["TEST-PART"]);
     let signals: Arc<Mutex<Vec<String>>> = Arc::default();
     let s = signals.clone();
     let usage: Usage = Arc::new(move |sig: &str| s.lock().unwrap().push(sig.to_string()));
@@ -134,6 +146,7 @@ fn review_a_symbol_from_its_library() {
         font_dirs: Vec::new(),
         library_search: Vec::new(),
         library_name: Vec::new(),
+        parts_source: Some(parts.clone()),
         ..Default::default()
     };
     let mut cx = Context::new();
@@ -148,7 +161,7 @@ fn review_a_symbol_from_its_library() {
     let ctx = h.ctx.clone();
     h.state_mut().open_path(&ctx, &lib);
     h.run();
-    h.get_by_label("2 symbols in Rev, 1 to review");
+    h.get_by_label("2 symbols in Rev, 1 to review, against file parts.toml");
     // Nothing picked yet: Accept says to pick a symbol
     assert!(disabled(&h, ACCEPT));
     h.get_by_label("pick a symbol first: its footprint and datasheet follow");
@@ -226,15 +239,16 @@ fn review_a_symbol_from_its_library() {
     let st = h.state();
     assert!(st.place.origin[0] > origin[0]);
     assert_eq!((st.place.rotation, st.place.mirror), (90.0, true));
-    // Accept shows what it writes where, and writes the review hash into the library symbol once confirmed
+    // Accept shows what it records, and records the review in the part source once confirmed
     assert!(!disabled(&h, ACCEPT));
     button(&h, ACCEPT).click();
     h.run();
-    h.get_by_label("Write the review?");
-    h.get_by_label("Rev.kicad_sym (library)");
-    // Its MPN is in the PDF's text: ticked already
-    assert!(h.state().rt.confirm.as_ref().unwrap().mpns[0].ticked);
+    h.get_by_label("Record the review?");
+    // Its MPN is in the PDF's text; every MPN is ticked, alone as it decodes into no family
+    let c = h.state().rt.confirm.as_ref().unwrap();
+    assert!(c.mpns[0].ticked && c.mpns[0].in_pdf && c.mpns[0].family.is_none());
     h.get_by_label("TEST-PART (in the PDF)");
+    h.get_by_label("Records in file parts.toml a review covering TEST-PART");
     // The SpaceMouse's taps answer it: the left button writes, the right one cancels; the rings wait
     let menu = h.state().pie_menu();
     assert_eq!(menu.center_left.map(|s| s.action), Some(Action::Write));
@@ -245,34 +259,37 @@ fn review_a_symbol_from_its_library() {
             .flatten()
             .all(|s| s.disabled.is_some())
     );
-    let line = format!("{want_hash} mpn=TEST-PART page=2 scale=0.02 at=");
-    h.get_by_label_contains(&format!("(none) → {line}"));
     assert!(h.state().rt.accepted.is_none(), "nothing accepted yet");
-    button(&h, "Write (Enter)").click();
+    button(&h, "Record (Enter)").click();
     h.run();
     assert_eq!(h.state().rt.accepted.as_deref(), Some(want_hash.as_str()));
-    h.get_by_label(&format!("Accepted. {FIELD} = {want_hash} (copied)"));
+    h.get_by_label("Accepted, the review hash copied:");
     assert!(
         matches!(h.state().rt.written, Some(Ok(_))),
         "{:?}",
         h.state().rt.written
     );
-    h.get_by_label("Rev:Mixed: written into");
-    h.get_by_label("  Rev.kicad_sym (library)");
-    let text = std::fs::read_to_string(&lib).unwrap();
-    assert!(
-        text.contains(&format!("(property \"Footprint_Review\" \"{line}")),
-        "{text}"
-    );
+    h.get_by_label("Review #1 recorded in file parts.toml: TEST-PART");
+    // The part source holds it, with where it was made; the library symbol is not written
+    let stored = better_erc::parts::PartsLock::read(&parts).unwrap();
+    let r = &stored.reviews[0];
+    assert_eq!((r.hash.as_str(), r.page), (want_hash.as_str(), Some(2)));
+    assert!((r.scale.unwrap() - 0.02).abs() < 1e-4, "{r:?}");
+    assert_eq!(r.at.map(|a| (a.rotation, a.mirror)), Some((90.0, true)));
+    assert!(!std::fs::read_to_string(&lib).unwrap().contains("Review"));
     let r = &h.state().reviews[0];
     assert_eq!((r.page, r.hash.as_str()), (2, want_hash.as_str()));
     assert_eq!(r.datasheet.as_deref(), Some(pdf.as_path()));
-    // berc fp check --lib agrees, and the list says so without reading the library again
-    let check = better_erc::fp::check_libraries(&LibCheckOptions {
-        libraries: vec![lib.display().to_string()],
-        project: dir.clone(),
-        search: LibrarySearch::default(),
-    })
+    // berc fp check --lib agrees, and the list read again says so
+    let source = better_erc::parts::FileSource::open(&parts).unwrap();
+    let check = better_erc::fp::check_libraries(
+        &LibCheckOptions {
+            libraries: vec![lib.display().to_string()],
+            project: dir.clone(),
+            search: LibrarySearch::default(),
+        },
+        Some(&source),
+    )
     .unwrap();
     let mixed = check
         .symbols
@@ -280,18 +297,17 @@ fn review_a_symbol_from_its_library() {
         .find(|e| e.symbol == "Rev:Mixed")
         .unwrap();
     assert_eq!(mixed.status, SymbolStatus::Ok);
-    h.get_by_label(&format!("{want_hash}, the same: reviewed"));
+    h.get_by_label("#1 no document recorded, page 2: TEST-PART");
     assert_eq!(
-        h.state().rt.symbols.as_ref().unwrap().rows[1].status,
-        SymbolStatus::Ok
+        h.state().rt.symbols.as_ref().unwrap().rows[1].status_name(),
+        "ok"
     );
     // Nothing else needs a review
     assert!(disabled(&h, super::panel::NEXT));
     // A symbol without a footprint: refused, with the reason
     h.get_by_label("Rev:Generic").click();
     h.run();
-    let why = "Rev:Generic sets no footprint (its Footprint field is empty): nothing to review, and no review \
-               hash to give it";
+    let why = "Rev:Generic sets no footprint (its Footprint field is empty): nothing to review";
     assert!(disabled(&h, ACCEPT));
     assert_eq!(h.state().accept_blocker().as_deref(), Some(why));
     assert!(h.state().rt.items.is_empty());
@@ -344,7 +360,7 @@ fn a_footprint_alone_is_a_preview() {
     });
     h.run();
     assert!(!h.state().rt.items.is_empty());
-    h.get_by_label("Preview: no symbol to write the review hash into");
+    h.get_by_label("Preview: no MPNs to review the footprint for");
     assert!(disabled(&h, ACCEPT));
     h.get_by_label(PREVIEW);
     std::fs::remove_dir_all(&dir).unwrap();
@@ -424,7 +440,7 @@ fn real_board() {
         l.rows
             .iter()
             .position(|r| match &want {
-                Some(s) => &r.symbol == s,
+                Some(s) => r.symbol() == Some(s.as_str()) || r.footprint() == Some(s.as_str()),
                 None => r.needs_review(),
             })
             .expect("such a symbol")
@@ -599,7 +615,8 @@ fn blend_modes_mix_with_the_page() {
 }
 
 /// A KiCad project in `dir` around the board of placed.kicad_pcb: its Mixed_Pads footprints U7-U12 placed for
-/// library symbol `Rev:Mixed`, with the library file and a sym-lib-table; returns the board
+/// library symbol `Rev:Mixed` with MPN `TEST-PART`, with the library file, a sym-lib-table, a part source
+/// (`parts.toml`) and the parts snapshot refreshed from it; returns the board
 fn project(dir: &Path) -> PathBuf {
     let fixtures =
         Path::new(env!("CARGO_MANIFEST_DIR")).join("../erc_kicad/tests/fixtures/footprints");
@@ -607,14 +624,14 @@ fn project(dir: &Path) -> PathBuf {
     std::fs::copy(fixtures.join("placed.kicad_pcb"), &board).unwrap();
     let symbol = |name: &str| {
         format!(
-            "(symbol \"{name}\" (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n    (property \"Value\" \"Mixed\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Mixed_Pads\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (symbol \"Mixed_1_1\" (pin passive line (at 0 0 0) (length 1.27) (name \"A\" (effects (font (size 1.27 1.27)))) (number \"1\" (effects (font (size 1.27 1.27)))))))\n"
+            "(symbol \"{name}\" (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n    (property \"Value\" \"Mixed\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Mixed_Pads\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (property \"Mpn1\" \"TEST-PART\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (symbol \"Mixed_1_1\" (pin passive line (at 0 0 0) (length 1.27) (name \"A\" (effects (font (size 1.27 1.27)))) (number \"1\" (effects (font (size 1.27 1.27)))))))\n"
         )
     };
     let root = "b0000000-0000-4000-8000-000000000000";
     let placed: String = (7..=12)
         .map(|n| {
             format!(
-                "  (symbol (lib_id \"Rev:Mixed\") (at {x} 50 0) (unit 1) (in_bom yes) (on_board yes) (dnp no) (uuid \"b0000000-0000-4000-8000-0000000001{n:02}\")\n    (property \"Reference\" \"U{n}\" (at {x} 45 0) (effects (font (size 1.27 1.27))))\n    (property \"Value\" \"Mixed\" (at {x} 55 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Mixed_Pads\" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (pin \"1\" (uuid \"b0000000-0000-4000-8000-0000000002{n:02}\"))\n    (instances (project \"rev\" (path \"/{root}\" (reference \"U{n}\") (unit 1)))))\n",
+                "  (symbol (lib_id \"Rev:Mixed\") (at {x} 50 0) (unit 1) (in_bom yes) (on_board yes) (dnp no) (uuid \"b0000000-0000-4000-8000-0000000001{n:02}\")\n    (property \"Reference\" \"U{n}\" (at {x} 45 0) (effects (font (size 1.27 1.27))))\n    (property \"Value\" \"Mixed\" (at {x} 55 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Mixed_Pads\" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (property \"Mpn1\" \"TEST-PART\" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (pin \"1\" (uuid \"b0000000-0000-4000-8000-0000000002{n:02}\"))\n    (instances (project \"rev\" (path \"/{root}\" (reference \"U{n}\") (unit 1)))))\n",
                 x = 20 * n
             )
         })
@@ -642,19 +659,24 @@ fn project(dir: &Path) -> PathBuf {
         "(sym_lib_table (version 7)\n  (lib (name \"Rev\")(type \"KiCad\")(uri \"${KIPRJMOD}/Rev.kicad_sym\")(options \"\")(descr \"\")))\n",
     )
     .unwrap();
+    let parts = parts_file(dir, &["TEST-PART"]);
+    let source = better_erc::parts::FileSource::open(&parts).unwrap();
+    better_erc::parts::refresh_project(dir, &source, better_erc::parts::WriteLock::Changed)
+        .unwrap();
     board
 }
 
-/// A symbol from a board's list: Accept writes its footprint's review hash into the library symbol and the
-/// schematic's copy, and `berc fp check` then finds the board's footprints ok; the board's own footprint list is a
-/// preview
+/// A footprint hash from a board's list: Accept records a review of it for the MPN of U7-U12 in the part source
+/// and refreshes the parts snapshot, and `berc fp check` then finds the board's footprints ok; nothing is written
+/// into the schematic or the library; the board's own footprint list is a preview
 #[test]
-fn accept_writes_into_the_symbols() {
+fn accept_records_in_the_part_source() {
     let dir = std::env::temp_dir().join(format!("berc-fp-write-{}", std::process::id()));
     let _ = std::fs::remove_dir_all(&dir);
     std::fs::create_dir_all(&dir).unwrap();
     let board = project(&dir);
     let pdf = datasheet(&dir);
+    let parts = dir.join("parts.toml");
     let signals: Arc<Mutex<Vec<String>>> = Arc::default();
     let s = signals.clone();
     let usage: Usage = Arc::new(move |sig: &str| s.lock().unwrap().push(sig.to_string()));
@@ -663,6 +685,7 @@ fn accept_writes_into_the_symbols() {
         library_search: Vec::new(),
         library_name: Vec::new(),
         reviewer: "tester".into(),
+        parts_source: Some(parts.clone()),
         ..Default::default()
     };
     let mut cx = Context::new();
@@ -676,7 +699,7 @@ fn accept_writes_into_the_symbols() {
     let ctx = h.ctx.clone();
     h.state_mut().open_path(&ctx, &board);
     h.run();
-    h.get_by_label("1 library symbols on rev.kicad_pcb, 1 to review");
+    h.get_by_label("1 of 1 to review on rev.kicad_pcb");
     // A board footprint from the preview list: Accept is off
     h.get_by_label_contains("library footprints on rev.kicad_pcb (preview)")
         .click();
@@ -685,10 +708,13 @@ fn accept_writes_into_the_symbols() {
         .click();
     h.run();
     assert!(h.state().rt.target.is_none());
-    // The symbol the board's footprints come from
-    h.get_by_label("Rev:Mixed").click();
+    // The footprint hash and its MPN, on U7-U12: the board's copy is what is reviewed
+    h.get_by_label("Mixed_Pads · TEST-PART").click();
     h.run();
     h.get_by_label("U7, U8, U9, U10, U11, U12");
+    let hash = h.state().rt.sourced.as_ref().unwrap().hash.clone();
+    let rows = &h.state().rt.symbols.as_ref().unwrap().rows;
+    assert_eq!(rows[0].hash(), Some(hash.as_str()));
     h.state_mut().open_datasheet(&ctx, &pdf);
     h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
     h.run();
@@ -700,23 +726,23 @@ fn accept_writes_into_the_symbols() {
         note: None,
     });
     h.run();
-    let hash = h.state().rt.sourced.as_ref().unwrap().hash.clone();
-    let files = ["Rev.kicad_sym", "rev.kicad_sch"].map(|f| dir.join(f));
+    let files = [
+        "Rev.kicad_sym",
+        "rev.kicad_sch",
+        "parts.toml",
+        "parts.lock.toml",
+    ]
+    .map(|f| dir.join(f));
     let before = files.clone().map(|f| std::fs::read_to_string(f).unwrap());
-    // Accept asks first: each file, the field, old and new value; Esc writes nothing
+    // Accept asks first: what it records where; Esc records nothing
     button(&h, ACCEPT).click();
     h.run();
-    h.get_by_label("Rev.kicad_sym (library)");
-    h.get_by_label("rev.kicad_sch (schematic copy)");
-    // The review line: the hash, then where it was made (no document library here: the page, scale, placement)
-    let line = format!("{hash} page=2 scale=0.02 at=");
-    assert_eq!(
-        h.get_all_by_label_contains(&format!("(none) → {line}"))
-            .count(),
-        2
+    h.get_by_label("Records in file parts.toml a review covering TEST-PART");
+    h.get_by_label("for U7 U8 U9 U10 U11 U12");
+    assert!(
+        h.query_by_label_contains("Also set the symbol's Footprint")
+            .is_none()
     );
-    assert_eq!(h.get_all_by_label_contains("by=tester on=").count(), 2);
-    assert!(h.query_by_label_contains("open in KiCad").is_none());
     h.key_press(egui::Key::Escape);
     h.run();
     assert!(h.state().rt.confirm.is_none());
@@ -725,18 +751,72 @@ fn accept_writes_into_the_symbols() {
         before,
         files.clone().map(|f| std::fs::read_to_string(f).unwrap())
     );
-    // KiCad running, no lock file beside the files: no warning
-    h.state_mut().rt.kicad_running = || true;
-    let warned = |h: &mut Harness<'_, FootprintReview>| {
-        button(h, ACCEPT).click();
-        h.run();
-        let w = h.query_by_label_contains("open in KiCad").is_some();
-        h.key_press(egui::Key::Escape);
-        h.run();
-        w
+    // Enter records
+    button(&h, ACCEPT).click();
+    h.run();
+    h.key_press(egui::Key::Enter);
+    h.run();
+    assert!(
+        matches!(h.state().rt.written, Some(Ok(_))),
+        "{:?}",
+        h.state().rt.written
+    );
+    h.get_by_label("Review #1 recorded in file parts.toml: TEST-PART");
+    h.get_by_label("parts.lock.toml refreshed: 1 of 1 pairs covered");
+    let stored = better_erc::parts::PartsLock::read(&parts).unwrap();
+    assert_eq!(
+        (
+            stored.reviews[0].hash.as_str(),
+            stored.reviews[0].reviewer.as_str()
+        ),
+        (hash.as_str(), "tester")
+    );
+    // The schematic and the library are as they were
+    for (f, b) in files.iter().zip(&before).take(2) {
+        assert_eq!(&std::fs::read_to_string(f).unwrap(), b, "{}", f.display());
+    }
+    let check = better_erc::fp::check(&dir, &better_erc::fp::LibrarySearch::default()).unwrap();
+    assert!(!check.footprints.is_empty());
+    for e in check.footprints.iter().filter(|e| e.symbol.is_some()) {
+        assert!(e.is_ok(), "{e:?}");
+    }
+    // The list read again: the row is reviewed, its review listed
+    assert_eq!(
+        h.state().rt.symbols.as_ref().unwrap().rows[0].status_name(),
+        "ok"
+    );
+    h.get_by_label("#1 no document recorded, page 2: TEST-PART");
+    assert!(
+        signals
+            .lock()
+            .unwrap()
+            .contains(&"app fp-review write".to_string())
+    );
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// KiCad may overwrite a symbol's `Footprint` written into a file it has open: its lock file beside the file says
+/// so, when it is held. An empty lock, a dead process' and KiCad's own with no KiCad running here are stale
+#[test]
+fn kicad_locks_warn() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-locks-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let sch = dir.join("rev.kicad_sch");
+    std::fs::write(&sch, "(kicad_sch)").unwrap();
+    let written = |changed: bool| {
+        vec![Written {
+            file: sch.clone(),
+            library: false,
+            symbol: "Rev:Mixed".into(),
+            old: Some("Test:A".into()),
+            changed,
+        }]
     };
-    assert!(!warned(&mut h), "KiCad running alone is no warning");
-    // Stale locks from this computer: a dead process id; KiCad's own (no pid) with no KiCad running here
+    assert!(
+        kicad_warnings(&written(true), true).is_empty(),
+        "KiCad running alone is no warning"
+    );
     let lock = dir.join("~rev.kicad_sch.lck");
     let host = this_host().unwrap_or_default();
     let record = |pid: Option<u64>| {
@@ -747,48 +827,37 @@ fn accept_writes_into_the_symbols() {
         j.to_string()
     };
     std::fs::write(&lock, "").unwrap();
-    assert!(!warned(&mut h), "an empty lock is stale, as KiCad takes it");
-    std::fs::write(&lock, record(Some(0x7fff_fff0))).unwrap();
-    assert!(!warned(&mut h), "a dead process holds nothing");
-    std::fs::write(&lock, record(None)).unwrap();
-    h.state_mut().rt.kicad_running = || false;
-    assert!(!warned(&mut h), "no KiCad here holds it");
-    // Held: this process' id, then KiCad's own with KiCad running; the warning names the lock file. Enter writes
-    std::fs::write(&lock, record(Some(std::process::id().into()))).unwrap();
-    assert!(warned(&mut h), "a live process holds it");
-    std::fs::write(&lock, record(None)).unwrap();
-    h.state_mut().rt.kicad_running = || true;
-    button(&h, ACCEPT).click();
-    h.run();
-    h.get_by_label_contains(&format!(
-        "rev.kicad_sch is open in KiCad (its lock file ~rev.kicad_sch.lck, someone@{host})"
-    ));
-    assert!(h.query_by_label_contains("KiCad is running").is_none());
-    assert!(h.query_by_label_contains("Rev.kicad_sym is open").is_none());
-    h.key_press(egui::Key::Enter);
-    h.run();
     assert!(
-        matches!(h.state().rt.written, Some(Ok(_))),
-        "{:?}",
-        h.state().rt.written
+        kicad_warnings(&written(true), true).is_empty(),
+        "an empty lock is stale"
     );
-    h.get_by_label("Rev:Mixed: written into");
-    h.get_by_label("  Rev.kicad_sym (library)");
-    h.get_by_label("  rev.kicad_sch (schematic copy)");
-    let want = format!("(property \"Footprint_Review\" \"{line}");
-    for f in ["Rev.kicad_sym", "rev.kicad_sch"] {
-        let text = std::fs::read_to_string(dir.join(f)).unwrap();
-        assert!(text.contains(&want), "{f}: {text}");
-    }
-    let check = better_erc::fp::check(&dir, &better_erc::fp::LibrarySearch::default()).unwrap();
-    for e in check.footprints.iter().filter(|e| e.symbol.is_some()) {
-        assert!(e.is_ok(), "{e:?}");
-    }
+    std::fs::write(&lock, record(Some(0x7fff_fff0))).unwrap();
     assert!(
-        signals
-            .lock()
-            .unwrap()
-            .contains(&"app fp-review write".to_string())
+        kicad_warnings(&written(true), true).is_empty(),
+        "a dead process holds nothing"
+    );
+    std::fs::write(&lock, record(None)).unwrap();
+    assert!(
+        kicad_warnings(&written(true), false).is_empty(),
+        "no KiCad here holds it"
+    );
+    std::fs::write(&lock, record(Some(std::process::id().into()))).unwrap();
+    assert_eq!(
+        kicad_warnings(&written(true), false).len(),
+        1,
+        "a live process holds it"
+    );
+    std::fs::write(&lock, record(None)).unwrap();
+    let w = kicad_warnings(&written(true), true);
+    assert!(
+        w[0].starts_with(&format!(
+            "rev.kicad_sch is open in KiCad (its lock file ~rev.kicad_sch.lck, someone@{host})"
+        )),
+        "{w:?}"
+    );
+    assert!(
+        kicad_warnings(&written(false), true).is_empty(),
+        "an unchanged file is no warning"
     );
     std::fs::remove_dir_all(&dir).unwrap();
 }
@@ -1663,11 +1732,13 @@ fn the_review_records_where_it_was_made() {
         ),
     )
     .unwrap();
+    let parts = parts_file(&dir, &["TEST-PART", "OTHER-PART"]);
     let settings = FootprintReviewSettings {
         font_dirs: Vec::new(),
         library_search: Vec::new(),
         library_name: Vec::new(),
         reviewer: "tester".into(),
+        parts_source: Some(parts.clone()),
         ..Default::default()
     };
     let mut cx = Context::new();
@@ -1721,27 +1792,21 @@ fn the_review_records_where_it_was_made() {
     let mpns = h.state().rt.confirm.as_ref().unwrap().mpns.clone();
     assert_eq!(
         mpns.iter()
-            .map(|m| (m.mpn.as_str(), m.ticked))
+            .map(|m| (m.mpn.as_str(), m.ticked, m.in_pdf))
             .collect::<Vec<_>>(),
-        [("TEST-PART", true), ("OTHER-PART", false)]
+        [("TEST-PART", true, true), ("OTHER-PART", false, false)]
     );
-    let line = format!(
-        "{hash} mpn=TEST-PART doc=DS99@rev3 pdf=b3:0123456789abcdef page=2 scale=0.02 at=150,230,90,mirror \
-         by=tester on="
-    );
-    h.get_by_label_contains(&format!("(none) → {line}"));
-    // Ticking the other one changes what would be written; unticked again, back (the checkbox, not the MPN's row
+    h.get_by_label("Records in file parts.toml a review covering TEST-PART");
+    // Ticking the other one changes what would be recorded; unticked again, back (the checkbox, not the MPN's row
     // in the Datasheets by MPN table)
     h.get_by_role_and_label(egui::accesskit::Role::CheckBox, "OTHER-PART")
         .click();
     h.run();
-    h.get_by_label_contains(&format!(
-        "(none) → {hash} mpn=TEST-PART,OTHER-PART doc=DS99"
-    ));
+    h.get_by_label("Records in file parts.toml a review covering TEST-PART; OTHER-PART");
     h.get_by_role_and_label(egui::accesskit::Role::CheckBox, "OTHER-PART")
         .click();
     h.run();
-    h.get_by_label_contains(&format!("(none) → {line}"));
+    h.get_by_label("Records in file parts.toml a review covering TEST-PART");
     h.key_press(egui::Key::Enter);
     h.run();
     assert!(
@@ -1749,23 +1814,49 @@ fn the_review_records_where_it_was_made() {
         "{:?}",
         h.state().rt.written
     );
-    let text = std::fs::read_to_string(&lib).unwrap();
-    assert!(
-        text.contains(&format!("(property \"Footprint_Review\" \"{line}")),
-        "{text}"
+    // The review holds where it was made: the document library's number, revision and content hash, the page,
+    // the scale, the placement, who
+    let stored = better_erc::parts::PartsLock::read(&parts).unwrap();
+    let r = &stored.reviews[0];
+    assert_eq!(
+        (
+            r.doc.as_deref(),
+            r.doc_rev.as_deref(),
+            r.page,
+            r.reviewer.as_str()
+        ),
+        (Some("DS99"), Some("rev3"), Some(2), "tester")
     );
+    assert_eq!(
+        r.pdf_blake3.as_deref(),
+        Some("0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
+    );
+    assert!((r.scale.unwrap() - 0.02).abs() < 1e-6);
+    let at = r.at.unwrap();
+    assert_eq!(
+        (at.x, at.y, at.rotation, at.mirror),
+        (150.0, 230.0, 90.0, true)
+    );
+    assert_eq!(r.hash, hash);
     // One maker's datasheet reviewed: the other MPN is not, and the row says partial
     let row = |h: &Harness<'_, FootprintReview>| {
         let rows = &h.state().rt.symbols.as_ref().unwrap().rows;
-        rows.iter().find(|r| r.symbol == "Rev:Two").unwrap().clone()
+        rows.iter()
+            .find(|r| r.symbol() == Some("Rev:Two"))
+            .unwrap()
+            .clone()
     };
-    assert_eq!(row(&h).status, SymbolStatus::Partial);
+    assert_eq!(row(&h).status_name(), "partial");
     h.get_by_label("MPNs not reviewed yet: OTHER-PART: accept against their datasheet");
-    let check = better_erc::fp::check_libraries(&LibCheckOptions {
-        libraries: vec![lib.display().to_string()],
-        project: dir.clone(),
-        search: LibrarySearch::default(),
-    })
+    let source = better_erc::parts::FileSource::open(&parts).unwrap();
+    let check = better_erc::fp::check_libraries(
+        &LibCheckOptions {
+            libraries: vec![lib.display().to_string()],
+            project: dir.clone(),
+            search: LibrarySearch::default(),
+        },
+        Some(&source),
+    )
     .unwrap();
     assert_eq!(check.symbols[1].status, SymbolStatus::Partial);
 
@@ -1796,28 +1887,26 @@ fn the_review_records_where_it_was_made() {
     assert_eq!(st.place, placed);
     let note = st.rt.record_note.clone().unwrap_or_default();
     assert!(
-        note.starts_with("the view the review was made in: DS99@rev3, page 2, by tester on "),
+        note.starts_with("the view the review was made in: #1 DS99 rev3, page 2, by tester on "),
         "{note}"
     );
-    assert!(!note.contains("stale"), "{note}");
-    // Accept straight away: the line for this datasheet is replaced, not added to
+    assert!(!note.contains("review it again"), "{note}");
+    // Accept straight away: OTHER-PART still needs a review
     assert!(!disabled(&h, ACCEPT));
 
-    // The footprint changed since (here: the hash on the line edited): stale, said plainly
-    std::fs::write(
-        &lib,
-        text.replace(&format!("\"{hash} mpn="), "\"fp1:0000000000000000 mpn="),
-    )
-    .unwrap();
+    // The footprint changed since (here: the review's hash edited in the part source): said plainly
+    let text = std::fs::read_to_string(&parts).unwrap();
+    std::fs::write(&parts, text.replace(&hash, "fp1:0000000000000000")).unwrap();
+    h.state_mut().reload_list();
     reopen(&mut h);
     let note = h.state().rt.record_note.clone().unwrap_or_default();
     assert!(
         note.contains(&format!(
-            "stale: the footprint changed since (reviewed fp1:0000000000000000, now {hash}): review it again"
+            "It was made for fp1:0000000000000000, the footprint is {hash} now: review it again"
         )),
         "{note}"
     );
-    h.get_by_label("stale: the footprint changed since");
+    h.get_by_label("earlier hash: the footprint changed since");
 
     // A PDF the library doesn't have: said, and the view stays as it is
     h.state_mut().rt.locator = Some(Arc::new(|_: &Path| Ok(None)));
@@ -1826,7 +1915,7 @@ fn the_review_records_where_it_was_made() {
     let note = h.state().rt.record_note.clone().unwrap_or_default();
     assert_eq!(
         note,
-        "reviewed against DS99@rev3, page 2: not found in the document library; open that PDF to see the \
+        "reviewed against #1 DS99 rev3, page 2: not found in the document library; open that PDF to see the \
          review's view"
     );
     h.get_by_label(&note);
@@ -1875,17 +1964,21 @@ fn datasheets_by_mpn() {
                     ("Footprint", "Test:Mixed_Pads"),
                     ("Mpn1", "TEST-PART"),
                     ("Mpn2", "OTHER-PART"),
-                    (
-                        "Footprint_Review",
-                        "fp1:0000000000000000 mpn=TEST-PART pdf=b3:0123456789abcdef page=2 scale=0.02 at=150,230,90",
-                    ),
                 ]
             ),
         ),
     )
     .unwrap();
     let hash = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
+    // TEST-PART reviewed for an earlier hash of the footprint, on its document
+    let parts = parts_file(&dir, &["TEST-PART", "OTHER-PART"]);
+    let mut text = std::fs::read_to_string(&parts).unwrap();
+    text += &format!(
+        "\n[[review]]\nid = 1\nhash = \"fp1:0000000000000000\"\nfootprint = \"Test:Mixed_Pads\"\npdf_blake3 = \"{hash}\"\npage = 2\nscale = 0.02\nat = {{ x = 150.0, y = 230.0, rotation = 90.0 }}\nreviewer = \"someone\"\nreviewed_on = \"2026-11-20\"\ncovers = [{{ kind = \"mpn\", mpn = \"TEST-PART\" }}]\n"
+    );
+    std::fs::write(&parts, text).unwrap();
     let mut h = harness("fp mpn");
+    h.state_mut().rt.settings.parts_source = Some(parts);
     h.state_mut().rt.indexer = Some(Arc::new(move || {
         docindex::parse_index(&format!(
             r#"[{{"path": "Test/TEST-PART.pdf", "doc": "DS99", "rev": "3", "hash": "{hash}"}}]"#
@@ -1953,7 +2046,7 @@ fn datasheets_by_mpn() {
     h.get_by_label("stale");
     h.get_by_label("not yet");
 
-    // The document opens with the view of the line made on it
+    // The document opens with the view of the review made on it
     h.state_mut().close_datasheet();
     h.run();
     h.get_by_label("📄 TEST-PART.pdf").click();

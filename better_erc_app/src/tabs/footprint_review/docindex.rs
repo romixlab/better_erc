@@ -1,10 +1,9 @@
-//! The datasheet as the document library knows it, for the review line Accept writes: its content hash and its
-//! document number and revision (`tpm lib docs --json --all`), and the way back from a recorded line to its PDF.
-//! The library lists its files relative to its own root, so a file is matched by the end of its path, and a
-//! recorded one is found again through the library's open command (`tpm lib open --json`), which answers with
-//! full paths.
+//! The datasheet as the document library knows it, for the review Accept records: its content hash and its document
+//! number and revision (`tpm lib docs --json --all`), and the way back from a recorded review to its PDF. The
+//! library lists its files relative to its own root, so a file is matched by the end of its path, and a recorded
+//! one is found again through the library's open command (`tpm lib open --json`), which answers with full paths.
 
-use better_erc::fp::record::ReviewLine;
+use better_erc::parts::lock::LockedReview;
 use serde::Deserialize;
 use std::path::{Path, PathBuf};
 
@@ -24,26 +23,57 @@ pub struct IndexedDoc {
     pub gone: bool,
 }
 
-/// How many hex digits of the content hash a review line keeps
-const HASH_DIGITS: usize = 16;
+/// The fewest hex digits of a content hash two hashes are compared on
+const HASH_DIGITS_MIN: usize = 16;
 
 impl IndexedDoc {
-    /// The line's `pdf=`: `b3:` and the first 16 hex digits of the content hash
-    pub fn pdf(&self) -> Option<String> {
-        let h = self.hash.get(..HASH_DIGITS)?;
-        h.chars()
-            .all(|c| c.is_ascii_hexdigit())
-            .then(|| format!("b3:{}", h.to_ascii_lowercase()))
+    /// The content hash as a review records it: blake3 in lowercase hex
+    pub fn blake3(&self) -> Option<String> {
+        (self.hash.len() >= HASH_DIGITS_MIN && self.hash.chars().all(|c| c.is_ascii_hexdigit()))
+            .then(|| self.hash.to_ascii_lowercase())
     }
 
-    /// The line's `doc=`: the document number, `@rev` and the revision where it is known (`DS13560@rev6`)
+    /// Its document number and revision for the person (`DS13560 rev6`), where it is known
     pub fn doc_label(&self) -> Option<String> {
         let no = self.doc.as_deref().filter(|d| !d.is_empty())?;
         Some(match self.rev.as_deref().filter(|r| !r.is_empty()) {
-            Some(r) => format!("{no}@rev{r}"),
+            Some(r) => format!("{no} rev{r}"),
             None => no.to_string(),
         })
     }
+}
+
+/// Two content hashes are the same PDF: one starts with the other, on at least [`HASH_DIGITS_MIN`] digits
+fn same_hash(a: &str, b: &str) -> bool {
+    let n = a.len().min(b.len());
+    n >= HASH_DIGITS_MIN && a[..n].eq_ignore_ascii_case(&b[..n])
+}
+
+/// How well `doc` is the document `review` was made on: 0 the same PDF by its content hash, 1 the same document
+/// number and revision, 2 the same number in another revision; `None` another document
+pub fn rank(doc: &IndexedDoc, review: &LockedReview) -> Option<u8> {
+    if let (Some(want), Some(have)) = (&review.pdf_blake3, doc.blake3())
+        && same_hash(want, &have)
+    {
+        return Some(0);
+    }
+    let no = doc.doc.as_deref().filter(|d| !d.is_empty())?;
+    if review.doc.as_deref() != Some(no) {
+        return None;
+    }
+    let rev = |r: Option<&str>| {
+        r.map(|r| {
+            let r = r.to_ascii_lowercase();
+            r.strip_prefix("rev").unwrap_or(&r).to_owned()
+        })
+    };
+    Some(
+        if rev(review.doc_rev.as_deref()) == rev(doc.rev.as_deref()) {
+            1
+        } else {
+            2
+        },
+    )
 }
 
 /// The index's entry for `file`: the one whose path `file` ends with, the longest such path when several do
@@ -54,31 +84,13 @@ pub fn identify<'a>(index: &'a [IndexedDoc], file: &Path) -> Option<&'a IndexedD
         .max_by_key(|d| d.path.components().count())
 }
 
-/// The document number of a `doc=` value, its revision aside
-fn doc_number(label: &str) -> &str {
-    label.split('@').next().unwrap_or(label)
-}
-
-/// The index's files for a recorded line, best first: the PDF with its content hash, then the same document number
-/// and revision, then the same number in another revision
-pub fn candidates<'a>(index: &'a [IndexedDoc], line: &ReviewLine) -> Vec<&'a IndexedDoc> {
-    let mut out: Vec<(u8, &IndexedDoc)> = Vec::new();
-    for d in index.iter().filter(|d| !d.gone) {
-        let rank = if line.pdf.is_some() && d.pdf() == line.pdf {
-            0
-        } else if let (Some(want), Some(have)) = (&line.doc, d.doc_label()) {
-            if *want == have {
-                1
-            } else if doc_number(want) == doc_number(&have) {
-                2
-            } else {
-                continue;
-            }
-        } else {
-            continue;
-        };
-        out.push((rank, d));
-    }
+/// The index's files for a recorded review, best first ([`rank`])
+pub fn candidates<'a>(index: &'a [IndexedDoc], review: &LockedReview) -> Vec<&'a IndexedDoc> {
+    let mut out: Vec<(u8, &IndexedDoc)> = index
+        .iter()
+        .filter(|d| !d.gone)
+        .filter_map(|d| Some((rank(d, review)?, d)))
+        .collect();
     out.sort_by_key(|(r, _)| *r);
     out.into_iter().map(|(_, d)| d).collect()
 }
@@ -156,8 +168,11 @@ mod tests {
             Path::new("/home/x/sync/datasheets/Diodes/BSS138W.pdf"),
         )
         .unwrap();
-        assert_eq!(d.pdf().as_deref(), Some("b3:0123456789abcdef"));
-        assert_eq!(d.doc_label().as_deref(), Some("DS30154@rev16"));
+        assert_eq!(
+            d.blake3().as_deref(),
+            Some("0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef")
+        );
+        assert_eq!(d.doc_label().as_deref(), Some("DS30154 rev16"));
         let old = identify(&index, Path::new("/s/datasheets/Diodes/old/BSS138W.pdf")).unwrap();
         assert_eq!(old.rev.as_deref(), Some("15"));
         let nx = identify(&index, Path::new("/s/datasheets/Nexperia/BSS138BKW.pdf")).unwrap();
@@ -167,14 +182,19 @@ mod tests {
         assert!(parse_index("nope").is_err());
     }
 
-    /// A recorded line's PDF: by its content hash first, then by number and revision, then the number alone
+    /// A recorded review's PDF: by its content hash first, then by number and revision, then the number alone
     #[test]
-    fn a_recorded_line_finds_its_pdf() {
+    fn a_recorded_review_finds_its_pdf() {
         let index = parse_index(INDEX).unwrap();
-        let line = |s: &str| ReviewLine::parse(s);
+        let review = |pdf: Option<&str>, doc: Option<&str>, rev: Option<&str>| LockedReview {
+            pdf_blake3: pdf.map(String::from),
+            doc: doc.map(String::from),
+            doc_rev: rev.map(String::from),
+            ..LockedReview::default()
+        };
         let by_hash = candidates(
             &index,
-            &line("fp1:0000000000000000 pdf=b3:aaaa456789abcdef doc=DS30154@rev15"),
+            &review(Some("aaaa456789abcdef"), Some("DS30154"), Some("rev15")),
         );
         let paths: Vec<&Path> = by_hash.iter().map(|d| d.path.as_path()).collect();
         assert_eq!(
@@ -185,10 +205,10 @@ mod tests {
                 Path::new("datasheets/Diodes/BSS138W.pdf"),
             ]
         );
-        let by_number = candidates(&index, &line("fp1:0000000000000000 doc=DS30154@rev9"));
+        let by_number = candidates(&index, &review(None, Some("DS30154"), Some("rev9")));
         assert_eq!(by_number.len(), 2);
-        assert!(candidates(&index, &line("fp1:0000000000000000")).is_empty());
-        assert!(candidates(&index, &line("fp1:0000000000000000 doc=DS1@rev1")).is_empty());
+        assert!(candidates(&index, &review(None, None, None)).is_empty());
+        assert!(candidates(&index, &review(None, Some("DS1"), Some("rev1"))).is_empty());
     }
 
     #[test]
