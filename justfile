@@ -56,7 +56,8 @@ netlists:
 
 # Build the better_erc app and the berc command line tool and install them on this PC, the app in the launcher
 install:
-    cargo build --profile deploy --locked -p better_erc_app -p berc
+    cargo build --profile deploy --locked -p better_erc_app -p berc --features berc/mx3
+    # The build has the mx3 part source; the cargo install fallback below is the default build without it.
     # With our release tool on PATH, it installs them (one copy on PATH, kept-releases stack); otherwise cargo install.
     if command -v tpm >/dev/null; then tpm install target/deploy/better_erc target/deploy/berc; else cargo install --locked --force --path better_erc_app && cargo install --locked --path berc; fi
     just launcher

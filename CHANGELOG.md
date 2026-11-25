@@ -17,6 +17,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Changed
 
+- `just install` builds berc and the app with the `mx3` part source.
 - `DRAW-49`: a note headed `TODO`, `TBD` or `FIXME` with no placeholder in its body is reported once.
 
 ## [0.6.0] - 2026-11-25
