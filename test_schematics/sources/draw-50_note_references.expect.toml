@@ -1,0 +1,17 @@
+# What better_erc finds on draw-50_note_references.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"N9 is not a reference wi...\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"See N1, N2\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"See N3\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-50"
+subjects = ["item text box \"See N3\"", "sheet /"]

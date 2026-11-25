@@ -57,6 +57,9 @@ project file (`CFG-2`); see [clearance margins](../drawing-guide.md#room-around-
 | `drawing.note.item_words` | 15 | most words in a sentence of a note item (`DRAW-47`) |
 | `drawing.note.item_marks` | 3 | most `;`, `:` and `(` in one sentence of a note (`DRAW-47`) |
 | `drawing.note.colour_slack` | 8 | counts per RGB channel a note box colour may be off its kind's colour (`DRAW-32`) |
+| `drawing.block.reach` | 25.4 mm | how far from a block's nearest part or heading a note may stand and still belong to it (`DRAW-48`) |
+| `drawing.block.tie` | 2.54 mm | blocks this much farther from a note than the nearest one get the note too (`DRAW-48`) |
+| `drawing.notes` | unset | the board's notes files, paths relative to the project directory, separated by commas (`DRAW-50`) |
 | `drawing.route.k_power`, `.k_ground`, `.k_signal` | 2, 2, 1 | factor on the bends and detours of power, ground and signal ties (`DRAW-40`) |
 | `drawing.route.min_saving` | 2 | cost a redraw must save to be reported (`DRAW-40`) |
 | `drawing.route.step` | 2.54 mm | the grid step wire is counted in (`DRAW-40`) |
@@ -637,3 +640,84 @@ sections and are left out. Two section boxes less than `drawing.section_gap` apa
 
 Section tops line up on one row and left edges on one column. Heading positions closer than `drawing.section.snap`,
 and not equal, form one line; the finding names the line and the headings off it.
+
+## `DRAW-48` Functional block with no note on its sheet <a id="draw-48"></a>
+
+💡 suggestion · needs: the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-48)
+
+**Impl.** mid · depends on NET-26
+
+A functional block is a set of parts whose `Block` field holds the same name, such as `AUX charge pump`. Its heading
+is a text on the sheet whose first line is that name, case ignored. A reviewer who meets a block needs a note that
+says what it does and why it is drawn this way: an Information box, a list of facts, or a pointer such as `See N13`
+to a note in the board's notes file. The check reports each block that has no such note.
+
+A note is a text box or a table cell with text, or a free text that is neither a heading nor a cost line. A heading
+is bold, or at least `drawing.heading_size` tall. A cost line starts with a price, after an optional label:
+`$0.19 @25 · $0.12 @1k` or `Sheet: $1.29 @25`. Each note on a sheet belongs to blocks in this order:
+
+1. Every block on the sheet that has a part the note names by its reference, as a whole word (`R901`).
+2. Otherwise the nearest block, measured from the note's box to the nearest part body, pin or heading of the block,
+   when that gap is at most `drawing.block.reach` (25.4 mm). Every other block at most `drawing.block.tie` (2.54 mm)
+   farther away gets the note too: a note between two blocks, such as one about a capacitor of each, serves both.
+
+The finding points at the block's heading, or at its first part when the sheet has no heading for it (the message
+then says so). Parts of a block drawn on another sheet than its heading, such as a regulator's decoupling
+capacitors placed at their load, are left to the sheet with the heading. A block without a heading on any sheet is
+checked on every sheet that holds its parts.
+
+## `DRAW-49` Placeholder left in a note, a text or a field <a id="draw-49"></a>
+
+⚠️ warning · needs: the schematic drawing (geometry), fields · [catalogue entry](../checks.md#draw-49)
+
+**Impl.** easy · depends on NET-26
+
+A note copied from a template keeps its blanks until someone fills them in: `Unregulated, x V .. y V` followed by an
+empty `Max current:` reads as a fact on a printed sheet. The check reads every text, text box and table cell of each
+sheet, and every field of each part except its Reference and its Value (`BOM-5` checks the value, `NAME-12` an
+unannotated reference). It reports a text or field that holds one of these:
+
+- the word `TBD`, `TBC`, `TODO`, `FIXME` or `CALC`, case ignored, the same words `BOM-5` looks for in a value;
+- a word made of question marks alone (`?`, `???`); a question such as `Why?` is not one;
+- a letter `x`, `y` or `z` (either case) where a number belongs: before a unit (`x V`, `y mA`) or with the unit
+  joined to it (`xV`);
+- a label left empty: a line that ends with a colon and has nothing after it but blank lines, `--` rules or other
+  empty labels (`Max current:` as the last line).
+
+A field value is also a placeholder by the value rule of `BOM-5`: it starts or ends with `?`. The word `TODO` that
+opens a note (`TODO:` as the box's first line, or the bold heading grouped with the box) names the note kind
+(`DRAW-32`) and is no placeholder.
+
+## `DRAW-50` Note reference to a note the notes file does not have <a id="draw-50"></a>
+
+⚠️ warning · needs: the schematic drawing (geometry), the setting `drawing.notes` · [catalogue entry](../checks.md#draw-50)
+
+**Impl.** mid · depends on NET-26, CFG-2
+
+Long explanations belong in a Markdown notes file kept with the board, one heading per note: `## N13 · AUX supply`.
+The sheet then points at them with `See N13` or `See N12, N14`. A reference to a note that was renumbered or never
+written sends the reader nowhere.
+
+The setting `drawing.notes` names the notes files, as paths relative to the project directory, separated by commas:
+`berc check hw/board --set drawing.notes=../doc/notes.md`. A note id is a Markdown heading of any level whose text
+starts with `N` and a number. A reference is a word `N` plus a number in a text, text box or table cell, following
+the word `See` (any case) in a list joined by commas, `and`, `&` or `/`: `See N3`, `see N12, N14 and N20`. Without the
+setting the check does not run; a file that cannot be read stops the run with an error.
+
+## `DRAW-51` Block name that contradicts its parts <a id="draw-51"></a>
+
+ℹ️ info · needs: part classes, the schematic drawing (geometry) · [catalogue entry](../checks.md#draw-51)
+
+**Impl.** mid · depends on NET-26
+
+A block's name is the first thing a reviewer reads, and a name copied from another block keeps telling the wrong
+story. The check compares the words of a block name (the `Block` field, see `DRAW-48`) with the classes of the parts
+that carry it, on the whole board:
+
+| The name has a word | The block holds | Finding |
+|---|---|---|
+| `DC-DC`, `DCDC`, `buck`, `boost`, `converter`, `SMPS`, `switcher` | a linear regulator and no inductor | a converter name on a linear regulator |
+| `LDO`, `linear` | an inductor | a linear-regulator name on a block with an inductor |
+
+Words are matched whole and case ignored; a ferrite bead is no inductor. The finding points at the block's heading
+where a sheet has one. It is a hint only: a block may hold both kinds of regulator on purpose.

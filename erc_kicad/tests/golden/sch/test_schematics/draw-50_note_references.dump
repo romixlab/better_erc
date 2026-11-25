@@ -1,0 +1,11 @@
+board draw-50_note_references
+sheet / name "" file draw-50_note_references.kicad_sch uuid /
+source file draw-50_note_references.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 3e34c61bed684ede
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1

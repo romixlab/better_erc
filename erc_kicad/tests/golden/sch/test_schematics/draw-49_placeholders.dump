@@ -1,0 +1,45 @@
+board draw-49_placeholders
+net unconnected-(R1-Pad1) class = Default @ sch draw-49_placeholders.kicad_sch note "effective net class"
+net unconnected-(R1-Pad1) kind unconnected
+net unconnected-(R1-Pad2) class = Default @ sch draw-49_placeholders.kicad_sch note "effective net class"
+net unconnected-(R1-Pad2) kind unconnected
+net unconnected-(R2-Pad1) class = Default @ sch draw-49_placeholders.kicad_sch note "effective net class"
+net unconnected-(R2-Pad1) kind unconnected
+net unconnected-(R2-Pad2) class = Default @ sch draw-49_placeholders.kicad_sch note "effective net class"
+net unconnected-(R2-Pad2) kind unconnected
+part R1 field Mpn1 = ??? @ sch draw-49_placeholders.kicad_sch
+part R1 field Value = 10k @ sch draw-49_placeholders.kicad_sch
+part R1 flag dnp = no @ sch draw-49_placeholders.kicad_sch
+part R1 flag exclude_from_sim = no @ sch draw-49_placeholders.kicad_sch
+part R1 flag in_bom = yes @ sch draw-49_placeholders.kicad_sch
+part R1 flag on_board = yes @ sch draw-49_placeholders.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid d49000000-0000-4000-8000-000000000005 line 18 at 101.6,63.5 rot 0
+part R1 value = text 10k @ sch draw-49_placeholders.kicad_sch note "from the Value field"
+part R2 field Mpn1 = RC0402FR-0710KL @ sch draw-49_placeholders.kicad_sch
+part R2 field Value = 10k @ sch draw-49_placeholders.kicad_sch
+part R2 flag dnp = no @ sch draw-49_placeholders.kicad_sch
+part R2 flag exclude_from_sim = no @ sch draw-49_placeholders.kicad_sch
+part R2 flag in_bom = yes @ sch draw-49_placeholders.kicad_sch
+part R2 flag on_board = yes @ sch draw-49_placeholders.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid d49000000-0000-4000-8000-000000000008 line 19 at 127,63.5 rot 0
+part R2 value = text 10k @ sch draw-49_placeholders.kicad_sch note "from the Value field"
+pin R1 1 name "" unit 1 net unconnected-(R1-Pad1)
+pin R1 1 type = passive @ sch draw-49_placeholders.kicad_sch
+pin R1 2 name "" unit 1 net unconnected-(R1-Pad2)
+pin R1 2 type = passive @ sch draw-49_placeholders.kicad_sch
+pin R2 1 name "" unit 1 net unconnected-(R2-Pad1)
+pin R2 1 type = passive @ sch draw-49_placeholders.kicad_sch
+pin R2 2 name "" unit 1 net unconnected-(R2-Pad2)
+pin R2 2 type = passive @ sch draw-49_placeholders.kicad_sch
+sheet / name "" file draw-49_placeholders.kicad_sch uuid /
+source file draw-49_placeholders.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 3e34c61bed684ede
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1

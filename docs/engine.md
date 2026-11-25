@@ -250,7 +250,8 @@ the same analyses the checks then use:
 | `Layout` | the board file was read |
 | `Drawing` | the design came from KiCad schematics (labels, no-connect flags), not a netlist or a Smart PDF |
 | `MultiBoard` | the design joins boards through connectors |
-| `PinRoles`, `PinThresholds`, `PinFunctions`, `PowerStates`, `Conduction`, `PartDb`, `Project(key)` | not yet: the analyses and the project file are still to come, and the hint names the FEATURES.md id |
+| `Project(key)` | the run sets the setting `key` (`--set drawing.notes=FILE`) and, for a path setting, its files were read |
+| `PinRoles`, `PinThresholds`, `PinFunctions`, `PowerStates`, `Conduction`, `PartDb` | not yet: the analyses are still to come, and the hint names the FEATURES.md id |
 
 ## Values
 
@@ -313,7 +314,9 @@ engine finds, for review in the diff, and keeps the sidecar's `[[not_run]]` bloc
 
 A check's thresholds are `Param`s in its `CheckMeta` with a default and a unit (`I2C-7` `max_tie` = 100 Ω, `I2C-9`
 `min_pull_up` and `max_pull_up`). `Config` is what a project changes: a severity per check, a value per
-`CHECK-ID.param`, checks to leave out. The better_erc project file (CFG-2) will fill it; a finding names the source
+`CHECK-ID.param`, checks to leave out. A path setting (unit `paths`, such as `drawing.notes`) names files relative to
+the project directory, separated by commas; `Project::check` reads them before the run, and a file it cannot read
+stops the run with an error. The better_erc project file (CFG-2) will fill it; a finding names the source
 of the threshold it used.
 
 ## Adding a check

@@ -1,7 +1,7 @@
 //! `BOM-10` Value that doesn't parse or isn't a standard series value
 
-use super::placeholder;
 use crate::meta::*;
+use crate::placeholder::placeholder;
 use crate::{Ctx, Finding};
 use erc_analysis::PartClass;
 use erc_analysis::value::format_si;

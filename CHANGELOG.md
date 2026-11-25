@@ -15,6 +15,21 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 - Cargo feature `mx3`: `berc parts refresh` and `berc fp accept` use the mx3 part store without `--from` (CFG-9).
 
+## [0.6.0] - 2026-11-25
+
+### Added
+
+- Catalogue: `DRAW-48` to `DRAW-51`, block notes, placeholders, note references and block names on a sheet (NET-26).
+- `DRAW-48`: a block (parts sharing a `Block` field) with no note on its sheet (NET-26).
+- `DRAW-49`: placeholders left in notes, texts and fields; `BOM-5` also reads `TBC` and `FIXME` (NET-26).
+- `DRAW-50`: `See N12` references to notes missing from the `drawing.notes` file, a new path setting (NET-26).
+- `DRAW-51`: a block named DC-DC holding an LDO and no inductor, or named LDO holding an inductor (NET-26).
+- Project file `[drawing] notes` names the notes file `DRAW-50` reads, as `--set drawing.notes` does (CFG-2).
+
+### Fixed
+
+- `berc explain` and `berc checks list` read info lines of the catalogue (`DRAW-12` was missing) (NET-26).
+
 ## [0.5.0] - 2026-11-25
 
 ### Added
