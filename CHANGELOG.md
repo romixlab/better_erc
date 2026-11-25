@@ -17,6 +17,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `DRAW-48`: a block (parts sharing a `Block` field) with no note on its sheet (NET-26).
 - `DRAW-49`: placeholders left in notes, texts and fields; `BOM-5` also reads `TBC` and `FIXME` (NET-26).
 - `DRAW-50`: `See N12` references to notes missing from the `drawing.notes` file, a new path setting (NET-26).
+- `DRAW-51`: a block named DC-DC holding an LDO and no inductor, or named LDO holding an inductor (NET-26).
 - `berc place-fields`: `drawing.fields.hide_defaults=always` hides every rating at its default, not only those in the way (TOOL-13).
 - `berc place-fields`: hides only ratings at the project's `DEFAULT_*` text variables (R package, power; C package, dielectric, voltage) (TOOL-13).
 - `DRAW-34`: `drawing.clearance.spacing` tight (default) holds parts packed at grid pitch to a 0.127 mm margin; sparse as before (NET-26).
