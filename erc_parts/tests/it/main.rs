@@ -1,7 +1,9 @@
-//! erc_parts: the board's MPNs, the lock's text, a refresh against a fake source
+//! erc_parts: the board's MPNs, the lock's text, a refresh against a fake source, the mx3 source against a fake mx3
 
 mod board;
 mod lock;
+#[cfg(feature = "mx3")]
+mod mx3;
 mod refresh;
 mod source;
 

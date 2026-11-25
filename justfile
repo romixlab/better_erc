@@ -6,23 +6,26 @@ default:
 
 # The tests. `just test`: all of them (test-all), the same run the landing gate does. `just test --changed`: only
 # the workspace crates changed against main and the crates that depend on them, a quick local check before
-# landing.
+# landing. Both run the crates with the `mx3` feature (the mx3 part source against a fake mx3) a second time.
 test *flags:
-    {{ if flags == "--changed" { "changedtests run" } else { just_executable() + " test-all " + flags } }}
+    {{ if flags == "--changed" { "changedtests run && changedtests run -- --features berc/mx3" } else { just_executable() + " test-all " + flags } }}
 
-# Run every test in the workspace; the hw differential compares a sample of the boards (BERC_HW_FULL: all)
+# Run every test in the workspace, then erc_parts and berc with the mx3 part source; the hw differential compares a sample of the boards (BERC_HW_FULL: all)
 test-all:
     cargo test --workspace
+    cargo test -p erc_parts -p berc --features erc_parts/mx3,berc/mx3
 
 # The hw boards (~41) take 30-50 s through kicad-cli; the default `just test` compares a sample of them.
 
 # Run every test with the full hw differential, for CI and before landing
 test-full:
     BERC_HW_FULL=1 cargo test --workspace
+    cargo test -p erc_parts -p berc --features erc_parts/mx3,berc/mx3
 
 # Clippy with warnings as errors, and the format check
 lint:
     cargo clippy --workspace --all-targets -- -D warnings
+    cargo clippy -p erc_parts -p berc --all-targets --features erc_parts/mx3,berc/mx3 -- -D warnings
     cargo fmt --all --check
 
 # Format all code

@@ -7,5 +7,6 @@ Part data for better_erc: the parts snapshot (`parts.lock.toml`) a board commits
 - `board`: the MPNs of a design's fitted parts, in the base design and every variant, and the footprint hash each is placed with.
 - `source`: the `Source` trait and `FileSource`, which answers from a file in the lock's shape (hand-filled data).
 - `refresh`: a new snapshot of a design from a source.
+- `mx3` (cargo feature `mx3`, off by default): `Mx3Source`, the mx3 part store as a source over mx3_api_lab's blocking client, and `Connection`, which finds its URL and token as the mx3 command line does. The tests run it against `erc_fake_mx3`.
 
 The checks read only the lock: no network, the same result on every PC.

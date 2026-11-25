@@ -3,13 +3,15 @@
 //!
 //! The checks read only the lock, so a run is offline and the same on every PC; `berc parts refresh`
 //! ([`refresh()`]) writes it from a source, and its diff shows a changed fact or a retracted review. The lock and
-//! the checks need no source: the lab's part store is one behind its own cargo feature, [`source::FileSource`]
-//! reads hand-filled data.
+//! the checks need no source: the mx3 part store is one behind the cargo feature `mx3` (`mx3::Mx3Source`),
+//! [`source::FileSource`] reads hand-filled data.
 
 pub mod board;
 pub mod keys;
 pub mod lock;
 pub mod mpn;
+#[cfg(feature = "mx3")]
+pub mod mx3;
 pub mod refresh;
 pub mod source;
 
