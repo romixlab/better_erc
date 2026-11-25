@@ -34,6 +34,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Fixed
 
+- `berc explain` and `berc checks list` read info lines of the catalogue (`DRAW-12` was missing) (NET-26).
 - `berc place-fields`: a column slid off the middle of its part is centred again where that is clear (TOOL-13).
 - `berc place-fields --write` with nothing to move says so instead of "Dry run" (TOOL-13).
 
