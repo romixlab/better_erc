@@ -1,0 +1,29 @@
+# What better_erc finds on rate-9_resistor_voltage.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-11"
+subjects = ["part R1", "part R2"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +48V"]
+
+[[finding]]
+check = "RATE-9"
+subjects = ["item R1 Mpn1", "part R1"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +48V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

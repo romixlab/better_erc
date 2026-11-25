@@ -276,19 +276,33 @@ fn test_schematics_equal_kicad() {
         return;
     };
     let sources = repo().join("test_schematics/sources");
+    // Each sheet, and each case directory `<name>/` with its own project around `<name>.kicad_sch`
     let mut sheets: Vec<PathBuf> = std::fs::read_dir(&sources)
         .unwrap()
         .flatten()
         .map(|e| e.path())
-        .filter(|p| p.extension().is_some_and(|e| e == "kicad_sch"))
+        .filter_map(|p| {
+            if p.is_dir() {
+                let name = p.file_name()?.to_str()?.to_owned();
+                Some(p.join(format!("{name}.kicad_sch"))).filter(|s| s.is_file())
+            } else {
+                p.extension().is_some_and(|e| e == "kicad_sch").then_some(p)
+            }
+        })
         .collect();
     sheets.sort();
     let mut failed = Vec::new();
     for sch in &sheets {
         let stem = sch.file_stem().unwrap().to_str().unwrap();
-        let rel = format!("test_schematics/sources/{stem}.kicad_sch");
-        // The project root is exported as a whole project, each other sheet on its own
-        let net = if stem == "test_schematics" {
+        let own_dir = sch.parent() != Some(sources.as_path());
+        let rel = if own_dir {
+            format!("test_schematics/sources/{stem}/{stem}.kicad_sch")
+        } else {
+            format!("test_schematics/sources/{stem}.kicad_sch")
+        };
+        // The project root and the cases with a project of their own are exported as whole projects, each other
+        // sheet on its own
+        let net = if stem == "test_schematics" || own_dir {
             project::cached_project_netlist(sch, Kicad::Installed, &cache()).unwrap()
         } else {
             generate_netlists::get_netlist_path(stem)

@@ -1,0 +1,80 @@
+# The parts snapshot of lib-6_package_vs_footprint.kicad_sch: R3's Mpn2 is an 0603 on an 0402 footprint; C1's MPN has no case
+version = 1
+source = "file parts.toml"
+keys = ["capacitance", "case_eia", "dielectric", "inductance", "power", "rated_voltage", "resistance", "saturation_current", "technology", "tolerance"]
+unknown_keys = []
+
+[[part]]
+mpn = "CL05A104KB5NNNC"
+match = "found"
+missing = []
+facts = [
+    { key = "capacitance", value = 1e-07, unit = "F", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "dielectric", text = "X5R", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 50.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 10.0, plus = 10.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "ERJ-P6WF1201V"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "0805", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "power", value = 0.5, unit = "W", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 50.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "resistance", value = 1200.0, unit = "Ω", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "technology", text = "thick_film", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 1.0, plus = 1.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "GRM188R71H104KA93D"
+match = "found"
+missing = []
+facts = [
+    { key = "capacitance", value = 1e-07, unit = "F", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "case_eia", text = "0603", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "dielectric", text = "X7R", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 50.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 10.0, plus = 10.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "RC0402FR-0710KL"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "power", value = 0.063, unit = "W", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 50.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "resistance", value = 10000.0, unit = "Ω", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "technology", text = "thick_film", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 1.0, plus = 1.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "RC0603FR-0710KL"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "0603", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "power", value = 0.1, unit = "W", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 50.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "resistance", value = 10000.0, unit = "Ω", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "technology", text = "thick_film", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 1.0, plus = 1.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "WSLP1206R0100FEA"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "1206", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "power", value = 1.0, unit = "W", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 50.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "resistance", value = 0.01, unit = "Ω", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "technology", text = "thick_film", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 1.0, plus = 1.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]

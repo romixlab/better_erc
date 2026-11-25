@@ -1,0 +1,78 @@
+board rate-15_inductor_saturation
+label / local OUT1 at 30,43.81 net /OUT1
+label / local OUT2 at 55,43.81 net /OUT2
+label / local OUT3 at 80,43.81 net /OUT3
+label / local SW1 at 30,36.19 net /SW1
+label / local SW2 at 55,36.19 net /SW2
+label / local SW3 at 80,36.19 net /SW3
+net /OUT1 class = Default @ sch rate-15_inductor_saturation.kicad_sch note "effective net class"
+net /OUT1 kind named
+net /OUT2 class = Default @ sch rate-15_inductor_saturation.kicad_sch note "effective net class"
+net /OUT2 kind named
+net /OUT3 class = Default @ sch rate-15_inductor_saturation.kicad_sch note "effective net class"
+net /OUT3 kind named
+net /SW1 class = Default @ sch rate-15_inductor_saturation.kicad_sch note "effective net class"
+net /SW1 kind named
+net /SW2 class = Default @ sch rate-15_inductor_saturation.kicad_sch note "effective net class"
+net /SW2 kind named
+net /SW3 class = Default @ sch rate-15_inductor_saturation.kicad_sch note "effective net class"
+net /SW3 kind named
+part L1 field Description = Inductor @ sch rate-15_inductor_saturation.kicad_sch
+part L1 field Footprint = Inductor_SMD:L_1206_3216Metric @ sch rate-15_inductor_saturation.kicad_sch
+part L1 field Ipeak = 3.5A @ sch rate-15_inductor_saturation.kicad_sch
+part L1 field Mpn1 = DFE322520F-1R0M @ sch rate-15_inductor_saturation.kicad_sch
+part L1 field Value = 1u @ sch rate-15_inductor_saturation.kicad_sch
+part L1 flag dnp = no @ sch rate-15_inductor_saturation.kicad_sch
+part L1 flag exclude_from_sim = no @ sch rate-15_inductor_saturation.kicad_sch
+part L1 flag in_bom = yes @ sch rate-15_inductor_saturation.kicad_sch
+part L1 flag on_board = yes @ sch rate-15_inductor_saturation.kicad_sch
+part L1 lib Device:L sheet / symbol Device:L
+part L1 unit 1 sheet / uuid b1150000-0001-4000-8000-000000000000 line 16 at 30,40 rot 0
+part L1 value = text 1u @ sch rate-15_inductor_saturation.kicad_sch note "from the Value field"
+part L2 field Description = Inductor @ sch rate-15_inductor_saturation.kicad_sch
+part L2 field Footprint = Inductor_SMD:L_1206_3216Metric @ sch rate-15_inductor_saturation.kicad_sch
+part L2 field Ipeak = 1A @ sch rate-15_inductor_saturation.kicad_sch
+part L2 field Mpn1 = DFE322520F-2R2M @ sch rate-15_inductor_saturation.kicad_sch
+part L2 field Value = 2u2 @ sch rate-15_inductor_saturation.kicad_sch
+part L2 flag dnp = no @ sch rate-15_inductor_saturation.kicad_sch
+part L2 flag exclude_from_sim = no @ sch rate-15_inductor_saturation.kicad_sch
+part L2 flag in_bom = yes @ sch rate-15_inductor_saturation.kicad_sch
+part L2 flag on_board = yes @ sch rate-15_inductor_saturation.kicad_sch
+part L2 lib Device:L sheet / symbol Device:L
+part L2 unit 1 sheet / uuid b1150000-0006-4000-8000-000000000000 line 28 at 55,40 rot 0
+part L2 value = text 2u2 @ sch rate-15_inductor_saturation.kicad_sch note "from the Value field"
+part L3 field Description = Inductor @ sch rate-15_inductor_saturation.kicad_sch
+part L3 field Footprint = Inductor_SMD:L_1206_3216Metric @ sch rate-15_inductor_saturation.kicad_sch
+part L3 field Mpn1 = DFE322520F-4R7M @ sch rate-15_inductor_saturation.kicad_sch
+part L3 field Value = 4u7 @ sch rate-15_inductor_saturation.kicad_sch
+part L3 flag dnp = no @ sch rate-15_inductor_saturation.kicad_sch
+part L3 flag exclude_from_sim = no @ sch rate-15_inductor_saturation.kicad_sch
+part L3 flag in_bom = yes @ sch rate-15_inductor_saturation.kicad_sch
+part L3 flag on_board = yes @ sch rate-15_inductor_saturation.kicad_sch
+part L3 lib Device:L sheet / symbol Device:L
+part L3 unit 1 sheet / uuid b1150000-000b-4000-8000-000000000000 line 40 at 80,40 rot 0
+part L3 value = text 4u7 @ sch rate-15_inductor_saturation.kicad_sch note "from the Value field"
+pin L1 1 name "" unit 1 net /SW1
+pin L1 1 type = passive @ sch rate-15_inductor_saturation.kicad_sch
+pin L1 2 name "" unit 1 net /OUT1
+pin L1 2 type = passive @ sch rate-15_inductor_saturation.kicad_sch
+pin L2 1 name "" unit 1 net /SW2
+pin L2 1 type = passive @ sch rate-15_inductor_saturation.kicad_sch
+pin L2 2 name "" unit 1 net /OUT2
+pin L2 2 type = passive @ sch rate-15_inductor_saturation.kicad_sch
+pin L3 1 name "" unit 1 net /SW3
+pin L3 1 type = passive @ sch rate-15_inductor_saturation.kicad_sch
+pin L3 2 name "" unit 1 net /OUT3
+pin L3 2 type = passive @ sch rate-15_inductor_saturation.kicad_sch
+sheet / name "" file rate-15_inductor_saturation.kicad_sch uuid /
+source file rate-15_inductor_saturation.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:L description Inductor
+symbol Device:L field Description Inductor
+symbol Device:L field Reference L
+symbol Device:L field Value L
+symbol Device:L hash 3b0ba03722973010
+symbol Device:L pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:L pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:L units 1

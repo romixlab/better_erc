@@ -1,0 +1,61 @@
+# What better_erc finds on rate-2_resistor_power.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-1"
+subjects = ["part R2", "part R4", "part R5", "part R6"]
+
+[[finding]]
+check = "BOM-11"
+subjects = ["part R2", "part R5", "part R6"]
+
+[[finding]]
+check = "BOM-3"
+subjects = ["part R3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board rate-2_resistor_power"]
+
+[[finding]]
+check = "RATE-2"
+subjects = ["item R1 Mpn1", "part R1"]
+
+[[finding]]
+check = "RATE-2"
+subjects = ["item R3 Mpn1", "part R3"]
+
+[[finding]]
+check = "RATE-2"
+subjects = ["item R6 Mpn1", "part R6"]
+
+[[finding]]
+check = "RATE-2"
+subjects = ["item R7 Mpn1", "part R7"]
+
+[[finding]]
+check = "RATE-2"
+subjects = ["item R7 Preq_min", "part R7"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S1", "pin R3.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S2", "pin R3.2"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S3", "pin R4.2"]

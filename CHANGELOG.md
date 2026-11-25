@@ -15,6 +15,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 - Part sources record footprint reviews (`Source::accept`); a file source judges coverage by MPN and family itself (TOOL-8).
 - `parts.lock.toml` reviews keep the page scale and the footprint's placement on it (TOOL-8).
+- `RATE-1`, `RATE-2`, `RATE-9`, `RATE-15`: each MPN's rating against derated working stress, or `Vreq_min`, `Preq_min` (CFG-9).
+- `BOM-12`, `LIB-6`: each MPN against value, tolerance, footprint; Voltage, Power, Dielectric, Package must equal the worst MPN (CFG-9).
 - `berc parts refresh`: writes `parts.lock.toml` from a part source (`--from FILE`); `--check` for CI (CFG-9).
 - `BOM-20`: an MPN of a fitted part missing from `parts.lock.toml`; project file `[parts] lock` names the file (CFG-9).
 - `berc waive`: appends a `[[waiver]]` for a finding, with its input hash, to the project file (CFG-2).

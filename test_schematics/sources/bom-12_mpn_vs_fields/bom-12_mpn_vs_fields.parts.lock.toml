@@ -1,0 +1,129 @@
+# The parts snapshot of bom-12_mpn_vs_fields.kicad_sch: R2's MPN is 13.3 kΩ; R3's Power is 167 mW, its lowest MPN 63 mW; R4's MPN 5 % against 1 %; C2 takes the 50 V default, its MPN is 25 V; C3's Dielectric is X7R, its worst MPN X5R; C5 states 25 V, its one MPN is 50 V; C1 and C6 state their worst MPN; C4's MPN has no rated voltage
+version = 1
+source = "file parts.toml"
+keys = ["capacitance", "case_eia", "dielectric", "inductance", "power", "rated_voltage", "resistance", "saturation_current", "technology", "tolerance"]
+unknown_keys = []
+
+[[part]]
+mpn = "CL05A104KA5NNNC"
+match = "found"
+missing = []
+facts = [
+    { key = "capacitance", value = 1e-07, unit = "F", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "dielectric", text = "X5R", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 10.0, plus = 10.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "ERJ-2BWFR47X"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "power", value = 0.2, unit = "W", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 50.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "resistance", value = 0.47, unit = "Ω", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "technology", text = "thick_film", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 1.0, plus = 1.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "GRM155R61C105KA12D"
+match = "found"
+missing = []
+facts = [
+    { key = "capacitance", value = 1e-06, unit = "F", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "dielectric", text = "X5R", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 16.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 10.0, plus = 10.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "GRM155R61E104KA87D"
+match = "found"
+missing = []
+facts = [
+    { key = "capacitance", value = 1e-07, unit = "F", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "dielectric", text = "X5R", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 25.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 10.0, plus = 10.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "GRM155R61H104KE14D"
+match = "found"
+missing = []
+facts = [
+    { key = "capacitance", value = 1e-07, unit = "F", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "dielectric", text = "X5R", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 50.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 10.0, plus = 10.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "GRM155R71C105KE11D"
+match = "found"
+missing = []
+facts = [
+    { key = "capacitance", value = 1e-06, unit = "F", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "dielectric", text = "X7R", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 16.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 10.0, plus = 10.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "RC0402FR-0710KL"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "power", value = 0.063, unit = "W", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 50.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "resistance", value = 10000.0, unit = "Ω", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "technology", text = "thick_film", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 1.0, plus = 1.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "RC0402FR-0713K3L"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "power", value = 0.063, unit = "W", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 50.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "resistance", value = 13300.0, unit = "Ω", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "technology", text = "thick_film", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 1.0, plus = 1.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "RC0402JR-074K7L"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "power", value = 0.063, unit = "W", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 50.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "resistance", value = 4700.0, unit = "Ω", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "technology", text = "thick_film", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 5.0, plus = 5.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "RL0402FR-070R47L"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "power", value = 0.063, unit = "W", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 50.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "resistance", value = 0.47, unit = "Ω", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "technology", text = "thick_film", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 1.0, plus = 1.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]

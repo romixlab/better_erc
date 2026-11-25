@@ -296,8 +296,21 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `BOM-11` One value in two packages · `bom/bom_11.rs`, `bom-11_packages`
 - ✅ `BOM-14` Fitted part without an MPN · `bom/bom_14.rs`, `bom-14_mpn` (field names configurable with `CFG-2`)
 - ✅ `BOM-17` One MPN with different values · `bom/bom_17.rs`, `bom-17_mpn_values`
+- ✅ `BOM-12` Each MPN of a fitted R, C, L from the parts snapshot against the part's `Value` (within the MPN's
+  tolerance) and `Tolerance`; display fields `Voltage`, `Power`, `Dielectric` (or the project's `DEFAULT_*` text
+  variable) must equal the worst over the MPNs, the finding names the value to write (`CFG-9`) · `bom/bom_12.rs`,
+  `component/`, `bom-12_mpn_vs_fields`
 - ✅ `BOM-20` MPN on the board but not in the parts snapshot (`CFG-9`) · `bom/bom_20.rs`, `bom-20_parts_lock`
 - ✅ `LIB-3` MOSFET pins not named G, D, S · `lib/lib_3.rs`, `lib-3_mosfet_pin_names`
+- ✅ `LIB-6` `Package` (or `DEFAULT_R_PACKAGE`, `DEFAULT_C_PACKAGE`) against the footprint's chip case, and each
+  MPN's case from the parts snapshot against it (`CFG-9`) · `lib/lib_6.rs`, `lib-6_package_vs_footprint`. Missing:
+  packages other than chip cases (SOD-123 against SOD-323) where the footprint names no case
+- ✅ `RATE-1`, `RATE-2`, `RATE-9`, `RATE-15` Each MPN's rated voltage, power or saturation current against `k` times
+  the working voltage (`Vworking`, else the part's two nets), dissipation (`Pworking`, else V²/R) or `Ipeak`, `k` from
+  `[derating]` by technology; `Vreq_min` and `Preq_min` state the rating needed instead (`CFG-2`, `CFG-9`) · `rate/`,
+  `rate-1_capacitor_voltage`, `rate-2_resistor_power`, `rate-9_resistor_voltage`, `rate-15_inductor_saturation`.
+  Missing: the converter's peak current for `RATE-15`
+  (`RPT-3`), diodes and MOSFETs (`RATE-13`, `RATE-4`: no fact keys yet)
 - ✅ `DEC-1` Rail feeding power pins with no capacitor to a ground · `dec/dec_1.rs`, `dec-1_no_decoupling`
 - ✅ `DEC-4` Ferrite in series between two rails, with the LC resonance against the capacitance behind it (bead
   inductance `bead_inductance` = 1 µH assumed until part data, so an estimate) · `dec/dec_4.rs`, `dec-4_ferrite_beads`

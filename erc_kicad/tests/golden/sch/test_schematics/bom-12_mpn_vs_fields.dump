@@ -1,0 +1,249 @@
+board bom-12_mpn_vs_fields
+label / local S1 at 30,36.19 net /S1
+label / local S2 at 30,43.81 net /S2
+label / local S3 at 55,36.19 net /S3
+label / local S4 at 55,43.81 net /S4
+label / local S5 at 80,36.19 net /S5
+label / local S6 at 80,43.81 net /S6
+label / local S7 at 105,36.19 net /S7
+label / local S8 at 105,43.81 net /S8
+label / local S9 at 130,36.19 net /S9
+label / local S10 at 130,43.81 net /S10
+label / local S11 at 205,36.19 net /S11
+label / local S12 at 205,43.81 net /S12
+label / local S13 at 230,36.19 net /S13
+label / local S14 at 230,43.81 net /S14
+label / local S15 at 255,36.19 net /S15
+label / local S16 at 255,43.81 net /S16
+label / local S17 at 155,36.19 net /S17
+label / local S18 at 155,43.81 net /S18
+label / local S19 at 180,36.19 net /S19
+label / local S20 at 180,43.81 net /S20
+net /S1 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S1 kind named
+net /S2 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S2 kind named
+net /S3 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S3 kind named
+net /S4 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S4 kind named
+net /S5 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S5 kind named
+net /S6 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S6 kind named
+net /S7 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S7 kind named
+net /S8 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S8 kind named
+net /S9 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S9 kind named
+net /S10 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S10 kind named
+net /S11 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S11 kind named
+net /S12 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S12 kind named
+net /S13 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S13 kind named
+net /S14 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S14 kind named
+net /S15 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S15 kind named
+net /S16 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S16 kind named
+net /S17 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S17 kind named
+net /S18 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S18 kind named
+net /S19 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S19 kind named
+net /S20 class = Default @ pro bom-12_mpn_vs_fields.kicad_pro note "effective net class"
+net /S20 kind named
+part C1 field Description = "Unpolarized capacitor" @ sch bom-12_mpn_vs_fields.kicad_sch
+part C1 field Footprint = Capacitor_SMD:C_0402_1005Metric @ sch bom-12_mpn_vs_fields.kicad_sch
+part C1 field Mpn1 = GRM155R61H104KE14D @ sch bom-12_mpn_vs_fields.kicad_sch
+part C1 field Mpn2 = GRM155R61E104KA87D @ sch bom-12_mpn_vs_fields.kicad_sch
+part C1 field Value = 100n @ sch bom-12_mpn_vs_fields.kicad_sch
+part C1 field Voltage = 25V @ sch bom-12_mpn_vs_fields.kicad_sch
+part C1 flag dnp = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part C1 flag exclude_from_sim = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part C1 flag in_bom = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part C1 flag on_board = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid b0120000-0015-4000-8000-000000000000 line 73 at 130,40 rot 0
+part C1 value = text 100n @ sch bom-12_mpn_vs_fields.kicad_sch note "from the Value field"
+part C2 field Description = "Unpolarized capacitor" @ sch bom-12_mpn_vs_fields.kicad_sch
+part C2 field Footprint = Capacitor_SMD:C_0402_1005Metric @ sch bom-12_mpn_vs_fields.kicad_sch
+part C2 field Mpn1 = GRM155R61E104KA87D @ sch bom-12_mpn_vs_fields.kicad_sch
+part C2 field Value = 100n @ sch bom-12_mpn_vs_fields.kicad_sch
+part C2 flag dnp = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part C2 flag exclude_from_sim = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part C2 flag in_bom = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part C2 flag on_board = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid b0120000-0024-4000-8000-000000000000 line 112 at 205,40 rot 0
+part C2 value = text 100n @ sch bom-12_mpn_vs_fields.kicad_sch note "from the Value field"
+part C3 field Description = "Unpolarized capacitor" @ sch bom-12_mpn_vs_fields.kicad_sch
+part C3 field Dielectric = X7R @ sch bom-12_mpn_vs_fields.kicad_sch
+part C3 field Footprint = Capacitor_SMD:C_0402_1005Metric @ sch bom-12_mpn_vs_fields.kicad_sch
+part C3 field Mpn1 = GRM155R61C105KA12D @ sch bom-12_mpn_vs_fields.kicad_sch
+part C3 field Mpn2 = GRM155R71C105KE11D @ sch bom-12_mpn_vs_fields.kicad_sch
+part C3 field Value = 1u @ sch bom-12_mpn_vs_fields.kicad_sch
+part C3 field Voltage = 16V @ sch bom-12_mpn_vs_fields.kicad_sch
+part C3 flag dnp = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part C3 flag exclude_from_sim = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part C3 flag in_bom = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part C3 flag on_board = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part C3 lib Device:C sheet / symbol Device:C
+part C3 unit 1 sheet / uuid b0120000-0029-4000-8000-000000000000 line 123 at 230,40 rot 0
+part C3 value = text 1u @ sch bom-12_mpn_vs_fields.kicad_sch note "from the Value field"
+part C4 field Description = "Unpolarized capacitor" @ sch bom-12_mpn_vs_fields.kicad_sch
+part C4 field Footprint = Capacitor_SMD:C_0402_1005Metric @ sch bom-12_mpn_vs_fields.kicad_sch
+part C4 field Mpn1 = CL05A104KA5NNNC @ sch bom-12_mpn_vs_fields.kicad_sch
+part C4 field Value = 100n @ sch bom-12_mpn_vs_fields.kicad_sch
+part C4 flag dnp = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part C4 flag exclude_from_sim = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part C4 flag in_bom = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part C4 flag on_board = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part C4 lib Device:C sheet / symbol Device:C
+part C4 unit 1 sheet / uuid b0120000-002e-4000-8000-000000000000 line 137 at 255,40 rot 0
+part C4 value = text 100n @ sch bom-12_mpn_vs_fields.kicad_sch note "from the Value field"
+part C5 field Description = "Unpolarized capacitor" @ sch bom-12_mpn_vs_fields.kicad_sch
+part C5 field Footprint = Capacitor_SMD:C_0402_1005Metric @ sch bom-12_mpn_vs_fields.kicad_sch
+part C5 field Mpn1 = GRM155R61H104KE14D @ sch bom-12_mpn_vs_fields.kicad_sch
+part C5 field Value = 100n @ sch bom-12_mpn_vs_fields.kicad_sch
+part C5 field Voltage = 25V @ sch bom-12_mpn_vs_fields.kicad_sch
+part C5 flag dnp = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part C5 flag exclude_from_sim = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part C5 flag in_bom = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part C5 flag on_board = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part C5 lib Device:C sheet / symbol Device:C
+part C5 unit 1 sheet / uuid b0120000-001a-4000-8000-000000000000 line 86 at 155,40 rot 0
+part C5 value = text 100n @ sch bom-12_mpn_vs_fields.kicad_sch note "from the Value field"
+part C6 field Description = "Unpolarized capacitor" @ sch bom-12_mpn_vs_fields.kicad_sch
+part C6 field Dielectric = X5R @ sch bom-12_mpn_vs_fields.kicad_sch
+part C6 field Footprint = Capacitor_SMD:C_0402_1005Metric @ sch bom-12_mpn_vs_fields.kicad_sch
+part C6 field Mpn1 = GRM155R61C105KA12D @ sch bom-12_mpn_vs_fields.kicad_sch
+part C6 field Mpn2 = GRM155R71C105KE11D @ sch bom-12_mpn_vs_fields.kicad_sch
+part C6 field Value = 1u @ sch bom-12_mpn_vs_fields.kicad_sch
+part C6 field Voltage = 16V @ sch bom-12_mpn_vs_fields.kicad_sch
+part C6 flag dnp = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part C6 flag exclude_from_sim = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part C6 flag in_bom = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part C6 flag on_board = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part C6 lib Device:C sheet / symbol Device:C
+part C6 unit 1 sheet / uuid b0120000-001f-4000-8000-000000000000 line 98 at 180,40 rot 0
+part C6 value = text 1u @ sch bom-12_mpn_vs_fields.kicad_sch note "from the Value field"
+part R1 field Description = Resistor @ sch bom-12_mpn_vs_fields.kicad_sch
+part R1 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-12_mpn_vs_fields.kicad_sch
+part R1 field Mpn1 = RC0402FR-0710KL @ sch bom-12_mpn_vs_fields.kicad_sch
+part R1 field Value = 10k @ sch bom-12_mpn_vs_fields.kicad_sch
+part R1 flag dnp = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part R1 flag exclude_from_sim = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part R1 flag in_bom = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part R1 flag on_board = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid b0120000-0001-4000-8000-000000000000 line 26 at 30,40 rot 0
+part R1 value = text 10k @ sch bom-12_mpn_vs_fields.kicad_sch note "from the Value field"
+part R2 field Description = Resistor @ sch bom-12_mpn_vs_fields.kicad_sch
+part R2 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-12_mpn_vs_fields.kicad_sch
+part R2 field Mpn1 = RC0402FR-0713K3L @ sch bom-12_mpn_vs_fields.kicad_sch
+part R2 field Value = 13k7 @ sch bom-12_mpn_vs_fields.kicad_sch
+part R2 flag dnp = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part R2 flag exclude_from_sim = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part R2 flag in_bom = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part R2 flag on_board = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid b0120000-0006-4000-8000-000000000000 line 37 at 55,40 rot 0
+part R2 value = text 13k7 @ sch bom-12_mpn_vs_fields.kicad_sch note "from the Value field"
+part R3 field Description = Resistor @ sch bom-12_mpn_vs_fields.kicad_sch
+part R3 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-12_mpn_vs_fields.kicad_sch
+part R3 field Mpn1 = ERJ-2BWFR47X @ sch bom-12_mpn_vs_fields.kicad_sch
+part R3 field Mpn2 = RL0402FR-070R47L @ sch bom-12_mpn_vs_fields.kicad_sch
+part R3 field Power = 167mW @ sch bom-12_mpn_vs_fields.kicad_sch
+part R3 field Value = 0R47 @ sch bom-12_mpn_vs_fields.kicad_sch
+part R3 flag dnp = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part R3 flag exclude_from_sim = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part R3 flag in_bom = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part R3 flag on_board = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid b0120000-000b-4000-8000-000000000000 line 48 at 80,40 rot 0
+part R3 value = qty 0.47 ohm @ sch bom-12_mpn_vs_fields.kicad_sch note "from the Value field"
+part R4 field Description = Resistor @ sch bom-12_mpn_vs_fields.kicad_sch
+part R4 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-12_mpn_vs_fields.kicad_sch
+part R4 field Mpn1 = RC0402JR-074K7L @ sch bom-12_mpn_vs_fields.kicad_sch
+part R4 field Tolerance = 1% @ sch bom-12_mpn_vs_fields.kicad_sch
+part R4 field Value = 4k7 @ sch bom-12_mpn_vs_fields.kicad_sch
+part R4 flag dnp = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part R4 flag exclude_from_sim = no @ sch bom-12_mpn_vs_fields.kicad_sch
+part R4 flag in_bom = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part R4 flag on_board = yes @ sch bom-12_mpn_vs_fields.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid b0120000-0010-4000-8000-000000000000 line 61 at 105,40 rot 0
+part R4 value = text 4k7 @ sch bom-12_mpn_vs_fields.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net /S9
+pin C1 1 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin C1 2 name "" unit 1 net /S10
+pin C1 2 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin C2 1 name "" unit 1 net /S11
+pin C2 1 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin C2 2 name "" unit 1 net /S12
+pin C2 2 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin C3 1 name "" unit 1 net /S13
+pin C3 1 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin C3 2 name "" unit 1 net /S14
+pin C3 2 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin C4 1 name "" unit 1 net /S15
+pin C4 1 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin C4 2 name "" unit 1 net /S16
+pin C4 2 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin C5 1 name "" unit 1 net /S17
+pin C5 1 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin C5 2 name "" unit 1 net /S18
+pin C5 2 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin C6 1 name "" unit 1 net /S19
+pin C6 1 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin C6 2 name "" unit 1 net /S20
+pin C6 2 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin R1 1 name "" unit 1 net /S1
+pin R1 1 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin R1 2 name "" unit 1 net /S2
+pin R1 2 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin R2 1 name "" unit 1 net /S3
+pin R2 1 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin R2 2 name "" unit 1 net /S4
+pin R2 2 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin R3 1 name "" unit 1 net /S5
+pin R3 1 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin R3 2 name "" unit 1 net /S6
+pin R3 2 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin R4 1 name "" unit 1 net /S7
+pin R4 1 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+pin R4 2 name "" unit 1 net /S8
+pin R4 2 type = passive @ sch bom-12_mpn_vs_fields.kicad_sch
+setting textvar DEFAULT_C_DIELECTRIC = X5R @ pro bom-12_mpn_vs_fields.kicad_pro
+setting textvar DEFAULT_C_PACKAGE = 0402 @ pro bom-12_mpn_vs_fields.kicad_pro
+setting textvar DEFAULT_C_VOLTAGE = 50V @ pro bom-12_mpn_vs_fields.kicad_pro
+setting textvar DEFAULT_R_PACKAGE = 0402 @ pro bom-12_mpn_vs_fields.kicad_pro
+setting textvar DEFAULT_R_POWER = 63mW @ pro bom-12_mpn_vs_fields.kicad_pro
+sheet / name "" file bom-12_mpn_vs_fields.kicad_sch uuid /
+source file bom-12_mpn_vs_fields.kicad_pro
+source file bom-12_mpn_vs_fields.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 84a9eb5c98f3bba1
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash b32a245cb7c04e0f
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1

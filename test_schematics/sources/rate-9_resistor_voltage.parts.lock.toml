@@ -1,0 +1,44 @@
+# The parts snapshot of rate-9_resistor_voltage.kicad_sch: R1 is a 50 V 0402 across 48 V
+version = 1
+source = "file parts.toml"
+keys = ["capacitance", "case_eia", "dielectric", "inductance", "power", "rated_voltage", "resistance", "saturation_current", "technology", "tolerance"]
+unknown_keys = []
+
+[[part]]
+mpn = "RC0402FR-0710KL"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "power", value = 0.063, unit = "W", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 50.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "resistance", value = 10000.0, unit = "Ω", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "technology", text = "thick_film", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 1.0, plus = 1.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "RC0402FR-071ML"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "power", value = 0.063, unit = "W", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 50.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "resistance", value = 1000000.0, unit = "Ω", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "technology", text = "thick_film", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 1.0, plus = 1.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "RC0805FR-071ML"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "0805", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "power", value = 0.125, unit = "W", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 150.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "resistance", value = 1000000.0, unit = "Ω", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "technology", text = "thick_film", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 1.0, plus = 1.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
