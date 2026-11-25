@@ -1257,6 +1257,73 @@ fn another_part_another_datasheet() {
     std::fs::remove_dir_all(&dir).unwrap();
 }
 
+/// A part picked while its datasheet is still being read: the footprint is centred once the page is fitted, on the
+/// page, not at the middle of the last view (which the fit then moves away)
+#[test]
+fn footprint_centred_on_a_page_read_late() {
+    let mut h = harness("fp late page");
+    h.run();
+    let ctx = h.ctx.clone();
+    // The last view: zoomed out and panned far from where the page will be
+    h.state_mut().zoom = 0.25;
+    h.state_mut().pan = [-3000.0, -2000.0];
+    h.state_mut().open_path(&ctx, &footprint());
+    let pdf = Path::new("late.pdf");
+    h.state_mut().open_datasheet(&ctx, pdf);
+    h.state_mut().rt.pdf = Some(PdfDoc::unread(pdf));
+    h.step();
+    h.step();
+    h.state_mut().rt.pdf.as_mut().unwrap().pages = Some(vec![[300.0, 400.0]]);
+    h.run();
+    let st = h.state();
+    let (lo, hi) = outline::extent(&st.rt.items).unwrap();
+    let mid = st.fp_to_page([(lo[0] + hi[0]) / 2.0, (lo[1] + hi[1]) / 2.0]);
+    assert!(
+        (0.0..=300.0).contains(&mid[0]) && (0.0..=400.0).contains(&mid[1]),
+        "the footprint's middle {mid:?} is on the 300 x 400 page"
+    );
+}
+
+/// Every row of a board's list, picked, shows its footprint as the board places it (U10 and U12 on the back,
+/// flipped to the front), drawn in the middle of the view
+#[test]
+fn each_board_row_shows_its_footprint() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-rows-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let board = project(&dir);
+    let mut h = harness("fp rows");
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &board);
+    h.run();
+    let rows = h.state().rt.symbols.as_ref().unwrap().rows.clone();
+    assert!(!rows.is_empty());
+    for (i, row) in rows.iter().enumerate() {
+        h.state_mut().select_symbol(i, true);
+        h.run();
+        let st = h.state();
+        let s = st.rt.sourced.as_ref().unwrap_or_else(|| {
+            panic!(
+                "{}: no footprint shown ({:?})",
+                row.title(),
+                st.rt.symbol_note
+            )
+        });
+        assert_eq!(Some(s.hash.as_str()), row.hash(), "{}", row.title());
+        let (lo, hi) = outline::extent(&st.rt.items).expect("the footprint is drawn");
+        let mid = st.fp_to_page([(lo[0] + hi[0]) / 2.0, (lo[1] + hi[1]) / 2.0]);
+        let at = st.to_screen(st.rt.canvas, mid);
+        assert!(
+            st.rt.canvas.contains(at),
+            "{}: drawn at {at:?}, outside the view {:?}",
+            row.title(),
+            st.rt.canvas
+        );
+    }
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
 /// The ruler by keys: R at one end of the dimension and R at the other place it coarsely; Z zooms in on the first
 /// end and a click puts it exactly, Z on the other end likewise; S goes back to the view and the length field, empty,
 /// takes the typed length; Enter sets the scale and the footprint is the one to move again. F shows the page at

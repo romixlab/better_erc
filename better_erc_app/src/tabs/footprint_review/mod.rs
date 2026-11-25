@@ -3157,7 +3157,15 @@ impl FootprintReview {
             self.rt.fit_width = false;
             self.rt.overview = None;
         }
-        if self.rt.center_footprint && canvas.width() > 1.0 {
+        // A page still being read is fitted first: centred before, the footprint would take the middle of the last
+        // view, off the page once the fit moves the view
+        let page_pending = self.rt.fit_page
+            && self
+                .rt
+                .pdf
+                .as_ref()
+                .is_some_and(|p| p.error.is_none() && page_size.is_none());
+        if self.rt.center_footprint && !page_pending && canvas.width() > 1.0 {
             // The middle of the footprint's extent to the middle of the view
             let target = self.to_page(canvas, canvas.center());
             self.place.origin = target;
