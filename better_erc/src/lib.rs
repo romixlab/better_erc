@@ -10,6 +10,8 @@
 //! - [`step`] ([`erc_step`]): STEP models into parts, faces and edges in mm, and measurements on them.
 //! - [`fp`]: footprint review hashes of library footprints and board copies, their 3D models against them, the
 //!   library side of `berc fp`.
+//! - [`fields`]: the display fields of resistors and capacitors written from the parts snapshot, the library side
+//!   of `berc fields sync`.
 //! - [`place`]: symbol fields moved clear of what they overlap (`DRAW-9`, `DRAW-34`), the library side of
 //!   `berc place-fields`.
 //!
@@ -38,6 +40,7 @@ pub use erc_model as model;
 pub use erc_step as step;
 
 pub mod diff;
+pub mod fields;
 pub mod fp;
 pub mod parts;
 pub mod place;

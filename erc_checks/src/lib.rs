@@ -18,6 +18,7 @@
 pub mod catalogue;
 pub mod ctx;
 pub mod engine;
+pub mod fields_sync;
 pub mod finding;
 pub mod meta;
 #[cfg(feature = "import")]

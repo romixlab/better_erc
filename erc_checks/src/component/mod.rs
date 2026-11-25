@@ -116,22 +116,24 @@ pub(crate) fn field(cx: &Ctx, p: PartId, name: &str) -> Option<Stated> {
 /// A field of a part, else the project's text variable that is the board's default for it (`DEFAULT_C_VOLTAGE`,
 /// the Defaults box on the drawing sheet)
 pub(crate) fn stated(cx: &Ctx, p: PartId, name: &str, default_var: Option<&str>) -> Option<Stated> {
-    field(cx, p, name).or_else(|| {
-        let var = default_var?;
-        let fact = cx
-            .board()
-            .settings
-            .text_vars
-            .iter()
-            .find(|v| v.key == var)?
-            .value
-            .resolve()?;
-        let text = fact.value.trim();
-        (!text.is_empty()).then(|| Stated {
-            text: text.to_owned(),
-            from: var.to_owned(),
-            source: fact.source.clone(),
-        })
+    field(cx, p, name).or_else(|| default_var.and_then(|var| default_of(cx, var)))
+}
+
+/// The board's default in the text variable `var`; `None` when the project has none or it is empty
+pub(crate) fn default_of(cx: &Ctx, var: &str) -> Option<Stated> {
+    let fact = cx
+        .board()
+        .settings
+        .text_vars
+        .iter()
+        .find(|v| v.key == var)?
+        .value
+        .resolve()?;
+    let text = fact.value.trim();
+    (!text.is_empty()).then(|| Stated {
+        text: text.to_owned(),
+        from: var.to_owned(),
+        source: fact.source.clone(),
     })
 }
 
@@ -393,6 +395,100 @@ pub(crate) fn report(
         );
     }
     out
+}
+
+/// The ratings of a number fact over a part's MPNs, for a display field (`Voltage`, `Power`) that states the lowest
+pub(crate) struct Ratings<'a, 'c> {
+    /// Each MPN that has the fact, with it
+    pub known: Vec<(f64, &'a Candidate<'c>)>,
+    /// The index in the candidates of each MPN that lacks it
+    pub lacking: Vec<usize>,
+}
+
+impl<'a, 'c> Ratings<'a, 'c> {
+    pub fn of(cands: &'a [Candidate<'c>], fact: &str) -> Ratings<'a, 'c> {
+        let mut r = Ratings {
+            known: Vec::new(),
+            lacking: Vec::new(),
+        };
+        for (i, c) in cands.iter().enumerate() {
+            match c.number(fact) {
+                Some(v) => r.known.push((v, c)),
+                None => r.lacking.push(i),
+            }
+        }
+        r
+    }
+
+    /// The lowest rating and its MPN, when every MPN has the fact
+    pub fn lowest(&self) -> Option<(f64, &'a Candidate<'c>)> {
+        if !self.lacking.is_empty() {
+            return None;
+        }
+        self.known
+            .iter()
+            .copied()
+            .min_by(|a, b| a.0.total_cmp(&b.0))
+    }
+}
+
+/// The dielectric codes of a part's ceramic MPNs, for a `Dielectric` field that states the worst
+pub(crate) struct Dielectrics<'a, 'c> {
+    /// Each ceramic MPN (or one whose technology is not known) that has a code, with it
+    pub codes: Vec<(&'a str, &'a Candidate<'c>)>,
+    /// The index in the candidates of each such MPN that lacks a code
+    pub lacking: Vec<usize>,
+}
+
+impl<'a, 'c> Dielectrics<'a, 'c> {
+    pub fn of(cands: &'a [Candidate<'c>]) -> Dielectrics<'a, 'c> {
+        let mut d = Dielectrics {
+            codes: Vec::new(),
+            lacking: Vec::new(),
+        };
+        for (i, c) in cands.iter().enumerate() {
+            if !ceramic_or_unknown(c) {
+                continue;
+            }
+            match c.text("dielectric") {
+                Some(code) => d.codes.push((code, c)),
+                None => d.lacking.push(i),
+            }
+        }
+        d
+    }
+
+    /// Whether the worst code can be judged: some MPN has one, none lacks it, and every code is one this reads
+    pub fn judgeable(&self) -> bool {
+        !self.codes.is_empty()
+            && self.lacking.is_empty()
+            && self
+                .codes
+                .iter()
+                .all(|(c, _)| dielectric::covers(c, c).is_some())
+    }
+
+    /// The code every other one covers; `None` when no code is worse than all the others
+    pub fn worst(&self) -> Option<&'a str> {
+        self.codes.iter().map(|(w, _)| *w).find(|w| {
+            self.codes
+                .iter()
+                .all(|(d, _)| dielectric::covers(w, d) == Some(true))
+        })
+    }
+}
+
+/// Whether two dielectric codes mean the same: each covers the other
+pub(crate) fn same_dielectric(a: &str, b: &str) -> bool {
+    dielectric::covers(a, b) == Some(true) && dielectric::covers(b, a) == Some(true)
+}
+
+/// Whether the MPN is a ceramic capacitor, or its technology is not known: a dielectric code applies
+pub(crate) fn ceramic_or_unknown(c: &Candidate) -> bool {
+    c.text("technology").is_none_or(|t| {
+        let t = t.to_ascii_lowercase();
+        t.contains("ceramic") || t.contains("mlcc")
+    })
 }
 
 /// The fitted parts of the variant checked, by designator

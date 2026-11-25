@@ -14,6 +14,12 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 ### Added
 
 - Cargo feature `mx3`: `berc parts refresh` and `berc fp accept` use the mx3 part store without `--from` (CFG-9).
+
+## [0.5.0] - 2026-11-25
+
+### Added
+
+- `berc fields sync`: Voltage, Power, Dielectric, Package of resistors and capacitors written from `parts.lock.toml` as the worst over each part's MPNs (TOOL-14).
 - Part sources record footprint reviews (`Source::accept`); a file source judges coverage by MPN and family itself (TOOL-8).
 - `parts.lock.toml` reviews keep the page scale and the footprint's placement on it (TOOL-8).
 - `RATE-1`, `RATE-2`, `RATE-9`, `RATE-15`: each MPN's rating against derated working stress, or `Vreq_min`, `Preq_min` (CFG-9).

@@ -1,7 +1,7 @@
-//! Moving and hiding the fields of placed symbols in a schematic (`TOOL-13`): a field's position, angle and
+//! Moving, hiding, writing and removing the fields of placed symbols in a schematic (`TOOL-13`): a field's position, angle and
 //! justification written new, or the field hidden, every other byte kept as it was ([`crate::edit`]).
 
-use crate::edit::{Edits, Kind, Node, Tree, items};
+use crate::edit::{Edits, Kind, Node, Tree, items, quote};
 use crate::sch::geom::upright_field;
 use crate::sexpr::ParseError;
 use erc_model::Pt;
@@ -41,6 +41,8 @@ pub enum PlaceError {
         symbol: String,
         field: String,
     },
+    /// Two edits touch the same bytes of the file, at this byte
+    Overlap(usize),
 }
 
 impl fmt::Display for PlaceError {
@@ -50,8 +52,9 @@ impl fmt::Display for PlaceError {
             PlaceError::NotSchematic => f.write_str("not a schematic"),
             PlaceError::NoSymbol(s) => write!(f, "no placed symbol {s}"),
             PlaceError::NoField { symbol, field } => {
-                write!(f, "symbol {symbol} has no field {field} to move")
+                write!(f, "symbol {symbol} has no field {field} to edit")
             }
+            PlaceError::Overlap(at) => write!(f, "two edits touch byte {at}"),
         }
     }
 }
@@ -118,6 +121,96 @@ pub fn place_fields(text: &str, places: &[FieldPlace]) -> Result<String, PlaceEr
     Ok(edits
         .apply(text)
         .expect("each field and each flag is edited once"))
+}
+
+/// What happens to the text of one field of a placed symbol
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ValueChange {
+    /// The field gets this text; a symbol without the field gets one, copied from its Reference field's layout
+    Put(String),
+    /// The field is taken off the symbol
+    Remove,
+}
+
+/// One field's text written or removed
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ValueEdit {
+    /// The UUID of the placed symbol
+    pub symbol: String,
+    pub field: String,
+    pub change: ValueChange,
+}
+
+/// `text`, a schematic, with the fields of `edits` written or removed: a field's text replaced in place, a new
+/// field added after the symbol's last one, laid out like its Reference field (shown, at the Reference's place, for
+/// `place_fields` to move), a removed field's lines gone. Every other byte is kept.
+pub fn edit_values(text: &str, edits: &[ValueEdit]) -> Result<String, PlaceError> {
+    let tree = Tree::parse(text).map_err(PlaceError::Parse)?;
+    let sch = tree.root("kicad_sch").ok_or(PlaceError::NotSchematic)?;
+    let mut out = Edits::new();
+    // New fields of one symbol go in together, in the order given
+    let mut added: Vec<(&Node, Vec<String>)> = Vec::new();
+    for e in edits {
+        let sym = tree
+            .children(sch, "symbol")
+            .find(|s| uuid(&tree, s).as_deref() == Some(e.symbol.as_str()))
+            .ok_or_else(|| PlaceError::NoSymbol(e.symbol.clone()))?;
+        let no_field = || PlaceError::NoField {
+            symbol: e.symbol.clone(),
+            field: e.field.clone(),
+        };
+        let prop = tree.children(sym, "property").find(|f| {
+            tree.arg(f, 0)
+                .is_some_and(|n| n.eq_ignore_ascii_case(&e.field))
+        });
+        match (&e.change, prop) {
+            (ValueChange::Put(v), Some(prop)) => {
+                let value = items(prop).get(2).ok_or_else(no_field)?;
+                out.replace(value.span.clone(), quote(v));
+            }
+            (ValueChange::Remove, Some(prop)) => out.replace(removal(&tree, sym, prop), ""),
+            (ValueChange::Remove, None) => return Err(no_field()),
+            (ValueChange::Put(v), None) => {
+                let reference = tree
+                    .children(sym, "property")
+                    .find(|f| tree.arg(f, 0).as_deref() == Some("Reference"))
+                    .ok_or_else(no_field)?;
+                let (name, value) = (
+                    items(reference).get(1).ok_or_else(no_field)?,
+                    items(reference).get(2).ok_or_else(no_field)?,
+                );
+                let src = tree.text();
+                let copy = format!(
+                    "{}{}{}{}{}",
+                    &src[reference.span.start..name.span.start],
+                    quote(&e.field),
+                    &src[name.span.end..value.span.start],
+                    quote(v),
+                    &src[value.span.end..reference.span.end],
+                )
+                .replace("(hide yes)", "(hide no)");
+                match added.iter_mut().find(|(s, _)| s.span == sym.span) {
+                    Some((_, l)) => l.push(copy),
+                    None => added.push((sym, vec![copy])),
+                }
+            }
+        }
+    }
+    for (sym, copies) in added {
+        let last = tree
+            .children(sym, "property")
+            .last()
+            .expect("a symbol with a Reference has a property");
+        let at = last.span.end;
+        for c in copies {
+            let lead = match tree.indent(last) {
+                Some(i) => format!("{}{i}", tree.newline()),
+                None => " ".to_owned(),
+            };
+            out.insert(at, format!("{lead}{c}"));
+        }
+    }
+    out.apply(text).map_err(|o| PlaceError::Overlap(o.at))
 }
 
 /// The placed symbol's UUID
@@ -273,6 +366,67 @@ mod tests {
         let shown = nine.replace("(show_name no)", "(hide no)");
         let out = place_fields(&shown, &[hidden("Value")]).unwrap();
         assert!(out.contains("(at 3 4 90)\n\t\t\t(hide yes)\n"), "{out}");
+    }
+
+    fn put(field: &str, v: &str) -> ValueEdit {
+        ValueEdit {
+            symbol: "u1".into(),
+            field: field.into(),
+            change: ValueChange::Put(v.into()),
+        }
+    }
+
+    /// A field's text is replaced, a new field copies the Reference's layout after the last one, a removed field's
+    /// line goes; the rest stays byte for byte
+    #[test]
+    fn writes_and_removes_values() {
+        let with = SCH.to_owned();
+        let out = edit_values(&with, &[put("Value", "2k2")]).unwrap();
+        assert_eq!(out, with.replace("\"1k\"", "\"2k2\""));
+
+        let out = edit_values(&with, &[put("Voltage", "25V"), put("Power", "63mW")]).unwrap();
+        let reference = "\t\t(property \"Reference\" \"R1\"\n\t\t\t(at 1 2 0)\n\t\t\t(effects\n\t\t\t\t(font\n\t\t\t\t\t(size 1.27 1.27)\n\t\t\t\t)\n\t\t\t)\n\t\t)";
+        let copy = |name: &str, v: &str| {
+            reference.replace("\"Reference\" \"R1\"", &format!("\"{name}\" \"{v}\""))
+        };
+        let last = "\t\t\t\t(justify left bottom)\n\t\t\t)\n\t\t)";
+        assert!(
+            out.contains(&format!(
+                "{last}\n{}\n{}\n\t)",
+                copy("Voltage", "25V"),
+                copy("Power", "63mW")
+            )),
+            "{out}"
+        );
+
+        let two = with.replace("(at 1 2 0)", "(at 1 2 0)\n\t\t\t(hide yes)");
+        let out = edit_values(&two, &[put("Voltage", "25V")]).unwrap();
+        assert!(
+            out.contains("(property \"Voltage\" \"25V\"\n\t\t\t(at 1 2 0)\n\t\t\t(hide no)"),
+            "{out}"
+        );
+
+        let gone = edit_values(
+            &with,
+            &[ValueEdit {
+                symbol: "u1".into(),
+                field: "value".into(),
+                change: ValueChange::Remove,
+            }],
+        )
+        .unwrap();
+        assert!(!gone.contains("\"Value\""), "{gone}");
+        assert!(gone.ends_with("\t\t)\n\t)\n)\n"), "{gone}");
+        assert_eq!(
+            edit_values(
+                &with,
+                &[put("Voltage", "5V")].map(|mut e| {
+                    e.symbol = "nope".into();
+                    e
+                })
+            ),
+            Err(PlaceError::NoSymbol("nope".into()))
+        );
     }
 
     #[test]
