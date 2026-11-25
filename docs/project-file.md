@@ -101,6 +101,8 @@ The rating checks read these through `Ctx::derating`, and name the factor and it
   (`[checks."I2C-9"] min_pull_up = 2200`).
 - `[drawing]`: the settings several checks and `berc place-fields` share, by their dotted names
   (`[drawing.fields] hide_defaults = "always"` is `drawing.fields.hide_defaults`).
+  `notes = "../doc/notes.md"` names the board's notes file that `DRAW-50` reads, relative to the project directory;
+  several files are separated by commas.
 
 A check id the catalogue does not have is a warning; a threshold no check declares is an unknown key. `--set
 NAME=VALUE` on the command line wins over the file.

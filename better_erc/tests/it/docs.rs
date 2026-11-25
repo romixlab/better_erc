@@ -209,6 +209,31 @@ fn note_references_against_the_notes_file() {
 }
 
 #[test]
+fn notes_file_from_the_project_file() {
+    let mut s = Sheet::new(&[]);
+    s.note("See N1", (20.32, 25.4));
+    s.note("See N2", (20.32, 50.8));
+    let dir = s.write("docs_notes_project_file");
+    std::fs::create_dir_all(dir.join("doc")).unwrap();
+    std::fs::write(dir.join("doc/notes.md"), "## N1 · Power\n").unwrap();
+    std::fs::write(dir.join("doc/other.md"), "## N2 · Reset\n").unwrap();
+    std::fs::write(
+        dir.join("docs.berc.toml"),
+        "[drawing]\nnotes = \"doc/notes.md\"\n",
+    )
+    .unwrap();
+    assert_eq!(
+        findings(&dir, "DRAW-50", &[]).unwrap(),
+        ["DRAW-50:item text box \"See N2\"|sheet /"]
+    );
+    // --set wins over the file
+    assert_eq!(
+        findings(&dir, "DRAW-50", &[("drawing.notes", "doc/other.md")]).unwrap(),
+        ["DRAW-50:item text box \"See N1\"|sheet /"]
+    );
+}
+
+#[test]
 fn block_name_against_its_parts() {
     let libs = [
         ("Device:L", "L"),

@@ -18,6 +18,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `DRAW-49`: placeholders left in notes, texts and fields; `BOM-5` also reads `TBC` and `FIXME` (NET-26).
 - `DRAW-50`: `See N12` references to notes missing from the `drawing.notes` file, a new path setting (NET-26).
 - `DRAW-51`: a block named DC-DC holding an LDO and no inductor, or named LDO holding an inductor (NET-26).
+- Project file `[drawing] notes` names the notes file `DRAW-50` reads, as `--set drawing.notes` does (CFG-2).
 
 ### Fixed
 
