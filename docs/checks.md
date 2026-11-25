@@ -691,6 +691,10 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="draw-45"></a>💡 `DRAW-45` Section headings just off a shared row or column ≈ DRAW-36 · impl: mid (NET-26) · [📖](checks/draw.md#draw-45) <!-- 31 Oct 2026, Roman -->
 - <a id="draw-46"></a>💡 `DRAW-46` Leader into a small part off its centre, not diagonal, or clipped by the outline · impl: mid (NET-26) · [📖](checks/draw.md#draw-46) <!-- 31 Oct 2026, Roman -->
 - <a id="draw-47"></a>💡 `DRAW-47` Run-on note text: long sentences or chains of `;`, `:`, `(` · impl: easy (NET-26) · [📖](checks/draw.md#draw-47) <!-- 31 Oct 2026, Roman -->
+- <a id="draw-48"></a>💡 `DRAW-48` Functional block (parts sharing a `Block` field) with no note on its sheet: nothing says what it does or why · impl: mid (NET-26) · [📖](checks/draw.md#draw-48) <!-- 25 Nov 2026; B153B -->
+- <a id="draw-49"></a>⚠️ `DRAW-49` Placeholder left in a note, a text or a field (`x V .. y V`, `TBD`, `???`, an empty `Max current:`) ≈ BOM-5 · impl: easy (NET-26) · [📖](checks/draw.md#draw-49) <!-- 25 Nov 2026; B153B -->
+- <a id="draw-50"></a>⚠️ `DRAW-50` Note reference (`See N12`) to a note the board's notes file does not have · impl: mid (NET-26, CFG-2) · [📖](checks/draw.md#draw-50) <!-- 25 Nov 2026; B153B -->
+- <a id="draw-51"></a>ℹ️ `DRAW-51` Block name that contradicts its parts: a DC-DC or buck with a linear regulator and no inductor, an LDO with an inductor · impl: mid (NET-26) · [📖](checks/draw.md#draw-51) <!-- 25 Nov 2026; B153B -->
 
 ### 📚 LIB - Library, symbols and footprints
 - <a id="lib-1"></a>⚠️ `LIB-1` Symbol pin names differ from the same part elsewhere in the database · impl: mid (CFG-5, NET-7) · [📖](checks/lib.md#lib-1) <!-- CHK-78; split 21 Oct 2026: LIB-4, LIB-5 -->
