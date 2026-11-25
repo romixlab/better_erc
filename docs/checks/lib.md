@@ -638,8 +638,8 @@ the stock footprint, not the one actually on the board.
 **How to check.** For each board footprint with a schematic symbol: its own `Lib:Name` against the symbol's
 `Footprint` field (instance override, else the schematic's cached copy, else the library symbol's), string equality
 after trimming, skipped when the board's own name has no library nickname. better_erc: `FpEntry::footprint_overridden`
-(`berc fp check`, per board footprint, naming both) and `TodoEntry::overridden` (`berc fp todo`, per library symbol,
-the references that disagree).
+(`berc fp check`, per board footprint, naming both) and `TodoEntry::overridden` (`berc fp todo`, per footprint
+hash and cover, the references that disagree).
 
 **Fix.** Update the schematic symbol's `Footprint` field to match what the board places (`berc fp accept --footprint
 LIB:NAME`, or the app's Accept confirmation, writes it into the library and every schematic copy), or update the

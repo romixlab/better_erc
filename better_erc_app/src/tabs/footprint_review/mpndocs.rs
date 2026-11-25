@@ -1,13 +1,14 @@
 //! The symbol's datasheets by MPN (VIEW-26): each `Mpn`, `Mpn1`, ... field, the library document that covers it and
 //! its review state. Which document covers an MPN is the document library's answer (a setting, `library_mpn`:
 //! `tpm lib mpn --json`, from mx3's Datasheet Url facts and the library's index; a series or catalogue file covers
-//! several MPNs), asked once per MPN on a worker thread. The review state is from the symbol's review lines
-//! ([`better_erc::fp::record`]): reviewed, stale, or not yet. An MPN the library has no document for gets the
+//! several MPNs), asked once per MPN on a worker thread. The review state is from the part source's reviews that name
+//! the row ([`super::rows::Row::recorded`]): reviewed, stale, or not yet. An MPN the library has no document for gets the
 //! library's fetch command (`library_fetch`: `tpm lib fetch --mpn`), after which it is asked about again.
 
 use super::docindex::IndexedDoc;
+use super::recorded::made_on;
+use super::rows::{Recorded, review_source};
 use super::*;
-use better_erc::fp::record::{self, CheckedLine, LineStatus, ReviewLine};
 use std::collections::HashMap;
 
 /// One document the library names for an MPN, or why it has none (`path` empty)
@@ -32,7 +33,7 @@ pub struct MpnDoc {
 }
 
 impl MpnDoc {
-    /// As the library's index lists it, for matching with the review lines (`pdf=`, `doc=`)
+    /// As the library's index lists it, for matching with the reviews (content hash, document number)
     pub(super) fn indexed(&self) -> IndexedDoc {
         IndexedDoc {
             path: self.path.clone().unwrap_or_default(),
@@ -43,19 +44,9 @@ impl MpnDoc {
         }
     }
 
-    /// Its document number and revision (`DS30154@rev16`), where the library knows them
+    /// Its document number and revision (`DS30154 rev16`), where the library knows them
     pub fn label(&self) -> Option<String> {
         self.indexed().doc_label()
-    }
-
-    /// The line naming this document: its `pdf=` or `doc=`
-    fn probe(&self) -> ReviewLine {
-        let d = self.indexed();
-        ReviewLine {
-            pdf: d.pdf(),
-            doc: d.doc_label(),
-            ..ReviewLine::default()
-        }
     }
 }
 
@@ -102,15 +93,15 @@ pub fn run_fetch(cmd: &[String], mpn: &str) -> Result<String, String> {
     Ok(out.trim().lines().last().unwrap_or("").to_string())
 }
 
-/// What the review lines say of one MPN on one document
+/// What the reviews say of one MPN on one document
 #[derive(Clone, Debug, PartialEq)]
 pub enum MpnReview {
-    /// No line covers the MPN
+    /// No review covers the MPN
     NotYet,
-    /// A line covers it, its hash the footprint's
-    Reviewed { line: Box<CheckedLine>, here: bool },
-    /// A line covers it, its hash not the footprint's
-    Stale { line: Box<CheckedLine>, here: bool },
+    /// A review of the footprint's hash now covers it
+    Reviewed { review: Box<Recorded>, here: bool },
+    /// Only a review of an earlier hash covers it
+    Stale { review: Box<Recorded>, here: bool },
 }
 
 impl MpnReview {
@@ -125,19 +116,20 @@ impl MpnReview {
         }
     }
 
-    /// The covering line, said for the person
+    /// The covering review, said for the person
     pub fn detail(&self) -> String {
         match self {
-            MpnReview::NotYet => {
-                "no review line names this MPN: accept against its datasheet".into()
-            }
-            MpnReview::Reviewed { line, here } | MpnReview::Stale { line, here } => {
-                let mut s = format!("{}: {}", line.property, recorded::line_source(&line.line));
+            MpnReview::NotYet => "no review covers this MPN: accept against its datasheet".into(),
+            MpnReview::Reviewed { review, here } | MpnReview::Stale { review, here } => {
+                let mut s = review_source(&review.review);
                 if !here {
                     s += " (another document than this one)";
                 }
-                if line.status != LineStatus::Ok {
-                    s += &format!(": {}", recorded::line_status(line.status).0);
+                if !review.current {
+                    s += &format!(
+                        ": made for {}, the footprint changed since",
+                        review.review.hash
+                    );
                 }
                 s
             }
@@ -145,25 +137,37 @@ impl MpnReview {
     }
 }
 
-/// The review state of `mpn` from the symbol's lines `rec`, against `doc` where the library names one: the line on
-/// that document first, else any line covering the MPN (on another document than `doc`)
-pub fn review_state(rec: &record::Assessed, mpn: &str, doc: Option<&MpnDoc>) -> MpnReview {
-    let covering: Vec<&CheckedLine> = rec.lines.iter().filter(|l| l.line.covers(mpn)).collect();
-    let probe = doc.map(MpnDoc::probe);
-    let on_doc = |l: &&&CheckedLine| probe.as_ref().is_some_and(|p| l.line.same_document(p));
-    let (line, here) = match covering.iter().find(on_doc) {
-        Some(l) => (*l, true),
-        None => match covering.first() {
+/// The review state of `mpn` from the row's reviews `rec`, against `doc` where the library names one: a review
+/// of the hash now before one of an earlier hash, on that document first, else on any other
+pub fn review_state(rec: &[Recorded], mpn: &str, doc: Option<&MpnDoc>) -> MpnReview {
+    let covering: Vec<&Recorded> = rec
+        .iter()
+        .filter(|r| r.review.retracted.is_none() && r.mpns.iter().any(|m| m == mpn))
+        .collect();
+    let indexed = doc.map(MpnDoc::indexed);
+    let on_doc = |r: &&Recorded| indexed.as_ref().is_some_and(|d| made_on(&r.review, d));
+    let best = |current: bool| {
+        let of = covering.iter().copied().filter(|r| r.current == current);
+        let mut of: Vec<&Recorded> = of.collect();
+        of.sort_by_key(|r| -r.review.id);
+        match of.iter().copied().find(on_doc) {
+            Some(r) => Some((r, true)),
             // Elsewhere only when there is a document of the library to compare with
-            Some(l) => (*l, probe.is_none()),
-            None => return MpnReview::NotYet,
-        },
+            None => of.first().map(|r| (*r, indexed.is_none())),
+        }
     };
-    let line = Box::new(line.clone());
-    if line.status == LineStatus::Ok {
-        MpnReview::Reviewed { line, here }
-    } else {
-        MpnReview::Stale { line, here }
+    match best(true) {
+        Some((r, here)) => MpnReview::Reviewed {
+            review: Box::new(r.clone()),
+            here,
+        },
+        None => match best(false) {
+            Some((r, here)) => MpnReview::Stale {
+                review: Box::new(r.clone()),
+                here,
+            },
+            None => MpnReview::NotYet,
+        },
     }
 }
 
@@ -192,12 +196,11 @@ pub(super) struct MpnDocs {
 }
 
 impl FootprintReview {
-    /// The symbol's MPNs ([`record::mpns`]); none for a preview
+    /// The MPNs of the row under review; none for a preview
     pub(super) fn symbol_mpns(&self) -> Vec<String> {
-        match (&self.rt.sourced, &self.rt.target) {
-            (Some(s), Some(_)) => record::mpns(&s.fields),
-            _ => Vec::new(),
-        }
+        self.target_row()
+            .map(|r| r.mpns().to_vec())
+            .unwrap_or_default()
     }
 
     /// The lookup to use: the test's, else the settings' command when it is on PATH
@@ -374,13 +377,27 @@ impl FootprintReview {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use better_erc::parts::lock::LockedReview;
 
-    fn line(property: &str, value: &str, status: LineStatus) -> CheckedLine {
-        CheckedLine {
-            property: property.into(),
-            value: value.into(),
-            line: ReviewLine::parse(value),
-            status,
+    fn recorded(
+        id: i64,
+        mpns: &[&str],
+        current: bool,
+        pdf: Option<&str>,
+        doc: Option<&str>,
+    ) -> Recorded {
+        Recorded {
+            review: LockedReview {
+                id,
+                hash: format!("fp1:{id:016}"),
+                pdf_blake3: pdf.map(String::from),
+                doc: doc.map(String::from),
+                doc_rev: doc.map(|_| "rev2".to_owned()),
+                page: Some(1),
+                ..LockedReview::default()
+            },
+            mpns: mpns.iter().map(|m| (*m).to_owned()).collect(),
+            current,
         }
     }
 
@@ -397,49 +414,36 @@ mod tests {
         let docs = parse_lookup(LOOKUP).unwrap();
         assert_eq!(docs.len(), 3);
         assert_eq!(docs[0].maker.as_deref(), Some("Diodes"));
-        assert_eq!(docs[0].probe().pdf.as_deref(), Some("b3:0123456789abcdef"));
-        assert_eq!(docs[0].probe().doc.as_deref(), Some("DS30154@rev16"));
+        assert_eq!(
+            docs[0].indexed().blake3().as_deref(),
+            Some("0123456789abcdef0123456789abcdef")
+        );
+        assert_eq!(docs[0].label().as_deref(), Some("DS30154 rev16"));
         assert!(docs[1].path.is_none());
         assert_eq!(docs[2].why.as_deref(), Some("not in mx3"));
         assert!(parse_lookup("usage: tpm lib ...").is_err());
     }
 
-    /// An MPN's state: the line on the library's document first, a line elsewhere next, stale when its hash is not
-    /// the footprint's, not yet with no line naming it
+    /// An MPN's state: a review of the hash now on the library's document first, one elsewhere next, stale when
+    /// only a review of an earlier hash covers it, not yet with none
     #[test]
     fn review_state_per_mpn() {
         let doc = parse_lookup(LOOKUP).unwrap().remove(0);
-        let here = line(
-            "Footprint_Review",
-            "fp1:1111111111111111 mpn=BSS138W-7-F pdf=b3:0123456789abcdef page=3",
-            LineStatus::Ok,
-        );
-        let other = line(
-            "Footprint_Review2",
-            "fp1:2222222222222222 mpn=BSS138W-7-F,BSS138BKW doc=NX1@rev2 page=1",
-            LineStatus::Changed,
-        );
-        let rec = record::Assessed {
-            lines: vec![other.clone(), here.clone()],
-            ..Default::default()
-        };
+        let here = recorded(1, &["BSS138W-7-F"], true, Some("0123456789abcdef"), None);
+        let other = recorded(2, &["BSS138W-7-F", "BSS138BKW"], false, None, Some("NX1"));
+        let rec = vec![other.clone(), here.clone()];
         let s = review_state(&rec, "BSS138W-7-F", Some(&doc));
         assert_eq!(s.word().0, "reviewed");
-        assert!(
-            matches!(&s, MpnReview::Reviewed { line, here: true } if line.property == "Footprint_Review")
-        );
-        // No document from the library: the first line covering it
+        assert!(matches!(&s, MpnReview::Reviewed { review, here: true } if review.review.id == 1));
+        // No document from the library: the review covering it
         let s = review_state(&rec, "BSS138BKW", None);
         assert_eq!(s.word().0, "stale");
         assert_eq!(
             s.detail(),
-            "Footprint_Review2: NX1@rev2, page 1: stale: the footprint changed since"
+            "#2 NX1 rev2, page 1: made for fp1:0000000000000002, the footprint changed since"
         );
-        // The library's document is another than the one the line was made on
-        let rec1 = record::Assessed {
-            lines: vec![other],
-            ..Default::default()
-        };
+        // The library's document is another than the one the review was made on
+        let rec1 = vec![other];
         let s = review_state(&rec1, "BSS138W-7-F", Some(&doc));
         assert_eq!(s.word().0, "stale");
         assert!(
@@ -448,18 +452,11 @@ mod tests {
             s.detail()
         );
         assert_eq!(review_state(&rec1, "OTHER", None), MpnReview::NotYet);
-        // A line naming no MPNs covers the whole symbol; against a document it names none of, elsewhere
-        let whole = record::Assessed {
-            lines: vec![line(
-                "Footprint_Review",
-                "fp1:1111111111111111",
-                LineStatus::Ok,
-            )],
-            ..Default::default()
-        };
-        assert_eq!(review_state(&whole, "ANY", None).word().0, "reviewed");
+        // Of the hash now, on another document than the library's
+        let elsewhere = vec![recorded(3, &["ANY"], true, None, Some("NX1"))];
+        assert_eq!(review_state(&elsewhere, "ANY", None).word().0, "reviewed");
         assert_eq!(
-            review_state(&whole, "ANY", Some(&doc)).word().0,
+            review_state(&elsewhere, "ANY", Some(&doc)).word().0,
             "reviewed elsewhere"
         );
     }

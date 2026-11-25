@@ -339,11 +339,11 @@ mod tests {
     fn derived_symbol_fields() {
         let t = r#"(kicad_symbol_lib (version 20241209)
             (symbol "Base" (property "Reference" "U") (property "Footprint" "Pkg:SOT-23")
-              (property "Footprint_Review" "fp1:aa") (symbol "Base_1_1"))
-            (symbol "Derived" (extends "Base") (property "Value" "X") (property "Footprint_Review" "fp1:bb")))"#;
+              (property "Berc_Note" "fp1:aa") (symbol "Base_1_1"))
+            (symbol "Derived" (extends "Base") (property "Value" "X") (property "Berc_Note" "fp1:bb")))"#;
         let f = symbol_fields(t, "Derived").unwrap();
         let get = |k: &str| f.iter().find(|(n, _)| n == k).map(|(_, v)| v.as_str());
-        assert_eq!(get("Footprint_Review"), Some("fp1:bb"));
+        assert_eq!(get("Berc_Note"), Some("fp1:bb"));
         assert_eq!(get("Footprint"), Some("Pkg:SOT-23"));
         assert_eq!(get("Value"), Some("X"));
         assert!(symbol_fields(t, "Missing").is_none());
@@ -355,7 +355,7 @@ mod tests {
     fn resolve_fields_across_files() {
         // A symbol directory library: one `.kicad_sym` per symbol, a derived one's parent in another file
         let base = r#"(kicad_symbol_lib (version 20241209)
-            (symbol "Base" (property "Footprint_Review" "fp1:aa")))"#;
+            (symbol "Base" (property "Berc_Note" "fp1:aa")))"#;
         let derived = r#"(kicad_symbol_lib (version 20241209)
             (symbol "Derived" (extends "Base") (property "Value" "X")))"#;
         let read = |n: &str| match n {
@@ -365,7 +365,7 @@ mod tests {
         };
         let f = resolve_fields("Derived", read).unwrap();
         let get = |k: &str| f.iter().find(|(n, _)| n == k).map(|(_, v)| v.as_str());
-        assert_eq!(get("Footprint_Review"), Some("fp1:aa"));
+        assert_eq!(get("Berc_Note"), Some("fp1:aa"));
         assert_eq!(get("Value"), Some("X"));
         assert!(resolve_fields("Missing", read).is_none());
     }
@@ -373,8 +373,8 @@ mod tests {
     /// A property removed with the line it stood on, every other byte kept; one not there changes nothing
     #[test]
     fn property_removed_with_its_line() {
-        let t = "(kicad_symbol_lib (version 20241209)\n  (symbol \"R\"\n    (property \"Reference\" \"R\")\n    (property \"Footprint_Review2\" \"fp1:bb\")\n    (property \"Value\" \"R\") (property \"Inline\" \"x\")\n  )\n)\n";
-        let e = remove_property(t, "R", "Footprint_Review2").unwrap();
+        let t = "(kicad_symbol_lib (version 20241209)\n  (symbol \"R\"\n    (property \"Reference\" \"R\")\n    (property \"Berc_Note2\" \"fp1:bb\")\n    (property \"Value\" \"R\") (property \"Inline\" \"x\")\n  )\n)\n";
+        let e = remove_property(t, "R", "Berc_Note2").unwrap();
         assert!(e.changed);
         assert_eq!(e.old.as_deref(), Some("fp1:bb"));
         assert_eq!(
@@ -389,7 +389,7 @@ mod tests {
         );
         assert_eq!(
             property_names(t, "R").unwrap(),
-            ["Reference", "Footprint_Review2", "Value", "Inline"]
+            ["Reference", "Berc_Note2", "Value", "Inline"]
         );
         let same = remove_property(t, "R", "Missing").unwrap();
         assert!(!same.changed);

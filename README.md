@@ -40,15 +40,16 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 - **`berc place-fields PROJECT`**: symbol fields that overlap something (`DRAW-9`, `DRAW-34`) moved into a column
   beside their body; a dry run by default, `--write` edits the schematic. See [Placing fields](#placing-fields).
 - **`berc fp`**: footprint review. `berc fp hash` prints a footprint's review hash, the same for a library file and
-  every board copy of it; `berc fp check` checks every board footprint against the hash on its library symbol (and
-  against its library footprint), `berc fp check --lib` every symbol of a symbol library against its library
-  footprint, and `berc fp todo` lists the library symbols a board uses that need a review; `berc fp model` reads
-  each footprint's 3D models and measures them against it. See [Footprint review](#footprint-review).
+  every board copy of it; `berc fp check` checks every (board footprint hash, MPN) pair against the footprint reviews
+  of the parts snapshot, `berc fp check --lib` every symbol of a symbol library against a part source's reviews,
+  `berc fp todo` lists what a board needs reviewed, one line per footprint and family, and `berc fp accept` records a
+  review in the part source; `berc fp model` reads each footprint's 3D models and measures them against it. See
+  [Footprint review](#footprint-review).
 - **The app** (`better_erc`, egui, crate `better_erc_app`): an import tab that opens any design the registry reads
   (and Altium or OrCAD files picked one by one) and shows its findings with their explanations and the checks that
   did not run, and tabs for nets (power rails, grounds and switching nodes from names and pin types), I2C buses,
-  style findings and inputs; a footprint review tab that draws a library symbol's footprint over its datasheet
-  drawing and writes the review hash into the symbol (see [Reviewing in the app](#reviewing-in-the-app)).
+  style findings and inputs; a footprint review tab that draws a footprint over its datasheet drawing and records
+  the review in the part source (see [Reviewing in the app](#reviewing-in-the-app)).
 - **Signal levels** (crate `erc_levels`): a database of the levels logic families, buses and differential
   standards define (74xx and CD4000, JEDEC LVCMOS/SSTL/HSTL, I2C, RS-485, CAN, LVDS, ECL, USB, Ethernet and more),
   every number with the document, table and page it was read from. See [docs/signal-levels.md](docs/signal-levels.md).
@@ -281,7 +282,11 @@ sheet's name or file.
 ## Footprint review
 
 A footprint checked once against its datasheet should not have to be checked again on the next board, unless it
-changed. `berc fp` keeps that record as a hash on the library symbol.
+changed. `berc fp` keeps that record as a footprint review in the part source: the footprint by its review hash, and
+the parts it fits, each by its MPN or a whole family by its MPN's decoding (a review of an 0402 resistor footprint
+against Yageo's RC series datasheet covers every RC0402 resistor). The parts snapshot
+([`parts.lock.toml`](#part-facts-the-parts-snapshot)) holds, for each board footprint hash and each MPN placed on it,
+the reviews that cover the pair, so a check runs offline. Nothing is stored on the symbols.
 
 `berc fp hash` prints a footprint's review hash, `fp1:` and 16 hex digits:
 
@@ -306,92 +311,77 @@ gives `fp2:` hashes, and an `fp1:` hash then reads as made by another version in
 are the first 8 bytes of the SHA-256 of the canonical text (`--canonical`, lines joined by a newline): a short
 fingerprint to tell a footprint unchanged, not a signature.
 
-Once a footprint is reviewed, `berc fp accept` puts its hash in the `Footprint_Review` field of the library symbol
-that uses it (see [Accepting a review](#accepting-a-review)), or the app's Accept does. `berc fp check` then checks a
-board:
+Once a footprint is reviewed, `berc fp accept` records the review (see [Accepting a review](#accepting-a-review)),
+or the app's Accept does. `berc fp check` then checks a board against its parts snapshot:
 
 ```sh
 berc fp check                       # the KiCad project in this directory
 berc fp check hw/board --format json
 ```
 
-For each footprint on the board it reads the review hash from its symbol's library symbol: in the `.kicad_sym`
-found through the project's or the global `sym-lib-table`, else in the schematic's copy of the library symbol. Each
-footprint is one of:
+Each board footprint is hashed as placed, and each MPN of its part (its `Mpn1`, `MPN_2`, ... fields in every variant
+it is fitted in) is one pair with that hash. A footprint is ok when a review of its hash now covers every one of its
+pairs. Each footprint is one of:
 
 | Status | Meaning |
 |---|---|
-| ok | the footprint is the one reviewed |
-| changed | the footprint differs from the one reviewed: review it again (with several review lines, the stale ones are named) |
-| partial | every review line's hash matches, but some of the symbol's MPNs are on no line: their datasheets are not reviewed yet, named |
-| unreviewed | the symbol has no review hash; the line shows the hash to put there once reviewed |
-| refused | the symbol sets no footprint, so a review of the one on the board means nothing |
+| ok | a review of the footprint's hash covers every MPN of its part |
+| changed | an MPN is covered only by a review of another hash: the footprint differs from the one reviewed, review it again |
+| other version | an MPN is covered only by reviews of another version of the review hash (`fp2:` against `fp1:`) |
+| not in lock | the parts snapshot lacks a pair: run `berc parts refresh` |
+| partial | some MPNs covered, others not yet, named |
+| uncovered | no MPN covered |
+| no MPN | the part has no MPN to review the footprint against |
 | no symbol | the footprint has no schematic symbol and is not marked board-only |
+| not fitted | the part is fitted in no variant: nothing to review, not a failure |
 | board-only | no symbol, marked board-only in KiCad (logos, mounting holes): listed last under its own heading, not a failure |
-| other version, malformed | the field holds a hash of another version, or no hash at all |
 
-A schematic copy that holds a different hash than the library is reported as well: the schematic was not updated
-from the library. So is a board copy that differs from its library footprint (the footprint the board names, found
-through `--footprints` and the `fp-lib-table`; a board footprint without a library nickname is looked up by its
-symbol's `Footprint` field): the line shows both hashes, and the board was not updated from the library.
+The review is of the footprint as the board places it, so a board copy that differs from its library footprint is
+reviewed as it is; it is reported too (the footprint the board names, found through `--footprints` and the
+`fp-lib-table`; a board footprint without a library nickname is looked up by its symbol's `Footprint` field): the line
+shows both hashes, and the board was not updated from the library.
 
 A board footprint placed under a different `Lib:Name` than its symbol's own `Footprint` field (a library migration
 half done, or a deliberate per-instance override) is reported too, naming both: a library migration that renamed or
 moved a footprint library, left half done, or a board edited by hand without updating the schematic, looks exactly
 like this. A footprint placed with no library nickname at all is not an override, there being nothing to compare its
-name against. Footprints that could not be compared are summed up once per reason below the list. `--symbols DIR` adds symbol libraries (a
-`.kicad_sym`, a `.kicad_symdir` or a folder of them, each named by its file name) searched before the
-`sym-lib-table`, and `--footprints DIR` footprint libraries searched before the `fp-lib-table`, for a PC without
-KiCad's global tables:
+name against. Footprints that could not be compared are summed up once per reason below the list. `--symbols DIR`
+adds symbol libraries (a `.kicad_sym`, a `.kicad_symdir` or a folder of them, each named by its file name) searched
+before the `sym-lib-table`, and `--footprints DIR` footprint libraries searched before the `fp-lib-table`, for a PC
+without KiCad's global tables:
 
 ```sh
 berc fp check hw/board --symbols ~/kicad-library/symbols --footprints ~/kicad-library/footprints
 ```
 
-The exit code is 0 when every footprint is ok or board-only and every copy up to date, 1 otherwise, 2 when the
-project can't be read.
+`--details` prints each MPN under its footprint with the reviews that cover it, or the review of another hash it was
+reviewed as. Without a parts snapshot the command exits 2, naming `berc parts refresh`. The exit code is 0 when every
+footprint is ok, not fitted or board-only and every copy up to date, 1 otherwise, 2 when the project or the snapshot
+can't be read.
 
-### Review lines: where a review was made
+### Where a review was made
 
-A review is made against one datasheet, and a datasheet is one maker's: the MPNs of one maker usually share one, and
-two makers never do. So a symbol holds one review line per datasheet, each in a property of its own,
-`Footprint_Review`, `Footprint_Review2`, `Footprint_Review3`, ... (KiCad needs field names unique, as with `Mpn1`,
-`Mpn2`). Each is one line, the review hash first and where the review was made after it:
+A review is made against one datasheet, and records where, so the review can be looked at again:
 
-```text
-fp1:7726812df851763a mpn=BSS138W-7-F,BSS138WQ-7-F doc=DS30154@rev16 pdf=b3:0123456789abcdef page=3 scale=0.02 at=150,230,90,mirror by=roman on=13nov2026
-```
-
-| Key | What |
+| Field | What |
 |---|---|
-| `mpn=` | the MPNs this datasheet covers, from the symbol's `Mpn`, `Mpn1`, `Mpn2`, ... fields, comma-separated; a comma, `%` or blank inside one is written `%2C`, `%25`, `%20` (Nexperia's `BSS138BKW,115` is `BSS138BKW%2C115`). No `mpn=`: the line reviews the whole symbol |
-| `doc=` | the document number and revision, where the document library knows them: they survive a download of the same document with other bytes |
-| `pdf=` | the PDF by the document library's content hash: `b3:` and 16 hex digits of its blake3 |
-| `page=` | the page the land pattern is on, 1-based |
-| `scale=` | the drawing's scale on that page, mm per PDF point |
-| `at=` | where the footprint lay on the page: its origin in page points from the page's top left, its rotation in degrees, `mirror` when seen from below |
-| `by=`, `on=` | who reviewed it, and the day |
+| `hash`, `footprint` | the footprint's review hash and its `Lib:Name` |
+| `covers` | what it covers: MPNs, each alone, or families, each a decoding scheme and the package segments (`case_eia`, `package`) its parts share |
+| `doc`, `doc_rev` | the document number and revision, where the document library knows them: they survive a download of the same document with other bytes |
+| `pdf_blake3` | the PDF by the document library's content hash |
+| `page` | the page the land pattern is on, 1-based |
+| `scale` | the drawing's scale on that page, mm per PDF point |
+| `at` | where the footprint lay on the page: its origin in page points from the page's top left, its rotation in degrees, `mirror` when seen from below |
+| `reviewer`, `reviewed_on`, `note` | who reviewed it, the day, a note |
+| `retracted` | set when the review was withdrawn (who, when, why): a retracted review covers nothing |
 
-The MPNs are written as strings, so reordering the `Mpn` fields breaks nothing. A key this version doesn't know stays
-on the line as it is. `berc fp check` reads the first token of each line as its hash: a symbol is ok when every line's
-hash is the footprint's and every MPN of the symbol is on some line (a symbol without `Mpn` fields needs a line
-without `mpn=`); otherwise it lists the MPNs not reviewed yet (partial) and the stale lines (changed). A value with
-the hash alone, as written before lines had a source, stays valid: a review of the whole symbol with no source
-recorded. `--details` prints every line under its footprint or symbol, with its status:
-
-```sh
-berc fp check hw/board --details
-berc fp check --lib Device --details
-```
-
-`--format json` holds each line read (`reviews.lines`: property, value, its parts, status) and the MPNs not reviewed
-(`reviews.unreviewed_mpns`). `berc textconv` shows each line whole.
+A review is never edited or deleted: a new one is recorded, and a wrong one is retracted. The parts snapshot holds
+the reviews its pairs name, so its git diff after a refresh shows a new or a retracted review.
 
 ### What to review for a board
 
-`berc fp todo` lists the library symbols a board's footprints come from, once each, and what each needs. The review
-is of the library: each symbol is checked as `berc fp check --lib` checks it, against the library footprint its
-`Footprint` field names, so a symbol reviewed once is done for every board that uses it.
+`berc fp todo` lists what a board's footprints need reviewed: one line per board footprint hash and what one review
+of it covers, a family where the MPNs decode into one, else one MPN, with the references it stands for.
 
 ```sh
 berc fp todo                       # the KiCad project in this directory
@@ -399,81 +389,68 @@ berc fp todo hw/board --symbols ~/kicad-library/symbols --footprints ~/kicad-lib
 berc fp todo hw/board --format json
 ```
 
-The symbols to review come first, in the order to step through them: changed (reviewed before, the footprint moved
-on), other version, malformed, unreviewed, partial (an MPN's datasheet not reviewed yet); by symbol within each. Each line shows the footprint, the hash it gets once
-reviewed and the board references that use it, and (always shown, whatever the symbol's own status) the references
-whose board places a different footprint than this line's, the same `Lib:Name` mismatch `berc fp check` names.
-Below them, under their own heading, the symbols that can't be
-reviewed until fixed: missing (the library symbol or its footprint is not found, the line says why) and refused. The
-ok ones and those without a footprint are counted; `--all` lists them too. `--format json` always holds every symbol
-with its footprint file, the hash now and the `Datasheet` field, for the app's review tab and scripts; the library
-call is `better_erc::fp::todo`. A symbol whose board places another footprint than its own carries that one too:
-`placed`, its library file `placed_file` and hash now `placed_hash`, or `placed_note` saying why no library has it.
-`files` lists every file the list was made from (what the app's review tab watches). The exit code is 0 when there is nothing to review or fix, 1 otherwise, 2 when the
-project can't be read.
+The lines to review come first, in the order to step through them: changed (reviewed before, the footprint moved
+on, naming the review it was reviewed as), other version, uncovered; by footprint and cover within each. Each line
+shows the footprint, its hash, the MPNs and the references, and (always shown, whatever the line's own status) the
+references whose board places a different footprint than their symbol's own `Footprint`, the same `Lib:Name`
+mismatch `berc fp check` names. Below them, under their own heading, the lines that can't be reviewed until fixed:
+not in lock (refresh the snapshot), unknown MPN (the part source has no part of it: add it there first) and no MPN.
+The reviewed ones are counted; `--all` lists them too. `--format json` always holds every entry with its hash, cover,
+MPNs, references, the reviews that cover it (`covered_by`) or that it was reviewed as (`other`), the symbol's
+`Datasheet` field, the library footprint file and its hash now (`library_hash`, another than `hash` when the board
+was not updated from the library), and `reviews`, every review an entry names; the library call is
+`better_erc::fp::todo`. `files` lists every file the list was made from (what the app's review tab watches). The exit
+code is 0 when there is nothing to review or fix, 1 otherwise, 2 when the project or the snapshot can't be read.
 
 ### Accepting a review
 
-`berc fp accept` writes the review hash of board footprints into their symbols:
+`berc fp accept` records a review of board footprints in a part source, then refreshes the project's parts snapshot
+from it:
 
 ```sh
-berc fp accept hw/board U1 U2           # the hash of U1 and U2 now, into their library symbol
-berc fp accept hw/board U1 --dry-run    # what would be written, nothing written
-berc fp accept hw/board --symbol Device:R --hash fp1:0123456789abcdef
-berc fp accept hw/board U1 --footprint VHRD_Package_QFP:LQFP-48   # also sets the symbol's own Footprint
-berc fp accept hw/board Q1 --mpn BSS138W-7-F --mpn BSS138WQ-7-F --doc DS30154@rev16 --page 3
+berc fp accept hw/board R1 R7 --from parts.toml --doc RC_Series@rev12 --page 4
+berc fp accept hw/board U3 --from parts.toml --mpn TPS62840DLCR --dry-run
+berc fp accept --hash fp1:0123456789abcdef --footprint-id Resistor_SMD:R_0402 --family-of RC0402FR-0710KL --from parts.toml
+berc fp accept hw/board U1 --from parts.toml --footprint VHRD_Package_QFP:LQFP-48   # also sets the symbol's own Footprint
 ```
 
-`--mpn` (repeatable), `--doc`, `--pdf` and `--page` say where the review was made: the review line of that
-datasheet is written (see [Review lines](#review-lines-where-a-review-was-made)), with `by=` (`--by`, else the
-login name) and today's date. Among the symbol's other lines, a line about the same datasheet (the same `pdf=`, or
-the same document number) is replaced in its place; the MPNs it names leave the other lines, and a line left with
-none goes; a line with the hash alone goes once lines with MPNs cover every MPN; a new line goes last. Without
-them, the line is for the whole symbol and replaces the lines without MPNs, except another datasheet's: a line
-naming another document stays. Every file gets the same lines, and a review
-property left over past them is removed.
+The references must share one review hash: one review is of one footprint. By default the review covers every MPN of
+their parts, each by its family where its MPN decodes into one (the same family `berc fp todo` lists), else alone;
+an MPN the source has no part of and that decodes into no family is left out, named. `--mpn MPN` covers that MPN
+alone and `--family-of MPN` its family, both repeatable, in place of the default. `--hash` with `--footprint-id`
+reviews a footprint by its hash instead, a library footprint before a board uses it (as `berc fp hash` prints it);
+it needs `--mpn` or `--family-of`, and no snapshot is refreshed.
+
+`--doc NO@REV`, `--pdf b3:HEX`, `--page`, `--by` (else the login name) and `--note` say where the review was made (see
+[Where a review was made](#where-a-review-was-made)); the day is today's. `--dry-run` says what would be recorded and
+records nothing.
+
+`--from FILE` is the part source: a file in the snapshot's own shape, whose `[[review]]` list the review is added to.
+The lab's part store is a source behind the same interface, not built into this version.
 
 `--footprint LIB:NAME` also sets the library symbol's own `Footprint` field to it, the value `berc fp check` showed
-as the one the board places: written the same way as the review hash, into the library and every schematic copy.
-Given for references of more than one library symbol at once, it is refused: one value can't hold for several.
+as the one the board places: written into the library's `.kicad_sym` (or the symbol's file in a `.kicad_symdir`),
+found through the project's or the global `sym-lib-table`, and the copy of the symbol in every schematic sheet's
+`lib_symbols`. Only the field is written; every other byte of each file stays as it was. KiCad 8, 9 and 10 files are
+written; an older file is refused until KiCad 8 or newer saved it. The `sym-lib-table` lookup follows the library
+wherever it actually lives, even for a project copied somewhere else: to try it without touching the library in
+place, copy the library too and point the copied project's `sym-lib-table` at that copy.
 
-The review line goes into the `Footprint_Review` fields of each footprint's schematic symbol's library symbol, in two places:
-the library's `.kicad_sym` (or the symbol's file in a `.kicad_symdir`), found through the project's or the global
-`sym-lib-table`, and the copy of the symbol in every schematic sheet's `lib_symbols`, so `berc fp check` finds both
-up to date. A library that is not found is named in the output, and only the schematic copies are written.
-
-The `sym-lib-table` lookup follows the library wherever it actually lives, even for a project copied somewhere else
-to try `accept` on: running it against a scratch copy of a project still writes into the real library the table
-points at, not a copy of it, `--symbol`/`--hash` included. To try `accept` without touching the library in place,
-copy the library too and rewrite the copied project's `sym-lib-table` (or the global one in KiCad's configuration
-directory) to point at that copy.
-
-Only the field is written. Every other byte of each file stays as it was, so the file's diff is the one field. A
-field that is there gets its new value; a new field goes after the symbol's own fields, hidden, laid out as the
-KiCad version that wrote the file lays it out (checked against kicad-cli in the tests). KiCad 8, 9 and 10 files are
-written; an older file is refused until KiCad 8 or newer saved it. Each file is replaced through a temporary file
-beside it. A library open in KiCad's symbol editor shows the field once it is opened again.
-
-Nothing is written when anything is wrong:
-
-- a symbol placed with more than one footprint (a generic `Device:C` on 0402 and 1210 pads): one hash can't hold
-  for all of them;
-- footprints of one symbol whose board copies differ;
-- a symbol that sets no footprint, a footprint without a schematic symbol, a hash that is not `fp1:` and 16 hex
-  digits.
-
-The exit code is 0 when written (or nothing needed a change), 2 otherwise. `--format json` lists every file with its
-old value.
+Nothing is recorded when anything is wrong: references whose footprints differ, a footprint without a schematic
+symbol, a part without an MPN, an MPN to cover that no reference carries, a family asked of an MPN that decodes into
+none, a hash that is not `fp1:` and 16 hex digits. The exit code is 0 when recorded (or a dry run), 2 otherwise.
+`--format json` holds the covers, the MPNs left out, the review as the source stored it and the snapshot refreshed.
 
 ### Checking a symbol library
 
-`berc fp check --lib` checks a symbol library itself, before any board uses it: each symbol against the library
-footprint its `Footprint` field names.
+`berc fp check --lib` checks a symbol library itself, before any board uses it: each symbol that names its MPNs,
+the hash of the library footprint its `Footprint` field names paired with each MPN, judged against the reviews a part
+source holds.
 
 ```sh
-berc fp check --lib symbols/Lib.kicad_symdir --footprints footprints
-berc fp check --lib symbols --footprints footprints   # every library in the folder
-berc fp check --lib Device hw/board                   # a nickname from hw/board's or the global sym-lib-table
+berc fp check --lib symbols/Lib.kicad_symdir --footprints footprints --from parts.toml
+berc fp check --lib symbols --footprints footprints --from parts.toml   # every library in the folder
+berc fp check --lib Device hw/board --from parts.toml                   # a nickname from a sym-lib-table
 ```
 
 `--lib` takes a `.kicad_sym` file, a KiCad 9+ `.kicad_symdir` directory, a folder of them, or a nickname from the
@@ -484,16 +461,18 @@ the directory given, `.` by default. Each symbol is one of:
 
 | Status | Meaning |
 |---|---|
-| ok | the footprint is the one reviewed |
-| changed | the footprint differs from the one reviewed: review it again |
-| unreviewed | the symbol has no review hash; the line shows the hash to put there once reviewed |
+| ok | a review of the footprint's hash covers every MPN of the symbol |
+| changed | an MPN is covered only by a review of another hash: the footprint differs from the one reviewed |
+| other version | an MPN is covered only by reviews of another version of the review hash |
+| partial | some MPNs covered, others not yet |
+| uncovered | no MPN covered |
 | missing | the footprint the symbol names is not found; the line says why |
-| refused | the symbol has a review hash but sets no footprint, so the hash reviews nothing |
-| other version, malformed | the field holds a hash of another version, or no hash at all |
-| no footprint | the symbol sets no footprint and has no hash (a generic part, a power symbol): listed last, not a failure |
+| unjudged | no `--from`: the footprint is read and hashed, the MPNs not judged |
+| no MPN | a footprint but no MPN: a generic symbol, reviewed on each board with the MPNs its instances carry; not a failure |
+| no footprint | the symbol sets no footprint (a generic part, a power symbol): listed last, not a failure |
 
-A derived symbol (`extends`) has its parent's footprint and hash unless it sets its own. The exit code is 0 when every
-symbol is ok or has no footprint, 1 otherwise, 2 when a library can't be read.
+A derived symbol (`extends`) has its parent's fields unless it sets its own. The exit code is 0 when every symbol is
+ok, has no MPN or no footprint, 1 otherwise, 2 when a library or the part source can't be read.
 
 `--allow NICKNAME` (repeatable, for `--lib` here and for `berc fp todo`) lists the library nicknames a symbol and its
 footprint may be in: an exact name, or a prefix ending `*` (`--allow 'VHRD_*'`). A symbol's own library, or the one
@@ -534,41 +513,42 @@ code is 1 on any warning, 0 when there are only suggestions (no model, not in mm
 
 ### Reviewing in the app
 
-The app's Footprint review tab does the review itself: it starts from a library symbol, since the symbol is what a
-schematic places and what holds the hash, draws the footprint its `Footprint` field names over the datasheet's
-drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
+The app's Footprint review tab does the review itself: it draws a footprint over the datasheet's drawing, and Accept
+records a review of its hash for the MPNs it fits in the part source, as `berc fp accept` does. The part source is a
+setting (Settings, Review record: part source), a file in the parts snapshot's shape; without it Accept is off and
+says so.
 
-1. **Pick a symbol**: open a board or project (`.kicad_pcb`, `.kicad_pro`, `.kicad_sch`) for the library symbols
-   its board uses, as `berc fp todo` lists them, those to review first; or a symbol library (a `.kicad_sym`, a
-   `.kicad_symdir` folder, or a nickname from the `sym-lib-table`s) for its symbols. Each row shows the symbol's
-   status (unreviewed, changed, ok, missing, no footprint). Picking one opens the library footprint its `Footprint`
-   field names, found through the project's or the global `fp-lib-table`; from a board, when every reference places
-   a different footprint than that field names, the one actually placed opens instead, noted above the canvas
-   rather than left unsaid. That one too is read from its library file, since the review hash is the library
-   footprint's; the note says when the board's copy differs from it (the board not updated from the library yet),
-   and only a footprint no library table has is read from the board's copy. A symbol that sets no footprint, or whose
-   symbol or footprint is not found, is refused with the reason. Next to review steps to the next symbol that
-   needs one. A reviewed symbol lists its review lines (what each was made against, its MPNs, ok or stale) and the
-   MPNs no line reviews yet.
+1. **Pick what to review**: open a board or project (`.kicad_pcb`, `.kicad_pro`, `.kicad_sch`) for its footprint
+   hashes and covers, one row each as `berc fp todo` lists them, those to review first; or a symbol library (a
+   `.kicad_sym`, a `.kicad_symdir` folder, or a nickname from the `sym-lib-table`s) for its symbols, judged as
+   `berc fp check --lib` judges them against the part source. Each row shows its status (changed, uncovered,
+   partial, ok, unknown MPN, no MPN, missing, no footprint). A board row opens the board's copy of the footprint,
+   the one its first reference places: that is what the pairs are of. A note above the canvas says when the board
+   places a different footprint than the symbol's own `Footprint` field names, and when the board's copy differs
+   from its library footprint (the board not updated from the library yet). A library row opens the library
+   footprint its `Footprint` field names, found through the project's or the global `fp-lib-table`. A symbol that
+   sets no footprint, or whose symbol or footprint is not found, is refused with the reason. Next to review steps to
+   the next row that needs one. A row lists the part source's reviews that name it (what each was made against, its
+   MPNs, ok or of an earlier hash) and the MPNs no review covers yet.
 2. **Open the datasheet**: the symbol's `Datasheet` field when it names a local file, a local document library
    search, or Open PDF. The library search runs a command (a setting) with the datasheet's file name, a part name
    in its web address, the `Mpn` fields or the value, until one finds something. The command prints a JSON list of
    `{"path": ..., "page": ...}`. What it finds is listed in a panel of its own, and for a symbol just picked the
    first one opens by itself. Picking another symbol opens its datasheet, or closes the last one when it has none.
-   A symbol whose review recorded its datasheet opens that PDF first, found in the document library by its content
+   A row whose review recorded its datasheet opens that PDF first, found in the document library by its content
    hash, else by its document number, and with it the view the review was made in: the page, the scale and the
-   footprint's placement. So does opening any datasheet a review line was made on. A line whose hash is no longer
-   the footprint's is said to be stale, and a recorded PDF the library doesn't have is said too. The library's
+   footprint's placement. So does opening any datasheet a review was made on. A review of an earlier hash of the
+   footprint is said so, and a recorded PDF the library doesn't have is said too. The library's
    index comes from a command (a setting, `tpm lib docs --json --all` by default) that prints a JSON list of
    `{"path", "hash", "doc", "rev"}`, paths relative to the library's root; the file on disk is then found through
    the library name command below, which prints full paths.
    A symbol with `Mpn` fields gets a table, Datasheets by MPN, at the top of the Datasheet section: each MPN, the
-   library document that covers it, and its review state (reviewed, reviewed elsewhere when its line was made on
-   another document, stale, or not yet). Which document covers an MPN is the document library's answer, not
+   library document that covers it, and its review state (reviewed, reviewed elsewhere when its review was made on
+   another document, stale when only a review of an earlier hash covers it, or not yet). Which document covers an MPN is the document library's answer, not
    better_erc's: a command (a setting, `library_mpn`, `tpm lib mpn --json` by default) gets the MPNs at the end and
    prints a JSON list of `{"mpn", "path", "hash", "doc", "rev", "why"}`, one object per document of an MPN, best
    first, or one with no `path` and `why` it has none. A series or catalogue file may cover several MPNs. Each MPN
-   is asked once per session. Clicking a document opens it with the view of its review line, else the page search
+   is asked once per session. Clicking a document opens it with the view of its review, else the page search
    runs. An MPN without a document says why, and its Fetch button runs another command (`library_fetch`,
    `tpm lib fetch --mpn` by default) with the MPN, then asks about it again. There are no extra `Datasheet2..N`
    fields: the library holds the mapping.
@@ -666,28 +646,28 @@ drawing, and Accept writes the hash into that symbol's `Footprint_Review` field.
    view, picks what moves, and sets the views' blend mode (normal, multiply, screen, difference), opacity and blink
    (B blinks what moves). Measure footprint (G) snaps to the views' outline corners and edge ends too, so a model
    dimension measures on the page. The footprint is drawn over the views where they overlap.
-9. **Accept** (A): when the footprint matches the drawing, Accept writes its review line into the symbol: the library
-   symbol and, for a symbol from a project's list, the schematic's copies too (as `berc fp accept --symbol` does).
-   The line records where the review was made: the datasheet by the document library's content hash and document
-   number, the page, the scale, the footprint's placement, who (a setting, else the login name) and the day. It
-   asks first which of the symbol's MPNs this datasheet covers, those found in the PDF's text (and those the
-   line for this datasheet already names) ticked, except an MPN another datasheet's line names: the question says
-   which, and ticking it moves it here; none ticked makes a line for the whole symbol. Each datasheet keeps its own
-   view of the symbol (page, zoom, scale, placements, ruler, note), saved with the tab: opening another datasheet
-   and coming back finds the first as it was left, accepted or not. It shows what
-   its dry run would write, following the ticks: each file, each property, the old and the new value. When the
-   board places a different footprint than the symbol's own `Footprint` field, a checkbox offers to also set that
-   field to the placed one, showing both; checked, it writes the same as `berc fp accept --footprint` does.
-   Enter (or
-   Write) writes; Esc (or Cancel) writes nothing. It warns, per file and naming the lock file, when KiCad may
-   overwrite the change on its next save: a file with KiCad's lock file beside it (`~name.kicad_sch.lck`, open in
-   an editor there) that is held. A lock from this computer is held while a KiCad runs here (KiCad's locks name
-   the user and host, no process id; a lock with a `pid` while that process lives); one from another computer
-   always counts; an empty one is stale, as KiCad takes it. KiCad running with no lock beside the file is no
-   warning.
-   Once written, it lists the files written, or says why it wrote nothing, copies the hash to the clipboard and keeps the review
-   (symbol's footprint, hash, datasheet, page, scale) in the tab's list. Accept stays disabled, saying why, until a
-   symbol with a footprint is picked, a datasheet is open and the scale is set on the page shown.
+9. **Accept** (A): when the footprint matches the drawing, Accept records a review of its hash in the part source,
+   and for a board row refreshes the project's parts snapshot from it (as `berc fp accept` does); the list is read
+   again and the row shows it reviewed. The review records where it was made: the datasheet by the document
+   library's content hash, document number and revision, the page, the scale, the footprint's placement, the review
+   note, who (a setting, else the login name) and the day. It asks first which MPNs this datasheet covers, and
+   for each whether alone or its whole family (where its MPN decodes into one). A board row's MPNs share one cover:
+   all ticked. A library row's MPNs found in the PDF's text are ticked, and those a review made on this datasheet
+   covers, except an MPN that a review on another datasheet covers. The question shows what its dry run would
+   record, following the ticks: the part source, what the review covers, the references, the MPNs left out. Each
+   datasheet keeps its own view of the row (page, zoom, scale, placements, ruler, note), saved with the tab:
+   opening another datasheet and coming back finds the first as it was left, accepted or not. When the board places
+   a different footprint than the symbol's own `Footprint` field for every reference, a checkbox offers to also set
+   that field to the placed one, showing both; checked, it writes the same as `berc fp accept --footprint` does,
+   and lists the files. It then warns, per file and naming the lock file, when KiCad may overwrite that write on its
+   next save: a file with KiCad's lock file beside it (`~name.kicad_sch.lck`, open in an editor there) that is held.
+   A lock from this computer is held while a KiCad runs here (KiCad's locks name the user and host, no process id;
+   a lock with a `pid` while that process lives); one from another computer always counts; an empty one is stale,
+   as KiCad takes it. KiCad running with no lock beside the file is no warning. Enter (or Record) records; Esc (or
+   Cancel) records nothing. Once recorded, it names the review and the snapshot refreshed, or says why it recorded
+   nothing, copies the hash to the clipboard and keeps the review (footprint, hash, datasheet, page, scale) in the
+   tab's list. Accept stays disabled, saying why, until a row with MPNs and a footprint is picked, a part source is
+   set, a datasheet is open and the scale is set on the page shown.
 
 #### Files changed on disk
 
@@ -697,8 +677,7 @@ editor is read again by itself once it stays quiet for a moment, and picking a s
 the files first. Reload (`F5`, a setting, or the button under the Open buttons) reads everything again; a line beside
 it says what was read again and when. A reload keeps the view: the page, the scale, the footprint's placement, the 3D
 camera and the list's filter. The review status follows the file, so a footprint changed since its review shows the
-review as changed. A file counts as changed only when its content changed; what Accept writes into the symbols reloads
-nothing.
+review as changed. A file counts as changed only when its content changed; what Accept writes reloads nothing.
 
 #### With a SpaceMouse
 
@@ -784,11 +763,11 @@ added the moment a newer KiCad opens and saves an older project. `berc textconv`
 line-oriented text (one fact per line, no UUIDs, no coordinates), and git can diff that instead. The stored files
 don't change; `git diff`, `git log -p`, `git show` and lazygit all show the readable form.
 
-A `.kicad_sch`'s cached library symbols (`lib_symbols`) print their fields - `Datasheet`, `Footprint`,
-`Footprint_Review`, ... - as their own `Name=value` lines, a hash underneath for the rest of the symbol (pins,
-graphics, sub-symbols). `berc fp accept` (see [Accepting a review](#accepting-a-review)) writes the
-`Footprint_Review` field into every sheet's `lib_symbols` copy, so this is what turns an accepted review into a
-one-line diff instead of a changed hash taken on faith.
+A `.kicad_sch`'s cached library symbols (`lib_symbols`) print their fields - `Datasheet`, `Footprint`, `Mpn1`,
+... - as their own `Name=value` lines, a hash underneath for the rest of the symbol (pins, graphics, sub-symbols).
+`berc fp accept --footprint` (see [Accepting a review](#accepting-a-review)) writes the `Footprint` field into every
+sheet's `lib_symbols` copy, so this is what turns that fix into a one-line diff instead of a changed hash taken on
+faith.
 
 With `berc` installed (see [Install](#install)), tell git which files to convert, in the repo with the KiCad
 files (`.gitattributes`, committed, or `.git/info/attributes` for yourself only):

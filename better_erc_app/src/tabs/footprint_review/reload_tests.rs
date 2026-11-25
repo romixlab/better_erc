@@ -1,6 +1,6 @@
 //! Files changed on disk while the review is open (VIEW-31): the symbol and its footprint shown as they are on disk
 //! now, read again by the Reload button and key, by picking a symbol again, and by the file watcher on its own;
-//! the view kept, the review state worked out again; what Accept wrote reloads nothing
+//! the view kept, the review state worked out again; what Accept recorded reloads nothing
 
 use super::panel::ACCEPT;
 use super::tests::datasheet;
@@ -12,8 +12,9 @@ use std::time::{Duration, Instant};
 const FIXTURES: &str = "../erc_kicad/tests/fixtures/footprints/Test.pretty";
 
 /// A library of its own in `dir` the test may change: `Test.pretty` with Mixed_Pads and Asym_SOT, through a
-/// `fp-lib-table`; `Rev.kicad_sym` with `Mixed` (reviewed: Mixed_Pads' hash now) and `Sot`, both naming the
-/// datasheet `pdf`. Returns the library and Mixed_Pads' file
+/// `fp-lib-table`; `Rev.kicad_sym` with `Mixed` (MPN `MIXED-1`) and `Sot` (`SOT-1`), both naming the datasheet
+/// `pdf`; a part source `parts.toml` with a review of Mixed_Pads' hash now covering `MIXED-1`. Returns the library
+/// and Mixed_Pads' file
 fn library(dir: &Path, pdf: &Path) -> (PathBuf, PathBuf) {
     let pretty = dir.join("Test.pretty");
     std::fs::create_dir_all(&pretty).unwrap();
@@ -28,12 +29,12 @@ fn library(dir: &Path, pdf: &Path) -> (PathBuf, PathBuf) {
     .unwrap();
     let mixed = pretty.join("Mixed_Pads.kicad_mod");
     let hash = better_erc::fp::hash_file(&mixed, None).unwrap().hash;
-    let symbol = |name: &str, fp: &str, review: Option<&str>| {
-        let mut props = vec![
+    let symbol = |name: &str, fp: &str, mpn: &str| {
+        let props = vec![
             ("Footprint", fp.to_string()),
             ("Datasheet", pdf.display().to_string()),
+            ("Mpn1", mpn.to_string()),
         ];
-        props.extend(review.map(|r| ("Footprint_Review", r.to_string())));
         let mut out = format!(
             "  (symbol \"{name}\" (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n"
         );
@@ -52,11 +53,17 @@ fn library(dir: &Path, pdf: &Path) -> (PathBuf, PathBuf) {
         &lib,
         format!(
             "(kicad_symbol_lib (version 20231120) (generator \"kicad_symbol_editor\")\n{}{})\n",
-            symbol("Mixed", "Test:Mixed_Pads", Some(&hash)),
-            symbol("Sot", "Test:Asym_SOT", None),
+            symbol("Mixed", "Test:Mixed_Pads", "MIXED-1"),
+            symbol("Sot", "Test:Asym_SOT", "SOT-1"),
         ),
     )
     .unwrap();
+    let parts = super::tests::parts_file(dir, &["MIXED-1", "SOT-1"]);
+    let mut text = std::fs::read_to_string(&parts).unwrap();
+    text += &format!(
+        "\n[[review]]\nid = 1\nhash = \"{hash}\"\nfootprint = \"Test:Mixed_Pads\"\nreviewer = \"someone\"\nreviewed_on = \"2026-11-20\"\ncovers = [{{ kind = \"mpn\", mpn = \"MIXED-1\" }}]\n"
+    );
+    std::fs::write(&parts, text).unwrap();
     (lib, mixed)
 }
 
@@ -88,9 +95,10 @@ fn pads(h: &Harness<'_, FootprintReview>) -> Vec<String> {
     s.footprint.pads.iter().map(|p| p.number.clone()).collect()
 }
 
-fn status(h: &Harness<'_, FootprintReview>, symbol: &str) -> SymbolStatus {
+/// The status of the row with key `key`
+fn status(h: &Harness<'_, FootprintReview>, key: &str) -> &'static str {
     let st = h.state();
-    st.rt.symbols.as_ref().unwrap().rows[st.symbol_row(symbol).unwrap()].status
+    st.rt.symbols.as_ref().unwrap().rows[st.symbol_row(key).unwrap()].status_name()
 }
 
 fn harness(name: &'static str, watch: bool) -> Harness<'static, FootprintReview> {
@@ -117,6 +125,7 @@ fn harness(name: &'static str, watch: bool) -> Harness<'static, FootprintReview>
 fn open(h: &mut Harness<'static, FootprintReview>, lib: &Path) {
     settle(h);
     let ctx = h.ctx.clone();
+    h.state_mut().rt.settings.parts_source = Some(lib.with_file_name("parts.toml"));
     h.state_mut().open_path(&ctx, lib);
     settle(h);
     h.get_by_label("Rev:Mixed").click();
@@ -134,7 +143,7 @@ fn open(h: &mut Harness<'static, FootprintReview>, lib: &Path) {
     st.place.origin = [123.0, 45.0];
     st.place.rotation = 90.0;
     settle(h);
-    assert_eq!(status(h, "Rev:Mixed"), SymbolStatus::Ok);
+    assert_eq!(status(h, "Rev:Mixed"), "ok");
 }
 
 /// The view as a reload must leave it: the page, the scale, where the footprint is
@@ -170,7 +179,7 @@ fn reload_shows_the_footprint_as_it_is_on_disk() {
     settle(&mut h);
     assert!(pads(&h).contains(&"7".to_string()), "{:?}", pads(&h));
     assert_ne!(h.state().rt.sourced.as_ref().unwrap().hash, hash);
-    assert_eq!(status(&h, "Rev:Mixed"), SymbolStatus::Changed);
+    assert_eq!(status(&h, "Rev:Mixed"), "changed");
     assert_eq!(view(&h), before, "the view stays");
     assert_eq!(h.state().symbol.as_deref(), Some("Rev:Mixed"));
     h.get_by_label_contains("Reloaded everything at ");
@@ -200,8 +209,8 @@ fn reload_shows_the_footprint_as_it_is_on_disk() {
     h.get_by_label_contains("the symbols and footprints changed on disk: reloaded at ");
 }
 
-/// What Accept writes into the library symbol is no change to read again: the watcher's look finds nothing, the
-/// symbol stays reviewed as Accept left it
+/// What Accept records is no change to read again: the library is not written, the watcher's look finds nothing,
+/// the symbol stays reviewed as Accept left it
 #[test]
 fn accept_reloads_nothing() {
     let dir = tempfile::tempdir().unwrap();
@@ -213,8 +222,9 @@ fn accept_reloads_nothing() {
     add_pad(&mixed, 7);
     h.get_by_label_contains("Reload · F5").click();
     settle(&mut h);
-    assert_eq!(status(&h, "Rev:Mixed"), SymbolStatus::Changed);
+    assert_eq!(status(&h, "Rev:Mixed"), "changed");
     let text = std::fs::read_to_string(&lib).unwrap();
+    let parts = std::fs::read_to_string(lib.with_file_name("parts.toml")).unwrap();
     h.get_by_label(ACCEPT).click();
     settle(&mut h);
     h.key_press(egui::Key::Enter);
@@ -224,10 +234,19 @@ fn accept_reloads_nothing() {
         "{:?}",
         h.state().rt.written
     );
-    assert_ne!(std::fs::read_to_string(&lib).unwrap(), text, "written");
+    assert_eq!(
+        std::fs::read_to_string(&lib).unwrap(),
+        text,
+        "the library is not written"
+    );
+    assert_ne!(
+        std::fs::read_to_string(lib.with_file_name("parts.toml")).unwrap(),
+        parts,
+        "recorded"
+    );
     assert_eq!(h.state_mut().rt.watch.changed(), []);
-    assert_eq!(status(&h, "Rev:Mixed"), SymbolStatus::Ok);
-    // Picking it again (the list's row; the label is in what Accept wrote too) reads nothing again
+    assert_eq!(status(&h, "Rev:Mixed"), "ok");
+    // Picking it again reads nothing again
     let i = h.state().symbol_row("Rev:Mixed").unwrap();
     h.state_mut().select_symbol(i, true);
     settle(&mut h);
@@ -274,15 +293,16 @@ fn a_change_on_disk_reloads_by_itself() {
         h.step();
         std::thread::sleep(Duration::from_millis(5));
     }
-    assert_eq!(status(&h, "Rev:Mixed"), SymbolStatus::Changed);
+    assert_eq!(status(&h, "Rev:Mixed"), "changed");
     assert_eq!(view(&h), before);
     settle(&mut h);
     h.get_by_label_contains("the symbols and footprints changed on disk: reloaded at ");
 }
 
 /// A project in `dir` around placed.kicad_pcb whose Mixed_Pads footprints U7-U12 are placed for `Rev:Mixed` as
-/// `Test:Mixed_Pads`, while the library symbol's own `Footprint` is `Test:Asym_SOT`: an override. The library is
-/// [`library`]'s; returns its Mixed_Pads file
+/// `Test:Mixed_Pads` with MPN `MIXED-1`, while the library symbol's own `Footprint` is `Test:Asym_SOT`: an
+/// override. The library and the part source are [`library`]'s, the parts snapshot refreshed from it; returns its
+/// Mixed_Pads file
 fn override_project(dir: &Path) -> PathBuf {
     let pdf = datasheet(dir);
     let (lib, mixed) = library(dir, &pdf);
@@ -308,7 +328,7 @@ fn override_project(dir: &Path) -> PathBuf {
     let placed: String = (7..=12)
         .map(|n| {
             format!(
-                "  (symbol (lib_id \"Rev:Mixed\") (at {x} 50 0) (unit 1) (in_bom yes) (on_board yes) (dnp no) (uuid \"b0000000-0000-4000-8000-0000000001{n:02}\")\n    (property \"Reference\" \"U{n}\" (at {x} 45 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Mixed_Pads\" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (pin \"1\" (uuid \"b0000000-0000-4000-8000-0000000002{n:02}\"))\n    (instances (project \"rev\" (path \"/{root}\" (reference \"U{n}\") (unit 1)))))\n",
+                "  (symbol (lib_id \"Rev:Mixed\") (at {x} 50 0) (unit 1) (in_bom yes) (on_board yes) (dnp no) (uuid \"b0000000-0000-4000-8000-0000000001{n:02}\")\n    (property \"Reference\" \"U{n}\" (at {x} 45 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Mixed_Pads\" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (property \"Mpn1\" \"MIXED-1\" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (pin \"1\" (uuid \"b0000000-0000-4000-8000-0000000002{n:02}\"))\n    (instances (project \"rev\" (path \"/{root}\" (reference \"U{n}\") (unit 1)))))\n",
                 x = 20 * n
             )
         })
@@ -326,47 +346,59 @@ fn override_project(dir: &Path) -> PathBuf {
         "(sym_lib_table (version 7)\n  (lib (name \"Rev\")(type \"KiCad\")(uri \"${KIPRJMOD}/Rev.kicad_sym\")(options \"\")(descr \"\")))\n",
     )
     .unwrap();
+    let source = better_erc::parts::FileSource::open(&dir.join("parts.toml")).unwrap();
+    better_erc::parts::refresh_project(dir, &source, better_erc::parts::WriteLock::Changed)
+        .unwrap();
     mixed
 }
 
 /// The board places a footprint other than the symbol's own, and that footprint was edited in its library after
-/// the board was last updated: the review is of the library file (the review hash is the library footprint's),
-/// with a note that the board's copy differs; the library edited again is read again
+/// the board was last updated: the review is of the board's copy (the pairs are of the board footprint's hash),
+/// with notes that it overrides the symbol's and that the library's footprint differs; the library edited again
+/// is read again into the list
 #[test]
-fn an_override_is_reviewed_from_its_library() {
+fn an_override_is_reviewed_as_placed() {
     let dir = tempfile::tempdir().unwrap();
     let mixed = override_project(dir.path());
     add_pad(&mixed, 7);
     let mut h = harness("fp reload override", false);
     settle(&mut h);
     let ctx = h.ctx.clone();
+    h.state_mut().rt.settings.parts_source = Some(dir.path().join("parts.toml"));
     h.state_mut()
         .open_path(&ctx, &dir.path().join("rev.kicad_pro"));
     settle(&mut h);
-    let i = h.state().symbol_row("Rev:Mixed").unwrap();
+    let i = h
+        .state()
+        .rt
+        .symbols
+        .as_ref()
+        .unwrap()
+        .rows
+        .iter()
+        .position(|r| r.footprint() == Some("Test:Mixed_Pads"))
+        .expect("the board's footprint");
     h.state_mut().select_symbol(i, true);
     settle(&mut h);
     let st = h.state();
     let s = st.rt.sourced.as_ref().expect("a footprint shown");
-    assert_eq!(s.source, FootprintSource::File(mixed.clone()));
-    assert!(pads(&h).contains(&"7".to_string()), "{:?}", pads(&h));
+    assert!(
+        matches!(&s.source, FootprintSource::Board { reference, .. } if reference == "U7"),
+        "{:?}",
+        s.source
+    );
+    assert!(!pads(&h).contains(&"7".to_string()), "{:?}", pads(&h));
     let note = h.state().rt.board_note.clone().unwrap_or_default();
     assert!(
-        note.contains(
-            "placed on U7 as Test:Mixed_Pads, not the symbol's own Footprint (Test:Asym_SOT)"
-        ),
+        note.contains("placed as Test:Mixed_Pads, not the symbol's own Footprint (Test:Asym_SOT)"),
         "{note}"
     );
     assert!(
-        note.contains("the board copy U7 differs from the library")
+        note.contains("the board's copy is not its library's footprint now")
             && note.contains("update the board"),
         "{note}"
     );
-    // Edited in the library again: read again, as any footprint shown
-    add_pad(&mixed, 8);
-    h.get_by_label_contains("Reload · F5").click();
-    settle(&mut h);
-    assert!(pads(&h).contains(&"8".to_string()), "{:?}", pads(&h));
+    // The library footprint is watched: edited again, the list is read again
     assert!(
         h.state()
             .rt
@@ -374,4 +406,14 @@ fn an_override_is_reviewed_from_its_library() {
             .files(watch::Group::List)
             .contains(&mixed)
     );
+    let library_hash =
+        |h: &Harness<'_, FootprintReview>| match &h.state().rt.symbols.as_ref().unwrap().rows[i] {
+            rows::Row::Board(e) => e.library_hash.clone(),
+            rows::Row::Library(_) => None,
+        };
+    let before = library_hash(&h);
+    add_pad(&mixed, 8);
+    h.get_by_label_contains("Reload · F5").click();
+    settle(&mut h);
+    assert_ne!(library_hash(&h), before);
 }

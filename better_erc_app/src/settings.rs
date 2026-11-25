@@ -57,8 +57,11 @@ pub struct FootprintReviewSettings {
     /// A command that fetches an MPN's datasheet into the library: the program and its arguments; the MPN is added
     /// at the end (`tpm lib fetch --mpn`). Empty: no Fetch button for an MPN without a document.
     pub library_fetch: Vec<String>,
-    /// Who reviews, written into the review record (`by=`); empty: the login name
+    /// Who reviews, recorded with the review; empty: the login name
     pub reviewer: String,
+    /// The part source Accept records reviews in and a symbol library is judged against: a parts file in the lock's
+    /// shape (`berc fp accept --from`). None: Accept is off and says so
+    pub parts_source: Option<PathBuf>,
     /// The review notes file (Markdown): a path of its own, or a name for a file beside the project or library
     /// under review
     pub notes_file: String,
@@ -370,6 +373,7 @@ impl Default for FootprintReviewSettings {
             library_mpn: ["tpm", "lib", "mpn", "--json"].map(String::from).to_vec(),
             library_fetch: ["tpm", "lib", "fetch", "--mpn"].map(String::from).to_vec(),
             reviewer: String::new(),
+            parts_source: None,
             notes_file: "footprint-review-notes.md".into(),
             blend: BlendMode::Normal,
             colors: LayerColors::default(),
