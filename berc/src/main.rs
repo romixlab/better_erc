@@ -781,6 +781,19 @@ fn git_user() -> Option<String> {
     (out.status.success() && !name.is_empty()).then_some(name)
 }
 
+/// The settings of `--set` and the colour themes of `--theme`
+fn check_config(args: &CheckArgs) -> Result<better_erc::Config, String> {
+    let mut config = settings(&args.set)?;
+    for path in &args.theme {
+        let text = std::fs::read_to_string(path)
+            .map_err(|e| format!("--theme {}: {e}", path.display()))?;
+        let theme = better_erc::kicad::theme::read(&text)
+            .map_err(|e| format!("--theme {}: {e}", path.display()))?;
+        config.themes.push(theme);
+    }
+    Ok(config)
+}
+
 fn check(args: CheckArgs) -> ExitCode {
     if args.state.is_some() {
         error(
@@ -794,23 +807,13 @@ fn check(args: CheckArgs) -> ExitCode {
         Some(Err(e)) => return check_error(&e),
         None => None,
     };
-    let mut config = match settings(&args.set) {
+    let config = match check_config(&args) {
         Ok(c) => c,
         Err(e) => {
             error(&e);
             return ExitCode::from(CheckError::EXIT_CODE);
         }
     };
-    for path in &args.theme {
-        let read = std::fs::read_to_string(path).map_err(|e| e.to_string());
-        match read.and_then(|text| better_erc::kicad::theme::read(&text)) {
-            Ok(theme) => config.themes.push(theme),
-            Err(e) => {
-                error(&format!("--theme {}: {e}", path.display()));
-                return ExitCode::from(CheckError::EXIT_CODE);
-            }
-        }
-    }
     let opts = CheckOptions {
         run: RunOptions {
             variant: args.variant,
