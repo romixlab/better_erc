@@ -30,6 +30,7 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
   as JSON and text, the embedded catalogue ([docs/engine.md](docs/engine.md))
 - `erc_import`: the importer registry, and the Altium, OrCAD and PnP importers into the board model
   ([docs/model.md](docs/model.md))
+- `erc_parts`: part data: the parts snapshot (`parts.lock.toml`) the checks read, the part sources a refresh asks
 - `erc_levels`: the signal-level database: logic families, buses and differential standards with their levels,
   each value with the document it was read from ([docs/signal-levels.md](docs/signal-levels.md))
 - `erc_step`: STEP models read with the truck crates (from the vhrdtech fork): parts placed by the assembly tree,
@@ -626,6 +627,11 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   (`Finding::input_hash`, `finding::input_hash`); applied after the run, shown as waived and out of the verdict; stale
   (input hash changed), expired and unmatched waivers are report notes; `berc waive` appends one; SARIF suppressions.
   Missing: one-click waiver in the app, voting (disagree first)
+- 🚧 `CFG-9` Parts snapshot `parts.lock.toml` (crate `erc_parts`): per MPN of the fitted parts in every variant the
+  facts the checks use (value, source, rank, time) and the footprint reviews of each (board footprint hash, MPN) pair,
+  sorted, one line per fact; `Project::open` reads it (`[parts] lock` in the project file), `BOM-20` reports MPNs it
+  lacks; `berc parts refresh` writes it from a `Source` (`--from FILE`, `--check`); keys in `erc_parts::keys`.
+  Missing: the lab part store as a source (its contract crate is not public yet)
 - 📋 `CFG-4` File-based config format for open source (RON?)
 - 📋 `CFG-5` Custom rules for parts in the database
 - 📋 `CFG-6` Selection constraints in the part database's `required` entries: one typed vocabulary of passive parameters

@@ -179,6 +179,37 @@ longer fails the run. See [docs/project-file.md](docs/project-file.md).
 In this repository `just check` runs `berc check` on the test schematics against the committed
 `test_schematics/berc-baseline.json` (they have findings on purpose), and `just check-baseline` rewrites it.
 
+## Part facts: the parts snapshot
+
+The checks that compare a part's MPNs with what its instance asks for (value, tolerance, dielectric, package, ratings)
+and the footprint review read part facts from one committed file beside the project, `parts.lock.toml`, like
+`Cargo.lock`. A check run never asks a server: CI runs offline and gives the same result on every PC.
+
+```sh
+berc parts refresh PROJECT --from parts.toml [--check] [--format text|json]
+```
+
+`berc parts refresh` writes the snapshot again from a part source. It holds every MPN field (`Mpn1`, `MPN_2`,
+`Manufacturer_Part_Number`, ...) of the parts fitted in the base design or any variant, and per MPN the facts the
+checks use: each with its value, the source that stated it, its rank and when. With a board file it also holds, for
+each board footprint's review hash ([`berc fp hash`](#footprint-review)) and each MPN placed on it, the footprint
+reviews that cover the pair. An MPN taken off the board leaves the file. The file is sorted and has one line per
+fact, so its git diff after a refresh shows exactly what changed in the source: a new value, a retracted review.
+
+| key | what |
+|---|---|
+| `capacitance`, `resistance`, `inductance` | the value, in F, Ω, H |
+| `tolerance` | below and above the value, in % or in its unit |
+| `rated_voltage`, `power`, `saturation_current` | ratings, in V, W, A |
+| `dielectric`, `technology`, `case_eia` | words: `X7R`, `thick_film`, `0402` |
+
+`--from FILE` takes part data from a file in the snapshot's own shape: hand-filled facts, or another board's
+snapshot. `--check` writes nothing and exits 1 when the snapshot is out of date, for a CI step; exit 2 is a design,
+source or file error. The project file can put the snapshot elsewhere: `[parts] lock = "data/parts.lock.toml"`.
+
+An MPN on the board that the snapshot lacks is a finding, `BOM-20`, until the next refresh: a new part cannot reach
+the BOM unchecked. Without a snapshot the checks that need it report themselves as not run.
+
 ## Placing fields
 
 ```sh

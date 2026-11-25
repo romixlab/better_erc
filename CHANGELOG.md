@@ -13,6 +13,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
+- `berc parts refresh`: writes `parts.lock.toml` from a part source (`--from FILE`); `--check` for CI (CFG-9).
 - `BOM-20`: an MPN of a fitted part missing from `parts.lock.toml`; project file `[parts] lock` names the file (CFG-9).
 - `berc waive`: appends a `[[waiver]]` for a finding, with its input hash, to the project file (CFG-2).
 - Project file `<name>.berc.toml` (fallback `berc.toml`): net voltages and ranges, derating factors, check settings, waivers (CFG-2).

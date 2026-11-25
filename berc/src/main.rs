@@ -164,6 +164,11 @@ enum Command {
         #[command(subcommand)]
         command: FpCommand,
     },
+    /// The parts snapshot: the part facts and footprint reviews the checks read (CFG-9)
+    Parts {
+        #[command(subcommand)]
+        command: PartsCommand,
+    },
     /// How often each command ran on this PC, from the local usage record
     ///
     /// Every run appends a line to $BERC_USAGE_FILE, else $XDG_STATE_HOME/berc/usage.tsv, else
@@ -183,6 +188,40 @@ enum Command {
         all: bool,
     },
 }
+
+#[derive(Subcommand)]
+enum PartsCommand {
+    /// Write parts.lock.toml again from a part source: the facts of every MPN on the board, the footprint reviews
+    ///
+    /// Every MPN field (Mpn1, MPN_2, ...) of the parts fitted in the base design or any variant, and each pair of a
+    /// board footprint's review hash with the MPNs placed on it. The file goes beside the project, or where the
+    /// project file's [parts] lock says; it is sorted, so its git diff shows what changed in the source. The
+    /// checks read only this file.
+    #[command(after_help = PARTS_REFRESH_AFTER_HELP)]
+    Refresh(PartsRefreshArgs),
+}
+
+#[derive(clap::Args)]
+struct PartsRefreshArgs {
+    /// The design: a directory with one design in it, or a design file
+    #[arg(value_hint = ValueHint::AnyPath, default_value = ".")]
+    project: PathBuf,
+    /// Take part data from this file, in the shape of parts.lock.toml (hand-filled facts, another board's lock)
+    #[arg(long, value_name = "FILE", value_hint = ValueHint::FilePath)]
+    from: Option<PathBuf>,
+    /// Write nothing; exit 1 when the snapshot is out of date (for CI)
+    #[arg(long)]
+    check: bool,
+    #[arg(long, value_enum, default_value_t = ListFormat::Text)]
+    format: ListFormat,
+}
+
+const PARTS_REFRESH_AFTER_HELP: &str = "\
+Exit codes: 0 written or unchanged; 1 out of date (--check); 2 the design, the source or the file failed.
+
+Examples:
+  berc parts refresh boards/b153 --from parts.toml
+  berc parts refresh --check --from parts.toml";
 
 #[derive(Subcommand)]
 enum FpCommand {
@@ -611,6 +650,9 @@ fn main() -> ExitCode {
         Command::Fp {
             command: FpCommand::Model(args),
         } => fp_model(&args),
+        Command::Parts {
+            command: PartsCommand::Refresh(args),
+        } => parts_refresh(&args),
         Command::Usage => {
             let out = usage::summary(&usage::known(&Cli::command()));
             let _ = std::io::stdout().lock().write_all(out.as_bytes());
@@ -1106,6 +1148,46 @@ fn fp_accept(args: &FpAcceptArgs) -> ExitCode {
         Err(e) => {
             error(&e.to_string());
             ExitCode::from(AcceptError::EXIT_CODE)
+        }
+    }
+}
+
+fn parts_refresh(args: &PartsRefreshArgs) -> ExitCode {
+    use better_erc::parts::{FileSource, PartsRefreshError, WriteLock, refresh_project};
+    let Some(from) = &args.from else {
+        error(
+            "no part source: name a file with --from (this berc has no other part source built in)",
+        );
+        return ExitCode::from(PartsRefreshError::EXIT_CODE);
+    };
+    let source = match FileSource::open(from) {
+        Ok(s) => s,
+        Err(e) => {
+            error(&e.to_string());
+            return ExitCode::from(PartsRefreshError::EXIT_CODE);
+        }
+    };
+    let write = if args.check {
+        WriteLock::Never
+    } else {
+        WriteLock::Changed
+    };
+    match refresh_project(&args.project, &source, write) {
+        Ok(r) => {
+            let out = match args.format {
+                ListFormat::Text => r.to_text(),
+                ListFormat::Json => r.to_json() + "\n",
+            };
+            let _ = std::io::stdout().lock().write_all(out.as_bytes());
+            if args.check && r.changed {
+                ExitCode::FAILURE
+            } else {
+                ExitCode::SUCCESS
+            }
+        }
+        Err(e) => {
+            error(&e.to_string());
+            ExitCode::from(PartsRefreshError::EXIT_CODE)
         }
     }
 }

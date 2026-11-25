@@ -36,6 +36,13 @@ pub struct Project {
     pub parts: Option<Arc<PartsLock>>,
 }
 
+/// Whether an open reads the parts snapshot
+#[derive(Clone, Copy)]
+enum Parts {
+    Read,
+    Skip,
+}
+
 /// A directory's files with some replaced
 struct Overlay<'e> {
     dir: DirFiles,
@@ -244,6 +251,19 @@ impl Project {
 
     /// [`Project::open`], telling `progress` when the import starts
     pub fn open_with(path: &Path, progress: &mut dyn FnMut(Stage)) -> Result<Project, CheckError> {
+        Project::open_dir(path, Parts::Read, progress)
+    }
+
+    /// [`Project::open`] without reading the parts snapshot, for a refresh that replaces it (CFG-9)
+    pub fn open_without_parts(path: &Path) -> Result<Project, CheckError> {
+        Project::open_dir(path, Parts::Skip, &mut |_| {})
+    }
+
+    fn open_dir(
+        path: &Path,
+        parts: Parts,
+        progress: &mut dyn FnMut(Stage),
+    ) -> Result<Project, CheckError> {
         let registry = Registry::default();
         let meta = std::fs::metadata(path).map_err(|_| CheckError::NotFound(path.to_path_buf()))?;
         let (dir, main) = if meta.is_dir() {
@@ -262,7 +282,7 @@ impl Project {
             (dir, name)
         };
         let files = DirFiles(dir.clone());
-        Project::import(&registry, dir, main, &files, progress)
+        Project::import(&registry, dir, main, &files, parts, progress)
     }
 
     /// Opens a design whose files were picked one by one, from anywhere (a GUI's file dialogs): `main` (an Altium
@@ -288,7 +308,14 @@ impl Project {
             Some(p) if !p.as_os_str().is_empty() => p.to_path_buf(),
             _ => PathBuf::from("."),
         };
-        Project::import(&Registry::default(), dir, main_name, &files, &mut |_| {})
+        Project::import(
+            &Registry::default(),
+            dir,
+            main_name,
+            &files,
+            Parts::Read,
+            &mut |_| {},
+        )
     }
 
     /// The same design read again with some of its files replaced: `edited` by path relative to [`Project::dir`],
@@ -303,6 +330,7 @@ impl Project {
             self.dir.clone(),
             self.main.clone(),
             &files,
+            Parts::Read,
             &mut |_| {},
         )
     }
@@ -312,6 +340,7 @@ impl Project {
         dir: PathBuf,
         main: String,
         files: &dyn Files,
+        parts: Parts,
         progress: &mut dyn FnMut(Stage),
     ) -> Result<Project, CheckError> {
         let src = Source::new(main.clone(), files);
@@ -339,12 +368,15 @@ impl Project {
         let lock_name = file
             .as_ref()
             .map_or(erc_parts::lock::FILE_NAME, |f| f.parts.lock_path());
-        let parts = read_lock(files, lock_name)
-            .map_err(|error| CheckError::PartsLock {
-                dir: dir.clone(),
-                error,
-            })?
-            .map(Arc::new);
+        let parts = match parts {
+            Parts::Skip => None,
+            Parts::Read => read_lock(files, lock_name)
+                .map_err(|error| CheckError::PartsLock {
+                    dir: dir.clone(),
+                    error,
+                })?
+                .map(Arc::new),
+        };
         Ok(Project {
             dir,
             main,
@@ -438,6 +470,15 @@ impl Project {
         };
         let path = project_file::append_waiver(&self.dir, &self.main, &w)?;
         Ok((w, path))
+    }
+
+    /// Where the parts snapshot is: the project file's `[parts] lock`, else `parts.lock.toml`, in [`Project::dir`]
+    pub fn parts_lock_path(&self) -> PathBuf {
+        let name = self
+            .file
+            .as_ref()
+            .map_or(erc_parts::lock::FILE_NAME, |f| f.parts.lock_path());
+        self.dir.join(name)
     }
 
     /// The variant names of every board, sorted, once each

@@ -42,6 +42,9 @@ min_pull_up = 2200
 [drawing.fields]
 hide_defaults = "always"
 
+[parts]
+lock = "parts.lock.toml"
+
 [[waiver]]
 fingerprint = "I2C-1:net /SDA|part R5"
 who = "Jane Doe"
@@ -101,6 +104,12 @@ The rating checks read these through `Ctx::derating`, and name the factor and it
 
 A check id the catalogue does not have is a warning; a threshold no check declares is an unknown key. `--set
 NAME=VALUE` on the command line wins over the file.
+
+## `[parts]`: the parts snapshot
+
+- `lock`: where the parts snapshot is, relative to the project directory (default `parts.lock.toml`). A path outside
+  the directory is refused. `berc parts refresh` writes it there and `berc check` reads it from there; see the README,
+  "Part facts: the parts snapshot".
 
 ## `[[waiver]]`: accepted findings
 
