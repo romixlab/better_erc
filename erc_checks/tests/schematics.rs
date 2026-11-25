@@ -8,9 +8,10 @@
 //! the diff, and keeps the sidecar's `[[not_run]]` blocks as they are (it never adds any). `DRAW` findings are
 //! compared on the `draw-*` schematics only: the others were written for their circuit, not drawn for style. A
 //! `<id>_<slug>.theme.json` beside a schematic is the colour theme of its run, a `<id>_<slug>.parts.lock.toml` its
-//! parts snapshot. A case that needs a KiCad project of its own (text variables) lives in a directory
-//! `<id>_<slug>/` holding `<id>_<slug>.kicad_sch`, its `.kicad_pro` and its sidecars, so the sources directory
-//! keeps one project.
+//! parts snapshot; `<id>_<slug>.settings` holds its settings, one `KEY=VALUE` per line as `--set` takes them, file
+//! paths relative to the schematic's directory. A case that needs a KiCad project of its own (text variables) lives
+//! in a directory `<id>_<slug>/` holding `<id>_<slug>.kicad_sch`, its `.kicad_pro` and its sidecars, so the sources
+//! directory keeps one project.
 
 use erc_checks::catalogue::catalogue;
 use erc_checks::{Confidence, Report, RunOptions, registered, run_imported};
@@ -165,6 +166,13 @@ fn schematics_match_their_expectations() {
             let lock =
                 erc_parts::PartsLock::parse(&format!("{name}.parts.lock.toml"), &text).unwrap();
             opts.parts = Some(std::sync::Arc::new(lock));
+        }
+        if let Ok(text) = std::fs::read_to_string(dir.join(format!("{name}.settings"))) {
+            for line in text.lines().filter(|l| !l.trim().is_empty()) {
+                let (k, v) = line.split_once('=').expect("KEY=VALUE");
+                opts.config.set_text(k.trim(), v.trim()).unwrap();
+            }
+            opts.config.read_paths(dir).unwrap();
         }
         let report = run_imported(&imported, &opts).unwrap();
         let mut got = actual(&report);

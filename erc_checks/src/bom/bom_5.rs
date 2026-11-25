@@ -1,7 +1,7 @@
 //! `BOM-5` No TODOs or "calculate later" values left
 
-use super::placeholder;
 use crate::meta::*;
+use crate::placeholder::placeholder;
 use crate::{Ctx, Finding};
 
 pub struct Bom5;

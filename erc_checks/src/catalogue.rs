@@ -96,6 +96,7 @@ fn parse_entry(line: &str) -> Option<Entry> {
         "🛑" => Severity::Error,
         "⚠️" => Severity::Warning,
         "💡" => Severity::Suggestion,
+        "ℹ️" => Severity::Info,
         _ => return None,
     };
     let rest = rest.strip_prefix('`')?;

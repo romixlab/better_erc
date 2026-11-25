@@ -7,6 +7,7 @@ use erc_analysis::scene::{Item, Scene, mm};
 use erc_model::geometry::{Colour, Rect};
 use erc_model::{Pt, Subject};
 
+mod block;
 mod colour;
 mod draw_28;
 mod draw_29;
@@ -23,6 +24,10 @@ mod draw_44;
 mod draw_45;
 mod draw_46;
 mod draw_47;
+mod draw_48;
+mod draw_49;
+mod draw_50;
+mod draw_51;
 mod draw_7;
 mod draw_9;
 mod overlap;

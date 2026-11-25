@@ -1,7 +1,7 @@
 //! `BOM-6` "Calculate later" part mounted
 
-use super::placeholder;
 use crate::meta::*;
+use crate::placeholder::placeholder;
 use crate::{Ctx, Finding};
 
 pub struct Bom6;

@@ -89,3 +89,15 @@ fn list_reports_the_rest_as_planned() {
     assert!(e.implemented && e.text.contains("**What it catches.**"));
     assert!(!erc_checks::explain("PIN-1").unwrap().implemented);
 }
+
+/// Every index line of `docs/checks.md` parses, whatever its severity (an info line too)
+#[test]
+fn every_index_line_parses() {
+    let text = include_str!("../../docs/checks.md");
+    let lines = text.lines().filter(|l| l.starts_with("- <a id=\"")).count();
+    assert_eq!(catalogue().entries.len(), lines);
+    let info = catalogue()
+        .entry("DRAW-12")
+        .expect("DRAW-12 is an info line");
+    assert_eq!(info.severity, erc_checks::Severity::Info);
+}

@@ -1,0 +1,33 @@
+# What better_erc finds on draw-49_placeholders.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"Ripple 20 mV\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"Ripple TBD\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"Information:\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"Information:\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-43"
+subjects = ["item text box \"Information:\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-49"
+subjects = ["item text \"Ripple TBD\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-49"
+subjects = ["item text box \"Information:\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-49"
+subjects = ["part R1"]

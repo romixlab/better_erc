@@ -49,6 +49,7 @@ mod mem;
 mod mux;
 mod name;
 mod pin;
+mod placeholder;
 mod rail;
 mod rate;
 mod seq;

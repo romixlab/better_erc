@@ -29,6 +29,8 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
   - parts without a value, placeholder values like `?` or `TBD` (fitted or not), resistor values that don't read
     or are written in a non-standard way (`BOM-5`, `BOM-6`, `BOM-9`, `BOM-10`)
   - MOSFET symbols whose pins aren't named G, S and D (`LIB-3`)
+  - sheet documentation: functional blocks (a `Block` field) without a note, placeholders left in notes and fields,
+    `See N12` references to a missing note, block names that contradict their parts (`DRAW-48` to `DRAW-51`)
 - **`berc check`**: the checks on a KiCad project (or a KiCad netlist, Altium, OrCAD, Smart PDF or PnP file) from the shell
   or a CI job, as text, JSON, SARIF (GitHub code scanning) or Markdown (a PR comment), with an exit code by
   severity and a baseline so only new findings fail. `berc explain ID` and `berc checks list` show the catalogue.
@@ -176,6 +178,11 @@ Facts the schematic cannot state live in the project file next to the design, `<
 `berc.toml`): net voltages, derating factors, check settings, and waivers for findings accepted on this design.
 `berc waive hw/board I2C-1 R5 --reason "..."` appends a waiver; a waived finding stays in the report, marked, and no
 longer fails the run. See [docs/project-file.md](docs/project-file.md).
+
+Some checks read files kept with the board. `--set drawing.notes=../doc/notes.md` names the board's notes file, a
+Markdown file with one `## N13 · title` heading per note, relative to the project directory; `DRAW-50` then reports
+each `See N13` on a sheet that points at a note the file lacks. Without the setting that check does not run. The
+project file sets it too, as `notes` under `[drawing]`.
 
 In this repository `just check` runs `berc check` on the test schematics against the committed
 `test_schematics/berc-baseline.json` (they have findings on purpose), and `just check-baseline` rewrites it.

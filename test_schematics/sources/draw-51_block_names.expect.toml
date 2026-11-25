@@ -1,0 +1,109 @@
+# What better_erc finds on draw-51_block_names.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board draw-51_block_names"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"1V8 LDO\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"3V3 LDO\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"3V8 DC-DC 500mA\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"5V buck\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"Information:\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"Information:\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"Information:\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"Information:\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "item text \"1V8 LDO\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "item text \"3V3 LDO\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "item text \"3V8 DC-DC 500mA\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "item text \"5V buck\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-51"
+subjects = ["item block 1V8 LDO", "part L1", "part U2", "sheet /"]
+
+[[finding]]
+check = "DRAW-51"
+subjects = ["item block 3V8 DC-DC 500mA", "part U1", "sheet /"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U1"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U2"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U3"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.1", "pin U1.2"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.1", "pin U2.2"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U3", "pin U3.1", "pin U3.2"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U4", "pin U4.1", "pin U4.2"]
