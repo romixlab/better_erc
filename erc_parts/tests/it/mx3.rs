@@ -90,6 +90,11 @@ fn facts_by_mpn() {
     assert!(
         matches!(&c.fact("capacitance").unwrap().value, FactValue::Number { value, unit } if (*value - 1e-7).abs() < 1e-18 && unit == "F")
     );
+    assert!(
+        matches!(&c.fact("tolerance").unwrap().value, FactValue::Tolerance { minus, plus, unit } if (*minus - 0.25e-12).abs() < 1e-20 && (*plus - 0.25e-12).abs() < 1e-20 && unit == "F"),
+        "{:?}",
+        c.fact("tolerance")
+    );
     let x7r = c.fact("dielectric").unwrap();
     assert_eq!(
         x7r.value,

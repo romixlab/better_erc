@@ -29,7 +29,8 @@ pub const TOKEN: &str = "mx3_0123456789abcdef-test-token";
 pub const RESISTOR: &str = "RC0402FR-0710KL";
 /// Its mx3 part id
 pub const RESISTOR_ID: i32 = 12;
-/// A Murata GRM 0402 capacitor: capacitance, rated voltage, a dielectric two sources disagree on
+/// A Murata GRM 0402 capacitor: capacitance, an absolute tolerance, rated voltage, a dielectric two sources
+/// disagree on
 pub const CAPACITOR: &str = "GRM155R71C104KA88D";
 /// Its mx3 part id
 pub const CAPACITOR_ID: i32 = 13;
@@ -153,6 +154,7 @@ fn decoded(scheme: &str, segments: Vec<MpnSegment>) -> MpnReading {
 /// The catalogue's part of `mpn`: its id, every value and its MPN reading
 fn catalogue(mpn: &str) -> Option<(i32, Vec<Resolved>, MpnReading)> {
     let pct = r#"{"Unit":{"prefix":"Centi","base":"Ratio","exp":1}}"#;
+    let pf = r#"{"Unit":{"prefix":"Pico","base":"Farad","exp":1}}"#;
     match mpn {
         RESISTOR => {
             let mut dielectric = resolved("dielectric", r#"{"Str":"C0G"}"#, "manual", 90);
@@ -198,6 +200,14 @@ fn catalogue(mpn: &str) -> Option<(i32, Vec<Resolved>, MpnReading)> {
                     resolved(
                         "capacitance",
                         r#"{"SI":{"value":{"F64":100.0},"unit":{"Unit":{"prefix":"Nano","base":"Farad","exp":1}}}}"#,
+                        "digikey",
+                        50,
+                    ),
+                    resolved(
+                        "tolerance",
+                        &format!(
+                            r#"{{"Tolerance":{{"min":{{"F64":-0.25}},"min_unit":{pf},"max":{{"F64":0.25}},"max_unit":{pf}}}}}"#
+                        ),
                         "digikey",
                         50,
                     ),

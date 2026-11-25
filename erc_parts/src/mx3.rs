@@ -447,8 +447,8 @@ fn unit_of(key: &str) -> &'static str {
         .map_or("", |k| k.unit)
 }
 
-/// A value in the lock's shape: numbers in the key's unit without prefix, a percent tolerance in `%`, anything
-/// else as its text
+/// A value in the lock's shape: numbers in the key's unit without prefix, a tolerance in `%` or in its own unit
+/// without prefix (`±0.25 pF` as 2.5e-13 F), anything else as its text
 fn fact_value(key: &str, v: &Variant, unparsed: bool) -> FactValue {
     let unit = unit_of(key);
     let text = || FactValue::Text {
@@ -458,7 +458,7 @@ fn fact_value(key: &str, v: &Variant, unparsed: bool) -> FactValue {
             other => other.to_string(),
         },
     };
-    if unparsed || unit.is_empty() && !matches!(v, Variant::Tolerance { .. }) {
+    if unparsed {
         return text();
     }
     match v {
@@ -467,19 +467,26 @@ fn fact_value(key: &str, v: &Variant, unparsed: bool) -> FactValue {
             min_unit,
             max,
             max_unit,
-        } if min_unit.to_string() == "%" && max_unit.to_string() == "%" => FactValue::Tolerance {
-            minus: -min.to_f64_lossy(),
-            plus: max.to_f64_lossy(),
-            unit: "%".to_owned(),
-        },
-        Variant::Tolerance { .. } if !unit.is_empty() => match v.bounds_base_f64() {
-            Some((lo, hi)) => FactValue::Tolerance {
-                minus: -lo,
-                plus: hi,
-                unit: unit.to_owned(),
-            },
-            None => text(),
-        },
+        } => {
+            if min_unit.to_string() == "%" && max_unit.to_string() == "%" {
+                return FactValue::Tolerance {
+                    minus: -min.to_f64_lossy(),
+                    plus: max.to_f64_lossy(),
+                    unit: "%".to_owned(),
+                };
+            }
+            match v.bounds_base_f64() {
+                Some((lo, hi)) if min_unit.dim().is_some_and(|d| !d.is_one()) => {
+                    FactValue::Tolerance {
+                        minus: -lo,
+                        plus: hi,
+                        unit: min_unit.without_prefixes().to_string(),
+                    }
+                }
+                _ => text(),
+            }
+        }
+        _ if unit.is_empty() => text(),
         Variant::SIRange { .. } => match v.bounds_base_f64() {
             Some((min, max)) => FactValue::Range {
                 min,
