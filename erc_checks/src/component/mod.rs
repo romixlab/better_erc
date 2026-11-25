@@ -166,7 +166,7 @@ pub(crate) fn quantity(text: &str, unit: Unit) -> Option<f64> {
 
 /// [`quantity`] with the precision the text writes it with
 pub(crate) fn written(text: &str, unit: Unit) -> Option<Written> {
-    Value::read(text, Some(unit)).written(unit)
+    Value::written(text, unit)
 }
 
 /// `rating` in whole steps of `step`, half a step rounded up
@@ -559,6 +559,8 @@ mod tests {
     fn a_field_states_a_rating_rounded_to_its_precision() {
         let w = Unit::Watt;
         assert!(field_states("63mW", w, 0.0625));
+        assert!(field_states("1/16W", w, 0.0625));
+        assert!(!field_states("1/16W", w, 0.063));
         assert!(field_states("63 mW", w, 0.063));
         assert!(!field_states("62mW", w, 0.0625));
         assert!(!field_states("64mW", w, 0.0625));

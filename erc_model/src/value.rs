@@ -202,6 +202,21 @@ impl Value {
         r
     }
 
+    /// The quantity in `unit` that the text of a rating's own field writes (`Power`, `Voltage`): a power written
+    /// as a fraction (`1/4W`, `1/16 W`), else what [`Value::read`] finds in that unit. Only a power is a fraction:
+    /// `10/25V` is no fraction of a volt.
+    pub fn written(text: &str, unit: Unit) -> Option<Written> {
+        let mut words = text.split_whitespace();
+        let first = words.next()?;
+        let with_next = words.next().map(|next| format!("{first}{next}"));
+        [Some(first), with_next.as_deref()]
+            .into_iter()
+            .flatten()
+            .filter_map(fraction)
+            .find(|q| q.unit == Unit::Watt && unit == Unit::Watt)
+            .or_else(|| Value::read(text, Some(unit)).written(unit))
+    }
+
     pub fn quantity(&self) -> Option<Quantity> {
         match self {
             Value::Quantity(q) => Some(*q),
@@ -713,6 +728,19 @@ mod tests {
         assert_eq!(
             ohm(" 499kR "),
             (Some(499e3), vec![ValueWarning::RedundantR])
+        );
+    }
+
+    #[test]
+    fn a_fraction_in_a_rating_field() {
+        let watts = |t: &str| Value::written(t, Unit::Watt).map(|w| (w.value, w.step));
+        assert_eq!(watts("1/4W"), Some((0.25, None)));
+        assert_eq!(watts("1/16 W"), Some((0.0625, None)));
+        assert_eq!(watts("1/8W 1%"), Some((0.125, None)));
+        assert_eq!(watts("1W").map(|w| w.0), Some(1.0));
+        assert_eq!(
+            Value::written("10/25V", Unit::Volt).map(|w| w.value),
+            Some(10.0)
         );
     }
 

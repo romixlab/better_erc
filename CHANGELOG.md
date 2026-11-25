@@ -22,6 +22,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `BOM-12`, `TOOL-14`: `Voltage` and `Power` match the lowest rating rounded to their written precision.
 - `TOOL-14`: `fields sync` writes powers below 1 W in whole mW (62.5 mW is `63mW`).
 
+### Fixed
+
+- `BOM-12`, `RATE-2`: a `Power`, `Preq_min` or `Pworking` field written `1/4W` was read as 1 W.
+
 ## [0.6.0] - 2026-11-25
 
 ### Added
