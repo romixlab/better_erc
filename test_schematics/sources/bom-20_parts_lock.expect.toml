@@ -1,0 +1,9 @@
+# What better_erc finds on bom-20_parts_lock.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-20"
+subjects = ["part R2"]
+
+[[finding]]
+check = "BOM-20"
+subjects = ["part R4"]

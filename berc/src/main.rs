@@ -819,6 +819,8 @@ fn check(args: CheckArgs) -> ExitCode {
             variant: args.variant,
             only: args.only,
             config,
+            // The project's own, read with it
+            parts: None,
         },
         require: args.require,
         fail_on: match args.fail_on {

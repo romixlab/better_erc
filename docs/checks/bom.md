@@ -508,3 +508,27 @@ BOM-19`).
 **Fix.** Bring the odd part in line with its siblings, or write on the sheet why it differs.
 
 **References.** Catalogue `BOM-3`, `PAS-40`, `PAS-41`; Roman, 23 Oct 2026.
+
+## `BOM-20` MPN on the board but not in the parts snapshot <a id="bom-20"></a>
+
+⚠️ warning · needs: MPN fields, the parts snapshot · [catalogue entry](../checks.md#bom-20)
+
+**Impl.** easy · depends on CFG-9
+
+**What it catches.** An MPN on a fitted part, in the variant checked, that the parts snapshot beside the project
+(`parts.lock.toml`) does not list.
+
+**Why it matters.** The checks that compare an MPN with its instance's fields and the footprint review read part facts
+only from the snapshot, so CI runs offline and the same on every PC. An MPN added since the last refresh has no facts
+there: every check of it would say "not checked", and a new part would reach the BOM unreviewed.
+
+**Example.** `Mpn2` of C412 set to `GRM155R60J105KE19D` after the last `berc parts refresh`: the rated voltage of the
+new candidate is never compared with the rail.
+
+**How to check.** Every MPN field (`Mpn1`, `MPN_2`, `Manufacturer_Part_Number`, ...) of each fitted part, against
+the snapshot's `[[part]]` entries by MPN as written. better_erc (`erc_checks/src/bom/bom_20.rs`) reports one finding
+per missing MPN on the parts carrying it. Without a snapshot the check does not run.
+
+**Fix.** Run `berc parts refresh` and commit the new `parts.lock.toml` with the change.
+
+**References.** Catalogue `BOM-12`, `LIB-6`; [project file](../project-file.md) `[parts]`.

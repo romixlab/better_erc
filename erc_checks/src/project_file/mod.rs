@@ -24,6 +24,9 @@
 //! [drawing.fields]
 //! hide_defaults = "always"
 //!
+//! [parts]
+//! lock = "parts.lock.toml"
+//!
 //! [[waiver]]
 //! fingerprint = "I2C-1:net /SDA|part R5"
 //! input_hash = "in1:0123456789abcdef"
@@ -62,8 +65,24 @@ pub struct ProjectFile {
     /// Nets, derating and check settings, for the run
     pub config: Config,
     pub waivers: Vec<Waiver>,
+    /// The parts snapshot's settings (CFG-9)
+    pub parts: PartsSettings,
     /// Keys this better_erc does not know, and other things read but not used
     pub warnings: Vec<String>,
+}
+
+/// `[parts]`: where the parts snapshot is
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct PartsSettings {
+    /// The lock's path relative to the project directory; `None`: [`erc_parts::lock::FILE_NAME`]
+    pub lock: Option<String>,
+}
+
+impl PartsSettings {
+    /// The lock's path relative to the project directory
+    pub fn lock_path(&self) -> &str {
+        self.lock.as_deref().unwrap_or(erc_parts::lock::FILE_NAME)
+    }
 }
 
 /// Why a project file cannot be used
@@ -210,6 +229,7 @@ impl ProjectFile {
             ..Config::default()
         };
         let mut waivers = Vec::new();
+        let mut parts = PartsSettings::default();
         for (key, v) in &table {
             match key.as_str() {
                 "nets" => read_nets(&mut r, v, &mut config.nets)?,
@@ -217,6 +237,7 @@ impl ProjectFile {
                 "checks" => read_checks(&mut r, v, &mut config)?,
                 "drawing" => read_settings(&mut r, "drawing", v, &mut config)?,
                 "waiver" => waivers = read_waivers(&mut r, v)?,
+                "parts" => parts = read_parts(&mut r, v)?,
                 _ => r.unknown(key),
             }
         }
@@ -224,6 +245,7 @@ impl ProjectFile {
             file: file.to_owned(),
             config,
             waivers,
+            parts,
             warnings: r.warnings,
         })
     }
@@ -288,6 +310,31 @@ fn read_voltage(r: &mut Reader, path: &str, v: &Value) -> Result<NetVoltage, Pro
         return Err(r.err(path, format!("nominal {n} V is outside {min}..{max} V")));
     }
     Ok(NetVoltage { nominal, min, max })
+}
+
+/// `[parts]`: `lock`, a relative path inside the project directory
+fn read_parts(r: &mut Reader, v: &Value) -> Result<PartsSettings, ProjectFileError> {
+    let mut parts = PartsSettings::default();
+    for (key, v) in r.table("parts", v)? {
+        let path = format!("parts.{key}");
+        match key.as_str() {
+            "lock" => {
+                let p = r.string(&path, v)?;
+                let inside = !p.is_empty()
+                    && !std::path::Path::new(p).is_absolute()
+                    && !p.split(['/', '\\']).any(|c| c == "..");
+                if !inside {
+                    return Err(r.err(
+                        &path,
+                        format!("a path inside the project directory, not {p:?}"),
+                    ));
+                }
+                parts.lock = Some(p.to_owned());
+            }
+            _ => r.unknown(&path),
+        }
+    }
+    Ok(parts)
 }
 
 fn read_derating(r: &mut Reader, v: &Value, d: &mut Derating) -> Result<(), ProjectFileError> {

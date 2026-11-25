@@ -127,6 +127,8 @@ pub enum Need {
     Variant,
     /// Part data from the part database or the lab's part store (CFG-5)
     PartDb,
+    /// The parts snapshot beside the project, `parts.lock.toml` (CFG-9)
+    PartsLock,
     /// A key of the better_erc project file (CFG-2)
     Project(&'static str),
     /// Several boards joined through connectors (NET-13)
@@ -153,6 +155,7 @@ impl Need {
             Need::ColourTheme => "colour theme".into(),
             Need::Variant => "fitted parts".into(),
             Need::PartDb => "part data".into(),
+            Need::PartsLock => "parts snapshot".into(),
             Need::Project(key) => format!("project file: {key}"),
             Need::MultiBoard => "multi-board".into(),
         }
@@ -178,6 +181,7 @@ impl Need {
         Need::ColourTheme,
         Need::Variant,
         Need::PartDb,
+        Need::PartsLock,
         Need::MultiBoard,
     ];
 
@@ -200,6 +204,7 @@ impl Need {
             Need::ColourTheme => "colour-theme".into(),
             Need::Variant => "variant".into(),
             Need::PartDb => "part-db".into(),
+            Need::PartsLock => "parts-lock".into(),
             Need::Project(key) => format!("project:{key}"),
             Need::MultiBoard => "multi-board".into(),
         }
@@ -236,6 +241,7 @@ impl Need {
             Need::ColourTheme => "KiCad colour themes, given with --theme",
             Need::Variant => "DNP flags and variant overrides: what is fitted",
             Need::PartDb => "part data (CFG-5)",
+            Need::PartsLock => "the parts snapshot, parts.lock.toml (CFG-9)",
             Need::Project(_) => "a key of the better_erc project file (CFG-2)",
             Need::MultiBoard => "several boards joined through connectors (NET-13)",
         }

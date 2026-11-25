@@ -144,6 +144,11 @@ fn schematics_match_their_expectations() {
                 .themes
                 .push(erc_kicad::theme::read(&text).unwrap());
         }
+        if let Ok(text) = std::fs::read_to_string(dir.join(format!("{name}.parts.lock.toml"))) {
+            let lock =
+                erc_parts::PartsLock::parse(&format!("{name}.parts.lock.toml"), &text).unwrap();
+            opts.parts = Some(std::sync::Arc::new(lock));
+        }
         let report = run_imported(&imported, &opts).unwrap();
         let mut got = actual(&report);
         if !name.starts_with("draw-") {

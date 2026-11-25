@@ -627,6 +627,7 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="bom-17"></a>🛑 `BOM-17` One MPN with two different values (a copy-paste part) · impl: easy (netlist) · [📖](checks/bom.md#bom-17) <!-- 21 Oct 2026 -->
 - <a id="bom-18"></a>💡 `BOM-18` Parts of the vendor's typical application or reference design left out without a stated reason · impl: judgement (part data (typical application circuits; no FEATURES id yet)) · [📖](checks/bom.md#bom-18) <!-- 21 Oct 2026 -->
 - <a id="bom-19"></a>💡 `BOM-19` Odd one out within a circuit block (a regulator with its passives, an amplifier stage, a filter, a divider, a small sheet): one part of a different case size (0201 beside 1206), mount type, series, dielectric or tolerance grade than its siblings of the same role, connectors excluded, with the likely reason (oversight, leftover of a copied design, lost cost, weak link) ≈ BOM-3 (board-wide), PAS-40, PAS-41, ANA-24, ANA-25 · impl: mid (NET-7, NET-23, NET-24, RPT-6) · [📖](checks/bom.md#bom-19) <!-- 23 Oct 2026; Roman -->
+- <a id="bom-20"></a>⚠️ `BOM-20` MPN on the board but not in the parts snapshot (`parts.lock.toml`): its facts and footprint reviews go unchecked · impl: easy (CFG-9) · [📖](checks/bom.md#bom-20) <!-- 25 Nov 2026 -->
 
 ### 🏷️ NAME - Naming and conventions
 - <a id="name-1"></a>💡 `NAME-1` Inconsistent naming of inverted signals: suggest one notation · impl: easy (netlist) · [📖](checks/name.md#name-1) <!-- CHK-63 -->

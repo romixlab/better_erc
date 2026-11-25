@@ -2,7 +2,7 @@
 //! part sources a refresh asks ([`source`]), and what of a design the snapshot covers ([`board`]).
 //!
 //! The checks read only the lock, so a run is offline and the same on every PC; `berc parts refresh`
-//! ([`refresh`]) writes it from a source, and its diff shows a changed fact or a retracted review. The lock and
+//! ([`refresh()`]) writes it from a source, and its diff shows a changed fact or a retracted review. The lock and
 //! the checks need no source: the lab's part store is one behind its own cargo feature, [`source::FileSource`]
 //! reads hand-filled data.
 

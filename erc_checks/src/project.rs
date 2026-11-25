@@ -14,10 +14,12 @@ use erc_import::Registry;
 use erc_model::{
     Confidence, DirFiles, Files, ImportError, ImportOptions, Imported, MemFiles, Source, Time,
 };
+use erc_parts::{LockError, PartsLock};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::fmt;
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 
 /// A design opened from a path: which file of which directory, read by which importer
 pub struct Project {
@@ -30,6 +32,8 @@ pub struct Project {
     pub imported: Imported,
     /// The better_erc project file beside the design (CFG-2), when there is one
     pub file: Option<ProjectFile>,
+    /// The parts snapshot beside the design (CFG-9), when there is one
+    pub parts: Option<Arc<PartsLock>>,
 }
 
 /// A directory's files with some replaced
@@ -164,6 +168,8 @@ pub enum CheckError {
         dir: PathBuf,
         error: ProjectFileError,
     },
+    /// The parts snapshot beside the design cannot be read (CFG-9)
+    PartsLock { dir: PathBuf, error: LockError },
 }
 
 impl CheckError {
@@ -196,14 +202,18 @@ impl fmt::Display for CheckError {
             CheckError::Baseline { file, message } => {
                 write!(f, "baseline {}: {message}", file.display())
             }
-            CheckError::ProjectFile { dir, error } => {
-                if dir.as_os_str().is_empty() || dir == Path::new(".") {
-                    error.fmt(f)
-                } else {
-                    write!(f, "{}/{error}", dir.display())
-                }
-            }
+            CheckError::ProjectFile { dir, error } => in_dir(f, dir, error),
+            CheckError::PartsLock { dir, error } => in_dir(f, dir, error),
         }
+    }
+}
+
+/// An error naming a file relative to `dir`, with `dir` in front
+fn in_dir(f: &mut fmt::Formatter<'_>, dir: &Path, error: &dyn fmt::Display) -> fmt::Result {
+    if dir.as_os_str().is_empty() || dir == Path::new(".") {
+        error.fmt(f)
+    } else {
+        write!(f, "{}/{error}", dir.display())
     }
 }
 
@@ -213,6 +223,7 @@ impl std::error::Error for CheckError {
             CheckError::Import { error, .. } => Some(error),
             CheckError::Run(e) => Some(e),
             CheckError::ProjectFile { error, .. } => Some(error),
+            CheckError::PartsLock { error, .. } => Some(error),
             _ => None,
         }
     }
@@ -325,12 +336,22 @@ impl Project {
                 })?),
                 None => None,
             };
+        let lock_name = file
+            .as_ref()
+            .map_or(erc_parts::lock::FILE_NAME, |f| f.parts.lock_path());
+        let parts = read_lock(files, lock_name)
+            .map_err(|error| CheckError::PartsLock {
+                dir: dir.clone(),
+                error,
+            })?
+            .map(Arc::new);
         Ok(Project {
             dir,
             main,
             importer: importer.name(),
             imported,
             file,
+            parts,
         })
     }
 
@@ -448,6 +469,7 @@ impl Project {
     pub fn check(&self, opts: &CheckOptions) -> Result<CheckRun, CheckError> {
         let run = RunOptions {
             config: self.config(&opts.run.config),
+            parts: opts.run.parts.clone().or_else(|| self.parts.clone()),
             ..opts.run.clone()
         };
         let mut report = run_imported(&self.imported, &run)?;
@@ -492,6 +514,24 @@ impl Project {
             verdict,
         })
     }
+}
+
+/// The parts snapshot `name` among the design's files, when it is there
+fn read_lock(files: &dyn Files, name: &str) -> Result<Option<PartsLock>, LockError> {
+    let Some(bytes) = files.read(name) else {
+        return Ok(None);
+    };
+    if bytes.len() as u64 > erc_parts::lock::FILE_SIZE_BYTES_MAX {
+        return Err(LockError::TooLarge {
+            file: name.to_owned(),
+            size_bytes: bytes.len() as u64,
+        });
+    }
+    let text = String::from_utf8(bytes).map_err(|e| LockError::Read {
+        file: name.to_owned(),
+        error: std::io::Error::new(std::io::ErrorKind::InvalidData, e),
+    })?;
+    PartsLock::parse(name, &text).map(Some)
 }
 
 /// An output format of a check run

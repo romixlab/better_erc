@@ -11,6 +11,7 @@ use erc_analysis::scene::Scene;
 use erc_analysis::{Feeds, I2cBuses, PartClasses, Power, PowerOptions, Values};
 use erc_model::geometry::Theme;
 use erc_model::{Board, BoardId, Design, PartId, Provenance, VariantId, View};
+use erc_parts::PartsLock;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::OnceLock;
@@ -291,6 +292,15 @@ impl Availability {
             Need::PowerStates => missing("power states need the project file (NET-8, CFG-2)"),
             Need::Conduction => missing("signal following is not built yet (NET-10)"),
             Need::PartDb => missing("no part data: the part database is not built yet (CFG-5)"),
+            Need::PartsLock => {
+                if cx.parts.is_some() {
+                    Availability::Available
+                } else {
+                    missing(
+                        "no parts snapshot beside the project: `berc parts refresh` writes parts.lock.toml (CFG-9)",
+                    )
+                }
+            }
             // Derating factors have defaults in code: never missing
             Need::Project(key) if key == "derating" || key.starts_with("derating.") => {
                 Availability::Available
@@ -327,6 +337,7 @@ pub struct Ctx<'a> {
     /// The variant checked; `None` for the base design
     pub variant: Option<VariantId>,
     config: &'a Config,
+    parts: Option<&'a PartsLock>,
     classes: OnceLock<PartClasses>,
     values: OnceLock<Values>,
     power: OnceLock<Power>,
@@ -348,6 +359,7 @@ impl<'a> Ctx<'a> {
             board_id,
             variant,
             config,
+            parts: None,
             classes: OnceLock::new(),
             values: OnceLock::new(),
             power: OnceLock::new(),
@@ -356,6 +368,17 @@ impl<'a> Ctx<'a> {
             drawing: OnceLock::new(),
             scenes: OnceLock::new(),
         }
+    }
+
+    /// The context with the project's parts snapshot (Need::PartsLock)
+    pub fn with_parts(mut self, parts: Option<&'a PartsLock>) -> Ctx<'a> {
+        self.parts = parts;
+        self
+    }
+
+    /// The parts snapshot beside the project (Need::PartsLock)
+    pub fn parts(&self) -> Option<&'a PartsLock> {
+        self.parts
     }
 
     pub fn board(&self) -> &'a Board {

@@ -295,6 +295,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `BOM-11` One value in two packages · `bom/bom_11.rs`, `bom-11_packages`
 - ✅ `BOM-14` Fitted part without an MPN · `bom/bom_14.rs`, `bom-14_mpn` (field names configurable with `CFG-2`)
 - ✅ `BOM-17` One MPN with different values · `bom/bom_17.rs`, `bom-17_mpn_values`
+- ✅ `BOM-20` MPN on the board but not in the parts snapshot (`CFG-9`) · `bom/bom_20.rs`, `bom-20_parts_lock`
 - ✅ `LIB-3` MOSFET pins not named G, D, S · `lib/lib_3.rs`, `lib-3_mosfet_pin_names`
 - ✅ `DEC-1` Rail feeding power pins with no capacitor to a ground · `dec/dec_1.rs`, `dec-1_no_decoupling`
 - ✅ `DEC-4` Ferrite in series between two rails, with the LC resonance against the capacitance behind it (bead

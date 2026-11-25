@@ -35,6 +35,7 @@ pub use erc_checks as checks;
 pub use erc_import as import;
 pub use erc_kicad as kicad;
 pub use erc_model as model;
+pub use erc_parts as parts;
 pub use erc_step as step;
 
 pub mod diff;

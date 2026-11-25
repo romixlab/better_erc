@@ -204,3 +204,18 @@ fn show_factor(v: f64) -> String {
         v.to_string()
     }
 }
+
+#[test]
+fn parts_lock_path() {
+    let f = ProjectFile::parse("b.berc.toml", "[parts]\nlock = \"data/b.lock.toml\"\n").unwrap();
+    assert_eq!(f.parts.lock_path(), "data/b.lock.toml");
+    assert_eq!(ProjectFile::default().parts.lock_path(), "parts.lock.toml");
+    assert_eq!(
+        err("[parts]\nlock = \"../other/parts.lock.toml\"\n"),
+        "b.berc.toml: parts.lock: a path inside the project directory, not \"../other/parts.lock.toml\""
+    );
+    assert_eq!(
+        err("[parts]\nlock = \"/etc/parts.lock.toml\"\n"),
+        "b.berc.toml: parts.lock: a path inside the project directory, not \"/etc/parts.lock.toml\""
+    );
+}

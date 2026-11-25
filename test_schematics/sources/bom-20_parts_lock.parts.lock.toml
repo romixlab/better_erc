@@ -1,0 +1,21 @@
+# The parts snapshot of bom-20_parts_lock.kicad_sch: R1's and C1's MPNs; R2's and R4's are not here, R3 is DNP.
+version = 1
+source = "file parts.toml"
+keys = ["capacitance", "resistance"]
+unknown_keys = []
+
+[[part]]
+mpn = "GRM155R71C104KA88D"
+match = "found"
+missing = []
+facts = [
+    { key = "capacitance", value = 1e-7, unit = "F", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "RC0402FR-0710KL"
+match = "found"
+missing = []
+facts = [
+    { key = "resistance", value = 10000.0, unit = "Ω", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]

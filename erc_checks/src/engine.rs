@@ -8,9 +8,11 @@ use crate::finding::{Confidence, Finding, NotRun};
 use crate::meta::{Check, Need, Scope, Severity, registered};
 use crate::report::{BoardSummary, CheckStatus, Note, Report, Status, Summary, Timing};
 use erc_model::{BoardId, Design, Imported, NoteKind};
+use erc_parts::PartsLock;
 use rayon::prelude::*;
 use std::collections::BTreeMap;
 use std::fmt;
+use std::sync::Arc;
 use std::time::Instant;
 
 /// What to run
@@ -21,6 +23,8 @@ pub struct RunOptions {
     /// Only these check ids or categories (`I2C-3`, `BOM`); empty for all
     pub only: Vec<String>,
     pub config: Config,
+    /// The project's parts snapshot (CFG-9)
+    pub parts: Option<Arc<PartsLock>>,
 }
 
 /// Why a run could not start
@@ -120,7 +124,8 @@ pub fn run_with(
             .iter()
             .filter(|c| c.meta().scope == Scope::Board || bi == 0)
             .collect();
-        let cx = Ctx::new(design, board_id, variants[bi], &opts.config);
+        let cx = Ctx::new(design, board_id, variants[bi], &opts.config)
+            .with_parts(opts.parts.as_deref());
         let mut avail: BTreeMap<String, Availability> = BTreeMap::new();
         let mut runnable = Vec::new();
         for c in here {
