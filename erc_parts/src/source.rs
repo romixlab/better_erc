@@ -72,6 +72,30 @@ pub struct NewReview {
     pub covers: Vec<Cover>,
 }
 
+impl NewReview {
+    /// Whether every source may record it: a review hash of this version, 1 to [`COVERS_PER_REVIEW_MAX`] covers,
+    /// no family without a segment, a reviewer and a date
+    pub fn check(&self) -> Result<(), AcceptRefused> {
+        if !erc_model::fphash::is_hash(&self.hash) {
+            return Err(AcceptRefused::BadHash(self.hash.clone()));
+        }
+        if self.covers.is_empty() || self.covers.len() > COVERS_PER_REVIEW_MAX {
+            return Err(AcceptRefused::Covers(self.covers.len()));
+        }
+        if self.reviewer.trim().is_empty() || self.reviewed_on.trim().is_empty() {
+            return Err(AcceptRefused::Who);
+        }
+        if let Some(c) = self
+            .covers
+            .iter()
+            .find(|c| matches!(c, Cover::Family { segments, .. } if segments.is_empty()))
+        {
+            return Err(AcceptRefused::EmptyFamily(c.describe()));
+        }
+        Ok(())
+    }
+}
+
 /// The largest number of covers one review takes
 pub const COVERS_PER_REVIEW_MAX: usize = 200;
 
@@ -109,7 +133,7 @@ pub struct FileSource {
     path: Option<PathBuf>,
 }
 
-/// Why a [`FileSource`] refused a review
+/// Why a source refused a review before recording it
 #[derive(Debug)]
 pub enum AcceptRefused {
     /// Not a review hash of this version
@@ -265,30 +289,15 @@ impl Source for FileSource {
             what: format!("review of {}", review.hash),
             cause: Box::new(e),
         };
-        if !erc_model::fphash::is_hash(&review.hash) {
-            return Err(refused(AcceptRefused::BadHash(review.hash.clone())));
-        }
-        if review.covers.is_empty() || review.covers.len() > COVERS_PER_REVIEW_MAX {
-            return Err(refused(AcceptRefused::Covers(review.covers.len())));
-        }
-        if review.reviewer.trim().is_empty() || review.reviewed_on.trim().is_empty() {
-            return Err(refused(AcceptRefused::Who));
-        }
+        review.check().map_err(refused)?;
         let mut data = self.lock();
         for c in &review.covers {
-            match c {
-                Cover::Mpn { mpn } => {
-                    if !data
-                        .part(mpn)
-                        .is_some_and(|p| p.matched == PartMatch::Found)
-                    {
-                        return Err(refused(AcceptRefused::NoPart(mpn.clone())));
-                    }
-                }
-                Cover::Family { segments, .. } if segments.is_empty() => {
-                    return Err(refused(AcceptRefused::EmptyFamily(c.describe())));
-                }
-                Cover::Family { .. } => {}
+            if let Cover::Mpn { mpn } = c
+                && !data
+                    .part(mpn)
+                    .is_some_and(|p| p.matched == PartMatch::Found)
+            {
+                return Err(refused(AcceptRefused::NoPart(mpn.clone())));
             }
         }
         let id = data.reviews.iter().map(|r| r.id).max().unwrap_or(0) + 1;
