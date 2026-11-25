@@ -409,7 +409,7 @@ checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
 
 [[package]]
 name = "berc"
-version = "0.4.62"
+version = "0.5.0"
 dependencies = [
  "anstream",
  "anstyle",
@@ -422,7 +422,7 @@ dependencies = [
 
 [[package]]
 name = "better_erc"
-version = "0.4.62"
+version = "0.5.0"
 dependencies = [
  "anstyle",
  "erc_analysis",
@@ -438,7 +438,7 @@ dependencies = [
 
 [[package]]
 name = "better_erc_app"
-version = "0.4.62"
+version = "0.5.0"
 dependencies = [
  "better_erc",
  "bytemuck",
@@ -1432,7 +1432,7 @@ checksum = "00d174d5400e5e8fd687ad1049e2f578285fa914201b1af7e8b112a4546bd826"
 
 [[package]]
 name = "erc_analysis"
-version = "0.4.62"
+version = "0.5.0"
 dependencies = [
  "erc_kicad",
  "erc_model",
@@ -1442,7 +1442,7 @@ dependencies = [
 
 [[package]]
 name = "erc_checks"
-version = "0.4.62"
+version = "0.5.0"
 dependencies = [
  "anstyle",
  "erc_analysis",
@@ -1460,7 +1460,7 @@ dependencies = [
 
 [[package]]
 name = "erc_import"
-version = "0.4.62"
+version = "0.5.0"
 dependencies = [
  "chardetng",
  "csv",
@@ -1475,7 +1475,7 @@ dependencies = [
 
 [[package]]
 name = "erc_kicad"
-version = "0.4.62"
+version = "0.5.0"
 dependencies = [
  "erc_model",
  "generate_netlists",
@@ -1485,7 +1485,7 @@ dependencies = [
 
 [[package]]
 name = "erc_levels"
-version = "0.4.62"
+version = "0.5.0"
 dependencies = [
  "exact_units",
  "serde",
@@ -1494,7 +1494,7 @@ dependencies = [
 
 [[package]]
 name = "erc_model"
-version = "0.4.62"
+version = "0.5.0"
 dependencies = [
  "serde",
  "sha2",
@@ -1502,7 +1502,7 @@ dependencies = [
 
 [[package]]
 name = "erc_parts"
-version = "0.4.62"
+version = "0.5.0"
 dependencies = [
  "erc_kicad",
  "erc_model",
@@ -1512,7 +1512,7 @@ dependencies = [
 
 [[package]]
 name = "erc_step"
-version = "0.4.62"
+version = "0.5.0"
 dependencies = [
  "ruststep",
  "truck-geotrait",
@@ -1754,7 +1754,7 @@ dependencies = [
 
 [[package]]
 name = "generate_netlists"
-version = "0.4.62"
+version = "0.5.0"
 dependencies = [
  "hex",
  "sha2",

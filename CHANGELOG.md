@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-25
+
 ### Added
 
 - `berc fields sync`: Voltage, Power, Dielectric, Package of resistors and capacitors written from `parts.lock.toml` as the worst over each part's MPNs (TOOL-14).
