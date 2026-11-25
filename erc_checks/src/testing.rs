@@ -26,11 +26,22 @@ pub fn fingerprints_with(
     f
 }
 
-/// The report of `check` alone on `test_schematics/sources/<schematic>.kicad_sch` with these options
+/// The directory of a test schematic: `test_schematics/sources/<schematic>/` for a case with a project of its own,
+/// else `test_schematics/sources`
+fn case_dir(schematic: &str) -> std::path::PathBuf {
+    let sources = Path::new(env!("CARGO_MANIFEST_DIR")).join("../test_schematics/sources");
+    let own = sources.join(schematic);
+    if own.join(format!("{schematic}.kicad_sch")).is_file() {
+        own
+    } else {
+        sources
+    }
+}
+
+/// The report of `check` alone on the test schematic `<schematic>.kicad_sch` with these options
 pub fn report_with(check: &'static dyn Check, schematic: &str, opts: &RunOptions) -> crate::Report {
-    let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../test_schematics/sources");
     let imported = erc_kicad::project::read(
-        &DirFiles(dir),
+        &DirFiles(case_dir(schematic)),
         &format!("{schematic}.kicad_sch"),
         &ImportOptions::default(),
     )
@@ -63,12 +74,9 @@ pub fn fingerprints_of_with(
     f
 }
 
-/// The options of a run with the parts snapshot beside `test_schematics/sources/<schematic>.kicad_sch`
-/// (`<schematic>.parts.lock.toml`)
+/// The options of a run with the parts snapshot beside the test schematic (`<schematic>.parts.lock.toml`)
 pub fn with_lock(schematic: &str) -> RunOptions {
-    let path = Path::new(env!("CARGO_MANIFEST_DIR")).join(format!(
-        "../test_schematics/sources/{schematic}.parts.lock.toml"
-    ));
+    let path = case_dir(schematic).join(format!("{schematic}.parts.lock.toml"));
     RunOptions {
         parts: Some(std::sync::Arc::new(
             erc_parts::PartsLock::read(&path).unwrap(),
