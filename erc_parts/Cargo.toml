@@ -1,0 +1,11 @@
+[package]
+name = "erc_parts"
+description = "better_erc part data: the parts snapshot (parts.lock.toml) the checks read, the part sources a refresh asks"
+authors.workspace = true
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+include.workspace = true
+
+[dependencies]
+erc_model = { path = "../erc_model" }

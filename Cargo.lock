@@ -1448,6 +1448,7 @@ dependencies = [
  "erc_import",
  "erc_kicad",
  "erc_model",
+ "erc_parts",
  "inventory",
  "rayon",
  "serde",
@@ -1496,6 +1497,13 @@ version = "0.4.62"
 dependencies = [
  "serde",
  "sha2",
+]
+
+[[package]]
+name = "erc_parts"
+version = "0.4.62"
+dependencies = [
+ "erc_model",
 ]
 
 [[package]]

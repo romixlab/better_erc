@@ -18,6 +18,7 @@ erc_import = { path = "../erc_import", optional = true }
 anstyle = "1"
 erc_analysis = { path = "../erc_analysis" }
 erc_model = { path = "../erc_model" }
+erc_parts = { path = "../erc_parts" }
 inventory = "0.3"
 rayon = "1"
 serde = { version = "1.0", features = ["derive"] }
