@@ -1,11 +1,13 @@
 //! `BOM-12` Value field vs the MPN's parameters
 
-use crate::component::{self, Candidate, Dielectrics, Judged, Ratings, Stated, dielectric};
+use crate::component::{
+    self, Candidate, Dielectrics, Judged, Ratings, SAME_REL, Stated, dielectric,
+};
 use crate::meta::*;
 use crate::{Ctx, Finding};
 use erc_analysis::PartClass;
 use erc_analysis::value::{PartValue, format_si};
-use erc_model::{PartId, Provenance, Subject, Unit};
+use erc_model::{PartId, Provenance, Subject, Unit, Written};
 
 pub struct Bom12;
 
@@ -20,18 +22,15 @@ static META: CheckMeta = CheckMeta {
     params: &[],
 };
 
-/// Two values closer than this, relative, are the same (a value written `4k7` and a fact of 4700.0000001)
-const SAME_REL: f64 = 1e-6;
-
 impl Check for Bom12 {
     fn meta(&self) -> &'static CheckMeta {
         &META
     }
 
     /// Every MPN of each fitted resistor, capacitor and inductor against what the part requires: its value (within
-    /// the MPN's tolerance) and tolerance. And the part's display fields, the worst over its MPNs exactly: `Voltage`
-    /// and `Power` the lowest rating, `Dielectric` the worst code; a part without the field is held to the board's
-    /// `DEFAULT_*` text variable.
+    /// the MPN's tolerance) and tolerance. And the part's display fields, the worst over its MPNs: `Voltage` and
+    /// `Power` the lowest rating, rounded to the precision the field is written with, `Dielectric` the worst code; a
+    /// part without the field is held to the board's `DEFAULT_*` text variable.
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let mut out = Vec::new();
         for p in component::fitted_sorted(cx) {
@@ -115,11 +114,11 @@ impl Shown<'_, '_, '_> {
         f.build()
     }
 
-    /// `Voltage` or `Power` equals the lowest rating among the MPNs; an MPN without the rating leaves it not checked
+    /// `Voltage` or `Power` states the lowest rating among the MPNs; an MPN without the rating leaves it not checked
     fn lowest(
         &self,
         judged: &mut [Judged],
-        want: f64,
+        want: Written,
         s: &Stated,
         fact: &'static str,
         unit: Unit,
@@ -129,11 +128,11 @@ impl Shown<'_, '_, '_> {
             judged[*i].lacks(fact);
         }
         let (low, by) = ratings.lowest()?;
-        if (want - low).abs() <= SAME_REL * low.abs() {
+        if component::states(want, low) {
             return None;
         }
         let name = if fact == "power" { "Power" } else { "Voltage" };
-        let write = format_si(low, unit).replace(' ', "");
+        let write = component::display_text(low, unit);
         let facts = ratings
             .known
             .iter()
@@ -146,7 +145,7 @@ impl Shown<'_, '_, '_> {
                 "{}: {} states {}, the lowest rating of its MPNs is {} ({} {}): write {name} {write}",
                 self.reference,
                 s.from,
-                format_si(want, unit),
+                format_si(want.value, unit),
                 format_si(low, unit),
                 by.field,
                 by.mpn,
@@ -210,8 +209,8 @@ struct Wants {
     value: Option<(f64, String, Provenance)>,
     tolerance: Option<(f64, Stated)>,
     dielectric: Option<Stated>,
-    voltage: Option<(f64, Stated)>,
-    power: Option<(f64, Stated)>,
+    voltage: Option<(Written, Stated)>,
+    power: Option<(Written, Stated)>,
 }
 
 impl Wants {
@@ -246,15 +245,15 @@ impl Wants {
         };
         let rating = |name: &str, u: Unit| {
             stated(name)
-                .and_then(|s| component::quantity(&s.text, u).map(|v| (v, s)))
+                .and_then(|s| component::written(&s.text, u).map(|v| (v, s)))
                 .or_else(|| {
                     pv.ratings
                         .iter()
                         .find(|q| q.unit == u)
-                        .map(|q| (q.value, from_value(format_si(q.value, u), "rating")))
+                        .map(|q| (*q, from_value(format_si(q.value, u), "rating")))
                 })
                 .or_else(|| {
-                    with_default(name).and_then(|s| component::quantity(&s.text, u).map(|v| (v, s)))
+                    with_default(name).and_then(|s| component::written(&s.text, u).map(|v| (v, s)))
                 })
         };
         Wants {

@@ -42,5 +42,5 @@ pub use import::{
     NoteKind, Source,
 };
 pub use layout::{Layout, Nm, Pt};
-pub use value::{ESeries, Quantity, Reading, Unit, Value, ValueWarning};
+pub use value::{ESeries, Quantity, Reading, Unit, Value, ValueWarning, Written};
 pub use view::View;

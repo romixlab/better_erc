@@ -14,8 +14,12 @@ use crate::finding::Finding;
 use crate::meta::{CheckMeta, Severity};
 use erc_analysis::value::format_si;
 use erc_model::{PartId, natural_cmp};
-use erc_model::{Provenance, Subject, Unit, Value};
+use erc_model::{Provenance, Subject, Unit, Value, Written};
 use erc_parts::lock::{FactValue, LockedPart, PartMatch};
+
+/// Two values closer than this, relative, are the same (a value written `4k7` and a fact of 4700.0000001); in
+/// the rounding of a rating, the same noise in steps of the precision written
+pub(crate) const SAME_REL: f64 = 1e-6;
 
 /// One MPN of a part, as the snapshot knows it
 pub(crate) struct Candidate<'a> {
@@ -157,11 +161,37 @@ pub(crate) fn default_var(reference: &str, name: &str) -> Option<&'static str> {
 /// A field's text read as a quantity in `unit` (`50V`, `63mW`, `1/4W`, `3.3`): the value when it is in that unit,
 /// else the first rating in it
 pub(crate) fn quantity(text: &str, unit: Unit) -> Option<f64> {
-    let r = Value::read(text, Some(unit));
-    match r.value {
-        Value::Quantity(q) if q.unit == unit => Some(q.value),
-        _ => r.ratings.iter().find(|q| q.unit == unit).map(|q| q.value),
+    written(text, unit).map(|w| w.value)
+}
+
+/// [`quantity`] with the precision the text writes it with
+pub(crate) fn written(text: &str, unit: Unit) -> Option<Written> {
+    Value::read(text, Some(unit)).written(unit)
+}
+
+/// `rating` in whole steps of `step`, half a step rounded up
+fn whole_steps(rating: f64, step: f64) -> f64 {
+    (rating / step + 0.5 + SAME_REL).floor()
+}
+
+/// Whether a display field states a rating: the rating, rounded half up to the precision the field is written
+/// with, equals the field (`63mW` states 62.5 mW, `62mW` does not). A fraction (`1/16W`) is exact.
+pub(crate) fn states(field: Written, rating: f64) -> bool {
+    match field.step {
+        // Both sides are whole numbers of steps
+        Some(step) => (whole_steps(rating, step) - (field.value / step).round()).abs() < 0.5,
+        None => (field.value - rating).abs() <= SAME_REL * rating.abs(),
     }
+}
+
+/// A rating as a display field is written, a text that [`states`] it: a power from 1 mW to below 1 W in whole mW
+/// (`63mW` for 62.5 mW), else up to three decimals of its SI prefix (`6.3V`, `1.5W`)
+pub(crate) fn display_text(rating: f64, unit: Unit) -> String {
+    if unit == Unit::Watt && (1e-3..1.0).contains(&rating) {
+        return format!("{}mW", whole_steps(rating, 1e-3));
+    }
+    // Raised past float noise, so a half rounds up as in `states`
+    format_si(rating * (1.0 + 1e-9), unit).replace(' ', "")
 }
 
 /// The imperial chip case code a text names (`0402`, `R0402`, `0402 (1005 Metric)`), else the text trimmed
@@ -519,6 +549,55 @@ mod tests {
         let mw = quantity("63mW", Unit::Watt).unwrap();
         assert!((mw - 0.063).abs() < 1e-12, "{mw}");
         assert_eq!(quantity("X7R", Unit::Volt), None);
+    }
+
+    fn field_states(text: &str, unit: Unit, rating: f64) -> bool {
+        states(written(text, unit).unwrap(), rating)
+    }
+
+    #[test]
+    fn a_field_states_a_rating_rounded_to_its_precision() {
+        let w = Unit::Watt;
+        assert!(field_states("63mW", w, 0.0625));
+        assert!(field_states("63 mW", w, 0.063));
+        assert!(!field_states("62mW", w, 0.0625));
+        assert!(!field_states("64mW", w, 0.0625));
+        assert!(field_states("62.5mW", w, 0.0625));
+        assert!(!field_states("62.4mW", w, 0.0625));
+        assert!(field_states("0.1W", w, 0.1));
+        assert!(field_states("100mW", w, 0.1));
+        assert!(!field_states("0.10W", w, 0.125));
+        assert!(field_states("0.1W", w, 0.125));
+        let v = Unit::Volt;
+        assert!(field_states("50V", v, 50.0));
+        assert!(!field_states("50V", v, 49.4));
+        assert!(!field_states("25V", v, 50.0));
+        assert!(field_states("6V3", v, 6.3));
+        assert!(!field_states("6.3V", v, 6.4));
+        assert!(field_states("2.5kV", v, 2500.0));
+        assert!(field_states("3.3", v, 3.3));
+    }
+
+    #[test]
+    fn a_written_rating_states_it() {
+        let text = |r, u| display_text(r, u);
+        assert_eq!(text(0.0625, Unit::Watt), "63mW");
+        assert_eq!(text(0.125, Unit::Watt), "125mW");
+        assert_eq!(text(0.03125, Unit::Watt), "31mW");
+        assert_eq!(text(0.1, Unit::Watt), "100mW");
+        assert_eq!(text(1.0, Unit::Watt), "1W");
+        assert_eq!(text(1.5, Unit::Watt), "1.5W");
+        assert_eq!(text(50.0, Unit::Volt), "50V");
+        assert_eq!(text(6.3, Unit::Volt), "6.3V");
+        for unit in [Unit::Watt, Unit::Volt] {
+            for rating in [
+                0.0005, 0.001, 0.0015, 0.03125, 0.0625, 0.9995, 0.9999999, 1.0025, 6.3, 999.9999,
+                1234.5675, 2500.0,
+            ] {
+                let t = text(rating, unit);
+                assert!(field_states(&t, unit, rating), "{t} for {rating}");
+            }
+        }
     }
 
     #[test]

@@ -69,6 +69,68 @@ fn dry_run_writes_nothing() {
     assert!(text.contains("Dry run:"), "{text}");
 }
 
+/// The design with each `(from, to)` replaced in its snapshot
+fn with_powers(name: &str, powers: &[(&str, &str)]) -> PathBuf {
+    let dir = design(name);
+    let lock = dir.join("parts.lock.toml");
+    let mut text = std::fs::read_to_string(&lock).unwrap();
+    for (from, to) in powers {
+        assert!(text.contains(from), "{from}");
+        text = text.replace(from, to);
+    }
+    std::fs::write(&lock, text).unwrap();
+    dir
+}
+
+/// 1/16 W parts on a board whose default is `63mW`: the default states 62.5 mW, so the parts at it have no
+/// finding and no field of their own
+#[test]
+fn a_default_of_63mw_states_one_sixteenth_watt() {
+    let dir = with_powers("sixteenth", &[("value = 0.063,", "value = 0.0625,")]);
+    let power: Vec<String> = display_findings(&dir)
+        .into_iter()
+        .filter(|m| m.contains("write Power"))
+        .collect();
+    // R3 alone: 167mW stated
+    assert_eq!(power.len(), 1, "{power:?}");
+    assert!(power[0].ends_with("write Power 63mW"), "{power:?}");
+    let (s, text) = ops(&dir, true);
+    let resistors: Vec<(&str, &Op)> = s
+        .fields
+        .iter()
+        .filter(|f| f.field == "Power")
+        .map(|f| (f.reference.as_str(), &f.op))
+        .collect();
+    assert_eq!(resistors, [("R3", &Op::Remove)], "{text}");
+    assert_eq!(display_findings(&dir), Vec::<String>::new());
+    let (again, text) = ops(&dir, true);
+    assert!(again.fields.is_empty(), "{text}");
+}
+
+/// A rating off the default is written in whole mW, which states it: a second run finds nothing
+#[test]
+fn a_rounded_power_is_written_once() {
+    let dir = with_powers("rounded", &[("value = 0.063,", "value = 0.03125,")]);
+    let (s, text) = ops(&dir, true);
+    for r in ["R1", "R2", "R3", "R4"] {
+        let found = s
+            .fields
+            .iter()
+            .find(|f| f.reference == r && f.field == "Power")
+            .unwrap_or_else(|| panic!("{r} in {text}"));
+        let want = if r == "R3" {
+            Op::Set("31mW".into())
+        } else {
+            Op::Add("31mW".into())
+        };
+        assert_eq!(found.op, want, "{r}: {text}");
+    }
+    assert_eq!(display_findings(&dir), Vec::<String>::new());
+    let (again, text) = ops(&dir, true);
+    assert!(again.fields.is_empty(), "{text}");
+    assert!(again.written.is_empty());
+}
+
 #[test]
 fn writes_the_worst_of_the_mpns() {
     let dir = design("write");

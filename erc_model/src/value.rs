@@ -75,6 +75,28 @@ impl fmt::Display for Quantity {
     }
 }
 
+/// A quantity as a field writes it, with how finely it is written
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Written {
+    /// The number in base SI units
+    pub value: f64,
+    /// The unit written, or the one the number was read in
+    pub unit: Unit,
+    /// One of the last digit written, in base units (`63mW` is 0.001, `0.1W` 0.1, `6V3` 0.1); `None` for a
+    /// fraction (`1/4W`), which is exact
+    pub step: Option<f64>,
+}
+
+impl Written {
+    /// The number and its unit, without the precision
+    pub fn quantity(self) -> Quantity {
+        Quantity {
+            value: self.value,
+            unit: self.unit,
+        }
+    }
+}
+
 /// A part's value: a quantity when it could be read as one, otherwise the text as written
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub enum Value {
@@ -86,10 +108,12 @@ pub enum Value {
 #[derive(Clone, Debug, PartialEq)]
 pub struct Reading {
     pub value: Value,
+    /// The precision of [`Reading::value`] ([`Written::step`]), when it is a quantity
+    pub step: Option<f64>,
     /// Tolerance in percent (`1%`, `±5 %`), when the field states one
     pub tolerance: Option<f64>,
     /// Further quantities with their own unit after the value: ratings (`50V`, `0.1W`, `1/4W`)
-    pub ratings: Vec<Quantity>,
+    pub ratings: Vec<Written>,
     /// A ceramic dielectric code (`X7R`, `C0G`), upper case as written
     pub dielectric: Option<String>,
     pub warnings: Vec<ValueWarning>,
@@ -114,6 +138,21 @@ pub enum ValueWarning {
     SeparateUnit,
 }
 
+impl Reading {
+    /// The quantity in `unit` as the field writes it: the value when it is in that unit, else the first rating in
+    /// it
+    pub fn written(&self, unit: Unit) -> Option<Written> {
+        match &self.value {
+            Value::Quantity(q) if q.unit == unit => Some(Written {
+                value: q.value,
+                unit,
+                step: self.step,
+            }),
+            _ => self.ratings.iter().find(|q| q.unit == unit).copied(),
+        }
+    }
+}
+
 impl Value {
     /// Reads `text` as a quantity when it names its unit (`100nF`, `4.7 kΩ`, `2R2`, `3V3`, `12MHz`), otherwise
     /// keeps it as text. The warnings say what was odd about it.
@@ -136,6 +175,7 @@ impl Value {
         let Some((q, warnings, rest)) = parse_head(text, unit) else {
             return Reading {
                 value: Value::Text(text.to_string()),
+                step: None,
                 tolerance: None,
                 ratings: Vec::new(),
                 dielectric: None,
@@ -143,7 +183,8 @@ impl Value {
             };
         };
         let mut r = Reading {
-            value: Value::Quantity(q),
+            value: Value::Quantity(q.quantity()),
+            step: q.step,
             tolerance: None,
             ratings: Vec::new(),
             dielectric: None,
@@ -253,19 +294,20 @@ fn split_rest(rest: &str) -> Vec<&str> {
 }
 
 /// `1/4W` as 0.25 W
-fn fraction(token: &str) -> Option<Quantity> {
+fn fraction(token: &str) -> Option<Written> {
     let (num, den) = token.split_once('/')?;
     let num: f64 = num.parse().ok()?;
     let (q, _, rest) = parse_head(den, None)?;
-    (rest.is_empty() && q.value != 0.0).then(|| Quantity {
+    (rest.is_empty() && q.value != 0.0).then(|| Written {
         value: round_sig(num / q.value),
         unit: q.unit,
+        step: None,
     })
 }
 
 /// The quantity at the start of `text` with its warnings and the text after it; `None` when there is no number
 /// or no unit (and no default unit)
-fn parse_head(text: &str, default: Option<Unit>) -> Option<(Quantity, Vec<ValueWarning>, String)> {
+fn parse_head(text: &str, default: Option<Unit>) -> Option<(Written, Vec<ValueWarning>, String)> {
     let mut warnings = Vec::new();
     let text = text.trim();
     // The first word is the value; the rest (`50V X7R`, `1%`) is read after it
@@ -331,6 +373,7 @@ fn parse_head(text: &str, default: Option<Unit>) -> Option<(Quantity, Vec<ValueW
     let number: String = chars[..digits_end].iter().collect();
     let tail: String = chars[digits_end..].iter().collect();
     let mut value: f64 = number.parse().ok()?;
+    let decimals = number.split_once('.').map_or(0, |(_, d)| d.len());
 
     // RKM: a multiplier or unit letter in place of the decimal point (`4k7`, `2R2`, `3V3`, `4n7`), the
     // multiplier's form optionally followed by a unit (`4k7Ω`, `4K7R`)
@@ -339,23 +382,25 @@ fn parse_head(text: &str, default: Option<Unit>) -> Option<(Quantity, Vec<ValueW
         let (frac, unit) = after.split_at(frac_len);
         (frac_len > 0 && !number.contains('.')).then(|| (first, frac.to_string(), unit.to_string()))
     });
-    let (unit_text, mult) = if let Some((first, frac, after)) = rkm
+    // The unit, the multiplier still to apply, and one of the last digit written
+    let (unit_text, mult, step) = if let Some((first, frac, after)) = rkm
         && (after.is_empty() || multiplier(first).is_some() && unit_suffix(&after).is_some())
     {
+        let last = last_digit(frac.len())?;
         let frac: f64 = format!("0.{frac}").parse().ok()?;
         if let Some(m) = multiplier(first) {
             value = (value + frac) * m;
             if after == "R" || after == "r" {
                 warnings.push(ValueWarning::RedundantR);
             }
-            (after, 1.0)
+            (after, 1.0, last * m)
         } else {
             let u = Unit::from_suffix(&first.to_string())?;
             if first == 'r' {
                 warnings.push(ValueWarning::LowercaseR);
             }
             value += frac;
-            (unit_name_for(u).to_string(), 1.0)
+            (unit_name_for(u).to_string(), 1.0, last)
         }
     } else if let Some((first, after)) = split_first(&tail)
         && let Some(m) = multiplier(first)
@@ -366,12 +411,12 @@ fn parse_head(text: &str, default: Option<Unit>) -> Option<(Quantity, Vec<ValueW
         if after == "R" || after == "r" {
             warnings.push(ValueWarning::RedundantR);
         }
-        (after, m)
+        (after, m, last_digit(decimals)? * m)
     } else {
         if tail == "r" {
             warnings.push(ValueWarning::LowercaseR);
         }
-        (tail, 1.0)
+        (tail, 1.0, last_digit(decimals)?)
     };
 
     let unit = if unit_text.is_empty() {
@@ -381,13 +426,19 @@ fn parse_head(text: &str, default: Option<Unit>) -> Option<(Quantity, Vec<ValueW
     };
     let value = if negative { -value } else { value };
     Some((
-        Quantity {
+        Written {
             value: round_sig(value * mult),
             unit,
+            step: Some(round_sig(step)),
         },
         warnings,
         rest,
     ))
+}
+
+/// One of the last of `decimals` places: 0.01 for two
+fn last_digit(decimals: usize) -> Option<f64> {
+    Some(10f64.powi(-i32::try_from(decimals).ok()?))
 }
 
 /// A unit with an optional multiplier: `kΩ`, `uF`, `Ω`
@@ -666,14 +717,37 @@ mod tests {
     }
 
     #[test]
+    fn the_precision_written() {
+        let step = |t: &str, u: Unit| Value::read(t, Some(u)).written(u).and_then(|w| w.step);
+        let near = |t: &str, u: Unit, want: f64| {
+            let got = step(t, u).unwrap();
+            assert!((got - want).abs() < want * 1e-9, "{t}: {got}");
+        };
+        near("63mW", Unit::Watt, 1e-3);
+        near("62.5 mW", Unit::Watt, 1e-4);
+        near("100mW", Unit::Watt, 1e-3);
+        near("0.10W", Unit::Watt, 1e-2);
+        near("0,1W", Unit::Watt, 0.1);
+        near("50V", Unit::Volt, 1.0);
+        near("6V3", Unit::Volt, 0.1);
+        near("2.5kV", Unit::Volt, 100.0);
+        near("4k7", Unit::Ohm, 100.0);
+        let rating = Value::read("10k 0.125W", Some(Unit::Ohm)).written(Unit::Watt);
+        assert_eq!(rating.and_then(|w| w.step), Some(1e-3));
+        let fraction = Value::read("10k 1/16W", Some(Unit::Ohm)).written(Unit::Watt);
+        assert_eq!(fraction.map(|w| (w.value, w.step)), Some((0.0625, None)));
+    }
+
+    #[test]
     fn tolerance_ratings_dielectric() {
         let r = Value::read("100nF 50V X7R", None);
         assert_eq!(r.value.quantity().map(|q| q.value), Some(1e-7));
         assert_eq!(
             r.ratings,
-            [Quantity {
+            [Written {
                 value: 50.0,
-                unit: Unit::Volt
+                unit: Unit::Volt,
+                step: Some(1.0)
             }]
         );
         assert_eq!(r.dielectric.as_deref(), Some("X7R"));
@@ -686,18 +760,20 @@ mod tests {
         assert_eq!(r.tolerance, Some(5.0));
         assert_eq!(
             r.ratings,
-            [Quantity {
+            [Written {
                 value: 0.1,
-                unit: Unit::Watt
+                unit: Unit::Watt,
+                step: Some(0.1)
             }]
         );
         let r = Value::read("0R 1/4W", Some(Unit::Ohm));
         assert_eq!(r.value.quantity().map(|q| q.value), Some(0.0));
         assert_eq!(
             r.ratings,
-            [Quantity {
+            [Written {
                 value: 0.25,
-                unit: Unit::Watt
+                unit: Unit::Watt,
+                step: None
             }]
         );
         let r = Value::read("10uF/25V", Some(Unit::Farad));
@@ -707,9 +783,10 @@ mod tests {
         assert_eq!(r.value.quantity().map(|q| q.value), Some(600.0));
         assert_eq!(
             r.ratings,
-            [Quantity {
+            [Written {
                 value: 1e8,
-                unit: Unit::Hertz
+                unit: Unit::Hertz,
+                step: Some(1e6)
             }]
         );
         let r = Value::read("BSS138", None);

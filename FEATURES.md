@@ -298,8 +298,9 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `BOM-17` One MPN with different values · `bom/bom_17.rs`, `bom-17_mpn_values`
 - ✅ `BOM-12` Each MPN of a fitted R, C, L from the parts snapshot against the part's `Value` (within the MPN's
   tolerance) and `Tolerance`; display fields `Voltage`, `Power`, `Dielectric` (or the project's `DEFAULT_*` text
-  variable) must equal the worst over the MPNs, the finding names the value to write (`CFG-9`) · `bom/bom_12.rs`,
-  `component/`, `bom-12_mpn_vs_fields`
+  variable) must state the worst over the MPNs, a rating rounded half up to the precision written (`63mW` states
+  62.5 mW), the finding names the value to write (`CFG-9`) · `bom/bom_12.rs`, `component/`,
+  `bom-12_mpn_vs_fields`
 - ✅ `BOM-20` MPN on the board but not in the parts snapshot (`CFG-9`) · `bom/bom_20.rs`, `bom-20_parts_lock`
 - ✅ `LIB-3` MOSFET pins not named G, D, S · `lib/lib_3.rs`, `lib-3_mosfet_pin_names`
 - ✅ `LIB-6` `Package` (or `DEFAULT_R_PACKAGE`, `DEFAULT_C_PACKAGE`) against the footprint's chip case, and each
@@ -1111,10 +1112,11 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 ## Code generation (`GEN`)
 
 - ✅ `TOOL-14` `berc fields sync PROJECT [--write]`: the display fields of resistors and capacitors from
-  `parts.lock.toml` (`CFG-9`): `Voltage` and `Power` the lowest rating over all MPNs of a part (mW below 1 W, V),
-  `Dielectric` the worst code (the order `BOM-12` uses, shared code in `erc_checks::component`), `Package` the case
-  every MPN shares. A field equal to the board default (`DEFAULT_*` text variables) is removed; a part without the
-  field and off the default gets one, placed as `place-fields` places a symbol's fields; only those fields change.
+  `parts.lock.toml` (`CFG-9`): `Voltage` and `Power` the lowest rating over all MPNs of a part (whole mW below
+  1 W, V; stated as `BOM-12` reads them, shared code in `erc_checks::component`), `Dielectric` the worst code (the
+  order `BOM-12` uses), `Package` the case every MPN shares. A field equal to the board default (`DEFAULT_*` text
+  variables) is removed; a part without the field and off the default gets one, placed as `place-fields` places a
+  symbol's fields; only those fields change.
   An MPN without the fact, or MPNs that disagree on `Package`, leave the field alone and are listed. Dry run by
   default; the `.kicad_sch` edit keeps every other byte (`erc_kicad::fields::edit_values`). After `--write` the
   `BOM-12` display findings are gone on the same snapshot · `erc_checks/src/fields_sync.rs`,

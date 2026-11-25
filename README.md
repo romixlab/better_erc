@@ -237,11 +237,15 @@ from `parts.lock.toml` (`BOM-12` and `LIB-6` hold them to the same values):
 
 | Field | Value |
 |---|---|
-| `Voltage` (capacitors), `Power` (resistors) | the lowest rating over all MPNs: `25V`, `63mW`; a power of 1 W or more is `1W` |
+| `Voltage` (capacitors), `Power` (resistors) | the lowest rating over all MPNs: `25V`; a power below 1 W in whole mW (62.5 mW is `63mW`), one of 1 W or more as `1W` |
 | `Dielectric` (capacitors) | the worst code of the ceramic MPNs, the one every other code covers (`X5R` for `X5R` and `X7R`) |
 | `Package` | the case every MPN has (`0402`) |
 
-A field equal to the board default, the text variables `DEFAULT_C_PACKAGE`, `DEFAULT_C_VOLTAGE`,
+A `Voltage` or `Power` text states a rating when the rating, rounded half up to the precision the text is written
+with, equals it: `63mW` states 62.5 mW (1/16 W), `62mW` does not. A fraction such as `1/16W` is exact. A field that
+already states the rating keeps its text.
+
+A field equal to the board default (for a rating: a default that states it), the text variables `DEFAULT_C_PACKAGE`, `DEFAULT_C_VOLTAGE`,
 `DEFAULT_C_DIELECTRIC`, `DEFAULT_R_PACKAGE` and `DEFAULT_R_POWER`, is removed from the part. A part without the field
 that is off the default gets one, shown and placed as `place-fields` places fields (`--set` takes its
 `drawing.*` settings). Only these four fields change; nothing else is removed. An MPN missing the fact (no rated

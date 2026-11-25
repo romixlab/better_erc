@@ -10,6 +10,7 @@
 use crate::class::{PartClass, PartClasses};
 use erc_model::{
     Board, ESeries, Fact, PartId, Provenance, Quantity, Unit, Value, ValueWarning, VariantId, View,
+    Written,
 };
 
 /// A Value field read as a quantity
@@ -26,7 +27,7 @@ pub struct PartValue {
     /// Tolerance in percent, when the field states one
     pub tolerance: Option<f64>,
     /// Ratings stated after the value (`50V`, `0.1W`)
-    pub ratings: Vec<Quantity>,
+    pub ratings: Vec<Written>,
     /// A ceramic dielectric code (`X7R`)
     pub dielectric: Option<String>,
     /// Whether the part's value should be in an E-series: a resistor, capacitor or inductor (not a ferrite,

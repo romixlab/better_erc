@@ -334,15 +334,21 @@ Requirements hold for every MPN on its own:
 | `Value` | the MPN's resistance, capacitance or inductance equals it, within the MPN's tolerance |
 | `Tolerance`, or a tolerance in the value (`4k7 1%`) | the MPN's tolerance is at most it |
 
-Display fields state the worst over all MPNs of the part, exactly, so the drawing shows what the board is sure to get.
+Display fields state the worst over all MPNs of the part, so the drawing shows what the board is sure to get.
 A part without the field is held to the board's default, the project's `DEFAULT_*` text variable the drawing sheet's
 Defaults box shows (the one `berc place-fields` hides):
 
-| Field | Default | Must equal |
+| Field | Default | Must state |
 |---|---|---|
 | `Voltage`, or a rating in the value (`100n 50V`) | `DEFAULT_C_VOLTAGE` for a capacitor | the lowest rated voltage among the MPNs |
 | `Power`, or a rating in the value | `DEFAULT_R_POWER` for a resistor | the lowest rated power among the MPNs |
 | `Dielectric`, or the value's code (`100n X7R`) | `DEFAULT_C_DIELECTRIC` for a capacitor | the worst dielectric among the ceramic MPNs: the one every other covers |
+
+A voltage or power text states a rating when the rating, rounded half up to the precision the text is written with,
+equals the text. The precision is one of the last digit written: 1 mW for `63mW`, 0.1 W for `0.1W`, 1 V for `50V`,
+0.1 V for `6V3`. So `63mW` states 62.5 mW (1/16 W, which datasheets label 63 mW) and `62mW` does not. A coarse text
+accepts more: `0.1W` states any rating from 50 mW to below 150 mW. Write the digits that matter. A fraction such as
+`1/16W` is exact.
 
 One dielectric covers another when it spans at least the same temperatures with at most the same capacitance change
 (`X7R` covers `X5R`, any class 1 code such as `C0G` covers any class 2). A display miss is one finding on the field

@@ -19,6 +19,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 - `just install` builds berc and the app with the `mx3` part source.
 - `DRAW-49`: a note headed `TODO`, `TBD` or `FIXME` with no placeholder in its body is reported once.
+- `BOM-12`, `TOOL-14`: `Voltage` and `Power` match the lowest rating rounded to their written precision.
+- `TOOL-14`: `fields sync` writes powers below 1 W in whole mW (62.5 mW is `63mW`).
 
 ## [0.6.0] - 2026-11-25
 

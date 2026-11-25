@@ -1,16 +1,13 @@
 //! The display fields of resistors and capacitors as the parts snapshot states them (`TOOL-14`): `Voltage` and
 //! `Power` the lowest rating over a part's MPNs, `Dielectric` the worst code, `Package` the case they share, the
-//! plan `berc fields sync` writes. A field equal to the board's `DEFAULT_*` text variable is taken off the part;
-//! a part without the field and off the default gets one. An MPN without the fact leaves the field as it is.
+//! plan `berc fields sync` writes. A field that states what the board's `DEFAULT_*` text variable states is taken
+//! off the part; a part without the field and off the default gets one. An MPN without the fact leaves the field as
+//! it is. A rating is stated as `BOM-12` reads it: rounded to the precision the text is written with.
 
 use crate::Ctx;
 use crate::component::{self, Dielectrics, Ratings};
 use erc_analysis::PartClass;
-use erc_analysis::value::format_si;
 use erc_model::{PartId, Unit};
-
-/// Two ratings closer than this, relative, are the same: the tolerance BOM-12 holds a field to
-const SAME_REL: f64 = 1e-6;
 
 /// What happens to one field of a part
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -76,8 +73,8 @@ pub fn plan_sync(cx: &Ctx) -> SyncPlan {
                     field: name,
                     why,
                 }),
-                Worst::Is(text) => {
-                    if let Some((old, op)) = decide(cx, p, &reference, name, &text) {
+                found @ (Worst::Rating(..) | Worst::Code(_)) => {
+                    if let Some((old, op)) = decide(cx, p, &reference, name, &found) {
                         let sync = FieldSync {
                             file: symbol.0.clone(),
                             uuid: symbol.1.clone(),
@@ -117,8 +114,10 @@ fn symbol_of(cx: &Ctx, reference: &str) -> Option<(String, String)> {
 enum Worst {
     /// The part has no MPN in the snapshot, or the field does not apply to it
     None,
-    /// The text to write
-    Is(String),
+    /// The lowest rating, in its unit
+    Rating(f64, Unit),
+    /// The code to write: a dielectric or a case
+    Code(String),
     /// The MPNs do not settle it: why
     Unknown(String),
 }
@@ -144,7 +143,7 @@ fn worst(cx: &Ctx, p: PartId, name: &str) -> Worst {
             };
             let ratings = Ratings::of(&cands, fact);
             match ratings.lowest() {
-                Some((low, _)) => Worst::Is(format_si(low, unit).replace(' ', "")),
+                Some((low, _)) => Worst::Rating(low, unit),
                 None => lacking(&ratings.lacking, fact),
             }
         }
@@ -160,7 +159,7 @@ fn worst(cx: &Ctx, p: PartId, name: &str) -> Worst {
                 return Worst::Unknown("a dielectric code it does not read".to_owned());
             }
             match found.worst() {
-                Some(w) => Worst::Is(w.to_owned()),
+                Some(w) => Worst::Code(w.to_owned()),
                 None => {
                     Worst::Unknown("no dielectric of its MPNs is worse than the others".to_owned())
                 }
@@ -182,7 +181,7 @@ fn worst(cx: &Ctx, p: PartId, name: &str) -> Worst {
                 .collect();
             let first = &cases[0].1;
             if cases.iter().all(|(_, c)| c.eq_ignore_ascii_case(first)) {
-                Worst::Is(first.clone())
+                Worst::Code(first.clone())
             } else {
                 let list: Vec<String> = cases.iter().map(|(f, c)| format!("{f} {c}")).collect();
                 Worst::Unknown(format!("the MPNs differ in case: {}", list.join(", ")))
@@ -191,43 +190,45 @@ fn worst(cx: &Ctx, p: PartId, name: &str) -> Worst {
     }
 }
 
-/// Whether two texts of a field name the same value
-fn same(name: &str, a: &str, b: &str) -> bool {
-    match name {
-        "Voltage" | "Power" => {
-            let unit = if name == "Power" {
-                Unit::Watt
-            } else {
-                Unit::Volt
-            };
-            match (component::quantity(a, unit), component::quantity(b, unit)) {
-                (Some(x), Some(y)) => (x - y).abs() <= SAME_REL * y.abs(),
-                _ => a.trim() == b.trim(),
-            }
+/// Whether the text of a field states what the MPNs say it is
+fn says(name: &str, text: &str, worst: &Worst) -> bool {
+    match worst {
+        Worst::Rating(low, unit) => {
+            component::written(text, *unit).is_some_and(|w| component::states(w, *low))
         }
-        "Dielectric" => component::same_dielectric(a, b) || a.trim().eq_ignore_ascii_case(b.trim()),
-        _ => component::case_code(a).eq_ignore_ascii_case(&component::case_code(b)),
+        Worst::Code(code) if name == "Dielectric" => {
+            component::same_dielectric(text, code) || text.trim().eq_ignore_ascii_case(code.trim())
+        }
+        Worst::Code(code) => {
+            component::case_code(text).eq_ignore_ascii_case(&component::case_code(code))
+        }
+        Worst::None | Worst::Unknown(_) => false,
     }
 }
 
-/// The field's text now and what to do with it, `None` when it is right
+/// The field's text now and what to do with it, `None` when it is right or the MPNs do not say what it is
 fn decide(
     cx: &Ctx,
     p: PartId,
     reference: &str,
     name: &str,
-    worst: &str,
+    worst: &Worst,
 ) -> Option<(Option<String>, FieldOp)> {
+    let write = match worst {
+        Worst::Rating(low, unit) => component::display_text(*low, *unit),
+        Worst::Code(code) => code.clone(),
+        Worst::None | Worst::Unknown(_) => return None,
+    };
     let now = component::field(cx, p, name).map(|s| s.text);
     let default = component::default_var(reference, name)
         .and_then(|v| component::default_of(cx, v))
         .map(|d| d.text);
-    if default.as_deref().is_some_and(|d| same(name, d, worst)) {
+    if default.is_some_and(|d| says(name, &d, worst)) {
         return now.map(|n| (Some(n), FieldOp::Remove));
     }
     match now {
-        Some(n) if same(name, &n, worst) => None,
-        Some(n) => Some((Some(n), FieldOp::Set(worst.to_owned()))),
-        None => Some((None, FieldOp::Add(worst.to_owned()))),
+        Some(n) if says(name, &n, worst) => None,
+        Some(n) => Some((Some(n), FieldOp::Set(write))),
+        None => Some((None, FieldOp::Add(write))),
     }
 }
