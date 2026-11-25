@@ -1922,11 +1922,13 @@ fn the_review_records_where_it_was_made() {
     std::fs::remove_dir_all(&dir).unwrap();
 }
 
-/// The lookup and fetch still out answered and taken in: their threads may answer within a run or after it, so
-/// wait on their replies
+/// The lookup and fetch still out answered and taken in. Their threads answer at any point of a run, and each
+/// answer taken in asks for a frame more, so a run may pass its step limit: it goes on, with each reply waited
+/// for, until one settles with nothing out
 fn settle_mpn_docs(h: &mut Harness<'_, FootprintReview>) {
-    loop {
-        h.run();
+    // A lookup, a fetch and the lookup after it, with room to spare
+    for _ in 0..16 {
+        let settled = h.try_run().is_ok();
         let d = &mut h.state_mut().rt.mpn_docs;
         if let Some((asked, rx)) = d.asking.take() {
             let reply = rx.recv().expect("the lookup answers");
@@ -1938,10 +1940,11 @@ fn settle_mpn_docs(h: &mut Harness<'_, FootprintReview>) {
             let (tx, rx) = std::sync::mpsc::channel();
             tx.send(reply).unwrap();
             d.fetching = Some((m, rx));
-        } else {
-            break;
+        } else if settled {
+            return;
         }
     }
+    panic!("the MPN lookup and fetch never settle");
 }
 
 /// The symbol's datasheets by MPN (VIEW-26): each MPN with the library's document and its review state; a click
@@ -2023,7 +2026,7 @@ fn datasheets_by_mpn() {
     h.run();
     let ctx = h.ctx.clone();
     h.state_mut().open_path(&ctx, &lib);
-    h.run();
+    settle_mpn_docs(&mut h);
     h.get_by_label("Rev:Two").click();
     settle_mpn_docs(&mut h);
     // Both MPNs asked in one lookup
@@ -2102,7 +2105,7 @@ fn datasheets_by_mpn_lookup_fails() {
     h.run();
     let ctx = h.ctx.clone();
     h.state_mut().open_path(&ctx, &lib);
-    h.run();
+    settle_mpn_docs(&mut h);
     h.get_by_label("Rev:One").click();
     settle_mpn_docs(&mut h);
     h.get_by_label(
