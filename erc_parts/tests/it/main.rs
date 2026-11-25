@@ -3,6 +3,7 @@
 mod board;
 mod lock;
 mod refresh;
+mod source;
 
 use erc_model::{Design, ImportOptions, MemFiles};
 

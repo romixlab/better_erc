@@ -7,7 +7,6 @@ use erc_checks::{CheckError, Project};
 use erc_parts::lock::{Coverage, PartMatch};
 use serde::Serialize;
 use std::fmt;
-use std::io::Write as _;
 use std::path::{Path, PathBuf};
 
 /// What a refresh did
@@ -117,7 +116,7 @@ pub fn refresh_project(
     let changed = std::fs::read(&path).ok().as_deref() != Some(text.as_bytes());
     let written = changed && write == WriteLock::Changed;
     if written {
-        write_atomic(&path, &text).map_err(|error| PartsRefreshError::Write {
+        erc_parts::lock::write_atomic(&path, &text).map_err(|error| PartsRefreshError::Write {
             path: path.clone(),
             error,
         })?;
@@ -143,16 +142,4 @@ pub fn refresh_project(
     })
 }
 
-/// Writes `text` to `path` through a file beside it, so a reader never sees half a lock
-fn write_atomic(path: &Path, text: &str) -> std::io::Result<()> {
-    if let Some(dir) = path.parent() {
-        std::fs::create_dir_all(dir)?;
-    }
-    let mut tmp = path.as_os_str().to_owned();
-    tmp.push(".tmp");
-    let tmp = PathBuf::from(tmp);
-    let mut f = std::fs::File::create(&tmp)?;
-    f.write_all(text.as_bytes())?;
-    f.sync_all()?;
-    std::fs::rename(&tmp, path)
-}
+

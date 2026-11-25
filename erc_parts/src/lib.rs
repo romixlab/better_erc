@@ -16,4 +16,4 @@ pub mod source;
 pub use board::BoardMpns;
 pub use lock::{LockError, PartsLock};
 pub use refresh::{RefreshError, refresh};
-pub use source::{FileSource, Source, SourceError};
+pub use source::{FileSource, NewReview, Source, SourceError};

@@ -208,6 +208,12 @@ pub struct LockedReview {
     /// The page of the land pattern, 1-based
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub page: Option<u32>,
+    /// mm per PDF point the page was drawn at
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub scale: Option<f64>,
+    /// Where the footprint lay on the page
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub at: Option<Placement>,
     pub reviewer: String,
     /// `2026-11-25`
     pub reviewed_on: String,
@@ -221,8 +227,29 @@ pub struct LockedReview {
     pub retracted: Option<String>,
 }
 
+impl LockedReview {
+    /// The review holds (not retracted) and covers `part`
+    pub fn covers(&self, part: &LockedPart) -> bool {
+        self.retracted.is_none() && self.covers.iter().any(|c| c.covers(part))
+    }
+}
+
+/// Where the footprint lay on the PDF page while it was reviewed
+#[derive(Clone, Copy, Debug, Default, PartialEq, Serialize, Deserialize)]
+pub struct Placement {
+    /// The footprint's origin in page points from the page's top left
+    pub x: f64,
+    pub y: f64,
+    /// Degrees
+    #[serde(default)]
+    pub rotation: f64,
+    /// Seen from below
+    #[serde(default)]
+    pub mirror: bool,
+}
+
 /// What one review covers
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum Cover {
     /// One part, by its MPN at review time
@@ -233,6 +260,58 @@ pub enum Cover {
         segments: BTreeMap<String, String>,
     },
 }
+
+impl Cover {
+    /// The family of `part`: its scheme and the decoded segments that set the package ([`PACKAGE_KEYS`]), when
+    /// its MPN decoded and at least one such segment is known
+    pub fn family_of(part: &LockedPart) -> Option<Cover> {
+        let d = part.decode.as_ref()?;
+        let scheme = d.scheme.as_ref().filter(|_| d.outcome == DECODED)?;
+        let segments: BTreeMap<String, String> = d
+            .segments
+            .iter()
+            .filter(|(k, _)| PACKAGE_KEYS.contains(&k.as_str()))
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .collect();
+        (!segments.is_empty()).then(|| Cover::Family {
+            scheme: scheme.clone(),
+            segments,
+        })
+    }
+
+    /// Whether `part` is in what this covers: the same MPN, or an MPN decoded under the family's scheme with each of
+    /// its segment values
+    pub fn covers(&self, part: &LockedPart) -> bool {
+        match self {
+            Cover::Mpn { mpn } => *mpn == part.mpn,
+            Cover::Family { scheme, segments } => part.decode.as_ref().is_some_and(|d| {
+                d.outcome == DECODED
+                    && d.scheme.as_ref() == Some(scheme)
+                    && !segments.is_empty()
+                    && segments.iter().all(|(k, v)| d.segments.get(k) == Some(v))
+            }),
+        }
+    }
+
+    /// For the person: `MPN` or `scheme case_eia=0402`
+    pub fn describe(&self) -> String {
+        match self {
+            Cover::Mpn { mpn } => mpn.clone(),
+            Cover::Family { scheme, segments } => {
+                let segs: Vec<String> = segments.iter().map(|(k, v)| format!("{k}={v}")).collect();
+                format!("{scheme} {}", segs.join(","))
+            }
+        }
+    }
+}
+
+/// The [`Decode::outcome`] of an MPN read whole by its scheme
+pub const DECODED: &str = "decoded";
+
+/// The decoded segment keys that set a part's package, so a family review of one footprint covers every part they
+/// agree on: the case size (`case_eia`) and the package code (`package`). Values, tolerances, voltages and
+/// packaging leave the land pattern as it is.
+pub const PACKAGE_KEYS: &[&str] = &["case_eia", "package"];
 
 /// Why a lock cannot be read
 #[derive(Debug)]
@@ -432,6 +511,22 @@ impl PartsLock {
             if let Some(p) = r.page {
                 line(&mut out, "page", &int(p.into()));
             }
+            if let Some(v) = r.scale {
+                line(&mut out, "scale", &float(v));
+            }
+            if let Some(a) = r.at {
+                line(
+                    &mut out,
+                    "at",
+                    &format!(
+                        "{{ x = {}, y = {}, rotation = {}, mirror = {} }}",
+                        float(a.x),
+                        float(a.y),
+                        float(a.rotation),
+                        a.mirror
+                    ),
+                );
+            }
             line(&mut out, "reviewer", &s(&r.reviewer));
             line(&mut out, "reviewed_on", &s(&r.reviewed_on));
             if !r.note.is_empty() {
@@ -445,6 +540,21 @@ impl PartsLock {
         }
         out
     }
+}
+
+/// Writes `text` to `path` through a file beside it, so a reader sees the old text or the new one, never a part
+pub fn write_atomic(path: &std::path::Path, text: &str) -> std::io::Result<()> {
+    use std::io::Write as _;
+    if let Some(dir) = path.parent().filter(|d| !d.as_os_str().is_empty()) {
+        std::fs::create_dir_all(dir)?;
+    }
+    let mut tmp = path.as_os_str().to_owned();
+    tmp.push(".tmp");
+    let tmp = std::path::PathBuf::from(tmp);
+    let mut f = std::fs::File::create(&tmp)?;
+    f.write_all(text.as_bytes())?;
+    f.sync_all()?;
+    std::fs::rename(&tmp, path)
 }
 
 fn line(out: &mut String, key: &str, value: &str) {

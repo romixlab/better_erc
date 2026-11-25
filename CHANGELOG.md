@@ -13,6 +13,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
+- Part sources record footprint reviews (`Source::accept`); a file source judges coverage by MPN and family itself (TOOL-8).
+- `parts.lock.toml` reviews keep the page scale and the footprint's placement on it (TOOL-8).
 - `berc parts refresh`: writes `parts.lock.toml` from a part source (`--from FILE`); `--check` for CI (CFG-9).
 - `BOM-20`: an MPN of a fitted part missing from `parts.lock.toml`; project file `[parts] lock` names the file (CFG-9).
 - `berc waive`: appends a `[[waiver]]` for a finding, with its input hash, to the project file (CFG-2).

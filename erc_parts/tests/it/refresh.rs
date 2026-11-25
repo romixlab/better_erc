@@ -67,6 +67,13 @@ impl Source for Fake {
             reviews: vec![],
         })
     }
+
+    fn accept(
+        &self,
+        _: &erc_parts::NewReview,
+    ) -> Result<erc_parts::lock::LockedReview, SourceError> {
+        unreachable!("a refresh records no review")
+    }
 }
 
 fn board(n: usize) -> BoardMpns {
