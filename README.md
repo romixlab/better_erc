@@ -90,6 +90,10 @@ cargo install --locked --path better_erc_app   # the desktop app (binary better_
 `berc --version` shows the version,
 the git commit it was built from and that commit's time.
 
+The mx3 part store as a part source (`berc parts refresh` and `berc fp accept` without `--from`) is the cargo
+feature `mx3`, off by default: `cargo install --locked --path berc --features mx3`. It adds an HTTP client (reqwest
+with rustls); the default build has no network code.
+
 ## Quick start
 
 Readable diffs of a KiCad project in git, once per machine and once per repository:
@@ -212,7 +216,11 @@ fact, so its git diff after a refresh shows exactly what changed in the source: 
 | `dielectric`, `technology`, `case_eia` | words: `X7R`, `thick_film`, `0402` |
 
 `--from FILE` takes part data from a file in the snapshot's own shape: hand-filled facts, or another board's
-snapshot. `--check` writes nothing and exits 1 when the snapshot is out of date, for a CI step; exit 2 is a design,
+snapshot. Without it, a berc built with the `mx3` feature asks the mx3 part store: the facts by MPN
+(`params/by_mpn`) and the reviews of each pair (`fp/review/check`). It finds the store as the mx3 command line does:
+the URL from `MX3_URL`, else `[share] mx3_url` in tpm's `config.toml` (`TPM_ROOT`, else `~/git/tpm`), else
+`http://localhost:3000`; the token from `MX3_TOKEN`, else `~/.config/mx3/token` (`mx3 token set`). The token is
+sent only in the request header and never printed. `--check` writes nothing and exits 1 when the snapshot is out of date, for a CI step; exit 2 is a design,
 source or file error. The project file can put the snapshot elsewhere: `[parts] lock = "data/parts.lock.toml"`.
 
 An MPN on the board that the snapshot lacks is a finding, `BOM-20`, until the next refresh: a new part cannot reach
@@ -460,7 +468,8 @@ it needs `--mpn` or `--family-of`, and no snapshot is refreshed.
 records nothing.
 
 `--from FILE` is the part source: a file in the snapshot's own shape, whose `[[review]]` list the review is added to.
-The lab's part store is a source behind the same interface, not built into this version.
+Without it, a berc built with the `mx3` feature records the review in the mx3 part store (`fp/review/accept`),
+found as for [`berc parts refresh`](#part-facts-the-parts-snapshot), and refreshes the snapshot from there.
 
 `--footprint LIB:NAME` also sets the library symbol's own `Footprint` field to it, the value `berc fp check` showed
 as the one the board places: written into the library's `.kicad_sym` (or the symbol's file in a `.kicad_symdir`),

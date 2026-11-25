@@ -1,0 +1,14 @@
+[package]
+name = "erc_fake_mx3"
+description = "Test-only: a fake mx3 backend on a local port, answering params/by_mpn and the footprint review calls with mx3_api_lab's own types"
+authors.workspace = true
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+include.workspace = true
+publish = false
+
+[dependencies]
+mx3_api_lab = { git = "https://github.com/vhrdtech/mx3_api", default-features = false }
+serde = "1.0"
+serde_json = "1"

@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- Cargo feature `mx3`: `berc parts refresh` and `berc fp accept` use the mx3 part store without `--from` (CFG-9).
+
 ### Changed
 
 - `DRAW-49`: a note headed `TODO`, `TBD` or `FIXME` with no placeholder in its body is reported once.

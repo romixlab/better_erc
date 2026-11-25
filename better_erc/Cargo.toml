@@ -7,6 +7,10 @@ version.workspace = true
 rust-version.workspace = true
 include.workspace = true
 
+[features]
+# The mx3 part store as a part source (`parts::mx3`), over mx3_api_lab's HTTP client
+mx3 = ["erc_parts/mx3"]
+
 [dependencies]
 anstyle = "1"
 erc_analysis = { path = "../erc_analysis" }

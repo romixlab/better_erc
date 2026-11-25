@@ -644,11 +644,13 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   (`Finding::input_hash`, `finding::input_hash`); applied after the run, shown as waived and out of the verdict; stale
   (input hash changed), expired and unmatched waivers are report notes; `berc waive` appends one; SARIF suppressions.
   Missing: one-click waiver in the app, voting (disagree first)
-- 🚧 `CFG-9` Parts snapshot `parts.lock.toml` (crate `erc_parts`): per MPN of the fitted parts in every variant the
+- ✅ `CFG-9` Parts snapshot `parts.lock.toml` (crate `erc_parts`): per MPN of the fitted parts in every variant the
   facts the checks use (value, source, rank, time) and the footprint reviews of each (board footprint hash, MPN) pair,
   sorted, one line per fact; `Project::open` reads it (`[parts] lock` in the project file), `BOM-20` reports MPNs it
-  lacks; `berc parts refresh` writes it from a `Source` (`--from FILE`, `--check`); keys in `erc_parts::keys`.
-  Missing: the lab part store as a source (its contract crate is not public yet)
+  lacks; `berc parts refresh` writes it from a `Source` (`--from FILE`, `--check`); keys in `erc_parts::keys`. The mx3
+  part store is a source behind the cargo feature `mx3` (`erc_parts::mx3::Mx3Source` on mx3_api_lab's client:
+  `params/by_mpn`, `fp/review/check`, `fp/review/accept`), the default without `--from`; URL and token found as the
+  mx3 command line finds them, the token never printed; tested against `erc_fake_mx3`
 - 📋 `CFG-4` File-based config format for open source (RON?)
 - 📋 `CFG-5` Custom rules for parts in the database
 - 📋 `CFG-6` Selection constraints in the part database's `required` entries: one typed vocabulary of passive parameters
@@ -1018,8 +1020,8 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   placement), over a canonical text that a re-save, a reorder or a placement never changes (100 nm grid, sorted
   items, arcs and polygons in one form, symmetric pads by their shape, KiCad's left-out defaults left out);
   `berc fp hash FILE.kicad_mod` and `berc fp hash BOARD.kicad_pcb REF` print it, `--canonical` the text. A review is
-  kept in the part source (`Source::accept`, `FileSource` writes its file; the lab's store `PART-6` waits on its
-  client), covering MPNs alone or families by decoding (`Cover::family_of`: scheme and `case_eia`/`package`), and
+  kept in the part source (`Source::accept`, `FileSource` writes its file, `Mx3Source` records it in mx3's
+  `PART-6` store), covering MPNs alone or families by decoding (`Cover::family_of`: scheme and `case_eia`/`package`), and
   the parts snapshot holds per board footprint hash and MPN the covering reviews (`CFG-9`). `berc fp check
   [PROJECT]` judges each board footprint from the snapshot (`fp::pairs::judge`): ok when a review of its hash now
   covers every MPN of its part in every variant it is fitted in; changed, other version, not in lock, partial,

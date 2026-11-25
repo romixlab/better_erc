@@ -1012,11 +1012,15 @@ fn accept_refusals_record_nothing() {
         let err = String::from_utf8_lossy(&out.stderr);
         assert!(err.contains(says), "{args:?}: {err}");
     }
-    let out = berc_in(&dir, &["fp", "accept", path(&dir), "U1"]);
-    assert!(
-        String::from_utf8_lossy(&out.stderr).contains("--from"),
-        "{out:?}"
-    );
+    // Built with mx3, no --from asks the mx3 part store (tests/parts.rs, with a fake one)
+    #[cfg(not(feature = "mx3"))]
+    {
+        let out = berc_in(&dir, &["fp", "accept", path(&dir), "U1"]);
+        assert!(
+            String::from_utf8_lossy(&out.stderr).contains("--from"),
+            "{out:?}"
+        );
+    }
     let out = berc_in(
         &dir,
         &[

@@ -46,6 +46,11 @@ fn placed(n: usize, mpn: &str, dnp: bool) -> String {
 
 /// A KiCad project in a fresh directory: the board of erc_kicad's placed.kicad_pcb (U1 and U2 an Asym_SOT, ...), a schematic placing U1 with `PART-A`, U2 with `PART-B` and a DNP U3 with `PART-DNP`
 fn project(name: &str) -> PathBuf {
+    project_of(name, "PART-A", "PART-B")
+}
+
+/// [`project`] with U1's and U2's MPNs given
+fn project_of(name: &str, u1: &str, u2: &str) -> PathBuf {
     let dir = scratch(name);
     let fixtures =
         Path::new(env!("CARGO_MANIFEST_DIR")).join("../erc_kicad/tests/fixtures/footprints");
@@ -59,8 +64,8 @@ fn project(name: &str) -> PathBuf {
         "(kicad_sch (version 20260306) (generator \"eeschema\") (generator_version \"10.0\")\n\
          \t(uuid \"a0000000-0000-4000-8000-000000000000\")\n\t(paper \"A4\")\n\t(lib_symbols\n{lib}\t)\n{}{}{}\
          \t(sheet_instances (path \"/\" (page \"1\")))\n)\n",
-        placed(1, "PART-A", false),
-        placed(2, "PART-B", false),
+        placed(1, u1, false),
+        placed(2, u2, false),
         placed(3, "PART-DNP", true),
     );
     std::fs::write(dir.join("acc.kicad_sch"), sch).unwrap();
@@ -203,6 +208,7 @@ fn check_says_out_of_date_and_writes_nothing() {
     );
 }
 
+#[cfg(not(feature = "mx3"))]
 #[test]
 fn a_source_is_needed() {
     let dir = project("no-source");
@@ -210,6 +216,139 @@ fn a_source_is_needed() {
     assert_eq!(out.status.code(), Some(2));
     assert_eq!(
         text(&out.stderr),
-        "berc: error: no part source: name a file with --from (this berc has no other part source built in)\n"
+        "berc: error: no part source: name a file with --from (this berc is built without the mx3 part store, cargo \
+         feature mx3)\n"
     );
+}
+
+/// berc with the mx3 part source at `url`, `token` in MX3_TOKEN (none: unset), and a home without a token file
+#[cfg(feature = "mx3")]
+fn berc_mx3(args: &[&str], url: &str, token: Option<&str>) -> Output {
+    let home = scratch("mx3-home");
+    let mut c = Command::new(env!("CARGO_BIN_EXE_berc"));
+    c.args(args)
+        .env("BERC_USAGE", "off")
+        .env("NO_COLOR", "1")
+        .env("KICAD_CONFIG_HOME", "/nonexistent")
+        .env("HOME", &home)
+        .env("TPM_ROOT", home.join("no-tpm"))
+        .env("MX3_URL", url)
+        .env_remove("COMPLETE");
+    match token {
+        Some(t) => c.env("MX3_TOKEN", t),
+        None => c.env_remove("MX3_TOKEN"),
+    };
+    c.output().unwrap()
+}
+
+#[cfg(feature = "mx3")]
+#[test]
+fn refresh_and_accept_through_mx3() {
+    use erc_fake_mx3::{CAPACITOR, FakeMx3, RESISTOR, TOKEN};
+    let fake = FakeMx3::start();
+    let dir = project_of("mx3", RESISTOR, CAPACITOR);
+    let lock = dir.join("parts.lock.toml");
+
+    let out = berc_mx3(&["parts", "refresh", path(&dir)], fake.url(), Some(TOKEN));
+    assert!(out.status.success(), "{}", text(&out.stderr));
+    assert_eq!(
+        text(&out.stdout),
+        format!(
+            "{}: 2 MPNs (0 not found), 2 footprint pairs (0 covered) from mx3: written\n",
+            lock.display()
+        )
+    );
+    let first = std::fs::read_to_string(&lock).unwrap();
+    assert!(first.contains("source = \"mx3\""), "{first}");
+    assert!(first.contains("key = \"resistance\""), "{first}");
+    assert!(first.contains("status = \"uncovered\""), "{first}");
+
+    let out = berc_mx3(
+        &[
+            "fp",
+            "accept",
+            path(&dir),
+            "U1",
+            "--doc",
+            "RC_Series@rev12",
+            "--page",
+            "4",
+            "--by",
+            "tester",
+        ],
+        fake.url(),
+        Some(TOKEN),
+    );
+    assert!(out.status.success(), "{}", text(&out.stderr));
+    let reviews = fake.reviews();
+    assert_eq!(reviews.len(), 1);
+    let r = &reviews[0];
+    assert_eq!(r.hash, hash(&dir, "U1"));
+    assert_eq!(
+        (r.source.doc.as_deref(), r.source.doc_rev.as_deref()),
+        (Some("RC_Series"), Some("rev12"))
+    );
+    assert_eq!((r.reviewer.as_str(), r.source.page), ("tester", Some(4)));
+    let after = std::fs::read_to_string(&lock).unwrap();
+    assert!(after.contains("covered_by = [7]"), "{after}");
+    assert!(after.contains("[[review]]\nid = 7"), "{after}");
+
+    // the lock is current: --check against mx3 finds nothing to write
+    let out = berc_mx3(
+        &["parts", "refresh", path(&dir), "--check"],
+        fake.url(),
+        Some(TOKEN),
+    );
+    assert_eq!(out.status.code(), Some(0), "{}", text(&out.stderr));
+    assert!(
+        fake.requests()
+            .iter()
+            .all(|r| r.authorization.as_deref() == Some(format!("Bearer {TOKEN}").as_str()))
+    );
+}
+
+#[cfg(feature = "mx3")]
+#[test]
+fn mx3_needs_a_token_and_never_shows_it() {
+    let fake = erc_fake_mx3::FakeMx3::start();
+    let dir = project("mx3-token");
+    let out = berc_mx3(&["parts", "refresh", path(&dir)], fake.url(), None);
+    assert_eq!(out.status.code(), Some(2));
+    assert!(
+        text(&out.stderr).contains("no mx3 token: set MX3_TOKEN"),
+        "{}",
+        text(&out.stderr)
+    );
+    assert!(fake.requests().is_empty());
+
+    let secret = "mx3_not-the-right-token";
+    let out = berc_mx3(&["parts", "refresh", path(&dir)], fake.url(), Some(secret));
+    assert_eq!(out.status.code(), Some(2));
+    let shown = text(&out.stdout) + &text(&out.stderr);
+    assert!(shown.contains("401"), "{shown}");
+    assert!(!shown.contains(secret), "{shown}");
+    assert!(!dir.join("parts.lock.toml").exists());
+}
+
+#[cfg(feature = "mx3")]
+#[test]
+fn help_names_where_mx3_is_found() {
+    for cmd in [["parts", "refresh"], ["fp", "accept"]] {
+        let out = berc(&[cmd[0], cmd[1], "--help"]);
+        let help = text(&out.stdout);
+        for needle in [
+            "MX3_URL",
+            "[share] mx3_url",
+            "MX3_TOKEN",
+            "~/.config/mx3/token",
+            "never printed",
+        ] {
+            assert!(
+                help.contains(needle),
+                "{} {}: {needle}\n{help}",
+                cmd[0],
+                cmd[1]
+            );
+        }
+    }
 }

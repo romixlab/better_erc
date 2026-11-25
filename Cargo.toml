@@ -24,6 +24,7 @@ members = [
     "erc_model",
     "erc_parts",
     "erc_step",
+    "erc_fake_mx3",
     "test_schematics/generate_netlists",
 ]
 
@@ -44,6 +45,8 @@ opt-level = 2
 
 
 [patch.crates-io]
+# rvariant (under mx3_api_lab, the `mx3` feature) takes si_dynamic 0.3 by version, which is not on crates.io
+si_dynamic = { git = "https://github.com/romixlab/napier", tag = "v0.3.0" }
 
 # If you want to use the bleeding edge version of egui and eframe:
 # egui = { git = "https://github.com/emilk/egui", branch = "master" }

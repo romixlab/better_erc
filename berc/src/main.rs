@@ -233,7 +233,7 @@ enum PartsCommand {
     /// board footprint's review hash with the MPNs placed on it. The file goes beside the project, or where the
     /// project file's [parts] lock says; it is sorted, so its git diff shows what changed in the source. The
     /// checks read only this file.
-    #[command(after_help = PARTS_REFRESH_AFTER_HELP)]
+    #[command(after_help = with_part_source(PARTS_REFRESH_AFTER_HELP))]
     Refresh(PartsRefreshArgs),
 }
 
@@ -242,7 +242,8 @@ struct PartsRefreshArgs {
     /// The design: a directory with one design in it, or a design file
     #[arg(value_hint = ValueHint::AnyPath, default_value = ".")]
     project: PathBuf,
-    /// Take part data from this file, in the shape of parts.lock.toml (hand-filled facts, another board's lock)
+    /// Take part data from this file, in the shape of parts.lock.toml (hand-filled facts, another board's lock),
+    /// instead of the mx3 part store
     #[arg(long, value_name = "FILE", value_hint = ValueHint::FilePath)]
     from: Option<PathBuf>,
     /// Write nothing; exit 1 when the snapshot is out of date (for CI)
@@ -310,7 +311,7 @@ enum FpCommand {
     /// PDF, page) and who made it. The project's parts.lock.toml is then written again from the source, so
     /// `berc fp check` finds them ok. Nothing is written into the schematic or the libraries, except the symbol's
     /// Footprint with --footprint.
-    #[command(after_help = FP_ACCEPT_AFTER_HELP)]
+    #[command(after_help = with_part_source(FP_ACCEPT_AFTER_HELP))]
     Accept(FpAcceptArgs),
     /// Read each footprint's 3D models and measure them against the footprint
     ///
@@ -399,7 +400,7 @@ struct FpAcceptArgs {
     /// The board footprints reviewed, by reference
     #[arg(add = ArgValueCandidates::new(complete::board_references))]
     references: Vec<String>,
-    /// The part source the review is recorded in, a file in the shape of parts.lock.toml
+    /// Record the review in this file, in the shape of parts.lock.toml, instead of the mx3 part store
     #[arg(long, value_name = "FILE", value_hint = ValueHint::FilePath)]
     from: Option<PathBuf>,
     /// A footprint by its review hash instead of board footprints (a library footprint, as `berc fp hash`
@@ -1188,20 +1189,49 @@ fn fp_model(args: &FpModelArgs) -> ExitCode {
     }
 }
 
+/// Where `parts refresh` and `fp accept` find the part source, under their --help
+fn with_part_source(help: &str) -> String {
+    #[cfg(feature = "mx3")]
+    let source = format!(
+        "Part source: --from FILE, else {}",
+        better_erc::parts::mx3::CONNECTION_HELP
+    );
+    #[cfg(not(feature = "mx3"))]
+    let source = "Part source: --from FILE (this berc is built without the mx3 part store, cargo feature mx3)."
+        .to_owned();
+    format!("{help}\n\n{source}")
+}
+
+/// The part source: the file `from` names, else the mx3 part store where this berc is built with it
+fn part_source(from: Option<&Path>) -> Result<Box<dyn better_erc::parts::Source>, String> {
+    if let Some(from) = from {
+        return better_erc::parts::FileSource::open(from)
+            .map(|s| Box::new(s) as Box<dyn better_erc::parts::Source>)
+            .map_err(|e| e.to_string());
+    }
+    #[cfg(feature = "mx3")]
+    {
+        use better_erc::parts::mx3::{Connection, Mx3Source};
+        Mx3Source::connect(Connection::from_env())
+            .map(|s| Box::new(s) as Box<dyn better_erc::parts::Source>)
+            .map_err(|e| e.to_string())
+    }
+    #[cfg(not(feature = "mx3"))]
+    Err(
+        "no part source: name a file with --from (this berc is built without the mx3 part store, cargo \
+         feature mx3)"
+            .to_owned(),
+    )
+}
+
 fn fp_accept(args: &FpAcceptArgs) -> ExitCode {
     use better_erc::fp::{AcceptError, AcceptWhat, Covers};
-    use better_erc::parts::{FileSource, NewReview};
+    use better_erc::parts::NewReview;
     let fail = |e: &dyn std::fmt::Display| {
         error(&e.to_string());
         ExitCode::from(AcceptError::EXIT_CODE)
     };
-    let Some(from) = &args.from else {
-        return fail(
-            &"no part source to record the review in: name a file with --from (this berc has no other \
-             part source built in)",
-        );
-    };
-    let source = match FileSource::open(from) {
+    let source = match part_source(args.from.as_deref()) {
         Ok(s) => s,
         Err(e) => return fail(&e),
     };
@@ -1248,7 +1278,14 @@ fn fp_accept(args: &FpAcceptArgs) -> ExitCode {
     let project = matches!(what, AcceptWhat::References(_)).then_some(args.project.as_path());
     let spinner = progress::Delayed::start();
     spinner.set(format!("reading {}", args.project.display()));
-    let run = better_erc::fp::accept(project, &what, &source, &review, &covers, args.dry_run);
+    let run = better_erc::fp::accept(
+        project,
+        &what,
+        source.as_ref(),
+        &review,
+        &covers,
+        args.dry_run,
+    );
     spinner.finish();
     let run = match run {
         Ok(r) => r,
@@ -1315,14 +1352,8 @@ fn set_footprint(
 }
 
 fn parts_refresh(args: &PartsRefreshArgs) -> ExitCode {
-    use better_erc::parts::{FileSource, PartsRefreshError, WriteLock, refresh_project};
-    let Some(from) = &args.from else {
-        error(
-            "no part source: name a file with --from (this berc has no other part source built in)",
-        );
-        return ExitCode::from(PartsRefreshError::EXIT_CODE);
-    };
-    let source = match FileSource::open(from) {
+    use better_erc::parts::{PartsRefreshError, WriteLock, refresh_project};
+    let source = match part_source(args.from.as_deref()) {
         Ok(s) => s,
         Err(e) => {
             error(&e.to_string());
@@ -1334,7 +1365,7 @@ fn parts_refresh(args: &PartsRefreshArgs) -> ExitCode {
     } else {
         WriteLock::Changed
     };
-    match refresh_project(&args.project, &source, write) {
+    match refresh_project(&args.project, source.as_ref(), write) {
         Ok(r) => {
             let out = match args.format {
                 ListFormat::Text => r.to_text(),
