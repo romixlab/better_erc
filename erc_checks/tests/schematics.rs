@@ -7,7 +7,8 @@
 //! expectation shows firing fails it. `BLESS=1` rewrites the findings from what the engine finds, for review in
 //! the diff, and keeps the sidecar's `[[not_run]]` blocks as they are (it never adds any). `DRAW` findings are
 //! compared on the `draw-*` schematics only: the others were written for their circuit, not drawn for style. A
-//! `<id>_<slug>.theme.json` beside a schematic is the colour theme of its run.
+//! `<id>_<slug>.theme.json` beside a schematic is the colour theme of its run; `<id>_<slug>.settings` holds its
+//! settings, one `KEY=VALUE` per line as `--set` takes them, file paths relative to the sources.
 
 use erc_checks::catalogue::catalogue;
 use erc_checks::{Confidence, Report, RunOptions, registered, run_imported};
@@ -143,6 +144,13 @@ fn schematics_match_their_expectations() {
             opts.config
                 .themes
                 .push(erc_kicad::theme::read(&text).unwrap());
+        }
+        if let Ok(text) = std::fs::read_to_string(dir.join(format!("{name}.settings"))) {
+            for line in text.lines().filter(|l| !l.trim().is_empty()) {
+                let (k, v) = line.split_once('=').expect("KEY=VALUE");
+                opts.config.set_text(k.trim(), v.trim()).unwrap();
+            }
+            opts.config.read_paths(&dir).unwrap();
         }
         let report = run_imported(&imported, &opts).unwrap();
         let mut got = actual(&report);

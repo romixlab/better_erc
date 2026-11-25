@@ -127,7 +127,7 @@ pub enum Need {
     Variant,
     /// Part data from the part database or the lab's part store (CFG-5)
     PartDb,
-    /// A key of the better_erc project file (CFG-2)
+    /// A project setting by its name (`drawing.notes`): set with `--set` now, by the better_erc project file (CFG-2) later
     Project(&'static str),
     /// Several boards joined through connectors (NET-13)
     MultiBoard,
@@ -153,7 +153,7 @@ impl Need {
             Need::ColourTheme => "colour theme".into(),
             Need::Variant => "fitted parts".into(),
             Need::PartDb => "part data".into(),
-            Need::Project(key) => format!("project file: {key}"),
+            Need::Project(key) => format!("setting {key}"),
             Need::MultiBoard => "multi-board".into(),
         }
     }
@@ -236,11 +236,17 @@ impl Need {
             Need::ColourTheme => "KiCad colour themes, given with --theme",
             Need::Variant => "DNP flags and variant overrides: what is fitted",
             Need::PartDb => "part data (CFG-5)",
-            Need::Project(_) => "a key of the better_erc project file (CFG-2)",
+            Need::Project(_) => {
+                "a project setting, given with --set (the better_erc project file, CFG-2, will hold it)"
+            }
             Need::MultiBoard => "several boards joined through connectors (NET-13)",
         }
     }
 }
+
+/// The unit of a setting that names files, relative to the project directory and separated by commas; `default` is
+/// unused and an unset path setting has no files
+pub const PATHS: &str = "paths";
 
 /// A threshold of a check with its default; the project file will override it per project (CFG-2). A name starting
 /// with `drawing.` is a setting several checks share, overridden under that name alone
@@ -248,7 +254,7 @@ impl Need {
 pub struct Param {
     pub name: &'static str,
     pub default: f64,
-    /// `ohm`, `V`, `A`, or empty for a plain number
+    /// `ohm`, `V`, `A`, empty for a plain number, or [`PATHS`] for a setting that names files
     pub unit: &'static str,
     pub doc: &'static str,
     /// The words a word setting takes, in order; it holds the index of its word, `default` included. Empty for a

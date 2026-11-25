@@ -2,7 +2,7 @@
 //! the importer registry ([`erc_import`]), run the engine, compare with a baseline report, and decide the exit code
 //! as data ([`Verdict`]). Nothing here prints; every failure is a [`CheckError`].
 
-use crate::ctx::{Availability, Config, Ctx};
+use crate::ctx::{Availability, Ctx};
 use crate::engine::{RunError, RunOptions, run_imported};
 use crate::finding::BaselineState;
 use crate::meta::{Need, Severity};
@@ -151,6 +151,8 @@ pub enum CheckError {
     Run(RunError),
     /// The baseline report cannot be read
     Baseline { file: PathBuf, message: String },
+    /// A file a path setting names cannot be read (`drawing.notes`)
+    Setting(String),
 }
 
 impl CheckError {
@@ -183,6 +185,7 @@ impl fmt::Display for CheckError {
             CheckError::Baseline { file, message } => {
                 write!(f, "baseline {}: {message}", file.display())
             }
+            CheckError::Setting(message) => f.write_str(message),
         }
     }
 }
@@ -316,16 +319,20 @@ impl Project {
         v
     }
 
-    /// Runs the checks, compares with the baseline and decides the verdict
+    /// Runs the checks, with the files the path settings name read from the project directory, compares with the
+    /// baseline and decides the verdict
     pub fn check(&self, opts: &CheckOptions) -> Result<CheckRun, CheckError> {
-        let mut report = run_imported(&self.imported, &opts.run)?;
+        let mut run = opts.run.clone();
+        run.config
+            .read_paths(&self.dir)
+            .map_err(CheckError::Setting)?;
+        let mut report = run_imported(&self.imported, &run)?;
         if let Some(b) = &opts.baseline {
             report.compare(b);
         }
         let mut unavailable = Vec::new();
         for need in &opts.require {
             for (bi, board) in self.imported.design.boards.iter().enumerate() {
-                let config = Config::default();
                 let variant = opts
                     .run
                     .variant
@@ -335,7 +342,7 @@ impl Project {
                     &self.imported.design,
                     erc_model::BoardId::from_index(bi),
                     variant,
-                    &config,
+                    &run.config,
                 );
                 if let Availability::Missing { why } = cx.availability(*need) {
                     unavailable.push(Unavailable {

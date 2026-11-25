@@ -3,7 +3,7 @@
 //! data a board has, worked out before a run.
 
 use crate::finding::FindingBuilder;
-use crate::meta::{CheckMeta, Need, Severity};
+use crate::meta::{CheckMeta, Need, PATHS, Severity};
 use erc_analysis::drawing::Drawing;
 use erc_analysis::scene::Scene;
 use erc_analysis::{Feeds, I2cBuses, PartClasses, Power, Values};
@@ -11,6 +11,8 @@ use erc_model::geometry::Theme;
 use erc_model::{Board, BoardId, Design, PartId, Provenance, VariantId, View};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
+use std::io::Read;
+use std::path::Path;
 use std::sync::OnceLock;
 
 /// What a project changes about the checks: the hook the project file (CFG-2) fills
@@ -28,13 +30,25 @@ pub struct Config {
     /// The colour themes the sheets are looked at on
     #[serde(default)]
     pub themes: Vec<Theme>,
+    /// The files each path setting names (`drawing.notes`), relative to the project directory, as given
+    #[serde(default)]
+    pub paths: BTreeMap<String, Vec<String>>,
+    /// The text of each file of [`Config::paths`], by its path as given; [`Config::read_paths`] fills it
+    #[serde(default)]
+    pub files: BTreeMap<String, String>,
 }
+
+/// The largest file a path setting may name
+const PATH_FILE_BYTES_MAX: u64 = 4 << 20;
 
 impl Config {
     /// Sets a threshold by its key: a setting of `CHECK-ID.param`, or a shared one by its own name. A key no
     /// registered check declares is refused.
     pub fn set(&mut self, key: &str, value: f64) -> Result<(), String> {
         let p = declared(key)?;
+        if p.unit == PATHS {
+            return Err(format!("{key} takes file paths, not {value}"));
+        }
         let index = value as usize;
         if !p.choices.is_empty()
             && (value.fract() != 0.0 || value < 0.0 || index >= p.choices.len())
@@ -51,6 +65,19 @@ impl Config {
     /// Sets a setting from its text: a number, or one of a word setting's words (`drawing.clearance.spacing=sparse`)
     pub fn set_text(&mut self, key: &str, value: &str) -> Result<(), String> {
         let p = declared(key)?;
+        if p.unit == PATHS {
+            let paths: Vec<String> = value
+                .split(',')
+                .map(str::trim)
+                .filter(|v| !v.is_empty())
+                .map(str::to_string)
+                .collect();
+            if paths.is_empty() {
+                return Err(format!("{key} takes file paths, separated by commas"));
+            }
+            self.paths.insert(key.to_string(), paths);
+            return Ok(());
+        }
         if let Some(i) = p.choices.iter().position(|c| *c == value) {
             return self.set(key, i as f64);
         }
@@ -62,6 +89,30 @@ impl Config {
             )),
             Err(_) => Err(format!("{key} takes a number, not {value}")),
         }
+    }
+
+    /// Reads the files the path settings name, relative to `dir`, into [`Config::files`]
+    ///
+    /// # Errors
+    ///
+    /// A file that cannot be read, is not UTF-8 or is larger than 4 MiB.
+    pub fn read_paths(&mut self, dir: &Path) -> Result<(), String> {
+        for (key, paths) in &self.paths {
+            for path in paths {
+                let full = dir.join(path);
+                let why = |e: &dyn std::fmt::Display| format!("{key}: {}: {e}", full.display());
+                let file = std::fs::File::open(&full).map_err(|e| why(&e))?;
+                let mut text = String::new();
+                file.take(PATH_FILE_BYTES_MAX + 1)
+                    .read_to_string(&mut text)
+                    .map_err(|e| why(&e))?;
+                if text.len() as u64 > PATH_FILE_BYTES_MAX {
+                    return Err(why(&"larger than 4 MiB"));
+                }
+                self.files.insert(path.clone(), text);
+            }
+        }
+        Ok(())
     }
 }
 
@@ -247,8 +298,12 @@ impl Availability {
             Need::PowerStates => missing("power states need the project file (NET-8, CFG-2)"),
             Need::Conduction => missing("signal following is not built yet (NET-10)"),
             Need::PartDb => missing("no part data: the part database is not built yet (CFG-5)"),
-            Need::Project(key) => Availability::Missing {
-                why: format!("no better_erc project file (CFG-2): it would set `{key}`"),
+            Need::Project(key) => match cx.path_files(key) {
+                Some(Ok(_)) => Availability::Available,
+                Some(Err(path)) => missing(&format!("`{key}` names {path}, which was not read")),
+                None => missing(&format!(
+                    "`{key}` is not set: --set {key}=FILE (the better_erc project file, CFG-2, will set it too)"
+                )),
             },
         }
     }
@@ -367,6 +422,21 @@ impl<'a> Ctx<'a> {
     /// Whether a part is fitted in the variant checked
     pub fn fitted(&self, part: PartId) -> bool {
         self.view().fitted(part)
+    }
+
+    /// The files a path setting names with their text, in the order given: `None` when it is unset, the first path
+    /// not read when one is missing
+    pub fn path_files(&self, key: &str) -> Option<Result<Vec<(&str, &str)>, &str>> {
+        let paths = self.config.paths.get(key)?;
+        Some(
+            paths
+                .iter()
+                .map(|p| match self.config.files.get(p) {
+                    Some(text) => Ok((p.as_str(), text.as_str())),
+                    None => Err(p.as_str()),
+                })
+                .collect(),
+        )
     }
 
     /// The colour themes given to the run (Need::ColourTheme)

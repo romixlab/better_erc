@@ -169,6 +169,10 @@ the current directory, which is what code scanning expects. To adopt better_erc 
 commit a baseline (`berc check hw/board --format json > hw/board/berc-baseline.json`) and add
 `--baseline hw/board/berc-baseline.json`: from then on only new findings fail the job.
 
+Some checks read files kept with the board. `--set drawing.notes=../doc/notes.md` names the board's notes file, a
+Markdown file with one `## N13 · title` heading per note, relative to the project directory; `DRAW-50` then reports
+each `See N13` on a sheet that points at a note the file lacks. Without the setting that check does not run.
+
 In this repository `just check` runs `berc check` on the test schematics against the committed
 `test_schematics/berc-baseline.json` (they have findings on purpose), and `just check-baseline` rewrites it.
 
