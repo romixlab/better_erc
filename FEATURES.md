@@ -592,6 +592,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   - ✅ `DRAW-46` Leader into a small part off centre, not diagonal or clipped (`drawing.leader.*`)
   - ✅ `DRAW-47` Run-on note text (`drawing.note.item_words`, `.item_marks`)
   - ✅ `DRAW-48` Block (parts sharing a `Block` field) with no note on its sheet (`drawing.block.reach`)
+  - ✅ `DRAW-49` Placeholder left in a note, a text or a field (`x V`, `TBD`, `???`, an empty `Max current:`)
 - ✅ `DIAG-1` Parts on an I2C bus in no known role are analysis notes in the report, not findings · `erc_analysis/src/i2c.rs`
 - ✅ `DIAG-2` Every catalogue check reported as ran, not run (the missing need, why, and what would enable it) or
   planned; each check declares its needs, availability is worked out per board before the run from the analyses
