@@ -30,6 +30,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Changed
 
+- `DRAW-49`: a note headed `TODO`, `TBD` or `FIXME` with no placeholder in its body is reported once.
 - `DRAW-9`, `DRAW-34`: a text box counts against wires by its text only; its border may cross them (NET-26).
 - `DRAW-7`, `DRAW-9`, `DRAW-34`: a wire ending on a sheet's pin is not near or over that sheet's box (NET-26).
 - `DRAW-7`, `DRAW-9`, `DRAW-34`: a symbol body counts by its drawn shapes on their stroke centrelines, not one box (NET-26).

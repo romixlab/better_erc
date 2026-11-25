@@ -2,9 +2,9 @@
 
 use super::one;
 use crate::meta::*;
-use crate::placeholder::{placeholder, placeholders_in};
+use crate::placeholder::{heading_word, placeholder, placeholders_in};
 use crate::{Ctx, Finding};
-use erc_analysis::scene::ItemKind as K;
+use erc_analysis::scene::{Item, ItemKind as K, Scene};
 use erc_model::geometry::Text;
 
 pub struct Draw49;
@@ -23,16 +23,57 @@ static META: CheckMeta = CheckMeta {
 /// Fields another check reads for placeholders: the value (`BOM-5`), the reference (`NAME-12`)
 const SKIPPED_FIELDS: [&str; 2] = ["Reference", "Value"];
 
-/// The placeholders of a sheet text; a bold heading's first word names its note's kind (`DRAW-32`), not a placeholder
-fn of_text(t: &Text) -> Vec<String> {
-    let text = t.text.trim();
-    let first = text.split_whitespace().next().unwrap_or("");
-    let rest = if t.bold && first.trim_end_matches(':').eq_ignore_ascii_case("TODO") {
-        &text[first.len()..]
-    } else {
-        text
-    };
-    placeholders_in(rest)
+/// A text, text box or table of a sheet, as part of a note
+struct Note<'s> {
+    item: &'s Item,
+    /// A bold free text that opens with an open word: the heading grouped with a note's box (`DRAW-32`)
+    bold_heading: bool,
+    /// The open word that heads it
+    heading: Option<String>,
+    /// The placeholders it holds besides that word
+    spots: Vec<String>,
+}
+
+impl<'s> Note<'s> {
+    fn free(item: &'s Item, t: &Text) -> Self {
+        let text = t.text.trim();
+        let heading = heading_word(&t.text, t.bold);
+        let body = match heading {
+            // The word of a bold heading ends at its colon or at a space
+            Some(_) if t.bold => text
+                .split_once(char::is_whitespace)
+                .map_or("", |(_, rest)| rest),
+            _ => text,
+        };
+        Note {
+            item,
+            bold_heading: t.bold && heading.is_some(),
+            heading: heading.map(str::to_string),
+            spots: placeholders_in(body),
+        }
+    }
+
+    fn boxed(item: &'s Item, t: &Text) -> Self {
+        Note {
+            item,
+            bold_heading: false,
+            heading: heading_word(&t.text, false).map(str::to_string),
+            spots: placeholders_in(&t.text),
+        }
+    }
+
+    /// What to report on it: its placeholders; else its heading's open word, when nothing grouped with it holds a
+    /// placeholder and no bold heading grouped with it is reported in its place
+    fn report(&self, scene: &Scene, all: &[Note]) -> Vec<String> {
+        if !self.spots.is_empty() {
+            return self.spots.clone();
+        }
+        let silent = all
+            .iter()
+            .filter(|o| scene.grouped(self.item, o.item))
+            .any(|o| !o.spots.is_empty() || (o.bold_heading && !self.bold_heading));
+        self.heading.iter().filter(|_| !silent).cloned().collect()
+    }
 }
 
 /// `` `x V`, `y V` ``
@@ -54,18 +95,31 @@ impl Check for Draw49 {
             let texts = scene.items.iter().filter(|i| i.kind == K::Text);
             let boxes = scene.items.iter().filter(|i| i.kind == K::TextBox);
             let tables = scene.items.iter().filter(|i| i.kind == K::Table);
-            let free = texts.zip(&g.texts).map(|(i, t)| (i, of_text(&t.text)));
+            let free = texts.zip(&g.texts).map(|(i, t)| Note::free(i, &t.text));
             let boxed = boxes
                 .zip(&g.text_boxes)
-                .map(|(i, b)| (i, placeholders_in(&b.text.text)));
+                .map(|(i, b)| Note::boxed(i, &b.text));
             let cells = tables.zip(&g.tables).map(|(i, t)| {
                 let spots = t.cells.iter().flat_map(|c| placeholders_in(&c.text.text));
-                (i, spots.collect())
+                Note {
+                    item: i,
+                    bold_heading: false,
+                    heading: None,
+                    spots: spots.collect(),
+                }
             });
-            for (item, spots) in free.chain(boxed).chain(cells) {
+            let notes: Vec<Note> = free.chain(boxed).chain(cells).collect();
+            for note in &notes {
+                let spots = note.report(scene, &notes);
                 if spots.is_empty() {
                     continue;
                 }
+                let item = note.item;
+                let fix = if note.spots.is_empty() {
+                    "do the open work, then delete the note"
+                } else {
+                    "fill in the value, or delete the line if it does not apply"
+                };
                 out.push(
                     one(cx, &META, scene, item, item.rect.min)
                         .message(format!(
@@ -73,7 +127,7 @@ impl Check for Draw49 {
                             item.name,
                             quoted(&spots)
                         ))
-                        .fix("fill in the value, or delete the line if it does not apply")
+                        .fix(fix)
                         .build(),
                 );
             }
