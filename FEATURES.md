@@ -1104,6 +1104,15 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 
 ## Code generation (`GEN`)
 
+- ✅ `TOOL-14` `berc fields sync PROJECT [--write]`: the display fields of resistors and capacitors from
+  `parts.lock.toml` (`CFG-9`): `Voltage` and `Power` the lowest rating over all MPNs of a part (mW below 1 W, V),
+  `Dielectric` the worst code (the order `BOM-12` uses, shared code in `erc_checks::component`), `Package` the case
+  every MPN shares. A field equal to the board default (`DEFAULT_*` text variables) is removed; a part without the
+  field and off the default gets one, placed as `place-fields` places a symbol's fields; only those fields change.
+  An MPN without the fact, or MPNs that disagree on `Package`, leave the field alone and are listed. Dry run by
+  default; the `.kicad_sch` edit keeps every other byte (`erc_kicad::fields::edit_values`). After `--write` the
+  `BOM-12` display findings are gone on the same snapshot · `erc_checks/src/fields_sync.rs`,
+  `better_erc/src/fields.rs`, `better_erc/tests/it/fields_sync.rs`, README "Display fields from the snapshot"
 - 📋 `GEN-1` GPIO init from the netlist: embassy, RTIC, raw registers
 - 📋 `GEN-2` Clock config
 - 📋 `GEN-3` PCB revision aware code, BSP-like crates

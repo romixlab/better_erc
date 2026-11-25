@@ -1,6 +1,6 @@
 //! `BOM-12` Value field vs the MPN's parameters
 
-use crate::component::{self, Candidate, Judged, Stated, dielectric};
+use crate::component::{self, Candidate, Dielectrics, Judged, Ratings, Stated, dielectric};
 use crate::meta::*;
 use crate::{Ctx, Finding};
 use erc_analysis::PartClass;
@@ -124,23 +124,18 @@ impl Shown<'_, '_, '_> {
         fact: &'static str,
         unit: Unit,
     ) -> Option<Finding> {
-        let mut ratings = Vec::new();
-        for (c, j) in self.cands.iter().zip(judged.iter_mut()) {
-            match c.number(fact) {
-                Some(v) => ratings.push((v, c)),
-                None => j.lacks(fact),
-            }
+        let ratings = Ratings::of(self.cands, fact);
+        for i in &ratings.lacking {
+            judged[*i].lacks(fact);
         }
-        if ratings.len() < self.cands.len() {
-            return None;
-        }
-        let (low, by) = ratings.iter().min_by(|a, b| a.0.total_cmp(&b.0))?;
+        let (low, by) = ratings.lowest()?;
         if (want - low).abs() <= SAME_REL * low.abs() {
             return None;
         }
         let name = if fact == "power" { "Power" } else { "Voltage" };
-        let write = format_si(*low, unit).replace(' ', "");
+        let write = format_si(low, unit).replace(' ', "");
         let facts = ratings
+            .known
             .iter()
             .map(|(v, c)| (format!("{}.{fact}", c.field), v.to_string(), c.source(fact)))
             .collect();
@@ -152,7 +147,7 @@ impl Shown<'_, '_, '_> {
                 self.reference,
                 s.from,
                 format_si(want, unit),
-                format_si(*low, unit),
+                format_si(low, unit),
                 by.field,
                 by.mpn,
             ),
@@ -162,51 +157,29 @@ impl Shown<'_, '_, '_> {
 
     /// `Dielectric` equals the worst code among the ceramic MPNs: the one every other covers
     fn worst_dielectric(&self, judged: &mut [Judged], s: &Stated) -> Option<Finding> {
-        let mut codes = Vec::new();
-        for (c, j) in self.cands.iter().zip(judged.iter_mut()) {
-            if !ceramic_or_unknown(c) {
-                continue;
-            }
-            match c.text("dielectric") {
-                Some(d) => codes.push((d, c)),
-                None => j.lacks("dielectric"),
-            }
+        let found = Dielectrics::of(self.cands);
+        for i in &found.lacking {
+            judged[*i].lacks("dielectric");
         }
-        if codes.is_empty() || judged.iter().any(|j| j.missing.contains(&"dielectric")) {
-            return None;
-        }
-        let same = |a: &str, b: &str| {
-            dielectric::covers(a, b) == Some(true) && dielectric::covers(b, a) == Some(true)
-        };
         // A code no reading knows is not judged
-        if codes
-            .iter()
-            .any(|(d, _)| dielectric::covers(d, d).is_none())
-            || dielectric::covers(&s.text, &s.text).is_none()
-        {
+        if !found.judgeable() || dielectric::covers(&s.text, &s.text).is_none() {
             return None;
         }
-        let worst = codes.iter().find(|(w, _)| {
-            codes
-                .iter()
-                .all(|(d, _)| dielectric::covers(w, d) == Some(true))
-        });
-        let holds = match worst {
-            Some((w, _)) => same(&s.text, w),
-            None => false,
-        };
-        if holds {
+        let worst = found.worst();
+        if worst.is_some_and(|w| component::same_dielectric(&s.text, w)) {
             return None;
         }
-        let listed: Vec<String> = codes
+        let listed: Vec<String> = found
+            .codes
             .iter()
             .map(|(d, c)| format!("{} {d}", c.field))
             .collect();
         let write = match worst {
-            Some((w, _)) => format!(": write Dielectric {w}"),
+            Some(w) => format!(": write Dielectric {w}"),
             None => ": no one of them is worse than the others".to_owned(),
         };
-        let facts = codes
+        let facts = found
+            .codes
             .iter()
             .map(|(d, c)| {
                 (
@@ -365,14 +338,6 @@ fn judge<'c>(
         }
     }
     j
-}
-
-/// Whether the MPN is a ceramic capacitor, or its technology is not known: a dielectric code applies
-fn ceramic_or_unknown(c: &Candidate) -> bool {
-    c.text("technology").is_none_or(|t| {
-        let t = t.to_ascii_lowercase();
-        t.contains("ceramic") || t.contains("mlcc")
-    })
 }
 
 inventory::submit!(Registered(&Bom12));

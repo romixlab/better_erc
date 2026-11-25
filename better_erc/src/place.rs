@@ -193,7 +193,7 @@ fn count(design: &Design, config: &Config, sheet: Option<&str>) -> OverlapCount 
 
 /// The text of every sheet file with a moved field, edited, by file relative to `dir`: from its text in `base`
 /// when an earlier edit made one, else from the file
-fn edit(
+pub(crate) fn edit(
     dir: &Path,
     plan: &FieldPlan,
     base: &BTreeMap<String, Vec<u8>>,

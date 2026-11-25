@@ -211,6 +211,33 @@ source or file error. The project file can put the snapshot elsewhere: `[parts] 
 An MPN on the board that the snapshot lacks is a finding, `BOM-20`, until the next refresh: a new part cannot reach
 the BOM unchecked. Without a snapshot the checks that need it report themselves as not run.
 
+## Display fields from the snapshot
+
+```sh
+berc fields sync PROJECT [--write] [--set NAME=VALUE]
+```
+
+A resistor's or capacitor's display fields state what all its MPNs guarantee, and `berc fields sync` writes them
+from `parts.lock.toml` (`BOM-12` and `LIB-6` hold them to the same values):
+
+| Field | Value |
+|---|---|
+| `Voltage` (capacitors), `Power` (resistors) | the lowest rating over all MPNs: `25V`, `63mW`; a power of 1 W or more is `1W` |
+| `Dielectric` (capacitors) | the worst code of the ceramic MPNs, the one every other code covers (`X5R` for `X5R` and `X7R`) |
+| `Package` | the case every MPN has (`0402`) |
+
+A field equal to the board default, the text variables `DEFAULT_C_PACKAGE`, `DEFAULT_C_VOLTAGE`,
+`DEFAULT_C_DIELECTRIC`, `DEFAULT_R_PACKAGE` and `DEFAULT_R_POWER`, is removed from the part. A part without the field
+that is off the default gets one, shown and placed as `place-fields` places fields (`--set` takes its
+`drawing.*` settings). Only these four fields change; nothing else is removed. An MPN missing the fact (no rated
+voltage, no `case_eia`), a dielectric code that is not read, or MPNs that differ in case leave the field as it is and
+are listed with the reason. A part with no MPN in the snapshot is not touched.
+
+The default is a dry run: one line per field, then the totals. `--write` edits the `.kicad_sch` files in place and
+keeps every other byte. Close the schematic in KiCad first, and run `berc parts refresh` before, since the fields
+follow the snapshot. A run after `--write` finds nothing to do, and the `BOM-12` findings on these fields are gone.
+Exit code 2: a design or file error, or no snapshot.
+
 ## Placing fields
 
 ```sh

@@ -87,6 +87,11 @@ is written when any file fails to edit.\n\nA written file differs only in the mo
 the hidden fields' (hide yes), and its moved symbols lose (fields_autoplaced yes), so KiCad keeps the new places. Close the schematic in KiCad \
 before --write.\n\nExamples:\n  berc place-fields hw/board\n  berc place-fields hw/board --sheet power --write";
 
+/// Exit codes of `berc fields sync`, under its --help
+const FIELDS_SYNC_AFTER_HELP: &str = "Exit codes: 0 planned (or written), 2 usage, read or write error, no \
+parts.lock.toml; nothing is written when any file fails to edit.\n\nClose the schematic in KiCad before --write. \
+Run `berc parts refresh` first.\n\nExamples:\n  berc fields sync hw/board\n  berc fields sync hw/board --write";
+
 /// better_erc command line tools
 ///
 /// Colour in help, errors and `check` text only on a terminal, and never with NO_COLOR set; `textconv` output is
@@ -169,6 +174,11 @@ enum Command {
         #[command(subcommand)]
         command: PartsCommand,
     },
+    /// The display fields of resistors and capacitors, written from the parts snapshot
+    Fields {
+        #[command(subcommand)]
+        command: FieldsCommand,
+    },
     /// How often each command ran on this PC, from the local usage record
     ///
     /// Every run appends a line to $BERC_USAGE_FILE, else $XDG_STATE_HOME/berc/usage.tsv, else
@@ -187,6 +197,32 @@ enum Command {
         #[arg(long)]
         all: bool,
     },
+}
+
+#[derive(Subcommand)]
+enum FieldsCommand {
+    /// Write Voltage, Power, Dielectric and Package from parts.lock.toml: the worst over each part's MPNs
+    ///
+    /// Voltage and Power state the lowest rating over all MPNs of a part, Dielectric the worst code, Package the
+    /// case they share (mW below 1 W, V). A field equal to the board default (the DEFAULT_C_PACKAGE, DEFAULT_C_VOLTAGE,
+    /// DEFAULT_C_DIELECTRIC, DEFAULT_R_PACKAGE, DEFAULT_R_POWER text variables) is taken off the part; a part
+    /// without the field and off the default gets one, placed as place-fields places fields. Only these fields
+    /// change. An MPN without the fact leaves the field alone; it is listed. A dry run by default.
+    #[command(after_help = FIELDS_SYNC_AFTER_HELP)]
+    Sync(FieldsSyncArgs),
+}
+
+#[derive(clap::Args)]
+struct FieldsSyncArgs {
+    /// The design: a directory with one .kicad_pro, or the .kicad_pro
+    #[arg(value_hint = ValueHint::AnyPath)]
+    project: PathBuf,
+    /// Edit the .kicad_sch files in place; without it nothing is written
+    #[arg(long)]
+    write: bool,
+    /// A setting over its default, repeatable, for placing new fields: `drawing.fields.pitch=2.54`
+    #[arg(long = "set", value_name = "NAME=VALUE")]
+    set: Vec<String>,
 }
 
 #[derive(Subcommand)]
@@ -663,6 +699,9 @@ fn main() -> ExitCode {
         Command::Parts {
             command: PartsCommand::Refresh(args),
         } => parts_refresh(&args),
+        Command::Fields {
+            command: FieldsCommand::Sync(args),
+        } => fields_sync(&args),
         Command::Usage => {
             let out = usage::summary(&usage::known(&Cli::command()));
             let _ = std::io::stdout().lock().write_all(out.as_bytes());
@@ -727,6 +766,35 @@ fn place_fields(args: &PlaceFieldsArgs) -> ExitCode {
     match placed {
         Ok(p) => {
             let out = better_erc::place::render(&p);
+            let _ = anstream::stdout().lock().write_all(out.as_bytes());
+            ExitCode::SUCCESS
+        }
+        Err(e) => {
+            error(&e.to_string());
+            ExitCode::from(CheckError::EXIT_CODE)
+        }
+    }
+}
+
+fn fields_sync(args: &FieldsSyncArgs) -> ExitCode {
+    let config = match settings(&args.set) {
+        Ok(c) => c,
+        Err(e) => {
+            error(&e);
+            return ExitCode::from(CheckError::EXIT_CODE);
+        }
+    };
+    let opts = better_erc::fields::SyncOptions {
+        write: args.write,
+        config,
+    };
+    let spinner = progress::Delayed::start();
+    spinner.set("syncing fields".into());
+    let synced = better_erc::fields::sync(&args.project, &opts);
+    spinner.finish();
+    match synced {
+        Ok(s) => {
+            let out = better_erc::fields::render(&s);
             let _ = anstream::stdout().lock().write_all(out.as_bytes());
             ExitCode::SUCCESS
         }
