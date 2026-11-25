@@ -139,7 +139,6 @@ fn cases(sources: &Path) -> Vec<(String, PathBuf)> {
 fn schematics_match_their_expectations() {
     let sources = sources();
     let cases = cases(&sources);
-    let names: Vec<String> = cases.iter().map(|(n, _)| n.clone()).collect();
     let bless = std::env::var_os("BLESS").is_some();
     let mut failed = Vec::new();
     let mut fired = BTreeSet::new();
