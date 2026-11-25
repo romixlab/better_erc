@@ -490,21 +490,21 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="ana-25"></a>💡 `ANA-25` Over-specified part a chain cannot use: its contribution on every figure it is graded on is negligible against the rest of the chain or below what the sink resolves (lost cost) ≈ PAS-41, BOM-19 · impl: hard (NET-5, NET-10, NET-25, CFG-5, CFG-8) · [📖](checks/ana.md#ana-25) <!-- 23 Oct 2026; Roman -->
 
 ### 🌡️ RATE - Ratings and derating
-- <a id="rate-1"></a>⚠️ `RATE-1` Capacitor voltage rating margins · impl: mid (NET-5, CFG-2, CFG-5) · [📖](checks/rate.md#rate-1) <!-- CHK-29 -->
-- <a id="rate-2"></a>⚠️ `RATE-2` Resistor power rating · impl: mid (NET-5, CFG-2, CFG-5) · [📖](checks/rate.md#rate-2) <!-- CHK-6; split 21 Oct 2026: RATE-9 -->
+- <a id="rate-1"></a>⚠️ `RATE-1` Capacitor voltage rating margins · impl: mid (NET-5, CFG-2, CFG-9) · [📖](checks/rate.md#rate-1) <!-- CHK-29 -->
+- <a id="rate-2"></a>⚠️ `RATE-2` Resistor power rating · impl: mid (NET-5, CFG-2, CFG-9) · [📖](checks/rate.md#rate-2) <!-- CHK-6; split 21 Oct 2026: RATE-9 -->
 - <a id="rate-3"></a>⚠️ `RATE-3` Shunt power ratings · impl: mid (CFG-2, CFG-5) · [📖](checks/rate.md#rate-3) <!-- CHK-7 -->
 - <a id="rate-4"></a>⚠️ `RATE-4` MOSFET Vds rating · impl: mid (NET-5, CFG-5, LIB-3) · [📖](checks/rate.md#rate-4) <!-- CHK-217 -->
 - <a id="rate-5"></a>⚠️ `RATE-5` MOSFET power dissipation estimate · impl: hard (CFG-2, CFG-5, RPT-4) · [📖](checks/rate.md#rate-5) <!-- CHK-8 -->
 - <a id="rate-6"></a>⚠️ `RATE-6` LDO current rating, when power draw is known · impl: mid (RPT-2, CFG-2, CFG-5) · [📖](checks/rate.md#rate-6) <!-- CHK-16 -->
 - <a id="rate-7"></a>⚠️ `RATE-7` LED brightness estimate: warn if too bright · impl: mid (NET-5, CFG-5) · [📖](checks/rate.md#rate-7) <!-- CHK-185; split 21 Oct 2026: RATE-10 -->
 - <a id="rate-8"></a>⚠️ `RATE-8` Temperature ranges that make no sense, e.g. X7R caps but 85 °C ICs · impl: mid (CFG-5, CFG-2) · [📖](checks/rate.md#rate-8) <!-- CHK-47 -->
-- <a id="rate-9"></a>⚠️ `RATE-9` Resistor voltage rating (high voltage dividers, a single 0402 across 100 V) · impl: mid (NET-5, CFG-2, CFG-5) · [📖](checks/rate.md#rate-9) <!-- from RATE-2 -->
+- <a id="rate-9"></a>⚠️ `RATE-9` Resistor voltage rating (high voltage dividers, a single 0402 across 100 V) · impl: mid (NET-5, CFG-2, CFG-9) · [📖](checks/rate.md#rate-9) <!-- from RATE-2 -->
 - <a id="rate-10"></a>⚠️ `RATE-10` LED current above its maximum forward current · impl: mid (NET-5, CFG-5) · [📖](checks/rate.md#rate-10) <!-- from RATE-7 -->
 - <a id="rate-11"></a>🛑 `RATE-11` Supply pin voltage outside the part's operating range or above its absolute maximum (a 3.3 V rail into a 1.8 V-only part) · impl: mid (NET-5, NET-7, CFG-5) · [📖](checks/rate.md#rate-11) <!-- 21 Oct 2026 -->
 - <a id="rate-12"></a>🛑 `RATE-12` Regulator input above its maximum Vin (24 V into a 6 V LDO) · impl: mid (NET-5, CFG-2, CFG-5) · [📖](checks/rate.md#rate-12) <!-- 21 Oct 2026 -->
 - <a id="rate-13"></a>⚠️ `RATE-13` Diode forward current or reverse voltage vs the circuit (a 20 V Schottky on a 24 V rail, a 200 mA diode in a 1 A path) · impl: mid (NET-5, CFG-2, CFG-5) · [📖](checks/rate.md#rate-13) <!-- 21 Oct 2026 -->
 - <a id="rate-14"></a>⚠️ `RATE-14` TVS clamping voltage above the absolute maximum of the pin it protects ≈ PIN-9 · impl: mid (NET-7, CFG-5) · [📖](checks/rate.md#rate-14) <!-- 21 Oct 2026 -->
-- <a id="rate-15"></a>🛑 `RATE-15` Inductor saturation current below the peak current of its converter (Iout plus half the ripple) · impl: mid (CFG-2, CFG-5, RPT-3) · [📖](checks/rate.md#rate-15) <!-- 21 Oct 2026 -->
+- <a id="rate-15"></a>🛑 `RATE-15` Inductor saturation current below the peak current of its converter (Iout plus half the ripple) · impl: mid (CFG-2, CFG-9, RPT-3) · [📖](checks/rate.md#rate-15) <!-- 21 Oct 2026 -->
 - <a id="rate-16"></a>⚠️ `RATE-16` Ceramic capacitor DC-bias derating ignored: effective capacitance at the working voltage below what the circuit needs · impl: mid (CFG-5, RPT-1) · [📖](checks/rate.md#rate-16) <!-- 21 Oct 2026 -->
 - <a id="rate-17"></a>⚠️ `RATE-17` Electrolytic or tantalum without voltage derating (50 % for tantalum), or tantalum on a low-impedance rail without surge limiting · impl: mid (NET-5, CFG-5) · [📖](checks/rate.md#rate-17) <!-- 21 Oct 2026 -->
 - <a id="rate-18"></a>⚠️ `RATE-18` Relay, solenoid or motor current above its driver's rating (BJT Ic, driver IC, GPIO) · impl: mid (CFG-5, CFG-2, NET-10) · [📖](checks/rate.md#rate-18) <!-- 21 Oct 2026 -->
@@ -619,7 +619,7 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="bom-9"></a>🛑 `BOM-9` Part without a value · impl: easy (netlist) · [📖](checks/bom.md#bom-9) <!-- new 5 Oct 2026, found in code -->
 - <a id="bom-10"></a>⚠️ `BOM-10` Value that doesn't parse or isn't a standard series value · impl: easy (IMP-6) · [📖](checks/bom.md#bom-10) <!-- new 5 Oct 2026, found in code -->
 - <a id="bom-11"></a>💡 `BOM-11` Same value in two packages · impl: easy (netlist) · [📖](checks/bom.md#bom-11) <!-- from BOM-1 -->
-- <a id="bom-12"></a>🛑 `BOM-12` Value field vs the MPN's parameters: resistance, capacitance, voltage, tolerance or package decoded from the part number disagree with the value or footprint (B200A R201/R203 13k3 for 13k7, B153A R219/R222 13k3 for 3k3; B135B C405, C509 MPN errors) · impl: mid (MPN decoding (no FEATURES id yet), `IMP-6`) · [📖](checks/bom.md#bom-12) <!-- 21 Oct 2026; B153A, B200A, B135B -->
+- <a id="bom-12"></a>🛑 `BOM-12` Value field vs the MPN's parameters: resistance, capacitance, voltage, tolerance or package decoded from the part number disagree with the value or footprint (B200A R201/R203 13k3 for 13k7, B153A R219/R222 13k3 for 3k3; B135B C405, C509 MPN errors) · impl: mid (CFG-9, IMP-6) · [📖](checks/bom.md#bom-12) <!-- 21 Oct 2026; B153A, B200A, B135B -->
 - <a id="bom-13"></a>⚠️ `BOM-13` Variant: a part's DNP flag disagrees with its per-variant fields, or a variant BOM is built from the base DNP flags · impl: mid (`IMP-1` (variant data from the schematic), `IMP-8`) · [📖](checks/bom.md#bom-13) <!-- 21 Oct 2026; B153A -->
 - <a id="bom-14"></a>⚠️ `BOM-14` Mounted part without an MPN · impl: easy (netlist) · [📖](checks/bom.md#bom-14) <!-- 21 Oct 2026 -->
 - <a id="bom-15"></a>💡 `BOM-15` MPN not recommended for new designs, obsolete or single-source (DPO2036) · impl: mid (a part lifecycle source (no FEATURES id yet)) · [📖](checks/bom.md#bom-15) <!-- 21 Oct 2026; B153A -->
@@ -699,7 +699,7 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="lib-3"></a>⚠️ `LIB-3` MOSFET symbol pins not named G/D/S (other checks need them) · impl: easy (netlist) · [📖](checks/lib.md#lib-3) <!-- new 5 Oct 2026, found in code -->
 - <a id="lib-4"></a>⚠️ `LIB-4` Pin electrical type wrong (a power pin as passive, an output as input): the type-based checks go blind · impl: mid (NET-7, IMP-9, IMP-10) · [📖](checks/lib.md#lib-4) <!-- from LIB-1 -->
 - <a id="lib-5"></a>⚠️ `LIB-5` Pins missing or duplicated against the package's pin count · impl: mid (netlist, CFG-5) · [📖](checks/lib.md#lib-5) <!-- from LIB-1 -->
-- <a id="lib-6"></a>🛑 `LIB-6` Footprint does not match the MPN's package (an inductor on the wrong footprint, a diode in another case size) · impl: mid (CFG-5) · [📖](checks/lib.md#lib-6) <!-- 21 Oct 2026; B153A -->
+- <a id="lib-6"></a>🛑 `LIB-6` Footprint does not match the MPN's package (an inductor on the wrong footprint, a diode in another case size) · impl: mid (CFG-9) · [📖](checks/lib.md#lib-6) <!-- 21 Oct 2026; B153A -->
 - <a id="lib-7"></a>⚠️ `LIB-7` Symbol pin name lacks a shared special function the pin has (`PF2` for a pin that is `PF2-NRST`): the reviewer and MUX-4 never see it · impl: mid (NET-12, IMP-9) · [📖](checks/lib.md#lib-7) <!-- 21 Oct 2026; B153A -->
 - <a id="lib-8"></a>⚠️ `LIB-8` Footprint pads too small or too large for the part's terminals (poor wetting, tombstoning, bridging) · impl: hard (TOOL-3, CFG-5) · [📖](checks/lib.md#lib-8) <!-- 21 Oct 2026; B153A D801/D802 -->
 - <a id="lib-9"></a>💡 `LIB-9` Footprint without a pin-1 or polarity mark on silk and fab layers · impl: hard (TOOL-3) · [📖](checks/lib.md#lib-9) <!-- 21 Oct 2026; B125A, B135B, B153A -->

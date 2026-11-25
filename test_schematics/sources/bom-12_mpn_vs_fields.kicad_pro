@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "filename": "bom-12_mpn_vs_fields.kicad_pro",
+    "version": 1
+  },
+  "text_variables": {
+    "DEFAULT_C_VOLTAGE": "50V",
+    "DEFAULT_C_DIELECTRIC": "X5R",
+    "DEFAULT_R_POWER": "63mW",
+    "DEFAULT_R_PACKAGE": "0402",
+    "DEFAULT_C_PACKAGE": "0402"
+  }
+}

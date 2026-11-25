@@ -1,0 +1,61 @@
+# What better_erc finds on rate-1_capacitor_voltage.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-11"
+subjects = ["part C1", "part C2", "part C6", "part C7", "part C8"]
+
+[[finding]]
+check = "BOM-3"
+subjects = ["part C4"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +12V"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-11"
+subjects = ["net +12V", "part C1", "part C4", "part C6", "part C7", "part C8"]
+
+[[finding]]
+check = "DEC-11"
+subjects = ["net +12V", "part C1", "part C5", "part C6", "part C7", "part C8"]
+
+[[finding]]
+check = "RATE-1"
+subjects = ["item C1 Mpn1", "part C1"]
+
+[[finding]]
+check = "RATE-1"
+subjects = ["item C3 Mpn1", "part C3"]
+
+[[finding]]
+check = "RATE-1"
+subjects = ["item C7 Mpn1", "part C7"]
+
+[[finding]]
+check = "RATE-1"
+subjects = ["item C8 Vreq_min", "part C8"]
+
+[[finding]]
+check = "RATE-1"
+subjects = ["part C5"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +12V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SW", "pin C3.1"]

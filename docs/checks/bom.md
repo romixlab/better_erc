@@ -58,7 +58,8 @@ change list.
 
 ## `BOM-2` Capacitor voltage, size and dielectric report: find odd ones <a id="bom-2"></a>
 
-💡 suggestion · needs: capacitance, voltage, size and dielectric (fields or MPN decoding), net voltage (`NET-5`) · [catalogue entry](../checks.md#bom-2)
+💡 suggestion · needs: capacitance, voltage, size and dielectric (fields or MPN decoding), net voltage (`NET-5`) ·
+[catalogue entry](../checks.md#bom-2)
 
 **Impl.** mid · depends on `NET-5`, MPN decoding (no FEATURES id yet)
 
@@ -79,7 +80,8 @@ dielectric; join with the net's voltage to flag ratings close to it.
 **Fix.** Harmonise ratings and sizes where nothing speaks against it; size voltage and case for the DC-bias derating
 the circuit needs.
 
-**References.** EPCI DC bias §2 (technical background), §3 (impact on designs); catalogue `RATE-1`, `RATE-16`; B200 rev B
+**References.** EPCI DC bias §2 (technical background), §3 (impact on designs); catalogue `RATE-1`, `RATE-16`; B200 rev
+B
 change list.
 
 ## `BOM-3` Big and small connectors, big and small parts, SMT and THT mixed and similar <a id="bom-3"></a>
@@ -264,7 +266,8 @@ any E series (`4.8k`).
 humans (`4R7` vs `4k7`). A value outside the series can still be bought only as a special or a high-precision part,
 which is often a typo.
 
-**Example.** `5k` written for 5.1 kΩ (5.00 kΩ is in no E series, E96 has 4.99 kΩ), `10K` vs `10k` mixed, `2.2 K` with a space.
+**Example.** `5k` written for 5.1 kΩ (5.00 kΩ is in no E series, E96 has 4.99 kΩ), `10K` vs `10k` mixed, `2.2 K` with a
+space.
 
 **How to check.** Resistor, capacitor and inductor values are read in the unit their part class gives
 (`erc_analysis::value::Values`, `erc_checks/src/bom/bom_10.rs`), on the parts the variant fits: a value that does not
@@ -301,9 +304,9 @@ reports a value in more than one package: the case size, else the footprint name
 
 ## `BOM-12` Value field vs the MPN's parameters <a id="bom-12"></a>
 
-🛑 error · needs: MPN decoding per vendor family, the value and footprint fields · [catalogue entry](../checks.md#bom-12)
+🛑 error · needs: the parts snapshot, the value and rating fields · [catalogue entry](../checks.md#bom-12)
 
-**Impl.** mid · depends on MPN decoding (no FEATURES id yet), `IMP-6`
+**Impl.** mid · depends on `CFG-9`, `IMP-6`
 
 **What it catches.** An MPN whose encoded resistance, capacitance, voltage, tolerance or package disagrees with the
 part's value or footprint: the schematic says 13.7 kΩ, the MPN orders 13.3 kΩ.
@@ -320,14 +323,51 @@ C405, C509, C511 and C512 had MPN errors.
 **How to check.** Decode the MPN per vendor family (Yageo RC, Panasonic ERJ, Samsung CL, Murata GRM, ...), compare
 value, tolerance, voltage and case size with the fields and the footprint; check every alternate MPN of a part too.
 
-**Fix.** Correct the MPN (and its alternates); keep MPNs generated from the value, not typed.
+better_erc (`erc_checks/src/bom/bom_12.rs`) takes the facts from the parts snapshot (`parts.lock.toml`, [project
+file](../project-file.md) `[parts]`), where the part source put the decoded and supplier values. For each fitted
+resistor, capacitor and inductor it checks two kinds of field.
+
+Requirements hold for every MPN on its own:
+
+| Field | Passes when |
+|---|---|
+| `Value` | the MPN's resistance, capacitance or inductance equals it, within the MPN's tolerance |
+| `Tolerance`, or a tolerance in the value (`4k7 1%`) | the MPN's tolerance is at most it |
+
+Display fields state the worst over all MPNs of the part, exactly, so the drawing shows what the board is sure to get.
+A part without the field is held to the board's default, the project's `DEFAULT_*` text variable the drawing sheet's
+Defaults box shows (the one `berc place-fields` hides):
+
+| Field | Default | Must equal |
+|---|---|---|
+| `Voltage`, or a rating in the value (`100n 50V`) | `DEFAULT_C_VOLTAGE` for a capacitor | the lowest rated voltage among the MPNs |
+| `Power`, or a rating in the value | `DEFAULT_R_POWER` for a resistor | the lowest rated power among the MPNs |
+| `Dielectric`, or the value's code (`100n X7R`) | `DEFAULT_C_DIELECTRIC` for a capacitor | the worst dielectric among the ceramic MPNs: the one every other covers |
+
+One dielectric covers another when it spans at least the same temperatures with at most the same capacitance change
+(`X7R` covers `X5R`, any class 1 code such as `C0G` covers any class 2). A display miss is one finding on the field
+(`item R911 Power`) that names the value to write; `Package` is `LIB-6`'s. What the circuit needs of the rating is the
+`RATE` checks' (`Vworking`, `Vreq_min`).
+
+A requirement miss is one finding per part and MPN field (`item C4 Mpn2`) naming the margin. Every finding carries the
+hash of the inputs it rests on (the fields, the MPNs' facts), so a [waiver](../project-file.md) pinned to it goes stale
+when any of them changes. A fact the snapshot lacks is never a pass: the part gets one `info` finding naming each MPN
+and fact not checked, or the MPN the part source does not know. An MPN the snapshot does not list is `BOM-20`'s.
+
+Example findings, from B153B: `R911: Power states 167 mW, the lowest rating of its MPNs is 63 mW (Mpn2
+RL0402FR-070R47L): write Power 63mW`; C807 states `Voltage` 10V,
+the lowest rating of its two MPNs, and passes.
+
+**Fix.** Correct the MPN (and its alternates); keep MPNs generated from the value, not typed. For a display field,
+write the value the finding names, or drop the MPN that is worse than the rest.
 
 **References.** Yageo RC_L "Ordering information - global part number"; B200 rev B change list (R201, R314); B200A
 schematic review §0 and §7; B153 rev B change list (R219, R222); B135 rev C change list (C405, C509).
 
 ## `BOM-13` Variant: a part's DNP flag disagrees with its per-variant fields <a id="bom-13"></a>
 
-⚠️ warning · needs: variant data from the schematic (KiCad 10 design variants), BOM per variant · [catalogue entry](../checks.md#bom-13)
+⚠️ warning · needs: variant data from the schematic (KiCad 10 design variants), BOM per variant · [catalogue
+entry](../checks.md#bom-13)
 
 **Impl.** mid · depends on `IMP-1` (variant data from the schematic), `IMP-8`
 
@@ -340,7 +380,8 @@ netlist, an older BOM export, an importer) see neither variant correctly: they l
 miss parts every variant fits. The assembler builds what the file says.
 
 **Example.** B153A has Main and Plus variants; R211/R212 are DNP in both, but the old BOM CSV and the parts-store
-import showed them placed. Its hub U301 still carries 18 alternate MPNs mixing the 2-port USB2512B and the 4-port USB2514B in
+import showed them placed. Its hub U301 still carries 18 alternate MPNs mixing the 2-port USB2512B and the 4-port
+USB2514B in
 one line, so a variant BOM could get the wrong hub; the change list asks for per-variant MPNs and per-variant BOM
 exports.
 
@@ -380,7 +421,8 @@ field names become configurable with the project file (`CFG-2`).
 
 ## `BOM-15` MPN not recommended for new designs, obsolete or single-source <a id="bom-15"></a>
 
-💡 suggestion · needs: lifecycle and sourcing data per MPN (a part database or distributor API) · [catalogue entry](../checks.md#bom-15)
+💡 suggestion · needs: lifecycle and sourcing data per MPN (a part database or distributor API) · [catalogue
+entry](../checks.md#bom-15)
 
 **Impl.** mid · depends on a part lifecycle source (no FEATURES id yet)
 
@@ -401,7 +443,8 @@ single source, comparing TI TPD4S311A / TPD6S300A, ST TCPP01-M12 / TCPP03-M20 an
 
 ## `BOM-16` Tolerance missing or loose on a part in a precision role <a id="bom-16"></a>
 
-💡 suggestion · needs: part roles (feedback divider, ADC reference divider, sense resistor; `NET-7`), tolerance (field or MPN) · [catalogue entry](../checks.md#bom-16)
+💡 suggestion · needs: part roles (feedback divider, ADC reference divider, sense resistor; `NET-7`), tolerance (field or
+MPN) · [catalogue entry](../checks.md#bom-16)
 
 **Impl.** mid · depends on `NET-7`, `RPT-6`, MPN decoding
 
@@ -423,7 +466,8 @@ tolerance from the field or the MPN; flag missing and loose ones.
 **Fix.** 1 % (or 0.1 % for measurement) in precision roles, stated in the value or MPN; compute the error budget per
 SNVA112A.
 
-**References.** SNVA112A §3 (worst-case approach); SLVAFE6 §2 (two 1 % resistors: ±1 % to ±1.3 %); B200A schematic review
+**References.** SNVA112A §3 (worst-case approach); SLVAFE6 §2 (two 1 % resistors: ±1 % to ±1.3 %); B200A schematic
+review
 §7.
 
 ## `BOM-17` One MPN with two different values (a copy-paste part) <a id="bom-17"></a>

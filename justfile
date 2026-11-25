@@ -37,13 +37,13 @@ run:
 
 # Run berc check on the test schematics, against test_schematics/berc-baseline.json
 check:
-    cargo run -q -p berc -- check test_schematics/sources --baseline test_schematics/berc-baseline.json
+    cargo run -q -p berc -- check test_schematics/sources/test_schematics.kicad_pro --baseline test_schematics/berc-baseline.json
 
 # The leading `-`: berc exits 1 on the findings it writes into the baseline.
 
 # Write the baseline `just check` compares with, after a change in what the checks find
 check-baseline:
-    -cargo run -q -p berc -- check test_schematics/sources --format json > test_schematics/berc-baseline.json
+    -cargo run -q -p berc -- check test_schematics/sources/test_schematics.kicad_pro --format json > test_schematics/berc-baseline.json
 
 # Only the changed schematics are exported again; netlists and pictures are cached by content hash. The tests export netlists only.
 

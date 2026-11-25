@@ -1,0 +1,74 @@
+# The parts snapshot of rate-1_capacitor_voltage.kicad_sch: C1's Mpn1 16 V on +12V, C3's 25 V at its 20 V Vworking; C5's MPN has neither technology nor dielectric; C6's Vreq_min 16 V passes its 16 V MPN, C7's 35 V fails its 25 V one; C8's Vreq_min 10 V is below its 12 V working voltage
+version = 1
+source = "file parts.toml"
+keys = ["capacitance", "case_eia", "dielectric", "inductance", "power", "rated_voltage", "resistance", "saturation_current", "technology", "tolerance"]
+unknown_keys = []
+
+[[part]]
+mpn = "C0402X104K250"
+match = "found"
+missing = []
+facts = [
+    { key = "capacitance", value = 1e-07, unit = "F", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 25.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "GRM155R60J105KE19D"
+match = "found"
+missing = []
+facts = [
+    { key = "capacitance", value = 1e-06, unit = "F", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "dielectric", text = "X5R", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 6.3, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 10.0, plus = 10.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "GRM155R61E104KA87D"
+match = "found"
+missing = []
+facts = [
+    { key = "capacitance", value = 1e-07, unit = "F", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "case_eia", text = "0402", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "dielectric", text = "X5R", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 25.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 10.0, plus = 10.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "GRM188R61C105KA93D"
+match = "found"
+missing = []
+facts = [
+    { key = "capacitance", value = 1e-06, unit = "F", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "case_eia", text = "0603", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "dielectric", text = "X5R", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 16.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 10.0, plus = 10.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "GRM188R61E105KA12D"
+match = "found"
+missing = []
+facts = [
+    { key = "capacitance", value = 1e-06, unit = "F", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "case_eia", text = "0603", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "dielectric", text = "X5R", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 25.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "tolerance", minus = 10.0, plus = 10.0, unit = "%", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "PCV1C101MCL1GS"
+match = "found"
+missing = []
+facts = [
+    { key = "capacitance", value = 0.0001, unit = "F", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "case_eia", text = "0805", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "rated_voltage", value = 16.0, unit = "V", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "technology", text = "aluminium polymer", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]

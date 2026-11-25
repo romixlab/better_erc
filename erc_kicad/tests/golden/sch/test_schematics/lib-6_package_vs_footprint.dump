@@ -1,0 +1,133 @@
+board lib-6_package_vs_footprint
+label / local S1 at 30,36.19 net /S1
+label / local S2 at 30,43.81 net /S2
+label / local S3 at 55,36.19 net /S3
+label / local S4 at 55,43.81 net /S4
+label / local S5 at 80,36.19 net /S5
+label / local S6 at 80,43.81 net /S6
+label / local S7 at 105,36.19 net /S7
+label / local S8 at 105,43.81 net /S8
+label / local S9 at 130,36.19 net /S9
+label / local S10 at 130,43.81 net /S10
+net /S1 class = Default @ pro lib-6_package_vs_footprint.kicad_pro note "effective net class"
+net /S1 kind named
+net /S2 class = Default @ pro lib-6_package_vs_footprint.kicad_pro note "effective net class"
+net /S2 kind named
+net /S3 class = Default @ pro lib-6_package_vs_footprint.kicad_pro note "effective net class"
+net /S3 kind named
+net /S4 class = Default @ pro lib-6_package_vs_footprint.kicad_pro note "effective net class"
+net /S4 kind named
+net /S5 class = Default @ pro lib-6_package_vs_footprint.kicad_pro note "effective net class"
+net /S5 kind named
+net /S6 class = Default @ pro lib-6_package_vs_footprint.kicad_pro note "effective net class"
+net /S6 kind named
+net /S7 class = Default @ pro lib-6_package_vs_footprint.kicad_pro note "effective net class"
+net /S7 kind named
+net /S8 class = Default @ pro lib-6_package_vs_footprint.kicad_pro note "effective net class"
+net /S8 kind named
+net /S9 class = Default @ pro lib-6_package_vs_footprint.kicad_pro note "effective net class"
+net /S9 kind named
+net /S10 class = Default @ pro lib-6_package_vs_footprint.kicad_pro note "effective net class"
+net /S10 kind named
+part C1 field Description = "Unpolarized capacitor" @ sch lib-6_package_vs_footprint.kicad_sch
+part C1 field Footprint = Capacitor_SMD:C_0402_1005Metric @ sch lib-6_package_vs_footprint.kicad_sch
+part C1 field Mpn1 = CL05A104KB5NNNC @ sch lib-6_package_vs_footprint.kicad_sch
+part C1 field Value = 100n @ sch lib-6_package_vs_footprint.kicad_sch
+part C1 flag dnp = no @ sch lib-6_package_vs_footprint.kicad_sch
+part C1 flag exclude_from_sim = no @ sch lib-6_package_vs_footprint.kicad_sch
+part C1 flag in_bom = yes @ sch lib-6_package_vs_footprint.kicad_sch
+part C1 flag on_board = yes @ sch lib-6_package_vs_footprint.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid b0060000-0010-4000-8000-000000000000 line 62 at 105,40 rot 0
+part C1 value = text 100n @ sch lib-6_package_vs_footprint.kicad_sch note "from the Value field"
+part C2 field Description = "Unpolarized capacitor" @ sch lib-6_package_vs_footprint.kicad_sch
+part C2 field Footprint = Capacitor_SMD:C_0603_1608Metric @ sch lib-6_package_vs_footprint.kicad_sch
+part C2 field Mpn1 = GRM188R71H104KA93D @ sch lib-6_package_vs_footprint.kicad_sch
+part C2 field Package = 0603 @ sch lib-6_package_vs_footprint.kicad_sch
+part C2 field Value = 100n @ sch lib-6_package_vs_footprint.kicad_sch
+part C2 flag dnp = no @ sch lib-6_package_vs_footprint.kicad_sch
+part C2 flag exclude_from_sim = no @ sch lib-6_package_vs_footprint.kicad_sch
+part C2 flag in_bom = yes @ sch lib-6_package_vs_footprint.kicad_sch
+part C2 flag on_board = yes @ sch lib-6_package_vs_footprint.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid b0060000-0015-4000-8000-000000000000 line 73 at 130,40 rot 0
+part C2 value = text 100n @ sch lib-6_package_vs_footprint.kicad_sch note "from the Value field"
+part R1 field Description = Resistor @ sch lib-6_package_vs_footprint.kicad_sch
+part R1 field Footprint = Resistor_SMD:R_0805_2012Metric @ sch lib-6_package_vs_footprint.kicad_sch
+part R1 field Mpn1 = ERJ-P6WF1201V @ sch lib-6_package_vs_footprint.kicad_sch
+part R1 field Power = 500mW @ sch lib-6_package_vs_footprint.kicad_sch
+part R1 field Value = 1k2 @ sch lib-6_package_vs_footprint.kicad_sch
+part R1 flag dnp = no @ sch lib-6_package_vs_footprint.kicad_sch
+part R1 flag exclude_from_sim = no @ sch lib-6_package_vs_footprint.kicad_sch
+part R1 flag in_bom = yes @ sch lib-6_package_vs_footprint.kicad_sch
+part R1 flag on_board = yes @ sch lib-6_package_vs_footprint.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid b0060000-0001-4000-8000-000000000000 line 26 at 30,40 rot 0
+part R1 value = text 1k2 @ sch lib-6_package_vs_footprint.kicad_sch note "from the Value field"
+part R2 field Description = Resistor @ sch lib-6_package_vs_footprint.kicad_sch
+part R2 field Footprint = Resistor_SMD:R_1206_3216Metric @ sch lib-6_package_vs_footprint.kicad_sch
+part R2 field Mpn1 = WSLP1206R0100FEA @ sch lib-6_package_vs_footprint.kicad_sch
+part R2 field Value = 0R01 @ sch lib-6_package_vs_footprint.kicad_sch
+part R2 flag dnp = no @ sch lib-6_package_vs_footprint.kicad_sch
+part R2 flag exclude_from_sim = no @ sch lib-6_package_vs_footprint.kicad_sch
+part R2 flag in_bom = yes @ sch lib-6_package_vs_footprint.kicad_sch
+part R2 flag on_board = yes @ sch lib-6_package_vs_footprint.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid b0060000-0006-4000-8000-000000000000 line 38 at 55,40 rot 0
+part R2 value = qty 0.01 ohm @ sch lib-6_package_vs_footprint.kicad_sch note "from the Value field"
+part R3 field Description = Resistor @ sch lib-6_package_vs_footprint.kicad_sch
+part R3 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch lib-6_package_vs_footprint.kicad_sch
+part R3 field Mpn1 = RC0402FR-0710KL @ sch lib-6_package_vs_footprint.kicad_sch
+part R3 field Mpn2 = RC0603FR-0710KL @ sch lib-6_package_vs_footprint.kicad_sch
+part R3 field Package = 0402 @ sch lib-6_package_vs_footprint.kicad_sch
+part R3 field Value = 10k @ sch lib-6_package_vs_footprint.kicad_sch
+part R3 flag dnp = no @ sch lib-6_package_vs_footprint.kicad_sch
+part R3 flag exclude_from_sim = no @ sch lib-6_package_vs_footprint.kicad_sch
+part R3 flag in_bom = yes @ sch lib-6_package_vs_footprint.kicad_sch
+part R3 flag on_board = yes @ sch lib-6_package_vs_footprint.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid b0060000-000b-4000-8000-000000000000 line 49 at 80,40 rot 0
+part R3 value = text 10k @ sch lib-6_package_vs_footprint.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net /S7
+pin C1 1 type = passive @ sch lib-6_package_vs_footprint.kicad_sch
+pin C1 2 name "" unit 1 net /S8
+pin C1 2 type = passive @ sch lib-6_package_vs_footprint.kicad_sch
+pin C2 1 name "" unit 1 net /S9
+pin C2 1 type = passive @ sch lib-6_package_vs_footprint.kicad_sch
+pin C2 2 name "" unit 1 net /S10
+pin C2 2 type = passive @ sch lib-6_package_vs_footprint.kicad_sch
+pin R1 1 name "" unit 1 net /S1
+pin R1 1 type = passive @ sch lib-6_package_vs_footprint.kicad_sch
+pin R1 2 name "" unit 1 net /S2
+pin R1 2 type = passive @ sch lib-6_package_vs_footprint.kicad_sch
+pin R2 1 name "" unit 1 net /S3
+pin R2 1 type = passive @ sch lib-6_package_vs_footprint.kicad_sch
+pin R2 2 name "" unit 1 net /S4
+pin R2 2 type = passive @ sch lib-6_package_vs_footprint.kicad_sch
+pin R3 1 name "" unit 1 net /S5
+pin R3 1 type = passive @ sch lib-6_package_vs_footprint.kicad_sch
+pin R3 2 name "" unit 1 net /S6
+pin R3 2 type = passive @ sch lib-6_package_vs_footprint.kicad_sch
+setting textvar DEFAULT_C_PACKAGE = 0402 @ pro lib-6_package_vs_footprint.kicad_pro
+setting textvar DEFAULT_R_PACKAGE = 0402 @ pro lib-6_package_vs_footprint.kicad_pro
+sheet / name "" file lib-6_package_vs_footprint.kicad_sch uuid /
+source file lib-6_package_vs_footprint.kicad_pro
+source file lib-6_package_vs_footprint.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 84a9eb5c98f3bba1
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash b32a245cb7c04e0f
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1

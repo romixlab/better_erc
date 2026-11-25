@@ -172,10 +172,10 @@ KiCad ERC "Duplicate pins with different nets".
 
 ## `LIB-6` Footprint does not match the MPN's package <a id="lib-6"></a>
 
-🛑 error · needs: package per MPN (part database or MPN decoding), the footprint name · [catalogue
+🛑 error · needs: package per MPN (the parts snapshot), the footprint name · [catalogue
 entry](../checks.md#lib-6)
 
-**Impl.** mid · depends on CFG-5
+**Impl.** mid · depends on CFG-9
 
 **What it catches.** A part whose footprint is not the package of the MPN in its BOM fields: a 4x4 mm inductor footprint
 for a part that is 5x5 mm, a SOD-123 footprint for a SOD-323 diode, a 0603 pattern for an 0805 capacitor.
@@ -192,6 +192,18 @@ placed on a SOD-123 footprint, whose pads are farther apart than the SOD-323's t
 **How to check.** Decode the package from the MPN (resistor and capacitor part numbers encode the case size; for others
 the part database holds it) and compare with the footprint name or, better, with the footprint's pad geometry. Report
 mismatches; report unknown MPNs as not checked (`DIAG-2`).
+
+better_erc (`erc_checks/src/lib/lib_6.rs`) reads the chip case from the footprint name (`R_0805_2012Metric` is 0805) and
+compares two things with it. The part's `Package` field, or for a resistor or capacitor without one the board's
+`DEFAULT_R_PACKAGE` or `DEFAULT_C_PACKAGE` text variable, must name the footprint's case: on B153B R701 sits on an 0805
+footprint while the board default says 0402, so the finding says `write Package 0805`. Each MPN's case (`case_eia` in
+the parts snapshot) must be the footprint's case, or, where the footprint names none, the `Package` field's. The
+`Package` check runs without a parts snapshot; the MPN check needs one. Each MPN field (`Mpn1`, `Mpn2`, ...) of a fitted
+part is judged on its own, against the facts the parts snapshot (`parts.lock.toml`, [project file](../project-file.md)
+`[parts]`) holds for it. A miss is one finding per part and MPN field (`item C4 Mpn2`) that names the margin and carries
+the hash of every input it rests on (the fields, the MPN's facts), so a [waiver](../project-file.md) pinned to it goes stale when any of them changes. A fact the snapshot lacks is never a
+pass: the part gets one `info` finding naming each MPN and fact not checked. An MPN the snapshot does not list is
+`BOM-20`'s.
 
 **Fix.** Pick the footprint from the MPN's datasheet package drawing, or change the MPN to one in the footprint's
 package. Keep the package in the library part so the two cannot drift.
