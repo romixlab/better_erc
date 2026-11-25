@@ -1,0 +1,10 @@
+{
+  "meta": {
+    "filename": "lib-6_package_vs_footprint.kicad_pro",
+    "version": 1
+  },
+  "text_variables": {
+    "DEFAULT_R_PACKAGE": "0402",
+    "DEFAULT_C_PACKAGE": "0402"
+  }
+}

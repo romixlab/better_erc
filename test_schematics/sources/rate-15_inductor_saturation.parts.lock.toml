@@ -1,0 +1,35 @@
+# The parts snapshot of rate-15_inductor_saturation.kicad_sch: L1 saturates at 3 A against a 3.5 A peak; L3 states no peak
+version = 1
+source = "file parts.toml"
+keys = ["capacitance", "case_eia", "dielectric", "inductance", "power", "rated_voltage", "resistance", "saturation_current", "technology", "tolerance"]
+unknown_keys = []
+
+[[part]]
+mpn = "DFE322520F-1R0M"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "1206", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "inductance", value = 1e-06, unit = "H", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "saturation_current", value = 3.0, unit = "A", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "DFE322520F-2R2M"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "1206", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "inductance", value = 2.2e-06, unit = "H", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "saturation_current", value = 2.0, unit = "A", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]
+
+[[part]]
+mpn = "DFE322520F-4R7M"
+match = "found"
+missing = []
+facts = [
+    { key = "case_eia", text = "1206", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "inductance", value = 4.7e-06, unit = "H", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+    { key = "saturation_current", value = 1.5, unit = "A", source = "manual", rank = 100, at = "2026-11-25T00:00:00Z" },
+]

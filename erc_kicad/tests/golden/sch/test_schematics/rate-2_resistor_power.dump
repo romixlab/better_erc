@@ -1,0 +1,156 @@
+board rate-2_resistor_power
+label / local S1 at 80,36.19 net /S1
+label / local S2 at 80,43.81 net /S2
+label / local S3 at 105,43.81 net /S3
+label / power +5V at 30,36.19 net +5V
+label / power +5V at 55,36.19 net +5V
+label / power +5V at 105,36.19 net +5V
+label / power +5V at 130,36.19 net +5V
+label / power +5V at 155,36.19 net +5V
+label / power +5V at 180,36.19 net +5V
+label / power GND at 30,43.81 net GND
+label / power GND at 55,43.81 net GND
+label / power GND at 130,43.81 net GND
+label / power GND at 155,43.81 net GND
+label / power GND at 180,43.81 net GND
+net +5V class = Default @ sch rate-2_resistor_power.kicad_sch note "effective net class"
+net +5V kind power
+net /S1 class = Default @ sch rate-2_resistor_power.kicad_sch note "effective net class"
+net /S1 kind named
+net /S2 class = Default @ sch rate-2_resistor_power.kicad_sch note "effective net class"
+net /S2 kind named
+net /S3 class = Default @ sch rate-2_resistor_power.kicad_sch note "effective net class"
+net /S3 kind named
+net GND class = Default @ sch rate-2_resistor_power.kicad_sch note "effective net class"
+net GND kind power
+part R1 field Description = Resistor @ sch rate-2_resistor_power.kicad_sch
+part R1 field Footprint = Resistor_SMD:R_0603_1608Metric @ sch rate-2_resistor_power.kicad_sch
+part R1 field Mpn1 = RC0603FR-07100RL @ sch rate-2_resistor_power.kicad_sch
+part R1 field Value = 100R @ sch rate-2_resistor_power.kicad_sch
+part R1 flag dnp = no @ sch rate-2_resistor_power.kicad_sch
+part R1 flag exclude_from_sim = no @ sch rate-2_resistor_power.kicad_sch
+part R1 flag in_bom = yes @ sch rate-2_resistor_power.kicad_sch
+part R1 flag on_board = yes @ sch rate-2_resistor_power.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid b1020000-0001-4000-8000-000000000000 line 30 at 30,40 rot 0
+part R1 value = qty 100 ohm @ sch rate-2_resistor_power.kicad_sch note "from the Value field"
+part R2 field Description = Resistor @ sch rate-2_resistor_power.kicad_sch
+part R2 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch rate-2_resistor_power.kicad_sch
+part R2 field Mpn1 = RC0402FR-0710KL @ sch rate-2_resistor_power.kicad_sch
+part R2 field Value = 10k @ sch rate-2_resistor_power.kicad_sch
+part R2 flag dnp = no @ sch rate-2_resistor_power.kicad_sch
+part R2 flag exclude_from_sim = no @ sch rate-2_resistor_power.kicad_sch
+part R2 flag in_bom = yes @ sch rate-2_resistor_power.kicad_sch
+part R2 flag on_board = yes @ sch rate-2_resistor_power.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid b1020000-0008-4000-8000-000000000000 line 49 at 55,40 rot 0
+part R2 value = text 10k @ sch rate-2_resistor_power.kicad_sch note "from the Value field"
+part R3 field Description = Resistor @ sch rate-2_resistor_power.kicad_sch
+part R3 field Footprint = Resistor_SMD:R_0805_2012Metric @ sch rate-2_resistor_power.kicad_sch
+part R3 field Mpn1 = RL0805FR-070R1L @ sch rate-2_resistor_power.kicad_sch
+part R3 field Pworking = 100mW @ sch rate-2_resistor_power.kicad_sch
+part R3 field Value = 0R1 @ sch rate-2_resistor_power.kicad_sch
+part R3 flag dnp = no @ sch rate-2_resistor_power.kicad_sch
+part R3 flag exclude_from_sim = no @ sch rate-2_resistor_power.kicad_sch
+part R3 flag in_bom = yes @ sch rate-2_resistor_power.kicad_sch
+part R3 flag on_board = yes @ sch rate-2_resistor_power.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid b1020000-000f-4000-8000-000000000000 line 68 at 80,40 rot 0
+part R3 value = qty 0.1 ohm @ sch rate-2_resistor_power.kicad_sch note "from the Value field"
+part R4 field Description = Resistor @ sch rate-2_resistor_power.kicad_sch
+part R4 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch rate-2_resistor_power.kicad_sch
+part R4 field Mpn1 = RC0402FR-074K7L @ sch rate-2_resistor_power.kicad_sch
+part R4 field Value = 4k7 @ sch rate-2_resistor_power.kicad_sch
+part R4 flag dnp = no @ sch rate-2_resistor_power.kicad_sch
+part R4 flag exclude_from_sim = no @ sch rate-2_resistor_power.kicad_sch
+part R4 flag in_bom = yes @ sch rate-2_resistor_power.kicad_sch
+part R4 flag on_board = yes @ sch rate-2_resistor_power.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid b1020000-0014-4000-8000-000000000000 line 80 at 105,40 rot 0
+part R4 value = text 4k7 @ sch rate-2_resistor_power.kicad_sch note "from the Value field"
+part R5 field Description = Resistor @ sch rate-2_resistor_power.kicad_sch
+part R5 field Footprint = Resistor_SMD:R_0603_1608Metric @ sch rate-2_resistor_power.kicad_sch
+part R5 field Mpn1 = RC0603FR-0710KL @ sch rate-2_resistor_power.kicad_sch
+part R5 field Preq_min = 100mW @ sch rate-2_resistor_power.kicad_sch
+part R5 field Value = 10k @ sch rate-2_resistor_power.kicad_sch
+part R5 flag dnp = no @ sch rate-2_resistor_power.kicad_sch
+part R5 flag exclude_from_sim = no @ sch rate-2_resistor_power.kicad_sch
+part R5 flag in_bom = yes @ sch rate-2_resistor_power.kicad_sch
+part R5 flag on_board = yes @ sch rate-2_resistor_power.kicad_sch
+part R5 lib Device:R sheet / symbol Device:R
+part R5 unit 1 sheet / uuid b1020000-001a-4000-8000-000000000000 line 95 at 130,40 rot 0
+part R5 value = text 10k @ sch rate-2_resistor_power.kicad_sch note "from the Value field"
+part R6 field Description = Resistor @ sch rate-2_resistor_power.kicad_sch
+part R6 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch rate-2_resistor_power.kicad_sch
+part R6 field Mpn1 = RC0402FR-0710KL @ sch rate-2_resistor_power.kicad_sch
+part R6 field Preq_min = 100mW @ sch rate-2_resistor_power.kicad_sch
+part R6 field Value = 10k @ sch rate-2_resistor_power.kicad_sch
+part R6 flag dnp = no @ sch rate-2_resistor_power.kicad_sch
+part R6 flag exclude_from_sim = no @ sch rate-2_resistor_power.kicad_sch
+part R6 flag in_bom = yes @ sch rate-2_resistor_power.kicad_sch
+part R6 flag on_board = yes @ sch rate-2_resistor_power.kicad_sch
+part R6 lib Device:R sheet / symbol Device:R
+part R6 unit 1 sheet / uuid b1020000-0021-4000-8000-000000000000 line 115 at 155,40 rot 0
+part R6 value = text 10k @ sch rate-2_resistor_power.kicad_sch note "from the Value field"
+part R7 field Description = Resistor @ sch rate-2_resistor_power.kicad_sch
+part R7 field Footprint = Resistor_SMD:R_0603_1608Metric @ sch rate-2_resistor_power.kicad_sch
+part R7 field Mpn1 = RC0603FR-07100RL @ sch rate-2_resistor_power.kicad_sch
+part R7 field Preq_min = 100mW @ sch rate-2_resistor_power.kicad_sch
+part R7 field Value = 100R @ sch rate-2_resistor_power.kicad_sch
+part R7 flag dnp = no @ sch rate-2_resistor_power.kicad_sch
+part R7 flag exclude_from_sim = no @ sch rate-2_resistor_power.kicad_sch
+part R7 flag in_bom = yes @ sch rate-2_resistor_power.kicad_sch
+part R7 flag on_board = yes @ sch rate-2_resistor_power.kicad_sch
+part R7 lib Device:R sheet / symbol Device:R
+part R7 unit 1 sheet / uuid b1020000-0028-4000-8000-000000000000 line 135 at 180,40 rot 0
+part R7 value = qty 100 ohm @ sch rate-2_resistor_power.kicad_sch note "from the Value field"
+pin R1 1 name "" unit 1 net +5V
+pin R1 1 type = passive @ sch rate-2_resistor_power.kicad_sch
+pin R1 2 name "" unit 1 net GND
+pin R1 2 type = passive @ sch rate-2_resistor_power.kicad_sch
+pin R2 1 name "" unit 1 net +5V
+pin R2 1 type = passive @ sch rate-2_resistor_power.kicad_sch
+pin R2 2 name "" unit 1 net GND
+pin R2 2 type = passive @ sch rate-2_resistor_power.kicad_sch
+pin R3 1 name "" unit 1 net /S1
+pin R3 1 type = passive @ sch rate-2_resistor_power.kicad_sch
+pin R3 2 name "" unit 1 net /S2
+pin R3 2 type = passive @ sch rate-2_resistor_power.kicad_sch
+pin R4 1 name "" unit 1 net +5V
+pin R4 1 type = passive @ sch rate-2_resistor_power.kicad_sch
+pin R4 2 name "" unit 1 net /S3
+pin R4 2 type = passive @ sch rate-2_resistor_power.kicad_sch
+pin R5 1 name "" unit 1 net +5V
+pin R5 1 type = passive @ sch rate-2_resistor_power.kicad_sch
+pin R5 2 name "" unit 1 net GND
+pin R5 2 type = passive @ sch rate-2_resistor_power.kicad_sch
+pin R6 1 name "" unit 1 net +5V
+pin R6 1 type = passive @ sch rate-2_resistor_power.kicad_sch
+pin R6 2 name "" unit 1 net GND
+pin R6 2 type = passive @ sch rate-2_resistor_power.kicad_sch
+pin R7 1 name "" unit 1 net +5V
+pin R7 1 type = passive @ sch rate-2_resistor_power.kicad_sch
+pin R7 2 name "" unit 1 net GND
+pin R7 2 type = passive @ sch rate-2_resistor_power.kicad_sch
+sheet / name "" file rate-2_resistor_power.kicad_sch uuid /
+source file rate-2_resistor_power.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash b32a245cb7c04e0f
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash ef523031b786b376
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash 442313ca8487e8b2
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

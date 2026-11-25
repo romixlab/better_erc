@@ -1,0 +1,113 @@
+# What better_erc finds on bom-12_mpn_vs_fields.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-1"
+subjects = ["part R1", "part R4"]
+
+[[finding]]
+check = "BOM-12"
+subjects = ["item C2 Voltage", "part C2"]
+
+[[finding]]
+check = "BOM-12"
+subjects = ["item C3 Dielectric", "part C3"]
+
+[[finding]]
+check = "BOM-12"
+subjects = ["item C5 Voltage", "part C5"]
+
+[[finding]]
+check = "BOM-12"
+subjects = ["item R2 Mpn1", "part R2"]
+
+[[finding]]
+check = "BOM-12"
+subjects = ["item R3 Power", "part R3"]
+
+[[finding]]
+check = "BOM-12"
+subjects = ["item R4 Mpn1", "part R4"]
+
+[[finding]]
+check = "BOM-12"
+subjects = ["part C4"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S1", "pin R1.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S10", "pin C1.2"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S11", "pin C2.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S12", "pin C2.2"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S13", "pin C3.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S14", "pin C3.2"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S15", "pin C4.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S16", "pin C4.2"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S17", "pin C5.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S18", "pin C5.2"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S19", "pin C6.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S2", "pin R1.2"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S20", "pin C6.2"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S3", "pin R2.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S4", "pin R2.2"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S5", "pin R3.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S6", "pin R3.2"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S7", "pin R4.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S8", "pin R4.2"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /S9", "pin C1.1"]

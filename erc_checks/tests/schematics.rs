@@ -7,7 +7,10 @@
 //! expectation shows firing fails it. `BLESS=1` rewrites the findings from what the engine finds, for review in
 //! the diff, and keeps the sidecar's `[[not_run]]` blocks as they are (it never adds any). `DRAW` findings are
 //! compared on the `draw-*` schematics only: the others were written for their circuit, not drawn for style. A
-//! `<id>_<slug>.theme.json` beside a schematic is the colour theme of its run.
+//! `<id>_<slug>.theme.json` beside a schematic is the colour theme of its run, a `<id>_<slug>.parts.lock.toml` its
+//! parts snapshot. A case that needs a KiCad project of its own (text variables) lives in a directory
+//! `<id>_<slug>/` holding `<id>_<slug>.kicad_sch`, its `.kicad_pro` and its sidecars, so the sources directory
+//! keeps one project.
 
 use erc_checks::catalogue::catalogue;
 use erc_checks::{Confidence, Report, RunOptions, registered, run_imported};
@@ -110,22 +113,36 @@ fn write_sidecar(path: &Path, name: &str, e: &Expect) {
     std::fs::write(path, out).unwrap();
 }
 
-#[test]
-fn schematics_match_their_expectations() {
-    let dir = sources();
-    let mut names: Vec<String> = std::fs::read_dir(&dir)
+/// Every test case by name with the directory it is in: each `<name>.kicad_sch` of `sources` but the project root,
+/// and each directory `<name>/` holding `<name>.kicad_sch`; sorted by name
+fn cases(sources: &Path) -> Vec<(String, PathBuf)> {
+    let mut cases: Vec<(String, PathBuf)> = std::fs::read_dir(sources)
         .unwrap()
         .filter_map(|e| e.ok())
-        .filter_map(|e| e.file_name().to_str().map(str::to_string))
-        .filter_map(|n| n.strip_suffix(".kicad_sch").map(str::to_string))
-        // The project root that joins all sheets into one project
-        .filter(|n| n != "test_schematics")
+        .filter_map(|e| {
+            let n = e.file_name().to_str()?.to_owned();
+            let p = e.path();
+            if p.is_dir() {
+                p.join(format!("{n}.kicad_sch")).is_file().then_some((n, p))
+            } else {
+                let stem = n.strip_suffix(".kicad_sch")?;
+                // The project root that joins all sheets into one project
+                (stem != "test_schematics").then(|| (stem.to_owned(), sources.to_path_buf()))
+            }
+        })
         .collect();
-    names.sort();
+    cases.sort();
+    cases
+}
+
+#[test]
+fn schematics_match_their_expectations() {
+    let sources = sources();
+    let cases = cases(&sources);
     let bless = std::env::var_os("BLESS").is_some();
     let mut failed = Vec::new();
     let mut fired = BTreeSet::new();
-    for name in &names {
+    for (name, dir) in &cases {
         let id = name.split('_').next().unwrap().to_uppercase();
         if catalogue().entry(&id).is_none() {
             failed.push(format!(
@@ -206,12 +223,17 @@ fn schematics_match_their_expectations() {
             ));
         }
     }
-    for e in std::fs::read_dir(&dir).unwrap().filter_map(|e| e.ok()) {
-        let n = e.file_name().to_string_lossy().to_string();
-        if let Some(stem) = n.strip_suffix(".expect.toml")
-            && !names.iter().any(|x| x == stem)
-        {
-            failed.push(format!("{n}: no {stem}.kicad_sch"));
+    let case_dirs: Vec<PathBuf> = std::iter::once(sources.clone())
+        .chain(cases.iter().map(|(_, d)| d.clone()))
+        .collect();
+    for d in case_dirs.iter().collect::<BTreeSet<_>>() {
+        for e in std::fs::read_dir(d).unwrap().filter_map(|e| e.ok()) {
+            let n = e.file_name().to_string_lossy().to_string();
+            if let Some(stem) = n.strip_suffix(".expect.toml")
+                && !cases.iter().any(|(x, xd)| x == stem && xd == d)
+            {
+                failed.push(format!("{n}: no {stem}.kicad_sch beside it"));
+            }
         }
     }
     for c in registered() {

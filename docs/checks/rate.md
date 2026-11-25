@@ -38,7 +38,7 @@ References used throughout:
 ⚠️ warning · needs: rail voltage across the capacitor, its voltage rating (value field or MPN) · [catalogue
 entry](../checks.md#rate-1)
 
-**Impl.** mid · depends on NET-5, CFG-2, CFG-5
+**Impl.** mid · depends on NET-5, CFG-2, CFG-9
 
 **What it catches.** A capacitor whose voltage rating leaves too little margin over the highest voltage across it: the
 rail's maximum (not its nominal), plus ripple and the transients it is exposed to.
@@ -57,6 +57,22 @@ parts.
 default tolerance), read the capacitor's rating from its value field (`100n 50V`) or MPN, and report a margin below a
 set ratio (for example rating under 1.25 × maximum for ceramics; electrolytics and tantalums per `RATE-17`).
 
+better_erc (`erc_checks/src/rate/rate_1.rs`) asks each MPN's rated voltage to be at least `k` times the working voltage,
+`k` from `[derating]` by the MPN's technology: `ceramic_capacitor_v` (1.5; also an MPN with a dielectric code and no
+technology), `electrolytic_capacitor_v`, `polymer_capacitor_v`, `tantalum_capacitor_v`, `tantalum_polymer_capacitor_v`,
+`film_capacitor_v`. A part's `Vreq_min` field states the minimum rated voltage this board asks for, and replaces `k`
+times the working voltage: every MPN's rated voltage at least `Vreq_min`. Each rating must still exceed the working
+voltage itself, and a `Vreq_min` below the working voltage is a finding of its own. The working voltage is the part's
+`Vworking` field when it has one (switch nodes, transients, a part across two rails), else the larger difference between
+its two nets: a rail's range when the project states one (`[nets]` in the [project file](../project-file.md)), its
+voltage otherwise, 0 V for a ground. Each MPN field (`Mpn1`, `Mpn2`, ...) of a fitted part is judged on its own against
+the facts of the parts snapshot (`parts.lock.toml`). A miss is one finding per part and MPN field (`item C4 Mpn2`)
+naming the margin, with the hash of the inputs it rests on (the working value and how it is known, the MPN's rating, the
+derating factor) for a [waiver](../project-file.md). A rating the snapshot lacks is never a pass: the part gets one
+`info` finding naming each MPN and fact not checked. A part whose stress is not known is not judged.
+
+Example finding: `C1 Mpn1 GRM188R61C105KA93D: 16 V rated, 12 V working (+12V (12 V) to GND (0 V)), 1.33× < 1.5×`.
+
 **Fix.** A higher voltage rating; for inputs exposed to hot-plug, a TVS or an input filter that limits the overshoot.
 
 **References.** Wikipedia, Ceramic capacitor "Voltage proof"; AVX derating (why rated voltage is not a safe working
@@ -67,7 +83,7 @@ voltage for tantalum); B200 rev B change list ("50V rating at USB?").
 ⚠️ warning · needs: voltage across or current through the resistor, its power rating (package or MPN) · [catalogue
 entry](../checks.md#rate-2)
 
-**Impl.** mid · depends on NET-5, CFG-2, CFG-5
+**Impl.** mid · depends on NET-5, CFG-2, CFG-9
 
 **What it catches.** A resistor whose dissipation, V²/R or I²R in the worst case, exceeds its rated power (with derating
 for the board temperature).
@@ -83,6 +99,19 @@ is still too small, a 1206 (250 mW) has some margin.
 **How to check.** For resistors whose both ends are on known rails (or a rail and ground), the voltage across is known
 from the netlist and rail voltages; for others the project must give a current. Compare with the rating from the MPN, or
 from the package when there is no MPN, derated per the datasheet's curve for the board temperature.
+
+better_erc (`erc_checks/src/rate/rate_2.rs`) asks each MPN's rated power to be at least `derating.resistor_p` (2.0)
+times the dissipation: the part's `Pworking` field, else V²/R from the working voltage and the value. A part's
+`Preq_min` field states the minimum rated power this board asks for, and replaces `k` times the dissipation: every MPN's
+rated power at least `Preq_min`. Each rating must still exceed the dissipation itself, and a `Preq_min` below the
+dissipation is a finding of its own. The working voltage is the part's `Vworking` field when it has one (switch nodes,
+transients, a part across two rails), else the larger difference between its two nets: a rail's range when the project
+states one (`[nets]` in the [project file](../project-file.md)), its voltage otherwise, 0 V for a ground. Each MPN field
+(`Mpn1`, `Mpn2`, ...) of a fitted part is judged on its own against the facts of the parts snapshot (`parts.lock.toml`).
+A miss is one finding per part and MPN field (`item C4 Mpn2`) naming the margin, with the hash of the inputs it rests on
+(the working value and how it is known, the MPN's rating, the derating factor) for a [waiver](../project-file.md). A
+rating the snapshot lacks is never a pass: the part gets one `info` finding naming each MPN and fact not checked. A part
+whose stress is not known is not judged.
 
 **Fix.** A larger package, a higher value where the function allows, or several resistors in series or parallel to share
 the power.
@@ -264,7 +293,7 @@ range in the project so the check has a target.
 
 ⚠️ warning · needs: voltage across each resistor, its maximum working voltage · [catalogue entry](../checks.md#rate-9)
 
-**Impl.** mid · depends on NET-5, CFG-2, CFG-5
+**Impl.** mid · depends on NET-5, CFG-2, CFG-9
 
 **What it catches.** A resistor with more voltage across it than its maximum working voltage, typically the top resistor
 of a divider from a high-voltage rail, or a bleeder across a high-voltage capacitor.
@@ -280,6 +309,20 @@ Three 330 kΩ 0603 resistors in series share the voltage at 33 V each.
 
 **How to check.** For each resistor, compute the voltage across it from the rails at its ends and the divider ratio
 (`RPT-6`); compare with the maximum working voltage from the MPN, or a default per package.
+
+better_erc (`erc_checks/src/rate/rate_9.rs`) asks each MPN's rated voltage to be at least `derating.resistor_v` (1.25)
+times the working voltage. A part's `Vreq_min` field states the minimum rated voltage this board asks for, and replaces
+`k` times the working voltage: every MPN's rated voltage at least `Vreq_min`. Each rating must still exceed the working
+voltage itself, and a `Vreq_min` below the working voltage is a finding of its own. The working voltage is the part's
+`Vworking` field when it has one (switch nodes, transients, a part across two rails), else the larger difference between
+its two nets: a rail's range when the project states one (`[nets]` in the [project file](../project-file.md)), its
+voltage otherwise, 0 V for a ground. A resistor inside a divider, with one end on a signal net, is judged only through
+its `Vworking` field until the divider ratio (`RPT-6`) feeds it. Each MPN field (`Mpn1`, `Mpn2`, ...) of a fitted part
+is judged on its own against the facts of the parts snapshot (`parts.lock.toml`). A miss is one finding per part and MPN
+field (`item C4 Mpn2`) naming the margin, with the hash of the inputs it rests on (the working value and how it is
+known, the MPN's rating, the derating factor) for a [waiver](../project-file.md). A rating the snapshot lacks is never a
+pass: the part gets one `info` finding naming each MPN and fact not checked. A part whose stress is not known is not
+judged.
 
 **Fix.** Several resistors in series, larger packages, or parts specified for high voltage.
 
@@ -433,7 +476,7 @@ B200A schematic review notes (D1605 value vs symbol).
 🛑 error · needs: input range, output voltage and current, switching frequency, inductance, the inductor's saturation
 current · [catalogue entry](../checks.md#rate-15)
 
-**Impl.** mid · depends on CFG-2, CFG-5, RPT-3
+**Impl.** mid · depends on CFG-2, CFG-9, RPT-3
 
 **What it catches.** A switching converter's inductor whose saturation current is below the peak current it must carry:
 the maximum output current plus half the ripple, at the maximum input voltage.
@@ -449,6 +492,14 @@ with a 3 A saturation current saturates at full load.
 **How to check.** Find the converter's input and output rails, output current (project), switching frequency (part data)
 and inductor value; compute the peak per SLVA477 equations 1, 2 and 4; compare with the inductor's saturation current
 from the MPN (`RPT-3` reports the same numbers).
+
+better_erc (`erc_checks/src/rate/rate_15.rs`) takes the peak from the inductor's `Ipeak` field and asks each MPN's
+saturation current to be at least `derating.inductor_isat` (1.3) times it; the peak computed from the converter
+(`RPT-3`) is not built yet. Each MPN field (`Mpn1`, `Mpn2`, ...) of a fitted part is judged on its own against the facts
+of the parts snapshot (`parts.lock.toml`). A miss is one finding per part and MPN field (`item C4 Mpn2`) naming the
+margin, with the hash of the inputs it rests on (the working value and how it is known, the MPN's rating, the derating
+factor) for a [waiver](../project-file.md). A rating the snapshot lacks is never a pass: the part gets one `info`
+finding naming each MPN and fact not checked. A part whose stress is not known is not judged.
 
 **Fix.** An inductor with saturation current above the peak with margin (or above the converter's switch current limit,
 which also covers faults), or a larger inductance to reduce the ripple.

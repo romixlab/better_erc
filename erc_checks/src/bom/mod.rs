@@ -3,6 +3,7 @@
 mod bom_1;
 mod bom_10;
 mod bom_11;
+mod bom_12;
 mod bom_14;
 mod bom_17;
 mod bom_20;
