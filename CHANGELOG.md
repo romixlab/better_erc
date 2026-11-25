@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-11-25
+
 ### Added
 
 - Catalogue: `DRAW-48` to `DRAW-51`, block notes, placeholders, note references and block names on a sheet (NET-26).
