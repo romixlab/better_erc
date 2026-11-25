@@ -2,9 +2,11 @@
 //! `Power` the lowest rating over a part's MPNs, `Dielectric` the worst code, `Package` the case they share, the
 //! plan `berc fields sync` writes. A field that states what the board's `DEFAULT_*` text variable states is taken
 //! off the part; a part without the field and off the default gets one. An MPN without the fact leaves the field as
-//! it is. A rating is stated as `BOM-12` reads it: rounded to the precision the text is written with.
+//! it is. A rating is stated as `BOM-12` reads it: as written, or rounded at most
+//! `drawing.fields.rating_rounding_max` apart.
 
 use crate::Ctx;
+use crate::bom::rounding_max_pct;
 use crate::component::{self, Dielectrics, Ratings};
 use erc_analysis::PartClass;
 use erc_model::{PartId, Unit};
@@ -190,12 +192,11 @@ fn worst(cx: &Ctx, p: PartId, name: &str) -> Worst {
     }
 }
 
-/// Whether the text of a field states what the MPNs say it is
-fn says(name: &str, text: &str, worst: &Worst) -> bool {
+/// Whether the text of a field states what the MPNs say it is, a rating rounded at most `rounding_max_pct` apart
+fn says(name: &str, text: &str, worst: &Worst, rounding_max_pct: f64) -> bool {
     match worst {
-        Worst::Rating(low, unit) => {
-            component::written(text, *unit).is_some_and(|w| component::states(w, *low))
-        }
+        Worst::Rating(low, unit) => component::written(text, *unit)
+            .is_some_and(|w| component::states(w, *low, rounding_max_pct)),
         Worst::Code(code) if name == "Dielectric" => {
             component::same_dielectric(text, code) || text.trim().eq_ignore_ascii_case(code.trim())
         }
@@ -214,8 +215,9 @@ fn decide(
     name: &str,
     worst: &Worst,
 ) -> Option<(Option<String>, FieldOp)> {
+    let max_pct = rounding_max_pct(cx);
     let write = match worst {
-        Worst::Rating(low, unit) => component::display_text(*low, *unit),
+        Worst::Rating(low, unit) => component::display_text(*low, *unit, max_pct),
         Worst::Code(code) => code.clone(),
         Worst::None | Worst::Unknown(_) => return None,
     };
@@ -223,11 +225,11 @@ fn decide(
     let default = component::default_var(reference, name)
         .and_then(|v| component::default_of(cx, v))
         .map(|d| d.text);
-    if default.is_some_and(|d| says(name, &d, worst)) {
+    if default.is_some_and(|d| says(name, &d, worst, max_pct)) {
         return now.map(|n| (Some(n), FieldOp::Remove));
     }
     match now {
-        Some(n) if says(name, &n, worst) => None,
+        Some(n) if says(name, &n, worst, max_pct) => None,
         Some(n) => Some((Some(n), FieldOp::Set(write))),
         None => Some((None, FieldOp::Add(write))),
     }

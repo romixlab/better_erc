@@ -1,7 +1,8 @@
 //! `BOM-12` Value field vs the MPN's parameters
 
 use crate::component::{
-    self, Candidate, Dielectrics, Judged, Ratings, SAME_REL, Stated, dielectric,
+    self, Candidate, Dielectrics, Judged, RATING_ROUNDING_MAX, Ratings, SAME_REL, Stated,
+    dielectric,
 };
 use crate::meta::*;
 use crate::{Ctx, Finding};
@@ -19,8 +20,13 @@ static META: CheckMeta = CheckMeta {
     scope: Scope::Board,
     needs: &[Need::Graph, Need::PartClasses, Need::PartsLock],
     overlaps: &[],
-    params: &[],
+    params: &[RATING_ROUNDING_MAX],
 };
+
+/// The project's [`RATING_ROUNDING_MAX`], percent
+pub(crate) fn rounding_max_pct(cx: &Ctx) -> f64 {
+    cx.param(&META, RATING_ROUNDING_MAX.name)
+}
 
 impl Check for Bom12 {
     fn meta(&self) -> &'static CheckMeta {
@@ -29,8 +35,8 @@ impl Check for Bom12 {
 
     /// Every MPN of each fitted resistor, capacitor and inductor against what the part requires: its value (within
     /// the MPN's tolerance) and tolerance. And the part's display fields, the worst over its MPNs: `Voltage` and
-    /// `Power` the lowest rating, rounded to the precision the field is written with, `Dielectric` the worst code; a
-    /// part without the field is held to the board's `DEFAULT_*` text variable.
+    /// `Power` the lowest rating, as written or rounded at most [`RATING_ROUNDING_MAX`] apart, `Dielectric` the
+    /// worst code; a part without the field is held to the board's `DEFAULT_*` text variable.
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let mut out = Vec::new();
         for p in component::fitted_sorted(cx) {
@@ -128,15 +134,22 @@ impl Shown<'_, '_, '_> {
             judged[*i].lacks(fact);
         }
         let (low, by) = ratings.lowest()?;
-        if component::states(want, low) {
+        let max_pct = rounding_max_pct(self.cx);
+        if component::states(want, low, max_pct) {
             return None;
         }
         let name = if fact == "power" { "Power" } else { "Voltage" };
-        let write = component::display_text(low, unit);
+        let write = component::display_text(low, unit, max_pct);
+        let limit = (
+            RATING_ROUNDING_MAX.name.to_owned(),
+            max_pct.to_string(),
+            self.cx.param_source(&META, RATING_ROUNDING_MAX.name),
+        );
         let facts = ratings
             .known
             .iter()
             .map(|(v, c)| (format!("{}.{fact}", c.field), v.to_string(), c.source(fact)))
+            .chain([limit])
             .collect();
         Some(self.finding(
             name,

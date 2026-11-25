@@ -11,7 +11,7 @@ pub(crate) mod dielectric;
 
 use crate::Ctx;
 use crate::finding::Finding;
-use crate::meta::{CheckMeta, Severity};
+use crate::meta::{CheckMeta, Param, Severity};
 use erc_analysis::value::format_si;
 use erc_model::{PartId, natural_cmp};
 use erc_model::{Provenance, Subject, Unit, Value, Written};
@@ -20,6 +20,16 @@ use erc_parts::lock::{FactValue, LockedPart, PartMatch};
 /// Two values closer than this, relative, are the same (a value written `4k7` and a fact of 4700.0000001); in
 /// the rounding of a rating, the same noise in steps of the precision written
 pub(crate) const SAME_REL: f64 = 1e-6;
+
+/// How far a `Voltage` or `Power` text may round the rating it states (`BOM-12`, `berc fields sync`)
+pub(crate) const RATING_ROUNDING_MAX: Param = Param {
+    name: "drawing.fields.rating_rounding_max",
+    default: 1.0,
+    unit: "%",
+    doc: "most a rounded Voltage or Power text may differ from the lowest rating of a part's MPNs, in percent of it \
+          (BOM-12, berc fields sync)",
+    choices: &[],
+};
 
 /// One MPN of a part, as the snapshot knows it
 pub(crate) struct Candidate<'a> {
@@ -174,24 +184,35 @@ fn whole_steps(rating: f64, step: f64) -> f64 {
     (rating / step + 0.5 + SAME_REL).floor()
 }
 
-/// Whether a display field states a rating: the rating, rounded half up to the precision the field is written
-/// with, equals the field (`63mW` states 62.5 mW, `62mW` does not). A fraction (`1/16W`) is exact.
-pub(crate) fn states(field: Written, rating: f64) -> bool {
-    match field.step {
-        // Both sides are whole numbers of steps
-        Some(step) => (whole_steps(rating, step) - (field.value / step).round()).abs() < 0.5,
-        None => (field.value - rating).abs() <= SAME_REL * rating.abs(),
+/// Whether a display field states a rating: it equals it, or it is the rating rounded half up to the precision
+/// the field is written with and differs from it by at most `rounding_max_pct` percent. At 1 %, `63mW` states
+/// 62.5 mW; `62mW` (not the rounding) and `0.1W` (60 % apart) do not. A fraction (`1/16W`) is not rounded.
+pub(crate) fn states(field: Written, rating: f64, rounding_max_pct: f64) -> bool {
+    let apart = (field.value - rating).abs();
+    if apart <= SAME_REL * rating.abs() {
+        return true;
     }
+    // Both sides are whole numbers of steps
+    let rounded = field
+        .step
+        .is_some_and(|step| (whole_steps(rating, step) - (field.value / step).round()).abs() < 0.5);
+    rounded && apart <= (rounding_max_pct / 100.0 + SAME_REL) * rating.abs()
 }
 
-/// A rating as a display field is written, a text that [`states`] it: a power from 1 mW to below 1 W in whole mW
-/// (`63mW` for 62.5 mW), else up to three decimals of its SI prefix (`6.3V`, `1.5W`)
-pub(crate) fn display_text(rating: f64, unit: Unit) -> String {
-    if unit == Unit::Watt && (1e-3..1.0).contains(&rating) {
-        return format!("{}mW", whole_steps(rating, 1e-3));
-    }
+/// A rating as a display field is written, a text that [`states`] it. A power from 1 mW to below 1 W is in whole
+/// mW (`63mW` for 62.5 mW), any other rating has up to three decimals of its SI prefix (`6.3V`, `1.5W`); where
+/// that rounds further than `rounding_max_pct`, the text has more digits (`2.5mW`).
+pub(crate) fn display_text(rating: f64, unit: Unit, rounding_max_pct: f64) -> String {
+    let stated =
+        |text: &String| written(text, unit).is_some_and(|w| states(w, rating, rounding_max_pct));
+    let milliwatts = (unit == Unit::Watt && (1e-3..1.0).contains(&rating))
+        .then(|| format!("{}mW", whole_steps(rating, 1e-3)));
     // Raised past float noise, so a half rounds up as in `states`
-    format_si(rating * (1.0 + 1e-9), unit).replace(' ', "")
+    let prefixed = || format_si(rating * (1.0 + 1e-9), unit).replace(' ', "");
+    milliwatts
+        .filter(stated)
+        .or_else(|| Some(prefixed()).filter(stated))
+        .unwrap_or_else(|| format!("{rating}{}", unit.name()))
 }
 
 /// The imperial chip case code a text names (`0402`, `R0402`, `0402 (1005 Metric)`), else the text trimmed
@@ -551,16 +572,19 @@ mod tests {
         assert_eq!(quantity("X7R", Unit::Volt), None);
     }
 
+    fn field_states_within(text: &str, unit: Unit, rating: f64, pct: f64) -> bool {
+        states(written(text, unit).unwrap(), rating, pct)
+    }
+
+    /// With the default limit of 1 %
     fn field_states(text: &str, unit: Unit, rating: f64) -> bool {
-        states(written(text, unit).unwrap(), rating)
+        field_states_within(text, unit, rating, RATING_ROUNDING_MAX.default)
     }
 
     #[test]
     fn a_field_states_a_rating_rounded_to_its_precision() {
         let w = Unit::Watt;
         assert!(field_states("63mW", w, 0.0625));
-        assert!(field_states("1/16W", w, 0.0625));
-        assert!(!field_states("1/16W", w, 0.063));
         assert!(field_states("63 mW", w, 0.063));
         assert!(!field_states("62mW", w, 0.0625));
         assert!(!field_states("64mW", w, 0.0625));
@@ -568,10 +592,11 @@ mod tests {
         assert!(!field_states("62.4mW", w, 0.0625));
         assert!(field_states("0.1W", w, 0.1));
         assert!(field_states("100mW", w, 0.1));
-        assert!(!field_states("0.10W", w, 0.125));
-        assert!(field_states("0.1W", w, 0.125));
+        assert!(field_states("1/16W", w, 0.0625));
+        assert!(!field_states("1/16W", w, 0.063));
         let v = Unit::Volt;
         assert!(field_states("50V", v, 50.0));
+        assert!(field_states("50V", v, 49.6));
         assert!(!field_states("50V", v, 49.4));
         assert!(!field_states("25V", v, 50.0));
         assert!(field_states("6V3", v, 6.3));
@@ -580,24 +605,51 @@ mod tests {
         assert!(field_states("3.3", v, 3.3));
     }
 
+    /// A rounding past the limit overstates or understates the part, however coarse the text is
+    #[test]
+    fn a_rounding_past_the_limit_states_nothing() {
+        let w = Unit::Watt;
+        assert!(!field_states("0.1W", w, 0.0625));
+        assert!(!field_states("1W", w, 0.5));
+        assert!(!field_states("6V", Unit::Volt, 6.3));
+        assert!(!field_states("50V", Unit::Volt, 49.4));
+        // The limit is the setting's: 0.8 % apart
+        assert!(!field_states_within("63mW", w, 0.0625, 0.0));
+        assert!(!field_states_within("63mW", w, 0.0625, 0.5));
+        assert!(field_states_within("63mW", w, 0.0625, 0.8));
+        assert!(field_states_within("0.1W", w, 0.0625, 60.0));
+        // Equal is never too far, and no limit makes another number a rounding
+        assert!(field_states_within("62.5mW", w, 0.0625, 0.0));
+        assert!(!field_states_within("62mW", w, 0.0625, 60.0));
+    }
+
     #[test]
     fn a_written_rating_states_it() {
-        let text = |r, u| display_text(r, u);
+        let text = |r, u| display_text(r, u, RATING_ROUNDING_MAX.default);
         assert_eq!(text(0.0625, Unit::Watt), "63mW");
         assert_eq!(text(0.125, Unit::Watt), "125mW");
         assert_eq!(text(0.03125, Unit::Watt), "31mW");
         assert_eq!(text(0.1, Unit::Watt), "100mW");
+        assert_eq!(text(0.5, Unit::Watt), "500mW");
+        // Whole mW would be 20 % apart
+        assert_eq!(text(0.0025, Unit::Watt), "2.5mW");
         assert_eq!(text(1.0, Unit::Watt), "1W");
         assert_eq!(text(1.5, Unit::Watt), "1.5W");
         assert_eq!(text(50.0, Unit::Volt), "50V");
         assert_eq!(text(6.3, Unit::Volt), "6.3V");
-        for unit in [Unit::Watt, Unit::Volt] {
-            for rating in [
-                0.0005, 0.001, 0.0015, 0.03125, 0.0625, 0.9995, 0.9999999, 1.0025, 6.3, 999.9999,
-                1234.5675, 2500.0,
-            ] {
-                let t = text(rating, unit);
-                assert!(field_states(&t, unit, rating), "{t} for {rating}");
+        assert_eq!(display_text(0.0625, Unit::Watt, 0.0), "62.5mW");
+        for pct in [0.0, 1.0, 50.0] {
+            for unit in [Unit::Watt, Unit::Volt] {
+                for rating in [
+                    0.0005, 0.001, 0.0015, 0.03125, 0.0625, 0.9995, 0.9999999, 1.0025, 1.00005,
+                    6.3, 999.9999, 1234.5675, 2500.0,
+                ] {
+                    let t = display_text(rating, unit, pct);
+                    assert!(
+                        field_states_within(&t, unit, rating, pct),
+                        "{t} for {rating} within {pct} %"
+                    );
+                }
             }
         }
     }

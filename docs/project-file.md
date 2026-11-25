@@ -99,8 +99,10 @@ The rating checks read these through `Ctx::derating`, and name the factor and it
 - `severity`: a severity per check id (`error`, `warning`, `suggestion`, `info`) over the catalogue's.
 - `[checks."ID"]`: the check's thresholds by the names it declares, the same as `--set ID.NAME=VALUE` takes
   (`[checks."I2C-9"] min_pull_up = 2200`).
-- `[drawing]`: the settings several checks and `berc place-fields` share, by their dotted names
+- `[drawing]`: the settings several checks, `berc place-fields` and `berc fields sync` share, by their dotted names
   (`[drawing.fields] hide_defaults = "always"` is `drawing.fields.hide_defaults`).
+  `[drawing.fields] rating_rounding_max = 1` is the most, in percent, that a rounded `Voltage` or `Power` text may
+  differ from the rating it states ([BOM-12](checks/bom.md#bom-12)).
   `notes = "../doc/notes.md"` names the board's notes file that `DRAW-50` reads, relative to the project directory;
   several files are separated by commas.
 

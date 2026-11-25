@@ -298,9 +298,9 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `BOM-17` One MPN with different values · `bom/bom_17.rs`, `bom-17_mpn_values`
 - ✅ `BOM-12` Each MPN of a fitted R, C, L from the parts snapshot against the part's `Value` (within the MPN's
   tolerance) and `Tolerance`; display fields `Voltage`, `Power`, `Dielectric` (or the project's `DEFAULT_*` text
-  variable) must state the worst over the MPNs, a rating rounded half up to the precision written (`63mW` states
-  62.5 mW), the finding names the value to write (`CFG-9`) · `bom/bom_12.rs`, `component/`,
-  `bom-12_mpn_vs_fields`
+  variable) must state the worst over the MPNs, a rating as is or rounded half up to the precision written and at
+  most `drawing.fields.rating_rounding_max` apart (1 %: `63mW` states 62.5 mW), the finding names the value to write
+  (`CFG-9`) · `bom/bom_12.rs`, `component/`, `bom-12_mpn_vs_fields`
 - ✅ `BOM-20` MPN on the board but not in the parts snapshot (`CFG-9`) · `bom/bom_20.rs`, `bom-20_parts_lock`
 - ✅ `LIB-3` MOSFET pins not named G, D, S · `lib/lib_3.rs`, `lib-3_mosfet_pin_names`
 - ✅ `LIB-6` `Package` (or `DEFAULT_R_PACKAGE`, `DEFAULT_C_PACKAGE`) against the footprint's chip case, and each

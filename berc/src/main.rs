@@ -204,7 +204,8 @@ enum FieldsCommand {
     /// Write Voltage, Power, Dielectric and Package from parts.lock.toml: the worst over each part's MPNs
     ///
     /// Voltage and Power state the lowest rating over all MPNs of a part, Dielectric the worst code, Package the
-    /// case they share (mW below 1 W, V). A field equal to the board default (the DEFAULT_C_PACKAGE, DEFAULT_C_VOLTAGE,
+    /// case they share (mW below 1 W, V). A rating text may round at most drawing.fields.rating_rounding_max
+    /// percent (default 1). A field equal to the board default (the DEFAULT_C_PACKAGE, DEFAULT_C_VOLTAGE,
     /// DEFAULT_C_DIELECTRIC, DEFAULT_R_PACKAGE, DEFAULT_R_POWER text variables) is taken off the part; a part
     /// without the field and off the default gets one, placed as place-fields places fields. Only these fields
     /// change. An MPN without the fact leaves the field alone; it is listed. A dry run by default.
@@ -220,7 +221,8 @@ struct FieldsSyncArgs {
     /// Edit the .kicad_sch files in place; without it nothing is written
     #[arg(long)]
     write: bool,
-    /// A setting over its default, repeatable, for placing new fields: `drawing.fields.pitch=2.54`
+    /// A setting over its default, repeatable: `drawing.fields.rating_rounding_max=0.5`, or one for placing new
+    /// fields (`drawing.fields.pitch=2.54`)
     #[arg(long = "set", value_name = "NAME=VALUE")]
     set: Vec<String>,
 }

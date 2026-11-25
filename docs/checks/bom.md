@@ -344,11 +344,17 @@ Defaults box shows (the one `berc place-fields` hides):
 | `Power`, or a rating in the value | `DEFAULT_R_POWER` for a resistor | the lowest rated power among the MPNs |
 | `Dielectric`, or the value's code (`100n X7R`) | `DEFAULT_C_DIELECTRIC` for a capacitor | the worst dielectric among the ceramic MPNs: the one every other covers |
 
-A voltage or power text states a rating when the rating, rounded half up to the precision the text is written with,
-equals the text. The precision is one of the last digit written: 1 mW for `63mW`, 0.1 W for `0.1W`, 1 V for `50V`,
-0.1 V for `6V3`. So `63mW` states 62.5 mW (1/16 W, which datasheets label 63 mW) and `62mW` does not. A coarse text
-accepts more: `0.1W` states any rating from 50 mW to below 150 mW. Write the digits that matter. A fraction such as
-`1/16W` is exact.
+A voltage or power field states a rating when its text equals the rating, or rounds it. A rounding passes when two
+conditions hold:
+
+1. The rating, rounded half up to the precision of the text, equals the text. The precision is one unit of the last
+   digit written: 1 mW for `63mW`, 0.1 W for `0.1W`, 1 V for `50V`, 0.1 V for `6V3`.
+2. The text differs from the rating by at most `drawing.fields.rating_rounding_max` percent of the rating (default
+   1 %, set in the [project file](../project-file.md) or with `--set`).
+
+For example, `63mW` states 62.5 mW (1/16 W, which datasheets label 63 mW), because the two are 0.8 % apart. `62mW`
+does not, because 62.5 mW rounds to 63. A coarse text fails the second condition: `0.1W` for 62.5 mW, `1W` for
+500 mW and `6V` for 6.3 V are findings that name the text to write. A fraction such as `1/16W` is not rounded.
 
 One dielectric covers another when it spans at least the same temperatures with at most the same capacitance change
 (`X7R` covers `X5R`, any class 1 code such as `C0G` covers any class 2). A display miss is one finding on the field

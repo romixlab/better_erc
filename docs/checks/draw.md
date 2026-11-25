@@ -51,6 +51,7 @@ project file (`CFG-2`); see [clearance margins](../drawing-guide.md#room-around-
 | `drawing.fields.step` | 0.25 mm | grid field anchors are placed on, and the step a column slides or moves out by (`berc place-fields`) |
 | `drawing.fields.gap_max` | 2 mm | fields farther than this from their body are placed again (`berc place-fields`) |
 | `drawing.fields.ends_raise` | 1.27 mm | how far above a horizontal packed part's pin line its Reference and Value sit (`berc place-fields`) |
+| `drawing.fields.rating_rounding_max` | 1 % | most a rounded `Voltage` or `Power` text may differ from the lowest rating of a part's MPNs (`BOM-12`, `berc fields sync`) |
 | `drawing.leader.angle_slack` | 3° | how far the last segment may be off 45° (`DRAW-46`) |
 | `drawing.leader.reach` | 5.08 mm | how far from a part a leader's tip still counts as ending at it (`DRAW-46`) |
 | `DRAW-46.max_pins` | 4 | most pins of a small part (`DRAW-46`) |

@@ -25,6 +25,20 @@ fn design(name: &str) -> PathBuf {
     dir
 }
 
+/// Rewrites the text of one symbol's field in the schematic
+fn state(dir: &Path, reference: &str, field: &str, old: &str, new: &str) {
+    let file = dir.join("bom-12_mpn_vs_fields.kicad_sch");
+    let text = std::fs::read_to_string(&file).unwrap();
+    let symbol = text
+        .find(&format!("(property \"Reference\" \"{reference}\""))
+        .unwrap();
+    let from = format!("(property \"{field}\" \"{old}\"");
+    let at = symbol + text[symbol..].find(&from).unwrap();
+    let to = format!("(property \"{field}\" \"{new}\"");
+    let out = format!("{}{to}{}", &text[..at], &text[at + from.len()..]);
+    std::fs::write(&file, out).unwrap();
+}
+
 /// The BOM-12 findings on a display field (`item C2 Voltage`), by subject
 fn display_findings(dir: &Path) -> Vec<String> {
     let p = Project::open(dir).unwrap();
@@ -80,6 +94,101 @@ fn with_powers(name: &str, powers: &[(&str, &str)]) -> PathBuf {
     }
     std::fs::write(&lock, text).unwrap();
     dir
+}
+
+/// A coarse text rounds a rating further than the project allows: a finding that names the value to write, and
+/// `fields sync` writes that value
+#[test]
+fn a_rounding_past_the_limit_is_written_again() {
+    let sixteenth: &[(&str, &str)] = &[("value = 0.063,", "value = 0.0625,")];
+    let half: &[(&str, &str)] = &[
+        ("value = 0.063,", "value = 0.5,"),
+        ("value = 0.2,", "value = 0.5,"),
+    ];
+    let volts: &[(&str, &str)] = &[("value = 50.0, unit = \"V\"", "value = 6.3, unit = \"V\"")];
+    let cases = [
+        // The rating to write is the board default `63mW`: the field goes
+        (
+            "coarse-sixteenth",
+            sixteenth,
+            "R3",
+            "0.1W",
+            "63mW",
+            Op::Remove,
+        ),
+        (
+            "coarse-half",
+            half,
+            "R3",
+            "1W",
+            "500mW",
+            Op::Set("500mW".into()),
+        ),
+        (
+            "coarse-volts",
+            volts,
+            "C5",
+            "6V",
+            "6.3V",
+            Op::Set("6.3V".into()),
+        ),
+    ];
+    for (name, lock, reference, stated, written, op) in cases {
+        let dir = with_powers(name, lock);
+        let (field, old) = if reference.starts_with('R') {
+            ("Power", "167mW")
+        } else {
+            ("Voltage", "25V")
+        };
+        state(&dir, reference, field, old, stated);
+        let want = format!("write {field} {written}");
+        let findings = display_findings(&dir);
+        assert!(
+            findings
+                .iter()
+                .any(|m| m.starts_with(&format!("{reference}: ")) && m.ends_with(&want)),
+            "{name}: {findings:?}"
+        );
+        let (s, text) = ops(&dir, true);
+        let found = s
+            .fields
+            .iter()
+            .find(|f| f.reference == reference && f.field == field)
+            .unwrap_or_else(|| panic!("{name}: {text}"));
+        assert_eq!(found.op, op, "{name}: {text}");
+        assert_eq!(display_findings(&dir), Vec::<String>::new(), "{name}");
+        let (again, text) = ops(&dir, true);
+        assert!(again.fields.is_empty(), "{name}: {text}");
+    }
+}
+
+/// `drawing.fields.rating_rounding_max` in the project file: at 0 the default `63mW` no longer states 62.5 mW, and
+/// the exact value is written
+#[test]
+fn the_project_sets_how_far_a_rating_is_rounded() {
+    let dir = with_powers("exact", &[("value = 0.063,", "value = 0.0625,")]);
+    std::fs::write(
+        dir.join("berc.toml"),
+        "[drawing.fields]\nrating_rounding_max = 0\n",
+    )
+    .unwrap();
+    let findings = display_findings(&dir);
+    assert!(
+        findings
+            .iter()
+            .any(|m| m.starts_with("R1: ") && m.ends_with("write Power 62.5mW")),
+        "{findings:?}"
+    );
+    let (s, text) = ops(&dir, true);
+    let r1 = s
+        .fields
+        .iter()
+        .find(|f| f.reference == "R1" && f.field == "Power")
+        .unwrap_or_else(|| panic!("{text}"));
+    assert_eq!(r1.op, Op::Add("62.5mW".into()), "{text}");
+    assert_eq!(display_findings(&dir), Vec::<String>::new());
+    let (again, text) = ops(&dir, true);
+    assert!(again.fields.is_empty(), "{text}");
 }
 
 /// 1/16 W parts on a board whose default is `63mW`: the default states 62.5 mW, so the parts at it have no

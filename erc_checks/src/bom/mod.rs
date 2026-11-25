@@ -14,4 +14,5 @@ mod bom_6;
 mod bom_8;
 mod bom_9;
 
+pub(crate) use bom_12::rounding_max_pct;
 pub(crate) use erc_parts::mpn::mpns;
