@@ -32,6 +32,11 @@ const DIFF_AFTER_HELP: &str = "Exit codes: 0 the same, 1 different, 2 usage or i
 const CHECK_AFTER_HELP: &str = "Exit codes: 0 nothing at or above --fail-on, 1 findings at or above --fail-on \
 (with --baseline: new ones only), 2 usage or import error, 3 a --require'd need is not available.";
 
+/// Exit codes of `berc waive`, under its --help
+const WAIVE_AFTER_HELP: &str = "Exit codes: 0 written, 1 no finding or several match (without --all), 2 usage, \
+import or write error.\n\nExamples:\n  berc waive hw/board I2C-1 R5 --reason \"pull-up on the mating board\"\n  \
+berc waive hw/board 'BOM-14:part R9' --reason \"DNP in every variant\" --expires 2027-06-30";
+
 /// Exit codes of `berc fp hash`, under its --help
 const FP_HASH_AFTER_HELP: &str = "Exit codes: 0 hashed, 2 usage or read error.\n\nExamples:\n  \
 berc fp hash Lib.pretty/SOT-23.kicad_mod\n  berc fp hash board.kicad_pcb U3 --canonical";
@@ -101,6 +106,14 @@ enum Command {
     /// a KiCad netlist, Altium EDIF, OrCAD pstxnet, a PnP file.
     #[command(after_help = CHECK_AFTER_HELP)]
     Check(CheckArgs),
+    /// Accept a finding for this project: append a [[waiver]] to its project file
+    ///
+    /// FINDING is a check id with subject names that pick one finding (`I2C-1 R5`, `BOM-14 "part R9"`), or a
+    /// full fingerprint as the JSON report gives it (`I2C-1:net /SDA|part R5`). The design is checked first; the
+    /// waiver keeps the finding's input hash, so it goes stale when what was judged changes. Written to
+    /// `<name>.berc.toml` beside the design, else `berc.toml`, created when neither exists.
+    #[command(after_help = WAIVE_AFTER_HELP)]
+    Waive(WaiveArgs),
     /// Explain a check of the catalogue (implemented or planned)
     Explain {
         /// The catalogue id (`I2C-3`)
@@ -368,6 +381,33 @@ struct FpCheckArgs {
 }
 
 #[derive(clap::Args)]
+struct WaiveArgs {
+    /// The design: a directory or a file
+    #[arg(value_hint = ValueHint::AnyPath)]
+    project: PathBuf,
+    /// A check id, or a full fingerprint
+    #[arg(add = ArgValueCandidates::new(complete::catalogue_ids))]
+    finding: String,
+    /// Subject names that pick the finding among the check's (`R5`, `/SDA`, `part R5`)
+    subjects: Vec<String>,
+    /// Why the finding is acceptable on this design
+    #[arg(long)]
+    reason: String,
+    /// Who accepts it; default: `git config user.name`
+    #[arg(long)]
+    who: Option<String>,
+    /// The last day it applies (`2027-06-30`)
+    #[arg(long, value_name = "DATE")]
+    expires: Option<String>,
+    /// The variant the finding is in
+    #[arg(long, value_name = "V", add = ArgValueCandidates::new(complete::variants))]
+    variant: Option<String>,
+    /// Waive every finding that matches, not only one
+    #[arg(long)]
+    all: bool,
+}
+
+#[derive(clap::Args)]
 struct CheckArgs {
     /// The design: a directory or a file
     #[arg(value_hint = ValueHint::AnyPath)]
@@ -537,6 +577,7 @@ fn main() -> ExitCode {
     };
     match cli.command {
         Command::Check(args) => check(args),
+        Command::Waive(args) => waive(&args),
         Command::Explain { id, format } => explain(&id, format),
         Command::Diff(args) => diff(args),
         Command::PlaceFields(args) => place_fields(&args),
@@ -642,6 +683,102 @@ fn place_fields(args: &PlaceFieldsArgs) -> ExitCode {
             ExitCode::from(CheckError::EXIT_CODE)
         }
     }
+}
+
+fn waive(args: &WaiveArgs) -> ExitCode {
+    let expires = match args
+        .expires
+        .as_deref()
+        .map(|e| (e, better_erc::model::Time::parse(e)))
+    {
+        Some((_, Some(t))) => Some(t),
+        Some((e, None)) => {
+            error(&format!("--expires {e}: not a date like 2027-06-30"));
+            return ExitCode::from(CheckError::EXIT_CODE);
+        }
+        None => None,
+    };
+    let who = match args.who.clone().or_else(git_user) {
+        Some(w) => w,
+        None => {
+            error("no --who and no `git config user.name`: say who accepts the finding");
+            return ExitCode::from(CheckError::EXIT_CODE);
+        }
+    };
+    let project = match better_erc::Project::open(&args.project) {
+        Ok(p) => p,
+        Err(e) => return check_error(&e),
+    };
+    let today = better_erc::checks::project::today();
+    let opts = CheckOptions {
+        run: RunOptions {
+            variant: args.variant.clone(),
+            ..RunOptions::default()
+        },
+        today,
+        ..CheckOptions::default()
+    };
+    let run = match project.check(&opts) {
+        Ok(r) => r,
+        Err(e) => return check_error(&e),
+    };
+    let picked = better_erc::checks::project::select(&run.report, &args.finding, &args.subjects);
+    let any = !picked.is_empty();
+    let picked: Vec<_> = picked.into_iter().filter(|f| !f.waived()).collect();
+    match picked.len() {
+        0 if any => {
+            error(&format!(
+                "{} {}: already waived",
+                args.finding,
+                args.subjects.join(" ")
+            ));
+            return ExitCode::FAILURE;
+        }
+        0 => {
+            error(&format!(
+                "no finding to waive matches {} {}",
+                args.finding,
+                args.subjects.join(" ")
+            ));
+            return ExitCode::FAILURE;
+        }
+        1 => {}
+        _ if args.all => {}
+        n => {
+            let list: Vec<&str> = picked.iter().map(|f| f.fingerprint.as_str()).collect();
+            error(&format!(
+                "{n} findings match; name more subjects, a fingerprint, or --all:\n  {}",
+                list.join("\n  ")
+            ));
+            return ExitCode::FAILURE;
+        }
+    }
+    for f in picked {
+        match project.waive(f, &who, &args.reason, expires, today) {
+            Ok((w, path)) => {
+                let pinned = w
+                    .input_hash
+                    .as_deref()
+                    .map_or(String::new(), |h| format!(", input {h}"));
+                println!("waived {}{pinned} in {}", w.fingerprint, path.display());
+            }
+            Err(e) => {
+                error(&format!("can't write the project file: {e}"));
+                return ExitCode::from(CheckError::EXIT_CODE);
+            }
+        }
+    }
+    ExitCode::SUCCESS
+}
+
+/// `git config user.name`, when git is there and it is set
+fn git_user() -> Option<String> {
+    let out = std::process::Command::new("git")
+        .args(["config", "user.name"])
+        .output()
+        .ok()?;
+    let name = String::from_utf8(out.stdout).ok()?.trim().to_owned();
+    (out.status.success() && !name.is_empty()).then_some(name)
 }
 
 fn check(args: CheckArgs) -> ExitCode {

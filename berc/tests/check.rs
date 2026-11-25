@@ -670,3 +670,44 @@ fn theme_runs_the_colour_check() {
         stderr(&bad)
     );
 }
+
+/// `berc waive` appends waivers to the project file and `berc check` applies them: the I2C-1 schematic's three
+/// errors waived make the run clean, and the JSON report lists the waivers
+#[test]
+fn waive_then_check() {
+    let dir = scratch("waive");
+    std::fs::copy(i2c1(), dir.join("board.kicad_sch")).unwrap();
+    let p = dir.join("board.kicad_sch");
+    let p = p.to_str().unwrap();
+    let waive = |args: &[&str]| {
+        let mut all = vec!["waive", p, "--who", "Jane Doe", "--reason", "accepted"];
+        all.extend_from_slice(args);
+        berc(&all)
+    };
+    let two = waive(&["I2C-3"]);
+    assert_eq!(code(&two), 1, "{}", stderr(&two));
+    assert!(
+        stderr(&two).contains("2 findings match"),
+        "{}",
+        stderr(&two)
+    );
+    assert_eq!(code(&waive(&["I2C-3", "--all"])), 0);
+    let one = waive(&["I2C-1", "--expires", "2099-12-31"]);
+    assert_eq!(code(&one), 0, "{}", stderr(&one));
+    assert!(
+        stdout(&one).starts_with("waived I2C-1:"),
+        "{}",
+        stdout(&one)
+    );
+    assert_eq!(code(&waive(&["I2C-1"])), 1, "already waived");
+    assert_eq!(code(&waive(&["I2C-1", "--expires", "soon"])), 2);
+    let text = std::fs::read_to_string(dir.join("board.berc.toml")).unwrap();
+    assert_eq!(text.matches("[[waiver]]").count(), 3, "{text}");
+    let out = berc(&["check", p, "--only", "I2C", "--format", "json"]);
+    assert_eq!(code(&out), 0, "{}", stdout(&out));
+    let v = json(&out);
+    assert_eq!(v["summary"]["waived"], 3);
+    assert_eq!(v["summary"]["errors"], 0);
+    assert_eq!(v["waivers"].as_array().unwrap().len(), 3);
+    assert_eq!(v["findings"][0]["waiver"]["status"], "applied");
+}
