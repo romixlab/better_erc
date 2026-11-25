@@ -1163,16 +1163,17 @@ impl FootprintReview {
         let list = match &from {
             SymbolsFrom::Project(p) => better_erc::fp::todo(p, &search)
                 .map(|t| {
+                    let groups = t.by_footprint();
                     let title = format!(
-                        "{} of {} to review on {}",
-                        t.to_review().count(),
-                        t.entries.len(),
+                        "{} of {} footprints to review on {}",
+                        groups.iter().filter(|g| g.needs_review()).count(),
+                        groups.len(),
                         file_name(&t.board)
                     );
                     let rows = t
-                        .entries
+                        .by_footprint()
                         .into_iter()
-                        .map(|e| Row::Board(Box::new(e)))
+                        .map(|g| Row::Board(Box::new(g)))
                         .collect();
                     (title, rows, t.reviews, Some(t.board), t.files)
                 })
@@ -1320,7 +1321,7 @@ impl FootprintReview {
         let mut board_note = row.note();
         let (sourced, note) = match &row {
             // What is reviewed is the footprint as the board places it: its hash is what the pairs are of
-            Row::Board(e) => match (&self.board, e.references.first()) {
+            Row::Board(g) => match (&self.board, g.references().first()) {
                 (Some(board), Some(reference)) => match (FootprintSource::Board {
                     board: board.clone(),
                     reference: reference.clone(),
@@ -2009,10 +2010,9 @@ impl FootprintReview {
             .and_then(|i| self.rt.symbols.as_ref()?.rows.get(i).cloned())
             .ok_or_else(|| format!("{} is no longer in the list", t.name))?;
         let (project, what) = match (&t.from, &row) {
-            (SymbolsFrom::Project(p), Row::Board(e)) => (
-                Some(p.as_path()),
-                AcceptWhat::References(e.references.clone()),
-            ),
+            (SymbolsFrom::Project(p), Row::Board(g)) => {
+                (Some(p.as_path()), AcceptWhat::References(g.references()))
+            }
             (_, r) => (
                 None,
                 AcceptWhat::Hash {

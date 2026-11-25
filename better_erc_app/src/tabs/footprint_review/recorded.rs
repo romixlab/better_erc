@@ -271,11 +271,11 @@ impl FootprintReview {
         }
     }
 
-    /// The row's MPNs for Accept's question, each by its family where its MPN decodes into one. A board row's
-    /// MPNs share one cover: all ticked. A library row's are ticked when a review of the hash now made on this
-    /// datasheet covers them, or the open PDF's text has them and no review of the hash now covers them on another
-    /// datasheet (a series document names its siblings: accepting on it never claims them unless ticked by hand);
-    /// none so: every one no review of the hash now covers
+    /// The row's MPNs for Accept's question, each by its family where its MPN decodes into one. Ticked when a
+    /// review of the hash now made on this datasheet covers them, or the open PDF's text has them and no review of
+    /// the hash now covers them on another datasheet (a series document names its siblings: accepting on it never
+    /// claims them unless ticked by hand); none so: every one no review of the hash now covers. Another maker's MPN
+    /// with its own datasheet is unticked by hand and reviewed on that one.
     pub(super) fn mpn_choices(&mut self) -> Vec<MpnChoice> {
         let Some(row) = self.target_row().cloned() else {
             return Vec::new();
@@ -300,9 +300,7 @@ impl FootprintReview {
                 let family = row.family_of(mpn).map(|c| c.describe());
                 MpnChoice {
                     mpn: mpn.clone(),
-                    ticked: matches!(row, rows::Row::Board(_))
-                        || here(mpn)
-                        || (in_pdf && !elsewhere(mpn)),
+                    ticked: here(mpn) || (in_pdf && !elsewhere(mpn)),
                     in_pdf,
                     by_family: family.is_some(),
                     family,

@@ -408,7 +408,7 @@ fn an_override_is_reviewed_as_placed() {
     );
     let library_hash =
         |h: &Harness<'_, FootprintReview>| match &h.state().rt.symbols.as_ref().unwrap().rows[i] {
-            rows::Row::Board(e) => e.library_hash.clone(),
+            rows::Row::Board(g) => g.entries[0].library_hash.clone(),
             rows::Row::Library(_) => None,
         };
     let before = library_hash(&h);

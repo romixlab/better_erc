@@ -44,7 +44,7 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 - **`berc fp`**: footprint review. `berc fp hash` prints a footprint's review hash, the same for a library file and
   every board copy of it; `berc fp check` checks every (board footprint hash, MPN) pair against the footprint reviews
   of the parts snapshot, `berc fp check --lib` every symbol of a symbol library against a part source's reviews,
-  `berc fp todo` lists what a board needs reviewed, one line per footprint and family, and `berc fp accept` records a
+  `berc fp todo` lists what a board needs reviewed, one line per footprint with its families and MPNs under it, and `berc fp accept` records a
   review in the part source; `berc fp model` reads each footprint's 3D models and measures them against it. See
   [Footprint review](#footprint-review).
 - **The app** (`better_erc`, egui, crate `better_erc_app`): an import tab that opens any design the registry reads
@@ -422,8 +422,10 @@ the reviews its pairs name, so its git diff after a refresh shows a new or a ret
 
 ### What to review for a board
 
-`berc fp todo` lists what a board's footprints need reviewed: one line per board footprint hash and what one review
-of it covers, a family where the MPNs decode into one, else one MPN, with the references it stands for.
+`berc fp todo` lists what a board's footprints need reviewed: one line per board footprint hash, and under it one
+line per family (where the MPNs decode into one) or MPN alone, with the references each stands for. One review of
+the footprint against a datasheet covers every family and MPN that datasheet covers. When the parts of its MPNs
+differ in some fact of the parts snapshot, the footprint's line is followed by the facts they differ in.
 
 ```sh
 berc fp todo                       # the KiCad project in this directory
@@ -431,13 +433,15 @@ berc fp todo hw/board --symbols ~/kicad-library/symbols --footprints ~/kicad-lib
 berc fp todo hw/board --format json
 ```
 
-The lines to review come first, in the order to step through them: changed (reviewed before, the footprint moved
-on, naming the review it was reviewed as), other version, uncovered; by footprint and cover within each. Each line
-shows the footprint, its hash, the MPNs and the references, and (always shown, whatever the line's own status) the
+The footprints to review come first, in the order to step through them: changed (reviewed before, the footprint
+moved on, naming the review it was reviewed as), other version, uncovered, by footprint's worst status; under each
+its families and MPNs. Each footprint line shows its `Lib:Name`, hash and how many of its families and MPNs are to
+review; each line under it the family or MPN, its MPNs and references, and (always shown, whatever the line's own status) the
 references whose board places a different footprint than their symbol's own `Footprint`, the same `Lib:Name`
-mismatch `berc fp check` names. Below them, under their own heading, the lines that can't be reviewed until fixed:
+mismatch `berc fp check` names. Below them, under their own heading, the footprints that can't be reviewed until fixed:
 not in lock (refresh the snapshot), unknown MPN (the part source has no part of it: add it there first) and no MPN.
-The reviewed ones are counted; `--all` lists them too. `--format json` always holds every entry with its hash, cover,
+The reviewed families and MPNs are counted; `--all` lists them too. `--format json` always holds every entry (one per
+footprint hash and family or MPN) with its hash, cover,
 MPNs, references, the reviews that cover it (`covered_by`) or that it was reviewed as (`other`), the symbol's
 `Datasheet` field, the library footprint file and its hash now (`library_hash`, another than `hash` when the board
 was not updated from the library), and `reviews`, every review an entry names; the library call is

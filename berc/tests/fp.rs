@@ -640,7 +640,8 @@ fn check_compares_board_copies_with_their_library_footprint() {
     std::fs::remove_dir_all(&dir).unwrap();
 }
 
-/// One line per footprint and family (or MPN alone), with its MPNs and references, in review order
+/// One entry per footprint and family (or MPN alone), with its MPNs and references, in review order; the text has
+/// one line per footprint with them under it
 #[test]
 fn todo_lists_pairs_in_review_order() {
     let dir = scratch("todo");
@@ -714,9 +715,19 @@ fn todo_lists_pairs_in_review_order() {
         text.contains("2 reviewed, not listed: --all lists them"),
         "{text}"
     );
-    assert!(text.contains("6 footprint pairs, 3 to review"), "{text}");
+    assert!(
+        text.contains("2 footprints, 1 to review; 6 footprint pairs"),
+        "{text}"
+    );
+    // One line per footprint, its families and MPNs under it
+    assert!(
+        text.contains("3 of 5 to review\n                changed       B-1"),
+        "{text}"
+    );
+    assert!(!text.contains("RC0402FR-0710KL"), "{text}");
     let all = stdout(&fp_todo(&dir, &["--footprints", path(&fps), "--all"]));
-    assert!(all.contains("reviewed (2):"), "{all}");
+    assert!(all.contains("RC0402FR-0710KL"), "{all}");
+    assert!(!all.contains("not listed"), "{all}");
     std::fs::remove_dir_all(&dir).unwrap();
 }
 

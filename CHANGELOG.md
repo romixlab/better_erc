@@ -20,6 +20,9 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `just install` builds berc and the app with the `mx3` part source.
 - `DRAW-49`: a note headed `TODO`, `TBD` or `FIXME` with no placeholder in its body is reported once.
 
+- `berc fp todo` text and the review tab list one row per footprint hash, families and MPNs under it (TOOL-8).
+- Review tab: a footprint's row shows how its parts differ; Accept ticks the MPNs the datasheet names (TOOL-11).
+
 ### Fixed
 
 - Footprint review: a part picked while its datasheet loads keeps its footprint on the page, not off it (VIEW-19).
