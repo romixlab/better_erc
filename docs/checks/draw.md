@@ -58,6 +58,7 @@ project file (`CFG-2`); see [clearance margins](../drawing-guide.md#room-around-
 | `drawing.note.item_marks` | 3 | most `;`, `:` and `(` in one sentence of a note (`DRAW-47`) |
 | `drawing.note.colour_slack` | 8 | counts per RGB channel a note box colour may be off its kind's colour (`DRAW-32`) |
 | `drawing.block.reach` | 25.4 mm | how far from a block's nearest part or heading a note may stand and still belong to it (`DRAW-48`) |
+| `drawing.block.tie` | 2.54 mm | blocks this much farther from a note than the nearest one get the note too (`DRAW-48`) |
 | `drawing.notes` | unset | the board's notes files, paths relative to the project directory, separated by commas (`DRAW-50`) |
 | `drawing.route.k_power`, `.k_ground`, `.k_signal` | 2, 2, 1 | factor on the bends and detours of power, ground and signal ties (`DRAW-40`) |
 | `drawing.route.min_saving` | 2 | cost a redraw must save to be reported (`DRAW-40`) |
@@ -657,7 +658,8 @@ is bold, or at least `drawing.heading_size` tall. A cost line starts with a pric
 
 1. Every block on the sheet that has a part the note names by its reference, as a whole word (`R901`).
 2. Otherwise the nearest block, measured from the note's box to the nearest part body, pin or heading of the block,
-   when that gap is at most `drawing.block.reach` (25.4 mm).
+   when that gap is at most `drawing.block.reach` (25.4 mm). Every other block at most `drawing.block.tie` (2.54 mm)
+   farther away gets the note too: a note between two blocks, such as one about a capacitor of each, serves both.
 
 The finding points at the block's heading, or at its first part when the sheet has no heading for it (the message
 then says so). Parts of a block drawn on another sheet than its heading, such as a regulator's decoupling

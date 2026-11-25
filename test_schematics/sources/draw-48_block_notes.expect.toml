@@ -1,0 +1,77 @@
+# What better_erc finds on draw-48_block_notes.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-1"
+subjects = ["part R1", "part R2", "part R5"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board draw-48_block_notes"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"Charge pump\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"Divider\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"Filter\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text \"Pull-up\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"Information:\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"R5 holds the line high a...\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-32"
+subjects = ["item text box \"Stray remark far from ev...\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "item text \"Charge pump\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "item text \"Divider\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "item text \"Filter\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-34"
+subjects = ["item text \"$0.19 @25 · $0.12 @1k\"", "item text \"Pull-up\"", "sheet /"]
+
+[[finding]]
+check = "DRAW-48"
+subjects = ["item block Charge pump", "sheet /"]
+
+[[finding]]
+check = "DRAW-48"
+subjects = ["item block Filter", "sheet /"]
