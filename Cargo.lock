@@ -1503,7 +1503,10 @@ dependencies = [
 name = "erc_parts"
 version = "0.4.62"
 dependencies = [
+ "erc_kicad",
  "erc_model",
+ "serde",
+ "toml",
 ]
 
 [[package]]
