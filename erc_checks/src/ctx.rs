@@ -272,7 +272,7 @@ impl Availability {
                     missing("no rails (NET-5)")
                 } else if have == 0 {
                     missing(
-                        "no rail name carries a voltage (`+3V3`, `VDD_1V8`, `-5V`); the project file will set them (CFG-2)",
+                        "no rail name carries a voltage (`+3V3`, `VDD_1V8`, `-5V`); set them under `[nets]` in the project file (CFG-2)",
                     )
                 } else if have == of {
                     Availability::Available

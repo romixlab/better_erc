@@ -61,6 +61,8 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 - [docs/engine.md](docs/engine.md): the check engine: checks and their data needs, findings, the report, the test
   schematics with their expectations, how to add a check.
 - [docs/model.md](docs/model.md): the board model, the importers and the crates.
+- [docs/project-file.md](docs/project-file.md): the project file `<name>.berc.toml`: net voltages, derating
+  factors, check settings and waivers, and `berc waive`.
 - [docs/drawing-guide.md](docs/drawing-guide.md): how to draw a sheet that reads at a glance (signal flow, power and
   ground, grid, labels, text, title block, KiCad shortcuts), each rule with its reason and source, and our own sheets
   measured against it; the `DRAW` checks automate part of it.
@@ -168,6 +170,11 @@ Run it from the repository root with a relative project path: the SARIF file nam
 the current directory, which is what code scanning expects. To adopt better_erc on a board with known findings,
 commit a baseline (`berc check hw/board --format json > hw/board/berc-baseline.json`) and add
 `--baseline hw/board/berc-baseline.json`: from then on only new findings fail the job.
+
+Facts the schematic cannot state live in the project file next to the design, `<name>.berc.toml` (else
+`berc.toml`): net voltages, derating factors, check settings, and waivers for findings accepted on this design.
+`berc waive hw/board I2C-1 R5 --reason "..."` appends a waiver; a waived finding stays in the report, marked, and no
+longer fails the run. See [docs/project-file.md](docs/project-file.md).
 
 In this repository `just check` runs `berc check` on the test schematics against the committed
 `test_schematics/berc-baseline.json` (they have findings on purpose), and `just check-baseline` rewrites it.

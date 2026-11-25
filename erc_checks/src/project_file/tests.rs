@@ -170,3 +170,37 @@ fn input_hash_is_order_free() {
     assert_ne!(a, input_hash(&[("a", "1"), ("b", "3")]));
     assert!(a.starts_with("in1:") && a.len() == 20, "{a}");
 }
+
+/// docs/project-file.md: its example reads without warnings, and its derating table has every key with its default
+#[test]
+fn the_docs_page_matches() {
+    let page = include_str!("../../../docs/project-file.md");
+    let example = page
+        .split("## An example\n\n```toml\n")
+        .nth(1)
+        .and_then(|rest| rest.split("```").next())
+        .expect("an example block");
+    let p = ProjectFile::parse("board.berc.toml", example).unwrap();
+    assert_eq!(p.warnings, Vec::<String>::new());
+    for k in derating::KEYS {
+        let row = format!(
+            "| `{}` | {} | {} |",
+            k.name,
+            show_factor(k.default),
+            k.doc.trim()
+        );
+        assert!(
+            page.contains(&row),
+            "docs/project-file.md lacks the row {row}"
+        );
+    }
+}
+
+/// A factor as the docs write it: `2.0`, `1.25`
+fn show_factor(v: f64) -> String {
+    if v.fract() == 0.0 {
+        format!("{v:.1}")
+    } else {
+        v.to_string()
+    }
+}

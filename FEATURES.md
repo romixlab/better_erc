@@ -615,9 +615,16 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 
 - 🚧 `CFG-1` Thresholds: in `erc_checks` each check declares its own with a default (`CheckMeta::params`), and
   `Config` overrides them and severities per project; the project file that sets them is `CFG-2`
-- 📋 `CFG-2` Project file: net voltage ranges, currents, power states, I2C address choices, unknown part mapping
-  (type and pin mapping)
-- 📋 `CFG-3` Waivers: check, nets involved, user, comment, date; one-click waiver; voting (disagree first)
+- 🚧 `CFG-2` Project file: `<name>.berc.toml` beside the `.kicad_pro`, else `berc.toml`, read by `Project::open`
+  (`erc_checks/src/project_file/`); errors name the file and key, unknown keys are report notes. `[nets]` voltage or
+  range per net name, ranked above the name in the power analysis (`ProjectNets`); `[derating]` factors per part class
+  and technology with defaults in code (`Ctx::derating`); `[checks]` disabled, severity, thresholds; `[drawing]` shared
+  settings; `--set` wins. Docs: `docs/project-file.md`. Missing: currents, net kinds, bus speeds, power states,
+  connectors, `[parts.map]` and `[pins.map]`, `[intent]`, directive labels as a second source, `berc init`
+- 🚧 `CFG-3` Waivers: `[[waiver]]` by fingerprint with who, date, reason, optional expiry, board and input hash
+  (`Finding::input_hash`, `finding::input_hash`); applied after the run, shown as waived and out of the verdict; stale
+  (input hash changed), expired and unmatched waivers are report notes; `berc waive` appends one; SARIF suppressions.
+  Missing: one-click waiver in the app, voting (disagree first)
 - 📋 `CFG-4` File-based config format for open source (RON?)
 - 📋 `CFG-5` Custom rules for parts in the database
 - 📋 `CFG-6` Selection constraints in the part database's `required` entries: one typed vocabulary of passive parameters
