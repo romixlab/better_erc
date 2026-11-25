@@ -12,6 +12,7 @@ use std::path::{Path, PathBuf};
 
 mod accept;
 mod check;
+pub mod group;
 mod library;
 pub mod model;
 pub mod outline;
@@ -22,6 +23,7 @@ pub use accept::{
     set_symbol_footprint, sheets_and_symbols, today,
 };
 pub use check::{FpCheck, FpCheckError, FpEntry, FpStatus, check};
+pub use group::{FactTable, FootprintTodo};
 pub use library::{
     CheckedLibrary, LibCheck, LibCheckError, LibCheckOptions, LibrarySearch, SymbolEntry,
     SymbolStatus, check_libraries,

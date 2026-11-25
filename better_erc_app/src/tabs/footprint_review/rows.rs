@@ -1,8 +1,10 @@
-//! The review list's rows: on a board one per board footprint hash and what one review of it covers (a family, else
-//! one MPN), as `berc fp todo` lists them; in a symbol library one per library symbol, as `berc fp check --lib`
-//! judges it. Each row knows the footprint to show and the reviews of the part source that name it.
+//! The review list's rows: on a board one per board footprint hash, with the families and MPNs placed with it (what
+//! `berc fp todo` lists under the footprint), since one review of a footprint against a datasheet covers every one
+//! of them the datasheet covers; in a symbol library one per library symbol, as `berc fp check --lib` judges it.
+//! Each row knows the footprint to show and the reviews of the part source that name it.
 
 use super::*;
+use better_erc::fp::FootprintTodo;
 use better_erc::fp::pairs::PairStatus;
 use better_erc::parts::lock::{Cover, LockedReview};
 use ve_theme::Tone;
@@ -10,8 +12,8 @@ use ve_theme::Tone;
 /// One row of the review list
 #[derive(Clone, Debug)]
 pub(super) enum Row {
-    /// A board footprint hash and its cover
-    Board(Box<TodoEntry>),
+    /// A board footprint hash, its families and MPNs
+    Board(Box<FootprintTodo>),
     /// A library symbol
     Library(Box<SymbolEntry>),
 }
@@ -27,42 +29,29 @@ pub(super) struct Recorded {
 }
 
 impl Row {
-    /// What finds the row again after the list is read anew: the symbol, or the footprint, its cover and first
-    /// reference
+    /// What finds the row again after the list is read anew: the symbol, or the footprint and its first reference
     pub fn key(&self) -> String {
         match self {
-            Row::Board(e) => format!(
-                "{} {} {}",
-                e.footprint,
-                self.cover_label(),
-                e.references.first().map_or("", String::as_str)
+            Row::Board(g) => format!(
+                "{} {}",
+                g.footprint(),
+                g.references().first().map_or("", String::as_str)
             ),
             Row::Library(e) => e.symbol.clone(),
         }
     }
 
-    /// The row's title: the footprint and what a review covers, or the library symbol
+    /// The row's title: the footprint and what a review of it covers, or the library symbol
     pub fn title(&self) -> String {
         match self {
-            Row::Board(e) => format!("{} · {}", e.footprint, self.cover_label()),
+            Row::Board(g) => format!("{} · {}", g.footprint(), covers_label(&g.entries)),
             Row::Library(e) => e.symbol.clone(),
-        }
-    }
-
-    /// What a review of a board row covers, for the person
-    fn cover_label(&self) -> String {
-        match self {
-            Row::Board(e) => e
-                .cover
-                .as_ref()
-                .map_or_else(|| "no MPN".to_owned(), Cover::describe),
-            Row::Library(_) => String::new(),
         }
     }
 
     pub fn status_name(&self) -> &'static str {
         match self {
-            Row::Board(e) => e.status.name(),
+            Row::Board(g) => g.status().name(),
             Row::Library(e) => e.status.name(),
         }
     }
@@ -70,7 +59,7 @@ impl Row {
     /// What the status means, as a tone (the word says it, the tone backs it up)
     pub fn tone(&self) -> Tone {
         match self {
-            Row::Board(e) => match e.status {
+            Row::Board(g) => match g.status() {
                 TodoStatus::Covered => Tone::Good,
                 TodoStatus::Changed | TodoStatus::NoMpn => Tone::Crit,
                 TodoStatus::OtherVersion | TodoStatus::Uncovered => Tone::Warn,
@@ -91,7 +80,7 @@ impl Row {
     /// A review is the next step
     pub fn needs_review(&self) -> bool {
         match self {
-            Row::Board(e) => e.needs_review(),
+            Row::Board(g) => g.needs_review(),
             Row::Library(e) => e.status.needs_review(),
         }
     }
@@ -99,15 +88,15 @@ impl Row {
     /// Nothing open: reviewed, or nothing to review
     pub fn is_done(&self) -> bool {
         match self {
-            Row::Board(e) => e.is_ok(),
+            Row::Board(g) => g.is_ok(),
             Row::Library(e) => e.status.is_ok(),
         }
     }
 
-    /// The symbol (`Lib:Name`): the library symbol, or the first reference's on a board
+    /// The symbol (`Lib:Name`): the library symbol, or on a board the first entry to review's (else the first's)
     pub fn symbol(&self) -> Option<&str> {
         match self {
-            Row::Board(e) => e.symbol.as_deref(),
+            Row::Board(g) => lead(g).symbol.as_deref(),
             Row::Library(e) => Some(&e.symbol),
         }
     }
@@ -115,7 +104,7 @@ impl Row {
     /// The footprint's `Lib:Name`: placed on the board, or the symbol's `Footprint` field
     pub fn footprint(&self) -> Option<&str> {
         match self {
-            Row::Board(e) => Some(&e.footprint),
+            Row::Board(g) => Some(g.footprint()),
             Row::Library(e) => e.footprint.as_deref(),
         }
     }
@@ -123,41 +112,50 @@ impl Row {
     /// The review hash a review of the row is made for: the board footprint's, or the library footprint's
     pub fn hash(&self) -> Option<&str> {
         match self {
-            Row::Board(e) => Some(&e.hash),
+            Row::Board(g) => Some(&g.hash),
             Row::Library(e) => e.hash.as_deref(),
         }
     }
 
+    /// The `Datasheet` field: on a board the first entry to review's that has one
     pub fn datasheet(&self) -> Option<&str> {
         match self {
-            Row::Board(e) => e.datasheet.as_deref(),
+            Row::Board(g) => {
+                let open = g.entries.iter().filter(|e| e.needs_review());
+                open.chain(&g.entries).find_map(|e| e.datasheet.as_deref())
+            }
             Row::Library(e) => e.datasheet.as_deref(),
         }
     }
 
     /// The MPNs a review of the row is for
-    pub fn mpns(&self) -> &[String] {
+    pub fn mpns(&self) -> Vec<String> {
         match self {
-            Row::Board(e) => &e.mpns,
-            Row::Library(e) => &e.mpns,
+            Row::Board(g) => g.mpns(),
+            Row::Library(e) => e.mpns.clone(),
         }
     }
 
     /// The board footprints of a board row, in natural order; none for a library row
-    pub fn references(&self) -> &[String] {
+    pub fn references(&self) -> Vec<String> {
         match self {
-            Row::Board(e) => &e.references,
-            Row::Library(_) => &[],
+            Row::Board(g) => g.references(),
+            Row::Library(_) => Vec::new(),
         }
     }
 
     /// The family `mpn` is in, when its MPN decodes into one: what one review covers for every part of it
     pub fn family_of(&self, mpn: &str) -> Option<Cover> {
         match self {
-            Row::Board(e) => e
-                .cover
-                .clone()
-                .filter(|c| matches!(c, Cover::Family { .. }) && e.mpns.iter().any(|m| m == mpn)),
+            Row::Board(g) => g
+                .entries
+                .iter()
+                .filter(|e| e.mpns.iter().any(|m| m == mpn))
+                .find_map(|e| {
+                    e.cover
+                        .clone()
+                        .filter(|c| matches!(c, Cover::Family { .. }))
+                }),
             Row::Library(e) => e
                 .pairs
                 .iter()
@@ -169,44 +167,69 @@ impl Row {
     /// The footprint the board places for every reference instead of its symbol's own `Footprint`, when it is the
     /// same for all of them: the symbol's `Footprint` can be set to it on Accept
     pub fn overridden_footprint(&self) -> Option<&str> {
-        let Row::Board(e) = self else { return None };
-        (e.overridden.len() == e.references.len() && !e.overridden.is_empty())
-            .then_some(e.footprint.as_str())
+        let Row::Board(g) = self else { return None };
+        let refs = g.references();
+        let over: Vec<&String> = refs
+            .iter()
+            .filter(|r| {
+                g.entries
+                    .iter()
+                    .any(|e| e.overridden.iter().any(|(o, _)| o == *r))
+            })
+            .collect();
+        let one_footprint = g.footprints().len() == 1;
+        (one_footprint && !over.is_empty() && over.len() == refs.len()).then_some(g.footprint())
     }
 
     /// The symbol's own `Footprint` where the board places another
     pub fn symbol_footprint(&self) -> Option<&str> {
         match self {
-            Row::Board(e) => e.overridden.first().map(|(_, f)| f.as_str()),
+            Row::Board(g) => g
+                .entries
+                .iter()
+                .find_map(|e| e.overridden.first().map(|(_, f)| f.as_str())),
             Row::Library(e) => e.footprint.as_deref(),
         }
     }
 
-    pub fn disallowed(&self) -> impl Iterator<Item = &String> {
-        let (a, b) = match self {
-            Row::Board(e) => (
+    /// The libraries outside the allowed ones the row's symbols and footprint are in
+    pub fn disallowed(&self) -> Vec<&String> {
+        let mut out: Vec<&String> = match self {
+            Row::Board(g) => g
+                .entries
+                .iter()
+                .flat_map(|e| {
+                    [
+                        &e.symbol_library_disallowed,
+                        &e.footprint_library_disallowed,
+                    ]
+                })
+                .flatten()
+                .collect(),
+            Row::Library(e) => [
                 &e.symbol_library_disallowed,
                 &e.footprint_library_disallowed,
-            ),
-            Row::Library(e) => (
-                &e.symbol_library_disallowed,
-                &e.footprint_library_disallowed,
-            ),
+            ]
+            .into_iter()
+            .flatten()
+            .collect(),
         };
-        a.iter().chain(b)
+        out.sort();
+        out.dedup();
+        out
     }
 
     /// Why the row's footprint or symbol could not be read, or what it says of the library footprint
     pub fn note(&self) -> Option<String> {
         match self {
-            Row::Board(e) => match (&e.library_hash, &e.library_file) {
-                (Some(h), _) if *h != e.hash => Some(format!(
+            Row::Board(g) => match (&lead(g).library_hash, &lead(g).library_file) {
+                (Some(h), _) if *h != g.hash => Some(format!(
                     "the board's copy is not its library's footprint now ({h}): update the board from the library, or \
                      review the copy as placed"
                 )),
-                (None, None) if e.footprint.contains(':') => Some(format!(
+                (None, None) if g.footprint().contains(':') => Some(format!(
                     "{} is in no footprint library found: the board's copy is reviewed",
-                    e.footprint
+                    g.footprint()
                 )),
                 _ => None,
             },
@@ -249,12 +272,14 @@ impl Row {
             }
         };
         match self {
-            Row::Board(e) => {
-                for id in &e.covered_by {
-                    add(*id, &e.mpns, true);
-                }
-                for o in &e.other {
-                    add(o.id, &e.mpns, false);
+            Row::Board(g) => {
+                for e in &g.entries {
+                    for id in &e.covered_by {
+                        add(*id, &e.mpns, true);
+                    }
+                    for o in &e.other {
+                        add(o.id, &e.mpns, false);
+                    }
                 }
             }
             Row::Library(e) => {
@@ -275,8 +300,12 @@ impl Row {
     /// The MPNs of the row the part source has no part of
     pub fn unknown_mpns(&self) -> Vec<String> {
         match self {
-            Row::Board(e) if e.status == TodoStatus::UnknownMpn => e.mpns.clone(),
-            Row::Board(_) => Vec::new(),
+            Row::Board(g) => g
+                .entries
+                .iter()
+                .filter(|e| e.status == TodoStatus::UnknownMpn)
+                .flat_map(|e| e.mpns.clone())
+                .collect(),
             Row::Library(e) => e
                 .pairs
                 .iter()
@@ -285,6 +314,47 @@ impl Row {
                 .collect(),
         }
     }
+}
+
+/// The entry of a board row a review is for first: the first to review, else the first
+fn lead(g: &FootprintTodo) -> &TodoEntry {
+    g.to_review()
+        .next()
+        .or_else(|| g.entries.first())
+        .expect("a footprint has an entry")
+}
+
+/// What a review of these entries covers, for the person: the one family or MPN, else how many of each
+fn covers_label(entries: &[TodoEntry]) -> String {
+    if let [e] = entries {
+        return e
+            .cover
+            .as_ref()
+            .map_or_else(|| "no MPN".to_owned(), Cover::describe);
+    }
+    let families = entries
+        .iter()
+        .filter(|e| matches!(e.cover, Some(Cover::Family { .. })))
+        .count();
+    let mpns = entries
+        .iter()
+        .filter(|e| matches!(e.cover, Some(Cover::Mpn { .. })))
+        .count();
+    let mut parts = Vec::new();
+    match families {
+        0 => {}
+        1 => parts.push("1 family".to_owned()),
+        n => parts.push(format!("{n} families")),
+    }
+    match mpns {
+        0 => {}
+        1 => parts.push("1 MPN".to_owned()),
+        n => parts.push(format!("{n} MPNs")),
+    }
+    if entries.iter().any(|e| e.cover.is_none()) {
+        parts.push("no MPN".to_owned());
+    }
+    parts.join(", ")
 }
 
 /// What a review was made against, for the person: the document and revision, else the PDF, and the page

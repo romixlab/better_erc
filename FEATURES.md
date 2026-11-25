@@ -1033,7 +1033,8 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   missing, unjudged (no `--from`), no MPN and no footprint (not failures). `berc fp todo [PROJECT]` (`fp::todo`):
   one entry per board footprint hash and cover (a family, else one MPN) with its MPNs and references, review order
   (changed, other version, uncovered), then what can't be reviewed yet (not in lock, unknown MPN, no MPN), reviewed
-  ones with `--all`; JSON with the covering and earlier reviews (`covered_by`, `other`, `reviews`), the library
+  ones with `--all`; the text one line per footprint hash (`FpTodo::by_footprint`) with its entries under it and
+  the facts its parts differ in (`fp::FactTable`); JSON with the covering and earlier reviews (`covered_by`, `other`, `reviews`), the library
   footprint file and hash, the datasheet and the files read. `--symbols` and `--footprints` put libraries ahead of
   the tables. Nothing is stored on symbols: the `Footprint_Review` field and its review lines are gone, not
   migrated · `erc_model/src/fphash.rs`, `erc_parts/src/source.rs`, `erc_parts/src/lock.rs`,
@@ -1063,8 +1064,11 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `TOOL-11` Where a footprint review was made, kept with the review in the part source: the document number and
   revision, the PDF's blake3 from the document library's index (`tpm lib docs --json --all`, a setting), the page,
   the scale, the footprint's placement, the reviewer (a setting), the day and the review note. The review tab's
-  Accept asks which MPNs the datasheet covers, alone or by family: a board row's all ticked, a library row's those
-  in the PDF's text or covered by a review made on it, not one a review on another datasheet covers. Opening a
+  Accept asks which MPNs the datasheet covers, alone or by family: those in the PDF's text or covered by a review
+  made on it, not one a review on another datasheet covers; none of them in the text: every one not covered yet.
+  A board's list has one row per footprint hash: under the picked row the families and MPNs still to review and
+  how their parts differ (the facts of the parts snapshot whose values differ, one line per MPN; the shared ones
+  folded), so one Accept covers every variant a footprint does not care about. Opening a
   reviewed row opens the recorded PDF (by its hash, else its document number, through `tpm lib open --json`) and
   restores page, scale and placement; a review of an earlier hash or a PDF not found is said. Each datasheet keeps
   its own view per row (page, zoom, scale, placements, ruler, note), saved with the tab: switching datasheets and

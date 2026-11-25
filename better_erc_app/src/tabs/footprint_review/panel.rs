@@ -373,6 +373,10 @@ impl FootprintReview {
                     }
                 }
             });
+            if let Some(rows::Row::Board(g)) = row {
+                open_covers(ui, g);
+                fact_table(ui, &g.facts);
+            }
             if let Some(r) = row {
                 for lib in r.disallowed() {
                     notice(
@@ -1444,13 +1448,12 @@ impl FootprintReview {
                 });
         }
         if let Some(row) = self.target_row() {
-            let open: Vec<&String> = row
+            let open: Vec<String> = row
                 .mpns()
-                .iter()
+                .into_iter()
                 .filter(|m| !rec.iter().any(|r| r.current && r.mpns.contains(m)))
                 .collect();
             if !open.is_empty() && row.needs_review() {
-                let open: Vec<&str> = open.iter().map(|m| m.as_str()).collect();
                 notice(
                     ui,
                     Tone::Warn,
@@ -1857,5 +1860,87 @@ impl FootprintReview {
         if let Some(n) = &self.rt.settings_note {
             hint(ui, n);
         }
+    }
+}
+
+/// The families and MPNs of a board row a review is still to cover, each with its status and references
+fn open_covers(ui: &mut Ui, g: &better_erc::fp::FootprintTodo) {
+    let open: Vec<&TodoEntry> = g.entries.iter().filter(|e| !e.is_ok()).collect();
+    if open.is_empty() || g.entries.len() < 2 {
+        return;
+    }
+    ui.label(RichText::new(format!("Still to review ({} of {})", open.len(), g.entries.len())).strong())
+        .on_hover_text(
+            "one Accept records one review for every family and MPN ticked: those the open datasheet covers",
+        );
+    egui::Grid::new("open covers")
+        .num_columns(2)
+        .striped(true)
+        .show(ui, |ui| {
+            for e in open {
+                ui.label(e.status.name());
+                let what = match &e.cover {
+                    Some(c @ better_erc::parts::lock::Cover::Family { .. }) => {
+                        format!("family {}: {}", c.describe(), e.mpns.join(", "))
+                    }
+                    Some(c) => c.describe(),
+                    None => "no MPN".to_owned(),
+                };
+                ui.add(Label::new(what).wrap())
+                    .on_hover_text(format!("on {}", e.references.join(" ")));
+                ui.end_row();
+            }
+        });
+}
+
+/// How the parts of a row's MPNs differ: one line per MPN with the facts whose values differ, and the facts they
+/// share, folded
+fn fact_table(ui: &mut Ui, t: &better_erc::fp::FactTable) {
+    if t.mpns.len() < 2 || t.is_empty() {
+        return;
+    }
+    if t.differ.is_empty() {
+        ui.label("The parts differ in no fact the parts snapshot holds");
+    } else {
+        ui.label(RichText::new("How the parts differ").strong()).on_hover_text(
+            "from the parts snapshot: only the facts whose values differ; a footprint review cares for none of \
+             them unless they are the package",
+        );
+        egui::ScrollArea::horizontal()
+            .id_salt("fact table")
+            .show(ui, |ui| {
+                egui::Grid::new("fact table grid")
+                    .striped(true)
+                    .show(ui, |ui| {
+                        ui.label(RichText::new("MPN").weak());
+                        for (k, _) in &t.differ {
+                            ui.label(RichText::new(k).weak());
+                        }
+                        ui.end_row();
+                        for (i, m) in t.mpns.iter().enumerate() {
+                            ui.label(m);
+                            for (_, values) in &t.differ {
+                                ui.label(
+                                    values
+                                        .get(i)
+                                        .cloned()
+                                        .flatten()
+                                        .unwrap_or_else(|| "-".into()),
+                                );
+                            }
+                            ui.end_row();
+                        }
+                    });
+            });
+    }
+    if !t.same.is_empty() {
+        egui::CollapsingHeader::new(format!("The same for all ({})", t.same.len()))
+            .id_salt("facts same")
+            .default_open(false)
+            .show(ui, |ui| {
+                for (k, v) in &t.same {
+                    ui.label(format!("{k}: {v}"));
+                }
+            });
     }
 }

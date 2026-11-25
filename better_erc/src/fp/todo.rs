@@ -3,12 +3,13 @@
 //! datasheet covers every part of the family placed with it, on this board and every other.
 
 use super::check::{Opened, field_of, is_lib_name};
+use super::group::{self, FootprintTodo};
 use super::library::lib_allowed;
 use super::pairs::{self, OtherReview, PairStatus};
 use super::{FootprintLibraries, FpCheckError, LibrarySearch};
 use erc_model::fphash;
 use erc_model::layout::FootprintId;
-use erc_parts::lock::{Cover, LockedReview};
+use erc_parts::lock::{Cover, LockedPart, LockedReview};
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
@@ -151,6 +152,9 @@ pub struct FpTodo {
     /// used or looked for in vain. When one of them changes the list is out of date (the review tab watches them)
     #[serde(default)]
     pub files: Vec<PathBuf>,
+    /// The parts snapshot's parts of the entries' MPNs, for [`FpTodo::by_footprint`]
+    #[serde(skip)]
+    pub parts: Vec<LockedPart>,
 }
 
 /// One board footprint as a todo entry takes it in
@@ -355,16 +359,28 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
         .iter()
         .filter_map(|id| lock.review(*id).cloned())
         .collect();
+    let parts = lock
+        .parts
+        .iter()
+        .filter(|p| entries.iter().any(|e| e.mpns.contains(&p.mpn)))
+        .cloned()
+        .collect();
     Ok(FpTodo {
         board: project.dir.join(&lay.file),
         lock: project.parts_lock_path(),
         entries,
         reviews,
         files,
+        parts,
     })
 }
 
 impl FpTodo {
+    /// The entries by footprint hash, in the order to review them: what one review of a footprint can cover
+    pub fn by_footprint(&self) -> Vec<FootprintTodo> {
+        group::by_footprint(&self.entries, &self.parts)
+    }
+
     /// The entries that need a review, in the order to review them
     pub fn to_review(&self) -> impl Iterator<Item = &TodoEntry> {
         self.entries.iter().filter(|e| e.needs_review())
@@ -394,53 +410,49 @@ impl FpTodo {
         serde_json::to_string_pretty(self).expect("serialises")
     }
 
-    /// One line per entry to review, then those that can't be under their own heading, then (with `all`) the
-    /// reviewed ones, else their count and how to list them; statuses in colour (the caller's stream drops it off a
-    /// terminal)
+    /// One line per footprint hash with a review to do, its families and MPNs under it; then the footprints that
+    /// can't be reviewed under their own heading; then (with `all`) the reviewed ones, else their count and how to
+    /// list them. Statuses in colour (the caller's stream drops it off a terminal).
     pub fn to_text_color(&self, all: bool) -> String {
-        use anstyle::{AnsiColor, Style};
         use std::fmt::Write as _;
-        let style = |s: TodoStatus| match s {
-            TodoStatus::Covered => AnsiColor::Green.on_default(),
-            TodoStatus::Changed => AnsiColor::Red.on_default().bold(),
-            TodoStatus::OtherVersion | TodoStatus::Uncovered => {
-                AnsiColor::Yellow.on_default().bold()
-            }
-            TodoStatus::NotInLock | TodoStatus::UnknownMpn | TodoStatus::NoMpn => {
-                AnsiColor::Cyan.on_default()
-            }
-        };
-        let dim = Style::new().dimmed();
-        let shown: Vec<&TodoEntry> = self
-            .entries
-            .iter()
-            .filter(|e| all || !e.is_ok() || e.is_overridden() || !e.is_allowed())
+        let dim = anstyle::Style::new().dimmed();
+        let shown_entry = |e: &TodoEntry| all || !e.is_ok() || e.is_overridden() || !e.is_allowed();
+        let groups: Vec<FootprintTodo> = self
+            .by_footprint()
+            .into_iter()
+            .filter(|g| g.entries.iter().any(shown_entry))
             .collect();
-        let fp_width = shown.iter().map(|e| e.footprint.len()).max().unwrap_or(0);
-        let what = |e: &TodoEntry| match &e.cover {
-            Some(c @ Cover::Family { .. }) => format!("family {}", c.describe()),
-            Some(Cover::Mpn { mpn }) => mpn.clone(),
-            None => e.symbol.clone().unwrap_or_default(),
-        };
-        let what_width = shown.iter().map(|e| what(e).len()).max().unwrap_or(0);
-        let mut out = String::new();
-        let blocked = shown
+        let fp_width = groups
             .iter()
-            .filter(|e| !e.needs_review() && !e.is_ok())
+            .map(|g| g.footprints().join(" ").len())
+            .max()
+            .unwrap_or(0);
+        let what_width = groups
+            .iter()
+            .flat_map(|g| &g.entries)
+            .filter(|e| shown_entry(e))
+            .map(|e| what(e).len())
+            .max()
+            .unwrap_or(0);
+        let all_groups = self.by_footprint();
+        let blocked = groups
+            .iter()
+            .filter(|g| !g.needs_review() && !g.is_ok())
             .count();
-        let done = self.entries.iter().filter(|e| e.is_ok()).count();
+        let done = all_groups.iter().filter(|g| g.is_ok()).count();
+        let mut out = String::new();
         let mut heading_for = None;
-        for e in &shown {
-            let group = if e.needs_review() {
+        for g in &groups {
+            let bucket = if g.needs_review() {
                 0
-            } else if e.is_ok() {
+            } else if g.is_ok() {
                 2
             } else {
                 1
             };
-            if heading_for != Some(group) {
-                heading_for = Some(group);
-                match group {
+            if heading_for != Some(bucket) {
+                heading_for = Some(bucket);
+                match bucket {
                     1 => {
                         let _ = writeln!(
                             out,
@@ -453,90 +465,37 @@ impl FpTodo {
                     _ => {}
                 }
             }
-            let st = style(e.status);
+            let st = style(g.status());
             let _ = write!(
                 out,
-                "{st}{:<13}{st:#} {:<fp_width$} {:<what_width$} {}",
-                e.status.name(),
-                e.footprint,
-                what(e),
-                e.hash
+                "{st}{:<13}{st:#} {:<fp_width$} {}",
+                g.status().name(),
+                g.footprints().join(" "),
+                g.hash
             );
-            if matches!(e.cover, Some(Cover::Family { .. })) {
-                let _ = write!(out, "  {dim}MPNs{dim:#} {}", e.mpns.join(" "));
-            }
-            let _ = write!(out, "  {dim}on{dim:#} {}", e.references.join(" "));
-            if !e.other.is_empty() {
-                let others: Vec<String> = e
-                    .other
-                    .iter()
-                    .map(|o| format!("#{} {}", o.id, o.hash))
-                    .collect();
-                let _ = write!(
-                    out,
-                    "\n{:13} {dim}reviewed as{dim:#} {}",
-                    "",
-                    others.join(", ")
-                );
-            }
-            if let (Some(lib), Some(file)) = (&e.library_hash, &e.library_file)
-                && *lib != e.hash
-            {
-                let warn = AnsiColor::Yellow.on_default();
-                let _ = write!(
-                    out,
-                    "\n{:13} {warn}library footprint {} has {lib}: update the board from the library before \
-                     reviewing{warn:#}",
-                    "",
-                    file.display()
-                );
-            }
-            if e.status == TodoStatus::NotInLock {
-                let _ = write!(
-                    out,
-                    "\n{:13} {dim}not in {}: run `berc parts refresh`{dim:#}",
-                    "",
-                    self.lock.display()
-                );
-            }
-            if !e.overridden.is_empty() {
-                let note = AnsiColor::Cyan.on_default();
-                let placed: Vec<String> = e
-                    .overridden
-                    .iter()
-                    .map(|(r, fp)| format!("{r} (symbol sets {fp})"))
-                    .collect();
-                let _ = write!(
-                    out,
-                    "\n{:13} {note}placed as {}: {}: the review follows the board, not the symbol's own \
-                     Footprint{note:#}",
-                    "",
-                    e.footprint,
-                    placed.join(", "),
-                );
-            }
-            if let Some(lib) = &e.symbol_library_disallowed {
-                let warn = AnsiColor::Yellow.on_default();
-                let _ = write!(
-                    out,
-                    "\n{:13} {warn}symbol library {lib} is not in the allowed libraries{warn:#}",
-                    "",
-                );
-            }
-            if let Some(lib) = &e.footprint_library_disallowed {
-                let warn = AnsiColor::Yellow.on_default();
-                let _ = write!(
-                    out,
-                    "\n{:13} {warn}footprint library {lib} is not in the allowed libraries{warn:#}",
-                    "",
-                );
+            let open = g.to_review().count();
+            if open > 0 {
+                let _ = write!(out, "  {dim}{open} of {} to review{dim:#}", g.entries.len());
             }
             out.push('\n');
+            if !g.facts.differ.is_empty() && g.facts.mpns.len() > 1 {
+                let keys: Vec<&str> = g.facts.differ.iter().map(|(k, _)| k.as_str()).collect();
+                let _ = writeln!(
+                    out,
+                    "{:13}   {dim}the parts differ in{dim:#} {}",
+                    "",
+                    keys.join(", ")
+                );
+            }
+            for e in g.entries.iter().filter(|e| shown_entry(e)) {
+                self.entry_text(&mut out, e, what_width);
+            }
         }
-        if !all && done > 0 {
+        let hidden = self.entries.iter().filter(|e| !shown_entry(e)).count();
+        if hidden > 0 {
             let _ = writeln!(
                 out,
-                "{dim}{done} reviewed, not listed: --all lists them{dim:#}"
+                "{dim}{hidden} reviewed, not listed: --all lists them{dim:#}"
             );
         }
         let counts: Vec<String> = self
@@ -549,10 +508,11 @@ impl FpTodo {
             .collect();
         let _ = write!(
             out,
-            "{}: {} footprint pairs, {} to review: {}",
+            "{}: {} footprints, {} to review; {} footprint pairs: {}",
             self.board.display(),
+            all_groups.len(),
+            all_groups.iter().filter(|g| g.needs_review()).count(),
             self.entries.len(),
-            self.to_review().count(),
             if counts.is_empty() {
                 "none".to_string()
             } else {
@@ -569,5 +529,112 @@ impl FpTodo {
         }
         out.push('\n');
         out
+    }
+
+    /// One entry under its footprint's line: its status, family or MPN, references, and what stands in its way
+    fn entry_text(&self, out: &mut String, e: &TodoEntry, what_width: usize) {
+        use anstyle::AnsiColor;
+        use std::fmt::Write as _;
+        let dim = anstyle::Style::new().dimmed();
+        let pad = "";
+        let st = style(e.status);
+        let _ = write!(
+            out,
+            "{pad:13}   {st}{:<13}{st:#} {:<what_width$}",
+            e.status.name(),
+            what(e)
+        );
+        if matches!(e.cover, Some(Cover::Family { .. })) {
+            let _ = write!(out, "  {dim}MPNs{dim:#} {}", e.mpns.join(" "));
+        }
+        let _ = write!(out, "  {dim}on{dim:#} {}", e.references.join(" "));
+        let note = |out: &mut String, text: String| {
+            let _ = write!(out, "\n{pad:13}{pad:17}{text}");
+        };
+        if !e.other.is_empty() {
+            let others: Vec<String> = e
+                .other
+                .iter()
+                .map(|o| format!("#{} {}", o.id, o.hash))
+                .collect();
+            note(
+                out,
+                format!("{dim}reviewed as{dim:#} {}", others.join(", ")),
+            );
+        }
+        let warn = AnsiColor::Yellow.on_default();
+        if let (Some(lib), Some(file)) = (&e.library_hash, &e.library_file)
+            && *lib != e.hash
+        {
+            note(
+                out,
+                format!(
+                    "{warn}library footprint {} has {lib}: update the board from the library before \
+                     reviewing{warn:#}",
+                    file.display()
+                ),
+            );
+        }
+        if e.status == TodoStatus::NotInLock {
+            note(
+                out,
+                format!(
+                    "{dim}not in {}: run `berc parts refresh`{dim:#}",
+                    self.lock.display()
+                ),
+            );
+        }
+        if !e.overridden.is_empty() {
+            let cyan = AnsiColor::Cyan.on_default();
+            let placed: Vec<String> = e
+                .overridden
+                .iter()
+                .map(|(r, fp)| format!("{r} (symbol sets {fp})"))
+                .collect();
+            note(
+                out,
+                format!(
+                    "{cyan}placed as {}: {}: the review follows the board, not the symbol's own \
+                     Footprint{cyan:#}",
+                    e.footprint,
+                    placed.join(", "),
+                ),
+            );
+        }
+        if let Some(lib) = &e.symbol_library_disallowed {
+            note(
+                out,
+                format!("{warn}symbol library {lib} is not in the allowed libraries{warn:#}"),
+            );
+        }
+        if let Some(lib) = &e.footprint_library_disallowed {
+            note(
+                out,
+                format!("{warn}footprint library {lib} is not in the allowed libraries{warn:#}"),
+            );
+        }
+        out.push('\n');
+    }
+}
+
+/// A status in its colour
+fn style(s: TodoStatus) -> anstyle::Style {
+    use anstyle::AnsiColor;
+    match s {
+        TodoStatus::Covered => AnsiColor::Green.on_default(),
+        TodoStatus::Changed => AnsiColor::Red.on_default().bold(),
+        TodoStatus::OtherVersion | TodoStatus::Uncovered => AnsiColor::Yellow.on_default().bold(),
+        TodoStatus::NotInLock | TodoStatus::UnknownMpn | TodoStatus::NoMpn => {
+            AnsiColor::Cyan.on_default()
+        }
+    }
+}
+
+/// What an entry stands for: its family, its MPN, or (no MPN) its symbol
+fn what(e: &TodoEntry) -> String {
+    match &e.cover {
+        Some(c @ Cover::Family { .. }) => format!("family {}", c.describe()),
+        Some(Cover::Mpn { mpn }) => mpn.clone(),
+        None => e.symbol.clone().unwrap_or_default(),
     }
 }

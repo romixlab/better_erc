@@ -174,6 +174,26 @@ impl PdfDoc {
         }
     }
 
+    /// `path` as a document whose reader has not answered yet and never does: the test sets [`pages`](Self::pages)
+    /// when the page sizes are to arrive (tests)
+    #[cfg(test)]
+    pub fn unread(path: &Path) -> PdfDoc {
+        PdfDoc {
+            path: path.to_path_buf(),
+            pages: None,
+            error: None,
+            texts: Vec::new(),
+            geometry: Vec::new(),
+            picture: None,
+            inverted: None,
+            asked: None,
+            requests: channel().0,
+            replies: channel().1,
+            idle: false,
+            wakes: false,
+        }
+    }
+
     /// Takes in what the reader thread sent; true when something changed
     pub fn poll(&mut self, ctx: &egui::Context) -> bool {
         let mut changed = false;

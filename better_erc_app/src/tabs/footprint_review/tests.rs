@@ -618,21 +618,41 @@ fn blend_modes_mix_with_the_page() {
 /// library symbol `Rev:Mixed` with MPN `TEST-PART`, with the library file, a sym-lib-table, a part source
 /// (`parts.toml`) and the parts snapshot refreshed from it; returns the board
 fn project(dir: &Path) -> PathBuf {
+    parts_file(dir, &["TEST-PART"]);
+    project_of(dir, &["TEST-PART"])
+}
+
+/// [`project`] with the MPNs `mpns` on every symbol (Mpn1, Mpn2, ...), its part source `parts.toml` written by the
+/// caller first
+fn project_of(dir: &Path, mpns: &[&str]) -> PathBuf {
+    let mpn_props = |x: i32| -> String {
+        mpns.iter()
+            .enumerate()
+            .map(|(i, m)| {
+                format!(
+                    "    (property \"Mpn{}\" \"{m}\" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))\n",
+                    i + 1
+                )
+            })
+            .collect()
+    };
     let fixtures =
         Path::new(env!("CARGO_MANIFEST_DIR")).join("../erc_kicad/tests/fixtures/footprints");
     let board = dir.join("rev.kicad_pcb");
     std::fs::copy(fixtures.join("placed.kicad_pcb"), &board).unwrap();
     let symbol = |name: &str| {
         format!(
-            "(symbol \"{name}\" (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n    (property \"Value\" \"Mixed\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Mixed_Pads\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (property \"Mpn1\" \"TEST-PART\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (symbol \"Mixed_1_1\" (pin passive line (at 0 0 0) (length 1.27) (name \"A\" (effects (font (size 1.27 1.27)))) (number \"1\" (effects (font (size 1.27 1.27)))))))\n"
+            "(symbol \"{name}\" (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n    (property \"Value\" \"Mixed\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Mixed_Pads\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))\n{}    (symbol \"Mixed_1_1\" (pin passive line (at 0 0 0) (length 1.27) (name \"A\" (effects (font (size 1.27 1.27)))) (number \"1\" (effects (font (size 1.27 1.27)))))))\n",
+            mpn_props(0)
         )
     };
     let root = "b0000000-0000-4000-8000-000000000000";
     let placed: String = (7..=12)
         .map(|n| {
             format!(
-                "  (symbol (lib_id \"Rev:Mixed\") (at {x} 50 0) (unit 1) (in_bom yes) (on_board yes) (dnp no) (uuid \"b0000000-0000-4000-8000-0000000001{n:02}\")\n    (property \"Reference\" \"U{n}\" (at {x} 45 0) (effects (font (size 1.27 1.27))))\n    (property \"Value\" \"Mixed\" (at {x} 55 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Mixed_Pads\" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (property \"Mpn1\" \"TEST-PART\" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))\n    (pin \"1\" (uuid \"b0000000-0000-4000-8000-0000000002{n:02}\"))\n    (instances (project \"rev\" (path \"/{root}\" (reference \"U{n}\") (unit 1)))))\n",
-                x = 20 * n
+                "  (symbol (lib_id \"Rev:Mixed\") (at {x} 50 0) (unit 1) (in_bom yes) (on_board yes) (dnp no) (uuid \"b0000000-0000-4000-8000-0000000001{n:02}\")\n    (property \"Reference\" \"U{n}\" (at {x} 45 0) (effects (font (size 1.27 1.27))))\n    (property \"Value\" \"Mixed\" (at {x} 55 0) (effects (font (size 1.27 1.27))))\n    (property \"Footprint\" \"Test:Mixed_Pads\" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))\n{props}    (pin \"1\" (uuid \"b0000000-0000-4000-8000-0000000002{n:02}\"))\n    (instances (project \"rev\" (path \"/{root}\" (reference \"U{n}\") (unit 1)))))\n",
+                x = 20 * n,
+                props = mpn_props(20 * n)
             )
         })
         .collect();
@@ -659,8 +679,7 @@ fn project(dir: &Path) -> PathBuf {
         "(sym_lib_table (version 7)\n  (lib (name \"Rev\")(type \"KiCad\")(uri \"${KIPRJMOD}/Rev.kicad_sym\")(options \"\")(descr \"\")))\n",
     )
     .unwrap();
-    let parts = parts_file(dir, &["TEST-PART"]);
-    let source = better_erc::parts::FileSource::open(&parts).unwrap();
+    let source = better_erc::parts::FileSource::open(&dir.join("parts.toml")).unwrap();
     better_erc::parts::refresh_project(dir, &source, better_erc::parts::WriteLock::Changed)
         .unwrap();
     board
@@ -699,7 +718,7 @@ fn accept_records_in_the_part_source() {
     let ctx = h.ctx.clone();
     h.state_mut().open_path(&ctx, &board);
     h.run();
-    h.get_by_label("1 of 1 to review on rev.kicad_pcb");
+    h.get_by_label("1 of 1 footprints to review on rev.kicad_pcb");
     // A board footprint from the preview list: Accept is off
     h.get_by_label_contains("library footprints on rev.kicad_pcb (preview)")
         .click();
@@ -792,6 +811,99 @@ fn accept_records_in_the_part_source() {
             .unwrap()
             .contains(&"app fp-review write".to_string())
     );
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// One footprint placed with three MPNs of one series is one row: what is still to review and how the parts differ
+/// (only the facts whose values differ, the shared ones folded) under it; one Accept records one review for the
+/// MPNs ticked, an MPN unticked stays to review
+#[test]
+fn one_row_per_footprint() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-group-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let mpns = ["SW-G", "SW-K", "SW-M"];
+    let mut text = String::from("version = 1\nsource = \"hand\"\n");
+    for (m, force) in mpns.iter().zip(["1.6 N", "2.5 N", "3.5 N"]) {
+        let fact = |key: &str, v: &str| {
+            format!(
+                "{{ key = \"{key}\", text = \"{v}\", source = \"manual\", rank = 100, at = \"2026-11-25T00:00:00Z\" }}"
+            )
+        };
+        text += &format!(
+            "\n[[part]]\nmpn = \"{m}\"\nmatch = \"found\"\nfacts = [{}, {}]\n",
+            fact("technology", "tactile"),
+            fact("tolerance", force)
+        );
+    }
+    std::fs::write(dir.join("parts.toml"), text).unwrap();
+    let board = project_of(&dir, &mpns);
+    let pdf = datasheet(&dir);
+    let settings = FootprintReviewSettings {
+        font_dirs: Vec::new(),
+        library_search: Vec::new(),
+        library_name: Vec::new(),
+        reviewer: "tester".into(),
+        parts_source: Some(dir.join("parts.toml")),
+        ..Default::default()
+    };
+    let mut cx = Context::new();
+    let mut h = Harness::builder()
+        .with_size(vec2(1200.0, 1400.0))
+        .build_ui_state(
+            move |ui, state: &mut FootprintReview| state.ui(ui, &mut cx, Id::new("fp group")),
+            FootprintReview::with(settings, Arc::new(|_: &str| {})),
+        );
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &board);
+    h.run();
+    h.get_by_label("1 of 1 footprints to review on rev.kicad_pcb");
+    assert_eq!(h.state().rt.symbols.as_ref().unwrap().rows.len(), 1);
+    h.get_by_label("Mixed_Pads · 3 MPNs").click();
+    h.run();
+    h.get_by_label("Still to review (3 of 3)");
+    h.get_by_label("How the parts differ");
+    h.get_by_label("tolerance");
+    h.get_by_label("2.5 N");
+    h.get_by_label("The same for all (1)");
+    assert!(h.query_by_label("technology: tactile").is_none(), "folded");
+    h.get_by_label("The same for all (1)").click();
+    h.run();
+    h.get_by_label("technology: tactile");
+    // The datasheet names none of them: all ticked; SW-M has a datasheet of its own and is unticked
+    h.state_mut().open_datasheet(&ctx, &pdf);
+    h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+    h.run();
+    let page = h.state().page;
+    h.state_mut().scale = Some(Scale {
+        mm_per_point: 0.02,
+        page,
+        mm: 2.0,
+        note: None,
+    });
+    h.run();
+    button(&h, ACCEPT).click();
+    h.run();
+    h.get_by_label("Records in file parts.toml a review covering SW-G; SW-K; SW-M");
+    h.get_by_role_and_label(egui::accesskit::Role::CheckBox, "SW-M")
+        .click();
+    h.run();
+    h.get_by_label("Records in file parts.toml a review covering SW-G; SW-K");
+    h.key_press(egui::Key::Enter);
+    h.run();
+    assert!(
+        matches!(h.state().rt.written, Some(Ok(_))),
+        "{:?}",
+        h.state().rt.written
+    );
+    let stored = better_erc::parts::PartsLock::read(&dir.join("parts.toml")).unwrap();
+    assert_eq!(stored.reviews.len(), 1, "one review");
+    // The list read again: SW-M is still to review on the same row
+    let rows = &h.state().rt.symbols.as_ref().unwrap().rows;
+    assert_eq!(rows.len(), 1);
+    assert_eq!(rows[0].status_name(), "uncovered");
+    h.get_by_label("Still to review (1 of 3)");
     std::fs::remove_dir_all(&dir).unwrap();
 }
 
@@ -1254,6 +1366,73 @@ fn another_part_another_datasheet() {
         h.state().rt.pdf.is_none(),
         "the last part's datasheet is closed"
     );
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// A part picked while its datasheet is still being read: the footprint is centred once the page is fitted, on the
+/// page, not at the middle of the last view (which the fit then moves away)
+#[test]
+fn footprint_centred_on_a_page_read_late() {
+    let mut h = harness("fp late page");
+    h.run();
+    let ctx = h.ctx.clone();
+    // The last view: zoomed out and panned far from where the page will be
+    h.state_mut().zoom = 0.25;
+    h.state_mut().pan = [-3000.0, -2000.0];
+    h.state_mut().open_path(&ctx, &footprint());
+    let pdf = Path::new("late.pdf");
+    h.state_mut().open_datasheet(&ctx, pdf);
+    h.state_mut().rt.pdf = Some(PdfDoc::unread(pdf));
+    h.step();
+    h.step();
+    h.state_mut().rt.pdf.as_mut().unwrap().pages = Some(vec![[300.0, 400.0]]);
+    h.run();
+    let st = h.state();
+    let (lo, hi) = outline::extent(&st.rt.items).unwrap();
+    let mid = st.fp_to_page([(lo[0] + hi[0]) / 2.0, (lo[1] + hi[1]) / 2.0]);
+    assert!(
+        (0.0..=300.0).contains(&mid[0]) && (0.0..=400.0).contains(&mid[1]),
+        "the footprint's middle {mid:?} is on the 300 x 400 page"
+    );
+}
+
+/// Every row of a board's list, picked, shows its footprint as the board places it (U10 and U12 on the back,
+/// flipped to the front), drawn in the middle of the view
+#[test]
+fn each_board_row_shows_its_footprint() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-rows-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    let board = project(&dir);
+    let mut h = harness("fp rows");
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &board);
+    h.run();
+    let rows = h.state().rt.symbols.as_ref().unwrap().rows.clone();
+    assert!(!rows.is_empty());
+    for (i, row) in rows.iter().enumerate() {
+        h.state_mut().select_symbol(i, true);
+        h.run();
+        let st = h.state();
+        let s = st.rt.sourced.as_ref().unwrap_or_else(|| {
+            panic!(
+                "{}: no footprint shown ({:?})",
+                row.title(),
+                st.rt.symbol_note
+            )
+        });
+        assert_eq!(Some(s.hash.as_str()), row.hash(), "{}", row.title());
+        let (lo, hi) = outline::extent(&st.rt.items).expect("the footprint is drawn");
+        let mid = st.fp_to_page([(lo[0] + hi[0]) / 2.0, (lo[1] + hi[1]) / 2.0]);
+        let at = st.to_screen(st.rt.canvas, mid);
+        assert!(
+            st.rt.canvas.contains(at),
+            "{}: drawn at {at:?}, outside the view {:?}",
+            row.title(),
+            st.rt.canvas
+        );
+    }
     std::fs::remove_dir_all(&dir).unwrap();
 }
 

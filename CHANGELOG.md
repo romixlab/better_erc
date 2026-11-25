@@ -27,6 +27,13 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 - `BOM-12`, `RATE-2`: a `Power`, `Preq_min` or `Pworking` field written `1/4W` was read as 1 W.
 
+- `berc fp todo` text and the review tab list one row per footprint hash, families and MPNs under it (TOOL-8).
+- Review tab: a footprint's row shows how its parts differ; Accept ticks the MPNs the datasheet names (TOOL-11).
+
+### Fixed
+
+- Footprint review: a part picked while its datasheet loads keeps its footprint on the page, not off it (VIEW-19).
+
 ## [0.6.0] - 2026-11-25
 
 ### Added
