@@ -22,6 +22,7 @@ pub mod finding;
 pub mod meta;
 #[cfg(feature = "import")]
 pub mod project;
+pub mod project_file;
 pub mod report;
 
 mod ana;

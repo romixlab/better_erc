@@ -2,6 +2,7 @@
 
 use crate::ctx::Ctx;
 use crate::meta::{CheckMeta, Severity};
+use crate::project_file::waiver::FindingWaiver;
 use erc_model::{Board, Provenance, Subject, natural_cmp};
 use serde::{Deserialize, Serialize};
 use std::fmt;
@@ -88,6 +89,13 @@ pub struct Finding {
     /// New or unchanged against the baseline, when the run was compared with one ([`crate::Report::compare`])
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub baseline: Option<BaselineState>,
+    /// The hash of the inputs the verdict rests on ([`input_hash`]), for checks that judge part data against
+    /// requirements: a waiver pinned to it goes stale when any input changes
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub input_hash: Option<String>,
+    /// The project file's waiver that matched it, and whether it applied
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub waiver: Option<FindingWaiver>,
 }
 
 /// A finding against a baseline report, matched by board and fingerprint
@@ -100,7 +108,30 @@ pub enum BaselineState {
     Unchanged,
 }
 
+/// The version prefix of [`input_hash`]
+pub const INPUT_HASH_VERSION: &str = "in1";
+
+/// The hash of what a verdict rests on: `in1:` and 16 hex digits, the first 8 bytes of the SHA-256 of the
+/// `name=value` lines sorted by name and joined by `\n`. The same inputs in any order give the same hash; any
+/// changed name or value gives another.
+pub fn input_hash<N: AsRef<str>, V: AsRef<str>>(inputs: &[(N, V)]) -> String {
+    use sha2::{Digest, Sha256};
+    let mut lines: Vec<String> = inputs
+        .iter()
+        .map(|(n, v)| format!("{}={}", n.as_ref(), v.as_ref()))
+        .collect();
+    lines.sort();
+    let digest = Sha256::digest(lines.join("\n").as_bytes());
+    let hex: String = digest[..8].iter().map(|b| format!("{b:02x}")).collect();
+    format!("{INPUT_HASH_VERSION}:{hex}")
+}
+
 impl Finding {
+    /// Whether a waiver of the project file applies to it
+    pub fn waived(&self) -> bool {
+        self.waiver.as_ref().is_some_and(FindingWaiver::applied)
+    }
+
     /// The subject names as a sorted set, for comparing findings of different checks
     pub fn subject_names(&self) -> Vec<String> {
         let mut v: Vec<String> = self.subjects.iter().map(|s| s.to_string()).collect();
@@ -131,6 +162,7 @@ pub struct FindingBuilder<'c, 'a> {
     severity: Option<Severity>,
     items: Vec<SubjectRef>,
     locations: Vec<Location>,
+    inputs: Vec<(String, String)>,
 }
 
 impl<'c, 'a> FindingBuilder<'c, 'a> {
@@ -147,6 +179,7 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
             severity: None,
             items: Vec::new(),
             locations: Vec::new(),
+            inputs: Vec::new(),
         }
     }
 
@@ -228,6 +261,14 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
         self
     }
 
+    /// An input of the verdict for [`Finding::input_hash`] (`C4.Vworking = 3.3`, `Mpn1.rated_voltage = 6.3`,
+    /// `derating.ceramic_capacitor_v = 1.5`): name every value the verdict rests on, so a change to any of them
+    /// makes a waiver of the finding stale
+    pub fn input(mut self, name: impl Into<String>, value: impl fmt::Display) -> Self {
+        self.inputs.push((name.into(), value.to_string()));
+        self
+    }
+
     pub fn fix(mut self, f: impl Into<String>) -> Self {
         self.fix = Some(f.into());
         self
@@ -304,6 +345,8 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
             locations,
             also: Vec::new(),
             baseline: None,
+            input_hash: (!self.inputs.is_empty()).then(|| input_hash(&self.inputs)),
+            waiver: None,
         }
     }
 }

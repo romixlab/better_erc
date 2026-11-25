@@ -21,7 +21,8 @@ pub struct PlaceOptions {
     pub sheet: Option<String>,
     /// Write the moved fields into the files; else only plan them
     pub write: bool,
-    /// The settings the margins (`drawing.clearance.*`) and the field style (`drawing.fields.*`) come from
+    /// The settings the margins (`drawing.clearance.*`) and the field style (`drawing.fields.*`) come from, over
+    /// the project file's
     pub config: Config,
 }
 
@@ -85,6 +86,8 @@ impl std::error::Error for PlaceFieldsError {
 pub fn place(path: &Path, opts: &PlaceOptions) -> Result<Placed, PlaceFieldsError> {
     let project = Project::open(path).map_err(PlaceFieldsError::Open)?;
     let design = &project.imported.design;
+    // The project file's drawing settings, the caller's over them
+    let config = project.config(&opts.config);
     if let Some(sheet) = &opts.sheet {
         let known = design.boards.iter().any(|b| {
             b.sheets.iter().any(|s| {
@@ -97,9 +100,9 @@ pub fn place(path: &Path, opts: &PlaceOptions) -> Result<Placed, PlaceFieldsErro
         }
     }
     let sheet = opts.sheet.as_deref();
-    let before = count(design, &opts.config, sheet);
+    let before = count(design, &config, sheet);
     // drawing.fields.hide_defaults = always: the default ratings go first, then the placer sees the design without them
-    let hides = plan_all(design, &opts.config, sheet, plan_default_hides)?;
+    let hides = plan_all(design, &config, sheet, plan_default_hides)?;
     let hidden = edit(&project.dir, &hides, &BTreeMap::new())?;
     let hidden_project = if hidden.is_empty() {
         None
@@ -113,7 +116,7 @@ pub fn place(path: &Path, opts: &PlaceOptions) -> Result<Placed, PlaceFieldsErro
     let placing = hidden_project
         .as_ref()
         .map_or(design, |p| &p.imported.design);
-    let moves = plan_all(placing, &opts.config, sheet, plan_fields)?;
+    let moves = plan_all(placing, &config, sheet, plan_fields)?;
     let mut edited = hidden;
     let moved = edit(&project.dir, &moves, &edited)?;
     edited.extend(moved);
@@ -121,7 +124,7 @@ pub fn place(path: &Path, opts: &PlaceOptions) -> Result<Placed, PlaceFieldsErro
     let after_project = project
         .reopen_with(&edited)
         .map_err(PlaceFieldsError::Open)?;
-    let after = count(&after_project.imported.design, &opts.config, sheet);
+    let after = count(&after_project.imported.design, &config, sheet);
     let mut written = Vec::new();
     if opts.write {
         for (file, text) in &edited {

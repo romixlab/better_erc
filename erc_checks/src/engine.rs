@@ -253,6 +253,7 @@ pub fn run_with(
         warnings: count(Severity::Warning),
         suggestions: count(Severity::Suggestion),
         infos: count(Severity::Info),
+        waived: 0,
         candidates: candidates.len(),
         ran: statuses
             .iter()
@@ -280,6 +281,7 @@ pub fn run_with(
             total_micros: start.elapsed().as_micros() as u64,
         },
         baseline: None,
+        waivers: Vec::new(),
     })
 }
 

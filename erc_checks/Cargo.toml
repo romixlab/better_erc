@@ -22,6 +22,8 @@ inventory = "0.3"
 rayon = "1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1"
+sha2 = { version = "0.10", default-features = false }
+toml = { version = "1", default-features = false, features = ["std", "parse", "display", "serde"] }
 
 [dev-dependencies]
 erc_kicad = { path = "../erc_kicad" }

@@ -7,6 +7,7 @@ pub mod sarif;
 use crate::catalogue::catalogue;
 use crate::finding::{BaselineState, Confidence, Finding, NotRun};
 use crate::meta::{Severity, Tier};
+use crate::project_file::waiver::{WaiverOutcome, WaiverStatus, day};
 use anstyle::{AnsiColor, Style};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -35,6 +36,9 @@ pub struct Report {
     /// The delta to a baseline report, when the run was compared with one ([`Report::compare`])
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub baseline: Option<Delta>,
+    /// The project file's waivers and what each met ([`crate::project_file::waiver::apply`])
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub waivers: Vec<WaiverOutcome>,
 }
 
 /// What changed against a baseline report: each finding is marked new or unchanged, and the baseline's findings
@@ -59,6 +63,9 @@ pub struct Summary {
     pub warnings: usize,
     pub suggestions: usize,
     pub infos: usize,
+    /// Findings a waiver applies to, out of the counts above
+    #[serde(default)]
+    pub waived: usize,
     pub candidates: usize,
     pub ran: usize,
     pub not_run: usize,
@@ -293,8 +300,13 @@ impl Report {
                 d.fixed.len()
             )
         });
+        let waived = if s.waived > 0 {
+            format!(", {} waived", s.waived)
+        } else {
+            String::new()
+        };
         format!(
-            "{}, {}, {}, {} info, {}{baseline} · checks: {} ran, {} not run, {} planned · {} ms",
+            "{}, {}, {}, {} info, {}{waived}{baseline} · checks: {} ran, {} not run, {} planned · {} ms",
             plural(s.errors, "error"),
             plural(s.warnings, "warning"),
             plural(s.suggestions, "suggestion"),
@@ -359,10 +371,16 @@ fn write_finding(out: &mut String, f: &Finding, st: &Styles) {
         Some(BaselineState::New) => format!(" {}[new]{}", st.new.render(), st.new.render_reset()),
         _ => String::new(),
     };
+    let waiver = match f.waiver.as_ref().map(|w| &w.status) {
+        Some(WaiverStatus::Applied) => " [waived]",
+        Some(WaiverStatus::Stale { .. }) => " [waiver stale]",
+        Some(WaiverStatus::Expired) => " [waiver expired]",
+        None => "",
+    };
     let sev = st.severity(f.severity);
     writeln!(
         out,
-        "  {}{:<10}{} {:<8} {}{estimate}{also}{new}",
+        "  {}{:<10}{} {:<8} {}{estimate}{also}{new}{waiver}",
         sev.render(),
         f.severity.name(),
         sev.render_reset(),
@@ -388,5 +406,29 @@ fn write_finding(out: &mut String, f: &Finding, st: &Styles) {
     }
     if let Some(fix) = &f.fix {
         writeln!(out, "  {:<10} {:<8} fix: {fix}", "", "").unwrap();
+    }
+    if let Some(h) = &f.input_hash {
+        writeln!(
+            out,
+            "  {:<10} {:<8} {}input {h}{}",
+            "",
+            "",
+            st.dim.render(),
+            st.dim.render_reset()
+        )
+        .unwrap();
+    }
+    if let Some(w) = &f.waiver {
+        let verb = if w.applied() { "waived" } else { "was waived" };
+        writeln!(
+            out,
+            "  {:<10} {:<8} {verb} by {} on {}: {}",
+            "",
+            "",
+            w.who,
+            day(w.date),
+            w.reason
+        )
+        .unwrap();
     }
 }

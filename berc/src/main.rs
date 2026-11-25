@@ -687,6 +687,7 @@ fn check(args: CheckArgs) -> ExitCode {
             FailOn::Suggestion => Severity::Suggestion,
         },
         baseline,
+        today: better_erc::checks::project::today(),
     };
     let spinner = progress::Delayed::start();
     let run = better_erc::check_path(&args.project, &opts, &mut |stage| {

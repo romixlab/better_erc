@@ -4,12 +4,15 @@
 
 use crate::ctx::{Availability, Config, Ctx};
 use crate::engine::{RunError, RunOptions, run_imported};
-use crate::finding::BaselineState;
+use crate::finding::{BaselineState, Finding};
 use crate::meta::{Need, Severity};
+use crate::project_file::waiver;
+use crate::project_file::{self, ProjectFile, ProjectFileError};
+use crate::report::Note;
 use crate::report::{Report, SCHEMA_VERSION};
 use erc_import::Registry;
 use erc_model::{
-    Confidence, DirFiles, Files, ImportError, ImportOptions, Imported, MemFiles, Source,
+    Confidence, DirFiles, Files, ImportError, ImportOptions, Imported, MemFiles, Source, Time,
 };
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -25,6 +28,8 @@ pub struct Project {
     /// The importer's name (`kicad`, `altium`)
     pub importer: &'static str,
     pub imported: Imported,
+    /// The better_erc project file beside the design (CFG-2), when there is one
+    pub file: Option<ProjectFile>,
 }
 
 /// A directory's files with some replaced
@@ -57,6 +62,8 @@ pub struct CheckOptions {
     pub fail_on: Severity,
     /// A previous report to compare with ([`read_baseline`])
     pub baseline: Option<Report>,
+    /// The day waiver expiries are judged on
+    pub today: Time,
 }
 
 impl Default for CheckOptions {
@@ -66,6 +73,7 @@ impl Default for CheckOptions {
             require: Vec::new(),
             fail_on: Severity::Error,
             baseline: None,
+            today: today(),
         }
     }
 }
@@ -151,6 +159,11 @@ pub enum CheckError {
     Run(RunError),
     /// The baseline report cannot be read
     Baseline { file: PathBuf, message: String },
+    /// The project file beside the design is wrong (CFG-2)
+    ProjectFile {
+        dir: PathBuf,
+        error: ProjectFileError,
+    },
 }
 
 impl CheckError {
@@ -183,6 +196,13 @@ impl fmt::Display for CheckError {
             CheckError::Baseline { file, message } => {
                 write!(f, "baseline {}: {message}", file.display())
             }
+            CheckError::ProjectFile { dir, error } => {
+                if dir.as_os_str().is_empty() || dir == Path::new(".") {
+                    error.fmt(f)
+                } else {
+                    write!(f, "{}/{error}", dir.display())
+                }
+            }
         }
     }
 }
@@ -192,6 +212,7 @@ impl std::error::Error for CheckError {
         match self {
             CheckError::Import { error, .. } => Some(error),
             CheckError::Run(e) => Some(e),
+            CheckError::ProjectFile { error, .. } => Some(error),
             _ => None,
         }
     }
@@ -294,12 +315,108 @@ impl Project {
         let imported = importer
             .import(&src, &ImportOptions::default())
             .map_err(|error| CheckError::Import { file, error })?;
+        let file =
+            match project_file::find(&dir, &main) {
+                Some(name) => Some(project_file::load(&dir, &name).map_err(|error| {
+                    CheckError::ProjectFile {
+                        dir: dir.clone(),
+                        error,
+                    }
+                })?),
+                None => None,
+            };
         Ok(Project {
             dir,
             main,
             importer: importer.name(),
             imported,
+            file,
         })
+    }
+
+    /// Notes on the project file: its warnings, nets no board has, waivers that met no finding or did not apply
+    fn file_notes(
+        &self,
+        file: &ProjectFile,
+        config: &Config,
+        waivers: &[waiver::WaiverOutcome],
+    ) -> Vec<Note> {
+        let note = |message: String| Note {
+            kind: "project".into(),
+            at: file.file.clone(),
+            message,
+        };
+        let mut notes: Vec<Note> = file
+            .warnings
+            .iter()
+            .map(|w| {
+                let prefix = format!("{}: ", file.file);
+                note(w.strip_prefix(&prefix).unwrap_or(w).to_owned())
+            })
+            .collect();
+        for name in config.nets.keys() {
+            let found = self
+                .imported
+                .design
+                .boards
+                .iter()
+                .any(|b| b.nets.iter().any(|n| n.name == *name));
+            if !found {
+                notes.push(note(format!(
+                    "nets.{}: no board has a net of this name",
+                    project_file::nets::toml_key(name)
+                )));
+            }
+        }
+        for o in waivers {
+            let w = &o.waiver;
+            let what = format!(
+                "waiver of {} ({}, {})",
+                w.fingerprint,
+                w.who,
+                waiver::day(w.date)
+            );
+            let message = match &o.status {
+                None => format!(
+                    "{what} matched no finding: the finding is gone or its subjects changed"
+                ),
+                Some(waiver::WaiverStatus::Applied) => continue,
+                Some(waiver::WaiverStatus::Stale { was, now }) => format!(
+                    "{what} is stale, the finding stands: its inputs changed ({was} then, {} now)",
+                    now.as_deref().unwrap_or("no hash")
+                ),
+                Some(waiver::WaiverStatus::Expired) => format!(
+                    "{what} expired on {}, the finding stands",
+                    w.expires.map_or_else(String::new, waiver::day)
+                ),
+            };
+            notes.push(note(message));
+        }
+        notes
+    }
+
+    /// Appends a waiver of `finding` to the project file (creating `<name>.berc.toml` beside the design when there
+    /// is none), pinned to the finding's input hash, and names the board when the design has several; the waiver
+    /// and the file written
+    pub fn waive(
+        &self,
+        finding: &Finding,
+        who: &str,
+        reason: &str,
+        expires: Option<Time>,
+        today: Time,
+    ) -> std::io::Result<(waiver::Waiver, PathBuf)> {
+        let w = waiver::Waiver {
+            fingerprint: finding.fingerprint.clone(),
+            board: (self.imported.design.boards.len() > 1).then(|| finding.board.clone()),
+            input_hash: finding.input_hash.clone(),
+            who: who.to_owned(),
+            date: today,
+            reason: reason.to_owned(),
+            expires,
+        };
+        let path = project_file::append_waiver(&self.dir, &self.main, &w)?;
+        Ok((w, path))
     }
 
     /// The variant names of every board, sorted, once each
@@ -316,16 +433,36 @@ impl Project {
         v
     }
 
-    /// Runs the checks, compares with the baseline and decides the verdict
+    /// The settings a run uses: the project file's, with `over` (the caller's, `--set`) on top
+    pub fn config(&self, over: &Config) -> Config {
+        let mut config = self
+            .file
+            .as_ref()
+            .map_or_else(Config::default, |f| f.config.clone());
+        config.overlay(over);
+        config
+    }
+
+    /// Runs the checks with the project file's settings under the caller's, compares with the baseline, applies the
+    /// project file's waivers and decides the verdict
     pub fn check(&self, opts: &CheckOptions) -> Result<CheckRun, CheckError> {
-        let mut report = run_imported(&self.imported, &opts.run)?;
+        let run = RunOptions {
+            config: self.config(&opts.run.config),
+            ..opts.run.clone()
+        };
+        let mut report = run_imported(&self.imported, &run)?;
         if let Some(b) = &opts.baseline {
             report.compare(b);
+        }
+        if let Some(file) = &self.file {
+            waiver::apply(&mut report, &file.waivers, opts.today);
+            let notes = self.file_notes(file, &run.config, &report.waivers);
+            report.notes.extend(notes);
         }
         let mut unavailable = Vec::new();
         for need in &opts.require {
             for (bi, board) in self.imported.design.boards.iter().enumerate() {
-                let config = Config::default();
+                let config = &run.config;
                 let variant = opts
                     .run
                     .variant
@@ -335,7 +472,7 @@ impl Project {
                     &self.imported.design,
                     erc_model::BoardId::from_index(bi),
                     variant,
-                    &config,
+                    config,
                 );
                 if let Availability::Missing { why } = cx.availability(*need) {
                     unavailable.push(Unavailable {
@@ -455,6 +592,7 @@ pub fn verdict(report: &Report, fail_on: Severity, unavailable: Vec<Unavailable>
         .iter()
         .filter(|f| f.severity <= fail_on)
         .filter(|f| f.baseline != Some(BaselineState::Unchanged))
+        .filter(|f| !f.waived())
         .count();
     let exit = if !unavailable.is_empty() {
         Exit::Unavailable
@@ -469,6 +607,37 @@ pub fn verdict(report: &Report, fail_on: Severity, unavailable: Vec<Unavailable>
         failing,
         unavailable,
     }
+}
+
+/// The findings and candidates of a report that `check` and `subjects` pick: `check` is a full fingerprint
+/// (`I2C-1:net /SDA|part R5`), or a check id with subject names that each name one of the finding's subjects
+/// (`R5`, or `part R5`)
+pub fn select<'r>(report: &'r Report, check: &str, subjects: &[String]) -> Vec<&'r Finding> {
+    report
+        .findings
+        .iter()
+        .chain(&report.candidates)
+        .filter(|f| {
+            if check.contains(':') {
+                return f.fingerprint == check;
+            }
+            f.check.eq_ignore_ascii_case(check)
+                && subjects.iter().all(|s| {
+                    f.subjects
+                        .iter()
+                        .any(|x| x.name == *s || x.to_string() == *s)
+                })
+        })
+        .collect()
+}
+
+/// Today, UTC, from the system clock
+pub fn today() -> Time {
+    let secs = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0, |d| d.as_secs());
+    let secs = i64::try_from(secs).expect("the clock is within i64 seconds");
+    Time(secs - secs.rem_euclid(86_400))
 }
 
 /// The design file of a directory

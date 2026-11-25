@@ -13,6 +13,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
+- Project file `<name>.berc.toml` (fallback `berc.toml`): net voltages and ranges, derating factors, check settings, waivers (CFG-2).
 - `berc place-fields`: `drawing.fields.hide_defaults=always` hides every rating at its default, not only those in the way (TOOL-13).
 - `berc place-fields`: hides only ratings at the project's `DEFAULT_*` text variables (R package, power; C package, dielectric, voltage) (TOOL-13).
 - `DRAW-34`: `drawing.clearance.spacing` tight (default) holds parts packed at grid pitch to a 0.127 mm margin; sparse as before (NET-26).

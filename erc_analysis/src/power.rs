@@ -84,6 +84,9 @@ pub struct Rail {
     pub signals: Vec<Fact<PowerSignal>>,
     /// The voltage from each source (the project, the name), volts; [`Facts::resolve`] gives the one to use
     pub voltage: Facts<f64>,
+    /// The range the rail moves in (min, max volts), when the project states one
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub range: Option<Fact<(f64, f64)>>,
 }
 
 impl Rail {
@@ -159,7 +162,10 @@ pub struct Power {
 #[derive(Clone, Debug, PartialEq)]
 pub struct NetDecl {
     pub role: Fact<DeclaredRole>,
+    /// The value to compute with, volts
     pub voltage: Option<Fact<f64>>,
+    /// The range the net moves in (min, max volts)
+    pub range: Option<Fact<(f64, f64)>>,
 }
 
 /// A net's role as the project declares it
@@ -278,6 +284,7 @@ impl Power {
                                 kind,
                                 signals: vec![sig],
                                 voltage,
+                                range: d.range.clone(),
                             },
                         );
                         continue;
@@ -341,6 +348,7 @@ impl Power {
                     kind,
                     signals,
                     voltage,
+                    range: None,
                 },
             );
         }

@@ -109,6 +109,20 @@ fn table(out: &mut String, findings: &[Finding]) {
         if f.baseline == Some(BaselineState::New) {
             message += " **new**";
         }
+        if let Some(w) = &f.waiver {
+            let state = if w.applied() {
+                "waived"
+            } else {
+                "waiver stale or expired"
+            };
+            write!(
+                message,
+                "<br>*{state}: {} ({})*",
+                cell(&w.reason),
+                cell(&w.who)
+            )
+            .unwrap();
+        }
         if let Some(fix) = &f.fix {
             write!(message, "<br>Fix: {}", cell(fix)).unwrap();
         }

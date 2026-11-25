@@ -108,7 +108,19 @@ pub struct SarifResult {
     pub partial_fingerprints: BTreeMap<&'static str, String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub baseline_state: Option<&'static str>,
+    /// The project file's waiver, when it applies: `external`, `accepted`, with its reason
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub suppressions: Vec<Suppression>,
     pub properties: ResultProperties,
+}
+
+/// A waived finding, as SARIF says it
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Suppression {
+    pub kind: &'static str,
+    pub status: &'static str,
+    pub justification: String,
 }
 
 #[derive(Serialize)]
@@ -140,6 +152,9 @@ pub struct Region {
 
 #[derive(Serialize)]
 pub struct ResultProperties {
+    /// The hash of the inputs the verdict rests on, for a waiver to pin
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub input_hash: Option<String>,
     pub board: String,
     pub confidence: Confidence,
     pub subjects: Vec<String>,
@@ -314,7 +329,18 @@ fn result(f: &Finding, rule_index: usize, uri_base: &str, main: &str) -> SarifRe
             BaselineState::New => "new",
             BaselineState::Unchanged => "unchanged",
         }),
+        suppressions: f
+            .waiver
+            .iter()
+            .filter(|w| w.applied())
+            .map(|w| Suppression {
+                kind: "external",
+                status: "accepted",
+                justification: format!("{} ({})", w.reason, w.who),
+            })
+            .collect(),
         properties: ResultProperties {
+            input_hash: f.input_hash.clone(),
             board: f.board.clone(),
             confidence: f.confidence,
             subjects,

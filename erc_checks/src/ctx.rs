@@ -4,9 +4,11 @@
 
 use crate::finding::FindingBuilder;
 use crate::meta::{CheckMeta, Need, Severity};
+use crate::project_file::derating::Derating;
+use crate::project_file::nets::{NetFacts, ProjectNets};
 use erc_analysis::drawing::Drawing;
 use erc_analysis::scene::Scene;
-use erc_analysis::{Feeds, I2cBuses, PartClasses, Power, Values};
+use erc_analysis::{Feeds, I2cBuses, PartClasses, Power, PowerOptions, Values};
 use erc_model::geometry::Theme;
 use erc_model::{Board, BoardId, Design, PartId, Provenance, VariantId, View};
 use serde::{Deserialize, Serialize};
@@ -28,9 +30,51 @@ pub struct Config {
     /// The colour themes the sheets are looked at on
     #[serde(default)]
     pub themes: Vec<Theme>,
+    /// What the project states about nets, by net name
+    #[serde(default)]
+    pub nets: BTreeMap<String, NetFacts>,
+    /// Derating factors per part class and technology
+    #[serde(default)]
+    pub derating: Derating,
 }
 
 impl Config {
+    /// Whether the project sets `key`: a section (`nets`), a net (`nets.+3V3`) or a net's fact
+    /// (`nets.+3V3.voltage`)
+    pub fn sets(&self, key: &str) -> bool {
+        match key.split_once('.') {
+            None if key == "nets" => !self.nets.is_empty(),
+            None => false,
+            Some(("nets", rest)) => {
+                let (name, fact) = match rest.rsplit_once('.') {
+                    Some((n, "voltage")) => (n, Some("voltage")),
+                    _ => (rest, None),
+                };
+                let name = name.trim_matches('"');
+                self.nets
+                    .get(name)
+                    .is_some_and(|n| fact.is_none() || n.voltage.is_some())
+            }
+            Some(_) => self.params.contains_key(key),
+        }
+    }
+
+    /// `other` over this: its settings, severities, disabled checks, themes, nets and set derating factors win
+    pub fn overlay(&mut self, other: &Config) {
+        if other.file.is_some() {
+            self.file.clone_from(&other.file);
+        }
+        self.severity
+            .extend(other.severity.iter().map(|(k, v)| (k.clone(), *v)));
+        self.params
+            .extend(other.params.iter().map(|(k, v)| (k.clone(), *v)));
+        self.disabled.extend(other.disabled.iter().cloned());
+        self.themes.extend(other.themes.iter().cloned());
+        self.nets
+            .extend(other.nets.iter().map(|(k, v)| (k.clone(), v.clone())));
+        self.derating.overlay(&other.derating);
+    }
+
     /// Sets a threshold by its key: a setting of `CHECK-ID.param`, or a shared one by its own name. A key no
     /// registered check declares is refused.
     pub fn set(&mut self, key: &str, value: f64) -> Result<(), String> {
@@ -66,7 +110,7 @@ impl Config {
 }
 
 /// The setting a registered check declares under `key`
-fn declared(key: &str) -> Result<crate::meta::Param, String> {
+pub(crate) fn declared(key: &str) -> Result<crate::meta::Param, String> {
     crate::meta::registered()
         .into_iter()
         .find_map(|c| {
@@ -247,8 +291,18 @@ impl Availability {
             Need::PowerStates => missing("power states need the project file (NET-8, CFG-2)"),
             Need::Conduction => missing("signal following is not built yet (NET-10)"),
             Need::PartDb => missing("no part data: the part database is not built yet (CFG-5)"),
-            Need::Project(key) => Availability::Missing {
-                why: format!("no better_erc project file (CFG-2): it would set `{key}`"),
+            // Derating factors have defaults in code: never missing
+            Need::Project(key) if key == "derating" || key.starts_with("derating.") => {
+                Availability::Available
+            }
+            Need::Project(key) => match &cx.config.file {
+                None => Availability::Missing {
+                    why: format!("no better_erc project file (CFG-2): it would set `{key}`"),
+                },
+                Some(file) if !cx.config.sets(key) => Availability::Missing {
+                    why: format!("{file} does not set `{key}`"),
+                },
+                Some(_) => Availability::Available,
             },
         }
     }
@@ -332,8 +386,18 @@ impl<'a> Ctx<'a> {
     /// Rails, grounds, ground groups and switching nodes in the variant checked (Need::Rails,
     /// Need::RailVoltages)
     pub fn power(&self) -> &Power {
-        self.power
-            .get_or_init(|| Power::of(self.view(), self.classes(), self.values()))
+        self.power.get_or_init(|| {
+            let project = ProjectNets {
+                config: self.config,
+            };
+            Power::with(
+                self.view(),
+                self.classes(),
+                self.values(),
+                PowerOptions::default(),
+                &[&project],
+            )
+        })
     }
 
     /// The source pins of each net and the parts that carry power between nets, in the variant checked
@@ -445,6 +509,16 @@ impl<'a> Ctx<'a> {
             .copied()
             .or(chosen)
             .unwrap_or(meta.severity)
+    }
+
+    /// The derating factors of the project, defaults where it sets none
+    pub fn derating(&self) -> &Derating {
+        &self.config.derating
+    }
+
+    /// What the project states about a net of this board, by its name
+    pub fn project_net(&self, net: erc_model::NetId) -> Option<&NetFacts> {
+        self.config.nets.get(&self.board().net(net).name)
     }
 
     /// Starts a finding of the check `meta` on this board
