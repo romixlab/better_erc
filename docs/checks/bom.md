@@ -353,8 +353,9 @@ conditions hold:
    1 %, set in the [project file](../project-file.md) or with `--set`).
 
 For example, `63mW` states 62.5 mW (1/16 W, which datasheets label 63 mW), because the two are 0.8 % apart. `62mW`
-does not, because 62.5 mW rounds to 63. A coarse text fails the second condition: `0.1W` for 62.5 mW, `1W` for
-500 mW and `6V` for 6.3 V are findings that name the text to write. A fraction such as `1/16W` is not rounded.
+does not, because 62.5 mW rounds to 63. A coarse text fails the second condition. Examples are `0.1W` for 62.5 mW,
+`1W` for 500 mW and `6V` for 6.3 V. Each is a finding that names the text to write. A fraction such as `1/16W` is
+not rounded.
 
 One dielectric covers another when it spans at least the same temperatures with at most the same capacitance change
 (`X7R` covers `X5R`, any class 1 code such as `C0G` covers any class 2). A display miss is one finding on the field
