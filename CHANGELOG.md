@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Changed
+
+- `DRAW-49`: a note headed `TODO`, `TBD` or `FIXME` with no placeholder in its body is reported once.
+
 ## [0.6.0] - 2026-11-25
 
 ### Added

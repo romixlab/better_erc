@@ -74,14 +74,27 @@ impl Sheet {
         );
     }
 
-    /// A dashed grey note box
-    fn note(&mut self, text: &str, at: (f64, f64)) {
+    /// A dashed grey note box; its UUID
+    fn note(&mut self, text: &str, at: (f64, f64)) -> String {
         let u = self.uuid();
         self.text += &format!(
             "(text_box \"{text}\" (at {} {} 0) (size 50.8 10.16) (stroke (width 0.1524) (type dash) \
              (color 110 110 110 1)) (fill (type none)) (effects (font (size 1.27 1.27)) (justify left top)) (uuid \"{u}\"))\n",
             at.0, at.1
         );
+        u
+    }
+
+    /// A note box under a bold heading, the two in one group
+    fn headed_note(&mut self, heading: &str, body: &str, at: (f64, f64)) {
+        let head = self.uuid();
+        self.text += &format!(
+            "(text \"{heading}\" (at {} {} 0) (effects (font (size 1.27 1.27) (bold yes)) (justify left top)) (uuid \"{head}\"))\n",
+            at.0, at.1
+        );
+        let body = self.note(body, at);
+        let u = self.uuid();
+        self.text += &format!("(group \"\" (uuid \"{u}\") (members \"{head}\" \"{body}\"))\n");
     }
 
     /// A block's heading and cost line
@@ -170,6 +183,32 @@ fn placeholders_in_notes_and_fields() {
         [
             "DRAW-49:item text box \"Information:\"|sheet /",
             "DRAW-49:part R1"
+        ]
+    );
+}
+
+#[test]
+fn placeholder_headings() {
+    let mut s = Sheet::new(&[]);
+    // Reported on the heading: nothing else in the note is open
+    s.headed_note("TODO", "Fit the test points", (20.32, 25.4));
+    // Reported on the body only
+    s.headed_note("FIXME: ripple", "Ripple TBD", (101.6, 25.4));
+    // The heading inside the box
+    s.note("TBC:\\nCheck the polarity", (20.32, 50.8));
+    s.note("TODO:\\nRipple ymA", (101.6, 50.8));
+    s.note("CALC:", (152.4, 50.8));
+    // No open word anywhere
+    s.headed_note("Information", "Gain = 0.32", (20.32, 76.2));
+    let dir = s.write("docs_placeholder_headings");
+    assert_eq!(
+        findings(&dir, "DRAW-49", &[]).unwrap(),
+        [
+            "DRAW-49:item text \"TODO\"|sheet /",
+            "DRAW-49:item text box \"CALC:\"|sheet /",
+            "DRAW-49:item text box \"Ripple TBD\"|sheet /",
+            "DRAW-49:item text box \"TBC:\"|sheet /",
+            "DRAW-49:item text box \"TODO:\"|sheet /",
         ]
     );
 }

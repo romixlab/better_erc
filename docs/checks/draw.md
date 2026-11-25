@@ -684,9 +684,17 @@ unannotated reference). It reports a text or field that holds one of these:
 - a label left empty: a line that ends with a colon and has nothing after it but blank lines, `--` rules or other
   empty labels (`Max current:` as the last line).
 
-A field value is also a placeholder by the value rule of `BOM-5`: it starts or ends with `?`. The word `TODO` that
-opens a note (`TODO:` as the box's first line, or the bold heading grouped with the box) names the note kind
-(`DRAW-32`) and is no placeholder.
+A field value is also a placeholder by the value rule of `BOM-5`: it starts or ends with `?`.
+
+A note headed by one of those words is open itself. The heading is the first word of a bold free text, such as the
+one grouped with a note box (`DRAW-32`), or the first word of a text or box when a colon ends it (`TODO:`). Each such
+note is reported once:
+
+- its body (the rest of the text, and any text box or table grouped with the heading) holds a placeholder: the body is
+  reported, the heading word is not;
+- its body holds none (`TODO` over `Fit the test points`): the heading is reported.
+
+A heading without such a word (`Information`) is never reported for itself.
 
 ## `DRAW-50` Note reference to a note the notes file does not have <a id="draw-50"></a>
 
