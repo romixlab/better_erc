@@ -17,6 +17,7 @@ mod library;
 pub mod model;
 pub mod outline;
 pub mod pairs;
+pub mod reviewed;
 mod todo;
 pub use accept::{
     AcceptError, AcceptRun, AcceptWhat, Covers, SymbolEditError, Written, accept, date_of,
@@ -28,7 +29,8 @@ pub use library::{
     CheckedLibrary, LibCheck, LibCheckError, LibCheckOptions, LibrarySearch, SymbolEntry,
     SymbolStatus, check_libraries,
 };
-pub use todo::{FpTodo, TodoEntry, TodoStatus, todo};
+pub use reviewed::{Resolver, Reviewed, ReviewedAs};
+pub use todo::{BoardCopy, FpTodo, TodoEntry, TodoStatus, todo};
 
 /// A footprint's review hash and the canonical text it is taken over
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]

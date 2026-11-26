@@ -2,7 +2,8 @@
 //! reviewed, then the project's parts snapshot refreshed from it so `berc fp check` sees it. Nothing is written into
 //! the schematic or the libraries, except a symbol's `Footprint` when asked ([`set_symbol_footprint`]).
 
-use super::SymbolLibraries;
+use super::reviewed::{Resolver, ReviewedAs};
+use super::{LibrarySearch, SymbolLibraries};
 use crate::parts::{PartsRefreshError, Refreshed, WriteLock, refresh_project};
 use erc_model::fphash;
 use erc_model::layout::{Footprint, FootprintId};
@@ -15,7 +16,8 @@ use std::path::{Path, PathBuf};
 /// What was reviewed: board footprints, or a footprint by hash
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum AcceptWhat {
-    /// Board footprints by reference: their review hash now (one for all of them) and their parts' MPNs
+    /// Board footprints by reference: the review hash of their library footprint (one for all of them) and their
+    /// parts' MPNs
     References(Vec<String>),
     /// A footprint by its review hash (a library footprint before a board uses it) and its `Lib:Name`
     Hash { hash: String, footprint: String },
@@ -63,6 +65,8 @@ pub struct AcceptRun {
 #[derive(Debug)]
 pub enum AcceptError {
     Open(crate::CheckError),
+    /// A footprint or symbol library given by path that is none
+    Libraries(super::LibCheckError),
     /// References to accept, but no board to take their footprints from
     NoBoard(PathBuf),
     NoFootprint(String),
@@ -99,6 +103,7 @@ impl fmt::Display for AcceptError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             AcceptError::Open(e) => e.fmt(f),
+            AcceptError::Libraries(e) => e.fmt(f),
             AcceptError::NoBoard(p) => write!(
                 f,
                 "{}: no KiCad board (.kicad_pcb) to take the footprints from",
@@ -150,6 +155,7 @@ impl std::error::Error for AcceptError {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         match self {
             AcceptError::Open(e) => Some(e),
+            AcceptError::Libraries(e) => Some(e),
             AcceptError::Source(e) => Some(e),
             AcceptError::Refresh { error, .. } => Some(error),
             AcceptError::Symbol(e) => Some(e),
@@ -172,13 +178,20 @@ pub fn date_of(secs: i64) -> String {
     t.get(..10).unwrap_or(&t).to_owned()
 }
 
-/// The board footprints `refs` of the KiCad project at `path`: their one review hash, `Lib:Name` and the MPNs of
-/// their parts, in reference order
+/// The board footprints `refs` of the KiCad project at `path`: the one review hash and `Lib:Name` of the footprint
+/// their review is of (their library footprint found through `search`, else the board copy as placed,
+/// [`super::reviewed`]) and the MPNs of their parts, in reference order
 fn board_footprints(
     path: &Path,
     refs: &[String],
+    search: &LibrarySearch,
 ) -> Result<(String, String, Vec<String>), AcceptError> {
     let project = crate::Project::open_without_parts(path).map_err(AcceptError::Open)?;
+    let (mut syms, mut fps) = search.open(&project.dir).map_err(AcceptError::Libraries)?;
+    let mut resolver = Resolver {
+        syms: &mut syms,
+        fps: &mut fps,
+    };
     let no_board = || AcceptError::NoBoard(path.to_path_buf());
     let board = project
         .imported
@@ -207,13 +220,14 @@ fn board_footprints(
                 mpns.push(m);
             }
         }
+        let reviewed = resolver.resolve(board, FootprintId::from_index(i));
         if lib_id.is_empty() {
-            lib_id.clone_from(&f.lib_id);
+            lib_id = match (reviewed.reviewed_as, reviewed.library_footprint) {
+                (ReviewedAs::Library, Some(l)) => l,
+                _ => f.lib_id.clone(),
+            };
         }
-        hashes.push((
-            r.clone(),
-            fphash::hash(&lay.local_footprint(FootprintId::from_index(i))),
-        ));
+        hashes.push((r.clone(), reviewed.hash));
     }
     let Some((_, hash)) = hashes.first().cloned() else {
         return Err(AcceptError::NothingToCover);
@@ -225,11 +239,12 @@ fn board_footprints(
 }
 
 /// Records a review of `what` in `source`: `review` gives where it was made and who made it (its hash, footprint
-/// and covers are set here), `covers` which MPNs it covers. For board footprints the MPNs must be theirs, and the
-/// parts snapshot of the project at `project` is refreshed from `source` afterwards. `dry_run` records nothing and
-/// says what would be.
+/// and covers are set here), `covers` which MPNs it covers. For board footprints the MPNs must be theirs, the
+/// review is of their library footprint found through `search`, and the parts snapshot of the project at
+/// `project` is refreshed from `source` afterwards. `dry_run` records nothing and says what would be.
 pub fn accept(
     project: Option<&Path>,
+    search: &LibrarySearch,
     what: &AcceptWhat,
     source: &dyn Source,
     review: &NewReview,
@@ -239,7 +254,7 @@ pub fn accept(
     let (hash, footprint, board_mpns, references) = match what {
         AcceptWhat::References(refs) => {
             let path = project.ok_or_else(|| AcceptError::NoBoard(PathBuf::from(".")))?;
-            let (hash, lib_id, mpns) = board_footprints(path, refs)?;
+            let (hash, lib_id, mpns) = board_footprints(path, refs, search)?;
             (hash, lib_id, Some(mpns), refs.clone())
         }
         AcceptWhat::Hash { hash, footprint } => {
@@ -331,7 +346,7 @@ pub fn accept(
     run.review = Some(stored);
     if let (Some(p), AcceptWhat::References(_)) = (project, what) {
         run.lock = Some(
-            refresh_project(p, source, WriteLock::Changed)
+            refresh_project(p, search, source, WriteLock::Changed)
                 .map_err(|error| AcceptError::Refresh { id, error })?,
         );
     }

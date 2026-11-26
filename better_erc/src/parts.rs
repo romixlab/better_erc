@@ -58,6 +58,8 @@ impl Refreshed {
 pub enum PartsRefreshError {
     /// The design cannot be opened
     Open(CheckError),
+    /// A footprint or symbol library given by path that is none
+    Libraries(crate::fp::LibCheckError),
     /// The source gave no answer, or a wrong one
     Refresh(RefreshError),
     /// The lock cannot be written
@@ -75,6 +77,7 @@ impl fmt::Display for PartsRefreshError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             PartsRefreshError::Open(e) => e.fmt(f),
+            PartsRefreshError::Libraries(e) => e.fmt(f),
             PartsRefreshError::Refresh(e) => e.fmt(f),
             PartsRefreshError::Write { path, error } => {
                 write!(f, "can't write {}: {error}", path.display())
@@ -87,6 +90,7 @@ impl std::error::Error for PartsRefreshError {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         match self {
             PartsRefreshError::Open(e) => Some(e),
+            PartsRefreshError::Libraries(e) => Some(e),
             PartsRefreshError::Refresh(e) => Some(e),
             PartsRefreshError::Write { error, .. } => Some(error),
         }
@@ -102,15 +106,34 @@ pub enum WriteLock {
     Never,
 }
 
-/// The snapshot of the design at `project` from `source`, written to its lock when it changed and `write` says so
+/// The snapshot of the design at `project` from `source`, written to its lock when it changed and `write` says so;
+/// each board footprint paired by the footprint its review is of, its library footprint found through `search`
+/// ([`crate::fp::reviewed`])
 pub fn refresh_project(
     project: &Path,
+    search: &crate::fp::LibrarySearch,
     source: &dyn Source,
     write: WriteLock,
 ) -> Result<Refreshed, PartsRefreshError> {
     let p = Project::open_without_parts(project).map_err(PartsRefreshError::Open)?;
-    let lock =
-        erc_parts::refresh(&p.imported.design, source).map_err(PartsRefreshError::Refresh)?;
+    let (mut syms, mut fps) = search.open(&p.dir).map_err(PartsRefreshError::Libraries)?;
+    let mut resolver = crate::fp::Resolver {
+        syms: &mut syms,
+        fps: &mut fps,
+    };
+    let mut reviewed = |board: &erc_model::Board, i| {
+        let r = resolver.resolve(board, i);
+        let lib_id = r
+            .library_footprint
+            .filter(|_| r.reviewed_as == crate::fp::ReviewedAs::Library);
+        let lay = board.layout.as_ref().expect("resolved from a layout");
+        (
+            r.hash,
+            lib_id.unwrap_or_else(|| lay.footprints[i.index()].lib_id.clone()),
+        )
+    };
+    let lock = erc_parts::refresh(&p.imported.design, &mut reviewed, source)
+        .map_err(PartsRefreshError::Refresh)?;
     let path = p.parts_lock_path();
     let text = lock.to_toml();
     let changed = std::fs::read(&path).ok().as_deref() != Some(text.as_bytes());

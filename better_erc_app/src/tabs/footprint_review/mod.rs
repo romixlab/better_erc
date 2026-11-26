@@ -1297,8 +1297,8 @@ impl FootprintReview {
         self.show_symbol(i, fresh);
     }
 
-    /// Puts row `i` of the list under review: a board row's footprint as the board places it, a library row's
-    /// from its `Footprint` field; its datasheet from its `Datasheet` field (`fresh`: looked for again), or the
+    /// Puts row `i` of the list under review: a board row's library footprint (the board copy as placed when no
+    /// library file is found), a library row's from its `Footprint` field; its datasheet from its `Datasheet` field (`fresh`: looked for again), or the
     /// reason it has no footprint to review
     fn show_symbol(&mut self, i: usize, fresh: bool) {
         let Some(list) = &self.rt.symbols else { return };
@@ -1320,27 +1320,41 @@ impl FootprintReview {
         let no_footprint = |why: String| (None, Some(why));
         let mut board_note = row.note();
         let (sourced, note) = match &row {
-            // What is reviewed is the footprint as the board places it: its hash is what the pairs are of
-            Row::Board(g) => match (&self.board, g.references().first()) {
-                (Some(board), Some(reference)) => match (FootprintSource::Board {
+            // What is reviewed is the library footprint the board names: its hash is what the pairs are of. A board
+            // copy that differs is reported in the note, never drawn as the reviewed footprint
+            Row::Board(g) => match (row.library_file(), &self.board, g.references().first()) {
+                (Some(file), _, _) => match FootprintSource::File(file.to_path_buf()).read() {
+                    Ok(s) => {
+                        let shown = format!(
+                            "library footprint {} shown, the one reviewed",
+                            file_name(file)
+                        );
+                        let margins = self.board_setup_note();
+                        board_note = Some(
+                            [Some(shown), margins, board_note, self.override_note(&row)]
+                                .into_iter()
+                                .flatten()
+                                .collect::<Vec<_>>()
+                                .join("; "),
+                        );
+                        (Some(s), None)
+                    }
+                    Err(e) => no_footprint(e.to_string()),
+                },
+                (None, Some(board), Some(reference)) => match (FootprintSource::Board {
                     board: board.clone(),
                     reference: reference.clone(),
                 })
                 .read()
                 {
                     Ok(s) => {
-                        if let (Some(own), Some(placed)) =
-                            (row.symbol_footprint(), row.overridden_footprint())
-                        {
-                            let over = format!(
-                                "placed as {placed}, not the symbol's own Footprint ({own}): the board's footprint is \
-                                 reviewed"
-                            );
-                            board_note = Some(match board_note {
-                                Some(n) => format!("{over}; {n}"),
-                                None => over,
-                            });
-                        }
+                        board_note = Some(
+                            [board_note, self.override_note(&row)]
+                                .into_iter()
+                                .flatten()
+                                .collect::<Vec<_>>()
+                                .join("; "),
+                        );
                         (Some(s), None)
                     }
                     Err(e) => no_footprint(e.to_string()),
@@ -1408,6 +1422,27 @@ impl FootprintReview {
         if fresh {
             self.usage("symbol");
         }
+    }
+
+    /// The board setup's mask and paste margins of the open board, which the library footprint is not drawn
+    /// with: one board-wide setting, not a difference of the footprint
+    fn board_setup_note(&self) -> Option<String> {
+        let b = self.rt.board.as_ref()?;
+        let m = better_erc::fp::reviewed::board_margins_note(&outline::Margins::of_setup(
+            &b.layout.setup,
+        ))?;
+        Some(format!(
+            "drawn with the library's own margins; the board setup applies {m} to pads that set none, on every \
+             footprint alike"
+        ))
+    }
+
+    /// The row's references placed with another footprint than their symbol's own `Footprint`
+    fn override_note(&self, row: &Row) -> Option<String> {
+        let (own, placed) = (row.symbol_footprint()?, row.overridden_footprint()?);
+        Some(format!(
+            "placed as {placed}, not the symbol's own Footprint ({own}): the board's footprint is reviewed"
+        ))
     }
 
     fn open_board(&mut self, path: &Path) {
@@ -1485,17 +1520,25 @@ impl FootprintReview {
                         copy.footprint.footprint.reference
                     )
                 } else {
+                    let d = better_erc::model::fphash::differences(&lib.footprint, &copy.footprint);
                     format!(
-                        "the board copy {} differs from the library ({}): update the board from the library",
+                        "the board copy {} ({}) differs from the library, not part of the review: {}",
                         reference(&copy),
-                        copy.hash
+                        copy.hash,
+                        d.describe("library", "board").join("; ")
                     )
+                };
+                let note = match self.board_setup_note() {
+                    Some(m) => format!("library footprint shown; {note}; {m}"),
+                    None => format!("library footprint shown; {note}"),
                 };
                 (lib, note)
             }
             Err(e) => (
                 copy,
-                format!("reviewing the board copy: the library footprint was not found ({e})"),
+                format!(
+                    "the board copy shown as placed, its own edits included: the library footprint was not found ({e})"
+                ),
             ),
         };
         // The board copy's fields (Datasheet, Footprint_Review from its symbol) where the library file has none
@@ -1537,15 +1580,16 @@ impl FootprintReview {
         }
     }
 
-    /// The open board's mask and paste margins, for a footprint of that board or of its project's libraries
+    /// The open board's mask and paste margins, for a board copy of that board
     fn board_margins(&self, s: &Sourced) -> outline::Margins {
         let Some(b) = &self.rt.board else {
             return outline::Margins::default();
         };
+        // A library footprint is drawn with its own margins: the board setup's are a board-wide setting, said in
+        // the note, not part of the footprint
         let of_board = match &s.source {
             FootprintSource::Board { board, .. } => *board == b.path,
-            FootprintSource::Library { project, .. } => Some(project.as_path()) == b.path.parent(),
-            FootprintSource::File(_) => false,
+            FootprintSource::Library { .. } | FootprintSource::File(_) => false,
         };
         if of_board {
             outline::Margins::of_setup(&b.layout.setup)
@@ -2024,7 +2068,8 @@ impl FootprintReview {
                 },
             ),
         };
-        better_erc::fp::accept(project, &what, &*source, new, covers, dry_run)
+        let search = self.library_search_for(&t.from);
+        better_erc::fp::accept(project, &search, &what, &*source, new, covers, dry_run)
             .map_err(|e| e.to_string())
     }
 

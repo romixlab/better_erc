@@ -601,7 +601,8 @@ fn check_compares_board_copies_with_their_library_footprint() {
     let v = json(&out);
     let u1 = entry(&v, "U1");
     assert_eq!(u1["library_footprint"], "Test:Asym_SOT", "{u1}");
-    assert_eq!(u1["library_footprint_hash"], sot.as_str());
+    assert_eq!(u1["hash"], sot.as_str());
+    assert_eq!(u1["reviewed_as"], "library");
     assert_eq!(u1["board_differs"], false);
     // A footprint without a symbol and without a library nickname can't be looked up
     assert!(
@@ -612,21 +613,26 @@ fn check_compares_board_copies_with_their_library_footprint() {
         "{v}"
     );
 
+    // The library edited since the board was updated: the review is of the library footprint, which no review
+    // covers yet; the board copy is reported apart, naming what differs
     let changed = changed_footprints(&dir);
     let out = fp_check(&dir, &["--format", "json", "--footprints", path(&changed)]);
     assert_eq!(out.status.code(), Some(1));
     let v = json(&out);
     let u1 = entry(&v, "U1");
-    assert_eq!(
-        u1["status"], "ok",
-        "the review hash is the board copy's: {u1}"
+    assert_ne!(
+        u1["hash"],
+        sot.as_str(),
+        "the review hash is the library's: {u1}"
     );
+    assert_eq!(u1["board_hash"], sot.as_str(), "{u1}");
+    assert_ne!(u1["status"], "ok", "{u1}");
     assert_eq!(u1["board_differs"], true, "{u1}");
     let text = stdout(&fp_check(&dir, &["--footprints", path(&changed)]));
     assert!(
         text.contains(&format!(
-            "the board copy has {sot}, library footprint Test:Asym_SOT has fp1:"
-        )),
+            "the board copy ({sot}) differs from library footprint Test:Asym_SOT, not part of the review"
+        )) && text.contains("pads differ beyond their settings: 1 only in the library, 1 only on the board"),
         "{text}"
     );
     assert!(
@@ -634,9 +640,100 @@ fn check_compares_board_copies_with_their_library_footprint() {
         "{text}"
     );
     assert!(
-        text.contains("not compared with a library footprint (6 footprints): footprint Mixed_Pads names no library"),
+        text.contains("reviewed as placed, no library footprint (6 footprints): footprint Mixed_Pads names no library"),
         "{text}"
     );
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// U1's board copy overrides pad 1's paste margin and the board setup sets one for every pad: the review, its
+/// pairs and an accept are of the library footprint's hash, which review 1 covers; the override is its own
+/// finding naming the setting, and the board-wide margin is said once, as no footprint's difference
+#[test]
+fn a_board_copy_override_is_reported_not_reviewed() {
+    let sot = library_hash("Asym_SOT");
+    let dir = scratch("copy-override");
+    project(&dir, &SYMBOLS[..1]);
+    let board = dir.join("fpcheck.kicad_pcb");
+    let text = std::fs::read_to_string(&board).unwrap();
+    let pad = "(uuid \"5985705a-6cd0-4865-809e-aab55d7ef8cf\")";
+    assert!(text.contains(pad), "U1's pad 1");
+    let text = text
+        .replacen(pad, &format!("(solder_paste_margin -0.05)\n\t\t\t{pad}"), 1)
+        .replacen(
+            "(pad_to_mask_clearance 0)",
+            "(pad_to_mask_clearance 0)\n\t\t(pad_to_paste_clearance -0.02)",
+            1,
+        );
+    std::fs::write(&board, text).unwrap();
+    let fps = fixtures();
+    let libs = ["--footprints", path(&fps)];
+    let out = berc_in(
+        &dir,
+        &[
+            "parts",
+            "refresh",
+            path(&dir),
+            "--from",
+            path(&dir.join(PARTS)),
+            libs[0],
+            libs[1],
+        ],
+    );
+    assert!(out.status.success(), "{out:?}");
+    let lock = std::fs::read_to_string(dir.join("parts.lock.toml")).unwrap();
+    assert!(
+        lock.contains(&sot),
+        "the lock pairs the library hash: {lock}"
+    );
+
+    let mut args = libs.to_vec();
+    args.extend(["--format", "json"]);
+    let v = json(&fp_check(&dir, &args));
+    let u1 = entry(&v, "U1");
+    assert_eq!(u1["status"], "ok", "{u1}");
+    assert_eq!(u1["hash"], sot.as_str());
+    assert_ne!(u1["board_hash"], sot.as_str());
+    assert_eq!(u1["board_differs"], true);
+    assert_eq!(u1["differences"]["settings"][0]["setting"], "paste", "{u1}");
+    assert_eq!(u1["differences"]["settings"][0]["pad"], "1", "{u1}");
+    assert_eq!(v["board_margins"], "paste -0.02 mm", "{v}");
+    let text = stdout(&fp_check(&dir, &libs));
+    assert!(
+        text.contains("paste on pad 1: library none, board -0.05"),
+        "{text}"
+    );
+    assert!(
+        text.contains(
+            "board setup margins for pads that set none, on every footprint alike: paste -0.02 mm"
+        ),
+        "{text}"
+    );
+
+    let out = fp_todo(&dir, &libs);
+    let text = stdout(&out);
+    assert!(
+        text.contains(&sot),
+        "fp todo lists the library hash: {text}"
+    );
+    assert!(
+        text.contains("board copy U1 (")
+            && text.contains("paste on pad 1: library none, board -0.05"),
+        "{text}"
+    );
+    let mut args = libs.to_vec();
+    args.extend(["--format", "json", "--all"]);
+    let v = json(&fp_todo(&dir, &args));
+    let e = &v["entries"][0];
+    assert_eq!(e["hash"], sot.as_str(), "{v}");
+    assert_eq!(e["reviewed_as"], "library", "{v}");
+    assert_eq!(e["board_copies"][0]["reference"], "U1", "{v}");
+
+    let mut args = vec!["U1", "--dry-run", "--format", "json"];
+    args.extend(libs);
+    let v = json(&fp_accept(&dir, &args));
+    assert_eq!(v["hash"], sot.as_str(), "{v}");
+    assert_eq!(v["footprint"], "Test:Asym_SOT", "{v}");
     std::fs::remove_dir_all(&dir).unwrap();
 }
 

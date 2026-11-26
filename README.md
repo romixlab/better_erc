@@ -42,7 +42,7 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
 - **`berc place-fields PROJECT`**: symbol fields that overlap something (`DRAW-9`, `DRAW-34`) moved into a column
   beside their body; a dry run by default, `--write` edits the schematic. See [Placing fields](#placing-fields).
 - **`berc fp`**: footprint review. `berc fp hash` prints a footprint's review hash, the same for a library file and
-  every board copy of it; `berc fp check` checks every (board footprint hash, MPN) pair against the footprint reviews
+  every board copy of it; `berc fp check` checks every (library footprint hash, MPN) pair against the footprint reviews
   of the parts snapshot, `berc fp check --lib` every symbol of a symbol library against a part source's reviews,
   `berc fp todo` lists what a board needs reviewed, one line per footprint with its families and MPNs under it, and `berc fp accept` records a
   review in the part source; `berc fp model` reads each footprint's 3D models and measures them against it. See
@@ -198,14 +198,15 @@ and the footprint review read part facts from one committed file beside the proj
 `Cargo.lock`. A check run never asks a server: CI runs offline and gives the same result on every PC.
 
 ```sh
-berc parts refresh PROJECT --from parts.toml [--check] [--format text|json]
+berc parts refresh PROJECT --from parts.toml [--check] [--symbols DIR] [--footprints DIR] [--format text|json]
 ```
 
 `berc parts refresh` writes the snapshot again from a part source. It holds every MPN field (`Mpn1`, `MPN_2`,
 `Manufacturer_Part_Number`, ...) of the parts fitted in the base design or any variant, and per MPN the facts the
 checks use: each with its value, the source that stated it, its rank and when. With a board file it also holds, for
-each board footprint's review hash ([`berc fp hash`](#footprint-review)) and each MPN placed on it, the footprint
-reviews that cover the pair. An MPN taken off the board leaves the file. The file is sorted and has one line per
+the review hash of each board footprint's library footprint ([`berc fp hash`](#footprint-review), the board copy's
+where no library file is found; `--symbols` and `--footprints` as for `berc fp check`) and each MPN placed with it,
+the footprint reviews that cover the pair. An MPN taken off the board leaves the file. The file is sorted and has one line per
 fact, so its git diff after a refresh shows exactly what changed in the source: a new value, a retracted review.
 
 | key | what |
@@ -334,9 +335,10 @@ sheet's name or file.
 A footprint checked once against its datasheet should not have to be checked again on the next board, unless it
 changed. `berc fp` keeps that record as a footprint review in the part source: the footprint by its review hash, and
 the parts it fits, each by its MPN or a whole family by its MPN's decoding (a review of an 0402 resistor footprint
-against Yageo's RC series datasheet covers every RC0402 resistor). The parts snapshot
-([`parts.lock.toml`](#part-facts-the-parts-snapshot)) holds, for each board footprint hash and each MPN placed on it,
-the reviews that cover the pair, so a check runs offline. Nothing is stored on the symbols.
+against Yageo's RC series datasheet covers every RC0402 resistor). What a review signs is the library footprint:
+a board copy's own edits are reported, never signed. The parts snapshot
+([`parts.lock.toml`](#part-facts-the-parts-snapshot)) holds, for each library footprint hash and each MPN placed with
+it, the reviews that cover the pair, so a check runs offline. Nothing is stored on the symbols.
 
 `berc fp hash` prints a footprint's review hash, `fp1:` and 16 hex digits:
 
@@ -369,9 +371,12 @@ berc fp check                       # the KiCad project in this directory
 berc fp check hw/board --format json
 ```
 
-Each board footprint is hashed as placed, and each MPN of its part (its `Mpn1`, `MPN_2`, ... fields in every variant
-it is fitted in) is one pair with that hash. A footprint is ok when a review of its hash now covers every one of its
-pairs. Each footprint is one of:
+Each board footprint is reviewed as the library footprint it names, found through `--footprints` and the
+`fp-lib-table` (a board footprint without a library nickname by its symbol's `Footprint` field), and each MPN of its
+part (its `Mpn1`, `MPN_2`, ... fields in every variant it is fitted in) is one pair with that library footprint's
+hash. A footprint whose library file is not found is reviewed as placed, its board copy's own edits included, and
+says so (`reviewed as placed`, `"reviewed_as": "placed"` in JSON). A footprint is ok when a review of its hash now
+covers every one of its pairs. Each footprint is one of:
 
 | Status | Meaning |
 |---|---|
@@ -386,10 +391,13 @@ pairs. Each footprint is one of:
 | not fitted | the part is fitted in no variant: nothing to review, not a failure |
 | board-only | no symbol, marked board-only in KiCad (logos, mounting holes): listed last under its own heading, not a failure |
 
-The review is of the footprint as the board places it, so a board copy that differs from its library footprint is
-reviewed as it is; it is reported too (the footprint the board names, found through `--footprints` and the
-`fp-lib-table`; a board footprint without a library nickname is looked up by its symbol's `Footprint` field): the line
-shows both hashes, and the board was not updated from the library.
+A board copy that differs from its library footprint is its own finding, apart from the review: the board was not
+updated from the library, or the copy overrides a setting of it. The line names what differs, from the canonical
+texts: each setting the footprint or a pad holds itself (`paste on pad 1: library none, board -0.05`, mask and paste
+margins and ratios, clearance, thermal relief, zone connection), grouped over the pads with the same change, then
+how many pads, graphics and zones differ beyond their settings. The board setup's mask and paste margins for pads
+that set none apply to every footprint alike: they are no footprint's difference, and the board's are said once
+below the list. `--format json` gives the board copy's hash (`board_hash`) and the differences (`differences`).
 
 A board footprint placed under a different `Lib:Name` than its symbol's own `Footprint` field (a library migration
 half done, or a deliberate per-instance override) is reported too, naming both: a library migration that renamed or
@@ -430,7 +438,8 @@ the reviews its pairs name, so its git diff after a refresh shows a new or a ret
 
 ### What to review for a board
 
-`berc fp todo` lists what a board's footprints need reviewed: one line per board footprint hash, and under it one
+`berc fp todo` lists what a board's footprints need reviewed: one line per library footprint hash (the board copy's
+where no library file is found), and under it one
 line per family (where the MPNs decode into one) or MPN alone, with the references each stands for. One review of
 the footprint against a datasheet covers every family and MPN that datasheet covers. When the parts of its MPNs
 differ in some fact of the parts snapshot, the footprint's line is followed by the facts they differ in.
@@ -577,10 +586,13 @@ says so.
    hashes and covers, one row each as `berc fp todo` lists them, those to review first; or a symbol library (a
    `.kicad_sym`, a `.kicad_symdir` folder, or a nickname from the `sym-lib-table`s) for its symbols, judged as
    `berc fp check --lib` judges them against the part source. Each row shows its status (changed, uncovered,
-   partial, ok, unknown MPN, no MPN, missing, no footprint). A board row opens the board's copy of the footprint,
-   the one its first reference places: that is what the pairs are of. A note above the canvas says when the board
-   places a different footprint than the symbol's own `Footprint` field names, and when the board's copy differs
-   from its library footprint (the board not updated from the library yet). A library row opens the library
+   partial, ok, unknown MPN, no MPN, missing, no footprint). A board row opens the library footprint its review is
+   of, drawn with the library's own margins: that is what the pairs are of. A footprint whose library file is not
+   found opens as its first reference places it, marked as reviewed as placed. A note above the canvas says which
+   footprint is shown, the board setup's mask and paste margins (which apply to every footprint alike, and which
+   the library footprint is not drawn with), when the board places a different footprint than the symbol's own
+   `Footprint` field names, and each board copy that differs from its library footprint, naming what differs: not
+   part of the review. A library row opens the library
    footprint its `Footprint` field names, found through the project's or the global `fp-lib-table`. A symbol that
    sets no footprint, or whose symbol or footprint is not found, is refused with the reason. Next to review steps to
    the next row that needs one. A row lists the part source's reviews that name it (what each was made against, its
@@ -770,7 +782,8 @@ libspnav), so the device is not needed to build or run it.
 
 A footprint opened alone (Open a footprint alone, a `.kicad_mod`) or picked from a board's footprint list is a
 preview: it is drawn over the datasheet the same way, but there is no symbol to put the hash on, so Accept is
-disabled and says so. For a board footprint the tab says whether the board copy is the same as its library file.
+disabled and says so. A board footprint shows its library file, and the tab says whether the board copy is the
+same, else what it differs in.
 
 PDFs are read and drawn by [hayro](https://github.com/LaurenzV/hayro), in pure Rust, on a thread of its own. The
 blend modes other than Normal are a wgpu shader that reads the page's own pixel under the footprint. The

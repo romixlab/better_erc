@@ -347,17 +347,22 @@ fn override_project(dir: &Path) -> PathBuf {
     )
     .unwrap();
     let source = better_erc::parts::FileSource::open(&dir.join("parts.toml")).unwrap();
-    better_erc::parts::refresh_project(dir, &source, better_erc::parts::WriteLock::Changed)
-        .unwrap();
+    better_erc::parts::refresh_project(
+        dir,
+        &better_erc::fp::LibrarySearch::default(),
+        &source,
+        better_erc::parts::WriteLock::Changed,
+    )
+    .unwrap();
     mixed
 }
 
 /// The board places a footprint other than the symbol's own, and that footprint was edited in its library after
-/// the board was last updated: the review is of the board's copy (the pairs are of the board footprint's hash),
-/// with notes that it overrides the symbol's and that the library's footprint differs; the library edited again
-/// is read again into the list
+/// the board was last updated: the review is of the library footprint (the pairs are of its hash), with notes that
+/// the board overrides the symbol's and that the board copy differs, not part of the review; the library edited
+/// again is read again into the list
 #[test]
-fn an_override_is_reviewed_as_placed() {
+fn an_override_reviews_the_library_footprint() {
     let dir = tempfile::tempdir().unwrap();
     let mixed = override_project(dir.path());
     add_pad(&mixed, 7);
@@ -383,19 +388,22 @@ fn an_override_is_reviewed_as_placed() {
     let st = h.state();
     let s = st.rt.sourced.as_ref().expect("a footprint shown");
     assert!(
-        matches!(&s.source, FootprintSource::Board { reference, .. } if reference == "U7"),
+        matches!(&s.source, FootprintSource::File(f) if *f == mixed),
         "{:?}",
         s.source
     );
-    assert!(!pads(&h).contains(&"7".to_string()), "{:?}", pads(&h));
+    assert!(pads(&h).contains(&"7".to_string()), "{:?}", pads(&h));
     let note = h.state().rt.board_note.clone().unwrap_or_default();
     assert!(
         note.contains("placed as Test:Mixed_Pads, not the symbol's own Footprint (Test:Asym_SOT)"),
         "{note}"
     );
     assert!(
-        note.contains("the board's copy is not its library's footprint now")
-            && note.contains("update the board"),
+        note.contains("library footprint Mixed_Pads.kicad_mod shown, the one reviewed")
+            && note.contains(
+                "board copy U7 differs from the library footprint, not part of the review: pads differ beyond \
+                 their settings: 1 only in the library, 0 only on the board"
+            ),
         "{note}"
     );
     // The library footprint is watched: edited again, the list is read again
@@ -408,7 +416,7 @@ fn an_override_is_reviewed_as_placed() {
     );
     let library_hash =
         |h: &Harness<'_, FootprintReview>| match &h.state().rt.symbols.as_ref().unwrap().rows[i] {
-            rows::Row::Board(g) => g.entries[0].library_hash.clone(),
+            rows::Row::Board(g) => Some(g.hash.clone()),
             rows::Row::Library(_) => None,
         };
     let before = library_hash(&h);

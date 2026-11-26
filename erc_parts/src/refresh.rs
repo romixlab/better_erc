@@ -42,9 +42,14 @@ impl From<SourceError> for RefreshError {
     }
 }
 
-/// The snapshot of `design`'s MPNs and footprint pairs from `source`, asking for [`keys::FACT_KEYS`]
-pub fn refresh(design: &Design, source: &dyn Source) -> Result<PartsLock, RefreshError> {
-    refresh_mpns(&BoardMpns::of(design), source)
+/// The snapshot of `design`'s MPNs and footprint pairs from `source`, asking for [`keys::FACT_KEYS`]; each board
+/// footprint paired by what `reviewed` says its review is of
+pub fn refresh(
+    design: &Design,
+    reviewed: &mut crate::board::Reviewed,
+    source: &dyn Source,
+) -> Result<PartsLock, RefreshError> {
+    refresh_mpns(&BoardMpns::of(design, reviewed), source)
 }
 
 /// The snapshot of `board`'s MPNs and footprint pairs from `source`

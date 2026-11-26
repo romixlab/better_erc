@@ -1,10 +1,12 @@
 //! `berc fp check`: every footprint of a board against the footprint reviews of the board's parts snapshot. A
-//! footprint is ok when a review of its hash covers every MPN of its part ([`super::pairs::judge`]); its board
-//! copy is also compared with its library footprint, and its `Lib:Name` with what its symbol names.
+//! footprint is ok when a review of its library footprint's hash ([`super::reviewed`]) covers every MPN of its part
+//! ([`super::pairs::judge`]); a board copy that differs from its library footprint is reported apart, naming what
+//! differs, and its `Lib:Name` is compared with what its symbol names.
 
 use super::pairs::{self, Overall, Pair};
+use super::reviewed::{self, Resolver, ReviewedAs};
 use super::{FootprintLibraries, LibCheckError, LibrarySearch, SymbolLibraries};
-use erc_model::fphash;
+use erc_model::fphash::Differences;
 use erc_model::layout::FootprintId;
 use erc_parts::PartsLock;
 use serde::{Deserialize, Serialize};
@@ -97,17 +99,22 @@ pub struct FpEntry {
     /// The schematic symbol's library id, when it has one
     pub symbol: Option<String>,
     pub status: FpStatus,
-    /// The footprint's review hash now
+    /// The review hash of the footprint reviewed: its library footprint's, else the board copy's as placed
     pub hash: String,
+    /// Which footprint [`hash`](Self::hash) is of
+    pub reviewed_as: ReviewedAs,
+    /// The board copy's own review hash
+    pub board_hash: String,
     /// Each MPN of its part in every variant it is fitted in, judged against the snapshot's reviews
     pub pairs: Vec<Pair>,
-    /// The library footprint this board copy is compared with: the board's `Lib:Name`, else (a board footprint
-    /// without a library nickname) the symbol's `Footprint` field
+    /// The library footprint reviewed: the board's `Lib:Name`, else (a board footprint without a library
+    /// nickname) the symbol's `Footprint` field
     pub library_footprint: Option<String>,
-    /// The review hash of that library footprint, when it was found
-    pub library_footprint_hash: Option<String>,
-    /// The board copy differs from its library footprint: the board was not updated from the library
+    /// The board copy differs from its library footprint: the board was not updated from the library, or the copy
+    /// overrides a setting of it. Never part of what is reviewed
     pub board_differs: bool,
+    /// What the board copy differs in, against its library footprint
+    pub differences: Differences,
     /// Why the library footprint was not found, when it was not
     pub footprint_note: Option<String>,
     /// What the symbol itself names as its `Footprint`: the library symbol's field, else the schematic's copy of
@@ -134,6 +141,9 @@ pub struct FpCheck {
     pub lock: PathBuf,
     /// By reference, in natural order
     pub footprints: Vec<FpEntry>,
+    /// The board setup's mask and paste margins for pads that set none, when it sets any: one board-wide setting,
+    /// not a difference of any footprint
+    pub board_margins: Option<String>,
 }
 
 /// Why `berc fp check` or `todo` could not run (exit code 2)
@@ -226,21 +236,10 @@ impl Opened {
 }
 
 /// `id` is a `Lib:Name`, not a bare name (a footprint placed without a library nickname, legitimate in KiCad):
-/// [`library_footprint`] and [`FpEntry::footprint_overridden`] only make sense of one
+/// [`reviewed::library_footprint`] and [`FpEntry::footprint_overridden`] only make sense of one
 pub(super) fn is_lib_name(id: &str) -> bool {
     id.split_once(':')
         .is_some_and(|(l, n)| !l.is_empty() && !n.is_empty())
-}
-
-/// The `Lib:Name` a board footprint is compared with in the footprint libraries: its own when it names a library,
-/// else its symbol's `Footprint` field
-fn library_footprint(board_lib_id: &str, symbol_footprint: Option<&str>) -> Option<String> {
-    [Some(board_lib_id), symbol_footprint]
-        .into_iter()
-        .flatten()
-        .map(str::trim)
-        .find(|id| is_lib_name(id))
-        .map(String::from)
 }
 
 /// Checks every footprint of the KiCad project at `path` (a directory, its `.kicad_pro`, `.kicad_sch` or
@@ -258,18 +257,24 @@ pub fn check(path: &Path, search: &LibrarySearch) -> Result<FpCheck, FpCheckErro
     let lay = board.layout.as_ref().expect("checked in open");
     let mut footprints = Vec::new();
     for (i, f) in lay.footprints.iter().enumerate() {
-        let hash = fphash::hash(&lay.local_footprint(FootprintId::from_index(i)));
+        let r = Resolver {
+            syms: &mut *syms,
+            fps: &mut *fps,
+        }
+        .resolve(board, FootprintId::from_index(i));
         let mut e = FpEntry {
             reference: f.reference.clone(),
             footprint: f.lib_id.clone(),
             symbol: None,
             status: FpStatus::NoSymbol,
-            hash,
+            board_differs: r.board_differs(),
+            hash: r.hash,
+            reviewed_as: r.reviewed_as,
+            board_hash: r.board_hash,
             pairs: Vec::new(),
-            library_footprint: None,
-            library_footprint_hash: None,
-            board_differs: false,
-            footprint_note: None,
+            library_footprint: r.library_footprint,
+            differences: r.differences,
+            footprint_note: r.note,
             symbol_footprint: None,
             footprint_overridden: false,
         };
@@ -277,7 +282,6 @@ pub fn check(path: &Path, search: &LibrarySearch) -> Result<FpCheck, FpCheckErro
             if f.attrs.board_only {
                 e.status = FpStatus::BoardOnly;
             }
-            compare_with_library(&mut e, None, fps);
             footprints.push(e);
             continue;
         };
@@ -285,11 +289,6 @@ pub fn check(path: &Path, search: &LibrarySearch) -> Result<FpCheck, FpCheckErro
         e.symbol = Some(part.lib_id.clone());
         let copy = part.symbol.map(|s| &board.symbols[s.index()]);
         let lib_fields = syms.fields(&part.lib_id).ok();
-        let footprint_field = part
-            .field("Footprint")
-            .or_else(|| copy.and_then(|s| field_of(&s.fields, "Footprint")))
-            .or_else(|| lib_fields.as_deref().and_then(|f| field_of(f, "Footprint")));
-        compare_with_library(&mut e, footprint_field, fps);
         e.symbol_footprint = lib_fields
             .as_deref()
             .and_then(|f| field_of(f, "Footprint"))
@@ -314,33 +313,10 @@ pub fn check(path: &Path, search: &LibrarySearch) -> Result<FpCheck, FpCheckErro
     footprints.sort_by(|a, b| erc_model::natural_cmp(&a.reference, &b.reference));
     Ok(FpCheck {
         board: project.dir.join(&lay.file),
+        board_margins: reviewed::board_margins_note(&super::outline::Margins::of_setup(&lay.setup)),
         lock: project.parts_lock_path(),
         footprints,
     })
-}
-
-/// The board copy in `e` against its library footprint, read through `fps`
-fn compare_with_library(
-    e: &mut FpEntry,
-    symbol_footprint: Option<&str>,
-    fps: &mut FootprintLibraries,
-) {
-    e.library_footprint = library_footprint(&e.footprint, symbol_footprint);
-    let Some(id) = &e.library_footprint else {
-        e.footprint_note = Some(format!(
-            "footprint {} names no library, and its symbol none either",
-            e.footprint
-        ));
-        return;
-    };
-    match fps.footprint(id) {
-        Ok(found) => {
-            let lib_hash = fphash::hash(&found.footprint);
-            e.board_differs = lib_hash != e.hash;
-            e.library_footprint_hash = Some(lib_hash);
-        }
-        Err(why) => e.footprint_note = Some(why.to_string()),
-    }
 }
 
 impl FpCheck {
@@ -426,6 +402,9 @@ impl FpCheck {
                     let _ = write!(out, "  {dim}hash now{dim:#} {}", e.hash);
                 }
             }
+            if e.reviewed_as == ReviewedAs::Placed && e.status != FpStatus::BoardOnly {
+                let _ = write!(out, "  {dim}reviewed as placed{dim:#}");
+            }
             for l in pair_notes(&e.pairs, details) {
                 let _ = write!(out, "\n{:13} {:width$} {l}", "", "");
             }
@@ -433,14 +412,16 @@ impl FpCheck {
                 let warn = AnsiColor::Yellow.on_default();
                 let _ = write!(
                     out,
-                    "\n{:13} {:width$} {warn}the board copy has {}, library footprint {} has {}: update the board \
-                     from the library{warn:#}",
+                    "\n{:13} {:width$} {warn}the board copy ({}) differs from library footprint {}, not part of the \
+                     review: update the board from the library, or keep the override{warn:#}",
                     "",
                     "",
-                    e.hash,
+                    e.board_hash,
                     e.library_footprint.as_deref().unwrap_or(""),
-                    e.library_footprint_hash.as_deref().unwrap_or(""),
                 );
+                for l in e.differences.describe("library", "board") {
+                    let _ = write!(out, "\n{:13} {:width$}   {warn}{l}{warn:#}", "", "");
+                }
             }
             if e.footprint_overridden {
                 let note = AnsiColor::Cyan.on_default();
@@ -463,7 +444,13 @@ impl FpCheck {
         for (why, n) in once_each(footprint_notes) {
             let _ = writeln!(
                 out,
-                "{dim}not compared with a library footprint ({n} footprints): {why}{dim:#}"
+                "{dim}reviewed as placed, no library footprint ({n} footprints): {why}{dim:#}"
+            );
+        }
+        if let Some(m) = &self.board_margins {
+            let _ = writeln!(
+                out,
+                "{dim}board setup margins for pads that set none, on every footprint alike: {m}{dim:#}"
             );
         }
         let counts: Vec<String> = self

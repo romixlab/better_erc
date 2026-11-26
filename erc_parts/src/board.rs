@@ -1,9 +1,30 @@
 //! What of a design a parts snapshot covers: every MPN of a fitted part in the base design and in each variant,
-//! and each (board footprint hash, MPN) pair where the design has a board file.
+//! and each (footprint hash, MPN) pair where the design has a board file, the hash of the footprint a review of
+//! the board footprint is of (the caller's [`Reviewed`] says which: its library footprint where one is found).
 
 use crate::mpn::mpns;
 use erc_model::layout::FootprintId;
 use erc_model::{Board, Design, PartId, VariantId, View, fphash, natural_cmp};
+
+/// The footprint a review of board footprint `i` of `board` is of: its review hash and `Lib:Name`
+pub type Reviewed<'a> = dyn FnMut(&Board, FootprintId) -> (String, String) + 'a;
+
+/// A board footprint reviewed as placed: the board copy's own hash and `Lib:Name`, for a design without footprint
+/// libraries
+///
+/// # Panics
+///
+/// When `board` has no layout.
+pub fn as_placed(board: &Board, i: FootprintId) -> (String, String) {
+    let lay = board
+        .layout
+        .as_ref()
+        .expect("a board footprint is of a layout");
+    (
+        fphash::hash(&lay.local_footprint(i)),
+        lay.footprints[i.index()].lib_id.clone(),
+    )
+}
 use std::collections::{BTreeMap, BTreeSet};
 
 /// The MPNs and footprint pairs of a design
@@ -11,14 +32,14 @@ use std::collections::{BTreeMap, BTreeSet};
 pub struct BoardMpns {
     /// MPN, as the board writes it, to the references carrying it
     pub mpns: BTreeMap<String, Vec<String>>,
-    /// Board footprint hash to its `Lib:Name` and the MPNs of the parts placed with it
+    /// Reviewed footprint hash to its `Lib:Name` and the MPNs of the parts placed with it
     pub footprints: BTreeMap<String, HashedFootprint>,
 }
 
-/// A board footprint hash, by the parts placed with it
+/// A reviewed footprint hash, by the parts placed with it
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct HashedFootprint {
-    /// The `Lib:Name` of the first footprint with this hash, by reference
+    /// The `Lib:Name` of the first footprint reviewed with this hash, by reference
     pub lib_id: String,
     pub mpns: BTreeSet<String>,
 }
@@ -50,12 +71,13 @@ fn views(board: &Board) -> impl Iterator<Item = View<'_>> {
 }
 
 impl BoardMpns {
-    /// Every `MpnN` field of the fitted parts of every board, in the base design and in each variant
-    pub fn of(design: &Design) -> BoardMpns {
+    /// Every `MpnN` field of the fitted parts of every board, in the base design and in each variant, each placed
+    /// footprint by what `reviewed` says its review is of
+    pub fn of(design: &Design, reviewed: &mut Reviewed) -> BoardMpns {
         let mut refs: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
         let mut footprints: BTreeMap<String, HashedFootprint> = BTreeMap::new();
         for board in &design.boards {
-            // The footprint hash of each part placed on the board file, in reference order
+            // The reviewed footprint hash of each part placed on the board file, in reference order
             let mut hashes = BTreeMap::new();
             if let Some(lay) = &board.layout {
                 let mut placed: Vec<(usize, &erc_model::layout::Footprint)> =
@@ -63,11 +85,10 @@ impl BoardMpns {
                 placed.sort_by(|a, b| natural_cmp(&a.1.reference, &b.1.reference));
                 for (i, f) in placed {
                     let Some(part) = f.part else { continue };
-                    let hash = fphash::hash(&lay.local_footprint(FootprintId::from_index(i)));
                     hashes
                         .entry(part)
                         .or_insert_with(Vec::new)
-                        .push((hash, f.lib_id.clone()));
+                        .push(reviewed(board, FootprintId::from_index(i)));
                 }
             }
             for view in views(board) {

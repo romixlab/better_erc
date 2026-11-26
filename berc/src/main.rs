@@ -248,6 +248,8 @@ struct PartsRefreshArgs {
     /// instead of the mx3 part store
     #[arg(long, value_name = "FILE", value_hint = ValueHint::FilePath)]
     from: Option<PathBuf>,
+    #[command(flatten)]
+    libraries: LibraryPathArgs,
     /// Write nothing; exit 1 when the snapshot is out of date (for CI)
     #[arg(long)]
     check: bool,
@@ -350,9 +352,22 @@ struct FpModelArgs {
     format: ListFormat,
 }
 
-/// Libraries searched before the sym-lib-table and fp-lib-table
+/// Libraries searched before the sym-lib-table and fp-lib-table, and the libraries allowed
 #[derive(clap::Args)]
 struct LibraryArgs {
+    #[command(flatten)]
+    paths: LibraryPathArgs,
+    /// A library nickname symbols and their footprints may be in, repeatable: an exact name, or a prefix with a
+    /// trailing `*` (`VHRD_*`). With --lib or in `berc fp todo`: any other library named is reported. None (the
+    /// default): no rule
+    #[arg(long, value_name = "NICKNAME")]
+    allow: Vec<String>,
+}
+
+/// Libraries searched before the sym-lib-table and fp-lib-table, where a board footprint's library footprint is
+/// found
+#[derive(clap::Args)]
+struct LibraryPathArgs {
     /// A symbol library (.kicad_sym, .kicad_symdir) or a folder of them, searched before the sym-lib-table, each
     /// by its file name; repeatable
     #[arg(long, value_name = "DIR", value_hint = ValueHint::AnyPath)]
@@ -361,19 +376,22 @@ struct LibraryArgs {
     /// name; repeatable
     #[arg(long, value_name = "DIR", value_hint = ValueHint::DirPath)]
     footprints: Vec<PathBuf>,
-    /// A library nickname symbols and their footprints may be in, repeatable: an exact name, or a prefix with a
-    /// trailing `*` (`VHRD_*`). With --lib or in `berc fp todo`: any other library named is reported. None (the
-    /// default): no rule
-    #[arg(long, value_name = "NICKNAME")]
-    allow: Vec<String>,
 }
 
 impl LibraryArgs {
     fn search(&self) -> better_erc::fp::LibrarySearch {
         better_erc::fp::LibrarySearch {
+            allowed: self.allow.clone(),
+            ..self.paths.search()
+        }
+    }
+}
+
+impl LibraryPathArgs {
+    fn search(&self) -> better_erc::fp::LibrarySearch {
+        better_erc::fp::LibrarySearch {
             symbols: self.symbols.clone(),
             footprints: self.footprints.clone(),
-            allowed: self.allow.clone(),
             ..better_erc::fp::LibrarySearch::kicad()
         }
     }
@@ -399,9 +417,11 @@ struct FpAcceptArgs {
     /// The KiCad project: a directory, its .kicad_pro, .kicad_sch or .kicad_pcb
     #[arg(value_hint = ValueHint::AnyPath, default_value = ".")]
     project: PathBuf,
-    /// The board footprints reviewed, by reference
+    /// The board footprints reviewed, by reference: the review is of their library footprint
     #[arg(add = ArgValueCandidates::new(complete::board_references))]
     references: Vec<String>,
+    #[command(flatten)]
+    libraries: LibraryPathArgs,
     /// Record the review in this file, in the shape of parts.lock.toml, instead of the mx3 part store
     #[arg(long, value_name = "FILE", value_hint = ValueHint::FilePath)]
     from: Option<PathBuf>,
@@ -1282,6 +1302,7 @@ fn fp_accept(args: &FpAcceptArgs) -> ExitCode {
     spinner.set(format!("reading {}", args.project.display()));
     let run = better_erc::fp::accept(
         project,
+        &args.libraries.search(),
         &what,
         source.as_ref(),
         &review,
@@ -1367,7 +1388,12 @@ fn parts_refresh(args: &PartsRefreshArgs) -> ExitCode {
     } else {
         WriteLock::Changed
     };
-    match refresh_project(&args.project, source.as_ref(), write) {
+    match refresh_project(
+        &args.project,
+        &args.libraries.search(),
+        source.as_ref(),
+        write,
+    ) {
         Ok(r) => {
             let out = match args.format {
                 ListFormat::Text => r.to_text(),

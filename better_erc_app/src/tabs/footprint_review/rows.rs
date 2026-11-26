@@ -4,8 +4,8 @@
 //! Each row knows the footprint to show and the reviews of the part source that name it.
 
 use super::*;
-use better_erc::fp::FootprintTodo;
 use better_erc::fp::pairs::PairStatus;
+use better_erc::fp::{BoardCopy, FootprintTodo, ReviewedAs};
 use better_erc::parts::lock::{Cover, LockedReview};
 use ve_theme::Tone;
 
@@ -117,6 +117,20 @@ impl Row {
         }
     }
 
+    /// The library `.kicad_mod` a board row's review is of; none when it is reviewed as placed, or for a library
+    /// row
+    pub fn library_file(&self) -> Option<&Path> {
+        match self {
+            Row::Board(g) => {
+                let e = lead(g);
+                (e.reviewed_as == ReviewedAs::Library)
+                    .then_some(e.library_file.as_deref())
+                    .flatten()
+            }
+            Row::Library(_) => None,
+        }
+    }
+
     /// The `Datasheet` field: on a board the first entry to review's that has one
     pub fn datasheet(&self) -> Option<&str> {
         match self {
@@ -222,17 +236,33 @@ impl Row {
     /// Why the row's footprint or symbol could not be read, or what it says of the library footprint
     pub fn note(&self) -> Option<String> {
         match self {
-            Row::Board(g) => match (&lead(g).library_hash, &lead(g).library_file) {
-                (Some(h), _) if *h != g.hash => Some(format!(
-                    "the board's copy is not its library's footprint now ({h}): update the board from the library, or \
-                     review the copy as placed"
-                )),
-                (None, None) if g.footprint().contains(':') => Some(format!(
-                    "{} is in no footprint library found: the board's copy is reviewed",
-                    g.footprint()
-                )),
-                _ => None,
-            },
+            Row::Board(g) => {
+                let e = lead(g);
+                let mut notes = Vec::new();
+                if e.reviewed_as == ReviewedAs::Placed {
+                    notes.push(format!(
+                        "no library file for {}: the board's copy is shown and reviewed as placed, its own edits \
+                         included ({})",
+                        g.footprint(),
+                        e.placed_note.as_deref().unwrap_or("not found")
+                    ));
+                }
+                let mut copies: Vec<&BoardCopy> = Vec::new();
+                for c in g.entries.iter().flat_map(|e| &e.board_copies) {
+                    if !copies.iter().any(|x| x.reference == c.reference) {
+                        copies.push(c);
+                    }
+                }
+                copies.sort_by(|a, b| better_erc::model::natural_cmp(&a.reference, &b.reference));
+                for c in copies {
+                    notes.push(format!(
+                        "board copy {} differs from the library footprint, not part of the review: {}",
+                        c.reference,
+                        c.describe().join("; ")
+                    ));
+                }
+                (!notes.is_empty()).then(|| notes.join("; "))
+            }
             Row::Library(e) => e.note.clone(),
         }
     }

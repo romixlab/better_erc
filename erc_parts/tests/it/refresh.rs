@@ -151,6 +151,7 @@ fn a_design_from_a_file_source() {
     .unwrap();
     let lock = refresh(
         &design(&text),
+        &mut erc_parts::board::as_placed,
         &FileSource::new("file parts.toml".to_owned(), data),
     )
     .unwrap();

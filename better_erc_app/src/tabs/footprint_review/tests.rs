@@ -680,8 +680,13 @@ fn project_of(dir: &Path, mpns: &[&str]) -> PathBuf {
     )
     .unwrap();
     let source = better_erc::parts::FileSource::open(&dir.join("parts.toml")).unwrap();
-    better_erc::parts::refresh_project(dir, &source, better_erc::parts::WriteLock::Changed)
-        .unwrap();
+    better_erc::parts::refresh_project(
+        dir,
+        &better_erc::fp::LibrarySearch::default(),
+        &source,
+        better_erc::parts::WriteLock::Changed,
+    )
+    .unwrap();
     board
 }
 
@@ -1396,8 +1401,8 @@ fn footprint_centred_on_a_page_read_late() {
     );
 }
 
-/// Every row of a board's list, picked, shows its footprint as the board places it (U10 and U12 on the back,
-/// flipped to the front), drawn in the middle of the view
+/// Every row of a board's list, picked, shows the library footprint its review is of (its hash the row's), drawn
+/// in the middle of the view
 #[test]
 fn each_board_row_shows_its_footprint() {
     let dir = std::env::temp_dir().join(format!("berc-fp-rows-{}", std::process::id()));
@@ -1434,6 +1439,59 @@ fn each_board_row_shows_its_footprint() {
         );
     }
     std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// A board copy that overrides a pad's paste margin, on a board whose setup sets a paste margin for every pad: the
+/// row shows the library footprint, drawn with the library's own margins; the note says which footprint is shown,
+/// names the override per reference and states the board-wide margin once
+#[test]
+fn a_board_row_shows_the_library_footprint_and_names_overrides() {
+    let dir = tempfile::tempdir().unwrap();
+    let board = project(dir.path());
+    let pad = "(uuid \"62eccd95-42d4-430d-bfe4-ba0d1dbca7dd\")";
+    let text = std::fs::read_to_string(&board).unwrap();
+    assert!(text.contains(pad), "U7's pad 2");
+    let text = text
+        .replacen(pad, &format!("(solder_paste_margin -0.05)\n\t\t\t{pad}"), 1)
+        .replacen(
+            "(pad_to_mask_clearance 0)",
+            "(pad_to_mask_clearance 0)\n\t\t(pad_to_paste_clearance -0.02)",
+            1,
+        );
+    std::fs::write(&board, text).unwrap();
+    let mut h = harness("fp library row");
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &board);
+    h.run();
+    let rows = h.state().rt.symbols.as_ref().unwrap().rows.clone();
+    assert_eq!(rows.len(), 1, "one library footprint, one row");
+    h.state_mut().select_symbol(0, true);
+    h.run();
+    let st = h.state();
+    let s = st.rt.sourced.as_ref().expect("a footprint shown");
+    let library = footprint().with_file_name("Mixed_Pads.kicad_mod");
+    assert!(
+        matches!(&s.source, FootprintSource::File(f) if *f == library),
+        "{:?}",
+        s.source
+    );
+    assert_eq!(Some(s.hash.as_str()), rows[0].hash());
+    assert_eq!(
+        st.rt.items,
+        outline::items(&s.footprint, outline::Margins::default()),
+        "drawn with the library's own margins"
+    );
+    let note = st.rt.board_note.clone().unwrap_or_default();
+    for want in [
+        "library footprint Mixed_Pads.kicad_mod shown, the one reviewed",
+        "the board setup applies paste -0.02 mm to pads that set none",
+        "board copy U7 differs from the library footprint, not part of the review: paste on pad 2: library none, \
+         board -0.05",
+    ] {
+        assert!(note.contains(want), "{want}: {note}");
+    }
+    assert!(!note.contains("board copy U8"), "{note}");
 }
 
 /// The ruler by keys: R at one end of the dimension and R at the other place it coarsely; Z zooms in on the first

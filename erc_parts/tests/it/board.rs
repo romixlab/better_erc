@@ -35,7 +35,7 @@ fn every_mpn_field_of_fitted_parts_in_every_variant() {
             variants: &[],
         },
     ]);
-    let got = BoardMpns::of(&design(&text));
+    let got = BoardMpns::of(&design(&text), &mut erc_parts::board::as_placed);
     let mpns: Vec<(&str, Vec<&str>)> = got
         .mpns
         .iter()

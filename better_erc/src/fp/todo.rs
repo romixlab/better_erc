@@ -1,13 +1,14 @@
-//! `berc fp todo`: what a board's footprints need reviewed, one entry per board footprint hash and family (or MPN
-//! reviewed alone), in the order a review steps through them. One review of a footprint against a family's
+//! `berc fp todo`: what a board's footprints need reviewed, one entry per reviewed footprint hash (the library
+//! footprint's, [`super::reviewed`]) and family (or MPN reviewed alone), in the order a review steps through them. One review of a footprint against a family's
 //! datasheet covers every part of the family placed with it, on this board and every other.
 
 use super::check::{Opened, field_of, is_lib_name};
 use super::group::{self, FootprintTodo};
 use super::library::lib_allowed;
 use super::pairs::{self, OtherReview, PairStatus};
-use super::{FootprintLibraries, FpCheckError, LibrarySearch};
-use erc_model::fphash;
+use super::reviewed::{self, Resolver, Reviewed, ReviewedAs};
+use super::{FpCheckError, LibrarySearch};
+use erc_model::fphash::Differences;
 use erc_model::layout::FootprintId;
 use erc_parts::lock::{Cover, LockedPart, LockedReview};
 use serde::{Deserialize, Serialize};
@@ -67,11 +68,30 @@ impl TodoStatus {
     }
 }
 
-/// One board footprint hash and what one review of it covers
+/// A board copy that differs from the library footprint reviewed: not part of the review, reported apart
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct BoardCopy {
+    pub reference: String,
+    /// The copy's own review hash
+    pub hash: String,
+    /// What it differs in, against the library footprint
+    pub differences: Differences,
+}
+
+impl BoardCopy {
+    /// The differences for the person, one line each
+    pub fn describe(&self) -> Vec<String> {
+        self.differences.describe("library", "board")
+    }
+}
+
+/// One reviewed footprint hash and what one review of it covers
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct TodoEntry {
-    /// The board footprint's review hash
+    /// The review hash of the footprint reviewed: the library footprint's, else the board copy's as placed
     pub hash: String,
+    /// Which footprint [`hash`](Self::hash) is of
+    pub reviewed_as: ReviewedAs,
     /// Its `Lib:Name` on the board, the first reference's
     pub footprint: String,
     pub status: TodoStatus,
@@ -91,11 +111,14 @@ pub struct TodoEntry {
     pub symbol: Option<String>,
     /// The first reference's `Datasheet` field, what the footprint is reviewed against
     pub datasheet: Option<String>,
-    /// The library `.kicad_mod` its `Lib:Name` names, when the footprint libraries give it
+    /// The library `.kicad_mod` reviewed, when the footprint libraries give it
     pub library_file: Option<PathBuf>,
-    /// That library footprint's review hash: another than [`hash`](Self::hash) when the board was not updated from
-    /// the library
-    pub library_hash: Option<String>,
+    /// Why the footprint is reviewed as placed: no library file was found
+    #[serde(default)]
+    pub placed_note: Option<String>,
+    /// The references' board copies that differ from the library footprint, in natural order
+    #[serde(default)]
+    pub board_copies: Vec<BoardCopy>,
     /// References placed with a footprint other than their symbol's own `Footprint` field (reference, the symbol's
     /// footprint): an override, deliberate or not, shown rather than silently resolved
     #[serde(default)]
@@ -152,6 +175,10 @@ pub struct FpTodo {
     /// used or looked for in vain. When one of them changes the list is out of date (the review tab watches them)
     #[serde(default)]
     pub files: Vec<PathBuf>,
+    /// The board setup's mask and paste margins for pads that set none, when it sets any: one board-wide setting,
+    /// not a difference of any footprint
+    #[serde(default)]
+    pub board_margins: Option<String>,
     /// The parts snapshot's parts of the entries' MPNs, for [`FpTodo::by_footprint`]
     #[serde(skip)]
     pub parts: Vec<LockedPart>,
@@ -159,7 +186,7 @@ pub struct FpTodo {
 
 /// One board footprint as a todo entry takes it in
 struct Placed<'a> {
-    hash: String,
+    reviewed: Reviewed,
     lib_id: &'a str,
     reference: &'a str,
     symbol: &'a str,
@@ -181,21 +208,18 @@ struct Group {
 
 /// `g` of footprint `f` into its entry of `entries`, a new one when there is none: one entry per hash, cover and
 /// whether it is reviewed
-fn add(entries: &mut Vec<TodoEntry>, f: &Placed, g: Group, fps: &mut FootprintLibraries) {
+fn add(entries: &mut Vec<TodoEntry>, f: &Placed, g: Group) {
     let done = g.status == TodoStatus::Covered;
+    let r = &f.reviewed;
     let at = entries.iter().position(|e| {
-        e.hash == f.hash && (e.status == TodoStatus::Covered) == done && e.cover == g.cover
+        e.hash == r.hash && (e.status == TodoStatus::Covered) == done && e.cover == g.cover
     });
     let e = match at {
         Some(i) => &mut entries[i],
         None => {
-            let found = if is_lib_name(f.lib_id) {
-                fps.footprint(f.lib_id.trim()).ok()
-            } else {
-                None
-            };
             entries.push(TodoEntry {
-                hash: f.hash.clone(),
+                hash: r.hash.clone(),
+                reviewed_as: r.reviewed_as,
                 footprint: f.lib_id.to_owned(),
                 status: g.status,
                 cover: g.cover.clone(),
@@ -205,8 +229,9 @@ fn add(entries: &mut Vec<TodoEntry>, f: &Placed, g: Group, fps: &mut FootprintLi
                 other: Vec::new(),
                 symbol: Some(f.symbol.to_owned()),
                 datasheet: f.datasheet.map(String::from),
-                library_file: found.as_ref().map(|x| x.path.clone()),
-                library_hash: found.as_ref().map(|x| fphash::hash(&x.footprint)),
+                library_file: r.library_file.clone(),
+                placed_note: r.note.clone(),
+                board_copies: Vec::new(),
                 overridden: Vec::new(),
                 symbol_library_disallowed: None,
                 footprint_library_disallowed: None,
@@ -220,8 +245,15 @@ fn add(entries: &mut Vec<TodoEntry>, f: &Placed, g: Group, fps: &mut FootprintLi
     {
         e.mpns.push(m);
     }
-    if !e.references.iter().any(|r| r == f.reference) {
+    if !e.references.iter().any(|x| x == f.reference) {
         e.references.push(f.reference.to_owned());
+        if r.board_differs() {
+            e.board_copies.push(BoardCopy {
+                reference: f.reference.to_owned(),
+                hash: r.board_hash.clone(),
+                differences: r.differences.clone(),
+            });
+        }
     }
     for id in g.covered_by {
         if !e.covered_by.contains(&id) {
@@ -271,7 +303,11 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
             continue;
         };
         let part = board.part(part_id);
-        let hash = fphash::hash(&lay.local_footprint(FootprintId::from_index(i)));
+        let reviewed = Resolver {
+            syms: &mut *syms,
+            fps: &mut *fps,
+        }
+        .resolve(board, FootprintId::from_index(i));
         let copy = part.symbol.map(|s| &board.symbols[s.index()]);
         let lib_fields = syms.fields(&part.lib_id).ok();
         let symbol_footprint = lib_fields
@@ -296,7 +332,7 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
             .map(str::trim)
             .filter(|d| !d.is_empty() && *d != "~");
         let placed = Placed {
-            hash,
+            reviewed,
             lib_id: &f.lib_id,
             reference: &f.reference,
             symbol: &part.lib_id,
@@ -313,10 +349,10 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
                 covered_by: Vec::new(),
                 other: Vec::new(),
             };
-            add(&mut entries, &placed, g, fps);
+            add(&mut entries, &placed, g);
         }
         for m in &mpns {
-            let p = pairs::judge(lock, &placed.hash, m);
+            let p = pairs::judge(lock, &placed.reviewed.hash, m);
             let g = Group {
                 status: TodoStatus::of(p.status),
                 cover: Some(p.cover()),
@@ -324,7 +360,7 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
                 covered_by: p.covered_by,
                 other: p.other,
             };
-            add(&mut entries, &placed, g, fps);
+            add(&mut entries, &placed, g);
         }
     }
     entries.sort_by(|a, b| {
@@ -371,6 +407,7 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
         entries,
         reviews,
         files,
+        board_margins: reviewed::board_margins_note(&super::outline::Margins::of_setup(&lay.setup)),
         parts,
     })
 }
@@ -386,12 +423,12 @@ impl FpTodo {
         self.entries.iter().filter(|e| e.needs_review())
     }
 
-    /// Nothing to review and nothing that can't be, no overridden footprint and no library outside what is
-    /// allowed
+    /// Nothing to review and nothing that can't be, no overridden footprint, no board copy that differs from its
+    /// library footprint and no library outside what is allowed
     pub fn is_ok(&self) -> bool {
         self.entries
             .iter()
-            .all(|e| e.is_ok() && !e.is_overridden() && e.is_allowed())
+            .all(|e| e.is_ok() && !e.is_overridden() && e.board_copies.is_empty() && e.is_allowed())
     }
 
     /// How many entries have each status, the statuses that occur, in list order
@@ -416,7 +453,9 @@ impl FpTodo {
     pub fn to_text_color(&self, all: bool) -> String {
         use std::fmt::Write as _;
         let dim = anstyle::Style::new().dimmed();
-        let shown_entry = |e: &TodoEntry| all || !e.is_ok() || e.is_overridden() || !e.is_allowed();
+        let shown_entry = |e: &TodoEntry| {
+            all || !e.is_ok() || e.is_overridden() || !e.board_copies.is_empty() || !e.is_allowed()
+        };
         let groups: Vec<FootprintTodo> = self
             .by_footprint()
             .into_iter()
@@ -498,6 +537,12 @@ impl FpTodo {
                 "{dim}{hidden} reviewed, not listed: --all lists them{dim:#}"
             );
         }
+        if let Some(m) = &self.board_margins {
+            let _ = writeln!(
+                out,
+                "{dim}board setup margins for pads that set none, on every footprint alike: {m}{dim:#}"
+            );
+        }
         let counts: Vec<String> = self
             .counts()
             .iter()
@@ -519,6 +564,21 @@ impl FpTodo {
                 counts.join(", ")
             }
         );
+        let mut copies: Vec<&str> = self
+            .entries
+            .iter()
+            .flat_map(|e| &e.board_copies)
+            .map(|c| c.reference.as_str())
+            .collect();
+        copies.sort_unstable();
+        copies.dedup();
+        if !copies.is_empty() {
+            let _ = write!(
+                out,
+                "; {} board copies differ from their library footprint",
+                copies.len()
+            );
+        }
         let overridden = self.entries.iter().filter(|e| e.is_overridden()).count();
         if overridden > 0 {
             let _ = write!(out, "; {overridden} with an overridden footprint");
@@ -563,17 +623,23 @@ impl FpTodo {
             );
         }
         let warn = AnsiColor::Yellow.on_default();
-        if let (Some(lib), Some(file)) = (&e.library_hash, &e.library_file)
-            && *lib != e.hash
-        {
+        if let Some(why) = &e.placed_note {
+            note(
+                out,
+                format!("{dim}reviewed as placed, no library footprint: {why}{dim:#}"),
+            );
+        }
+        for c in &e.board_copies {
             note(
                 out,
                 format!(
-                    "{warn}library footprint {} has {lib}: update the board from the library before \
-                     reviewing{warn:#}",
-                    file.display()
+                    "{warn}board copy {} ({}) differs from the library footprint, not part of the review:{warn:#}",
+                    c.reference, c.hash
                 ),
             );
+            for l in c.describe() {
+                note(out, format!("  {warn}{l}{warn:#}"));
+            }
         }
         if e.status == TodoStatus::NotInLock {
             note(

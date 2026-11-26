@@ -18,6 +18,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Changed
 
+- `berc fp` reviews and hashes the library footprint a board names; a differing board copy is its own finding (TOOL-8).
+- `berc fp check` and `todo` name each board copy's differing settings and the board setup's margins once (TOOL-8).
+- `berc parts refresh` and `berc fp accept` take `--symbols` and `--footprints`; lock pairs hold library hashes (TOOL-9).
+- Review tab: a board row shows its library footprint with its own margins, naming board copy overrides (VIEW-19).
 - `just install` builds berc and the app with the `mx3` part source.
 - `DRAW-49`: a note headed `TODO`, `TBD` or `FIXME` with no placeholder in its body is reported once.
 - `BOM-12`, `TOOL-14`: `Voltage` and `Power` may round the lowest rating at their written precision.

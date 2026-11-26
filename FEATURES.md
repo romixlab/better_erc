@@ -646,7 +646,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   (input hash changed), expired and unmatched waivers are report notes; `berc waive` appends one; SARIF suppressions.
   Missing: one-click waiver in the app, voting (disagree first)
 - ✅ `CFG-9` Parts snapshot `parts.lock.toml` (crate `erc_parts`): per MPN of the fitted parts in every variant the
-  facts the checks use (value, source, rank, time) and the footprint reviews of each (board footprint hash, MPN) pair,
+  facts the checks use (value, source, rank, time) and the footprint reviews of each (library footprint hash, MPN) pair,
   sorted, one line per fact; `Project::open` reads it (`[parts] lock` in the project file), `BOM-20` reports MPNs it
   lacks; `berc parts refresh` writes it from a `Source` (`--from FILE`, `--check`); keys in `erc_parts::keys`. The mx3
   part store is a source behind the cargo feature `mx3` (`erc_parts::mx3::Mx3Source` on mx3_api_lab's client:
@@ -1023,15 +1023,19 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `berc fp hash FILE.kicad_mod` and `berc fp hash BOARD.kicad_pcb REF` print it, `--canonical` the text. A review is
   kept in the part source (`Source::accept`, `FileSource` writes its file, `Mx3Source` records it in mx3's
   `PART-6` store), covering MPNs alone or families by decoding (`Cover::family_of`: scheme and `case_eia`/`package`), and
-  the parts snapshot holds per board footprint hash and MPN the covering reviews (`CFG-9`). `berc fp check
+  the parts snapshot holds per library footprint hash and MPN the covering reviews (`CFG-9`). A board footprint is
+  reviewed as the library footprint it names (`fp::reviewed`, through `--footprints` and the `fp-lib-table`; as
+  placed, marked so, when no library file is found), in check, todo, accept, the parts snapshot and the app. `berc fp check
   [PROJECT]` judges each board footprint from the snapshot (`fp::pairs::judge`): ok when a review of its hash now
   covers every MPN of its part in every variant it is fitted in; changed, other version, not in lock, partial,
   uncovered, no MPN, no symbol, not fitted and board-only (not failures); a board copy that differs from its library
-  footprint reported with both hashes; `--details` the covering reviews; no snapshot: exit 2 naming `berc parts
+  footprint its own finding, never signed, naming the settings it differs in (`fphash::differences`: the
+  footprint's and each pad's margins, clearance, thermal relief, zone connection; other pads, graphics, zones
+  counted); the board setup's margins said once, as no footprint's difference; `--details` the covering reviews; no snapshot: exit 2 naming `berc parts
   refresh`. `berc fp check --lib LIB --from FILE` judges every symbol of a symbol library that names its MPNs,
   its library footprint's hash against the source's reviews: ok, changed, other version, partial, uncovered,
   missing, unjudged (no `--from`), no MPN and no footprint (not failures). `berc fp todo [PROJECT]` (`fp::todo`):
-  one entry per board footprint hash and cover (a family, else one MPN) with its MPNs and references, review order
+  one entry per library footprint hash and cover (a family, else one MPN) with its MPNs and references, review order
   (changed, other version, uncovered), then what can't be reviewed yet (not in lock, unknown MPN, no MPN), reviewed
   ones with `--all`; the text one line per footprint hash (`FpTodo::by_footprint`) with its entries under it and
   the facts its parts differ in (`fp::FactTable`); JSON with the covering and earlier reviews (`covered_by`, `other`, `reviews`), the library
