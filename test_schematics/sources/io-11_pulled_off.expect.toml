@@ -1,0 +1,102 @@
+# What better_erc finds on io-11_pulled_off.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board io-11_pulled_off"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +VIO"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DRV-5"
+subjects = ["net /GPIO1", "part Q4"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /GATE_B", "part Q5"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /GATE_B", "part Q6"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /GATE_C", "part Q7"]
+
+[[finding]]
+check = "IO-11"
+subjects = ["net /GATE_D", "part Q8"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.4", "pin U1.5", "pin U1.6", "pin U1.7"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +1V8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +VIO"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SIG_A1", "pin Q2.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SIG_A2", "pin Q3.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SIG_B", "pin Q6.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SIG_C", "pin Q7.3"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SRC_C", "pin Q7.2"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /SRC_D", "pin Q8.2"]

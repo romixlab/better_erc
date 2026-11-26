@@ -290,7 +290,10 @@ getting hot, a reverse-polarity FET that conducts when it should not.
 solenoid clicks, and with the MCU unpowered the drain's dV/dt from another load turns it on.
 
 **How to check.** For each MOSFET (pins named per `LIB-3`), the gate net needs a resistor to the source net or to the
-off-rail, unless its driver is a push-pull output that is valid in every state (a gate driver IC).
+off-rail, unless its driver is a push-pull output that is valid in every state (a gate driver IC). The off-rail is one
+at or above the source's level for P-channel, at or below it for N-channel. A source on no rail (the common node of
+back-to-back switches) sits at most at the rails one FET channel away, through the body diodes; each needs a known
+voltage (the name, or the project file's range, whose top counts). An unknown voltage keeps the finding.
 
 **Fix.** 10-100 kΩ from gate to source (pull-down for NMOS, pull-up to the source rail for PMOS).
 
