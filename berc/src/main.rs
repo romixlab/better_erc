@@ -87,6 +87,10 @@ is written when any file fails to edit.\n\nA written file differs only in the mo
 the hidden fields' (hide yes), and its moved symbols lose (fields_autoplaced yes), so KiCad keeps the new places. Close the schematic in KiCad \
 before --write.\n\nExamples:\n  berc place-fields hw/board\n  berc place-fields hw/board --sheet power --write";
 
+/// Exit codes of `berc probe-access`, under its --help
+const PROBE_ACCESS_AFTER_HELP: &str = "Exit codes: 0 listed, 2 usage or read error, no board file.\n\nExamples:\n  \
+berc probe-access hw/board\n  berc probe-access hw/board --format json";
+
 /// Exit codes of `berc fields sync`, under its --help
 const FIELDS_SYNC_AFTER_HELP: &str = "Exit codes: 0 planned (or written), 2 usage, read or write error, no \
 parts.lock.toml; nothing is written when any file fails to edit.\n\nClose the schematic in KiCad before --write. \
@@ -139,6 +143,15 @@ enum Command {
     /// default; --write edits the .kicad_sch files in place.
     #[command(after_help = PLACE_FIELDS_AFTER_HELP)]
     PlaceFields(PlaceFieldsArgs),
+    /// Where a probe reaches each net of a board, by side: test point and connector pads, and the vias
+    ///
+    /// The access parts are what the DBG and TEST checks count: test points and connectors by their part class,
+    /// fitted or not, and pads KiCad marks as test points. A pad is on a side when it has copper and a mask
+    /// opening there: an SMD pad on its footprint's side, a through-hole pad on both. Access one series part
+    /// (resistor, ferrite, net tie, jumper) away shows as `series`. Each net lists its vias with the outer sides
+    /// they reach; `hwb pcb tent-vias` reads the JSON to open vias for hand probing.
+    #[command(after_help = PROBE_ACCESS_AFTER_HELP)]
+    ProbeAccess(ProbeAccessArgs),
     /// Compare two designs: their placements (--pnp) or their nets (--nets)
     ///
     /// --pnp: A and B are PnP files (KiCad, Altium, Allegro CSV), board files (.kicad_pcb) or KiCad projects with
@@ -198,6 +211,15 @@ enum Command {
         #[arg(long)]
         all: bool,
     },
+}
+
+#[derive(clap::Args)]
+struct ProbeAccessArgs {
+    /// The KiCad project: a directory, its .kicad_pro, .kicad_sch or .kicad_pcb
+    #[arg(value_hint = ValueHint::AnyPath, default_value = ".")]
+    project: PathBuf,
+    #[arg(long, value_enum, default_value_t = ListFormat::Text)]
+    format: ListFormat,
 }
 
 #[derive(Subcommand)]
@@ -696,6 +718,7 @@ fn main() -> ExitCode {
         Command::Explain { id, format } => explain(&id, format),
         Command::Diff(args) => diff(args),
         Command::PlaceFields(args) => place_fields(&args),
+        Command::ProbeAccess(args) => probe_access(&args),
         Command::Checks {
             command:
                 ChecksCommand::List {
@@ -774,6 +797,32 @@ fn settings(sets: &[String]) -> Result<better_erc::Config, String> {
         config.set_text(k, v)?;
     }
     Ok(config)
+}
+
+fn probe_access(args: &ProbeAccessArgs) -> ExitCode {
+    let spinner = progress::Delayed::start();
+    spinner.set("reading the board".into());
+    let found = better_erc::probe::probe_access(&args.project);
+    spinner.finish();
+    let p = match found {
+        Ok(p) => p,
+        Err(e) => {
+            error(&e.to_string());
+            return ExitCode::from(CheckError::EXIT_CODE);
+        }
+    };
+    let out = match args.format {
+        ListFormat::Text => better_erc::probe::render(&p),
+        ListFormat::Json => match serde_json::to_string_pretty(&p) {
+            Ok(j) => j + "\n",
+            Err(e) => {
+                error(&e.to_string());
+                return ExitCode::from(CheckError::EXIT_CODE);
+            }
+        },
+    };
+    let _ = std::io::stdout().lock().write_all(out.as_bytes());
+    ExitCode::SUCCESS
 }
 
 fn place_fields(args: &PlaceFieldsArgs) -> ExitCode {

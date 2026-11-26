@@ -52,3 +52,27 @@ fn completion_scripts_for_bash_zsh_and_fish() {
         assert!(script.contains("berc"), "{shell}: {script}");
     }
 }
+
+/// The JSON is the library's types; the text is a table
+#[test]
+fn probe_access_json_on_a_board() {
+    let board = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/tests/fixtures/small.kicad_pcb"
+    );
+    let out = berc(&["probe-access", board, "--format", "json"]);
+    assert!(out.status.success(), "{out:?}");
+    let p: better_erc::probe::ProbeAccess = serde_json::from_slice(&out.stdout).unwrap();
+    assert_eq!(p.schema, better_erc::probe::SCHEMA_VERSION);
+    assert_eq!(p.board, "small.kicad_pcb");
+    assert_eq!(p.nets.iter().map(|n| n.vias.len()).sum::<usize>(), 1);
+    let text = berc(&["probe-access", board]);
+    let text = String::from_utf8(text.stdout).unwrap();
+    assert!(text.contains("/SDA  -    -       1"), "{text}");
+}
+
+#[test]
+fn probe_access_without_a_board_fails() {
+    let out = berc(&["probe-access", "/nonexistent/dir"]);
+    assert_eq!(out.status.code(), Some(2));
+}

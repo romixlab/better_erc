@@ -12,6 +12,7 @@
 //!   library side of `berc fp`.
 //! - [`fields`]: the display fields of resistors and capacitors written from the parts snapshot, the library side
 //!   of `berc fields sync`.
+//! - [`probe`]: where a probe reaches each net of a board, by side, the library side of `berc probe-access`.
 //! - [`place`]: symbol fields moved clear of what they overlap (`DRAW-9`, `DRAW-34`), the library side of
 //!   `berc place-fields`.
 //!
@@ -44,6 +45,7 @@ pub mod fields;
 pub mod fp;
 pub mod parts;
 pub mod place;
+pub mod probe;
 pub mod usage;
 
 pub use erc_checks::{

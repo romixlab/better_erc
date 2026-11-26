@@ -39,7 +39,7 @@ not from running it. Imported from the Notion tracker (exported 1 Oct 2026).
 - `better_erc`: the library: the crates above re-exported, the run entry and report types at the top, `diff`
   (`TOOL-6`)
 - `better_erc_app`: egui/eframe desktop app (`egui_tiles` tabs), binary `better_erc`
-- `berc`: command line tool (`check`, `explain`, `checks list`, `diff --pnp`, `textconv`)
+- `berc`: command line tool (`check`, `explain`, `checks list`, `diff --pnp`, `probe-access`, `textconv`)
 - The first crates, `ecad_file_format` (netlist model and readers), `erc_core` (`PcbAssembly`, analysis and checks)
   and `ecad_compare` (PnP compare), were removed in 0.4 once all they did ran on the crates above
 - `test_schematics`: KiCad test schematics, one per check, with a netlist generator (`generate_netlists`)
@@ -1009,6 +1009,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `TOOL-15` `berc diff --pnp --exclude-dnp` and `--exclude-from-bom`: the board side also without its `dnp` and
   `exclude_from_bom` footprints, as the PnP file was exported; the summary line and JSON `excluded` count what was left
   out · `erc_model/src/placecmp.rs`, `better_erc/src/diff.rs`, `berc/tests/diff.rs`
+- ✅ `TOOL-16` `berc probe-access PROJECT [--format json]`: per net and board side, the test point and connector pads
+  a probe reaches it at (pads with copper and mask there; one series part away as `series`), its pad count, rail or
+  ground, and its vias with the sides they reach ([docs/probe-access.md](docs/probe-access.md)) ·
+  `better_erc/src/probe.rs`, `better_erc/tests/it/probe.rs`
 - 📋 `TOOL-2` Schematic vs layout match (catalogue `LAY-1`)
 - ✅ `TOOL-3` Readable git diffs: `berc textconv` prints a `.kicad_sch` / `.kicad_pcb` as sorted text without UUIDs
   or coordinates (`--with-geometry` adds them), and a `.kicad_pro` as dotted-path settings with named lists and
