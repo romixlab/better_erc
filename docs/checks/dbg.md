@@ -226,7 +226,9 @@ PMIC sees nobody acknowledging and the interrupt line floats; a DNM 10 kΩ footp
 minute.
 
 **How to check.** Nets driven by an open-drain pin with no resistor to a rail, populated or not; list them in the
-test point report (`RPT-15`) too.
+test point report (`RPT-15`) too. better_erc (`erc_checks/src/dbg/dbg_8.rs`) leaves out a controller's own
+open-drain pin whose net reaches no logic input (as in `LOGIC-7`): it switches a resistor or leaves the board, and no
+reader relies on a pull.
 
 **Fix.** A DNM (or fitted) 10 kΩ to the IO rail of the reader, plus a test point.
 

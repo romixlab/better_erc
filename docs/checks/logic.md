@@ -209,7 +209,12 @@ outputs. better_erc (`erc_checks/src/logic/logic_7.rs`) takes the KiCad pin type
 with open-collector (or open-emitter) pins, no output, tri-state or power output pin, and a pin of another part to
 receive, is a finding when no fitted resistor, diode or ferrite chain (`max_hops` = 2: an LED and its resistor count)
 leads up to a rail (down to ground for open emitters). A bidirectional pin (an MCU GPIO) is not counted as a driver: its
-mode and internal pull-up need pin roles (`NET-7`), and so does open drain by part data.
+mode and internal pull-up need pin roles (`NET-7`), and so does open drain by part data. An MCU, SoC or FPGA pin set
+open drain (its symbol type, or a chosen alternate such as `PA1/OD`) whose net reaches no logic input is left out: no
+pin of another fitted part other than resistors, capacitors, inductors, ferrites, diodes, links, connectors, test points
+and passive pins of unclassified parts sits on the net or behind one series resistor. Such a pin switches a resistor (a
+USB-C Rd on CC) or leaves the board through a header, and floating when released is its purpose. The same pin driving
+another IC, directly or through a series resistor, is still a finding.
 
 **Fix.** A pull-up to the receiver's rail, sized per `IO-17`.
 

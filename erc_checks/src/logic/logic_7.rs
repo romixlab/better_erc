@@ -1,5 +1,6 @@
 //! `LOGIC-7` Open-drain or open-collector output as the only driver of a net with no pull-up: never goes high
 
+use crate::io::switches_resistor;
 use crate::meta::*;
 use crate::{Ctx, Finding};
 use erc_analysis::graph::net_pins;
@@ -71,7 +72,8 @@ impl Check for Logic7 {
     /// Signal nets whose output-capable pins on fitted parts are all open collector (open drain) or all open emitter
     /// (KiCad pin types), with a pin of another part to receive, and no resistor (or LED and resistor) up to a rail for
     /// open collectors, down to ground for open emitters. A bidirectional pin is not counted as a driver: its
-    /// direction (and internal pull) needs pin roles (`NET-7`)
+    /// direction (and internal pull) needs pin roles (`NET-7`). A controller's open-drain pin that reaches no logic
+    /// input switches a resistor or leaves the board, and is left out ([`switches_resistor`]).
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let b = cx.board();
         let power = cx.power();
@@ -107,7 +109,7 @@ impl Check for Logic7 {
             let receivers = pins
                 .iter()
                 .any(|p| !driver_parts.contains(&b.pin(*p).part) && !drivers.contains(p));
-            if !receivers {
+            if !receivers || switches_resistor(cx, n, &drivers) {
                 continue;
             }
             let target = |m: NetId| {
@@ -159,6 +161,20 @@ mod tests {
         assert_eq!(
             crate::testing::fingerprints(&super::Logic7, "logic-7_open_drain"),
             ["LOGIC-7:net /CMP1|part U1"]
+        );
+    }
+
+    #[test]
+    fn controller_switching_a_resistor() {
+        // U1's open-drain PA1 through R1 to header J1 and PA2 through R2 onto CC2: no logic input to float
+        assert_eq!(
+            crate::testing::fingerprints(&super::Logic7, "logic-7_mcu_switched_resistor"),
+            [] as [&str; 0]
+        );
+        // U1's open-drain PA1 into U2 and PA2 through R1 into U3, no pull-up on either
+        assert_eq!(
+            crate::testing::fingerprints(&super::Logic7, "logic-7_mcu_open_drain_receiver"),
+            ["LOGIC-7:net /RST_R|part U1", "LOGIC-7:net /RST|part U1"]
         );
     }
 }

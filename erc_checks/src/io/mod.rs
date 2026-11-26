@@ -12,9 +12,10 @@ mod io_7;
 mod io_8;
 
 use crate::Ctx;
+use erc_analysis::access::series_neighbours;
 use erc_analysis::graph::net_pins;
 use erc_analysis::pull::{Pulls, pulls};
-use erc_model::{EcadPinType, NetId, PartId, PinId};
+use erc_model::{EcadPinType, NetId, PartClass, PartId, PinId};
 use std::collections::{BTreeMap, BTreeSet};
 
 /// The pulls of a net in the variant checked
@@ -176,4 +177,38 @@ pub(crate) fn same_level(cx: &Ctx, a: NetId, c: NetId) -> bool {
         (Some(x), Some(y)) => power.is_rail(a) && power.is_rail(c) && (x - y).abs() < 1e-6,
         _ => false,
     }
+}
+
+/// Whether open-drain `drivers` on `net` are a controller's own pins that reach no logic input: every driver sits on
+/// an MCU, SoC or FPGA, and no pin of another fitted part sits on the net or one series part away, except
+/// resistors, capacitors, inductors, ferrites, diodes, links, connectors, test points and passive pins of
+/// unclassified parts (a spark gap). Such a pin switches a resistor (a CC pull-down, a divider leg) or leaves the
+/// board, and floating when released is what it is for.
+pub(crate) fn switches_resistor(cx: &Ctx, net: NetId, drivers: &[PinId]) -> bool {
+    let b = cx.board();
+    let classes = cx.classes();
+    let own: BTreeSet<PartId> = drivers.iter().map(|p| b.pin(*p).part).collect();
+    if own.is_empty() || !own.iter().all(|p| classes.get(*p).is_programmable()) {
+        return false;
+    }
+    let mut nets = vec![net];
+    nets.extend(
+        series_neighbours(cx.view(), classes, cx.power(), net)
+            .into_iter()
+            .map(|(_, far)| far),
+    );
+    !nets.iter().flat_map(|n| net_pins(b, *n)).any(|pin| {
+        let part = b.pin(pin).part;
+        let c = classes.get(part);
+        let passive = c.is_resistor()
+            || c.is_capacitor()
+            || c.is_diode()
+            || c.is_connector()
+            || c.is_dc_tie()
+            || c.is_mechanical()
+            || matches!(c, PartClass::Inductor | PartClass::TestPoint)
+            || (c == PartClass::Unknown
+                && matches!(b.pin(pin).etype.get(), Some(EcadPinType::Passive) | None));
+        cx.fitted(part) && !own.contains(&part) && !passive
+    })
 }

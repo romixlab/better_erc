@@ -27,6 +27,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `berc parts refresh` and `berc fp accept` take `--symbols` and `--footprints`; lock pairs hold library hashes (TOOL-9).
 - Review tab: a board row shows its library footprint with its own margins, naming board copy overrides (VIEW-19).
 - `just install` builds berc and the app with the `mx3` part source.
+- `just jobs=N RECIPE` caps build jobs and test threads for that run.
 - `DRAW-49`: a note headed `TODO`, `TBD` or `FIXME` with no placeholder in its body is reported once.
 - `BOM-12`, `TOOL-14`: `Voltage` and `Power` may round the lowest rating at their written precision.
 - `BOM-12`, `TOOL-14`: setting `drawing.fields.rating_rounding_max` (default 1 %) bounds that rounding.
@@ -34,6 +35,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Fixed
 
+- `LOGIC-7`, `IO-8`, `DBG-8`: an MCU open-drain pin reaching no logic input (switched resistor, header) is not reported.
+- `I2C-4`: pull-ups to an MCU push-pull GPIO on lines with strap pull-downs are info, not an error.
 - `BOM-12`, `RATE-2`: a `Power`, `Preq_min` or `Pworking` field written `1/4W` was read as 1 W.
 - `CLK-5`, `DBG-7`: no finding on STM32G0B1 NRST and open USB2514B PRTPWR/BC_EN, which have internal pulls.
 - `BOM-9`: a part excluded from the BOM (documentation link, value `~`) needs no value.

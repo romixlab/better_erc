@@ -1,3 +1,11 @@
+# `just jobs=N <recipe>` caps build and test parallelism for that run (test, test-all, lint, check and anything
+# they call); unset (the default) leaves CARGO_BUILD_JOBS, NEXTEST_TEST_THREADS and RUST_TEST_THREADS as inherited,
+# or as the tools' own defaults (the CPU count) when not set.
+jobs := ""
+export CARGO_BUILD_JOBS := if jobs != "" { jobs } else { env_var_or_default('CARGO_BUILD_JOBS', num_cpus()) }
+export NEXTEST_TEST_THREADS := if jobs != "" { jobs } else { env_var_or_default('NEXTEST_TEST_THREADS', 'num-cpus') }
+export RUST_TEST_THREADS := if jobs != "" { jobs } else { env_var_or_default('RUST_TEST_THREADS', num_cpus()) }
+
 # Bare `just` only lists the recipes
 default:
     @just --list

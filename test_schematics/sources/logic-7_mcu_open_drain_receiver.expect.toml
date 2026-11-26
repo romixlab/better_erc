@@ -1,0 +1,74 @@
+# What better_erc finds on logic-7_mcu_open_drain_receiver.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board logic-7_mcu_open_drain_receiver"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "DBG-8"
+subjects = ["net /RST", "pin U1.3"]
+
+[[finding]]
+check = "DBG-8"
+subjects = ["net /RST_R", "pin U1.4"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "IO-8"
+subjects = ["net /RST", "pin U1.3"]
+
+[[finding]]
+check = "IO-8"
+subjects = ["net /RST_R", "pin U1.4"]
+
+[[finding]]
+check = "LOGIC-7"
+subjects = ["net /RST", "part U1"]
+
+[[finding]]
+check = "LOGIC-7"
+subjects = ["net /RST_R", "part U1"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net /+3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.5", "pin U1.6"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.4"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U3", "pin U3.4"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /OUT2", "pin U2.4"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /OUT3", "pin U3.4"]

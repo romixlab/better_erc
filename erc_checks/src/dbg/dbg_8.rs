@@ -1,5 +1,6 @@
 //! `DBG-8` Suggest DNM pull-ups on open drain pins; test point detector should highlight those nets
 
+use crate::io::switches_resistor;
 use crate::meta::*;
 use crate::text::pin_list;
 use crate::{Ctx, Finding};
@@ -27,7 +28,8 @@ impl Check for Dbg8 {
     }
 
     /// A net driven by an open-drain output (pin type open collector, or an IC's `INT`, `ALERT`, `PG`,
-    /// `FAULT` by name) with no resistor, fitted or not, to a rail; I2C lines are I2C-1's
+    /// `FAULT` by name) with no resistor, fitted or not, to a rail; I2C lines are I2C-1's. A controller's own
+    /// open-drain pin that reaches no logic input is left out ([`switches_resistor`]).
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let b = cx.board();
         let power = cx.power();
@@ -65,7 +67,7 @@ impl Check for Dbg8 {
                         .filter_map(|p| b.pin(*p).net)
                         .any(|n| power.is_rail(n))
             });
-            if pulled {
+            if pulled || switches_resistor(cx, net, &pins) {
                 continue;
             }
             let f = pins
@@ -93,5 +95,17 @@ mod tests {
     fn open_drain_without_pull_up() {
         let found = crate::testing::fingerprints(&super::Dbg8, "dbg-8_open_drain_pull_ups");
         assert_eq!(found, ["DBG-8:net /PMIC_IRQ|pin U2.3"], "{found:?}");
+    }
+
+    #[test]
+    fn controller_switching_a_resistor() {
+        let found = crate::testing::fingerprints(&super::Dbg8, "logic-7_mcu_switched_resistor");
+        assert!(found.is_empty(), "{found:?}");
+        let found = crate::testing::fingerprints(&super::Dbg8, "logic-7_mcu_open_drain_receiver");
+        assert_eq!(
+            found,
+            ["DBG-8:net /RST_R|pin U1.4", "DBG-8:net /RST|pin U1.3"],
+            "{found:?}"
+        );
     }
 }

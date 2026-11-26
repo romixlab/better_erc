@@ -108,7 +108,10 @@ only reachable once firmware set PA4; the hub in fact works with both lines simp
 freed in rev B.
 
 **How to check.** The far end of each pull-up must be a rail of the power structure (`NET-5`); a two-pin net
-there is the clearest sign.
+there is the clearest sign. A strap-gated bus is info, not an error: the far end is a push-pull output of an MCU,
+SoC or FPGA (pin type output, or a chosen alternate such as `PF0/PP`), and the bus lines also have pull-downs to
+ground. The pull-downs are straps the bus parts read while the GPIO is low (USB2514B `CFG_SEL`, `NON_REM` on B153B);
+the GPIO then enables the bus. Without pull-downs, or with another driver on the far end, it stays an error.
 
 **Fix.** Pull to the rail; if a switched pull-up is really wanted, use a proper bus switch or a FET with a
 documented default (`IO-3`).

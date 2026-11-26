@@ -1,0 +1,38 @@
+# What better_erc finds on logic-7_mcu_switched_resistor.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board logic-7_mcu_switched_resistor"]
+
+[[finding]]
+check = "CONN-2"
+subjects = ["net /CC2", "pin J2.1", "pin U1.6"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net /+3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.5"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /GND"]

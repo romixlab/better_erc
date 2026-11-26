@@ -1,0 +1,58 @@
+# What better_erc finds on i2c-4_strap_gated_bus.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board i2c-4_strap_gated_bus"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net /GND", "part R3", "part R4"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["net /I2C_EN", "part R1", "part R2"]
+
+[[finding]]
+check = "DBG-18"
+subjects = ["net /I2C_SCL", "net /I2C_SDA"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "I2C-4"
+subjects = ["net /I2C_EN", "net /I2C_SCL", "net /I2C_SDA", "part R1", "part R2"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net /+3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.6"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /+3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /GND"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /I2C_SCL"]
+
+[[finding]]
+check = "TEST-5"
+subjects = ["net /I2C_SDA"]
