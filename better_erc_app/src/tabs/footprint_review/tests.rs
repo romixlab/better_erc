@@ -1944,6 +1944,52 @@ fn library_search_opens_the_first_hit() {
     std::fs::remove_dir_all(&dir).unwrap();
 }
 
+/// A `Datasheet` field that is an mx3: link (VIEW-39): the library search asks for the part numbers it names first,
+/// its `${Mpn1}` filled from the symbol, then the MPN fields; the link is no file to open
+#[test]
+fn an_mx3_datasheet_link_searches_its_part_numbers() {
+    let dir = std::env::temp_dir().join(format!("berc-fp-mx3link-{}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    footprint_table(&dir);
+    let lib = dir.join("Rev.kicad_sym");
+    std::fs::write(
+        &lib,
+        format!(
+            "(kicad_symbol_lib (version 20231120) (generator \"kicad_symbol_editor\")\n{})\n",
+            symbol_text(
+                "Sot",
+                &[
+                    ("Footprint", "Test:Asym_SOT"),
+                    ("Datasheet", "mx3:LINKED-PART ${Mpn1} ${Mpn2}"),
+                    ("Mpn1", "TEST-PART"),
+                ]
+            ),
+        ),
+    )
+    .unwrap();
+    let asked: Arc<Mutex<Vec<String>>> = Arc::default();
+    let searcher: Searcher = {
+        let asked = asked.clone();
+        Arc::new(move |words: &[String]| {
+            asked.lock().unwrap().push(words.join(" "));
+            Ok(vec![])
+        })
+    };
+    let mut h = harness("fp mx3 link");
+    h.state_mut().rt.searcher = Some(searcher);
+    h.run();
+    let ctx = h.ctx.clone();
+    h.state_mut().open_path(&ctx, &lib);
+    h.run();
+    h.get_by_label("Rev:Sot").click();
+    h.step();
+    assert_eq!(h.state().rt.queries, ["LINKED-PART", "TEST-PART"]);
+    assert_eq!(h.state().rt.query, "LINKED-PART");
+    assert_eq!(h.state().datasheet, None);
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
 /// Accept records where the review was made and reopening the symbol goes back there: the datasheet as the
 /// document library knows it (its content hash and number), the MPNs it covers (the one in its text ticked, the
 /// other maker's not), the page, scale and placement. Reopened, the recorded PDF opens by itself with that view; a

@@ -514,7 +514,16 @@ pub(super) fn read_symbol(
     }
     e.datasheet = field_of(&fields, "Datasheet")
         .filter(|d| *d != "~")
-        .map(String::from);
+        .map(|d| {
+            // an mx3: link with the symbol's fields filled in
+            erc_parts::mpn::mx3_link_resolved(d, |n| {
+                fields
+                    .iter()
+                    .find(|(k, _)| k.eq_ignore_ascii_case(n))
+                    .map(|(_, v)| v.as_str())
+            })
+            .unwrap_or_else(|| d.to_owned())
+        });
     for (k, v) in &fields {
         let v = v.trim();
         if erc_parts::mpn::mpn_field(k)

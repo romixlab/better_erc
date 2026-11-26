@@ -4451,9 +4451,22 @@ fn reference(s: &Sourced) -> String {
     }
 }
 
-/// What to search the library for, best first: the datasheet's PDF file name, a part name in its web address, the
-/// part numbers (`Mpn1`, `MPN`, ...; packing suffixes after a comma cut off), the value
+/// What to search the library for, best first: the part numbers an `mx3:` datasheet link names, else the
+/// datasheet's PDF file name and a part name in its web address; the part numbers (`Mpn1`, `MPN`, ...; packing
+/// suffixes after a comma cut off), the value
 fn search_queries(s: &Sourced) -> Vec<String> {
+    field_queries(&s.fields)
+}
+
+/// [`search_queries`] of a footprint's fields.
+fn field_queries(fields: &[(String, String)]) -> Vec<String> {
+    let field = |name: &str| {
+        fields
+            .iter()
+            .find(|(k, _)| k == name)
+            .map(|(_, v)| v.trim())
+            .filter(|v| !v.is_empty())
+    };
     let mut out: Vec<String> = Vec::new();
     let mut add = |q: &str| {
         let q = q.trim();
@@ -4464,7 +4477,19 @@ fn search_queries(s: &Sourced) -> Vec<String> {
             out.push(q.to_string());
         }
     };
-    if let Some(ds) = s.field("Datasheet") {
+    // an mx3: link names the part numbers whose documents to find (mx3's docs/kicad-datasheet.md)
+    let link = field("Datasheet").and_then(|ds| {
+        better_erc::parts::mpn::mx3_link_mpns(ds, |n| {
+            fields
+                .iter()
+                .find(|(k, _)| k.eq_ignore_ascii_case(n))
+                .map(|(_, v)| v.as_str())
+        })
+    });
+    for m in link.iter().flatten() {
+        add(m.split([',', '/']).next().unwrap_or(""));
+    }
+    if let Some(ds) = field("Datasheet").filter(|_| link.is_none()) {
         let (path, query) = ds.split_once('?').unwrap_or((ds, ""));
         let file = path.rsplit('/').next().unwrap_or("");
         if let Some(stem) = file
@@ -4483,8 +4508,7 @@ fn search_queries(s: &Sourced) -> Vec<String> {
             }
         }
     }
-    let mut mpns: Vec<&(String, String)> = s
-        .fields
+    let mut mpns: Vec<&(String, String)> = fields
         .iter()
         .filter(|(k, _)| {
             let k = k.to_lowercase();
@@ -4495,7 +4519,7 @@ fn search_queries(s: &Sourced) -> Vec<String> {
     for (_, v) in mpns {
         add(v.split([',', '/']).next().unwrap_or(""));
     }
-    if let Some(v) = s.field("Value") {
+    if let Some(v) = field("Value") {
         add(v);
     }
     out
