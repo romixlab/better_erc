@@ -412,7 +412,8 @@ in rev B next to the old pull-down).
 **Example.** 10 kΩ to `+3V3` and 10 kΩ to GND on a boot strap: 1.65 V, read as either level depending on the part.
 
 **How to check.** Resistors from one net to a rail and to a ground (`NET-5`), excluding nets that reach analog inputs or
-feedback pins; report the divided voltage.
+feedback pins; report the divided voltage. An MCU pin counts as an analog input by its name or by the alternate chosen
+on the placed symbol (`PA5/ADC1_IN5` in KiCad's alternate pin functions).
 
 **Fix.** Remove one, or make the intent explicit (a DNP pair for a strap option).
 

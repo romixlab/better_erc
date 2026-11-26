@@ -29,7 +29,8 @@ impl Check for Io16 {
     }
 
     /// A signal net with a fitted resistor to a rail and another to a ground, unless the net or one series part
-    /// away reaches an analog input by name (`FB`, `ADC`, `VREF`, amplifier inputs), a pin of an op-amp,
+    /// away reaches an analog input by name or by the alternate chosen on the placed symbol (`FB`, `ADC`, `VREF`,
+    /// `PA5/ADC1_IN5`, amplifier inputs), a pin of an op-amp,
     /// comparator, regulator or load switch (feedback, enable and UVLO thresholds are dividers on purpose); with
     /// the divided voltage where values and the rail's voltage are known
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
@@ -51,10 +52,11 @@ impl Check for Io16 {
                     .map(|(_, n)| n),
             );
             let analog = reach.iter().flat_map(|n| net_pins(b, *n)).any(|pin| {
-                let part = b.pin(pin).part;
-                let class = cx.classes().get(part);
-                cx.fitted(part)
-                    && (is_analog_input(&b.pin(pin).name)
+                let p = b.pin(pin);
+                let class = cx.classes().get(p.part);
+                cx.fitted(p.part)
+                    && (is_analog_input(&p.name)
+                        || p.alt.as_deref().is_some_and(is_analog_input)
                         || matches!(
                             class,
                             PartClass::Opamp
@@ -113,5 +115,11 @@ mod tests {
     fn pull_up_and_down() {
         let found = crate::testing::fingerprints(&super::Io16, "io-16_pull_up_and_down");
         assert_eq!(found, ["IO-16:net /BOOT|part R1|part R2"], "{found:?}");
+    }
+
+    #[test]
+    fn chosen_adc_alternate_is_a_sense_divider() {
+        let found = crate::testing::fingerprints(&super::Io16, "io-16_adc_alternate");
+        assert_eq!(found, ["IO-16:net /LEVEL_B|part R3|part R4"], "{found:?}");
     }
 }
