@@ -726,6 +726,7 @@ condensed [schematic review checklist](review-checklist.md) links back here by I
 - <a id="lib-26"></a>💡 `LIB-26` 3D model file not in millimetres (metres, inches) · impl: easy (IMP-20) · [📖](checks/lib.md#lib-26) <!-- 13 Nov 2026, TOOL-12 -->
 - <a id="lib-27"></a>⚠️ `LIB-27` 3D model turned by an angle that is not a multiple of 90° · impl: easy (IMP-21) · [📖](checks/lib.md#lib-27) <!-- 13 Nov 2026, TOOL-12 -->
 - <a id="lib-28"></a>💡 `LIB-28` Footprint with copper pads and no 3D model shown (none, or every one hidden) · impl: easy (IMP-21) · [📖](checks/lib.md#lib-28) <!-- 13 Nov 2026, TOOL-12 -->
+- <a id="lib-29"></a>⚠️ `LIB-29` Placed symbol carrying a `ki_` field (`ki_fp_filters`, `ki_keywords`): library-symbol properties that KiCad's schematic parity then reports as missing in the footprint · impl: easy · [📖](checks/lib.md#lib-29) <!-- 26 Nov 2026 -->
 
 ## Layout
 

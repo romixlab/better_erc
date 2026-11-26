@@ -14,6 +14,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 ### Added
 
 - Review tab: right click on the 3D model adds a projection; several at once, placed by drag, saved (VIEW-38).
+- `LIB-29` (check): a placed symbol carrying a `ki_` field (`ki_fp_filters`, `ki_keywords`), which breaks KiCad's schematic parity (LIB-29).
 - Review tab: a double click brings the footprint's origin to the pointer, a double right click the 3D model's (VIEW-32).
 - `erc_model::fphash::differences` names the settings and items two copies of a footprint differ in (TOOL-8).
 - Cargo feature `mx3`: `berc parts refresh` and `berc fp accept` use the mx3 part store without `--from` (CFG-9).

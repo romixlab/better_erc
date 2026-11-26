@@ -1,0 +1,44 @@
+# What better_erc finds on lib-29_placed_ki_fields.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["part U1"]
+
+[[finding]]
+check = "BOM-14"
+subjects = ["part U2"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U1"]
+confidence = "estimate"
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U2"]
+confidence = "estimate"
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U3"]
+confidence = "estimate"
+
+[[finding]]
+check = "LIB-29"
+subjects = ["part U2"]
+
+[[finding]]
+check = "LIB-29"
+subjects = ["part U3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U3", "pin U3.1"]

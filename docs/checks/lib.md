@@ -829,3 +829,21 @@ pass without it.
 **Fix.** Add a model of the package, or mark the footprint board-only when it has no part.
 
 **References.** None.
+
+## `LIB-29` Placed symbol carrying a `ki_` field <a id="lib-29"></a>
+
+⚠️ warning · needs: the schematic's placed symbols · [catalogue entry](../checks.md#lib-29)
+
+**Impl.** easy
+
+**What it catches.** A placed symbol with a field whose name starts with `ki_` (`ki_fp_filters`, `ki_keywords`, `ki_description`, `ki_locked`). Fields inside the library symbol (`lib_symbols`) never count.
+
+**Why it matters.** These are properties of the library symbol. On a placed symbol they are ordinary fields, so KiCad's DRC schematic parity reports "Missing symbol field ki_fp_filters in footprint" (`footprint_symbol_field_mismatch`). Update PCB from Schematic never clears it, because KiCad treats a footprint field of that name as its own internal property.
+
+**Example.** `(property "ki_keywords" ...)` and `(property "ki_fp_filters" ...)` as direct children of a placed `(symbol (lib_id ...))`.
+
+**How to check.** The placed symbol's field names. An empty field is not seen: the importer drops empty fields.
+
+**Fix.** Delete the field in Symbol Properties on the placed symbol, then Update PCB from Schematic.
+
+**References.** None.

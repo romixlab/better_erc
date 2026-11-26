@@ -1,0 +1,66 @@
+board lib-29_placed_ki_fields
+net unconnected-(U1-A-Pad1) class = Default @ sch lib-29_placed_ki_fields.kicad_sch note "effective net class"
+net unconnected-(U1-A-Pad1) kind unconnected
+net unconnected-(U2-A-Pad1) class = Default @ sch lib-29_placed_ki_fields.kicad_sch note "effective net class"
+net unconnected-(U2-A-Pad1) kind unconnected
+net unconnected-(U3-A-Pad1) class = Default @ sch lib-29_placed_ki_fields.kicad_sch note "effective net class"
+net unconnected-(U3-A-Pad1) kind unconnected
+part U1 field Value = FIXTURE @ sch lib-29_placed_ki_fields.kicad_sch
+part U1 flag dnp = no @ sch lib-29_placed_ki_fields.kicad_sch
+part U1 flag exclude_from_sim = no @ sch lib-29_placed_ki_fields.kicad_sch
+part U1 flag in_bom = yes @ sch lib-29_placed_ki_fields.kicad_sch
+part U1 flag on_board = yes @ sch lib-29_placed_ki_fields.kicad_sch
+part U1 lib Fixture:IC_U1 sheet / symbol Fixture:IC_U1
+part U1 unit 1 sheet / uuid l2900001-0000-4000-8000-000000000000 line 42 at 40,50 rot 0
+part U1 value = text FIXTURE @ sch lib-29_placed_ki_fields.kicad_sch note "from the Value field"
+part U2 field Value = FIXTURE @ sch lib-29_placed_ki_fields.kicad_sch
+part U2 field ki_fp_filters = SOT* @ sch lib-29_placed_ki_fields.kicad_sch
+part U2 field ki_keywords = fixture @ sch lib-29_placed_ki_fields.kicad_sch
+part U2 flag dnp = no @ sch lib-29_placed_ki_fields.kicad_sch
+part U2 flag exclude_from_sim = no @ sch lib-29_placed_ki_fields.kicad_sch
+part U2 flag in_bom = yes @ sch lib-29_placed_ki_fields.kicad_sch
+part U2 flag on_board = yes @ sch lib-29_placed_ki_fields.kicad_sch
+part U2 lib Fixture:IC_U2 sheet / symbol Fixture:IC_U2
+part U2 unit 1 sheet / uuid l2900002-0000-4000-8000-000000000000 line 51 at 80,50 rot 0
+part U2 value = text FIXTURE @ sch lib-29_placed_ki_fields.kicad_sch note "from the Value field"
+part U3 field Mpn = X-1 @ sch lib-29_placed_ki_fields.kicad_sch
+part U3 field Value = FIXTURE @ sch lib-29_placed_ki_fields.kicad_sch
+part U3 field ki_description = "a note" @ sch lib-29_placed_ki_fields.kicad_sch
+part U3 flag dnp = no @ sch lib-29_placed_ki_fields.kicad_sch
+part U3 flag exclude_from_sim = no @ sch lib-29_placed_ki_fields.kicad_sch
+part U3 flag in_bom = yes @ sch lib-29_placed_ki_fields.kicad_sch
+part U3 flag on_board = yes @ sch lib-29_placed_ki_fields.kicad_sch
+part U3 lib Fixture:IC_U3 sheet / symbol Fixture:IC_U3
+part U3 unit 1 sheet / uuid l2900003-0000-4000-8000-000000000000 line 62 at 120,50 rot 0
+part U3 value = text FIXTURE @ sch lib-29_placed_ki_fields.kicad_sch note "from the Value field"
+pin U1 1 name A unit 1 net unconnected-(U1-A-Pad1)
+pin U1 1 type = passive @ sch lib-29_placed_ki_fields.kicad_sch
+pin U2 1 name A unit 1 net unconnected-(U2-A-Pad1)
+pin U2 1 type = passive @ sch lib-29_placed_ki_fields.kicad_sch
+pin U3 1 name A unit 1 net unconnected-(U3-A-Pad1)
+pin U3 1 type = passive @ sch lib-29_placed_ki_fields.kicad_sch
+sheet / name "" file lib-29_placed_ki_fields.kicad_sch uuid /
+source file lib-29_placed_ki_fields.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:IC_U1 field Reference U
+symbol Fixture:IC_U1 field Value IC_U1
+symbol Fixture:IC_U1 fp-filter SOT*
+symbol Fixture:IC_U1 hash 163805f6ca44e219
+symbol Fixture:IC_U1 keywords fixture
+symbol Fixture:IC_U1 pin 1 unit 1 body 1 name A type passive style line
+symbol Fixture:IC_U1 units 1
+symbol Fixture:IC_U2 field Reference U
+symbol Fixture:IC_U2 field Value IC_U2
+symbol Fixture:IC_U2 fp-filter SOT*
+symbol Fixture:IC_U2 hash d0fdb0e4e43c0862
+symbol Fixture:IC_U2 keywords fixture
+symbol Fixture:IC_U2 pin 1 unit 1 body 1 name A type passive style line
+symbol Fixture:IC_U2 units 1
+symbol Fixture:IC_U3 field Reference U
+symbol Fixture:IC_U3 field Value IC_U3
+symbol Fixture:IC_U3 fp-filter SOT*
+symbol Fixture:IC_U3 hash 547ecbb0edfdbe7b
+symbol Fixture:IC_U3 keywords fixture
+symbol Fixture:IC_U3 pin 1 unit 1 body 1 name A type passive style line
+symbol Fixture:IC_U3 units 1
