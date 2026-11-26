@@ -26,6 +26,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `berc parts refresh` and `berc fp accept` take `--symbols` and `--footprints`; lock pairs hold library hashes (TOOL-9).
 - Review tab: a board row shows its library footprint with its own margins, naming board copy overrides (VIEW-19).
 - `just install` builds berc and the app with the `mx3` part source.
+- `just jobs=N RECIPE` caps build jobs and test threads for that run.
 - `DRAW-49`: a note headed `TODO`, `TBD` or `FIXME` with no placeholder in its body is reported once.
 - `BOM-12`, `TOOL-14`: `Voltage` and `Power` may round the lowest rating at their written precision.
 - `BOM-12`, `TOOL-14`: setting `drawing.fields.rating_rounding_max` (default 1 %) bounds that rounding.
