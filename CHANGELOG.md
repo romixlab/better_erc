@@ -11,6 +11,11 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- Footprint review: an `mx3:${Mpn1}` Datasheet field searches the library for the part numbers it names (VIEW-39).
+- `berc fp todo` shows an `mx3:` Datasheet link with the symbol's fields filled in (TOOL-17).
+
 ## [0.6.5] - 2026-11-26
 
 ### Fixed

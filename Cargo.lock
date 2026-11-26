@@ -1534,6 +1534,7 @@ dependencies = [
  "erc_fake_mx3",
  "erc_kicad",
  "erc_model",
+ "mx3_api_core",
  "mx3_api_lab",
  "serde",
  "serde_json",
@@ -3050,7 +3051,7 @@ dependencies = [
 [[package]]
 name = "mx3_api_core"
 version = "0.1.0"
-source = "git+https://github.com/vhrdtech/mx3_api#e2ea55a3cdb502eadab691de83005cf40d5c6fc6"
+source = "git+https://github.com/vhrdtech/mx3_api#ee5933b62958da16096e6b9f62d20339415661fb"
 dependencies = [
  "base64 0.22.1",
  "reqwest",
@@ -3061,7 +3062,7 @@ dependencies = [
 [[package]]
 name = "mx3_api_lab"
 version = "0.1.0"
-source = "git+https://github.com/vhrdtech/mx3_api#e2ea55a3cdb502eadab691de83005cf40d5c6fc6"
+source = "git+https://github.com/vhrdtech/mx3_api#ee5933b62958da16096e6b9f62d20339415661fb"
 dependencies = [
  "anyhow",
  "chrono",

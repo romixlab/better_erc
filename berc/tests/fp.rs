@@ -157,6 +157,15 @@ fn library_hash(name: &str) -> String {
     stdout(&out).trim().to_string()
 }
 
+/// The `Datasheet` field of a test symbol: a file beside the project, for `Future` an mx3: link to its MPNs
+fn datasheet(name: &str) -> String {
+    if name.ends_with("Future") {
+        "mx3:${Mpn1} ${Mpn2}".to_owned()
+    } else {
+        format!("docs/{name}.pdf")
+    }
+}
+
 /// A symbol of the test library: one pin, a footprint, its MPNs
 fn lib_symbol(name: &str, footprint: &str, mpns: &[&str]) -> String {
     let mpns: String = mpns
@@ -174,9 +183,10 @@ fn lib_symbol(name: &str, footprint: &str, mpns: &[&str]) -> String {
       (property "Reference" "U" (at 0 0 0) (effects (font (size 1.27 1.27))))
       (property "Value" "{name}" (at 0 0 0) (effects (font (size 1.27 1.27))))
       (property "Footprint" "{footprint}" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
-      (property "Datasheet" "docs/{name}.pdf" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+      (property "Datasheet" "{ds}" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
       {mpns}
-      (symbol "{name}_1_1" (pin passive line (at 0 0 0) (length 1.27) (name "A" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))))"#
+      (symbol "{name}_1_1" (pin passive line (at 0 0 0) (length 1.27) (name "A" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))))"#,
+        ds = datasheet(name)
     )
 }
 
@@ -241,11 +251,12 @@ fn project(dir: &Path, symbols: &[Sym]) {
     (property "Reference" "U{n}" (at {x} 45 0) (effects (font (size 1.27 1.27))))
     (property "Value" "{name}" (at {x} 55 0) (effects (font (size 1.27 1.27))))
     (property "Footprint" "{footprint}" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))
-    (property "Datasheet" "docs/{name}.pdf" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))
+    (property "Datasheet" "{ds}" (at {x} 50 0) (effects (font (size 1.27 1.27)) (hide yes)))
 {mpn_props}    (pin "1" (uuid "a0000000-0000-4000-8000-0000000002{n:02}"))
     (instances (project "fpcheck" (path "/{root}" (reference "U{n}") (unit 1)))))
 "#,
-            x = 20 * n
+            x = 20 * n,
+            ds = datasheet(name)
         );
     }
     lib += ")\n";
@@ -790,6 +801,8 @@ fn todo_lists_pairs_in_review_order() {
     );
     assert_eq!(family["hash"], library_hash("Asym_SOT").as_str());
     assert_eq!(family["datasheet"], "docs/Unc.pdf");
+    // an mx3: link with the symbol's fields filled in; a reference with no field stays (TOOL-17)
+    assert_eq!(entries[1]["datasheet"], "mx3:E-1 ${Mpn2}");
     assert!(
         family["library_file"]
             .as_str()

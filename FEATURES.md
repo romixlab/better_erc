@@ -947,6 +947,11 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   (`library_fetch`, `mx3 lib fetch --mpn`), then asks again. Usage signals `app fp-review mpn datasheet|fetch`.
   Tests on a fake lookup and fetch, and on mx3_api_lab's client against `erc_fake_mx3`, one per coverage way ·
   `better_erc_app/src/tabs/footprint_review/mpndocs.rs`, `mx3lib.rs`
+- ✅ `VIEW-39` Footprint review, `mx3:` datasheet links: a `Datasheet` field `mx3:${Mpn1} ${Mpn2}` (mx3's
+  handler of KiCad's Show Datasheet, mx3 `docs/kicad-datasheet.md`) makes the library search ask for the part
+  numbers it names first, its references filled from the symbol's fields; a path or URL field searches as before.
+  The reader is `erc_parts::mpn::mx3_link_mpns` · `better_erc_app/src/tabs/footprint_review/mod.rs` (`field_queries`),
+  test `an_mx3_datasheet_link_searches_its_part_numbers`
 - 🚧 `VIEW-20` Footprint review on a SpaceMouse, through spacenavd (vhrd_egui `ve_spacemouse`, pure Rust): the puck
   pans the page in screen points (one speed at every zoom) and zooms the view about the pointer, or moves the
   footprint (`P` switches); a tap of the left button lays the ruler, of the right one switches what the puck
@@ -1018,6 +1023,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   (QFN, DFN, SON, LGA, BGA, an exposed pad). Also its pad count, rail or ground, and its vias with the sides they
   reach ([docs/probe-access.md](docs/probe-access.md)) · `better_erc/src/probe.rs`, `better_erc/src/probe/part_pad.rs`,
   `better_erc/tests/it/probe.rs`, `better_erc/tests/it/probe_parts.rs`
+- ✅ `TOOL-17` `mx3:` datasheet links in `berc fp todo`: an entry's `datasheet` is the link with the symbol's fields
+  filled in (`mx3:E-1`), a reference with no field left as it is; paths and URLs as written. No check reads the
+  `Datasheet` field, so the checks take `mx3:` links as any other text; no export writes a Datasheet column ·
+  `better_erc/src/fp/{todo,library}.rs`, `erc_parts/src/mpn.rs`, `berc/tests/fp.rs`
 - 📋 `TOOL-2` Schematic vs layout match (catalogue `LAY-1`)
 - ✅ `TOOL-3` Readable git diffs: `berc textconv` prints a `.kicad_sch` / `.kicad_pcb` as sorted text without UUIDs
   or coordinates (`--with-geometry` adds them), and a `.kicad_pro` as dotted-path settings with named lists and

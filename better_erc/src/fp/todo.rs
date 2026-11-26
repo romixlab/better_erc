@@ -190,7 +190,7 @@ struct Placed<'a> {
     lib_id: &'a str,
     reference: &'a str,
     symbol: &'a str,
-    datasheet: Option<&'a str>,
+    datasheet: Option<String>,
     /// (reference, the symbol's own footprint), when they differ
     overridden: Option<(String, String)>,
     symbol_lib: Option<&'a str>,
@@ -228,7 +228,7 @@ fn add(entries: &mut Vec<TodoEntry>, f: &Placed, g: Group) {
                 covered_by: Vec::new(),
                 other: Vec::new(),
                 symbol: Some(f.symbol.to_owned()),
-                datasheet: f.datasheet.map(String::from),
+                datasheet: f.datasheet.clone(),
                 library_file: r.library_file.clone(),
                 placed_note: r.note.clone(),
                 board_copies: Vec::new(),
@@ -327,10 +327,21 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
             .split_once(':')
             .map(|(l, _)| l)
             .filter(|l| !lib_allowed(l, &search.allowed));
+        // an mx3: link with the part's fields filled in, as the schematic editor's Show Datasheet passes it
         let datasheet = part
             .field("Datasheet")
             .map(str::trim)
-            .filter(|d| !d.is_empty() && *d != "~");
+            .filter(|d| !d.is_empty() && *d != "~")
+            .map(|d| {
+                erc_parts::mpn::datasheet_link::resolve(d, |n| {
+                    let f = part
+                        .fields
+                        .iter()
+                        .find(|f| f.name.eq_ignore_ascii_case(n))?;
+                    part.field(&f.name)
+                })
+                .unwrap_or_else(|| d.to_owned())
+            });
         let placed = Placed {
             reviewed,
             lib_id: &f.lib_id,

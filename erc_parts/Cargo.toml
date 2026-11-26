@@ -17,6 +17,8 @@ erc_model = { path = "../erc_model" }
 serde = { version = "1.0", features = ["derive"] }
 toml = { version = "1", default-features = false, features = ["std", "parse", "display", "serde"] }
 mx3_api_lab = { git = "https://github.com/vhrdtech/mx3_api", default-features = false, optional = true }
+# The mx3: datasheet link reader (`datasheet_link`): types and parsing only, no HTTP client
+mx3_api_core = { git = "https://github.com/vhrdtech/mx3_api", default-features = false }
 
 [dev-dependencies]
 erc_fake_mx3 = { path = "../erc_fake_mx3" }

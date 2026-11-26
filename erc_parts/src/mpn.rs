@@ -32,6 +32,9 @@ pub fn mpns<'a>(view: View<'a>, part: PartId) -> Vec<(&'a str, &'a str)> {
         .collect()
 }
 
+/// The `mx3:` datasheet link format (`mx3:${Mpn1} ${Mpn2}`): its one reader, shared with mx3's handler.
+pub use mx3_api_core::datasheet_link;
+
 #[cfg(test)]
 mod tests {
     use super::mpn_field;
