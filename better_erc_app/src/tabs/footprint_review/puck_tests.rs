@@ -76,10 +76,13 @@ fn until(h: &Harness<'static, FootprintReview>, what: &str, cond: impl Fn(&Space
     }
 }
 
-/// The puck held at `axes`, then one frame
+/// The puck held at `axes`, then one frame. A deflection the client holds already is not sent again: the wait is
+/// on the client's axes, which a repeat leaves as they are, so its event would arrive in some later frame
 fn push(h: &mut Harness<'static, FootprintReview>, fake: &FakeSpacenavd, axes: [i32; 6]) {
-    fake.send(Event::motion(axes));
-    until(h, "the motion arrived", |m| m.axes() == axes);
+    if mouse(h).axes() != axes {
+        fake.send(Event::motion(axes));
+        until(h, "the motion arrived", |m| m.axes() == axes);
+    }
     h.step();
 }
 
