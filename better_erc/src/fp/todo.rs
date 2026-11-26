@@ -333,7 +333,7 @@ pub fn todo(path: &Path, search: &LibrarySearch) -> Result<FpTodo, FpCheckError>
             .map(str::trim)
             .filter(|d| !d.is_empty() && *d != "~")
             .map(|d| {
-                erc_parts::mpn::mx3_link_resolved(d, |n| {
+                erc_parts::mpn::datasheet_link::resolve(d, |n| {
                     let f = part
                         .fields
                         .iter()

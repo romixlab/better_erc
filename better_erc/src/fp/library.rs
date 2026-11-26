@@ -516,7 +516,7 @@ pub(super) fn read_symbol(
         .filter(|d| *d != "~")
         .map(|d| {
             // an mx3: link with the symbol's fields filled in
-            erc_parts::mpn::mx3_link_resolved(d, |n| {
+            erc_parts::mpn::datasheet_link::resolve(d, |n| {
                 fields
                     .iter()
                     .find(|(k, _)| k.eq_ignore_ascii_case(n))

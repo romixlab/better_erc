@@ -4460,6 +4460,7 @@ fn search_queries(s: &Sourced) -> Vec<String> {
 
 /// [`search_queries`] of a footprint's fields.
 fn field_queries(fields: &[(String, String)]) -> Vec<String> {
+    use better_erc::parts::mpn::datasheet_link;
     let field = |name: &str| {
         fields
             .iter()
@@ -4478,14 +4479,19 @@ fn field_queries(fields: &[(String, String)]) -> Vec<String> {
         }
     };
     // an mx3: link names the part numbers whose documents to find (mx3's docs/kicad-datasheet.md)
-    let link = field("Datasheet").and_then(|ds| {
-        better_erc::parts::mpn::mx3_link_mpns(ds, |n| {
-            fields
-                .iter()
-                .find(|(k, _)| k.eq_ignore_ascii_case(n))
-                .map(|(_, v)| v.as_str())
-        })
-    });
+    // (one too long to read names none)
+    let link = field("Datasheet")
+        .filter(|ds| datasheet_link::is_link(ds))
+        .map(|ds| {
+            datasheet_link::parse_resolved(ds, |n| {
+                fields
+                    .iter()
+                    .find(|(k, _)| k.eq_ignore_ascii_case(n))
+                    .map(|(_, v)| v.as_str())
+            })
+            .map(|l| l.mpns)
+            .unwrap_or_default()
+        });
     for m in link.iter().flatten() {
         add(m.split([',', '/']).next().unwrap_or(""));
     }
