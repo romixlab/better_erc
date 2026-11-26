@@ -1,0 +1,77 @@
+board clk-5_internal_pull
+label / local NRST_FIX at 72.38,27.46 net /NRST_FIX
+label / local NRST_G0 at 22.38,27.46 net /NRST_G0
+label / power +3V3 at 5,5 net +3V3 dangling
+label / power GND at 5,10 net GND dangling
+nc / at 22.38,30 pin U1 2
+nc / at 72.38,30 pin U2 2
+net +3V3 class = Default @ sch clk-5_internal_pull.kicad_sch note "effective net class"
+net +3V3 kind power
+net /NRST_FIX class = Default @ sch clk-5_internal_pull.kicad_sch note "effective net class"
+net /NRST_FIX kind named
+net /NRST_G0 class = Default @ sch clk-5_internal_pull.kicad_sch note "effective net class"
+net /NRST_G0 kind named
+net GND class = Default @ sch clk-5_internal_pull.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U1-PA0-Pad2) class = Default @ sch clk-5_internal_pull.kicad_sch note "effective net class"
+net unconnected-(U1-PA0-Pad2) kind unconnected
+net unconnected-(U2-PA0-Pad2) class = Default @ sch clk-5_internal_pull.kicad_sch note "effective net class"
+net unconnected-(U2-PA0-Pad2) kind unconnected
+part U1 field Value = STM32G0B1CETx @ sch clk-5_internal_pull.kicad_sch
+part U1 flag dnp = no @ sch clk-5_internal_pull.kicad_sch
+part U1 flag exclude_from_sim = no @ sch clk-5_internal_pull.kicad_sch
+part U1 flag in_bom = yes @ sch clk-5_internal_pull.kicad_sch
+part U1 flag on_board = yes @ sch clk-5_internal_pull.kicad_sch
+part U1 lib MCU_ST_STM32G0:STM32G0B1CETx sheet / symbol MCU_ST_STM32G0:STM32G0B1CETx
+part U1 unit 1 sheet / uuid c5a11000-0000-4000-8000-000000000003 line 48 at 30,30 rot 0
+part U1 value = text STM32G0B1CETx @ sch clk-5_internal_pull.kicad_sch note "from the Value field"
+part U2 field Value = MCU_RST @ sch clk-5_internal_pull.kicad_sch
+part U2 flag dnp = no @ sch clk-5_internal_pull.kicad_sch
+part U2 flag exclude_from_sim = no @ sch clk-5_internal_pull.kicad_sch
+part U2 flag in_bom = yes @ sch clk-5_internal_pull.kicad_sch
+part U2 flag on_board = yes @ sch clk-5_internal_pull.kicad_sch
+part U2 lib MCU_Fixture:MCU_RST sheet / symbol MCU_Fixture:MCU_RST
+part U2 unit 1 sheet / uuid c5a11000-0000-4000-8000-000000000008 line 58 at 80,30 rot 0
+part U2 value = text MCU_RST @ sch clk-5_internal_pull.kicad_sch note "from the Value field"
+pin U1 1 name PF2-NRST unit 1 net /NRST_G0
+pin U1 1 type = input @ sch clk-5_internal_pull.kicad_sch
+pin U1 2 name PA0 unit 1 nc net unconnected-(U1-PA0-Pad2)
+pin U1 2 type = bidirectional @ sch clk-5_internal_pull.kicad_sch
+pin U2 1 name NRST unit 1 net /NRST_FIX
+pin U2 1 type = input @ sch clk-5_internal_pull.kicad_sch
+pin U2 2 name PA0 unit 1 nc net unconnected-(U2-PA0-Pad2)
+pin U2 2 type = bidirectional @ sch clk-5_internal_pull.kicad_sch
+sheet / name "" file clk-5_internal_pull.kicad_sch uuid /
+source file clk-5_internal_pull.kicad_sch
+source tool kicad
+source version 8.0
+symbol MCU_Fixture:MCU_RST description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_RST field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_RST field Reference U
+symbol MCU_Fixture:MCU_RST field Value MCU_RST
+symbol MCU_Fixture:MCU_RST hash 73356fa4b96ec093
+symbol MCU_Fixture:MCU_RST pin 1 unit 1 body 1 name NRST type input style line
+symbol MCU_Fixture:MCU_RST pin 2 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Fixture:MCU_RST units 1
+symbol MCU_ST_STM32G0:STM32G0B1CETx description "Fixture microcontroller with an internal NRST pull-up"
+symbol MCU_ST_STM32G0:STM32G0B1CETx field Description "Fixture microcontroller with an internal NRST pull-up"
+symbol MCU_ST_STM32G0:STM32G0B1CETx field Reference U
+symbol MCU_ST_STM32G0:STM32G0B1CETx field Value STM32G0B1CETx
+symbol MCU_ST_STM32G0:STM32G0B1CETx hash 3605dbbd37b46de9
+symbol MCU_ST_STM32G0:STM32G0B1CETx pin 1 unit 1 body 1 name PF2-NRST type input style line
+symbol MCU_ST_STM32G0:STM32G0B1CETx pin 2 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_ST_STM32G0:STM32G0B1CETx units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

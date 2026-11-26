@@ -1,0 +1,65 @@
+# What better_erc finds on clk-5_internal_pull.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board clk-5_internal_pull"]
+
+[[finding]]
+check = "CLK-5"
+subjects = ["net /NRST_FIX", "pin U2.1"]
+
+[[finding]]
+check = "CLK-7"
+subjects = ["net /NRST_FIX", "pin U2.1"]
+
+[[finding]]
+check = "CLK-7"
+subjects = ["net /NRST_G0", "pin U1.1"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1", "part U2"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /NRST_FIX", "pin U2.1"]
+
+[[finding]]
+check = "IO-1"
+subjects = ["net /NRST_G0", "pin U1.1"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U1"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U2"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.1", "pin U1.2"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.1", "pin U2.2"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /NRST_FIX", "pin U2.1"]
+
+[[finding]]
+check = "WIRE-1"
+subjects = ["net /NRST_G0", "pin U1.1"]

@@ -1,0 +1,95 @@
+board dbg-7_internal_pull
+label / local PWR2_U1 at 2.38,30 net /PWR2_U1
+label / local PWR2_U1 at 22.38,30 net /PWR2_U1
+label / power +3V3 at 5,5 net +3V3 dangling
+label / power GND at 5,10 net GND dangling
+nc / at 22.38,27.46 pin U1 1
+nc / at 72.38,27.46 pin U2 1
+nc / at 72.38,30 pin U2 2
+net +3V3 class = Default @ sch dbg-7_internal_pull.kicad_sch note "effective net class"
+net +3V3 kind power
+net /PWR2_U1 class = Default @ sch dbg-7_internal_pull.kicad_sch note "effective net class"
+net /PWR2_U1 kind named
+net GND class = Default @ sch dbg-7_internal_pull.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U1-PRTPWR1{slash}BC_EN1-Pad1) class = Default @ sch dbg-7_internal_pull.kicad_sch note "effective net class"
+net unconnected-(U1-PRTPWR1{slash}BC_EN1-Pad1) kind unconnected
+net unconnected-(U2-PRTPWR1{slash}BC_EN1-Pad1) class = Default @ sch dbg-7_internal_pull.kicad_sch note "effective net class"
+net unconnected-(U2-PRTPWR1{slash}BC_EN1-Pad1) kind unconnected
+net unconnected-(U2-PRTPWR2{slash}BC_EN2-Pad2) class = Default @ sch dbg-7_internal_pull.kicad_sch note "effective net class"
+net unconnected-(U2-PRTPWR2{slash}BC_EN2-Pad2) kind unconnected
+part J1 field Value = Conn_01x01 @ sch dbg-7_internal_pull.kicad_sch
+part J1 flag dnp = no @ sch dbg-7_internal_pull.kicad_sch
+part J1 flag exclude_from_sim = no @ sch dbg-7_internal_pull.kicad_sch
+part J1 flag in_bom = yes @ sch dbg-7_internal_pull.kicad_sch
+part J1 flag on_board = yes @ sch dbg-7_internal_pull.kicad_sch
+part J1 lib Connector_Generic:Conn_01x01 sheet / symbol Connector_Generic:Conn_01x01
+part J1 unit 1 sheet / uuid d7a11000-0000-4000-8000-000000000007 line 68 at 10,30 rot 0
+part J1 value = text Conn_01x01 @ sch dbg-7_internal_pull.kicad_sch note "from the Value field"
+part U1 field Value = USB2514B_Bi @ sch dbg-7_internal_pull.kicad_sch
+part U1 flag dnp = no @ sch dbg-7_internal_pull.kicad_sch
+part U1 flag exclude_from_sim = no @ sch dbg-7_internal_pull.kicad_sch
+part U1 flag in_bom = yes @ sch dbg-7_internal_pull.kicad_sch
+part U1 flag on_board = yes @ sch dbg-7_internal_pull.kicad_sch
+part U1 lib VHRD_Interface_USB:USB2514B_Bi sheet / symbol VHRD_Interface_USB:USB2514B_Bi
+part U1 unit 1 sheet / uuid d7a11000-0000-4000-8000-000000000003 line 58 at 30,30 rot 0
+part U1 value = text USB2514B_Bi @ sch dbg-7_internal_pull.kicad_sch note "from the Value field"
+part U2 field Value = HUB_X @ sch dbg-7_internal_pull.kicad_sch
+part U2 flag dnp = no @ sch dbg-7_internal_pull.kicad_sch
+part U2 flag exclude_from_sim = no @ sch dbg-7_internal_pull.kicad_sch
+part U2 flag in_bom = yes @ sch dbg-7_internal_pull.kicad_sch
+part U2 flag on_board = yes @ sch dbg-7_internal_pull.kicad_sch
+part U2 lib Fixture_Hub:HUB_X sheet / symbol Fixture_Hub:HUB_X
+part U2 unit 1 sheet / uuid d7a11000-0000-4000-8000-000000000011 line 76 at 80,30 rot 0
+part U2 value = text HUB_X @ sch dbg-7_internal_pull.kicad_sch note "from the Value field"
+pin J1 1 name Pin_1 unit 1 net /PWR2_U1
+pin J1 1 type = passive @ sch dbg-7_internal_pull.kicad_sch
+pin U1 1 name PRTPWR1/BC_EN1 unit 1 nc net unconnected-(U1-PRTPWR1{slash}BC_EN1-Pad1)
+pin U1 1 type = bidirectional @ sch dbg-7_internal_pull.kicad_sch
+pin U1 2 name PRTPWR2/BC_EN2 unit 1 net /PWR2_U1
+pin U1 2 type = bidirectional @ sch dbg-7_internal_pull.kicad_sch
+pin U2 1 name PRTPWR1/BC_EN1 unit 1 nc net unconnected-(U2-PRTPWR1{slash}BC_EN1-Pad1)
+pin U2 1 type = bidirectional @ sch dbg-7_internal_pull.kicad_sch
+pin U2 2 name PRTPWR2/BC_EN2 unit 1 nc net unconnected-(U2-PRTPWR2{slash}BC_EN2-Pad2)
+pin U2 2 type = bidirectional @ sch dbg-7_internal_pull.kicad_sch
+sheet / name "" file dbg-7_internal_pull.kicad_sch uuid /
+source file dbg-7_internal_pull.kicad_sch
+source tool kicad
+source version 8.0
+symbol Connector_Generic:Conn_01x01 description "Generic connector"
+symbol Connector_Generic:Conn_01x01 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x01 field Reference U
+symbol Connector_Generic:Conn_01x01 field Value Conn_01x01
+symbol Connector_Generic:Conn_01x01 hash 64a0baf87a8f3406
+symbol Connector_Generic:Conn_01x01 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x01 units 1
+symbol Fixture_Hub:HUB_X description "USB 2.0 hub controller"
+symbol Fixture_Hub:HUB_X field Description "USB 2.0 hub controller"
+symbol Fixture_Hub:HUB_X field Reference U
+symbol Fixture_Hub:HUB_X field Value HUB_X
+symbol Fixture_Hub:HUB_X hash 4c072723ef0f1051
+symbol Fixture_Hub:HUB_X pin 1 unit 1 body 1 name PRTPWR1/BC_EN1 type bidirectional style line
+symbol Fixture_Hub:HUB_X pin 2 unit 1 body 1 name PRTPWR2/BC_EN2 type bidirectional style line
+symbol Fixture_Hub:HUB_X units 1
+symbol VHRD_Interface_USB:USB2514B_Bi description "USB 2.0 hub controller"
+symbol VHRD_Interface_USB:USB2514B_Bi field Description "USB 2.0 hub controller"
+symbol VHRD_Interface_USB:USB2514B_Bi field Reference U
+symbol VHRD_Interface_USB:USB2514B_Bi field Value USB2514B_Bi
+symbol VHRD_Interface_USB:USB2514B_Bi hash d97ffec3475cf76f
+symbol VHRD_Interface_USB:USB2514B_Bi pin 1 unit 1 body 1 name PRTPWR1/BC_EN1 type bidirectional style line
+symbol VHRD_Interface_USB:USB2514B_Bi pin 2 unit 1 body 1 name PRTPWR2/BC_EN2 type bidirectional style line
+symbol VHRD_Interface_USB:USB2514B_Bi units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global
