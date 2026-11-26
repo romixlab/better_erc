@@ -34,6 +34,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Fixed
 
+- `LOGIC-7`, `IO-8`, `DBG-8`: an MCU open-drain pin reaching no logic input (switched resistor, header) is not reported.
 - `BOM-12`, `RATE-2`: a `Power`, `Preq_min` or `Pworking` field written `1/4W` was read as 1 W.
 
 - `berc fp todo` text and the review tab list one row per footprint hash, families and MPNs under it (TOOL-8).

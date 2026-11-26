@@ -1,6 +1,6 @@
 //! `IO-8` Mention a needed pull-up or down where it applies, e.g. buttons
 
-use super::{button_sides, net_pulls, switches};
+use super::{button_sides, net_pulls, switches, switches_resistor};
 use crate::meta::*;
 use crate::text::pin_list;
 use crate::{Ctx, Finding};
@@ -29,7 +29,8 @@ impl Check for Io8 {
 
     /// A switch to a rail or ground with no fitted pull to the other level on its signal side, and an
     /// open-drain output (pin type) that is no interrupt, fault or power-good flag (IO-15) and no I2C line
-    /// (I2C-1) on a net with an MCU pin and no pull-up: the firmware must enable an internal pull. Errata that
+    /// (I2C-1) on a net with an MCU pin and no pull-up: the firmware must enable an internal pull. A controller's
+    /// own open-drain pin that reaches no logic input needs no pull ([`switches_resistor`]). Errata that
     /// rule internal pulls out (RP2350-E9) need part data (CFG-5) and are not judged here.
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let b = cx.board();
@@ -93,7 +94,7 @@ impl Check for Io8 {
                 let part = b.pin(p).part;
                 cx.fitted(part) && cx.classes().get(part).is_programmable()
             });
-            if !reader || !net_pulls(cx, net).up.is_empty() {
+            if !reader || !net_pulls(cx, net).up.is_empty() || switches_resistor(cx, net, &pins) {
                 continue;
             }
             out.push(
@@ -126,6 +127,18 @@ mod tests {
                 "IO-8:net /BTN_UP|part SW1",
                 "IO-8:net /LIGHT_DRDY|pin U2.3"
             ],
+            "{found:?}"
+        );
+    }
+
+    #[test]
+    fn controller_switching_a_resistor() {
+        let found = crate::testing::fingerprints(&super::Io8, "logic-7_mcu_switched_resistor");
+        assert!(found.is_empty(), "{found:?}");
+        let found = crate::testing::fingerprints(&super::Io8, "logic-7_mcu_open_drain_receiver");
+        assert_eq!(
+            found,
+            ["IO-8:net /RST_R|pin U1.4", "IO-8:net /RST|pin U1.3"],
             "{found:?}"
         );
     }

@@ -220,7 +220,11 @@ with only the pad pull-down can latch at about 2.2 V (erratum E9), so a button t
 needed, and E9 makes it unreliable; rev A got a 6 kΩ rework resistor, rev B an external pull-down.
 
 **How to check.** Switch to a rail with no opposite pull on the input side: add an entry "needs internal pull-up/down"
-to the programmer report (`RPT-13`), and an error where the part's errata rule internal pulls out.
+to the programmer report (`RPT-13`), and an error where the part's errata rule internal pulls out. better_erc
+(`erc_checks/src/io/io_8.rs`) also reports an open-drain pin (pin type; no flag or I2C line) on a net with an MCU pin
+and no pull-up. A controller's own open-drain pin whose net reaches no logic input (only passives, connectors and test
+points on the net and behind one series resistor, as in `LOGIC-7`) switches a resistor or leaves the board: it needs
+no pull and is left out.
 
 **Fix.** Either an external pull, or a line in the programmer report and the firmware's pin setup.
 
