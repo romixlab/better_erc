@@ -747,8 +747,8 @@ impl FootprintReview {
         let mut fetch = None;
         Group::new("Datasheets by MPN")
             .tooltip(
-                "Each MPN of the symbol, the library document that covers it and its review state (Settings: \
-                 library MPN lookup)",
+                "Each MPN of the symbol, the library document that covers it, how it was found (mx3's by_mpn) \
+                 and its review state",
             )
             .show(ui, |ui| {
                 if let Some(e) = &lookup_failed {
@@ -768,14 +768,22 @@ impl FootprintReview {
                                     if let Some(no) = d.label() {
                                         tip = format!("{no}\n{tip}");
                                     }
-                                    let text = format!("📄 {}", file_name(&path));
-                                    if ui
-                                        .selectable_label(is_open, text)
-                                        .on_hover_text(format!("Open it\n{tip}"))
-                                        .clicked()
-                                    {
-                                        open = Some(path);
+                                    if let Some(by) = &d.by {
+                                        tip = format!("{tip}\nfound by: {by}");
                                     }
+                                    let text = format!("📄 {}", file_name(&path));
+                                    ui.horizontal(|ui| {
+                                        if ui
+                                            .selectable_label(is_open, text)
+                                            .on_hover_text(format!("Open it\n{tip}"))
+                                            .clicked()
+                                        {
+                                            open = Some(path.clone());
+                                        }
+                                        if let Some(by) = &d.by {
+                                            ui.weak(by);
+                                        }
+                                    });
                                 }
                                 (None, Some(why)) => {
                                     ui.horizontal(|ui| {
@@ -1754,40 +1762,6 @@ impl FootprintReview {
                         self.rt.doc_name = None;
                     }
                 });
-            PropertyRow::new(
-                "Library docs command, for the review record (the index with content hashes)",
-            )
-            .show(ui, |ui| {
-                if ui
-                    .add(TextEdit::singleline(&mut self.rt.docs_text))
-                    .changed()
-                {
-                    s.library_docs = self
-                        .rt
-                        .docs_text
-                        .split_whitespace()
-                        .map(String::from)
-                        .collect();
-                    self.rt.doc_index = None;
-                }
-            });
-            PropertyRow::new(
-                "Library MPN lookup command, for the table of MPNs (the MPNs are added)",
-            )
-            .show(ui, |ui| {
-                if ui
-                    .add(TextEdit::singleline(&mut self.rt.mpn_text))
-                    .changed()
-                {
-                    s.library_mpn = self
-                        .rt
-                        .mpn_text
-                        .split_whitespace()
-                        .map(String::from)
-                        .collect();
-                    self.rt.mpn_docs.known.clear();
-                }
-            });
             PropertyRow::new(
                 "Library fetch command, for an MPN without a document (the MPN is added)",
             )

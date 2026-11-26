@@ -11,6 +11,12 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Changed
+
+- Review tab: datasheets by MPN come from mx3's `by_mpn`, each with how it was found (VIEW-26).
+- The library catalog and a datasheet's path come from mx3_api_lab's client, not `tpm lib` (TOOL-11).
+- `library_fetch`'s default command is `mx3 lib fetch --mpn` (VIEW-26).
+
 ## [0.6.3] - 2026-11-26
 
 ### Added

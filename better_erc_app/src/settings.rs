@@ -43,19 +43,8 @@ pub struct FootprintReviewSettings {
     /// (`tpm lib open --json`); the note names the datasheet by its number and revision, else by `value`. Empty:
     /// the note gives the datasheet's file.
     pub library_name: Vec<String>,
-    /// A command that lists the document library's index: the program and its arguments. It prints a JSON list of
-    /// `{"path", "hash", "doc", "rev"}` (`tpm lib docs --json --all`, paths relative to the library's root, the
-    /// content hash in hex). Accept records the datasheet by its hash and document number with it, and a reviewed
-    /// symbol's datasheet is found again through it and `library_name`. Empty: no datasheet recorded but the page,
-    /// scale and placement.
-    pub library_docs: Vec<String>,
-    /// A command that names the library document of each part number: the program and its arguments; the
-    /// symbol's MPNs are added at the end. It prints a JSON list of `{"mpn", "path", "hash", "doc", "rev", "why"}`
-    /// (`tpm lib mpn --json`): one object per document of an MPN, best first, or one with no `path` and `why` it
-    /// has none. The Datasheet section's table of MPNs comes from it. Empty: no table.
-    pub library_mpn: Vec<String>,
     /// A command that fetches an MPN's datasheet into the library: the program and its arguments; the MPN is added
-    /// at the end (`tpm lib fetch --mpn`). Empty: no Fetch button for an MPN without a document.
+    /// at the end (`mx3 lib fetch --mpn`). Empty: no Fetch button for an MPN without a document.
     pub library_fetch: Vec<String>,
     /// Who reviews, recorded with the review; empty: the login name
     pub reviewer: String,
@@ -363,11 +352,7 @@ impl Default for FootprintReviewSettings {
             library_name: ["tpm", "lib", "open", "--json", "-n", "10"]
                 .map(String::from)
                 .to_vec(),
-            library_docs: ["tpm", "lib", "docs", "--json", "--all"]
-                .map(String::from)
-                .to_vec(),
-            library_mpn: ["tpm", "lib", "mpn", "--json"].map(String::from).to_vec(),
-            library_fetch: ["tpm", "lib", "fetch", "--mpn"].map(String::from).to_vec(),
+            library_fetch: ["mx3", "lib", "fetch", "--mpn"].map(String::from).to_vec(),
             reviewer: String::new(),
             parts_source: None,
             notes_file: "footprint-review-notes.md".into(),

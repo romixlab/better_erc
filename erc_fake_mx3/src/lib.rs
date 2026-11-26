@@ -1,16 +1,23 @@
-//! Test-only: a fake mx3 backend for the tests of the mx3 part source.
+//! Test-only: a fake mx3 backend for the tests of the mx3 part source and the document library (VIEW-26).
 //!
-//! [`FakeMx3::start`] serves `/params/by_mpn`, `/fp/review/check` and `/fp/review/accept` on a local port
-//! ([`http::Server`]) from a fixed part catalogue ([`RESISTOR`], [`CAPACITOR`]; any other MPN is not found) and the
-//! reviews accepted so far. Requests and answers are mx3_api_lab's own types. A request without
-//! `Authorization: Bearer` [`TOKEN`] is answered 401, as the backend answers a missing or wrong token.
+//! [`FakeMx3::start`] serves `/params/by_mpn`, `/fp/review/check`, `/fp/review/accept`, `/lib/by_mpn` and
+//! `/lib/docs` on a local port ([`http::Server`]) from a fixed part catalogue ([`RESISTOR`], [`CAPACITOR`]; any
+//! other MPN is not found) and a fixed set of library documents, one per [`By`] source ([`LIB_LINK_MPN`] and the
+//! other `LIB_*_MPN` constants), plus the reviews accepted so far. Requests and answers are mx3_api_lab's own
+//! types. A request without `Authorization: Bearer` [`TOKEN`] is answered 401, as the backend answers a missing
+//! or wrong token.
 
 pub mod http;
 
+use chrono::NaiveDate;
 use http::{Answer, Request, Server};
 use mx3_api_lab::endpoints::fp_review::{
     EP_FP_REVIEW_ACCEPT, EP_FP_REVIEW_CHECK, FpAccepted, FpCheck, FpCheckItem, FpCheckQuery,
     FpCheckStatus, FpCover, FpCoverSpec, FpReview, FpReviewAccept,
+};
+use mx3_api_lab::endpoints::library::{
+    By, DocFile, Docs, DocsQuery, EP_LIB_BY_MPN, EP_LIB_DOCS, Ident, LibPath, MpnDoc as LibMpnDoc,
+    MpnDocs as LibMpnDocs,
 };
 use mx3_api_lab::endpoints::mpn::{MpnReading, MpnSegment};
 use mx3_api_lab::endpoints::parameter::ParameterDefId;
@@ -47,6 +54,34 @@ const KNOWN_KEYS: &[&str] = &[
     "resistance",
     "technology",
     "tolerance",
+];
+
+/// An MPN whose document a fetch by part number saved or found ([`By::Link`])
+pub const LIB_LINK_MPN: &str = "LIB-LINK-MPN";
+/// An MPN whose document's origin is one of its datasheet URLs ([`By::Source`])
+pub const LIB_SOURCE_MPN: &str = "LIB-SOURCE-MPN";
+/// An MPN a document's file name matches, with no origin URL ([`By::Name`])
+pub const LIB_NAME_MPN: &str = "LIB-NAME-MPN";
+/// An MPN a person covered by part number ([`By::Cover`])
+pub const LIB_COVER_MPN: &str = "LIB-COVER-MPN";
+/// An MPN a document covers by family, its MPN decode reading in the family ([`By::Family`])
+pub const LIB_FAMILY_MPN: &str = "LIB-FAMILY-MPN";
+/// An MPN a document's pattern matches ([`By::Pattern`])
+pub const LIB_PATTERN_MPN: &str = "LIB-PATTERN-MPN";
+/// An MPN printed on a document's first pages ([`By::Text`])
+pub const LIB_TEXT_MPN: &str = "LIB-TEXT-MPN";
+/// An MPN the library has no document for
+pub const LIB_NONE_MPN: &str = "LIB-NONE-MPN";
+
+/// Every `LIB_*_MPN` the fake has a document for, by [`By`] source
+pub const LIB_MPNS: &[&str] = &[
+    LIB_LINK_MPN,
+    LIB_SOURCE_MPN,
+    LIB_NAME_MPN,
+    LIB_COVER_MPN,
+    LIB_FAMILY_MPN,
+    LIB_PATTERN_MPN,
+    LIB_TEXT_MPN,
 ];
 
 /// A fake mx3 backend on a local port
@@ -108,6 +143,15 @@ fn answer(req: &Request, reviews: &Mutex<Vec<FpReview>>) -> Answer {
         ("POST", EP_PARAMS_BY_MPN) => body(req).map(|q| json(200, &by_mpn(&q))),
         ("POST", EP_FP_REVIEW_CHECK) => body(req).map(|q| json(200, &check(&q, &reviews))),
         ("POST", EP_FP_REVIEW_ACCEPT) => body(req).and_then(|q| accept(q, &mut reviews)),
+        ("POST", EP_LIB_BY_MPN) => {
+            body(req).map(|q: mx3_api_lab::endpoints::library::ByMpnQuery| {
+                json(
+                    200,
+                    &q.mpns.iter().map(|m| library_docs(m)).collect::<Vec<_>>(),
+                )
+            })
+        }
+        ("POST", EP_LIB_DOCS) => body(req).map(|q: DocsQuery| json(200, &library_catalog(&q))),
         _ => Err(error(404, "no such route")),
     };
     r.unwrap_or_else(|e| e)
@@ -288,6 +332,146 @@ fn by_mpn(q: &ByMpn) -> ByMpnResult {
     ByMpnResult {
         unknown_keys,
         results,
+    }
+}
+
+fn lib_hash(byte: u8) -> String {
+    format!("{byte:02x}").repeat(32)
+}
+
+/// One document of the fixture library: `share/path` under `datasheets/Fixture`, its hash and document number
+fn lib_doc(
+    byte: u8,
+    file: &str,
+    doc: &str,
+    by: By,
+    url: Option<&str>,
+    cover: Option<&str>,
+) -> LibMpnDoc {
+    LibMpnDoc {
+        hash: lib_hash(byte),
+        ident: Ident {
+            doc: Some(doc.to_owned()),
+            rev: Some("1".to_owned()),
+            ..Ident::default()
+        },
+        url: url.map(str::to_owned),
+        by,
+        cover: cover.map(str::to_owned),
+        paths: vec![LibPath {
+            share: "datasheets".to_owned(),
+            path: format!("Fixture/{file}"),
+        }],
+    }
+}
+
+/// The library's documents of `mpn` (`/lib/by_mpn`): one of the `LIB_*_MPN` fixtures, each a different [`By`]
+/// source, [`LIB_NONE_MPN`] with none, any other MPN not in the library at all
+fn library_docs(mpn: &str) -> LibMpnDocs {
+    let doc = match mpn {
+        LIB_LINK_MPN => Some(lib_doc(
+            1,
+            "link.pdf",
+            "DSL1",
+            By::Link,
+            Some("https://x/link.pdf"),
+            None,
+        )),
+        LIB_SOURCE_MPN => Some(lib_doc(
+            2,
+            "source.pdf",
+            "DSS1",
+            By::Source,
+            Some("https://x/source.pdf"),
+            None,
+        )),
+        LIB_NAME_MPN => Some(lib_doc(
+            3,
+            "lib-name-mpn-datasheet.pdf",
+            "DSN1",
+            By::Name,
+            None,
+            None,
+        )),
+        LIB_COVER_MPN => Some(lib_doc(4, "cover.pdf", "DSC1", By::Cover, None, None)),
+        LIB_FAMILY_MPN => Some(lib_doc(
+            5,
+            "family.pdf",
+            "DSF1",
+            By::Family,
+            None,
+            Some("yageo.rc case_eia=0402"),
+        )),
+        LIB_PATTERN_MPN => Some(lib_doc(
+            6,
+            "pattern.pdf",
+            "DSP1",
+            By::Pattern,
+            None,
+            Some("LIB-PATTERN-*"),
+        )),
+        LIB_TEXT_MPN => Some(lib_doc(7, "text.pdf", "DST1", By::Text, None, None)),
+        LIB_NONE_MPN => None,
+        _ => {
+            return LibMpnDocs {
+                mpn: mpn.to_owned(),
+                maker: None,
+                known: false,
+                urls: Vec::new(),
+                docs: Vec::new(),
+                why: Some("not in the library".to_owned()),
+            };
+        }
+    };
+    let urls = doc
+        .as_ref()
+        .and_then(|d| d.url.clone())
+        .into_iter()
+        .collect();
+    let why = doc
+        .is_none()
+        .then(|| "the library has no document for it".to_owned());
+    LibMpnDocs {
+        mpn: mpn.to_owned(),
+        maker: Some("Maker".to_owned()),
+        known: true,
+        urls,
+        docs: doc.into_iter().collect(),
+        why,
+    }
+}
+
+/// The catalog (`/lib/docs`): the `LIB_*_MPN` fixtures' files, and one gone
+fn library_catalog(q: &DocsQuery) -> Docs {
+    let since = NaiveDate::from_ymd_opt(2026, 1, 1).expect("a valid date");
+    let file = |byte: u8, name: &str, doc: &str, gone: bool| DocFile {
+        share: "datasheets".to_owned(),
+        path: format!("Fixture/{name}"),
+        hash: lib_hash(byte),
+        size: 1000,
+        since,
+        gone: gone.then_some(since),
+        ident: Ident {
+            doc: Some(doc.to_owned()),
+            rev: Some("1".to_owned()),
+            ..Ident::default()
+        },
+        place: mx3_api_lab::endpoints::library::Place::default(),
+        title: None,
+        origin: None,
+        seq: 1,
+    };
+    let mut files = vec![
+        file(1, "link.pdf", "DSL1", false),
+        file(4, "cover.pdf", "DSC1", false),
+    ];
+    if q.gone {
+        files.push(file(9, "old.pdf", "DSOLD", true));
+    }
+    Docs {
+        seq: 1,
+        unchanged: false,
+        files,
     }
 }
 

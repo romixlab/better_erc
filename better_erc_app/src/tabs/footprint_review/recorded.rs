@@ -43,14 +43,12 @@ pub(super) fn covers_of(choices: &[MpnChoice]) -> better_erc::fp::Covers {
 }
 
 impl FootprintReview {
-    /// The document library's index, read once per session; empty without a docs command
+    /// The document library's catalog, read once per session through mx3's `/lib/docs`
     pub(super) fn doc_index(&mut self) -> Result<&[IndexedDoc], String> {
         if self.rt.doc_index.is_none() {
-            let cmd = self.rt.settings.library_docs.clone();
             let index = match &self.rt.indexer {
                 Some(f) => f(),
-                None if cmd.is_empty() || find_program(&cmd[0]).is_none() => Ok(Vec::new()),
-                None => docindex::run_index(&cmd),
+                None => super::mx3lib::connect().and_then(|c| docindex::fetch_index(&c)),
             };
             self.rt.doc_index = Some(index);
         }
@@ -133,13 +131,12 @@ impl FootprintReview {
                 return false;
             }
         };
-        let cmd = self.rt.settings.library_name.clone();
+        let roots = super::mx3lib::roots();
         for r in &reviews {
             for d in docindex::candidates(&index, &r.review) {
                 let found = match &self.rt.locator {
                     Some(f) => f(&d.path),
-                    None if cmd.is_empty() || find_program(&cmd[0]).is_none() => Ok(None),
-                    None => docindex::run_locate(&cmd, &d.path),
+                    None => Ok(roots.locate(&d.path.to_string_lossy())),
                 };
                 if let Ok(Some(path)) = found {
                     self.open_datasheet(ctx, &path);

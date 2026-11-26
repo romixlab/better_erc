@@ -937,14 +937,16 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   most `VIEWS_MAX`, a side may repeat), drawn in both looks over the 3D model and saved with the row's view; the
   Model views section's chips add or take off each side. Tests: add, place, remove, Escape and double right click;
   the per-datasheet view keeps them · `projmenu.rs`, `modelviews.rs`, `grab.rs`, `perdoc_tests.rs`
-- 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
-  symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
-  one lookup per MPN per session, on a worker thread) and its review state from the part source's reviews (reviewed,
-  reviewed elsewhere, stale, not yet). A click opens the document with its review's view, else the page search; an MPN without
-  a document says why and fetches it (`library_fetch`, `tpm lib fetch --mpn`), then asks again. Usage signals
-  `app fp-review mpn datasheet|fetch`. Tests on a fake lookup and fetch. Open: tpm's `lib mpn --json`
-  (ops#13nov-1420); until then the table shows the command's error ·
-  `better_erc_app/src/tabs/footprint_review/mpndocs.rs`
+- ✅ `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
+  symbol, the library document that covers it (mx3_api_lab's `by_mpn`, `/lib/by_mpn`, over the mx3 connection and
+  this computer's library folders, `mx3lib.rs`; one lookup per MPN per session, on a worker thread) and its review
+  state from the part source's reviews (reviewed, reviewed elsewhere, stale, not yet). Each document shows how it
+  was found (`link`, `source`, `name`, or the coverage ways `cover`, `family`, `pattern`, `text`,
+  P2527#25nov-1839); a document taken back (`mx3 lib uncover`) is not among the answers. A click opens the
+  document with its review's view, else the page search; an MPN without a document says why and fetches it
+  (`library_fetch`, `mx3 lib fetch --mpn`), then asks again. Usage signals `app fp-review mpn datasheet|fetch`.
+  Tests on a fake lookup and fetch, and on mx3_api_lab's client against `erc_fake_mx3`, one per coverage way ·
+  `better_erc_app/src/tabs/footprint_review/mpndocs.rs`, `mx3lib.rs`
 - 🚧 `VIEW-20` Footprint review on a SpaceMouse, through spacenavd (vhrd_egui `ve_spacemouse`, pure Rust): the puck
   pans the page in screen points (one speed at every zoom) and zooms the view about the pointer, or moves the
   footprint (`P` switches); a tap of the left button lays the ruler, of the right one switches what the puck
@@ -1090,15 +1092,16 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `better_erc/src/fp/todo.rs`, `better_erc/src/fp/library.rs` (`lib_allowed`), `berc/src/main.rs`,
   `better_erc_app/src/tabs/footprint_review/mod.rs`, `better_erc_app/src/settings.rs`, `berc/tests/fp.rs`
 - ✅ `TOOL-11` Where a footprint review was made, kept with the review in the part source: the document number and
-  revision, the PDF's blake3 from the document library's index (`tpm lib docs --json --all`, a setting), the page,
+  revision, the PDF's blake3 from the document library's catalog (mx3_api_lab's `/lib/docs`, VIEW-26), the page,
   the scale, the footprint's placement, the reviewer (a setting), the day and the review note. The review tab's
   Accept asks which MPNs the datasheet covers, alone or by family: those in the PDF's text or covered by a review
   made on it, not one a review on another datasheet covers; none of them in the text: every one not covered yet.
   A board's list has one row per footprint hash: under the picked row the families and MPNs still to review and
   how their parts differ (the facts of the parts snapshot whose values differ, one line per MPN; the shared ones
   folded), so one Accept covers every variant a footprint does not care about. Opening a
-  reviewed row opens the recorded PDF (by its hash, else its document number, through `tpm lib open --json`) and
-  restores page, scale and placement; a review of an earlier hash or a PDF not found is said. Each datasheet keeps
+  reviewed row opens the recorded PDF (by its hash, else its document number, resolved against this computer's
+  library folders) and restores page, scale and placement; a review of an earlier hash or a PDF not found is
+  said. Each datasheet keeps
   its own view per row (page, zoom, scale, placements, ruler, note), saved with the tab: switching datasheets and
   back finds each as it was left; a review recorded since wins · `better_erc_app/src/tabs/footprint_review/recorded.rs`,
   `rows.rs`, `docview.rs`, `docindex.rs`, `perdoc_tests.rs`, README "Where a review was made"
