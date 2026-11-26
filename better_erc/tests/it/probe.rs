@@ -6,7 +6,7 @@ use better_erc::probe::{
 };
 use std::path::PathBuf;
 
-const LIB: &str = r#"(lib_symbols
+pub(crate) const LIB: &str = r#"(lib_symbols
 (symbol "Device:R" (pin_numbers (hide yes)) (pin_names (hide yes)) (exclude_from_sim no) (in_bom yes) (on_board yes)
 (property "Reference" "R" (at 0 0 0) (effects (font (size 1.27 1.27))))
 (property "Value" "R" (at 0 0 0) (effects (font (size 1.27 1.27))))
@@ -28,7 +28,7 @@ const LIB: &str = r#"(lib_symbols
 
 /// A placed symbol at `x`, `y` with a label on each pin's end: (pin number, x, y relative to the symbol as the
 /// library draws it, y up, label)
-fn symbol(
+pub(crate) fn symbol(
     n: u32,
     lib: &str,
     reference: &str,
@@ -166,8 +166,14 @@ fn footprint(
     pads: &[(&str, &str)],
     property: &str,
 ) -> String {
+    // The resistors are too small to probe, so a net beside one is reached through it only
+    let name = if reference.starts_with('R') {
+        "R_0201_0603Metric"
+    } else {
+        reference
+    };
     let mut s = format!(
-        " (footprint \"T:{reference}\" (layer \"{side}\") (at {} {})\n  \
+        " (footprint \"T:{name}\" (layer \"{side}\") (at {} {})\n  \
          (property \"Reference\" \"{reference}\" (at 0 0 0) (layer \"F.SilkS\") (hide yes))\n",
         at.0, at.1
     );
@@ -321,7 +327,11 @@ fn sides_series_and_vias() {
     assert_eq!(reach("SIG_F"), (Reach::None, Reach::None));
 
     let a = &net(&p, "SIG_A").access;
-    assert_eq!(a.len(), 1, "{a:?}");
+    assert_eq!(
+        a.iter().filter(|a| a.not_counted.is_none()).count(),
+        1,
+        "{a:?}"
+    );
     assert_eq!(
         (a[0].reference.as_str(), a[0].kind, a[0].sides.as_slice()),
         ("TP1", AccessKind::TestPoint, &[Side::Top][..])
@@ -397,6 +407,7 @@ fn shielded_and_fine_pitch_connectors_do_not_count() {
         &dir,
         &ProbeOptions {
             connector_pitch_mm_min: 0.8,
+            ..ProbeOptions::default()
         },
     )
     .unwrap();

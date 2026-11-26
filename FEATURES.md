@@ -1011,11 +1011,13 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `TOOL-15` `berc diff --pnp --exclude-dnp` and `--exclude-from-bom`: the board side also without its `dnp` and
   `exclude_from_bom` footprints, as the PnP file was exported; the summary line and JSON `excluded` count what was left
   out · `erc_model/src/placecmp.rs`, `better_erc/src/diff.rs`, `berc/tests/diff.rs`
-- ✅ `TOOL-16` `berc probe-access PROJECT [--format json]`: per net and board side, the test point and connector pads
-  a probe reaches it at (pads with copper and mask there; one series part away as `series`; USB, HDMI, RJ45, card,
-  FPC and coax connectors never, others from a pad pitch of `--connector-pitch-min` 1.27 mm), its pad count, rail or
-  ground, and its vias with the sides they reach ([docs/probe-access.md](docs/probe-access.md)) ·
-  `better_erc/src/probe.rs`, `better_erc/tests/it/probe.rs`
+- ✅ `TOOL-16` `berc probe-access PROJECT [--format json]`: per net and board side, the pads a hand probe reaches it
+  at (pads with copper and mask there; one series part away as `series`): test points; connectors from a pad pitch of
+  `--connector-pitch-min` 1.27 mm, USB, HDMI, RJ45, card, FPC and coax never; two-terminal passives from
+  `--passive-size-min` 0402; other parts from a lead pitch of `--part-pitch-min` 0.65 mm; never a pad under a body
+  (QFN, DFN, SON, LGA, BGA, an exposed pad). Also its pad count, rail or ground, and its vias with the sides they
+  reach ([docs/probe-access.md](docs/probe-access.md)) · `better_erc/src/probe.rs`, `better_erc/src/probe/part_pad.rs`,
+  `better_erc/tests/it/probe.rs`, `better_erc/tests/it/probe_parts.rs`
 - 📋 `TOOL-2` Schematic vs layout match (catalogue `LAY-1`)
 - ✅ `TOOL-3` Readable git diffs: `berc textconv` prints a `.kicad_sch` / `.kicad_pcb` as sorted text without UUIDs
   or coordinates (`--with-geometry` adds them), and a `.kicad_pro` as dotted-path settings with named lists and

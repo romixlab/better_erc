@@ -1,21 +1,32 @@
 //! Where a probe reaches each net of a board, by side: the library side of `berc probe-access` (`TOOL-16`).
 //!
-//! The access parts are what the DBG and TEST checks count ([`erc_analysis::access`]): test points and connectors,
-//! fitted or not, by their part class; a pad KiCad marks as a test point (`pad_prop_testpoint`) counts too, for a
-//! board-only footprint. Not every connector is somewhere a probe or a wire goes: one of a kind that is shielded
-//! or fine pitch by nature (USB, HDMI, RJ45, card socket, FPC, coax, from its part class) never counts, and any
-//! other only with a pad pitch of at least [`ProbeOptions::connector_pitch_mm_min`]. Such a pad is still listed,
-//! with why it does not count ([`NotCounted`]). A pad is on a side when it has copper and a mask opening there: an SMD pad on its
-//! footprint's side, a through-hole pad on both. Behind one series part (a resistor, ferrite, net tie or jumper,
-//! as [`erc_analysis::access::series_neighbours`] finds it) counts apart, as [`Reach::Series`]. Each net lists its
-//! vias with the outer sides they reach, for a tool that opens the solder mask on them.
+//! Test points and connectors, fitted or not, are what the DBG and TEST checks count ([`erc_analysis::access`]),
+//! by their part class; a pad KiCad marks as a test point (`pad_prop_testpoint`) counts too, for a board-only
+//! footprint. Not every connector is somewhere a probe or a wire goes: one of a kind that is shielded or fine
+//! pitch by nature (USB, HDMI, RJ45, card socket, FPC, coax, from its part class) never counts, and any other only
+//! with a pad pitch of at least [`ProbeOptions::connector_pitch_mm_min`].
+//!
+//! A hand probe also touches the pads of other parts ([`AccessKind::PartPad`]): the ends of a two-terminal
+//! passive of at least [`ProbeOptions::passive_size_min`], and the leads of any other part with a pitch of at
+//! least [`ProbeOptions::part_pitch_mm_min`]; never a pad under the part's body.
+//!
+//! A pad that does not count is still listed, with why ([`NotCounted`]). A pad is on a side when it has copper and
+//! a mask opening there: an SMD pad on its footprint's side, a through-hole pad on both. Behind one series part (a
+//! resistor, ferrite, net tie or jumper, as [`erc_analysis::access::series_neighbours`] finds it) counts apart, as
+//! [`Reach::Series`]. Each net lists its vias with the outer sides they reach, for a tool that opens the solder
+//! mask on them.
+
+mod part_pad;
 
 use erc_analysis::access::{is_access, series_neighbours};
+pub use erc_analysis::package::CaseSize;
 use erc_checks::{CheckError, Config, Ctx, Project};
 use erc_model::class::ConnectorKind;
-use erc_model::layout::{Layout, Pad, Pt};
+use erc_model::layout::{FootprintId, Layout, Pad, PadId, Pt};
 use erc_model::{BoardId, Design, NetId, PartClass};
+use part_pad::PartFootprint;
 use serde::{Deserialize, Serialize};
+use std::cmp::Ordering;
 use std::collections::BTreeMap;
 use std::fmt;
 use std::path::{Path, PathBuf};
@@ -30,22 +41,36 @@ const TESTPOINT_PROPERTY: &str = "pad_prop_testpoint";
 /// count, 1.0 mm and finer do not
 pub const CONNECTOR_PITCH_MM_MIN: f64 = 1.27;
 
+/// The smallest case size of a two-terminal passive whose pads count by default: 0402 (1005 metric), 0201 does not
+pub const PASSIVE_SIZE_MIN: CaseSize = CaseSize::IMPERIAL_0402;
+
+/// The narrowest lead pitch of any other part a probe still touches by default, mm: SOT, SOIC and 0.65 mm TSSOP
+/// count, 0.5 mm and finer do not
+pub const PART_PITCH_MM_MIN: f64 = 0.65;
+
 /// What counts as access
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct ProbeOptions {
     /// A connector counts only with its pads at least this far apart, mm (centre to centre, the nearest two)
     pub connector_pitch_mm_min: f64,
+    /// A two-terminal passive's pads count only when its footprint is of this case size or larger
+    pub passive_size_min: CaseSize,
+    /// The pads of any other part count only with its leads at least this far apart, mm (centre to centre, the
+    /// nearest two of different numbers)
+    pub part_pitch_mm_min: f64,
 }
 
 impl Default for ProbeOptions {
     fn default() -> ProbeOptions {
         ProbeOptions {
             connector_pitch_mm_min: CONNECTOR_PITCH_MM_MIN,
+            passive_size_min: PASSIVE_SIZE_MIN,
+            part_pitch_mm_min: PART_PITCH_MM_MIN,
         }
     }
 }
 
-/// Why a connector pad does not count as access
+/// Why a pad does not count as access
 #[derive(Clone, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[serde(tag = "why", rename_all = "snake_case")]
 pub enum NotCounted {
@@ -53,6 +78,10 @@ pub enum NotCounted {
     Kind { kind: String },
     /// Its pads are closer than the minimum pitch
     Pitch { pitch_mm: f64, min_mm: f64 },
+    /// A passive of a case size below the minimum
+    Size { size: String, min: String },
+    /// Under the part's body: a bottom terminal, a ball, an exposed thermal pad
+    UnderBody,
 }
 
 impl fmt::Display for NotCounted {
@@ -60,6 +89,8 @@ impl fmt::Display for NotCounted {
         match self {
             NotCounted::Kind { kind } => write!(f, "{kind}"),
             NotCounted::Pitch { pitch_mm, min_mm } => write!(f, "pitch {pitch_mm} < {min_mm} mm"),
+            NotCounted::Size { size, min } => write!(f, "size {size} < {min}"),
+            NotCounted::UnderBody => f.write_str("under the body"),
         }
     }
 }
@@ -95,13 +126,15 @@ impl Side {
 pub enum AccessKind {
     TestPoint,
     Connector,
+    /// A pad of any other part
+    PartPad,
 }
 
 /// How a probe reaches a net on one side
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Reach {
-    /// A test point or connector pad on the net itself
+    /// A pad that counts on the net itself
     Direct,
     /// Only one series part away
     Series,
@@ -117,7 +150,7 @@ pub enum PowerKind {
     Ground,
 }
 
-/// A test point or connector pad a probe reaches the net at
+/// A pad of a footprint on the net, as a probe reaches it
 #[derive(Clone, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Access {
     /// The footprint's reference (`TP3`, `J1`)
@@ -129,8 +162,12 @@ pub struct Access {
     pub sides: Vec<Side>,
     /// The series part between the pad's net and this one; none for a pad on the net itself
     pub series: Option<String>,
-    /// The footprint's pad pitch, a connector's, mm: the nearest two pads centre to centre; none with one pad
+    /// The pitch the pad was judged by, mm, centre to centre: a connector's nearest two pads, a part's nearest two
+    /// leads of different numbers; none for a test point, a one-pad footprint, a pad under the body and a passive
+    /// judged by its size
     pub pitch_mm: Option<f64>,
+    /// The case size a passive was judged by (`0402`), from its footprint name
+    pub size: Option<String>,
     /// Why the pad does not count as access; none when it counts
     pub not_counted: Option<NotCounted>,
 }
@@ -280,11 +317,14 @@ pub fn of(
             let Some(far_name) = names.board_of.get(&far) else {
                 continue;
             };
+            let through = &b.part(part).designator;
             for a in direct.get(far_name.as_str()).into_iter().flatten() {
-                behind.push(Access {
-                    series: Some(b.part(part).designator.clone()),
-                    ..a.clone()
-                });
+                if a.reference != *through {
+                    behind.push(Access {
+                        series: Some(through.clone()),
+                        ..a.clone()
+                    });
+                }
             }
         }
         entry(&mut nets, name).access.extend(behind);
@@ -310,8 +350,7 @@ fn finish(layout: &Layout, nets: BTreeMap<String, NetAccess>, schematic: bool) -
     let nets = nets
         .into_values()
         .map(|mut n| {
-            n.access
-                .sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+            n.access.sort_by(listing_order);
             n.access.dedup();
             let reach = |side: Side| {
                 let on: Vec<&Access> = n
@@ -340,6 +379,15 @@ fn finish(layout: &Layout, nets: BTreeMap<String, NetAccess>, schematic: bool) -
     }
 }
 
+/// The order a net lists its access in, the best places first: pads that count, on the net itself, test points
+/// before connectors before other parts' pads
+fn listing_order(a: &Access, b: &Access) -> Ordering {
+    let rank = |x: &Access| (x.not_counted.is_some(), x.series.is_some(), x.kind);
+    rank(a)
+        .cmp(&rank(b))
+        .then_with(|| a.partial_cmp(b).unwrap_or(Ordering::Equal))
+}
+
 /// The board net name of each schematic net, from the pads that carry both
 struct NetNames {
     board_of: BTreeMap<NetId, String>,
@@ -357,63 +405,79 @@ impl NetNames {
     }
 }
 
-/// The test point and connector pads of each board net, on the net itself
+/// The pads of each board net a probe may touch, on the net itself, counted or not
 fn direct_access<'l>(
     cx: &Ctx,
     layout: &'l Layout,
     opts: &ProbeOptions,
 ) -> BTreeMap<&'l str, Vec<Access>> {
     let pitch = pitches(layout);
+    let mut parts: BTreeMap<FootprintId, PartFootprint> = BTreeMap::new();
     let mut out: BTreeMap<&str, Vec<Access>> = BTreeMap::new();
-    for pad in &layout.pads {
+    for (pad_index, pad) in layout.pads.iter().enumerate() {
         let Some(name) = pad.net_name.as_deref().filter(|n| !n.is_empty()) else {
             continue;
         };
         let fp = layout.footprint(pad.footprint);
         let class = fp.part.map(|p| (p, cx.classes().get(p)));
-        let pitch_mm = pitch[pad.footprint.index()];
-        let not_counted = match class {
-            Some((_, PartClass::Connector { kind: Some(k) })) if never_counts(k) => {
-                Some(NotCounted::Kind {
-                    kind: format!("{k:?}"),
-                })
-            }
-            Some((_, PartClass::Connector { .. })) => pitch_mm
-                .filter(|p| *p < opts.connector_pitch_mm_min)
-                .map(|p| NotCounted::Pitch {
-                    pitch_mm: p,
-                    min_mm: opts.connector_pitch_mm_min,
-                }),
-            _ => None,
-        };
-        let kind = match class {
-            Some((p, c)) if is_access(cx.classes(), p) => {
-                if c == PartClass::TestPoint {
-                    AccessKind::TestPoint
-                } else {
-                    AccessKind::Connector
-                }
-            }
-            _ if pad.property.as_deref() == Some(TESTPOINT_PROPERTY) => AccessKind::TestPoint,
-            _ => continue,
-        };
         let sides = pad_sides(pad);
-        if sides.is_empty() {
+        if sides.is_empty() || pad.kind == "np_thru_hole" {
             continue;
         }
-        out.entry(name).or_default().push(Access {
+        let marked = pad.property.as_deref() == Some(TESTPOINT_PROPERTY);
+        let access = |kind, pitch_mm, size, not_counted| Access {
             reference: fp.reference.clone(),
             pad: pad.number.clone(),
             kind,
-            sides,
+            sides: sides.clone(),
             series: None,
-            pitch_mm: (kind == AccessKind::Connector)
-                .then_some(pitch_mm)
-                .flatten(),
+            pitch_mm,
+            size,
             not_counted,
-        });
+        };
+        let found = match class {
+            Some((_, PartClass::TestPoint)) => access(AccessKind::TestPoint, None, None, None),
+            Some((p, c)) if is_access(cx.classes(), p) => {
+                let pitch_mm = pitch[pad.footprint.index()];
+                access(
+                    AccessKind::Connector,
+                    pitch_mm,
+                    None,
+                    connector_not_counted(c, pitch_mm, opts),
+                )
+            }
+            _ if marked => access(AccessKind::TestPoint, None, None, None),
+            Some((_, c)) => {
+                let part = parts
+                    .entry(pad.footprint)
+                    .or_insert_with(|| PartFootprint::of(layout, pad.footprint));
+                let v = part.judge(PadId::from_index(pad_index), c, opts);
+                access(AccessKind::PartPad, v.pitch_mm, v.size, v.not_counted)
+            }
+            None => continue,
+        };
+        out.entry(name).or_default().push(found);
     }
     out
+}
+
+/// Why a connector's pads do not count, if they do not
+fn connector_not_counted(
+    class: PartClass,
+    pitch_mm: Option<f64>,
+    opts: &ProbeOptions,
+) -> Option<NotCounted> {
+    if let PartClass::Connector { kind: Some(k) } = class
+        && never_counts(k)
+    {
+        return Some(NotCounted::Kind {
+            kind: format!("{k:?}"),
+        });
+    }
+    let min_mm = opts.connector_pitch_mm_min;
+    pitch_mm
+        .filter(|p| *p < min_mm)
+        .map(|pitch_mm| NotCounted::Pitch { pitch_mm, min_mm })
 }
 
 /// A connector kind a probe or wire never goes to: shielded, or fine pitch by nature
@@ -561,7 +625,7 @@ pub fn render(p: &ProbeAccess) -> String {
 mod tests {
     use super::*;
 
-    fn pad(layers: &[&str]) -> Pad {
+    pub(super) fn pad(layers: &[&str]) -> Pad {
         Pad {
             footprint: erc_model::layout::FootprintId(0),
             number: "1".into(),

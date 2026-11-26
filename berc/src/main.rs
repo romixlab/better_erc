@@ -1,6 +1,8 @@
 use better_erc::diff::DiffError;
 use better_erc::model::placecmp::{Origin, PlaceOptions};
+use better_erc::probe::CaseSize;
 use better_erc::{CheckError, CheckOptions, Need, RunOptions, RunState, Severity, Stage, Tier};
+use clap::builder::PossibleValuesParser;
 use clap::builder::styling::Styles;
 use clap::{CommandFactory, FromArgMatches, Parser, Subcommand, ValueEnum, ValueHint};
 use clap_complete::engine::{ArgValueCandidates, ArgValueCompleter};
@@ -89,7 +91,8 @@ before --write.\n\nExamples:\n  berc place-fields hw/board\n  berc place-fields 
 
 /// Exit codes of `berc probe-access`, under its --help
 const PROBE_ACCESS_AFTER_HELP: &str = "Exit codes: 0 listed, 2 usage or read error, no board file.\n\nExamples:\n  \
-berc probe-access hw/board\n  berc probe-access hw/board --format json";
+berc probe-access hw/board\n  berc probe-access hw/board --format json\n  \
+berc probe-access hw/board --passive-size-min 0603 --part-pitch-min 1.27";
 
 /// Exit codes of `berc fields sync`, under its --help
 const FIELDS_SYNC_AFTER_HELP: &str = "Exit codes: 0 planned (or written), 2 usage, read or write error, no \
@@ -143,15 +146,21 @@ enum Command {
     /// default; --write edits the .kicad_sch files in place.
     #[command(after_help = PLACE_FIELDS_AFTER_HELP)]
     PlaceFields(PlaceFieldsArgs),
-    /// Where a probe reaches each net of a board, by side: test point and connector pads, and the vias
+    /// Where a probe reaches each net of a board, by side: the pads a hand probe touches, and the vias
     ///
-    /// The access parts are what the DBG and TEST checks count: test points and connectors by their part class,
-    /// fitted or not, and pads KiCad marks as test points. A connector of a shielded or fine-pitch kind (USB,
-    /// HDMI, RJ45, card socket, FPC, coax) never counts, any other only with a pad pitch of at least
-    /// --connector-pitch-min; such pads are listed with why they do not count. A pad is on a side when it has copper and a mask
-    /// opening there: an SMD pad on its footprint's side, a through-hole pad on both. Access one series part
-    /// (resistor, ferrite, net tie, jumper) away shows as `series`. Each net lists its vias with the outer sides
-    /// they reach; `hwb pcb tent-vias` reads the JSON to open vias for hand probing.
+    /// Test points and connectors count by their part class, fitted or not, as for the DBG and TEST checks, and
+    /// so do pads KiCad marks as test points. A connector of a shielded or fine-pitch kind (USB, HDMI, RJ45, card
+    /// socket, FPC, coax) never counts, any other only with a pad pitch of at least --connector-pitch-min.
+    ///
+    /// Of other parts, the pads of a two-terminal passive (resistor, capacitor, inductor, ferrite, diode, LED,
+    /// fuse) count from --passive-size-min up, and the leads of any other part from a pitch of --part-pitch-min:
+    /// SOT, SOIC and 0.65 mm TSSOP by default. A pad under the part's body never counts: QFN, DFN, SON, LGA and
+    /// BGA packages (by the footprint name), and a surface-mount pad enclosed by the others (an exposed pad).
+    ///
+    /// Pads that do not count are listed with why. A pad is on a side when it has copper and a mask opening
+    /// there: an SMD pad on its footprint's side, a through-hole pad on both. Access one series part (resistor,
+    /// ferrite, net tie, jumper) away shows as `series`. Each net lists its vias with the outer sides they reach;
+    /// `hwb pcb tent-vias` reads the JSON to open vias for hand probing.
     #[command(after_help = PROBE_ACCESS_AFTER_HELP)]
     ProbeAccess(ProbeAccessArgs),
     /// Compare two designs: their placements (--pnp) or their nets (--nets)
@@ -223,6 +232,15 @@ struct ProbeAccessArgs {
     /// A connector counts only with its pads at least this far apart, mm (the nearest two, centre to centre)
     #[arg(long, value_name = "MM", default_value_t = better_erc::probe::CONNECTOR_PITCH_MM_MIN)]
     connector_pitch_min: f64,
+    /// A two-terminal passive's pads count only from this case size up (imperial code, from the footprint name; a
+    /// footprint without one: its pad centres at least 0.8 of that size's length apart)
+    #[arg(long, value_name = "SIZE", default_value = better_erc::probe::PASSIVE_SIZE_MIN.code(),
+          value_parser = case_sizes())]
+    passive_size_min: String,
+    /// Any other part's pads count only with its leads at least this far apart, mm (the nearest two of different
+    /// numbers, centre to centre)
+    #[arg(long, value_name = "MM", default_value_t = better_erc::probe::PART_PITCH_MM_MIN)]
+    part_pitch_min: f64,
     #[arg(long, value_enum, default_value_t = ListFormat::Text)]
     format: ListFormat,
 }
@@ -804,11 +822,25 @@ fn settings(sets: &[String]) -> Result<better_erc::Config, String> {
     Ok(config)
 }
 
+/// The case sizes `--passive-size-min` takes
+fn case_sizes() -> PossibleValuesParser {
+    PossibleValuesParser::new(CaseSize::all().map(CaseSize::code))
+}
+
 fn probe_access(args: &ProbeAccessArgs) -> ExitCode {
+    let Some(passive_size_min) = CaseSize::parse(&args.passive_size_min) else {
+        error(&format!(
+            "--passive-size-min {}: not a case size",
+            args.passive_size_min
+        ));
+        return ExitCode::from(CheckError::EXIT_CODE);
+    };
     let spinner = progress::Delayed::start();
     spinner.set("reading the board".into());
     let opts = better_erc::probe::ProbeOptions {
         connector_pitch_mm_min: args.connector_pitch_min,
+        passive_size_min,
+        part_pitch_mm_min: args.part_pitch_min,
     };
     let found = better_erc::probe::probe_access(&args.project, &opts);
     spinner.finish();

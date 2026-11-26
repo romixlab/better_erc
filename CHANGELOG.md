@@ -11,11 +11,17 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `berc probe-access` counts passives from 0402 and leads from 0.65 mm pitch as `part_pad` access (TOOL-16).
+- `berc probe-access --passive-size-min` and `--part-pitch-min`; pads under a part's body never count (TOOL-16).
+
 ### Changed
 
 - Review tab: datasheets by MPN come from mx3's `by_mpn`, each with how it was found (VIEW-26).
 - The library catalog and a datasheet's path come from mx3_api_lab's client, not `tpm lib` (TOOL-11).
 - `library_fetch`'s default command is `mx3 lib fetch --mpn` (VIEW-26).
+- `berc probe-access` lists a net's counted pads first, test points before connectors before part pads (TOOL-16).
 
 ## [0.6.3] - 2026-11-26
 

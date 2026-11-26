@@ -55,6 +55,41 @@ const SIZES: &[(&str, &str)] = &[
     ("2512", "6332Metric"),
 ];
 
+/// A chip case size, ordered from the smallest (01005) to the largest
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct CaseSize(usize);
+
+impl CaseSize {
+    /// Imperial 0402, metric 1005
+    pub const IMPERIAL_0402: CaseSize = CaseSize(2);
+
+    /// Every size, smallest first
+    pub fn all() -> impl Iterator<Item = CaseSize> {
+        (0..SIZES.len()).map(CaseSize)
+    }
+
+    /// The size of an imperial code (`0402`) or a metric name (`1005Metric`)
+    pub fn parse(text: &str) -> Option<CaseSize> {
+        SIZES
+            .iter()
+            .position(|(imperial, metric)| text == *imperial || text == *metric)
+            .map(CaseSize)
+    }
+
+    /// The imperial code (`0402`)
+    pub fn code(self) -> &'static str {
+        SIZES[self.0].0
+    }
+
+    /// The nominal body length in mm: the first two digits of the metric code, in tenths
+    pub fn length_mm(self) -> f64 {
+        let tenths: u32 = SIZES[self.0].1[..2]
+            .parse()
+            .expect("every metric name in SIZES starts with two digits");
+        f64::from(tenths) / 10.0
+    }
+}
+
 /// Name tokens of through-hole packages
 const THT_WORDS: &[&str] = &[
     "THT",
@@ -171,6 +206,17 @@ mod tests {
     fn read(f: &str) -> (Option<&'static str>, Option<Mount>) {
         let p = Package::from_footprint(f).unwrap();
         (p.size, p.mount)
+    }
+
+    #[test]
+    fn case_sizes() {
+        assert_eq!(CaseSize::IMPERIAL_0402.code(), "0402");
+        assert_eq!(CaseSize::parse("1005Metric"), Some(CaseSize::IMPERIAL_0402));
+        assert!(CaseSize::parse("0201") < CaseSize::parse("0402"));
+        assert_eq!(CaseSize::IMPERIAL_0402.length_mm(), 1.0);
+        assert_eq!(CaseSize::parse("2512").map(CaseSize::length_mm), Some(6.3));
+        assert!(CaseSize::all().all(|c| c.length_mm() > 0.0));
+        assert_eq!(CaseSize::parse("0403"), None);
     }
 
     #[test]

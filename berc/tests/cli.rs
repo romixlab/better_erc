@@ -68,7 +68,35 @@ fn probe_access_json_on_a_board() {
     assert_eq!(p.nets.iter().map(|n| n.vias.len()).sum::<usize>(), 1);
     let text = berc(&["probe-access", board]);
     let text = String::from_utf8(text.stdout).unwrap();
-    assert!(text.contains("/SDA  -    -       1"), "{text}");
+    assert!(
+        text.contains("/SDA  yes  -       1     R10.1 (top)"),
+        "{text}"
+    );
+}
+
+#[test]
+fn probe_access_takes_the_part_settings() {
+    let board = concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/tests/fixtures/small.kicad_pcb"
+    );
+    let out = berc(&[
+        "probe-access",
+        board,
+        "--passive-size-min",
+        "0603",
+        "--part-pitch-min",
+        "1.27",
+    ]);
+    assert!(out.status.success(), "{out:?}");
+    let out = berc(&["probe-access", board, "--passive-size-min", "0403"]);
+    assert_eq!(out.status.code(), Some(2));
+    let stderr = String::from_utf8(out.stderr).unwrap();
+    assert!(stderr.contains("01005, 0201, 0402"), "{stderr}");
+    let help = berc(&["probe-access", "--help"]);
+    let help = String::from_utf8(help.stdout).unwrap();
+    assert!(help.contains("[default: 0402]"), "{help}");
+    assert!(help.contains("[default: 0.65]"), "{help}");
 }
 
 #[test]

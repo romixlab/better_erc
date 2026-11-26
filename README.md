@@ -41,8 +41,9 @@ The project is early. The KiCad diff tool is ready for daily use; the checks run
   compared as the pins each net connects, whatever their names: renamed, removed and added nets.
 - **`berc place-fields PROJECT`**: symbol fields that overlap something (`DRAW-9`, `DRAW-34`) moved into a column
   beside their body; a dry run by default, `--write` edits the schematic. See [Placing fields](#placing-fields).
-- **`berc probe-access PROJECT`**: where a probe reaches each net, per board side: test point and connector pads
-  (also one series part away) and the vias, as a table or JSON. See [docs/probe-access.md](docs/probe-access.md).
+- **`berc probe-access PROJECT`**: where a hand probe reaches each net, per board side: test point, connector and
+  part pads (also one series part away) and the vias, as a table or JSON. See
+  [docs/probe-access.md](docs/probe-access.md).
 - **`berc fp`**: footprint review. `berc fp hash` prints a footprint's review hash, the same for a library file and
   every board copy of it; `berc fp check` checks every (library footprint hash, MPN) pair against the footprint reviews
   of the parts snapshot, `berc fp check --lib` every symbol of a symbol library against a part source's reviews,

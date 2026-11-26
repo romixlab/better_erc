@@ -7,4 +7,5 @@ mod model;
 mod parts_lock;
 mod place;
 mod probe;
+mod probe_parts;
 mod project_file;
