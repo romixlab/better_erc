@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-11-26
+
 ### Added
 
 - Review tab: right click on the 3D model adds a projection; several at once, placed by drag, saved (VIEW-38).
