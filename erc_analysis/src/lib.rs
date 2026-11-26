@@ -12,6 +12,7 @@
 //! - [`i2c`]: the I2C bus recogniser: buses, pull-ups, ties, translators, segments.
 //! - [`interface`]: interface pins and nets by name: USB data, MDIO, CAN lines, SD and eMMC pins, DDR ZQ, reset
 //!   and CKE, MIPI and multi-gigabit lanes.
+//! - [`internal_pull`]: permanent internal pulls of known parts (STM32G0B1 NRST, USB2514B PRTPWR).
 //! - [`pin_name`]: the debug, bus and control functions a pin name states (`PA13/JTMS-SWDIO`, `USART1_TX`).
 //! - [`pull`]: the fitted pull-up and pull-down resistors on a net.
 //! - [`power`]: rails and grounds by name grammar, power symbols and pins, ground groups, switching nodes.
@@ -33,6 +34,7 @@ pub mod feed;
 pub mod graph;
 pub mod i2c;
 pub mod interface;
+pub mod internal_pull;
 pub mod names;
 pub mod package;
 pub mod pin_name;

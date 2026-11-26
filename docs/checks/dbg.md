@@ -199,12 +199,14 @@ A pair of unpopulated pull-up and pull-down footprints does that with a dab of s
 tell whether the LDO or a load is at fault is lifting a pin.
 
 **How to check.** Pins named `EN`, `ON`, `SHDN` and similar whose net is a rail directly, or a single driver, with
-no second resistor footprint on it.
+no second resistor footprint on it. A pin left open with a permanent internal pull in the known-parts table
+(`erc_analysis/src/internal_pull.rs`: USB2514B PRTPWR/BC_EN, internal pull-down) is not reported; a driven or
+rail-tied pin of such a part still is.
 
 **Fix.** Drive EN through a resistor (or from a GPIO with a pull, `IO-3`) and add a DNM resistor to the other level.
 
 **References.** XJTAG DFT (pull resistors to define a default that a controller can override); the regulator's
-datasheet (EN thresholds and input current).
+datasheet (EN thresholds and input current). Test schematic `dbg-7_internal_pull` (U1, U2).
 
 ## `DBG-8` Suggest DNM pull-ups on open drain pins; test point detector should highlight those nets <a id="dbg-8"></a>
 

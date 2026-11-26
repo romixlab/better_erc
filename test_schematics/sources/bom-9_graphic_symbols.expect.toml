@@ -1,0 +1,9 @@
+# What better_erc finds on bom-9_graphic_symbols.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board bom-9_graphic_symbols"]
+
+[[finding]]
+check = "BOM-9"
+subjects = ["part R1"]

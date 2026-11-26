@@ -21,9 +21,12 @@ impl Check for Bom9 {
         &META
     }
 
+    /// A part with an empty or `~` value. A part the schematic excludes from the BOM (a documentation link, a
+    /// logo) is not a part to buy and needs none.
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let b = cx.board();
         cx.components()
+            .filter(|p| cx.view().flag(*p, "in_bom") != Some(false))
             .filter(|p| {
                 erc_analysis::value::value_text(cx.view(), *p)
                     .is_none_or(|t| t.fact.value.trim().is_empty())
@@ -48,6 +51,15 @@ mod tests {
         assert_eq!(
             crate::testing::fingerprints(&super::Bom9, "bom-10_values"),
             ["BOM-9:part R2"]
+        );
+    }
+
+    /// A documentation link excluded from the BOM needs no value; a part in the BOM with `~` still does.
+    #[test]
+    fn excluded_from_bom_needs_no_value() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Bom9, "bom-9_graphic_symbols"),
+            ["BOM-9:part R1"]
         );
     }
 }

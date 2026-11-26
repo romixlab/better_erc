@@ -5,6 +5,7 @@ use crate::meta::*;
 use crate::text::{designators, pin_list};
 use crate::{Ctx, Finding};
 use erc_analysis::graph::net_pins;
+use erc_analysis::internal_pull::internal_pull;
 use erc_analysis::pin_name::PinFunction;
 use erc_model::{NetId, PartId};
 
@@ -27,7 +28,8 @@ impl Check for Dbg7 {
     }
 
     /// An enable pin of a fitted IC (`EN`, `ON`, `SHDN` by name) without resistor footprints, fitted or not,
-    /// to both a rail and a ground: tied to a rail, driven from one place, or pulled one way only
+    /// to both a rail and a ground: tied to a rail, driven from one place, or pulled one way only. A pin left open
+    /// with a known internal pull ([`erc_analysis::internal_pull`], USB2514B PRTPWR/BC_EN) is not reported.
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let b = cx.board();
         let power = cx.power();
@@ -65,6 +67,8 @@ impl Check for Dbg7 {
                             "pulled down by {} with no footprint to pull it up",
                             designators(cx, down)
                         ),
+                        // A pin left open on purpose: the part's own internal pull holds it
+                        _ if drivers.is_empty() && internal_pull(b, pin).is_some() => continue,
                         _ if drivers.is_empty() => "left with no pull either way".into(),
                         _ => format!("driven by {} only", pin_list(cx, &drivers)),
                     }
@@ -121,6 +125,22 @@ mod tests {
                 "DBG-7:net +5V|pin U1.4",
                 "DBG-7:net /EN_U2|pin U2.4",
                 "DBG-7:net /EN_U3|pin U3.4"
+            ],
+            "{found:?}"
+        );
+    }
+
+    /// USB2514B PRTPWR/BC_EN left open is the part's internal pull-down: no finding. The same pin name on an
+    /// unknown hub, and a known pin with a connector on it, still fire.
+    #[test]
+    fn internal_pull_down_holds_open_pin() {
+        let found = crate::testing::fingerprints(&super::Dbg7, "dbg-7_internal_pull");
+        assert_eq!(
+            found,
+            [
+                "DBG-7:net /PWR2_U1|pin U1.2",
+                "DBG-7:net unconnected-(U2-PRTPWR1{slash}BC_EN1-Pad1)|pin U2.1",
+                "DBG-7:net unconnected-(U2-PRTPWR2{slash}BC_EN2-Pad2)|pin U2.2",
             ],
             "{found:?}"
         );

@@ -170,7 +170,9 @@ ESP32's CHIP_PU must not float at all (ESP32 checklist).
 programmer attached, the module resets when the cable next to it moves.
 
 **How to check.** Reset-role pins (`IMP-1` names, part data `NET-7`) with no resistor to a rail; with a known internal
-pull-up, downgrade to a note.
+pull-up, downgrade to a note. A net with a pin the known-parts table gives a permanent internal pull-up
+(`erc_analysis/src/internal_pull.rs`: STM32G0B1 and G0C1 NRST, 25-55 kΩ, DS13560 rev 6 Table 60) is not reported;
+the same pin on a part not in the table still is. Test schematic `clk-5_internal_pull` (U1, U2).
 
 **Fix.** 10 kΩ pull-up to the part's IO rail (with `CLK-7`'s capacitor).
 
