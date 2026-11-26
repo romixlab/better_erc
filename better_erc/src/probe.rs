@@ -13,7 +13,7 @@
 //! A pad that does not count is still listed, with why ([`NotCounted`]). A pad is on a side when it has copper and
 //! a mask opening there: an SMD pad on its footprint's side, a through-hole pad on both. Behind one series part (a
 //! resistor, ferrite, net tie or jumper, as [`erc_analysis::access::series_neighbours`] finds it) counts apart, as
-//! [`Reach::Series`]. Each net lists its vias with the outer sides they reach, for a tool that opens the solder
+//! [`Reach::Series`], except behind a net tie, which joins one conductor and counts as [`Reach::Direct`]. Each net lists its vias with the outer sides they reach, for a tool that opens the solder
 //! mask on them.
 
 mod part_pad;
@@ -162,6 +162,9 @@ pub struct Access {
     pub sides: Vec<Side>,
     /// The series part between the pad's net and this one; none for a pad on the net itself
     pub series: Option<String>,
+    /// The series part is a net tie: copper of one net, so the pad reaches this net directly
+    #[serde(default)]
+    pub tied: bool,
     /// The pitch the pad was judged by, mm, centre to centre: a connector's nearest two pads, a part's nearest two
     /// leads of different numbers; none for a test point, a one-pad footprint, a pad under the body and a passive
     /// judged by its size
@@ -318,10 +321,12 @@ pub fn of(
                 continue;
             };
             let through = &b.part(part).designator;
+            let tied = cx.classes().get(part) == PartClass::NetTie;
             for a in direct.get(far_name.as_str()).into_iter().flatten() {
                 if a.reference != *through {
                     behind.push(Access {
                         series: Some(through.clone()),
+                        tied,
                         ..a.clone()
                     });
                 }
@@ -358,7 +363,7 @@ fn finish(layout: &Layout, nets: BTreeMap<String, NetAccess>, schematic: bool) -
                     .iter()
                     .filter(|a| a.not_counted.is_none() && a.sides.contains(&side))
                     .collect();
-                if on.iter().any(|a| a.series.is_none()) {
+                if on.iter().any(|a| a.series.is_none() || a.tied) {
                     Reach::Direct
                 } else if on.is_empty() {
                     Reach::None
@@ -431,6 +436,7 @@ fn direct_access<'l>(
             kind,
             sides: sides.clone(),
             series: None,
+            tied: false,
             pitch_mm,
             size,
             not_counted,

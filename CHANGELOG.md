@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Fixed
+
+- `berc probe-access`: access through a net tie counts as direct, marked `tied`, not as series (TOOL-16).
+
 ## [0.6.4] - 2026-11-26
 
 ### Added

@@ -15,7 +15,7 @@ It counts more than the `DBG` and `TEST` checks do: those ask for a test point o
   - every pad of a footprint whose library or name has a bottom-terminated package word: `QFN` (`VQFN`, `UFQFPN`), `DFN`, `SON` (`WSON`, `X2SON`), `LGA`, `BGA`, `CSP` (`WLCSP`);
   - in any other footprint, a surface-mount pad enclosed on all four sides by pads of other numbers (an exposed thermal pad, an inner ball), and its thermal vias.
 - A pad is **on a side** when it has copper and a mask opening there: an SMD pad on its footprint's side, a through-hole pad (`*.Cu`, `*.Mask`) on both.
-- **Behind one series part**: a pad that counts one series resistor, ferrite, net tie or jumper away (`series_neighbours`; a pull to a rail or ground does not count). The series part's own pad on the far net is not listed. The side's reach is `series` when only such access is there.
+- **Behind one series part**: a pad that counts one series resistor, ferrite, net tie or jumper away (`series_neighbours`; a pull to a rail or ground does not count). The series part's own pad on the far net is not listed. The side's reach is `series` when only such access is there. A net tie is copper of one net, so access through one is marked `tied` and makes the reach `direct`.
 
 Parts are counted fitted or not. A footprint without a part in the schematic (a board-only mounting hole) counts only through a pad marked as a test point.
 

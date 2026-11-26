@@ -11,6 +11,10 @@ pub(crate) const LIB: &str = r#"(lib_symbols
 (property "Reference" "R" (at 0 0 0) (effects (font (size 1.27 1.27))))
 (property "Value" "R" (at 0 0 0) (effects (font (size 1.27 1.27))))
 (symbol "R_1_1" (pin passive line (at 0 3.81 270) (length 1.27) (name "~" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27))))) (pin passive line (at 0 -3.81 90) (length 1.27) (name "~" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))))
+(symbol "Device:NetTie_2" (pin_numbers (hide yes)) (pin_names (hide yes)) (exclude_from_sim no) (in_bom no) (on_board yes)
+(property "Reference" "NT" (at 0 0 0) (effects (font (size 1.27 1.27))))
+(property "Value" "NetTie_2" (at 0 0 0) (effects (font (size 1.27 1.27))))
+(symbol "NetTie_2_0_1" (pin passive line (at -2.54 0 0) (length 2.54) (name "1" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27))))) (pin passive line (at 2.54 0 180) (length 2.54) (name "2" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))))
 (symbol "Connector:TestPoint" (pin_numbers (hide yes)) (pin_names (hide yes)) (exclude_from_sim no) (in_bom yes) (on_board yes)
 (property "Reference" "TP" (at 0 0 0) (effects (font (size 1.27 1.27))))
 (property "Value" "TestPoint" (at 0 0 0) (effects (font (size 1.27 1.27))))
@@ -61,7 +65,7 @@ pub(crate) fn symbol(
 }
 
 /// TP1 on SIG_A; R1 from SIG_A to SIG_C (series, 22 Ω); J1 on SIG_B and GND; TP2 on SIG_D; R2 from SIG_E to GND;
-/// R3 from SIG_F to GND; the USB-C receptacle J4 and the 2.54 mm header J2 on SIG_G; the 1.0 mm header J3 on
+/// R3 from SIG_F to GND; the net tie NT1 from SIG_D to SIG_J; the USB-C receptacle J4 and the 2.54 mm header J2 on SIG_G; the 1.0 mm header J3 on
 /// SIG_H
 fn schematic() -> String {
     let mut s = String::from(
@@ -142,6 +146,14 @@ fn schematic() -> String {
         "Conn_01x02",
         (60.96, 81.28),
         &conn("SIG_H", "GND"),
+    );
+    s += &symbol(
+        10,
+        "Device:NetTie_2",
+        "NT1",
+        "NetTie_2",
+        (81.28, 50.8),
+        &[("1", -2.54, 0.0, "SIG_D"), ("2", 2.54, 0.0, "SIG_J")],
     );
     s + "(sheet_instances (path \"/\" (page \"1\"))))\n"
 }
@@ -266,6 +278,16 @@ fn board() -> String {
         &[("1", "SIG_E")],
         " (property pad_prop_testpoint)",
     );
+    // A net tie: copper only, no mask opening
+    s += &footprint(
+        "NT1",
+        "F.Cu",
+        (50.0, 30.0),
+        "smd",
+        "\"F.Cu\"",
+        &[("1", "SIG_D"), ("2", "SIG_J")],
+        "",
+    );
     for (r, x, pads) in [
         ("J4", 10.0, [("1", "SIG_G"), ("2", "SIG_G")]),
         ("J2", 20.0, [("1", "SIG_G"), ("2", "GND")]),
@@ -325,6 +347,17 @@ fn sides_series_and_vias() {
     assert_eq!(reach("SIG_D"), (Reach::None, Reach::Direct));
     assert_eq!(reach("SIG_E"), (Reach::None, Reach::Direct));
     assert_eq!(reach("SIG_F"), (Reach::None, Reach::None));
+    assert_eq!(
+        reach("SIG_J"),
+        (Reach::None, Reach::Direct),
+        "TP2 on the far side of the net tie NT1 reaches SIG_J directly"
+    );
+    let j = &net(&p, "SIG_J").access;
+    assert_eq!(
+        (j[0].reference.as_str(), j[0].series.as_deref(), j[0].tied),
+        ("TP2", Some("NT1"), true),
+        "{j:?}"
+    );
 
     let a = &net(&p, "SIG_A").access;
     assert_eq!(
