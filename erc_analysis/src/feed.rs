@@ -105,6 +105,8 @@ pub struct Feeds {
     /// The source pins on each net (grounds left out)
     pub sources: BTreeMap<NetId, Vec<Source>>,
     pub links: Vec<Link>,
+    /// The zeners from each net to a ground, cathode on the net: with a series resistor in front, a shunt regulator
+    pub shunts: BTreeMap<NetId, Vec<PartId>>,
 }
 
 /// A pin name that states a regulator's output: `OUT`, `VOUT`, `VOUT2`, `VO`, `OUTPUT`
@@ -155,6 +157,9 @@ impl Feeds {
             if let Some(link) = link(view, classes, values, power, part) {
                 feeds.links.push(link);
             }
+            if let Some(net) = zener_shunt(view, classes, power, part) {
+                feeds.shunts.entry(net).or_default().push(part);
+            }
         }
         feeds
     }
@@ -162,6 +167,11 @@ impl Feeds {
     /// The links with an end on `net`
     pub fn links_at(&self, net: NetId) -> impl Iterator<Item = &Link> {
         self.links.iter().filter(move |l| l.a == net || l.b == net)
+    }
+
+    /// The zeners that hold `net` against a ground
+    pub fn shunts_on(&self, net: NetId) -> &[PartId] {
+        self.shunts.get(&net).map_or(&[], Vec::as_slice)
     }
 
     /// The sources on `net`
@@ -309,6 +319,30 @@ fn link(
         ohms,
         forward,
     })
+}
+
+/// The net a fitted zener holds: its cathode's, when the anode is on a ground and the cathode is not
+fn zener_shunt(view: View, classes: &PartClasses, power: &Power, part: PartId) -> Option<NetId> {
+    if !matches!(
+        classes.get(part),
+        PartClass::Diode {
+            kind: Some(DiodeKind::Zener)
+        }
+    ) {
+        return None;
+    }
+    let b = view.board;
+    let end = |names: &[&str]| {
+        b.part(part)
+            .pins
+            .iter()
+            .map(|p| b.pin(*p))
+            .find(|p| names.contains(&p.name.to_uppercase().as_str()))
+            .and_then(|p| p.net)
+    };
+    let k = end(&["K", "CATHODE"])?;
+    let a = end(&["A", "ANODE"])?;
+    (power.is_ground(a) && !power.is_ground(k)).then_some(k)
 }
 
 /// The pins on a net of fitted parts typed power input, whatever their names

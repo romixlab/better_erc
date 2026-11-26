@@ -77,4 +77,14 @@ mod tests {
             "{found:?}"
         );
     }
+
+    #[test]
+    fn zener_shunt_sources_its_rail() {
+        let found = crate::testing::fingerprints(&super::Rail5, "rail-5_zener_shunt");
+        assert_eq!(
+            found,
+            ["RAIL-5:net /+V_ISO", "RAIL-5:net /+V_NOZ"],
+            "{found:?}"
+        );
+    }
 }

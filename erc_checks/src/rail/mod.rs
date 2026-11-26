@@ -31,10 +31,12 @@ pub(crate) fn feeds_power(cx: &Ctx, meta: &CheckMeta) -> impl Fn(&Link) -> bool 
     move |l: &Link| l.kind != LinkKind::Resistor || l.ohms.is_some_and(|r| r <= max)
 }
 
-/// The nets any source reaches, with the link parts on the way
+/// The nets any source reaches, with the link parts on the way; a resistor of any value into a net a zener holds
+/// to ground (a shunt regulator) feeds it
 pub(crate) fn fed(cx: &Ctx, meta: &CheckMeta) -> BTreeMap<NetId, Vec<PartId>> {
     let pass = feeds_power(cx, meta);
-    cx.feeds().fed_by(
+    let feeds = cx.feeds();
+    let mut fed = feeds.fed_by(
         &[
             SourceKind::Regulator,
             SourceKind::LoadSwitch,
@@ -43,7 +45,32 @@ pub(crate) fn fed(cx: &Ctx, meta: &CheckMeta) -> BTreeMap<NetId, Vec<PartId>> {
             SourceKind::Battery,
         ],
         &pass,
-    )
+    );
+    loop {
+        let shunted: Vec<(NetId, Vec<PartId>)> = feeds
+            .links
+            .iter()
+            .filter(|l| l.kind == LinkKind::Resistor)
+            .flat_map(|l| [(l.a, l.b, l.part), (l.b, l.a, l.part)])
+            .filter(|(from, to, _)| {
+                fed.contains_key(from) && !fed.contains_key(to) && !feeds.shunts_on(*to).is_empty()
+            })
+            .map(|(from, to, r)| {
+                let mut path = fed[&from].clone();
+                path.push(r);
+                (to, path)
+            })
+            .collect();
+        if shunted.is_empty() {
+            return fed;
+        }
+        for (net, path) in shunted {
+            for (n, rest) in feeds.reach([net], &pass) {
+                fed.entry(n)
+                    .or_insert_with(|| path.iter().chain(&rest).copied().collect());
+            }
+        }
+    }
 }
 
 /// Whether a pin is named like a ground (`GND`, `VSS`, `AGND`)

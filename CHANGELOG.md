@@ -34,6 +34,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Fixed
 
+- A rail fed through a series resistor and held by a zener to ground is sourced (RAIL-5, RAIL-1).
+
 - A divider into an MCU pin whose chosen alternate is an ADC input is a sense divider (IO-16).
 
 - Sense, set-point and discharge nets (`VIO_S`, `VIO_SP`, `VIO_DISCH`) are signals, not rails (SHORT-6); filter pins need no LED (DBG-4).

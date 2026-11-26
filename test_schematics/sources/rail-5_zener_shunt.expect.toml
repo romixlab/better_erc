@@ -1,0 +1,59 @@
+# What better_erc finds on rail-5_zener_shunt.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board rail-5_zener_shunt"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net /+V_ISO"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net /+V_NOZ"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net /+V_OPA"]
+
+[[finding]]
+check = "NAME-5"
+subjects = ["part D1", "part D3"]
+
+[[finding]]
+check = "NAME-7"
+subjects = ["board rail-5_zener_shunt"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net /+V_ISO"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net /+V_NOZ"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /+V_ISO"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /+V_NOZ"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /+V_OPA"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
