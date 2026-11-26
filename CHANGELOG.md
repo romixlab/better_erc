@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `berc diff --pnp --exclude-dnp` and `--exclude-from-bom` leave those board footprints out as the PnP file was; counts in summary and JSON (TOOL-15).
+
 ## [0.6.1] - 2026-11-26
 
 ### Added

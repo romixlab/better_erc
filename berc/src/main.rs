@@ -143,7 +143,8 @@ enum Command {
     ///
     /// --pnp: A and B are PnP files (KiCad, Altium, Allegro CSV), board files (.kicad_pcb) or KiCad projects with
     /// their board. A board compared with a PnP file is brought into the PnP file's frame first: from --origin, y
-    /// up, without the footprints excluded from position files.
+    /// up, without the footprints excluded from position files, and with --exclude-dnp and --exclude-from-bom
+    /// also without those. The summary line of a side says how many were left out.
     ///
     /// --nets: A and B are any designs with nets (a KiCad project or schematic, a netlist, Altium EDIF or WireList,
     /// OrCAD, an Altium Smart PDF). Each net is the set of pins it connects: nets match by their pins whatever their
@@ -587,6 +588,12 @@ struct DiffArgs {
     /// The origin the PnP file was exported from, for a board compared with one
     #[arg(long, value_enum, default_value_t = OriginArg::Page)]
     origin: OriginArg,
+    /// Leave the board's do-not-populate footprints out, as `kicad-cli pcb export pos --exclude-dnp` does
+    #[arg(long)]
+    exclude_dnp: bool,
+    /// Leave the board's footprints marked exclude_from_bom out, for a fab output without them
+    #[arg(long)]
+    exclude_from_bom: bool,
     /// Largest difference in x or y that counts as the same position, in mm
     #[arg(long, value_name = "MM", default_value_t = 0.0)]
     tolerance: f64,
@@ -1029,6 +1036,8 @@ fn diff(args: DiffArgs) -> ExitCode {
             OriginArg::Page => Origin::Page,
             OriginArg::Aux => Origin::Aux,
         },
+        exclude_dnp: args.exclude_dnp,
+        exclude_from_bom: args.exclude_from_bom,
     };
     let spinner = progress::Delayed::start();
     spinner.set("reading the designs".into());

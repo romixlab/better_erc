@@ -222,3 +222,67 @@ fn nets_that_differ() {
     let out = berc(&["diff", &smart_pdf(), &smart_pdf()]);
     assert_eq!(out.status.code(), Some(2), "--pnp or --nets");
 }
+
+/// A PnP file written with `--exclude-dnp` (no R5, which is dnp) and one without the exclude_from_bom parts (no J1)
+#[test]
+fn board_against_filtered_pnp_exports() {
+    let out = diff("board.kicad_pcb", "board.nodnp.page.csv", &[]);
+    let v = json(&out);
+    assert_eq!(
+        refs(&v, "removed"),
+        ["R5"],
+        "no flag: the dnp footprint is removed"
+    );
+    assert_eq!(v["a"]["excluded"]["dnp"], 0);
+
+    let out = diff(
+        "board.kicad_pcb",
+        "board.nodnp.page.csv",
+        &["--exclude-dnp"],
+    );
+    assert_eq!(
+        out.status.code(),
+        Some(0),
+        "{}",
+        String::from_utf8_lossy(&out.stdout)
+    );
+    let v = json(&out);
+    assert_eq!(v["a"]["footprints"], 2);
+    assert_eq!(v["a"]["excluded"]["pos_files"], 2);
+    assert_eq!(v["a"]["excluded"]["dnp"], 1);
+    assert_eq!(v["a"]["excluded"]["from_bom"], 0);
+    assert_eq!(v["b"]["excluded"]["dnp"], 0);
+    let text = berc(&[
+        "diff",
+        "--pnp",
+        "--exclude-dnp",
+        &fixture("board.kicad_pcb"),
+        &fixture("board.nodnp.page.csv"),
+    ]);
+    let text = String::from_utf8_lossy(&text.stdout).to_string();
+    assert!(
+        text.contains("left out: 2 exclude_from_pos_files, 1 dnp"),
+        "{text}"
+    );
+
+    let out = diff("board.kicad_pcb", "board.nobom.page.csv", &[]);
+    assert_eq!(
+        refs(&json(&out), "removed"),
+        ["J1"],
+        "no flag: J1 is removed"
+    );
+    let out = diff(
+        "board.kicad_pcb",
+        "board.nobom.page.csv",
+        &["--exclude-from-bom"],
+    );
+    assert_eq!(
+        out.status.code(),
+        Some(0),
+        "{}",
+        String::from_utf8_lossy(&out.stdout)
+    );
+    let v = json(&out);
+    assert_eq!(v["a"]["excluded"]["from_bom"], 1);
+    assert_eq!(v["a"]["excluded"]["dnp"], 0);
+}

@@ -1006,6 +1006,9 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   tolerances; a board against a PnP file in the PnP frame (origin page or aux, y up, footprints excluded from
   position files left out); `berc diff --pnp A B` with each side's footprint and test point count, text or JSON,
   exit 1 on a difference · `erc_model/src/placecmp.rs`, `better_erc/src/diff.rs`, `berc/tests/diff.rs`
+- ✅ `TOOL-15` `berc diff --pnp --exclude-dnp` and `--exclude-from-bom`: the board side also without its `dnp` and
+  `exclude_from_bom` footprints, as the PnP file was exported; the summary line and JSON `excluded` count what was left
+  out · `erc_model/src/placecmp.rs`, `better_erc/src/diff.rs`, `berc/tests/diff.rs`
 - 📋 `TOOL-2` Schematic vs layout match (catalogue `LAY-1`)
 - ✅ `TOOL-3` Readable git diffs: `berc textconv` prints a `.kicad_sch` / `.kicad_pcb` as sorted text without UUIDs
   or coordinates (`--with-geometry` adds them), and a `.kicad_pro` as dotted-path settings with named lists and

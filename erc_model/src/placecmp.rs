@@ -7,7 +7,8 @@
 //! a PnP file (KiCad's `pcb export pos`, Altium's and Allegro's) from an origin with y up. When one side is a board
 //! and the other is not, [`compare_boards`] brings the board into the PnP frame first ([`to_placement_frame`]): from
 //! the [`Origin`] the PnP file was exported with, y negated, rotations as they are, and without the footprints
-//! marked `exclude_from_pos_files` (KiCad never writes those).
+//! marked `exclude_from_pos_files` (KiCad never writes those), and, when asked, without the `dnp` and
+//! `exclude_from_bom` ones (`pcb export pos --exclude-dnp`; a fab output without the parts left out of the BOM).
 
 use crate::canon::natural_cmp;
 use crate::design::Board;
@@ -24,6 +25,21 @@ pub struct PlaceOptions {
     pub rotation_tolerance: f64,
     /// The origin the PnP file was exported from, when a board is compared with one
     pub origin: Origin,
+    /// Leave out the board's footprints marked do-not-populate, as `pcb export pos --exclude-dnp` does
+    pub exclude_dnp: bool,
+    /// Leave out the board's footprints marked `exclude_from_bom` (a fab output without those parts)
+    pub exclude_from_bom: bool,
+}
+
+/// How many of a board's footprints [`to_placement_frame`] left out, by the first filter that took each
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Excluded {
+    /// Marked `exclude_from_pos_files`: always left out, KiCad never writes those
+    pub pos_files: usize,
+    /// Marked `dnp`, with [`PlaceOptions::exclude_dnp`]
+    pub dnp: usize,
+    /// Marked `exclude_from_bom`, with [`PlaceOptions::exclude_from_bom`]
+    pub from_bom: usize,
 }
 
 /// Where a PnP file's coordinates start
@@ -172,8 +188,8 @@ pub fn compare(a: &Layout, b: &Layout, opts: &PlaceOptions) -> PlaceDiff {
 pub fn compare_boards(a: &Board, b: &Board, opts: &PlaceOptions) -> Option<PlaceDiff> {
     let (la, lb) = (a.layout.as_ref()?, b.layout.as_ref()?);
     Some(match (is_board_file(la), is_board_file(lb)) {
-        (true, false) => compare(&to_placement_frame(la, opts.origin), lb, opts),
-        (false, true) => compare(la, &to_placement_frame(lb, opts.origin), opts),
+        (true, false) => compare(&to_placement_frame(la, opts).0, lb, opts),
+        (false, true) => compare(la, &to_placement_frame(lb, opts).0, opts),
         _ => compare(la, lb, opts),
     })
 }
@@ -199,30 +215,39 @@ pub fn aux_origin(layout: &Layout) -> Pt {
         .unwrap_or_default()
 }
 
-/// A board's placements as a PnP file exported from it has them: relative to `origin`, y up, rotations as they are,
-/// without the footprints excluded from position files. Only the footprints are kept.
-pub fn to_placement_frame(layout: &Layout, origin: Origin) -> Layout {
-    let o = match origin {
+/// A board's placements as a PnP file exported from it has them: relative to `opts.origin`, y up, rotations as they
+/// are, without the footprints excluded from position files, and with `opts`' `exclude_dnp` and `exclude_from_bom`
+/// also without those. Only the footprints are kept. Also how many each filter took, in that order.
+pub fn to_placement_frame(layout: &Layout, opts: &PlaceOptions) -> (Layout, Excluded) {
+    let o = match opts.origin {
         Origin::Page => Pt::default(),
         Origin::Aux => aux_origin(layout),
     };
-    let footprints = layout
-        .footprints
-        .iter()
-        .filter(|f| !f.attrs.exclude_from_pos_files)
-        .map(|f| Footprint {
-            at: Pt {
-                x: f.at.x - o.x,
-                y: o.y - f.at.y,
-            },
-            ..f.clone()
-        })
-        .collect();
-    Layout {
+    let mut excluded = Excluded::default();
+    let mut footprints = Vec::new();
+    for f in &layout.footprints {
+        if f.attrs.exclude_from_pos_files {
+            excluded.pos_files += 1;
+        } else if opts.exclude_dnp && f.attrs.dnp {
+            excluded.dnp += 1;
+        } else if opts.exclude_from_bom && f.attrs.exclude_from_bom {
+            excluded.from_bom += 1;
+        } else {
+            footprints.push(Footprint {
+                at: Pt {
+                    x: f.at.x - o.x,
+                    y: o.y - f.at.y,
+                },
+                ..f.clone()
+            });
+        }
+    }
+    let frame = Layout {
         file: layout.file.clone(),
         footprints,
         ..Layout::default()
-    }
+    };
+    (frame, excluded)
 }
 
 #[cfg(test)]
@@ -302,11 +327,42 @@ mod tests {
         board
             .setup
             .push(("aux_axis_origin".into(), "100 50".into()));
-        let page = to_placement_frame(&board, Origin::Page);
+        let page_opts = PlaceOptions::default();
+        let (page, ex) = to_placement_frame(&board, &page_opts);
         assert_eq!(page.footprints.len(), 1, "TP1 is not in position files");
+        assert_eq!(ex.pos_files, 1);
         assert_eq!(page.footprints[0].at, Pt::from_mm(110.0, -100.0));
-        let aux = to_placement_frame(&board, Origin::Aux);
+        let aux_opts = PlaceOptions {
+            origin: Origin::Aux,
+            ..PlaceOptions::default()
+        };
+        let aux = to_placement_frame(&board, &aux_opts).0;
         assert_eq!(aux.footprints[0].at, Pt::from_mm(10.0, -50.0));
         assert_eq!(aux.footprints[0].rotation, 90.0);
+    }
+
+    #[test]
+    fn dnp_and_bom_filters() {
+        let mut board = layout(vec![
+            fp("R1", 1.0, 0.0, Side::Front, "", ""),
+            fp("R2", 2.0, 0.0, Side::Front, "", ""),
+            fp("R3", 3.0, 0.0, Side::Front, "", ""),
+        ]);
+        board.footprints[1].attrs.dnp = true;
+        board.footprints[2].attrs.exclude_from_bom = true;
+        let none = to_placement_frame(&board, &PlaceOptions::default());
+        assert_eq!((none.0.footprints.len(), none.1), (3, Excluded::default()));
+        let dnp = PlaceOptions {
+            exclude_dnp: true,
+            ..PlaceOptions::default()
+        };
+        let (l, ex) = to_placement_frame(&board, &dnp);
+        assert_eq!((l.footprints.len(), ex.dnp, ex.from_bom), (2, 1, 0));
+        let bom = PlaceOptions {
+            exclude_from_bom: true,
+            ..PlaceOptions::default()
+        };
+        let (l, ex) = to_placement_frame(&board, &bom);
+        assert_eq!((l.footprints.len(), ex.dnp, ex.from_bom), (2, 0, 1));
     }
 }

@@ -151,7 +151,9 @@ same way; it is the PnP compare of `berc diff --pnp`. A board file counts from t
 down, a PnP file from an origin with y up, so `compare_boards` brings a board compared with a PnP file into the PnP
 frame first (`to_placement_frame`): relative to `Origin::Page` (KiCad's default) or `Origin::Aux` (the board's
 `aux_axis_origin`, KiCad's `--use-drill-file-origin`), y negated, rotations unchanged, footprints marked
-`exclude_from_pos_files` left out: what kicad-cli's `pcb export pos` writes. `better_erc::diff::pnp` opens the two
+`exclude_from_pos_files` left out: what kicad-cli's `pcb export pos` writes. `PlaceOptions::exclude_dnp` (`pcb export
+pos --exclude-dnp`) and `exclude_from_bom` leave the `dnp` and `exclude_from_bom` footprints out too; `to_placement_frame`
+also returns how many each filter took (`Excluded`, first matching filter only). `better_erc::diff::pnp` opens the two
 sides by path, counts each side's footprints and test points, and renders the result as text or JSON.
 
 ## erc_kicad

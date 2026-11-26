@@ -137,9 +137,11 @@ keeps it in the model.
 - `berc checks list [--tier easy|mid|hard|judgement] [--status ran|not-run|planned] [--project PATH]
   [--format text|json]`: `list_for(report)`, every catalogue check with severity, tier and state; with `--project`
   what a run there does with each (ran, not run with the hint, planned), which `--status ran` and `not-run` need.
-- `berc diff --pnp A B [--origin page|aux] [--tolerance MM] [--rotation-tolerance DEG] [--format text|json]`:
+- `berc diff --pnp A B [--origin page|aux] [--exclude-dnp] [--exclude-from-bom] [--tolerance MM] [--rotation-tolerance DEG] [--format text|json]`:
   `better_erc::diff::pnp`, the placements of two designs (PnP files, boards, KiCad projects with their board)
-  footprint by footprint; a board against a PnP file in the PnP frame ([model.md](model.md)). Exit codes 0 the
+  footprint by footprint; a board against a PnP file in the PnP frame ([model.md](model.md)). `--exclude-dnp` (KiCad's
+  own flag name) and `--exclude-from-bom` also leave the board's `dnp` and `exclude_from_bom` footprints out, as the
+  PnP file was exported; each side's summary line and the JSON `excluded` object count what was left out. Exit codes 0 the
   same, 1 different, 2 usage or import error.
 - `berc diff --nets A B [--format text|json]`: `better_erc::diff::nets`, the nets of any two designs with
   connectivity (a KiCad project or schematic, a netlist, Altium EDIF or WireList, OrCAD, a Smart PDF), each net as

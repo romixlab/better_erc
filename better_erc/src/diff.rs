@@ -26,6 +26,9 @@ pub struct PlaceSide {
     pub test_points: usize,
     /// Read from a board file, in the board's frame
     pub board_file: bool,
+    /// How many of a board's footprints were left out to match a PnP file (all zero for a PnP file)
+    #[serde(default)]
+    pub excluded: placecmp::Excluded,
 }
 
 /// The placements of two designs compared
@@ -89,10 +92,10 @@ pub fn pnp(a: &Path, b: &Path, opts: &PlaceOptions) -> Result<PnpDiff, DiffError
     let (la, lb) = (layout(ba), layout(bb));
     let mixed = placecmp::is_board_file(la) != placecmp::is_board_file(lb);
     let side = |p: &Project, l: &Layout| {
-        let compared = if mixed && placecmp::is_board_file(l) {
-            placecmp::to_placement_frame(l, opts.origin)
+        let (compared, excluded) = if mixed && placecmp::is_board_file(l) {
+            placecmp::to_placement_frame(l, opts)
         } else {
-            l.clone()
+            (l.clone(), placecmp::Excluded::default())
         };
         PlaceSide {
             file: p.dir.join(&p.main),
@@ -103,6 +106,7 @@ pub fn pnp(a: &Path, b: &Path, opts: &PlaceOptions) -> Result<PnpDiff, DiffError
                 .filter(|f| f.reference.starts_with("TP"))
                 .count(),
             board_file: placecmp::is_board_file(l),
+            excluded,
         }
     };
     Ok(PnpDiff {
@@ -244,9 +248,24 @@ impl PnpDiff {
                 (true, Some(placecmp::Origin::Aux)) => ", as a PnP file from the aux origin",
                 _ => "",
             };
+            let ex = s.excluded;
+            let left_out = [
+                (ex.pos_files, "exclude_from_pos_files"),
+                (ex.dnp, "dnp"),
+                (ex.from_bom, "exclude_from_bom"),
+            ]
+            .iter()
+            .filter(|(n, _)| *n > 0)
+            .map(|(n, what)| format!("{n} {what}"))
+            .collect::<Vec<_>>();
+            let left_out = if left_out.is_empty() {
+                String::new()
+            } else {
+                format!(", left out: {}", left_out.join(", "))
+            };
             let _ = writeln!(
                 out,
-                "{name}: {} ({} footprints, {} test points{frame})",
+                "{name}: {} ({} footprints, {} test points{frame}{left_out})",
                 s.file.display(),
                 s.footprints,
                 s.test_points
