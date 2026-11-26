@@ -8,8 +8,8 @@
 
 use crate::keys;
 use crate::lock::{
-    Cover, Coverage, Decode, FactValue, LockedFact, LockedPair, LockedPart, LockedReview,
-    PartMatch, Placement,
+    Cover, Coverage, Decode, FactValue, LockedFact, LockedMaker, LockedPair, LockedPart,
+    LockedReview, PartKey, PartMatch, Placement,
 };
 use crate::source::{
     MPNS_PER_CALL_MAX, NewReview, PartsAnswer, ReviewsAnswer, Source, SourceError,
@@ -20,7 +20,7 @@ use mx3_api_lab::endpoints::fp_review::{
     FpReviewAccept, FpSource,
 };
 use mx3_api_lab::endpoints::params::{self, BY_MPN_KEYS_MAX, BY_MPN_MPNS_MAX, ByMpn, MpnKey};
-use mx3_api_lab::endpoints::part::LookupPartResult;
+use mx3_api_lab::endpoints::part::{LookupPartResult, MakerMatch};
 use mx3_api_lab::rvariant::Variant;
 use std::collections::BTreeSet;
 use std::fmt;
@@ -281,14 +281,14 @@ impl Source for Mx3Source {
         "mx3".to_owned()
     }
 
-    fn parts(&self, mpns: &[String], keys: &[String]) -> Result<PartsAnswer, SourceError> {
+    fn parts(&self, mpns: &[PartKey], keys: &[String]) -> Result<PartsAnswer, SourceError> {
         let what = format!("parts of {} MPNs", mpns.len());
         let q = ByMpn {
             mpns: mpns
                 .iter()
                 .map(|m| MpnKey {
-                    manufacturer: None,
-                    mpn: m.clone(),
+                    manufacturer: m.maker.clone(),
+                    mpn: m.mpn.clone(),
                 })
                 .collect(),
             keys: keys.to_vec(),
@@ -393,13 +393,28 @@ impl Source for Mx3Source {
 }
 
 /// One by_mpn result in the lock's shape: the current values of `keys` (the asked keys mx3 has a definition
-/// for), every other one of them missing
+/// for), every other one of them missing; the MPN's parts and makers when none was chosen. A maker mx3 does not
+/// know resolves nothing, whatever parts it matched.
 fn locked_part(r: params::MpnResult, keys: &[String]) -> LockedPart {
-    let (matched, part) = match &r.part {
-        LookupPartResult::Found { id, .. } => (PartMatch::Found, Some(id.0.to_string())),
-        LookupPartResult::NotFound => (PartMatch::NotFound, None),
-        LookupPartResult::NotUnique(_) => (PartMatch::NotUnique, None),
+    let (matched, part) = match (&r.maker, &r.part) {
+        (Some(MakerMatch::Unknown), _) => (PartMatch::UnknownMaker, None),
+        (_, LookupPartResult::Found { id, .. }) => (PartMatch::Found, Some(id.0.to_string())),
+        (_, LookupPartResult::NotFound) => (PartMatch::NotFound, None),
+        (_, LookupPartResult::NotUnique(_)) => (PartMatch::NotUnique, None),
     };
+    let mut makers: Vec<LockedMaker> = if matched == PartMatch::Found {
+        Vec::new()
+    } else {
+        r.makers
+            .iter()
+            .map(|m| LockedMaker {
+                part: m.part.0.to_string(),
+                maker: m.maker.clone(),
+            })
+            .collect()
+    };
+    makers.sort();
+    makers.dedup();
     let d = &r.mpn_decode;
     let decode = Decode {
         outcome: d.outcome.clone(),
@@ -411,7 +426,12 @@ fn locked_part(r: params::MpnResult, keys: &[String]) -> LockedPart {
             .collect(),
     };
     let mut facts: Vec<LockedFact> = Vec::new();
-    for v in r.values.iter().filter(|v| !v.retracted) {
+    let resolved = if matched == PartMatch::UnknownMaker {
+        &[]
+    } else {
+        r.values.as_slice()
+    };
+    for v in resolved.iter().filter(|v| !v.retracted) {
         let Some(key) = v.key.as_ref().filter(|k| keys.contains(k)) else {
             continue;
         };
@@ -436,8 +456,10 @@ fn locked_part(r: params::MpnResult, keys: &[String]) -> LockedPart {
         .collect();
     LockedPart {
         mpn: r.mpn.mpn,
+        maker: r.mpn.manufacturer,
         matched,
         part,
+        makers,
         decode: Some(decode),
         missing: missing.into_iter().collect(),
         facts,

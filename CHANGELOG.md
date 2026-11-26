@@ -11,6 +11,16 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `berc parts refresh` reads `MfgN` beside `MpnN`, asks the source by MPN and maker, records the part chosen (CFG-9).
+- `BOM-21`: an MPN with several parts and no maker, or a maker without that part, names the makers (BOM-21).
+- `BOM-22`: a maker field without the MPN field it belongs beside (BOM-22).
+
+### Changed
+
+- `BOM-12`, `LIB-6`, `RATE-*` and `BOM-20` read the part of the maker named beside an MPN (CFG-9).
+
 ## [0.6.6] - 2026-11-26
 
 ### Added

@@ -39,7 +39,7 @@ fn every_mpn_field_of_fitted_parts_in_every_variant() {
     let mpns: Vec<(&str, Vec<&str>)> = got
         .mpns
         .iter()
-        .map(|(m, refs)| (m.as_str(), refs.iter().map(String::as_str).collect()))
+        .map(|(m, refs)| (m.mpn.as_str(), refs.iter().map(String::as_str).collect()))
         .collect();
     assert_eq!(
         mpns,
@@ -51,4 +51,50 @@ fn every_mpn_field_of_fitted_parts_in_every_variant() {
     );
     // No board file: no footprint pairs
     assert!(got.footprints.is_empty());
+}
+
+#[test]
+fn the_maker_beside_each_mpn() {
+    let text = schematic(&[
+        // Mfg1 beside Mpn1; Mpn2 names no maker
+        Part {
+            reference: "U1",
+            fields: &[
+                ("Mpn1", "SN74LVC1G17DCKR"),
+                ("Mfg1", "UMW"),
+                ("Mpn2", "74LVC1G17GW"),
+            ],
+            dnp: false,
+            variants: &[],
+        },
+        // The same MPN without a maker is its own entry
+        Part {
+            reference: "U2",
+            fields: &[("MPN", "SN74LVC1G17DCKR"), ("Mfg", "~")],
+            dnp: false,
+            variants: &[],
+        },
+        // A variant names another maker
+        Part {
+            reference: "U3",
+            fields: &[("Mpn", "SN74LVC1G17DCKR"), ("Mfg", "UMW")],
+            dnp: false,
+            variants: &[("Lite", false, &[("Mfg", "Texas Instruments")])],
+        },
+    ]);
+    let got = BoardMpns::of(&design(&text), &mut erc_parts::board::as_placed);
+    let keys: Vec<(String, Vec<&str>)> = got
+        .mpns
+        .iter()
+        .map(|(k, refs)| (k.describe(), refs.iter().map(String::as_str).collect()))
+        .collect();
+    assert_eq!(
+        keys,
+        [
+            ("74LVC1G17GW".to_owned(), vec!["U1"]),
+            ("SN74LVC1G17DCKR".to_owned(), vec!["U2"]),
+            ("SN74LVC1G17DCKR (Texas Instruments)".to_owned(), vec!["U3"]),
+            ("SN74LVC1G17DCKR (UMW)".to_owned(), vec!["U1", "U3"]),
+        ]
+    );
 }

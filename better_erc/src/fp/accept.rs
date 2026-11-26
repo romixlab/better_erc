@@ -7,7 +7,7 @@ use super::{LibrarySearch, SymbolLibraries};
 use crate::parts::{PartsRefreshError, Refreshed, WriteLock, refresh_project};
 use erc_model::fphash;
 use erc_model::layout::{Footprint, FootprintId};
-use erc_parts::lock::{Cover, LockedReview, PartMatch};
+use erc_parts::lock::{Cover, LockedReview, PartKey, PartMatch};
 use erc_parts::source::{MPNS_PER_CALL_MAX, NewReview, Source, SourceError};
 use serde::{Deserialize, Serialize};
 use std::fmt;
@@ -285,7 +285,8 @@ pub fn accept(
     };
     let mut parts = Vec::new();
     for chunk in wanted.chunks(MPNS_PER_CALL_MAX) {
-        parts.extend(source.parts(chunk, &[]).map_err(AcceptError::Source)?.parts);
+        let keys: Vec<PartKey> = chunk.iter().map(|m| PartKey::mpn(m)).collect();
+        parts.extend(source.parts(&keys, &[]).map_err(AcceptError::Source)?.parts);
     }
     let part = |m: &str| parts.iter().find(|p| p.mpn == m);
     let mut list: Vec<Cover> = Vec::new();

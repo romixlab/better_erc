@@ -2,7 +2,8 @@
 //! and each (footprint hash, MPN) pair where the design has a board file, the hash of the footprint a review of
 //! the board footprint is of (the caller's [`Reviewed`] says which: its library footprint where one is found).
 
-use crate::mpn::mpns;
+use crate::lock::PartKey;
+use crate::mpn::{mpn_entries, mpns};
 use erc_model::layout::FootprintId;
 use erc_model::{Board, Design, PartId, VariantId, View, fphash, natural_cmp};
 
@@ -30,8 +31,8 @@ use std::collections::{BTreeMap, BTreeSet};
 /// The MPNs and footprint pairs of a design
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct BoardMpns {
-    /// MPN, as the board writes it, to the references carrying it
-    pub mpns: BTreeMap<String, Vec<String>>,
+    /// MPN and the maker named beside it, as the board writes them, to the references carrying it
+    pub mpns: BTreeMap<PartKey, Vec<String>>,
     /// Reviewed footprint hash to its `Lib:Name` and the MPNs of the parts placed with it
     pub footprints: BTreeMap<String, HashedFootprint>,
 }
@@ -71,10 +72,10 @@ fn views(board: &Board) -> impl Iterator<Item = View<'_>> {
 }
 
 impl BoardMpns {
-    /// Every `MpnN` field of the fitted parts of every board, in the base design and in each variant, each placed
+    /// Every `MpnN` field (with its `MfgN`) of the fitted parts of every board, in the base design and in each variant, each placed
     /// footprint by what `reviewed` says its review is of
     pub fn of(design: &Design, reviewed: &mut Reviewed) -> BoardMpns {
-        let mut refs: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+        let mut refs: BTreeMap<PartKey, BTreeSet<String>> = BTreeMap::new();
         let mut footprints: BTreeMap<String, HashedFootprint> = BTreeMap::new();
         for board in &design.boards {
             // The reviewed footprint hash of each part placed on the board file, in reference order
@@ -94,8 +95,8 @@ impl BoardMpns {
             for view in views(board) {
                 for p in view.fitted_components() {
                     let part_mpns = mpns(view, p);
-                    for (_, mpn) in &part_mpns {
-                        refs.entry((*mpn).to_owned())
+                    for e in mpn_entries(view, p) {
+                        refs.entry(e.key())
                             .or_default()
                             .insert(board.part(p).designator.clone());
                     }
@@ -117,10 +118,10 @@ impl BoardMpns {
         }
         let mpns = refs
             .into_iter()
-            .map(|(mpn, set)| {
+            .map(|(key, set)| {
                 let mut v: Vec<String> = set.into_iter().collect();
                 v.sort_by(|a, b| natural_cmp(a, b));
-                (mpn, v)
+                (key, v)
             })
             .collect();
         BoardMpns { mpns, footprints }

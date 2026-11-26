@@ -1,0 +1,57 @@
+# What better_erc finds on bom-21_mpn_makers.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-12"
+subjects = ["item R3 MPN", "part R3"]
+
+[[finding]]
+check = "BOM-12"
+subjects = ["part R1"]
+
+[[finding]]
+check = "BOM-12"
+subjects = ["part R4"]
+
+[[finding]]
+check = "BOM-12"
+subjects = ["part R5"]
+
+[[finding]]
+check = "BOM-21"
+subjects = ["part R1"]
+
+[[finding]]
+check = "BOM-21"
+subjects = ["part R4"]
+
+[[finding]]
+check = "BOM-21"
+subjects = ["part R5"]
+
+[[finding]]
+check = "BOM-22"
+subjects = ["part R6"]
+
+[[finding]]
+check = "LIB-6"
+subjects = ["part R1"]
+
+[[finding]]
+check = "LIB-6"
+subjects = ["part R2"]
+
+[[finding]]
+check = "LIB-6"
+subjects = ["part R3"]
+
+[[finding]]
+check = "LIB-6"
+subjects = ["part R4"]
+
+[[finding]]
+check = "LIB-6"
+subjects = ["part R5"]
+
+[[finding]]
+check = "LIB-6"
+subjects = ["part R6"]

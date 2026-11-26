@@ -7,7 +7,7 @@ use super::pairs::{self, Overall, Pair};
 use erc_kicad::libtable::{FootprintLibraries, LibError, SymbolLibraries, SymbolLibrary};
 use erc_model::fphash;
 use erc_parts::PartsLock;
-use erc_parts::lock::LockedReview;
+use erc_parts::lock::{LockedReview, PartKey};
 use erc_parts::source::{MPNS_PER_CALL_MAX, Source, SourceError};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -439,7 +439,8 @@ fn judge_all(
     all.sort();
     all.dedup();
     for chunk in all.chunks(MPNS_PER_CALL_MAX) {
-        lock.parts.extend(source.parts(chunk, &[])?.parts);
+        let keys: Vec<PartKey> = chunk.iter().map(|m| PartKey::mpn(m)).collect();
+        lock.parts.extend(source.parts(&keys, &[])?.parts);
     }
     for (hash, mut mpns) in by_hash {
         mpns.sort();

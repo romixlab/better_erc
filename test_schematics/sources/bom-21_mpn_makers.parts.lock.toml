@@ -1,0 +1,62 @@
+# The parts snapshot of bom-21_mpn_makers.kicad_sch: SHARED-0402-10K by two makers and a maker-less stub. R1 names
+# no maker (several parts), R2 and R3 name one each (the chosen part, R3's 12k against its 10k Value), R4 a maker the
+# source does not know, R5 a maker that does not make RC0402FR-0710KL; R6 has Mfg2 without Mpn2.
+version = 1
+source = "file parts.toml"
+keys = ["resistance", "tolerance"]
+unknown_keys = []
+
+[[part]]
+mpn = "RC0402FR-0710KL"
+match = "found"
+part = "12"
+missing = []
+facts = [
+    { key = "resistance", value = 10000.0, unit = "Ω", source = "manual", rank = 100, at = "2026-11-26T00:00:00Z" },
+    { key = "tolerance", minus = -1.0, plus = 1.0, unit = "%", source = "manual", rank = 100, at = "2026-11-26T00:00:00Z" },
+]
+
+[[part]]
+mpn = "RC0402FR-0710KL"
+maker = "Maker B"
+match = "not_found"
+makers = [{ part = "12", maker = "Yageo" }]
+missing = ["resistance", "tolerance"]
+facts = []
+
+[[part]]
+mpn = "SHARED-0402-10K"
+match = "not_unique"
+makers = [{ part = "21", maker = "Maker A Inc." }, { part = "22", maker = "Maker B" }, { part = "23", maker = "Unknown" }]
+missing = ["resistance", "tolerance"]
+facts = []
+
+[[part]]
+mpn = "SHARED-0402-10K"
+maker = "Maker A Inc."
+match = "found"
+part = "21"
+missing = []
+facts = [
+    { key = "resistance", value = 10000.0, unit = "Ω", source = "manual", rank = 100, at = "2026-11-26T00:00:00Z" },
+    { key = "tolerance", minus = -1.0, plus = 1.0, unit = "%", source = "manual", rank = 100, at = "2026-11-26T00:00:00Z" },
+]
+
+[[part]]
+mpn = "SHARED-0402-10K"
+maker = "Maker B"
+match = "found"
+part = "22"
+missing = []
+facts = [
+    { key = "resistance", value = 12000.0, unit = "Ω", source = "manual", rank = 100, at = "2026-11-26T00:00:00Z" },
+    { key = "tolerance", minus = -1.0, plus = 1.0, unit = "%", source = "manual", rank = 100, at = "2026-11-26T00:00:00Z" },
+]
+
+[[part]]
+mpn = "SHARED-0402-10K"
+maker = "Nobody Corp"
+match = "unknown_maker"
+makers = [{ part = "21", maker = "Maker A Inc." }, { part = "22", maker = "Maker B" }, { part = "23", maker = "Unknown" }]
+missing = ["resistance", "tolerance"]
+facts = []

@@ -1,8 +1,9 @@
 //! Test-only: a fake mx3 backend for the tests of the mx3 part source and the document library (VIEW-26).
 //!
 //! [`FakeMx3::start`] serves `/params/by_mpn`, `/fp/review/check`, `/fp/review/accept`, `/lib/by_mpn` and
-//! `/lib/docs` on a local port ([`http::Server`]) from a fixed part catalogue ([`RESISTOR`], [`CAPACITOR`]; any
-//! other MPN is not found) and a fixed set of library documents, one per [`By`] source ([`LIB_LINK_MPN`] and the
+//! `/lib/docs` on a local port ([`http::Server`]) from a fixed part catalogue ([`RESISTOR`], [`CAPACITOR`],
+//! [`SHARED`] of two makers and a maker-less stub; any other MPN is not found, a maker other than [`MAKERS`] is
+//! unknown) and a fixed set of library documents, one per [`By`] source ([`LIB_LINK_MPN`] and the
 //! other `LIB_*_MPN` constants), plus the reviews accepted so far. Requests and answers are mx3_api_lab's own
 //! types. A request without `Authorization: Bearer` [`TOKEN`] is answered 401, as the backend answers a missing
 //! or wrong token.
@@ -24,7 +25,7 @@ use mx3_api_lab::endpoints::parameter::ParameterDefId;
 use mx3_api_lab::endpoints::params::{
     ByMpn, ByMpnResult, EP_PARAMS_BY_MPN, FactId, MpnResult, Resolved, SourceId,
 };
-use mx3_api_lab::endpoints::part::{LookupPartResult, PartId};
+use mx3_api_lab::endpoints::part::{LookupPartResult, MakerMatch, MpnMaker, PartId};
 use serde::Serialize;
 use serde::de::DeserializeOwned;
 use std::sync::{Arc, Mutex};
@@ -41,6 +42,31 @@ pub const RESISTOR_ID: i32 = 12;
 pub const CAPACITOR: &str = "GRM155R71C104KA88D";
 /// Its mx3 part id
 pub const CAPACITOR_ID: i32 = 13;
+/// A resistor MPN two makers make, plus a maker-less stub of it: [`SHARED_A_ID`] (62.5 mW), [`SHARED_B_ID`]
+/// (100 mW), [`SHARED_STUB_ID`] (no facts)
+pub const SHARED: &str = "SHARED-0402-10K";
+/// The part of [`SHARED`] by [`MAKER_A`]
+pub const SHARED_A_ID: i32 = 21;
+/// The part of [`SHARED`] by [`MAKER_B`]
+pub const SHARED_B_ID: i32 = 22;
+/// The maker-less part of [`SHARED`] (maker `Unknown`)
+pub const SHARED_STUB_ID: i32 = 23;
+/// A maker of [`SHARED`]; [`MAKER_A_SYNONYM`] names it too
+pub const MAKER_A: &str = "Maker A Inc.";
+/// Another name of [`MAKER_A`]
+pub const MAKER_A_SYNONYM: &str = "MakerA";
+/// The other maker of [`SHARED`]
+pub const MAKER_B: &str = "Maker B";
+/// The maker of a part without one
+pub const NO_MAKER: &str = "Unknown";
+/// Every company the fake knows, with its synonyms
+pub const MAKERS: &[(&str, &[&str])] = &[
+    (MAKER_A, &[MAKER_A_SYNONYM]),
+    (MAKER_B, &[]),
+    ("Yageo", &[]),
+    ("Murata", &[]),
+];
+
 /// When every fact of the catalogue was stated
 pub const FACTS_AT: &str = "2026-11-20T10:00:00Z";
 
@@ -195,8 +221,75 @@ fn decoded(scheme: &str, segments: Vec<MpnSegment>) -> MpnReading {
     }
 }
 
-/// The catalogue's part of `mpn`: its id, every value and its MPN reading
-fn catalogue(mpn: &str) -> Option<(i32, Vec<Resolved>, MpnReading)> {
+/// One part of the catalogue: its id, maker and every value
+struct Part {
+    id: i32,
+    maker: &'static str,
+    values: Vec<Resolved>,
+}
+
+/// The catalogue's parts of `mpn` and the MPN's reading
+fn catalogue(mpn: &str) -> Option<(Vec<Part>, MpnReading)> {
+    if mpn == SHARED {
+        let power = |mw: f64| {
+            resolved(
+                "power",
+                &format!(
+                    r#"{{"SI":{{"value":{{"F64":{mw:?}}},"unit":{{"Unit":{{"prefix":"Milli","base":"Watt","exp":1}}}}}}}}"#
+                ),
+                "digikey",
+                50,
+            )
+        };
+        let reading = MpnReading {
+            outcome: "no_scheme".to_owned(),
+            scheme: None,
+            version: None,
+            class: None,
+            segments: Vec::new(),
+            schemes: Vec::new(),
+        };
+        return Some((
+            vec![
+                Part {
+                    id: SHARED_A_ID,
+                    maker: MAKER_A,
+                    values: vec![power(62.5)],
+                },
+                Part {
+                    id: SHARED_B_ID,
+                    maker: MAKER_B,
+                    values: vec![power(100.0)],
+                },
+                Part {
+                    id: SHARED_STUB_ID,
+                    maker: NO_MAKER,
+                    values: Vec::new(),
+                },
+            ],
+            reading,
+        ));
+    }
+    let (id, values, reading) = catalogue_one(mpn)?;
+    let maker = if id == RESISTOR_ID { "Yageo" } else { "Murata" };
+    Some((vec![Part { id, maker, values }], reading))
+}
+
+/// The company `name` is, by its name or a synonym, case ignored
+fn company(name: &str) -> MakerMatch {
+    MAKERS
+        .iter()
+        .find(|(n, syn)| {
+            n.eq_ignore_ascii_case(name.trim())
+                || syn.iter().any(|s| s.eq_ignore_ascii_case(name.trim()))
+        })
+        .map_or(MakerMatch::Unknown, |(n, _)| MakerMatch::Known {
+            name: (*n).to_owned(),
+        })
+}
+
+/// The catalogue's single-maker part of `mpn`: its id, every value and its MPN reading
+fn catalogue_one(mpn: &str) -> Option<(i32, Vec<Resolved>, MpnReading)> {
     let pct = r#"{"Unit":{"prefix":"Centi","base":"Ratio","exp":1}}"#;
     let pf = r#"{"Unit":{"prefix":"Pico","base":"Farad","exp":1}}"#;
     match mpn {
@@ -286,7 +379,8 @@ fn by_mpn(q: &ByMpn) -> ByMpnResult {
         .mpns
         .iter()
         .map(|key| {
-            let Some((id, values, reading)) = catalogue(&key.mpn) else {
+            let maker = key.manufacturer.as_deref().map(company);
+            let Some((parts, reading)) = catalogue(&key.mpn) else {
                 return MpnResult {
                     mpn: key.clone(),
                     part: LookupPartResult::NotFound,
@@ -301,8 +395,51 @@ fn by_mpn(q: &ByMpn) -> ByMpnResult {
                         segments: Vec::new(),
                         schemes: Vec::new(),
                     },
+                    makers: Vec::new(),
+                    maker,
                 };
             };
+            let makers: Vec<MpnMaker> = parts
+                .iter()
+                .map(|p| MpnMaker {
+                    part: PartId(p.id),
+                    maker: p.maker.to_owned(),
+                })
+                .collect();
+            let mut chosen: Vec<Part> = parts
+                .into_iter()
+                .filter(|p| match &maker {
+                    None => true,
+                    Some(MakerMatch::Known { name }) => p.maker == name,
+                    Some(MakerMatch::Unknown) => p.maker == NO_MAKER,
+                })
+                .collect();
+            if chosen.len() != 1 {
+                let part = if chosen.is_empty() {
+                    LookupPartResult::NotFound
+                } else {
+                    LookupPartResult::NotUnique(
+                        chosen
+                            .iter()
+                            .map(|p| MpnMaker {
+                                part: PartId(p.id),
+                                maker: p.maker.to_owned(),
+                            })
+                            .collect(),
+                    )
+                };
+                return MpnResult {
+                    mpn: key.clone(),
+                    part,
+                    values: Vec::new(),
+                    missing: known.iter().map(|k| (*k).clone()).collect(),
+                    facts: None,
+                    mpn_decode: reading,
+                    makers,
+                    maker,
+                };
+            }
+            let Part { id, values, .. } = chosen.remove(0);
             let values: Vec<Resolved> = values
                 .into_iter()
                 .filter(|v| v.key.as_ref().is_some_and(|k| known.contains(&k)))
@@ -326,6 +463,8 @@ fn by_mpn(q: &ByMpn) -> ByMpnResult {
                 missing,
                 facts: None,
                 mpn_decode: reading,
+                makers,
+                maker,
             }
         })
         .collect();
@@ -478,7 +617,7 @@ fn library_catalog(q: &DocsQuery) -> Docs {
 /// Whether `cover` takes in the catalogue's part of `mpn`, as the backend judges it: the part, or its MPN
 /// reading of the family's scheme with each of its values
 fn takes_in(cover: &FpCover, mpn: &str) -> bool {
-    let Some((id, _, reading)) = catalogue(mpn) else {
+    let Some((id, _, reading)) = catalogue_one(mpn) else {
         return false;
     };
     match cover {
@@ -501,7 +640,7 @@ fn check(q: &FpCheckQuery, reviews: &[FpReview]) -> FpCheck {
         .mpns
         .iter()
         .map(|mpn| {
-            let Some((id, _, _)) = catalogue(mpn) else {
+            let Some((id, _, _)) = catalogue_one(mpn) else {
                 return FpCheckItem {
                     mpn: mpn.clone(),
                     part_id: None,
@@ -558,7 +697,7 @@ fn accept(q: FpReviewAccept, reviews: &mut Vec<FpReview>) -> Result<Answer, Answ
             FpCoverSpec::Mpn { mpn, part_id } => {
                 let id = part_id
                     .map(|p| p.0)
-                    .or_else(|| catalogue(&mpn).map(|(id, _, _)| id))
+                    .or_else(|| catalogue_one(&mpn).map(|(id, _, _)| id))
                     .ok_or_else(|| error(400, &format!("no part has MPN {mpn}")))?;
                 FpCover::Mpn {
                     part_id: PartId(id),

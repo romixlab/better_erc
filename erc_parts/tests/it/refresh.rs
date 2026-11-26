@@ -2,7 +2,7 @@
 
 use super::{Part, design, schematic};
 use erc_parts::board::{BoardMpns, HashedFootprint};
-use erc_parts::lock::{Coverage, LockedPair, LockedPart, PartMatch};
+use erc_parts::lock::{Coverage, LockedPair, LockedPart, PartKey, PartMatch};
 use erc_parts::refresh::refresh_mpns;
 use erc_parts::source::{MPNS_PER_CALL_MAX, PartsAnswer, ReviewsAnswer, SourceError};
 use erc_parts::{FileSource, RefreshError, Source, refresh};
@@ -21,7 +21,7 @@ impl Source for Fake {
         "fake".to_owned()
     }
 
-    fn parts(&self, mpns: &[String], keys: &[String]) -> Result<PartsAnswer, SourceError> {
+    fn parts(&self, mpns: &[PartKey], keys: &[String]) -> Result<PartsAnswer, SourceError> {
         self.calls
             .borrow_mut()
             .push(format!("parts {}", mpns.len()));
@@ -29,7 +29,8 @@ impl Source for Fake {
             .iter()
             .rev()
             .map(|m| LockedPart {
-                mpn: m.clone(),
+                mpn: m.mpn.clone(),
+                maker: m.maker.clone(),
                 matched: PartMatch::Found,
                 missing: keys.to_vec(),
                 ..LockedPart::default()
@@ -79,7 +80,8 @@ impl Source for Fake {
 fn board(n: usize) -> BoardMpns {
     let mut b = BoardMpns::default();
     for i in 0..n {
-        b.mpns.insert(format!("MPN-{i:04}"), vec![format!("R{i}")]);
+        b.mpns
+            .insert(PartKey::mpn(&format!("MPN-{i:04}")), vec![format!("R{i}")]);
     }
     b.footprints.insert(
         "fp1:0123456789abcdef".to_owned(),

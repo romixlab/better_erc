@@ -1,10 +1,13 @@
 //! The mx3 part source against a fake mx3: facts by MPN, reviews of a hash, a review accepted, the URL and token
 //! found as the mx3 command line finds them
 
-use erc_fake_mx3::{CAPACITOR, FakeMx3, RESISTOR, TOKEN};
+use erc_fake_mx3::{
+    CAPACITOR, FakeMx3, MAKER_A, MAKER_A_SYNONYM, MAKER_B, NO_MAKER, RESISTOR, SHARED, SHARED_A_ID,
+    SHARED_B_ID, SHARED_STUB_ID, TOKEN,
+};
 use erc_parts::board::{BoardMpns, HashedFootprint};
 use erc_parts::keys;
-use erc_parts::lock::{Cover, Coverage, FactValue, PartMatch, PartsLock};
+use erc_parts::lock::{Cover, Coverage, FactValue, PartKey, PartMatch, PartsLock};
 use erc_parts::mx3::{Connection, Environment, Mx3Source};
 use erc_parts::refresh::refresh_mpns;
 use erc_parts::{NewReview, Source};
@@ -20,7 +23,7 @@ fn source(fake: &FakeMx3) -> Mx3Source {
 fn board() -> BoardMpns {
     let mut b = BoardMpns::default();
     for (mpn, r) in [(RESISTOR, "R1"), (CAPACITOR, "C1"), ("NOPE-1", "U1")] {
-        b.mpns.insert(mpn.to_owned(), vec![r.to_owned()]);
+        b.mpns.insert(PartKey::mpn(mpn), vec![r.to_owned()]);
     }
     b.footprints.insert(
         HASH.to_owned(),
@@ -39,9 +42,9 @@ fn board() -> BoardMpns {
 fn facts_by_mpn() {
     let fake = FakeMx3::start();
     let mpns = vec![
-        RESISTOR.to_owned(),
-        CAPACITOR.to_owned(),
-        "NOPE-1".to_owned(),
+        PartKey::mpn(RESISTOR),
+        PartKey::mpn(CAPACITOR),
+        PartKey::mpn("NOPE-1"),
     ];
     let a = source(&fake).parts(&mpns, &keys::names()).unwrap();
     assert_eq!(a.unknown_keys, ["inductance", "saturation_current"]);
@@ -206,6 +209,69 @@ fn refresh_accept_refresh() {
 }
 
 #[test]
+fn an_mpn_of_two_makers_and_a_stub() {
+    let fake = FakeMx3::start();
+    let asked = [
+        PartKey::mpn(SHARED),
+        PartKey::new(SHARED, Some(MAKER_A_SYNONYM)),
+        PartKey::new(SHARED, Some(MAKER_B)),
+        PartKey::new(SHARED, Some("Nobody Corp")),
+        PartKey::new(RESISTOR, Some(MAKER_B)),
+    ];
+    let a = source(&fake).parts(&asked, &keys::names()).unwrap();
+    let by = |i: usize| &a.parts[i];
+
+    // No maker: several parts, each maker named, nothing resolved
+    let all = [
+        (SHARED_A_ID, MAKER_A),
+        (SHARED_B_ID, MAKER_B),
+        (SHARED_STUB_ID, NO_MAKER),
+    ];
+    let makers = |i: usize| -> Vec<(String, String)> {
+        by(i)
+            .makers
+            .iter()
+            .map(|m| (m.part.clone(), m.maker.clone()))
+            .collect()
+    };
+    let all: Vec<(String, String)> = all
+        .iter()
+        .map(|(id, m)| (id.to_string(), (*m).to_owned()))
+        .collect();
+    assert_eq!(by(0).matched, PartMatch::NotUnique);
+    assert_eq!(by(0).part, None);
+    assert!(by(0).facts.is_empty());
+    assert_eq!(makers(0), all);
+
+    // A synonym chooses its company's part, with that part's facts and id; no choices kept
+    assert_eq!(by(1).maker.as_deref(), Some(MAKER_A_SYNONYM));
+    assert_eq!(by(1).matched, PartMatch::Found);
+    assert_eq!(by(1).part, Some(SHARED_A_ID.to_string()));
+    assert!(by(1).makers.is_empty());
+    let watts = |i: usize| match &by(i).fact("power").unwrap().value {
+        FactValue::Number { value, .. } => *value,
+        other => panic!("{other:?}"),
+    };
+    assert!((watts(1) - 0.0625).abs() < 1e-9);
+    assert_eq!(by(2).part, Some(SHARED_B_ID.to_string()));
+    assert!((watts(2) - 0.1).abs() < 1e-9);
+
+    // A maker mx3 does not know resolves nothing
+    assert_eq!(by(3).matched, PartMatch::UnknownMaker);
+    assert!(by(3).facts.is_empty());
+    assert_eq!(makers(3), all);
+
+    // A known maker that has no part of the MPN: the maker that has it to choose from
+    assert_eq!(by(4).matched, PartMatch::NotFound);
+    assert_eq!(by(4).maker_names(), ["Yageo"]);
+
+    let req = fake.requests().pop().unwrap();
+    let body: serde_json::Value = serde_json::from_slice(&req.body).unwrap();
+    assert_eq!(body["mpns"][0]["manufacturer"], serde_json::Value::Null);
+    assert_eq!(body["mpns"][1]["manufacturer"], MAKER_A_SYNONYM);
+}
+
+#[test]
 fn a_review_is_checked_before_it_is_sent() {
     let fake = FakeMx3::start();
     let e = source(&fake)
@@ -228,7 +294,9 @@ fn a_wrong_token_is_refused_and_never_shown() {
     let fake = FakeMx3::start();
     let secret = "mx3_wrong-secret-token";
     let s = Mx3Source::connect(Connection::new(fake.url(), Some(secret.to_owned()))).unwrap();
-    let e = s.parts(&[RESISTOR.to_owned()], &keys::names()).unwrap_err();
+    let e = s
+        .parts(&[PartKey::mpn(RESISTOR)], &keys::names())
+        .unwrap_err();
     let shown = format!("{e} {e:?} {s:?}");
     assert!(shown.contains("401"), "{shown}");
     assert!(shown.contains(fake.url()), "{shown}");

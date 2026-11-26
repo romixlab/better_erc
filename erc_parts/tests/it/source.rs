@@ -1,6 +1,6 @@
 //! A file source: coverage by MPN and by family, a review accepted and read back
 
-use erc_parts::lock::{Cover, Coverage, Decode, LockedPart, PartMatch, Placement};
+use erc_parts::lock::{Cover, Coverage, Decode, LockedPart, PartKey, PartMatch, Placement};
 use erc_parts::{FileSource, NewReview, PartsLock, Source};
 use std::collections::BTreeMap;
 
@@ -196,4 +196,34 @@ fn the_family_of_a_part() {
         ..LockedPart::default()
     };
     assert_eq!(Cover::family_of(&ic), None);
+}
+
+#[test]
+fn parts_by_mpn_and_maker() {
+    let mut d = data();
+    d.parts.push(LockedPart {
+        maker: Some("Yageo".to_owned()),
+        part: Some("12".to_owned()),
+        ..rc("RC0402FR-0710KL", "0402")
+    });
+    let s = FileSource::new("hand".to_owned(), d);
+    let asked = [
+        PartKey::mpn("RC0402FR-0710KL"),
+        PartKey::new("RC0402FR-0710KL", Some("Yageo")),
+        PartKey::new("RC0402FR-0710KL", Some("Vishay")),
+    ];
+    let a = s.parts(&asked, &[]).unwrap();
+    let got: Vec<(PartKey, PartMatch, Option<&str>)> = a
+        .parts
+        .iter()
+        .map(|p| (p.key(), p.matched, p.part.as_deref()))
+        .collect();
+    assert_eq!(
+        got,
+        [
+            (asked[0].clone(), PartMatch::Found, None),
+            (asked[1].clone(), PartMatch::Found, Some("12")),
+            (asked[2].clone(), PartMatch::NotFound, None),
+        ]
+    );
 }

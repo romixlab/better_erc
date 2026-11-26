@@ -590,3 +590,53 @@ per missing MPN on the parts carrying it. Without a snapshot the check does not 
 **Fix.** Run `berc parts refresh` and commit the new `parts.lock.toml` with the change.
 
 **References.** Catalogue `BOM-12`, `LIB-6`; [project file](../project-file.md) `[parts]`.
+
+## `BOM-21` MPN whose maker is not settled <a id="bom-21"></a>
+
+⚠️ warning · needs: MPN and maker fields, the parts snapshot · [catalogue entry](../checks.md#bom-21)
+
+**Impl.** easy · depends on CFG-9
+
+**What it catches.** An MPN on a fitted part, in the variant checked, whose part the snapshot cannot choose: the part
+source has several parts of it (two makers, or a maker-less stub beside the real part) and the symbol names no maker;
+or the symbol names a maker (`MfgN` beside `MpnN`) that makes no part of that MPN in the source, or that the source
+does not know at all.
+
+**Why it matters.** One part per maker: the same part number from two makers is two parts, with their own facts,
+footprint reviews and stock. When the maker is not settled, no fact is resolved, so `BOM-12`, `LIB-6` and the `RATE`
+checks say "not checked" for the MPN, and the BOM leaves the choice of maker to whoever buys it.
+
+**Example.** b153b: `SN74LVC1G17DCKR` is in mx3 by Texas Instruments and by UMW. A symbol with only `Mpn1` gets
+`match = "not_unique"` in `parts.lock.toml`; with `Mfg1 = Texas Instruments` it gets TI's part and its facts.
+
+**How to check.** Every MPN field of each fitted part with the maker field beside it (`Mfg` beside `MPN`, `Mfg1`
+beside `Mpn1`, `MFG_2` beside `MPN_2`), against the snapshot's `[[part]]` entry of that MPN and maker. `berc parts
+refresh` asks the source by MPN and maker (mx3 matches the maker through its company synonyms) and records the part
+chosen, or the makers to choose from. better_erc (`erc_checks/src/bom/bom_21.rs`) reports one finding per MPN and
+maker on the parts carrying it, naming the makers. A symbol without `MfgN` whose MPN has one part is checked as
+before. Test case `bom-21_mpn_makers`.
+
+**Fix.** Write the maker in `MfgN` as the part source names it (or a synonym of it), then `berc parts refresh`. A
+maker-less stub beside the real part is merged into it in the part source (`mx3 part merge`).
+
+**References.** Catalogue `BOM-20`, `BOM-22`; [project file](../project-file.md) `[parts]`.
+
+## `BOM-22` Maker field without its MPN field <a id="bom-22"></a>
+
+⚠️ warning · needs: MPN and maker fields · [catalogue entry](../checks.md#bom-22)
+
+**Impl.** easy · depends on the netlist
+
+**What it catches.** A fitted part, in the variant checked, with a filled maker field (`Mfg2`) and no filled MPN field
+beside it (`Mpn2` absent, empty or `~`).
+
+**Why it matters.** The maker names nothing on its own: the MPN it was written for was dropped, or typed into a field
+with another number, so the part the maker was meant to choose is not the one checked.
+
+**How to check.** Every field whose name starts with `Mfg`, against the MPN fields of the same suffix. better_erc
+(`erc_checks/src/bom/bom_22.rs`) reports one finding per maker field. Test case `bom-21_mpn_makers` (R6).
+
+**Fix.** Fill in the MPN beside the maker, or drop the maker field when the MPN is gone.
+
+**References.** Catalogue `BOM-21`.
+

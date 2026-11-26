@@ -39,14 +39,21 @@ pub(crate) struct Candidate<'a> {
     pub part: &'a LockedPart,
 }
 
-/// The MPNs of a fitted part that the snapshot lists, in field order. An MPN it does not list is `BOM-20`'s.
+/// The MPNs of a fitted part that the snapshot lists, in field order, each the part of the maker named beside it
+/// (`MfgN`) when one is. An MPN it does not list is `BOM-20`'s, one whose maker is not settled `BOM-21`'s.
 pub(crate) fn candidates<'a>(cx: &Ctx<'a>, p: PartId) -> Vec<Candidate<'a>> {
     let Some(lock) = cx.parts() else {
         return Vec::new();
     };
-    erc_parts::mpn::mpns(cx.view(), p)
+    erc_parts::mpn::mpn_entries(cx.view(), p)
         .into_iter()
-        .filter_map(|(field, mpn)| lock.part(mpn).map(|part| Candidate { field, mpn, part }))
+        .filter_map(|e| {
+            lock.part_of(&e.key()).map(|part| Candidate {
+                field: e.field,
+                mpn: e.mpn,
+                part,
+            })
+        })
         .collect()
 }
 
@@ -403,6 +410,10 @@ pub(crate) fn report(
                 PartMatch::NotFound => format!("{} {} is not in the part source", j.field, j.mpn),
                 PartMatch::NotUnique => format!(
                     "{} {} names several parts in the part source (give its maker)",
+                    j.field, j.mpn
+                ),
+                PartMatch::UnknownMaker => format!(
+                    "{} {} names a maker the part source does not know",
                     j.field, j.mpn
                 ),
             });

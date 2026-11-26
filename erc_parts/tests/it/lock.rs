@@ -1,8 +1,8 @@
 //! The lock's text: one fixed order, read back the same
 
 use erc_parts::lock::{
-    Cover, Coverage, Decode, FactValue, LockedFact, LockedPair, LockedPart, LockedReview,
-    PartMatch, PartsLock,
+    Cover, Coverage, Decode, FactValue, LockedFact, LockedMaker, LockedPair, LockedPart,
+    LockedReview, PartKey, PartMatch, PartsLock,
 };
 
 fn fact(key: &str, value: FactValue) -> LockedFact {
@@ -27,8 +27,10 @@ pub fn sample() -> PartsLock {
         parts: vec![
             LockedPart {
                 mpn: "RC0402FR-0710KL".to_owned(),
+                maker: None,
                 matched: PartMatch::Found,
                 part: Some("12".to_owned()),
+                makers: vec![],
                 decode: Some(Decode {
                     outcome: "decoded".to_owned(),
                     scheme: Some("yageo.rc".to_owned()),
@@ -73,6 +75,29 @@ pub fn sample() -> PartsLock {
             },
             LockedPart {
                 mpn: "GRM155R61A105KE15D".to_owned(),
+                ..LockedPart::default()
+            },
+            // One MPN of two makers: named on one part, not on another
+            LockedPart {
+                mpn: "SN74LVC1G17DCKR".to_owned(),
+                maker: Some("UMW".to_owned()),
+                matched: PartMatch::Found,
+                part: Some("2000".to_owned()),
+                ..LockedPart::default()
+            },
+            LockedPart {
+                mpn: "SN74LVC1G17DCKR".to_owned(),
+                matched: PartMatch::NotUnique,
+                makers: vec![
+                    LockedMaker {
+                        part: "1999".to_owned(),
+                        maker: "Texas Instruments".to_owned(),
+                    },
+                    LockedMaker {
+                        part: "2000".to_owned(),
+                        maker: "UMW".to_owned(),
+                    },
+                ],
                 ..LockedPart::default()
             },
         ],
@@ -148,6 +173,26 @@ fn written_sorted_and_read_back() {
     assert!(order("hash = \"fp1:aaaaaaaaaaaaaaaa\"") < order("hash = \"fp1:bbbbbbbbbbbbbbbb\""));
     assert!(order("id = 3") < order("id = 7"));
     assert!(text.contains("covered_by = [3, 7]"), "{text}");
+    // An MPN without a maker before the same MPN with one; the makers to choose from on one line
+    assert!(order("match = \"not_unique\"") < order("maker = \"UMW\"\n"));
+    assert!(
+        text.contains("makers = [{ part = \"1999\", maker = \"Texas Instruments\" }, { part = \"2000\", maker = \"UMW\" }]"),
+        "{text}"
+    );
+}
+
+#[test]
+fn entries_by_mpn_and_maker() {
+    let lock = sample();
+    let shared = "SN74LVC1G17DCKR";
+    assert_eq!(lock.part(shared).unwrap().matched, PartMatch::NotUnique);
+    let umw = lock.part_of(&PartKey::new(shared, Some("UMW"))).unwrap();
+    assert_eq!(umw.part.as_deref(), Some("2000"));
+    assert!(lock.part_of(&PartKey::new(shared, Some("TI"))).is_none());
+    assert_eq!(
+        lock.part(shared).unwrap().maker_names(),
+        ["Texas Instruments", "UMW"]
+    );
 }
 
 #[test]

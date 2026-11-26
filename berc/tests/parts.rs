@@ -30,17 +30,25 @@ fn scratch(name: &str) -> PathBuf {
     d
 }
 
-/// One placed symbol of a KiCad 10 schematic, with an MPN field
+/// One placed symbol of a KiCad 10 schematic, with an MPN field and, when given, a maker field beside it
 fn placed(n: usize, mpn: &str, dnp: bool) -> String {
     let dnp = if dnp { "yes" } else { "no" };
+    let (mpn, maker) = mpn.split_once('@').map_or((mpn, ""), |(m, k)| (m, k));
+    let x = 20 * n;
+    let maker = if maker.is_empty() {
+        String::new()
+    } else {
+        format!(
+            "\t\t(property \"Mfg1\" \"{maker}\" (at {x} 55 0) (hide yes) (effects (font (size 1.27 1.27))))\n"
+        )
+    };
     format!(
         "\t(symbol (lib_id \"Fix:U\") (at {x} 50 0) (unit 1) (in_bom yes) (on_board yes) (dnp {dnp}) (uuid \"a0000000-0000-4000-8000-0000000001{n:02}\")\n\
          \t\t(property \"Reference\" \"U{n}\" (at {x} 45 0) (effects (font (size 1.27 1.27))))\n\
          \t\t(property \"Value\" \"U\" (at {x} 55 0) (effects (font (size 1.27 1.27))))\n\
-         \t\t(property \"Mpn1\" \"{mpn}\" (at {x} 55 0) (hide yes) (effects (font (size 1.27 1.27))))\n\
+         \t\t(property \"Mpn1\" \"{mpn}\" (at {x} 55 0) (hide yes) (effects (font (size 1.27 1.27))))\n{maker}\
          \t\t(pin \"1\" (uuid \"a0000000-0000-4000-8000-0000000002{n:02}\"))\n\
-         \t\t(instances (project \"acc\" (path \"/a0000000-0000-4000-8000-000000000000\" (reference \"U{n}\") (unit 1))))\n\t)\n",
-        x = 20 * n
+         \t\t(instances (project \"acc\" (path \"/a0000000-0000-4000-8000-000000000000\" (reference \"U{n}\") (unit 1))))\n\t)\n"
     )
 }
 
@@ -49,7 +57,7 @@ fn project(name: &str) -> PathBuf {
     project_of(name, "PART-A", "PART-B")
 }
 
-/// [`project`] with U1's and U2's MPNs given
+/// [`project`] with U1's and U2's MPNs given (`MPN@Maker` adds `Mfg1`)
 fn project_of(name: &str, u1: &str, u2: &str) -> PathBuf {
     let dir = scratch(name);
     let fixtures =
@@ -304,6 +312,48 @@ fn refresh_and_accept_through_mx3() {
         fake.requests()
             .iter()
             .all(|r| r.authorization.as_deref() == Some(format!("Bearer {TOKEN}").as_str()))
+    );
+}
+
+#[cfg(feature = "mx3")]
+#[test]
+fn the_maker_beside_an_mpn_chooses_its_part() {
+    use erc_fake_mx3::{FakeMx3, MAKER_A, MAKER_A_SYNONYM, MAKER_B, NO_MAKER, SHARED, TOKEN};
+    let fake = FakeMx3::start();
+    let dir = project_of("mx3-makers", &format!("{SHARED}@{MAKER_A_SYNONYM}"), SHARED);
+    let out = berc_mx3(&["parts", "refresh", path(&dir)], fake.url(), Some(TOKEN));
+    assert!(out.status.success(), "{}", text(&out.stderr));
+    let lock = std::fs::read_to_string(dir.join("parts.lock.toml")).unwrap();
+    // U1 names its maker: that part, with its facts; U2 does not: the makers to choose from
+    assert!(
+        lock.contains(&format!(
+            "mpn = \"{SHARED}\"\nmaker = \"{MAKER_A_SYNONYM}\"\nmatch = \"found\"\npart = \"21\"\n"
+        )),
+        "{lock}"
+    );
+    assert!(lock.contains("key = \"power\", value = 0.0625"), "{lock}");
+    assert!(
+        lock.contains(&format!(
+            "mpn = \"{SHARED}\"\nmatch = \"not_unique\"\nmakers = [{{ part = \"21\", maker = \"{MAKER_A}\" }}, {{ part = \"22\", maker = \"{MAKER_B}\" }}, {{ part = \"23\", maker = \"{NO_MAKER}\" }}]\n"
+        )),
+        "{lock}"
+    );
+
+    let out = berc(&["check", path(&dir), "--format", "json", "--only", "BOM-21"]);
+    let report: serde_json::Value = serde_json::from_slice(&out.stdout)
+        .unwrap_or_else(|e| panic!("{e}: {}{}", text(&out.stdout), text(&out.stderr)));
+    let messages: Vec<&str> = report["findings"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|f| f["message"].as_str().unwrap())
+        .collect();
+    assert_eq!(
+        messages,
+        [format!(
+            "U2: MPN {SHARED} (Mpn1) matches 3 parts in the part source ({MAKER_A}, {MAKER_B}, {NO_MAKER}): which one \
+             is meant is not said, so its facts go unchecked"
+        )]
     );
 }
 

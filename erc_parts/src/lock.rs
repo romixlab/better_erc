@@ -1,8 +1,9 @@
-//! The parts snapshot, `parts.lock.toml`: for every MPN of a board the part facts the checks use and the footprint
-//! reviews covering each (board footprint hash, MPN) pair, as a part source gave them at the last refresh.
+//! The parts snapshot, `parts.lock.toml`: for every MPN of a board (with the maker named beside it) the part
+//! facts the checks use and the footprint reviews covering each (board footprint hash, MPN) pair, as a part
+//! source gave them at the last refresh.
 //!
-//! [`PartsLock::to_toml`] writes it in one fixed order (parts by MPN, facts by key, pairs by hash and MPN, reviews
-//! by id), one line per fact, and nothing that changes when the source did not (no refresh time): a refresh is a
+//! [`PartsLock::to_toml`] writes it in one fixed order (parts by MPN and maker, facts by key, pairs by hash and
+//! MPN, reviews by id), one line per fact, and nothing that changes when the source did not (no refresh time): a
 //! diff of what changed in the source. [`PartsLock::parse`] reads it back; keys it does not know are ignored, so a
 //! file written by a newer better_erc still loads.
 
@@ -32,7 +33,7 @@ pub struct PartsLock {
     /// Keys the source has no definition for at all, sorted
     #[serde(default)]
     pub unknown_keys: Vec<String>,
-    /// One entry per MPN of the board, by MPN
+    /// One entry per MPN of the board and maker named beside it, by MPN and maker
     #[serde(default, rename = "part")]
     pub parts: Vec<LockedPart>,
     /// One entry per (board footprint hash, MPN) pair and source part, by hash, MPN and maker
@@ -43,16 +44,56 @@ pub struct PartsLock {
     pub reviews: Vec<LockedReview>,
 }
 
-/// One MPN as the source knows it
+/// An MPN as a board names it, with the maker its `MfgN` field names beside it
+#[derive(Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct PartKey {
+    pub mpn: String,
+    /// The `MfgN` field's text, `None` when the part names no maker for this MPN
+    pub maker: Option<String>,
+}
+
+impl PartKey {
+    /// An MPN without a maker
+    pub fn mpn(mpn: &str) -> PartKey {
+        PartKey {
+            mpn: mpn.to_owned(),
+            maker: None,
+        }
+    }
+
+    /// An MPN with the maker named beside it, if any
+    pub fn new(mpn: &str, maker: Option<&str>) -> PartKey {
+        PartKey {
+            mpn: mpn.to_owned(),
+            maker: maker.map(str::to_owned),
+        }
+    }
+
+    /// For the person: `MPN` or `MPN (Maker)`
+    pub fn describe(&self) -> String {
+        match &self.maker {
+            Some(m) => format!("{} ({m})", self.mpn),
+            None => self.mpn.clone(),
+        }
+    }
+}
+
+/// One MPN, with the maker the board names for it, as the source knows it
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 pub struct LockedPart {
     /// As the board writes it
     pub mpn: String,
+    /// The maker as the board writes it beside the MPN (`MfgN`), when it names one
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub maker: Option<String>,
     #[serde(rename = "match")]
     pub matched: PartMatch,
-    /// The source's id of the part, when it found exactly one
+    /// The source's id of the part chosen, when it found exactly one (of the maker, when one is named)
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub part: Option<String>,
+    /// Every part the source has of this MPN, with its maker, when it found none or several to choose from
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub makers: Vec<LockedMaker>,
     /// The source's reading of the MPN by its scheme, also for an MPN it holds no part for
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub decode: Option<Decode>,
@@ -64,7 +105,32 @@ pub struct LockedPart {
     pub facts: Vec<LockedFact>,
 }
 
+/// One part of an MPN and its maker, as the source names it
+#[derive(Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct LockedMaker {
+    /// The source's id of the part
+    pub part: String,
+    /// The maker's name in the source (`Texas Instruments`, `Unknown` for a part without one)
+    pub maker: String,
+}
+
 impl LockedPart {
+    /// The MPN and maker this entry is of
+    pub fn key(&self) -> PartKey {
+        PartKey::new(&self.mpn, self.maker.as_deref())
+    }
+
+    /// The makers to choose from, each once, in the source's order
+    pub fn maker_names(&self) -> Vec<&str> {
+        let mut out: Vec<&str> = Vec::new();
+        for m in &self.makers {
+            if !out.contains(&m.maker.as_str()) {
+                out.push(&m.maker);
+            }
+        }
+        out
+    }
+
     /// The fact for `key`
     pub fn fact(&self, key: &str) -> Option<&LockedFact> {
         self.facts.iter().find(|f| f.key == key)
@@ -80,8 +146,10 @@ pub enum PartMatch {
     /// No part has this MPN
     #[default]
     NotFound,
-    /// Several parts have it (several makers): no value is resolved
+    /// Several parts have it (several makers, or several of the maker named): no value is resolved
     NotUnique,
+    /// The maker named beside the MPN is no company the source knows: no value is resolved
+    UnknownMaker,
 }
 
 impl PartMatch {
@@ -90,6 +158,7 @@ impl PartMatch {
             PartMatch::Found => "found",
             PartMatch::NotFound => "not_found",
             PartMatch::NotUnique => "not_unique",
+            PartMatch::UnknownMaker => "unknown_maker",
         }
     }
 }
@@ -399,9 +468,20 @@ impl PartsLock {
         PartsLock::parse(&file, &text)
     }
 
-    /// The entry of `mpn`, as the board writes it
+    /// The entry of `mpn` without a maker, as the board writes it; else the first entry of `mpn` with one (for
+    /// what holds for every maker of an MPN, such as its decoding)
     pub fn part(&self, mpn: &str) -> Option<&LockedPart> {
-        self.parts.iter().find(|p| p.mpn == mpn)
+        self.parts
+            .iter()
+            .find(|p| p.mpn == mpn && p.maker.is_none())
+            .or_else(|| self.parts.iter().find(|p| p.mpn == mpn))
+    }
+
+    /// The entry of exactly this MPN and maker
+    pub fn part_of(&self, key: &PartKey) -> Option<&LockedPart> {
+        self.parts
+            .iter()
+            .find(|p| p.mpn == key.mpn && p.maker == key.maker)
     }
 
     /// The pairs of a footprint hash and an MPN
@@ -432,8 +512,10 @@ impl PartsLock {
             p.facts.sort_by(|a, b| a.key.cmp(&b.key));
             p.facts.dedup_by(|a, b| a.key == b.key);
         }
-        self.parts.sort_by(|a, b| a.mpn.cmp(&b.mpn));
-        self.parts.dedup_by(|a, b| a.mpn == b.mpn);
+        self.parts
+            .sort_by(|a, b| (&a.mpn, &a.maker).cmp(&(&b.mpn, &b.maker)));
+        self.parts
+            .dedup_by(|a, b| (&a.mpn, &a.maker) == (&b.mpn, &b.maker));
         for p in &mut self.footprints {
             p.covered_by.sort_unstable();
             p.covered_by.dedup();
@@ -462,9 +544,20 @@ impl PartsLock {
         for p in &lock.parts {
             out += "\n[[part]]\n";
             line(&mut out, "mpn", &s(&p.mpn));
+            if let Some(m) = &p.maker {
+                line(&mut out, "maker", &s(m));
+            }
             line(&mut out, "match", &s(p.matched.name()));
             if let Some(id) = &p.part {
                 line(&mut out, "part", &s(id));
+            }
+            if !p.makers.is_empty() {
+                let items: Vec<String> = p
+                    .makers
+                    .iter()
+                    .map(|m| format!("{{ part = {}, maker = {} }}", s(&m.part), s(&m.maker)))
+                    .collect();
+                line(&mut out, "makers", &format!("[{}]", items.join(", ")));
             }
             if let Some(d) = &p.decode {
                 line(&mut out, "decode", &decode(d));

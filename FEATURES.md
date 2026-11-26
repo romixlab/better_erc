@@ -302,6 +302,9 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   most `drawing.fields.rating_rounding_max` apart (1 %: `63mW` states 62.5 mW), the finding names the value to write
   (`CFG-9`) · `bom/bom_12.rs`, `component/`, `bom-12_mpn_vs_fields`
 - ✅ `BOM-20` MPN on the board but not in the parts snapshot (`CFG-9`) · `bom/bom_20.rs`, `bom-20_parts_lock`
+- ✅ `BOM-21` MPN whose maker is not settled: several parts and no `MfgN` (the makers named), an `MfgN` without a part
+  of the MPN, or a maker the source does not know (`CFG-9`) · `bom/bom_21.rs`, `bom-21_mpn_makers`
+- ✅ `BOM-22` Maker field (`MfgN`) without its MPN field · `bom/bom_22.rs`, `bom-21_mpn_makers`
 - ✅ `LIB-3` MOSFET pins not named G, D, S · `lib/lib_3.rs`, `lib-3_mosfet_pin_names`
 - ✅ `LIB-6` `Package` (or `DEFAULT_R_PACKAGE`, `DEFAULT_C_PACKAGE`) against the footprint's chip case, and each
   MPN's case from the parts snapshot against it (`CFG-9`) · `lib/lib_6.rs`, `lib-6_package_vs_footprint`. Missing:
@@ -652,7 +655,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   lacks; `berc parts refresh` writes it from a `Source` (`--from FILE`, `--check`); keys in `erc_parts::keys`. The mx3
   part store is a source behind the cargo feature `mx3` (`erc_parts::mx3::Mx3Source` on mx3_api_lab's client:
   `params/by_mpn`, `fp/review/check`, `fp/review/accept`), the default without `--from`; URL and token found as the
-  mx3 command line finds them, the token never printed; tested against `erc_fake_mx3`
+  mx3 command line finds them, the token never printed; tested against `erc_fake_mx3`. An MPN with the maker named
+  beside it (`Mfg` beside `MPN`, `Mfg1` beside `Mpn1`) is its own entry: the source is asked by MPN and maker (mx3
+  through its company synonyms) and the entry records the part chosen, or the makers to choose from (`makers`); an MPN
+  without a maker is asked and checked as before
 - 📋 `CFG-4` File-based config format for open source (RON?)
 - 📋 `CFG-5` Custom rules for parts in the database
 - 📋 `CFG-6` Selection constraints in the part database's `required` entries: one typed vocabulary of passive parameters

@@ -3,7 +3,7 @@
 
 use crate::board::BoardMpns;
 use crate::keys;
-use crate::lock::{LockedPart, PartsLock, VERSION};
+use crate::lock::{LockedPart, PartKey, PartsLock, VERSION};
 use crate::source::{MPNS_PER_CALL_MAX, Source, SourceError};
 use erc_model::Design;
 use std::collections::BTreeSet;
@@ -14,7 +14,7 @@ use std::fmt;
 pub enum RefreshError {
     /// The source gave no answer
     Source(SourceError),
-    /// The source answered for an MPN not asked, or not for one asked
+    /// The source answered for an MPN not asked, or not for one asked (`MPN` or `MPN (Maker)`)
     Answer { what: String, mpn: String },
 }
 
@@ -55,7 +55,7 @@ pub fn refresh(
 /// The snapshot of `board`'s MPNs and footprint pairs from `source`
 pub fn refresh_mpns(board: &BoardMpns, source: &dyn Source) -> Result<PartsLock, RefreshError> {
     let keys = keys::names();
-    let mpns: Vec<String> = board.mpns.keys().cloned().collect();
+    let mpns: Vec<PartKey> = board.mpns.keys().cloned().collect();
     let mut lock = PartsLock {
         version: VERSION,
         source: source.name(),
@@ -98,26 +98,27 @@ pub fn refresh_mpns(board: &BoardMpns, source: &dyn Source) -> Result<PartsLock,
     Ok(lock)
 }
 
-/// The answer's parts for exactly the MPNs asked, once each
+/// The answer's parts for exactly the MPNs and makers asked, once each
 fn matched(
-    asked: &[String],
+    asked: &[PartKey],
     parts: Vec<LockedPart>,
     what: &str,
 ) -> Result<Vec<LockedPart>, RefreshError> {
-    let want: BTreeSet<&String> = asked.iter().collect();
+    let want: BTreeSet<&PartKey> = asked.iter().collect();
     let mut got = BTreeSet::new();
     for p in &parts {
-        if !want.contains(&p.mpn) || !got.insert(p.mpn.clone()) {
+        let key = p.key();
+        if !want.contains(&key) || !got.insert(key.clone()) {
             return Err(RefreshError::Answer {
                 what: format!("{what} an MPN not asked or twice:"),
-                mpn: p.mpn.clone(),
+                mpn: key.describe(),
             });
         }
     }
     if let Some(m) = asked.iter().find(|m| !got.contains(*m)) {
         return Err(RefreshError::Answer {
             what: "gave no part entry for".to_owned(),
-            mpn: m.clone(),
+            mpn: m.describe(),
         });
     }
     Ok(parts)

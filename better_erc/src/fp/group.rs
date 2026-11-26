@@ -187,8 +187,10 @@ mod tests {
     fn part(mpn: &str, facts: &[(&str, &str)]) -> LockedPart {
         LockedPart {
             mpn: mpn.to_owned(),
+            maker: None,
             matched: PartMatch::default(),
             part: None,
+            makers: Vec::new(),
             decode: None,
             missing: Vec::new(),
             facts: facts

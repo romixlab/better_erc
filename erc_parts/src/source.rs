@@ -3,8 +3,8 @@
 //! the lab's part store is another source, behind its own cargo feature.
 
 use crate::lock::{
-    Cover, Coverage, LockError, LockedPair, LockedPart, LockedReview, PartMatch, PartsLock,
-    Placement,
+    Cover, Coverage, LockError, LockedPair, LockedPart, LockedReview, PartKey, PartMatch,
+    PartsLock, Placement,
 };
 use std::fmt;
 use std::path::{Path, PathBuf};
@@ -15,7 +15,7 @@ use std::sync::Mutex;
 pub struct PartsAnswer {
     /// Asked keys the source has no definition for at all
     pub unknown_keys: Vec<String>,
-    /// One entry per MPN asked
+    /// One entry per MPN and maker asked
     pub parts: Vec<LockedPart>,
 }
 
@@ -34,8 +34,9 @@ pub trait Source {
     fn name(&self) -> String;
 
     /// The facts of `keys` for each of `mpns` (at most [`MPNS_PER_CALL_MAX`]), with each MPN's reading by its
-    /// scheme
-    fn parts(&self, mpns: &[String], keys: &[String]) -> Result<PartsAnswer, SourceError>;
+    /// scheme. An MPN with a maker is the part of that maker; one without is the MPN's only part, and the parts
+    /// to choose from when it has several.
+    fn parts(&self, mpns: &[PartKey], keys: &[String]) -> Result<PartsAnswer, SourceError>;
 
     /// The reviews of the footprint with review hash `hash` covering each of `mpns` (at most
     /// [`MPNS_PER_CALL_MAX`])
@@ -122,7 +123,8 @@ impl std::error::Error for SourceError {
     }
 }
 
-/// Part data from a file in the lock's shape: its `[[part]]` entries by MPN and its `[[review]]` entries. A review
+/// Part data from a file in the lock's shape: its `[[part]]` entries by MPN and maker (as written, the same
+/// text) and its `[[review]]` entries. A review
 /// covers a part as the lab's store judges it ([`LockedReview::covers`]): by MPN, or by the part's decoding for a
 /// family. An MPN the file lacks is not found. [`Source::accept`] adds a review and, for a source opened from a
 /// file, writes the file again.
@@ -240,11 +242,11 @@ impl Source for FileSource {
         self.name.clone()
     }
 
-    fn parts(&self, mpns: &[String], keys: &[String]) -> Result<PartsAnswer, SourceError> {
+    fn parts(&self, mpns: &[PartKey], keys: &[String]) -> Result<PartsAnswer, SourceError> {
         let data = self.lock();
         let parts = mpns
             .iter()
-            .map(|mpn| match data.part(mpn) {
+            .map(|key| match data.part_of(key) {
                 Some(p) => {
                     let mut p = p.clone();
                     p.facts.retain(|f| keys.contains(&f.key));
@@ -256,7 +258,8 @@ impl Source for FileSource {
                     p
                 }
                 None => LockedPart {
-                    mpn: mpn.clone(),
+                    mpn: key.mpn.clone(),
+                    maker: key.maker.clone(),
                     missing: keys.to_vec(),
                     ..LockedPart::default()
                 },

@@ -3051,7 +3051,7 @@ dependencies = [
 [[package]]
 name = "mx3_api_core"
 version = "0.1.0"
-source = "git+https://github.com/vhrdtech/mx3_api#ee5933b62958da16096e6b9f62d20339415661fb"
+source = "git+https://github.com/vhrdtech/mx3_api#df65a6c63a1c1b59da6c87883919ab06fb30595f"
 dependencies = [
  "base64 0.22.1",
  "reqwest",
@@ -3062,7 +3062,7 @@ dependencies = [
 [[package]]
 name = "mx3_api_lab"
 version = "0.1.0"
-source = "git+https://github.com/vhrdtech/mx3_api#ee5933b62958da16096e6b9f62d20339415661fb"
+source = "git+https://github.com/vhrdtech/mx3_api#df65a6c63a1c1b59da6c87883919ab06fb30595f"
 dependencies = [
  "anyhow",
  "chrono",
