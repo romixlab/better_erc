@@ -14,6 +14,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 ### Added
 
 - `berc probe-access`: per net and board side, the test point and connector pads a probe reaches, and its vias (TOOL-16).
+- `berc probe-access`: USB, HDMI, RJ45, card, FPC and coax connectors never count; others need a 1.27 mm pitch (TOOL-16).
 
 ## [0.6.2] - 2026-11-26
 

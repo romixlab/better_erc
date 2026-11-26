@@ -1010,7 +1010,8 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `exclude_from_bom` footprints, as the PnP file was exported; the summary line and JSON `excluded` count what was left
   out · `erc_model/src/placecmp.rs`, `better_erc/src/diff.rs`, `berc/tests/diff.rs`
 - ✅ `TOOL-16` `berc probe-access PROJECT [--format json]`: per net and board side, the test point and connector pads
-  a probe reaches it at (pads with copper and mask there; one series part away as `series`), its pad count, rail or
+  a probe reaches it at (pads with copper and mask there; one series part away as `series`; USB, HDMI, RJ45, card,
+  FPC and coax connectors never, others from a pad pitch of `--connector-pitch-min` 1.27 mm), its pad count, rail or
   ground, and its vias with the sides they reach ([docs/probe-access.md](docs/probe-access.md)) ·
   `better_erc/src/probe.rs`, `better_erc/tests/it/probe.rs`
 - 📋 `TOOL-2` Schematic vs layout match (catalogue `LAY-1`)

@@ -1,7 +1,9 @@
 //! `probe::probe_access` on a project written here: a schematic of test points, a connector and resistors joined by
 //! local labels (nets `/SIG_A`, ...), and its board with the footprints on either side and vias
 
-use better_erc::probe::{AccessKind, PowerKind, ProbeAccess, Reach, Side, probe_access, render};
+use better_erc::probe::{
+    AccessKind, NotCounted, PowerKind, ProbeAccess, ProbeOptions, Reach, Side, probe_access, render,
+};
 use std::path::PathBuf;
 
 const LIB: &str = r#"(lib_symbols
@@ -13,6 +15,10 @@ const LIB: &str = r#"(lib_symbols
 (property "Reference" "TP" (at 0 0 0) (effects (font (size 1.27 1.27))))
 (property "Value" "TestPoint" (at 0 0 0) (effects (font (size 1.27 1.27))))
 (symbol "TestPoint_1_1" (pin passive line (at 0 0 90) (length 0) (name "1" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))))
+(symbol "Connector:USB_C_Receptacle_USB2.0_16P" (exclude_from_sim no) (in_bom yes) (on_board yes)
+(property "Reference" "J" (at 0 0 0) (effects (font (size 1.27 1.27))))
+(property "Value" "USB_C_Receptacle_USB2.0_16P" (at 0 0 0) (effects (font (size 1.27 1.27))))
+(symbol "USB_C_Receptacle_USB2.0_16P_1_1" (pin bidirectional line (at -5.08 0 0) (length 3.81) (name "D+" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27))))) (pin bidirectional line (at -5.08 -2.54 0) (length 3.81) (name "D+" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))))
 (symbol "Connector_Generic:Conn_01x02" (exclude_from_sim no) (in_bom yes) (on_board yes)
 (property "Reference" "J" (at 0 0 0) (effects (font (size 1.27 1.27))))
 (property "Value" "Conn_01x02" (at 0 0 0) (effects (font (size 1.27 1.27))))
@@ -55,7 +61,8 @@ fn symbol(
 }
 
 /// TP1 on SIG_A; R1 from SIG_A to SIG_C (series, 22 Ω); J1 on SIG_B and GND; TP2 on SIG_D; R2 from SIG_E to GND;
-/// R3 from SIG_F to GND
+/// R3 from SIG_F to GND; the USB-C receptacle J4 and the 2.54 mm header J2 on SIG_G; the 1.0 mm header J3 on
+/// SIG_H
 fn schematic() -> String {
     let mut s = String::from(
         "(kicad_sch (version 20231120) (generator \"eeschema\") (generator_version \"8.0\")\n\
@@ -111,7 +118,42 @@ fn schematic() -> String {
         (60.96, 50.8),
         &r("SIG_F", "GND"),
     );
+    let conn = |a: &'static str, b: &'static str| [("1", -5.08, 0.0, a), ("2", -5.08, -2.54, b)];
+    s += &symbol(
+        7,
+        "Connector:USB_C_Receptacle_USB2.0_16P",
+        "J4",
+        "USB_C",
+        (20.32, 81.28),
+        &conn("SIG_G", "SIG_G"),
+    );
+    s += &symbol(
+        8,
+        "Connector_Generic:Conn_01x02",
+        "J2",
+        "Conn_01x02",
+        (40.64, 81.28),
+        &conn("SIG_G", "GND"),
+    );
+    s += &symbol(
+        9,
+        "Connector_Generic:Conn_01x02",
+        "J3",
+        "Conn_01x02",
+        (60.96, 81.28),
+        &conn("SIG_H", "GND"),
+    );
     s + "(sheet_instances (path \"/\" (page \"1\"))))\n"
+}
+
+/// The pad pitch of a footprint by its reference: J4 a USB-C receptacle at 0.5 mm, J3 a 1.0 mm header, the rest
+/// 2.54 mm
+fn pitch_of(reference: &str) -> f64 {
+    match reference {
+        "J4" => 0.5,
+        "J3" => 1.0,
+        _ => 2.54,
+    }
 }
 
 /// A footprint with one pad per (number, net), each on `layers`
@@ -137,7 +179,7 @@ fn footprint(
         };
         s += &format!(
             "  (pad \"{number}\" {kind} circle (at {} 0) (size 1.5 1.5){drill} (layers {layers}){property} (net \"/{net}\"))\n",
-            i as f64 * 2.54
+            i as f64 * pitch_of(reference)
         );
     }
     s + " )\n"
@@ -218,6 +260,13 @@ fn board() -> String {
         &[("1", "SIG_E")],
         " (property pad_prop_testpoint)",
     );
+    for (r, x, pads) in [
+        ("J4", 10.0, [("1", "SIG_G"), ("2", "SIG_G")]),
+        ("J2", 20.0, [("1", "SIG_G"), ("2", "GND")]),
+        ("J3", 30.0, [("1", "SIG_H"), ("2", "GND")]),
+    ] {
+        s += &footprint(r, "F.Cu", (x, 70.0), "smd", smd_top, &pads, "");
+    }
     for (i, (net, layers)) in [
         ("SIG_C", "\"F.Cu\" \"B.Cu\""),
         ("SIG_F", "\"F.Cu\" \"B.Cu\""),
@@ -254,7 +303,7 @@ fn net<'p>(p: &'p ProbeAccess, name: &str) -> &'p better_erc::probe::NetAccess {
 #[test]
 fn sides_series_and_vias() {
     let dir = project("sides");
-    let p = probe_access(&dir).unwrap();
+    let p = probe_access(&dir, &ProbeOptions::default()).unwrap();
     std::fs::remove_dir_all(&dir).unwrap();
     assert!(p.schematic);
     assert_eq!(p.board, "probe.kicad_pcb");
@@ -302,7 +351,7 @@ fn sides_series_and_vias() {
 #[test]
 fn json_round_trips() {
     let dir = project("json");
-    let p = probe_access(&dir).unwrap();
+    let p = probe_access(&dir, &ProbeOptions::default()).unwrap();
     std::fs::remove_dir_all(&dir).unwrap();
     let json = serde_json::to_string(&p).unwrap();
     assert!(json.contains("\"top\":\"direct\""), "{json}");
@@ -315,7 +364,7 @@ fn json_round_trips() {
 fn no_board_is_an_error() {
     let dir = project("noboard");
     std::fs::remove_file(dir.join("probe.kicad_pcb")).unwrap();
-    let e = probe_access(&dir).unwrap_err();
+    let e = probe_access(&dir, &ProbeOptions::default()).unwrap_err();
     std::fs::remove_dir_all(&dir).unwrap();
     assert!(e.to_string().contains("no board file"), "{e}");
 }
@@ -325,7 +374,7 @@ fn a_board_alone_counts_marked_pads_only() {
     let dir = project("alone");
     std::fs::remove_file(dir.join("probe.kicad_sch")).unwrap();
     std::fs::remove_file(dir.join("probe.kicad_pro")).unwrap();
-    let p = probe_access(&dir.join("probe.kicad_pcb")).unwrap();
+    let p = probe_access(&dir.join("probe.kicad_pcb"), &ProbeOptions::default()).unwrap();
     std::fs::remove_dir_all(&dir).unwrap();
     assert!(!p.schematic);
     assert_eq!(
@@ -338,4 +387,55 @@ fn a_board_alone_counts_marked_pads_only() {
         "TP1 has no class without a schematic"
     );
     assert!(render(&p).contains("only pads marked as test points count"));
+}
+
+#[test]
+fn shielded_and_fine_pitch_connectors_do_not_count() {
+    let dir = project("pitch");
+    let p = probe_access(&dir, &ProbeOptions::default()).unwrap();
+    let wide = probe_access(
+        &dir,
+        &ProbeOptions {
+            connector_pitch_mm_min: 0.8,
+        },
+    )
+    .unwrap();
+    std::fs::remove_dir_all(&dir).unwrap();
+    let g = net(&p, "SIG_G");
+    assert_eq!(g.top, Reach::Direct, "the header: {}", render(&p));
+    let usb: Vec<_> = g.access.iter().filter(|a| a.reference == "J4").collect();
+    assert_eq!(usb.len(), 2, "{:?}", g.access);
+    assert!(usb.iter().all(|a| a.not_counted
+        == Some(NotCounted::Kind {
+            kind: "UsbC".to_owned()
+        })));
+    let header = g.access.iter().find(|a| a.reference == "J2").unwrap();
+    assert_eq!((header.pitch_mm, &header.not_counted), (Some(2.54), &None));
+    let h = net(&p, "SIG_H");
+    assert_eq!(h.top, Reach::None, "{}", render(&p));
+    assert_eq!(
+        h.access[0].not_counted,
+        Some(NotCounted::Pitch {
+            pitch_mm: 1.0,
+            min_mm: 1.27
+        })
+    );
+    assert!(
+        render(&p).contains("J3.1 (top) not counted: pitch 1 < 1.27 mm"),
+        "{}",
+        render(&p)
+    );
+    assert_eq!(
+        net(&wide, "SIG_H").top,
+        Reach::Direct,
+        "a lower minimum counts it"
+    );
+    assert_eq!(
+        net(&wide, "SIG_G")
+            .access
+            .iter()
+            .filter(|a| a.not_counted.is_some())
+            .count(),
+        2
+    );
 }

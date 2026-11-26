@@ -2,14 +2,18 @@
 //!
 //! The access parts are what the DBG and TEST checks count ([`erc_analysis::access`]): test points and connectors,
 //! fitted or not, by their part class; a pad KiCad marks as a test point (`pad_prop_testpoint`) counts too, for a
-//! board-only footprint. A pad is on a side when it has copper and a mask opening there: an SMD pad on its
+//! board-only footprint. Not every connector is somewhere a probe or a wire goes: one of a kind that is shielded
+//! or fine pitch by nature (USB, HDMI, RJ45, card socket, FPC, coax, from its part class) never counts, and any
+//! other only with a pad pitch of at least [`ProbeOptions::connector_pitch_mm_min`]. Such a pad is still listed,
+//! with why it does not count ([`NotCounted`]). A pad is on a side when it has copper and a mask opening there: an SMD pad on its
 //! footprint's side, a through-hole pad on both. Behind one series part (a resistor, ferrite, net tie or jumper,
 //! as [`erc_analysis::access::series_neighbours`] finds it) counts apart, as [`Reach::Series`]. Each net lists its
 //! vias with the outer sides they reach, for a tool that opens the solder mask on them.
 
 use erc_analysis::access::{is_access, series_neighbours};
 use erc_checks::{CheckError, Config, Ctx, Project};
-use erc_model::layout::{Layout, Pad};
+use erc_model::class::ConnectorKind;
+use erc_model::layout::{Layout, Pad, Pt};
 use erc_model::{BoardId, Design, NetId, PartClass};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -21,6 +25,44 @@ pub const SCHEMA_VERSION: u32 = 1;
 
 /// The pad property KiCad gives a test point pad
 const TESTPOINT_PROPERTY: &str = "pad_prop_testpoint";
+
+/// The narrowest connector pad pitch a probe or a soldered wire still goes to by default, mm: 1.27 mm headers
+/// count, 1.0 mm and finer do not
+pub const CONNECTOR_PITCH_MM_MIN: f64 = 1.27;
+
+/// What counts as access
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ProbeOptions {
+    /// A connector counts only with its pads at least this far apart, mm (centre to centre, the nearest two)
+    pub connector_pitch_mm_min: f64,
+}
+
+impl Default for ProbeOptions {
+    fn default() -> ProbeOptions {
+        ProbeOptions {
+            connector_pitch_mm_min: CONNECTOR_PITCH_MM_MIN,
+        }
+    }
+}
+
+/// Why a connector pad does not count as access
+#[derive(Clone, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[serde(tag = "why", rename_all = "snake_case")]
+pub enum NotCounted {
+    /// A kind of connector that is shielded or fine pitch by nature (`UsbC`, `Fpc`, `Coax`)
+    Kind { kind: String },
+    /// Its pads are closer than the minimum pitch
+    Pitch { pitch_mm: f64, min_mm: f64 },
+}
+
+impl fmt::Display for NotCounted {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            NotCounted::Kind { kind } => write!(f, "{kind}"),
+            NotCounted::Pitch { pitch_mm, min_mm } => write!(f, "pitch {pitch_mm} < {min_mm} mm"),
+        }
+    }
+}
 
 /// An outer side of the board
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
@@ -76,7 +118,7 @@ pub enum PowerKind {
 }
 
 /// A test point or connector pad a probe reaches the net at
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Access {
     /// The footprint's reference (`TP3`, `J1`)
     pub reference: String,
@@ -87,6 +129,10 @@ pub struct Access {
     pub sides: Vec<Side>,
     /// The series part between the pad's net and this one; none for a pad on the net itself
     pub series: Option<String>,
+    /// The footprint's pad pitch, a connector's, mm: the nearest two pads centre to centre; none with one pad
+    pub pitch_mm: Option<f64>,
+    /// Why the pad does not count as access; none when it counts
+    pub not_counted: Option<NotCounted>,
 }
 
 /// A via of the net
@@ -166,17 +212,22 @@ impl std::error::Error for ProbeError {
 
 /// The probe access of the design at `path` (a directory, a `.kicad_pro`, `.kicad_sch` or `.kicad_pcb`), on its
 /// first board with a board file
-pub fn probe_access(path: &Path) -> Result<ProbeAccess, ProbeError> {
+pub fn probe_access(path: &Path, opts: &ProbeOptions) -> Result<ProbeAccess, ProbeError> {
     let project = Project::open_without_parts(path).map_err(ProbeError::Open)?;
     let config = project.config(&Config::default());
     let design = &project.imported.design;
     (0..design.boards.len())
-        .find_map(|bi| of(design, BoardId::from_index(bi), &config))
+        .find_map(|bi| of(design, BoardId::from_index(bi), &config, opts))
         .ok_or_else(|| ProbeError::NoBoard(path.to_path_buf()))
 }
 
 /// The probe access of one board of a design, in its base variant; `None` without a board file
-pub fn of(design: &Design, board: BoardId, config: &Config) -> Option<ProbeAccess> {
+pub fn of(
+    design: &Design,
+    board: BoardId,
+    config: &Config,
+    opts: &ProbeOptions,
+) -> Option<ProbeAccess> {
     let cx = Ctx::new(design, board, None, config);
     let b = cx.board();
     let layout = b.layout.as_ref()?;
@@ -192,7 +243,7 @@ pub fn of(design: &Design, board: BoardId, config: &Config) -> Option<ProbeAcces
             entry(&mut nets, name).pads += 1;
         }
     }
-    let direct = direct_access(&cx, layout);
+    let direct = direct_access(&cx, layout, opts);
     for (name, access) in &direct {
         entry(&mut nets, name).access.extend(access.iter().cloned());
     }
@@ -259,13 +310,14 @@ fn finish(layout: &Layout, nets: BTreeMap<String, NetAccess>, schematic: bool) -
     let nets = nets
         .into_values()
         .map(|mut n| {
-            n.access.sort();
+            n.access
+                .sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
             n.access.dedup();
             let reach = |side: Side| {
                 let on: Vec<&Access> = n
                     .access
                     .iter()
-                    .filter(|a| a.sides.contains(&side))
+                    .filter(|a| a.not_counted.is_none() && a.sides.contains(&side))
                     .collect();
                 if on.iter().any(|a| a.series.is_none()) {
                     Reach::Direct
@@ -306,7 +358,12 @@ impl NetNames {
 }
 
 /// The test point and connector pads of each board net, on the net itself
-fn direct_access<'l>(cx: &Ctx, layout: &'l Layout) -> BTreeMap<&'l str, Vec<Access>> {
+fn direct_access<'l>(
+    cx: &Ctx,
+    layout: &'l Layout,
+    opts: &ProbeOptions,
+) -> BTreeMap<&'l str, Vec<Access>> {
+    let pitch = pitches(layout);
     let mut out: BTreeMap<&str, Vec<Access>> = BTreeMap::new();
     for pad in &layout.pads {
         let Some(name) = pad.net_name.as_deref().filter(|n| !n.is_empty()) else {
@@ -314,6 +371,21 @@ fn direct_access<'l>(cx: &Ctx, layout: &'l Layout) -> BTreeMap<&'l str, Vec<Acce
         };
         let fp = layout.footprint(pad.footprint);
         let class = fp.part.map(|p| (p, cx.classes().get(p)));
+        let pitch_mm = pitch[pad.footprint.index()];
+        let not_counted = match class {
+            Some((_, PartClass::Connector { kind: Some(k) })) if never_counts(k) => {
+                Some(NotCounted::Kind {
+                    kind: format!("{k:?}"),
+                })
+            }
+            Some((_, PartClass::Connector { .. })) => pitch_mm
+                .filter(|p| *p < opts.connector_pitch_mm_min)
+                .map(|p| NotCounted::Pitch {
+                    pitch_mm: p,
+                    min_mm: opts.connector_pitch_mm_min,
+                }),
+            _ => None,
+        };
         let kind = match class {
             Some((p, c)) if is_access(cx.classes(), p) => {
                 if c == PartClass::TestPoint {
@@ -335,9 +407,59 @@ fn direct_access<'l>(cx: &Ctx, layout: &'l Layout) -> BTreeMap<&'l str, Vec<Acce
             kind,
             sides,
             series: None,
+            pitch_mm: (kind == AccessKind::Connector)
+                .then_some(pitch_mm)
+                .flatten(),
+            not_counted,
         });
     }
     out
+}
+
+/// A connector kind a probe or wire never goes to: shielded, or fine pitch by nature
+fn never_counts(kind: ConnectorKind) -> bool {
+    use ConnectorKind as K;
+    match kind {
+        K::UsbA
+        | K::UsbB
+        | K::UsbMicro
+        | K::UsbC
+        | K::Hdmi
+        | K::MicroHdmi
+        | K::Rj45
+        | K::Card
+        | K::Fpc
+        | K::Coax => true,
+        K::Barrel | K::TerminalBlock | K::Header => false,
+    }
+}
+
+/// Each footprint's pad pitch, mm: the nearest two of its numbered pads, centre to centre, rounded to the µm;
+/// none with fewer than two
+fn pitches(layout: &Layout) -> Vec<Option<f64>> {
+    layout
+        .footprints
+        .iter()
+        .map(|fp| {
+            let at: Vec<Pt> = fp
+                .pads
+                .iter()
+                .map(|p| layout.pad(*p))
+                .filter(|p| !p.number.is_empty() && p.kind != "np_thru_hole")
+                .map(|p| p.at)
+                .collect();
+            let mut nearest: Option<f64> = None;
+            for (i, a) in at.iter().enumerate() {
+                for b in &at[i + 1..] {
+                    let d = ((a.x - b.x) as f64).hypot((a.y - b.y) as f64);
+                    if d > 0.0 && nearest.is_none_or(|n| d < n) {
+                        nearest = Some(d);
+                    }
+                }
+            }
+            nearest.map(|d| (d / 1e3).round() / 1e3)
+        })
+        .collect()
 }
 
 /// The sides a pad has copper and a mask opening on
@@ -384,7 +506,16 @@ pub fn render(p: &ProbeAccess) -> String {
                     .series
                     .as_ref()
                     .map_or(String::new(), |s| format!(" via {s}"));
-                format!("{}.{} ({}){series}", a.reference, a.pad, sides.join("+"))
+                let not = a
+                    .not_counted
+                    .as_ref()
+                    .map_or(String::new(), |n| format!(" not counted: {n}"));
+                format!(
+                    "{}.{} ({}){series}{not}",
+                    a.reference,
+                    a.pad,
+                    sides.join("+")
+                )
             })
             .collect();
         rows.push([
@@ -429,7 +560,6 @@ pub fn render(p: &ProbeAccess) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use erc_model::layout::Pt;
 
     fn pad(layers: &[&str]) -> Pad {
         Pad {

@@ -146,7 +146,9 @@ enum Command {
     /// Where a probe reaches each net of a board, by side: test point and connector pads, and the vias
     ///
     /// The access parts are what the DBG and TEST checks count: test points and connectors by their part class,
-    /// fitted or not, and pads KiCad marks as test points. A pad is on a side when it has copper and a mask
+    /// fitted or not, and pads KiCad marks as test points. A connector of a shielded or fine-pitch kind (USB,
+    /// HDMI, RJ45, card socket, FPC, coax) never counts, any other only with a pad pitch of at least
+    /// --connector-pitch-min; such pads are listed with why they do not count. A pad is on a side when it has copper and a mask
     /// opening there: an SMD pad on its footprint's side, a through-hole pad on both. Access one series part
     /// (resistor, ferrite, net tie, jumper) away shows as `series`. Each net lists its vias with the outer sides
     /// they reach; `hwb pcb tent-vias` reads the JSON to open vias for hand probing.
@@ -218,6 +220,9 @@ struct ProbeAccessArgs {
     /// The KiCad project: a directory, its .kicad_pro, .kicad_sch or .kicad_pcb
     #[arg(value_hint = ValueHint::AnyPath, default_value = ".")]
     project: PathBuf,
+    /// A connector counts only with its pads at least this far apart, mm (the nearest two, centre to centre)
+    #[arg(long, value_name = "MM", default_value_t = better_erc::probe::CONNECTOR_PITCH_MM_MIN)]
+    connector_pitch_min: f64,
     #[arg(long, value_enum, default_value_t = ListFormat::Text)]
     format: ListFormat,
 }
@@ -802,7 +807,10 @@ fn settings(sets: &[String]) -> Result<better_erc::Config, String> {
 fn probe_access(args: &ProbeAccessArgs) -> ExitCode {
     let spinner = progress::Delayed::start();
     spinner.set("reading the board".into());
-    let found = better_erc::probe::probe_access(&args.project);
+    let opts = better_erc::probe::ProbeOptions {
+        connector_pitch_mm_min: args.connector_pitch_min,
+    };
+    let found = better_erc::probe::probe_access(&args.project, &opts);
     spinner.finish();
     let p = match found {
         Ok(p) => p,
