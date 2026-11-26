@@ -1,0 +1,78 @@
+# What better_erc finds on short-6_sense_nets.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board short-6_sense_nets"]
+
+[[finding]]
+check = "BOM-4"
+subjects = ["part R1", "part R2"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1", "part U2"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net /+1V8"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net /+5V_S"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net /+5V_S"]
+
+[[finding]]
+check = "DEC-8"
+subjects = ["net +3V3", "part R4"]
+
+[[finding]]
+check = "RAIL-1"
+subjects = ["net /+5V_S", "part U2"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "SHORT-6"
+subjects = ["net +3V3", "part U1", "pin U1.6"]
+
+[[finding]]
+check = "SHORT-6"
+subjects = ["net /+5V_S", "part U2", "pin U2.3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.4", "pin U2.5", "pin U2.6"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /+1V2_CORE"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /+1V8"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net /+5V_S"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

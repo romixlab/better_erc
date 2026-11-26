@@ -311,6 +311,13 @@ impl Power {
                 }
                 NameRole::Rail(_) | NameRole::None => {}
             }
+            // `VIO_S`, `VBUS_SP`: a sense or set-point net named after its rail, power only with more on the net
+            let regulator = pins
+                .iter()
+                .any(|p| matches!(classes.get(p.part), PartClass::Regulator { .. }));
+            if name.sense && !symbol && !power_pins && !regulator {
+                continue;
+            }
             if name.role == NameRole::None && ground_pins {
                 power.grounds.insert(
                     id,
@@ -498,6 +505,8 @@ pub struct NetName {
     pub negative: bool,
     /// The sign was taken from the negative marker, not written (`5V0_NEG`)
     pub sign_from_marker: bool,
+    /// A rail name ending in a sense or set-point suffix (`VIO_S`, `VBUS_SP`): [`SENSE_SUFFIXES`]
+    pub sense: bool,
 }
 
 impl NetName {
@@ -524,11 +533,62 @@ pub enum NameRole {
 
 /// Words that make a name a signal even with a voltage or a power word in it
 const SIGNAL_WORDS: &[&str] = &[
-    "EN", "ENA", "ENABLE", "NEN", "PG", "PGOOD", "PWRGD", "PWROK", "POK", "OK", "SENSE", "SNS",
-    "FB", "DET", "DETECT", "MON", "ADC", "CTRL", "CTL", "SEL", "INT", "IRQ", "ALERT", "FAULT",
-    "NFAULT", "SCL", "SDA", "SCK", "SCLK", "MOSI", "MISO", "CS", "TX", "RX", "TXD", "RXD", "CLK",
-    "DIV", "GATE", "DRV", "LED", "STAT", "STATUS", "CHG", "ON", "OFF", "RST", "RESET", "IN_DET",
+    "EN",
+    "ENA",
+    "ENABLE",
+    "NEN",
+    "PG",
+    "PGOOD",
+    "PWRGD",
+    "PWROK",
+    "POK",
+    "OK",
+    "SENSE",
+    "SNS",
+    "FB",
+    "DET",
+    "DETECT",
+    "MON",
+    "ADC",
+    "CTRL",
+    "CTL",
+    "SEL",
+    "INT",
+    "IRQ",
+    "ALERT",
+    "FAULT",
+    "NFAULT",
+    "SCL",
+    "SDA",
+    "SCK",
+    "SCLK",
+    "MOSI",
+    "MISO",
+    "CS",
+    "TX",
+    "RX",
+    "TXD",
+    "RXD",
+    "CLK",
+    "DIV",
+    "GATE",
+    "DRV",
+    "LED",
+    "STAT",
+    "STATUS",
+    "CHG",
+    "ON",
+    "OFF",
+    "RST",
+    "RESET",
+    "IN_DET",
+    "DISCH",
+    "DISCHARGE",
 ];
+
+/// Suffixes that name a copy of a rail rather than the rail (`VIO_S` its sense divider, `VIO_SP` a set point):
+/// such a name makes a rail only together with a power pin, power symbol or regulator on the net
+const SENSE_SUFFIXES: &[&str] = &["S", "SP"];
 
 /// Power words a rail name starts a token with
 const POWER_WORDS: &[(&str, RailKind)] = &[
@@ -734,6 +794,7 @@ pub fn read_name(full: &str, strict: bool) -> NetName {
             kind = RailKind::Analog;
         }
         out.role = NameRole::Rail(kind);
+        out.sense = tokens.len() > 1 && tokens.last().is_some_and(|t| SENSE_SUFFIXES.contains(t));
         if let Some((v, signed)) = voltage {
             if !signed && out.negative && v > 0.0 {
                 out.voltage = Some(-v);
@@ -857,5 +918,18 @@ mod tests {
         assert_eq!(role("VCCINT_1V0"), NameRole::Rail(RailKind::Supply));
         assert_eq!(role("VSYNC"), NameRole::None, "+V only with its +");
         assert_eq!(role("VINT"), NameRole::None);
+        assert_eq!(role("VIO_DISCH"), NameRole::Signal, "a discharge control");
+    }
+
+    #[test]
+    fn sense_suffixes() {
+        for n in ["/MCU/VIO_S", "VBUS_PLUG_S", "VIO_SP"] {
+            let name = read_name(n, false);
+            assert!(name.sense, "{n}");
+            assert!(matches!(name.role, NameRole::Rail(_)), "{n}");
+        }
+        for n in ["VIO", "+3V3", "VBUS_PLUG", "S", "+5V_SW"] {
+            assert!(!read_name(n, false).sense, "{n}");
+        }
     }
 }

@@ -36,6 +36,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 - A divider into an MCU pin whose chosen alternate is an ADC input is a sense divider (IO-16).
 
+- Sense, set-point and discharge nets (`VIO_S`, `VIO_SP`, `VIO_DISCH`) are signals, not rails (SHORT-6); filter pins need no LED (DBG-4).
+
 - `BOM-12`, `RATE-2`: a `Power`, `Preq_min` or `Pworking` field written `1/4W` was read as 1 W.
 
 - `berc fp todo` text and the review tab list one row per footprint hash, families and MPNs under it (TOOL-8).

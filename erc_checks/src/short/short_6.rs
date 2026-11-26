@@ -89,4 +89,15 @@ mod tests {
             ["SHORT-6:net GND|part U1|pin U1.3"]
         );
     }
+
+    #[test]
+    fn sense_and_control_nets_are_no_rails() {
+        assert_eq!(
+            crate::testing::fingerprints(&super::Short6, "short-6_sense_nets"),
+            [
+                "SHORT-6:net +3V3|part U1|pin U1.6",
+                "SHORT-6:net /+5V_S|part U2|pin U2.3"
+            ]
+        );
+    }
 }

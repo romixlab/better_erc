@@ -126,7 +126,8 @@ Rails that switch on in firmware are the most useful ones to show.
 blown input fuse and a buck that does not start look the same. One LED on VBUS tells them apart.
 
 **How to check.** For each rail of the power structure, look for an LED (with its resistor) between the rail and a
-ground net.
+ground net. An IC's regulator filter pin is left out: a rail by its name alone whose only parts are that IC and
+capacitors (`CRFILT`, `PLLFILT`, `VCAP` of an internal regulator), which an LED would load.
 
 **Fix.** An LED on the input and on the main rail, optionally on switched rails; take the current into the sleep
 budget (`RPT-2`), or put a DNP option on battery boards.

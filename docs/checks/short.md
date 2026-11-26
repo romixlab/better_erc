@@ -166,7 +166,9 @@ The pin's driver then sources 30-100 mA into the rail until it fails.
 drives it high: the pin sinks its short-circuit current, the port's IO current budget is gone, and the pin is degraded.
 
 **How to check.** Pins of IO or bidirectional type, or input pins of parts with configurable IO (`NET-7`), whose net is
-a rail or ground with no series resistor (`NET-10`).
+a rail or ground with no series resistor (`NET-10`). A sense, set-point or discharge net named after its rail
+(`VIO_S`, `VIO_SP`, `VIO_DISCH`) is no rail: an ADC input on a divider or a DAC output there is the design. Such a
+name makes a rail again with a power pin, power symbol or regulator on the net.
 
 **Fix.** Tie through 1-10 kΩ, or leave the GPIO unconnected and configure it as analog or output-low in firmware
 (`LEAK-3`).
