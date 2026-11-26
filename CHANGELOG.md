@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.6.7] - 2026-11-26
+
 ### Added
 
 - `berc parts refresh` reads `MfgN` beside `MpnN`, asks the source by MPN and maker, records the part chosen (CFG-9).
