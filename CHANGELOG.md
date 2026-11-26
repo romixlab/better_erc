@@ -17,11 +17,6 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Changed
 
-- `VIEW-26` datasheets by MPN ask mx3's `by_mpn` over mx3_api_lab's client, no longer `tpm lib mpn --json`; each
-  document shows how it was found (link, source, name, cover, family, pattern, text).
-- `TOOL-11` the document library's catalog and a recorded datasheet's path come from mx3_api_lab's client, no
-  longer `tpm lib docs --json --all` and `tpm lib open --json`.
-- `library_fetch`'s default command is `mx3 lib fetch --mpn`.
 - `just install` builds berc and the app with the `mx3` part source.
 - `DRAW-49`: a note headed `TODO`, `TBD` or `FIXME` with no placeholder in its body is reported once.
 - `BOM-12`, `TOOL-14`: `Voltage` and `Power` may round the lowest rating at their written precision.

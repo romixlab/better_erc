@@ -2292,3 +2292,20 @@ fn datasheets_by_mpn_lookup_fails() {
     );
     std::fs::remove_dir_all(&dir).unwrap();
 }
+
+/// Without the lookup command on PATH the table says so in place of rows
+#[test]
+fn datasheets_by_mpn_without_the_command() {
+    let mut h = harness("fp mpn none");
+    h.state_mut().rt.mpn_docs.lookup = None;
+    h.state_mut().rt.settings.library_mpn = vec!["berc-no-such-lookup".into()];
+    assert_eq!(
+        h.state().mpn_lookup_blocker().as_deref(),
+        Some("berc-no-such-lookup is not on PATH (Settings: library MPN lookup)")
+    );
+    h.state_mut().rt.settings.library_mpn.clear();
+    assert_eq!(
+        h.state().mpn_lookup_blocker().as_deref(),
+        Some("no MPN lookup command is set (Settings: library MPN lookup)")
+    );
+}

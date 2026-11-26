@@ -164,11 +164,6 @@ impl Connection {
     pub fn has_token(&self) -> bool {
         self.token.is_some()
     }
-
-    /// The token found, for a client of an endpoint this module does not cover itself (the document library's)
-    pub fn token(&self) -> Option<&str> {
-        self.token.as_deref()
-    }
 }
 
 /// Why the mx3 source gave no answer

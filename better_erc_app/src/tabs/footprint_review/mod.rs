@@ -53,7 +53,6 @@ mod mode_tests;
 pub mod model3d;
 pub mod modelviews;
 mod mpndocs;
-mod mx3lib;
 mod notes;
 mod panel;
 mod solid;
@@ -663,7 +662,9 @@ struct Runtime {
     /// Whose view the canvas shows (the symbol or footprint, and the datasheet): kept under it when another
     /// datasheet or symbol is opened ([`docview`])
     view_key: Option<(String, PathBuf)>,
-    /// The library fetch command as text being edited (Settings)
+    docs_text: String,
+    /// The library's MPN lookup and fetch commands as text being edited (Settings)
+    mpn_text: String,
     fetch_text: String,
     /// The symbol's datasheets by MPN: what the library said of each, the lookup and fetch running (VIEW-26)
     mpn_docs: mpndocs::MpnDocs,
@@ -769,6 +770,8 @@ impl Default for Runtime {
             locator: None,
             record_note: None,
             view_key: None,
+            docs_text: String::new(),
+            mpn_text: String::new(),
             fetch_text: String::new(),
             mpn_docs: mpndocs::MpnDocs::default(),
             puck: Puck::default(),
@@ -989,6 +992,8 @@ impl FootprintReview {
             .join("\n");
         self.rt.search_text = s.library_search.join(" ");
         self.rt.name_text = s.library_name.join(" ");
+        self.rt.docs_text = s.library_docs.join(" ");
+        self.rt.mpn_text = s.library_mpn.join(" ");
         self.rt.fetch_text = s.library_fetch.join(" ");
         self.rt.settings = s;
     }

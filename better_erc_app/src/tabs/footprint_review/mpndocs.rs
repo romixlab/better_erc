@@ -1,29 +1,21 @@
 //! The symbol's datasheets by MPN (VIEW-26): each `Mpn`, `Mpn1`, ... field, the library document that covers it and
-//! its review state. Which document covers an MPN is the document library's answer, mx3_api_lab's `by_mpn`
-//! (`/lib/by_mpn`, over [`super::mx3lib::connect`] and [`super::mx3lib::roots`]), asked once per MPN on a worker
-//! thread; a series or catalogue file covers several MPNs. Each document keeps how it was found ([`MpnDoc::by`]:
-//! `link`, `source`, `name`, or the coverage ways `cover`, `family`, `pattern`, `text`, P2527#25nov-1839); a
-//! document a person took back (`mx3 lib uncover`) is not among the answers. The review state is from the part
-//! source's reviews that name the row ([`super::rows::Row::recorded`]): reviewed, stale, or not yet. An MPN the
-//! library has no document for gets the library's fetch command (`library_fetch`: `mx3 lib fetch --mpn`), after
-//! which it is asked about again.
+//! its review state. Which document covers an MPN is the document library's answer (a setting, `library_mpn`:
+//! `tpm lib mpn --json`, from mx3's Datasheet Url facts and the library's index; a series or catalogue file covers
+//! several MPNs), asked once per MPN on a worker thread. The review state is from the part source's reviews that name
+//! the row ([`super::rows::Row::recorded`]): reviewed, stale, or not yet. An MPN the library has no document for gets the
+//! library's fetch command (`library_fetch`: `tpm lib fetch --mpn`), after which it is asked about again.
 
 use super::docindex::IndexedDoc;
 use super::recorded::made_on;
 use super::rows::{Recorded, review_source};
 use super::*;
-use mx3_api_lab::blocking::BlockingClient;
-use mx3_api_lab::endpoints::library::{
-    ByMpnQuery, MpnDoc as LibMpnDoc, MpnDocs as LibMpnDocs, by_mpn as lib_by_mpn,
-};
-use mx3_api_lab::library::roots::Roots;
 use std::collections::HashMap;
 
 /// One document the library names for an MPN, or why it has none (`path` empty)
 #[derive(Clone, Debug, PartialEq, Deserialize)]
 pub struct MpnDoc {
     pub mpn: String,
-    /// The document's file, absolute; none: not found on this computer, or the library has no document for the MPN
+    /// The document's file, absolute; none: the library has no document for the MPN
     #[serde(default)]
     pub path: Option<PathBuf>,
     #[serde(default)]
@@ -35,9 +27,6 @@ pub struct MpnDoc {
     pub doc: Option<String>,
     #[serde(default)]
     pub rev: Option<String>,
-    /// How it was found: `link`, `source`, `name`, `cover`, `family`, `pattern` or `text` ([`By::as_str`](mx3_api_lab::endpoints::library::By::as_str))
-    #[serde(default)]
-    pub by: Option<String>,
     /// Why there is no document
     #[serde(default)]
     pub why: Option<String>,
@@ -70,73 +59,9 @@ type LookupReply = Receiver<Result<Vec<MpnDoc>, String>>;
 /// The library's fetch for one MPN in place of the settings' command (tests): what it said, or why it failed
 pub(super) type MpnFetch = Arc<dyn Fn(&str) -> Result<String, String> + Send + Sync>;
 
-/// The lookup's answer as a fixture (tests): a JSON list in [`MpnDoc`]'s shape
-#[cfg(test)]
+/// The lookup's answer as its command prints it
 pub fn parse_lookup(json: &str) -> Result<Vec<MpnDoc>, String> {
     serde_json::from_str(json).map_err(|e| format!("not a JSON list of MPN documents: {e}"))
-}
-
-/// Asks mx3's `by_mpn` (`client`) for each of `mpns`, resolved against this computer's library folders (`roots`)
-pub fn mx3_lookup(
-    client: &BlockingClient,
-    roots: &Roots,
-    mpns: &[String],
-) -> Result<Vec<MpnDoc>, String> {
-    let q = ByMpnQuery {
-        mpns: mpns.to_vec(),
-    };
-    let answer = lib_by_mpn(client, &q).map_err(|e| format!("mx3 /lib/by_mpn: {e:#}"))?;
-    if answer.len() != mpns.len() {
-        return Err(format!(
-            "mx3 answered {} results for {} MPNs",
-            answer.len(),
-            mpns.len()
-        ));
-    }
-    Ok(answer.into_iter().flat_map(|d| rows_of(d, roots)).collect())
-}
-
-/// One `by_mpn` answer as the table's rows: its documents, best first, else one with no path and why
-fn rows_of(docs: LibMpnDocs, roots: &Roots) -> Vec<MpnDoc> {
-    if docs.docs.is_empty() {
-        let why = docs
-            .why
-            .unwrap_or_else(|| "the library has no document for it".to_owned());
-        return vec![MpnDoc {
-            mpn: docs.mpn,
-            path: None,
-            maker: docs.maker,
-            hash: None,
-            doc: None,
-            rev: None,
-            by: None,
-            why: Some(why),
-        }];
-    }
-    docs.docs
-        .into_iter()
-        .map(|d| doc_of(&docs.mpn, docs.maker.clone(), d, roots))
-        .collect()
-}
-
-/// One of `by_mpn`'s documents as a row: its catalog path resolved against `roots`, else said as not on this
-/// computer
-fn doc_of(mpn: &str, maker: Option<String>, d: LibMpnDoc, roots: &Roots) -> MpnDoc {
-    let path = d.paths.iter().find_map(|p| roots.resolve(p));
-    let why = (path.is_none()).then(|| match d.paths.first() {
-        Some(p) => format!("in the library ({}), not on this computer", p.rel()),
-        None => "in the library, but no path holds it any more".to_owned(),
-    });
-    MpnDoc {
-        mpn: mpn.to_owned(),
-        path,
-        maker,
-        hash: Some(d.hash),
-        doc: d.ident.doc,
-        rev: d.ident.rev,
-        by: Some(d.by.as_str().to_owned()),
-        why,
-    }
 }
 
 /// The output of `cmd` with `args` added, or why it failed
@@ -155,6 +80,11 @@ fn run(cmd: &[String], args: &[String]) -> Result<String, String> {
         return Err(format!("{} failed: {err}", cmd.join(" ")));
     }
     Ok(String::from_utf8_lossy(&out.stdout).into_owned())
+}
+
+/// Runs the library's MPN lookup (`cmd`, the MPNs added at the end)
+pub fn run_lookup(cmd: &[String], mpns: &[String]) -> Result<Vec<MpnDoc>, String> {
+    parse_lookup(&run(cmd, mpns)?).map_err(|e| format!("{}: {e}", cmd.join(" ")))
 }
 
 /// Runs the library's fetch (`cmd`, the MPN added at the end): its last line
@@ -273,15 +203,16 @@ impl FootprintReview {
             .unwrap_or_default()
     }
 
-    /// The lookup to use: the test's, else mx3's `by_mpn`
+    /// The lookup to use: the test's, else the settings' command when it is on PATH
     fn mpn_lookup(&self) -> Option<MpnLookup> {
         if let Some(f) = &self.rt.mpn_docs.lookup {
             return Some(f.clone());
         }
-        Some(Arc::new(|mpns: &[String]| {
-            let client = mx3lib::connect()?;
-            mx3_lookup(&client, &mx3lib::roots(), mpns)
-        }))
+        let cmd = self.rt.settings.library_mpn.clone();
+        if cmd.is_empty() || find_program(&cmd[0]).is_none() {
+            return None;
+        }
+        Some(Arc::new(move |mpns: &[String]| run_lookup(&cmd, mpns)))
     }
 
     /// Why the lookup can't run, for the person; none when it can
@@ -289,7 +220,14 @@ impl FootprintReview {
         if self.rt.mpn_docs.lookup.is_some() {
             return None;
         }
-        mx3lib::blocker()
+        let cmd = &self.rt.settings.library_mpn;
+        match cmd.first() {
+            None => Some("no MPN lookup command is set (Settings: library MPN lookup)".into()),
+            Some(p) if find_program(p).is_none() => {
+                Some(format!("{p} is not on PATH (Settings: library MPN lookup)"))
+            }
+            _ => None,
+        }
     }
 
     /// The fetch to use: the test's, else the settings' command when it is on PATH
@@ -521,71 +459,5 @@ mod tests {
             review_state(&elsewhere, "ANY", Some(&doc)).word().0,
             "reviewed elsewhere"
         );
-    }
-
-    /// `mx3_lookup` against the fake: each `By` source resolved to its file under the library roots, an MPN with
-    /// no document said why, an MPN not in the library at all too
-    #[test]
-    fn mx3_lookup_resolves_every_coverage_way() {
-        use erc_fake_mx3::{
-            FakeMx3, LIB_COVER_MPN, LIB_FAMILY_MPN, LIB_LINK_MPN, LIB_NAME_MPN, LIB_NONE_MPN,
-            LIB_PATTERN_MPN, LIB_SOURCE_MPN, LIB_TEXT_MPN, TOKEN,
-        };
-        let dir = std::env::temp_dir().join(format!("berc-mx3-lookup-{}", std::process::id()));
-        let fixture = dir.join("datasheets/Fixture");
-        std::fs::create_dir_all(&fixture).unwrap();
-        for name in [
-            "link.pdf",
-            "source.pdf",
-            "lib-name-mpn-datasheet.pdf",
-            "cover.pdf",
-            "family.pdf",
-            "pattern.pdf",
-            "text.pdf",
-        ] {
-            std::fs::write(fixture.join(name), b"%PDF").unwrap();
-        }
-        let roots = Roots::new(vec![dir.join("datasheets")]);
-        let fake = FakeMx3::start();
-        let client = BlockingClient::new(fake.url().to_owned()).with_token(Some(TOKEN.to_owned()));
-        let mpns: Vec<String> = [
-            LIB_LINK_MPN,
-            LIB_SOURCE_MPN,
-            LIB_NAME_MPN,
-            LIB_COVER_MPN,
-            LIB_FAMILY_MPN,
-            LIB_PATTERN_MPN,
-            LIB_TEXT_MPN,
-            LIB_NONE_MPN,
-            "NOT-IN-MX3-AT-ALL",
-        ]
-        .map(String::from)
-        .to_vec();
-        let rows = mx3_lookup(&client, &roots, &mpns).unwrap();
-        let by = |mpn: &str| -> &MpnDoc { rows.iter().find(|r| r.mpn == mpn).expect(mpn) };
-        for (mpn, want, file) in [
-            (LIB_LINK_MPN, "link", "link.pdf"),
-            (LIB_SOURCE_MPN, "source", "source.pdf"),
-            (LIB_NAME_MPN, "name", "lib-name-mpn-datasheet.pdf"),
-            (LIB_COVER_MPN, "cover", "cover.pdf"),
-            (LIB_FAMILY_MPN, "family", "family.pdf"),
-            (LIB_PATTERN_MPN, "pattern", "pattern.pdf"),
-            (LIB_TEXT_MPN, "text", "text.pdf"),
-        ] {
-            let d = by(mpn);
-            assert_eq!(d.by.as_deref(), Some(want), "{mpn}");
-            assert_eq!(
-                d.path.as_deref(),
-                Some(fixture.join(file).as_path()),
-                "{mpn}"
-            );
-        }
-        assert!(by(LIB_NONE_MPN).path.is_none());
-        assert!(by(LIB_NONE_MPN).why.is_some());
-        assert!(by("NOT-IN-MX3-AT-ALL").why.as_deref() == Some("not in the library"));
-        // No token: the client is refused before any document is named
-        let unauthorized = BlockingClient::new(fake.url().to_owned());
-        assert!(mx3_lookup(&unauthorized, &roots, &mpns).is_err());
-        std::fs::remove_dir_all(&dir).unwrap();
     }
 }

@@ -269,7 +269,6 @@ fn url_and_token_as_the_mx3_cli_finds_them() {
     assert_eq!(c.url, "http://from-config:3000");
     assert_eq!(c.url_from, tpm.join("config.toml").display().to_string());
     assert!(c.has_token());
-    assert_eq!(c.token(), Some("mx3_from-file"));
     assert!(!format!("{c:?}").contains("mx3_from-file"), "{c:?}");
 
     let c = Connection::resolve(&Environment {
@@ -305,5 +304,4 @@ fn url_and_token_as_the_mx3_cli_finds_them() {
         !c.has_token(),
         "an empty MX3_TOKEN and no file give no token"
     );
-    assert_eq!(c.token(), None);
 }

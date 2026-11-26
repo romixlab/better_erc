@@ -1,18 +1,16 @@
 //! The datasheet as the document library knows it, for the review Accept records: its content hash and its document
-//! number and revision, the library's catalog (mx3_api_lab's `/lib/docs`, VIEW-26), and the way back from a
-//! recorded review to its PDF, through [`super::mx3lib::roots`]. A file's catalog path is `share/path`, so it is
-//! matched by the end of a local path.
+//! number and revision (`tpm lib docs --json --all`), and the way back from a recorded review to its PDF. The
+//! library lists its files relative to its own root, so a file is matched by the end of its path, and a recorded
+//! one is found again through the library's open command (`tpm lib open --json`), which answers with full paths.
 
 use better_erc::parts::lock::LockedReview;
-use mx3_api_lab::blocking::BlockingClient;
-use mx3_api_lab::endpoints::library::{DocFile, DocsQuery, docs as lib_docs};
 use serde::Deserialize;
 use std::path::{Path, PathBuf};
 
 /// One file of the library's index
 #[derive(Clone, Debug, PartialEq, Deserialize)]
 pub struct IndexedDoc {
-    /// `share/path`, as the catalog lists it
+    /// Relative to the library's root
     pub path: PathBuf,
     /// The content hash, blake3 in hex
     pub hash: String,
@@ -43,30 +41,6 @@ impl IndexedDoc {
             None => no.to_string(),
         })
     }
-
-    fn from_doc_file(f: DocFile) -> IndexedDoc {
-        IndexedDoc {
-            path: PathBuf::from(format!("{}/{}", f.share, f.path)),
-            hash: f.hash,
-            doc: f.ident.doc,
-            rev: f.ident.rev,
-            gone: f.gone.is_some(),
-        }
-    }
-}
-
-/// The catalog's files, including those gone, through mx3's `/lib/docs`
-pub fn fetch_index(client: &BlockingClient) -> Result<Vec<IndexedDoc>, String> {
-    let q = DocsQuery {
-        if_seq: None,
-        gone: true,
-    };
-    let answer = lib_docs(client, &q).map_err(|e| format!("mx3 /lib/docs: {e:#}"))?;
-    Ok(answer
-        .files
-        .into_iter()
-        .map(IndexedDoc::from_doc_file)
-        .collect())
 }
 
 /// Two content hashes are the same PDF: one starts with the other, on at least [`HASH_DIGITS_MIN`] digits
@@ -121,10 +95,54 @@ pub fn candidates<'a>(index: &'a [IndexedDoc], review: &LockedReview) -> Vec<&'a
     out.into_iter().map(|(_, d)| d).collect()
 }
 
-/// The index as a fixture (tests): a JSON list in [`IndexedDoc`]'s shape
-#[cfg(test)]
+/// The library's index as its docs command prints it
 pub fn parse_index(json: &str) -> Result<Vec<IndexedDoc>, String> {
     serde_json::from_str(json).map_err(|e| format!("not a JSON list of indexed documents: {e}"))
+}
+
+/// Runs the library's docs command (`cmd`) and reads its index
+pub fn run_index(cmd: &[String]) -> Result<Vec<IndexedDoc>, String> {
+    let (prog, args) = cmd.split_first().ok_or("no library docs command")?;
+    let out = std::process::Command::new(prog)
+        .args(args)
+        .stdin(std::process::Stdio::null())
+        .output()
+        .map_err(|e| format!("can't run {prog}: {e}"))?;
+    if !out.status.success() {
+        return Err(format!(
+            "{} failed: {}",
+            cmd.join(" "),
+            String::from_utf8_lossy(&out.stderr).trim()
+        ));
+    }
+    parse_index(&String::from_utf8_lossy(&out.stdout))
+        .map_err(|e| format!("{}: {e}", cmd.join(" ")))
+}
+
+/// The full path of library file `rel` (relative to the library's root) from the open command's list (`json`):
+/// the listed path that ends with it
+pub fn located(json: &str, rel: &Path) -> Option<PathBuf> {
+    #[derive(Deserialize)]
+    struct Listed {
+        path: PathBuf,
+    }
+    let list: Vec<Listed> = serde_json::from_str(json).ok()?;
+    list.into_iter()
+        .map(|l| l.path)
+        .find(|p| p.ends_with(rel) && p.is_file())
+}
+
+/// Finds library file `rel` on disk through the library's open command (`cmd`, the file's name added at the end)
+pub fn run_locate(cmd: &[String], rel: &Path) -> Result<Option<PathBuf>, String> {
+    let (prog, args) = cmd.split_first().ok_or("no library open command")?;
+    let name = rel.file_name().ok_or("no file name")?;
+    let out = std::process::Command::new(prog)
+        .args(args)
+        .arg(name)
+        .stdin(std::process::Stdio::null())
+        .output()
+        .map_err(|e| format!("can't run {prog}: {e}"))?;
+    Ok(located(&String::from_utf8_lossy(&out.stdout), rel))
 }
 
 #[cfg(test)]
@@ -193,27 +211,20 @@ mod tests {
         assert!(candidates(&index, &review(None, Some("DS1"), Some("rev1"))).is_empty());
     }
 
-    fn fake_client(fake: &erc_fake_mx3::FakeMx3, token: bool) -> BlockingClient {
-        let c = BlockingClient::new(fake.url().to_owned());
-        if token {
-            c.with_token(Some(erc_fake_mx3::TOKEN.to_owned()))
-        } else {
-            c
-        }
-    }
-
-    /// The catalog comes from mx3's `/lib/docs`, gone files included; without a token the client is refused
     #[test]
-    fn the_catalog_comes_from_lib_docs() {
-        let fake = erc_fake_mx3::FakeMx3::start();
-        let index = fetch_index(&fake_client(&fake, true)).unwrap();
-        let link = index
-            .iter()
-            .find(|d| d.doc_label().as_deref() == Some("DSL1 rev1"))
-            .unwrap();
-        assert_eq!(link.path, Path::new("datasheets/Fixture/link.pdf"));
-        assert!(!link.gone);
-        assert!(index.iter().any(|d| d.gone), "{index:?}");
-        assert!(fetch_index(&fake_client(&fake, false)).is_err());
+    fn located_by_the_open_commands_list() {
+        let dir = std::env::temp_dir().join(format!("berc-docindex-{}", std::process::id()));
+        let file = dir.join("lib/datasheets/x.pdf");
+        std::fs::create_dir_all(file.parent().unwrap()).unwrap();
+        std::fs::write(&file, b"%PDF").unwrap();
+        let json = serde_json::json!([{"path": "/elsewhere/datasheets/x.pdf"}, {"path": file}])
+            .to_string();
+        assert_eq!(
+            located(&json, Path::new("datasheets/x.pdf")),
+            Some(file.clone())
+        );
+        assert_eq!(located(&json, Path::new("datasheets/y.pdf")), None);
+        assert_eq!(located("[]", Path::new("datasheets/x.pdf")), None);
+        std::fs::remove_dir_all(&dir).unwrap();
     }
 }
