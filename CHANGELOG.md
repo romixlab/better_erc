@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.6.4] - 2026-11-26
+
 ### Added
 
 - `berc probe-access` counts passives from 0402 and leads from 0.65 mm pitch as `part_pad` access (TOOL-16).
