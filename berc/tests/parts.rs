@@ -333,7 +333,11 @@ fn mx3_needs_a_token_and_never_shows_it() {
 #[cfg(feature = "mx3")]
 #[test]
 fn help_names_where_mx3_is_found() {
-    for cmd in [["parts", "refresh"], ["fp", "accept"]] {
+    for cmd in [
+        ["parts", "refresh"],
+        ["fp", "accept"],
+        ["parts", "datasheets"],
+    ] {
         let out = berc(&[cmd[0], cmd[1], "--help"]);
         let help = text(&out.stdout);
         for needle in [
@@ -351,4 +355,228 @@ fn help_names_where_mx3_is_found() {
             );
         }
     }
+}
+
+/// One placed symbol of a KiCad 10 schematic with MPN fields `Mpn1`, `Mpn2`, ... and a Datasheet field
+fn placed_ds(n: usize, mpns: &[&str], datasheet: &str, dnp: bool) -> String {
+    let dnp = if dnp { "yes" } else { "no" };
+    let x = 20 * n;
+    let fields: String = mpns
+        .iter()
+        .enumerate()
+        .map(|(i, m)| {
+            format!(
+                "\t\t(property \"Mpn{}\" \"{m}\" (at {x} 55 0) (hide yes) (effects (font (size 1.27 1.27))))\n",
+                i + 1
+            )
+        })
+        .collect();
+    format!(
+        "\t(symbol (lib_id \"Fix:U\") (at {x} 50 0) (unit 1) (in_bom yes) (on_board yes) (dnp {dnp}) (uuid \"b0000000-0000-4000-8000-0000000001{n:02}\")\n\
+         \t\t(property \"Reference\" \"U{n}\" (at {x} 45 0) (effects (font (size 1.27 1.27))))\n\
+         \t\t(property \"Value\" \"U\" (at {x} 55 0) (effects (font (size 1.27 1.27))))\n\
+         \t\t(property \"Datasheet\" \"{datasheet}\" (at {x} 55 0) (hide yes) (effects (font (size 1.27 1.27))))\n\
+         {fields}\
+         \t\t(pin \"1\" (uuid \"b0000000-0000-4000-8000-0000000002{n:02}\"))\n\
+         \t\t(instances (project \"ds\" (path \"/b0000000-0000-4000-8000-000000000000\" (reference \"U{n}\") (unit 1))))\n\t)\n"
+    )
+}
+
+/// The capacitor's URL on the board
+const CAP_URL: &str =
+    "https://www.murata.com/en-us/products/productdetail?partno=GRM155R71C104KA88D";
+
+/// A schematic-only design `ds` whose parts carry Datasheet fields: the resistor with the URL mx3 has already, the
+/// capacitor with a product page (U2 and U3), an MPN mx3 has no part of, one it has several of, two parts that give
+/// one MPN different URLs, a DNP part, an mx3: link and an empty field
+fn ds_project(name: &str) -> PathBuf {
+    use erc_fake_mx3::datasheets::RESISTOR_DATASHEET;
+    use erc_fake_mx3::{CAPACITOR, RESISTOR, SEVERAL_MPN};
+    let dir = scratch(name);
+    let lib = "\t\t(symbol \"Fix:U\" (in_bom yes) (on_board yes)\n\
+               \t\t\t(property \"Reference\" \"U\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n\
+               \t\t\t(property \"Value\" \"U\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n\
+               \t\t\t(symbol \"U_1_1\" (pin passive line (at 0 0 0) (length 1.27) (name \"A\" (effects (font (size 1.27 1.27)))) (number \"1\" (effects (font (size 1.27 1.27))))))\n\
+               \t\t)\n";
+    let symbols = [
+        placed_ds(1, &[RESISTOR], RESISTOR_DATASHEET, false),
+        placed_ds(2, &[CAPACITOR], CAP_URL, false),
+        placed_ds(3, &[CAPACITOR], CAP_URL, false),
+        placed_ds(4, &["NOPE-1"], "https://vendor.example/nope-1", false),
+        placed_ds(
+            5,
+            &[SEVERAL_MPN],
+            "https://vendor.example/several.pdf",
+            false,
+        ),
+        placed_ds(6, &["SPLIT-1"], "https://a.example/split.pdf", false),
+        placed_ds(7, &["SPLIT-1"], "https://b.example/split.pdf", false),
+        placed_ds(8, &["DNP-1"], "https://vendor.example/dnp.pdf", true),
+        placed_ds(9, &["LINKED-1"], "mx3:${Mpn1}", false),
+        placed_ds(10, &["EMPTY-1"], "", false),
+    ]
+    .concat();
+    let sch = format!(
+        "(kicad_sch (version 20260306) (generator \"eeschema\") (generator_version \"10.0\")\n\
+         \t(uuid \"b0000000-0000-4000-8000-000000000000\")\n\t(paper \"A4\")\n\t(lib_symbols\n{lib}\t)\n{symbols}\
+         \t(sheet_instances (path \"/\" (page \"1\")))\n)\n"
+    );
+    std::fs::write(dir.join("ds.kicad_sch"), sch).unwrap();
+    std::fs::write(dir.join("ds.kicad_pro"), "{}\n").unwrap();
+    dir
+}
+
+#[test]
+fn datasheets_lists_the_web_urls_by_mpn() {
+    let dir = ds_project("ds-list");
+    let out = berc(&["parts", "datasheets", path(&dir)]);
+    assert!(out.status.success(), "{}", text(&out.stderr));
+    let listed = text(&out.stdout);
+    assert!(
+        listed.contains(&format!("GRM155R71C104KA88D  {CAP_URL}  (U2 U3)\n")),
+        "{listed}"
+    );
+    assert!(
+        listed.contains("SPLIT-1  https://a.example/split.pdf  (U6)\n"),
+        "{listed}"
+    );
+    assert!(
+        listed.contains("SPLIT-1  https://b.example/split.pdf  (U7)\n"),
+        "{listed}"
+    );
+    for left_out in ["DNP-1", "LINKED-1", "EMPTY-1"] {
+        assert!(!listed.contains(left_out), "{left_out}: {listed}");
+    }
+    assert!(
+        listed.ends_with("5 MPNs with a datasheet URL, 1 with URLs that disagree\n"),
+        "{listed}"
+    );
+
+    let out = berc(&["parts", "datasheets", path(&dir), "--format", "json"]);
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    assert_eq!(v.as_array().unwrap().len(), 5);
+    assert_eq!(v[0]["mpn"], "GRM155R71C104KA88D");
+    assert_eq!(
+        v[0]["urls"][0]["references"],
+        serde_json::json!(["U2", "U3"])
+    );
+
+    let out = berc(&["parts", "datasheets", path(&dir), "--dry-run"]);
+    assert_eq!(out.status.code(), Some(2), "--dry-run needs --to-mx3");
+}
+
+#[cfg(feature = "mx3")]
+#[test]
+fn datasheets_to_mx3_dry_run_write_and_again() {
+    use erc_fake_mx3::datasheets::RESISTOR_DATASHEET;
+    use erc_fake_mx3::{CAPACITOR, CAPACITOR_ID, FakeMx3, RESISTOR, TOKEN};
+    let fake = FakeMx3::start();
+    let dir = ds_project("ds-mx3");
+    let run = |extra: &[&str]| {
+        let mut args = vec!["parts", "datasheets", path(&dir), "--to-mx3"];
+        args.extend_from_slice(extra);
+        let out = berc_mx3(&args, fake.url(), Some(TOKEN));
+        assert!(out.status.success(), "{}", text(&out.stderr));
+        text(&out.stdout)
+    };
+
+    let dry = run(&["--dry-run"]);
+    assert!(
+        dry.contains(&format!(
+            "{CAPACITOR}  would write  {CAP_URL}  part {CAPACITOR_ID}\n"
+        )),
+        "{dry}"
+    );
+    assert!(
+        dry.contains(&format!(
+            "{RESISTOR}  present  {RESISTOR_DATASHEET}  part 12  from digikey\n"
+        )),
+        "{dry}"
+    );
+    assert!(
+        dry.contains("NOPE-1  no mx3 part  https://vendor.example/nope-1\n"),
+        "{dry}"
+    );
+    assert!(
+        dry.contains("SEVERAL-PARTS-1  several mx3 parts  "),
+        "{dry}"
+    );
+    assert!(
+        dry.contains(
+            "SPLIT-1  URLs disagree  https://a.example/split.pdf | https://b.example/split.pdf\n"
+        ),
+        "{dry}"
+    );
+    assert!(
+        dry.ends_with(
+            "5 MPNs: 1 would write, 1 present, 1 no mx3 part, 1 several mx3 parts, 1 URLs disagree\n"
+        ),
+        "{dry}"
+    );
+    assert_eq!(fake.datasheet_facts().len(), 1, "a dry run writes nothing");
+
+    let wrote = run(&[]);
+    assert!(
+        wrote.contains(&format!(
+            "{CAPACITOR}  written  {CAP_URL}  part {CAPACITOR_ID}\n"
+        )),
+        "{wrote}"
+    );
+    let facts = fake.datasheet_facts();
+    assert_eq!(facts.len(), 2);
+    let f = &facts[1];
+    assert_eq!(f.source, "kicad_field");
+    assert_eq!(f.raw.as_deref(), Some(CAP_URL));
+    assert_eq!(f.note, "KiCad Datasheet field of ds: U2 U3");
+
+    let again = run(&[]);
+    assert!(
+        again.contains(&format!(
+            "{CAPACITOR}  present  {CAP_URL}  part {CAPACITOR_ID}  from kicad_field\n"
+        )),
+        "{again}"
+    );
+    assert_eq!(
+        fake.datasheet_facts().len(),
+        2,
+        "a second run writes nothing"
+    );
+
+    let out = berc_mx3(
+        &[
+            "parts",
+            "datasheets",
+            path(&dir),
+            "--to-mx3",
+            "--format",
+            "json",
+        ],
+        fake.url(),
+        Some(TOKEN),
+    );
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    assert_eq!(v[0]["outcome"], "present");
+    assert_eq!(v[0]["part"], CAPACITOR_ID);
+}
+
+#[cfg(feature = "mx3")]
+#[test]
+fn datasheets_to_mx3_needs_the_source() {
+    use erc_fake_mx3::{FakeMx3, TOKEN};
+    let fake = FakeMx3::start();
+    fake.remove_source("kicad_field");
+    let dir = ds_project("ds-no-source");
+    let out = berc_mx3(
+        &["parts", "datasheets", path(&dir), "--to-mx3"],
+        fake.url(),
+        Some(TOKEN),
+    );
+    assert_eq!(out.status.code(), Some(2));
+    let err = text(&out.stderr);
+    assert!(
+        err.contains("mx3 has no parameter source `kicad_field`")
+            && err.contains("mx3 param source add kicad_field"),
+        "{err}"
+    );
+    assert_eq!(fake.datasheet_facts().len(), 1);
 }

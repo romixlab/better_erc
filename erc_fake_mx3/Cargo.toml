@@ -1,6 +1,6 @@
 [package]
 name = "erc_fake_mx3"
-description = "Test-only: a fake mx3 backend on a local port, answering params/by_mpn, the footprint review and the document library calls with mx3_api_lab's own types"
+description = "Test-only: a fake mx3 backend on a local port, answering params/by_mpn, params/sources and params/set of datasheet URLs, the footprint review and the document library calls with mx3_api_lab's own types"
 authors.workspace = true
 edition.workspace = true
 version.workspace = true

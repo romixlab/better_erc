@@ -1,15 +1,18 @@
 //! Test-only: a fake mx3 backend for the tests of the mx3 part source and the document library (VIEW-26).
 //!
-//! [`FakeMx3::start`] serves `/params/by_mpn`, `/fp/review/check`, `/fp/review/accept`, `/lib/by_mpn` and
+//! [`FakeMx3::start`] serves `/params/by_mpn`, `/params/sources` and `/params/set` of datasheet URLs
+//! ([`datasheets`]), `/fp/review/check`, `/fp/review/accept`, `/lib/by_mpn` and
 //! `/lib/docs` on a local port ([`http::Server`]) from a fixed part catalogue ([`RESISTOR`], [`CAPACITOR`]; any
 //! other MPN is not found) and a fixed set of library documents, one per [`By`] source ([`LIB_LINK_MPN`] and the
 //! other `LIB_*_MPN` constants), plus the reviews accepted so far. Requests and answers are mx3_api_lab's own
 //! types. A request without `Authorization: Bearer` [`TOKEN`] is answered 401, as the backend answers a missing
 //! or wrong token.
 
+pub mod datasheets;
 pub mod http;
 
 use chrono::NaiveDate;
+use datasheets::Datasheets;
 use http::{Answer, Request, Server};
 use mx3_api_lab::endpoints::fp_review::{
     EP_FP_REVIEW_ACCEPT, EP_FP_REVIEW_CHECK, FpAccepted, FpCheck, FpCheckItem, FpCheckQuery,
@@ -22,7 +25,8 @@ use mx3_api_lab::endpoints::library::{
 use mx3_api_lab::endpoints::mpn::{MpnReading, MpnSegment};
 use mx3_api_lab::endpoints::parameter::ParameterDefId;
 use mx3_api_lab::endpoints::params::{
-    ByMpn, ByMpnResult, EP_PARAMS_BY_MPN, FactId, MpnResult, Resolved, SourceId,
+    ByMpn, ByMpnResult, EP_PARAMS_BY_MPN, EP_PARAMS_SET, EP_PARAMS_SOURCES, FactId, MpnResult,
+    Resolved, SetParam, SourceId,
 };
 use mx3_api_lab::endpoints::part::{LookupPartResult, PartId};
 use serde::Serialize;
@@ -48,6 +52,7 @@ pub const FACTS_AT: &str = "2026-11-20T10:00:00Z";
 const KNOWN_KEYS: &[&str] = &[
     "capacitance",
     "case_eia",
+    "datasheet",
     "dielectric",
     "power",
     "rated_voltage",
@@ -73,6 +78,9 @@ pub const LIB_TEXT_MPN: &str = "LIB-TEXT-MPN";
 /// An MPN the library has no document for
 pub const LIB_NONE_MPN: &str = "LIB-NONE-MPN";
 
+/// An MPN mx3 has several parts of
+pub const SEVERAL_MPN: &str = "SEVERAL-PARTS-1";
+
 /// Every `LIB_*_MPN` the fake has a document for, by [`By`] source
 pub const LIB_MPNS: &[&str] = &[
     LIB_LINK_MPN,
@@ -84,19 +92,30 @@ pub const LIB_MPNS: &[&str] = &[
     LIB_TEXT_MPN,
 ];
 
+/// What the fake holds that requests change
+#[derive(Debug, Default)]
+struct State {
+    reviews: Vec<FpReview>,
+    datasheets: Datasheets,
+}
+
 /// A fake mx3 backend on a local port
 pub struct FakeMx3 {
     server: Server,
-    reviews: Arc<Mutex<Vec<FpReview>>>,
+    state: Arc<Mutex<State>>,
 }
 
 impl FakeMx3 {
-    /// Serves on a free port of 127.0.0.1, with no review yet
+    /// Serves on a free port of 127.0.0.1, with no review yet and the datasheet facts of [`Datasheets::default`]
     pub fn start() -> FakeMx3 {
-        let reviews: Arc<Mutex<Vec<FpReview>>> = Arc::new(Mutex::new(Vec::new()));
-        let held = Arc::clone(&reviews);
+        let state: Arc<Mutex<State>> = Arc::new(Mutex::new(State::default()));
+        let held = Arc::clone(&state);
         let server = Server::start(move |req| answer(req, &held));
-        FakeMx3 { server, reviews }
+        FakeMx3 { server, state }
+    }
+
+    fn state(&self) -> std::sync::MutexGuard<'_, State> {
+        self.state.lock().expect("no panic while held")
     }
 
     /// `http://127.0.0.1:PORT`
@@ -115,18 +134,36 @@ impl FakeMx3 {
     ///
     /// When the server thread panicked while holding them.
     pub fn reviews(&self) -> Vec<FpReview> {
-        self.reviews.lock().expect("no panic while held").clone()
+        self.state().reviews.clone()
+    }
+
+    /// Every datasheet fact so far, superseded ones included
+    ///
+    /// # Panics
+    ///
+    /// When the server thread panicked while holding them.
+    pub fn datasheet_facts(&self) -> Vec<mx3_api_lab::endpoints::params::Fact> {
+        self.state().datasheets.facts.clone()
+    }
+
+    /// Takes the parameter source `key` away, as on a backend where nobody added it
+    ///
+    /// # Panics
+    ///
+    /// When the server thread panicked while holding the sources.
+    pub fn remove_source(&self, key: &str) {
+        self.state().datasheets.sources.retain(|s| s.key != key);
     }
 }
 
-fn json<T: Serialize>(status: u16, v: &T) -> Answer {
+pub(crate) fn json<T: Serialize>(status: u16, v: &T) -> Answer {
     (
         status,
         serde_json::to_string(v).expect("the answer serialises"),
     )
 }
 
-fn error(status: u16, msg: &str) -> Answer {
+pub(crate) fn error(status: u16, msg: &str) -> Answer {
     json(status, &serde_json::json!({ "error": msg }))
 }
 
@@ -134,15 +171,23 @@ fn body<T: DeserializeOwned>(req: &Request) -> Result<T, Answer> {
     serde_json::from_slice(&req.body).map_err(|e| error(400, &e.to_string()))
 }
 
-fn answer(req: &Request, reviews: &Mutex<Vec<FpReview>>) -> Answer {
+fn answer(req: &Request, state: &Mutex<State>) -> Answer {
     if req.authorization.as_deref() != Some(&format!("Bearer {TOKEN}")) {
         return error(401, "no valid token: run `mx3 token set`");
     }
-    let mut reviews = reviews.lock().expect("no panic while held");
+    let mut state = state.lock().expect("no panic while held");
+    let State {
+        reviews,
+        datasheets,
+    } = &mut *state;
     let r = match (req.method.as_str(), req.path.as_str()) {
-        ("POST", EP_PARAMS_BY_MPN) => body(req).map(|q| json(200, &by_mpn(&q))),
-        ("POST", EP_FP_REVIEW_CHECK) => body(req).map(|q| json(200, &check(&q, &reviews))),
-        ("POST", EP_FP_REVIEW_ACCEPT) => body(req).and_then(|q| accept(q, &mut reviews)),
+        ("POST", EP_PARAMS_BY_MPN) => body(req).map(|q| json(200, &by_mpn(&q, datasheets))),
+        ("POST", EP_PARAMS_SOURCES) => Ok(json(200, &datasheets.sources)),
+        ("POST", EP_PARAMS_SET) => {
+            body(req).map(|q: SetParam| datasheets.set(&q, &[RESISTOR_ID, CAPACITOR_ID]))
+        }
+        ("POST", EP_FP_REVIEW_CHECK) => body(req).map(|q| json(200, &check(&q, reviews))),
+        ("POST", EP_FP_REVIEW_ACCEPT) => body(req).and_then(|q| accept(q, reviews)),
         ("POST", EP_LIB_BY_MPN) => {
             body(req).map(|q: mx3_api_lab::endpoints::library::ByMpnQuery| {
                 json(
@@ -157,7 +202,7 @@ fn answer(req: &Request, reviews: &Mutex<Vec<FpReview>>) -> Answer {
     r.unwrap_or_else(|e| e)
 }
 
-fn parse<T: DeserializeOwned>(text: &str) -> T {
+pub(crate) fn parse<T: DeserializeOwned>(text: &str) -> T {
     serde_json::from_str(text).expect("a fixture value")
 }
 
@@ -270,7 +315,7 @@ fn catalogue(mpn: &str) -> Option<(i32, Vec<Resolved>, MpnReading)> {
     }
 }
 
-fn by_mpn(q: &ByMpn) -> ByMpnResult {
+fn by_mpn(q: &ByMpn, datasheets: &Datasheets) -> ByMpnResult {
     let unknown_keys: Vec<String> = q
         .keys
         .iter()
@@ -286,23 +331,27 @@ fn by_mpn(q: &ByMpn) -> ByMpnResult {
         .mpns
         .iter()
         .map(|key| {
-            let Some((id, values, reading)) = catalogue(&key.mpn) else {
+            if key.mpn == SEVERAL_MPN {
+                return MpnResult {
+                    mpn: key.clone(),
+                    part: LookupPartResult::NotUnique(vec![PartId(30), PartId(31)]),
+                    values: Vec::new(),
+                    missing: Vec::new(),
+                    facts: q.with_facts.then(Vec::new),
+                    mpn_decode: no_scheme(),
+                };
+            }
+            let Some((id, mut values, reading)) = catalogue(&key.mpn) else {
                 return MpnResult {
                     mpn: key.clone(),
                     part: LookupPartResult::NotFound,
                     values: Vec::new(),
                     missing: Vec::new(),
-                    facts: None,
-                    mpn_decode: MpnReading {
-                        outcome: "no_scheme".to_owned(),
-                        scheme: None,
-                        version: None,
-                        class: None,
-                        segments: Vec::new(),
-                        schemes: Vec::new(),
-                    },
+                    facts: q.with_facts.then(Vec::new),
+                    mpn_decode: no_scheme(),
                 };
             };
+            values.extend(datasheets.resolved(id));
             let values: Vec<Resolved> = values
                 .into_iter()
                 .filter(|v| v.key.as_ref().is_some_and(|k| known.contains(&k)))
@@ -324,7 +373,10 @@ fn by_mpn(q: &ByMpn) -> ByMpnResult {
                 },
                 values,
                 missing,
-                facts: None,
+                facts: q
+                    .with_facts
+                    .then(|| datasheets.of_part(id))
+                    .filter(|_| known.iter().any(|k| *k == "datasheet")),
                 mpn_decode: reading,
             }
         })
@@ -332,6 +384,17 @@ fn by_mpn(q: &ByMpn) -> ByMpnResult {
     ByMpnResult {
         unknown_keys,
         results,
+    }
+}
+
+fn no_scheme() -> MpnReading {
+    MpnReading {
+        outcome: "no_scheme".to_owned(),
+        scheme: None,
+        version: None,
+        class: None,
+        segments: Vec::new(),
+        schemes: Vec::new(),
     }
 }
 

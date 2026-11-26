@@ -1027,6 +1027,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   filled in (`mx3:E-1`), a reference with no field left as it is; paths and URLs as written. No check reads the
   `Datasheet` field, so the checks take `mx3:` links as any other text; no export writes a Datasheet column ·
   `better_erc/src/fp/{todo,library}.rs`, `erc_parts/src/mpn.rs`, `berc/tests/fp.rs`
+- ✅ `TOOL-18` `berc parts datasheets PROJECT [--to-mx3 [--dry-run]]`: the http(s) `Datasheet` URLs of the fitted
+  parts by MPN; `--to-mx3` states each as the `datasheet`-key fact of the MPN's mx3 part, source `kicad_field` (rank
+  65), leaving a part that has the URL, an MPN with no or several parts and URLs that disagree ·
+  `erc_parts/src/datasheets/`, `berc/src/datasheets.rs`, `erc_fake_mx3/src/datasheets.rs`, `berc/tests/parts.rs`
 - 📋 `TOOL-2` Schematic vs layout match (catalogue `LAY-1`)
 - ✅ `TOOL-3` Readable git diffs: `berc textconv` prints a `.kicad_sch` / `.kicad_pcb` as sorted text without UUIDs
   or coordinates (`--with-geometry` adds them), and a `.kicad_pro` as dotted-path settings with named lists and

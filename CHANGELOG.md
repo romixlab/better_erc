@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- `berc parts datasheets`: a design's http(s) Datasheet URLs by MPN; `--to-mx3` states them as mx3 datasheet facts (TOOL-18).
+
 ## [0.6.6] - 2026-11-26
 
 ### Added

@@ -64,7 +64,7 @@ pub fn part_mpns(board: &Board, part: PartId) -> Option<Vec<String>> {
 }
 
 /// The base design's view of `board`, then each variant's
-fn views(board: &Board) -> impl Iterator<Item = View<'_>> {
+pub(crate) fn views(board: &Board) -> impl Iterator<Item = View<'_>> {
     std::iter::once(None)
         .chain((0..board.variants.len()).map(|i| Some(VariantId::from_index(i))))
         .map(move |v| View::new(board, v))

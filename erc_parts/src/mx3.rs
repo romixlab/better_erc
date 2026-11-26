@@ -184,6 +184,8 @@ pub enum Mx3Error {
     },
     /// The answer does not fit what was asked
     Answer(String),
+    /// mx3 has no parameter source of this key; an admin adds it once (the text says how)
+    NoSource { key: String, setup: String },
     /// A review's date is not `YYYY-MM-DD`
     Date {
         text: String,
@@ -204,6 +206,10 @@ impl fmt::Display for Mx3Error {
                 error,
             } => write!(f, "mx3 at {url}{endpoint}: {error:#}"),
             Mx3Error::Answer(what) => write!(f, "mx3 answered {what}"),
+            Mx3Error::NoSource { key, setup } => write!(
+                f,
+                "mx3 has no parameter source `{key}`; an mx3 admin adds it once: {setup}"
+            ),
             Mx3Error::Date { text, error } => {
                 write!(f, "review date `{text}` is not YYYY-MM-DD: {error}")
             }
@@ -216,7 +222,7 @@ impl std::error::Error for Mx3Error {
         match self {
             Mx3Error::Call { error, .. } => Some(error.as_ref()),
             Mx3Error::Date { error, .. } => Some(error.as_ref()),
-            Mx3Error::NoToken | Mx3Error::Answer(_) => None,
+            Mx3Error::NoToken | Mx3Error::Answer(_) | Mx3Error::NoSource { .. } => None,
         }
     }
 }
@@ -252,7 +258,12 @@ impl Mx3Source {
         })
     }
 
-    fn call_error(
+    /// The HTTP client, for calls this module does not cover itself (the datasheet facts')
+    pub(crate) fn client(&self) -> &BlockingClient {
+        &self.client
+    }
+
+    pub(crate) fn call_error(
         &self,
         what: String,
         endpoint: &'static str,
@@ -269,7 +280,7 @@ impl Mx3Source {
     }
 }
 
-fn answer_error(what: String, wrong: String) -> SourceError {
+pub(crate) fn answer_error(what: String, wrong: String) -> SourceError {
     SourceError {
         what,
         cause: Box::new(Mx3Error::Answer(wrong)),

@@ -164,3 +164,15 @@ pub fn refresh_project(
         lock,
     })
 }
+
+/// The datasheet URLs of the design at `project` by MPN ([`datasheets::of`], TOOL-18), with the design's name (its
+/// main file without the extension)
+pub fn project_datasheets(
+    project: &Path,
+) -> Result<(String, Vec<datasheets::MpnDatasheets>), CheckError> {
+    let p = Project::open_without_parts(project)?;
+    let name = Path::new(&p.main)
+        .file_stem()
+        .map_or_else(|| p.main.clone(), |s| s.to_string_lossy().into_owned());
+    Ok((name, datasheets::of(&p.imported.design)))
+}

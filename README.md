@@ -232,6 +232,25 @@ source or file error. The project file can put the snapshot elsewhere: `[parts] 
 An MPN on the board that the snapshot lacks is a finding, `BOM-20`, until the next refresh: a new part cannot reach
 the BOM unchecked. Without a snapshot the checks that need it report themselves as not run.
 
+## Datasheet URLs into mx3
+
+```sh
+berc parts datasheets PROJECT [--to-mx3 [--dry-run]] [--format text|json]
+```
+
+`berc parts datasheets` lists the `Datasheet` fields that are http(s) URLs, by MPN: every MPN field of the parts
+fitted in the base design or any variant, with the references that give each URL. A vendor's product page counts as
+much as a PDF; empty fields, files and `mx3:` links are left out. An MPN whose parts give different URLs is listed
+with each of them.
+
+`--to-mx3` states each MPN's URL in the mx3 part store, found as for `berc parts refresh`, as a fact of the
+parameter with key `datasheet` on the MPN's part. That parameter (mx3's `Datasheet Url`) is the one `/lib/by_mpn`
+and `mx3 lib fetch --mpn` read. The fact's source is `kicad_field`, ranked 65: below the makers' own data, above BOM
+files and the distributors after Digi-Key. A part that has the URL already, from any source, is left as it is, so a
+second run writes nothing. An MPN with no mx3 part, several parts or URLs that disagree is listed and never
+written; no part is created. `--dry-run` asks mx3 and writes nothing. An mx3 admin adds the source once:
+`mx3 param source add kicad_field "KiCad field" --rank 65 --kind import --writable-by lab:write`.
+
 ## Display fields from the snapshot
 
 ```sh

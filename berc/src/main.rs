@@ -11,6 +11,7 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 mod complete;
+mod datasheets;
 mod progress;
 mod usage;
 
@@ -283,6 +284,13 @@ enum PartsCommand {
     /// checks read only this file.
     #[command(after_help = with_part_source(PARTS_REFRESH_AFTER_HELP))]
     Refresh(PartsRefreshArgs),
+    /// List the http(s) Datasheet URLs of a design's parts by MPN; with --to-mx3, state them in mx3
+    ///
+    /// Every MPN field (Mpn1, MPN_2, ...) of the parts fitted in the base design or any variant whose Datasheet
+    /// field is a web URL, with the references that give it. --to-mx3 states each URL as the datasheet fact of
+    /// the MPN's mx3 part, where `mx3 lib fetch --mpn` finds it.
+    #[command(after_help = datasheets::after_help())]
+    Datasheets(datasheets::PartsDatasheetsArgs),
 }
 
 #[derive(clap::Args)]
@@ -775,6 +783,9 @@ fn main() -> ExitCode {
         Command::Parts {
             command: PartsCommand::Refresh(args),
         } => parts_refresh(&args),
+        Command::Parts {
+            command: PartsCommand::Datasheets(args),
+        } => datasheets::parts_datasheets(&args),
         Command::Fields {
             command: FieldsCommand::Sync(args),
         } => fields_sync(&args),
