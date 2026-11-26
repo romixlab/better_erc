@@ -11,6 +11,8 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+## [0.6.3] - 2026-11-26
+
 ### Added
 
 - `berc probe-access`: per net and board side, the test point and connector pads a probe reaches, and its vias (TOOL-16).
