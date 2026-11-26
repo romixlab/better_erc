@@ -190,7 +190,9 @@ estimate.
 `+3V3`, `3V3`, `-5V`, `+5V`, `12V0`, `3.3V`, `3P3V`; power words `VDD*`, `VCC*`, `VBUS`, `VBAT`, `VIN`, `VSYS`,
 `VREF`, `VDDA`, `AVDD`, `+V...`, `V+`, `V-`, `VEE` (a negative rail, not a ground); ground words `GND*`, `AGND`,
 `DGND`, `PGND`, `VSS*`, `GND_ISO`, `CHASSIS`, `SHIELD`, `EARTH`, `PE`, `0V`; and signal words (`EN`, `PG`, `SENSE`,
-`FB`, `SCL`, `TX`, ...) that make a name a signal whatever voltage it mentions (`VDD_EN`, `SCL1_3V3`). The sheet path
+`FB`, `SCL`, `TX`, ...) that make a name a signal whatever voltage it mentions (`VDD_EN`, `SCL1_3V3`, `VIO_DISCH`). A rail name ending in
+`S` or `SP` (`VIO_S`, `VBUS_SP`) names a sense or set-point copy of the rail: the net is a rail only with a power
+pin, a power symbol or a regulator on it. The sheet path
 is left out and auto-named nets have no name to read. A net is a rail by its name, a power symbol on it (not
 `PWR_FLAG`), or power pins of components on it; a ground by its name or by pins named like a ground. `NetSource` is
 the hook for the project file (CFG-2), whose declarations rank first. A rail's voltage is a `Facts<f64>`: the name's

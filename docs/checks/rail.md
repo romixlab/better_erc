@@ -162,7 +162,10 @@ schematic and none on the PCB: the tracks join the four pads to each other only.
 garbage and the op-amp inputs are back-powered from the IO pins (rework 1: a ferrite from `+5V0_USBIN`).
 
 **How to check.** Walk each rail back through two-pin series parts (ferrites, 0 Ω, fuses, switches) until a source
-is found (`NET-5` needs sources and ties for this); a rail with loads and no source is the finding.
+is found (`NET-5` needs sources and ties for this); a rail with loads and no source is the finding. A resistor
+above `max_feed` stops the walk, except into a rail a zener holds to ground: a series resistor with a zener shunt
+(`+VAUX` through 330 Ω, a 5.1 V zener on `+V_OPA`) is a shunt regulator, and the rail is sourced. A zener alone,
+with no resistor from a sourced rail, sources nothing. `RAIL-1` reads sources the same way.
 
 **Fix.** Add the missing link; put a test point on every rail so bring-up measures it first.
 

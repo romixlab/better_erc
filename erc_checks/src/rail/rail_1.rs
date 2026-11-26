@@ -102,4 +102,14 @@ mod tests {
             "{found:?}"
         );
     }
+
+    #[test]
+    fn zener_shunt_powers_its_loads() {
+        let found = crate::testing::fingerprints(&super::Rail1, "rail-5_zener_shunt");
+        assert_eq!(
+            found,
+            ["RAIL-1:net /+V_ISO", "RAIL-1:net /+V_NOZ"],
+            "{found:?}"
+        );
+    }
 }

@@ -37,6 +37,9 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 - `LOGIC-7`, `IO-8`, `DBG-8`: an MCU open-drain pin reaching no logic input (switched resistor, header) is not reported.
 - `I2C-4`: pull-ups to an MCU push-pull GPIO on lines with strap pull-downs are info, not an error.
+- A rail fed through a series resistor and held by a zener to ground is sourced (RAIL-5, RAIL-1).
+- A divider into an MCU pin whose chosen alternate is an ADC input is a sense divider (IO-16).
+- Sense, set-point and discharge nets (`VIO_S`, `VIO_SP`, `VIO_DISCH`) are signals, not rails (SHORT-6); filter pins need no LED (DBG-4).
 - `BOM-12`, `RATE-2`: a `Power`, `Preq_min` or `Pworking` field written `1/4W` was read as 1 W.
 - `CLK-5`, `DBG-7`: no finding on STM32G0B1 NRST and open USB2514B PRTPWR/BC_EN, which have internal pulls.
 - `BOM-9`: a part excluded from the BOM (documentation link, value `~`) needs no value.
