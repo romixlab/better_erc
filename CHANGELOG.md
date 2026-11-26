@@ -35,6 +35,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 - `BOM-12`, `RATE-2`: a `Power`, `Preq_min` or `Pworking` field written `1/4W` was read as 1 W.
 - `IO-15`: an open-drain flag pin with a no-connect flag is left open on purpose, not reported.
+- `IO-16`: a divider from a higher rail with a clamp diode to a lower rail is a sense divider, not reported.
 
 - `berc fp todo` text and the review tab list one row per footprint hash, families and MPNs under it (TOOL-8).
 - Review tab: a footprint's row shows how its parts differ; Accept ticks the MPNs the datasheet names (TOOL-11).

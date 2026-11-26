@@ -413,7 +413,9 @@ in rev B next to the old pull-down).
 **Example.** 10 kΩ to `+3V3` and 10 kΩ to GND on a boot strap: 1.65 V, read as either level depending on the part.
 
 **How to check.** Resistors from one net to a rail and to a ground (`NET-5`), excluding nets that reach analog inputs or
-feedback pins; report the divided voltage.
+feedback pins, and sense dividers: a diode clamps the net (anode on it, cathode on a rail) to a rail that none of the
+pull-ups go to and that no pull-up rail is known to sit at or below (VBUS divided into a hub's `VBUS_DET`, clamped to
+its 3.3 V supply). Report the divided voltage.
 
 **Fix.** Remove one, or make the intent explicit (a DNP pair for a strap option).
 
