@@ -1,0 +1,142 @@
+board logic-7_mcu_open_drain_receiver
+label / local +3V3 at 32.38,32.38 net /+3V3
+label / local +3V3 at 92.38,34.92 net /+3V3
+label / local +3V3 at 92.38,74.92 net /+3V3
+label / local GND at 32.38,34.92 net /GND
+label / local GND at 92.38,37.46 net /GND
+label / local GND at 92.38,77.46 net /GND
+label / local OUT2 at 107.62,40 net /OUT2
+label / local OUT3 at 107.62,80 net /OUT3
+label / local RST at 47.62,32.38 net /RST
+label / local RST at 92.38,40 net /RST
+label / local RST_B at 80,83.81 net /RST_B
+label / local RST_B at 92.38,80 net /RST_B
+label / local RST_R at 47.62,34.92 net /RST_R
+label / local RST_R at 80,76.19 net /RST_R
+net /+3V3 class = Default @ sch logic-7_mcu_open_drain_receiver.kicad_sch note "effective net class"
+net /+3V3 kind named
+net /GND class = Default @ sch logic-7_mcu_open_drain_receiver.kicad_sch note "effective net class"
+net /GND kind named
+net /OUT2 class = Default @ sch logic-7_mcu_open_drain_receiver.kicad_sch note "effective net class"
+net /OUT2 kind named
+net /OUT3 class = Default @ sch logic-7_mcu_open_drain_receiver.kicad_sch note "effective net class"
+net /OUT3 kind named
+net /RST class = Default @ sch logic-7_mcu_open_drain_receiver.kicad_sch note "effective net class"
+net /RST kind named
+net /RST_B class = Default @ sch logic-7_mcu_open_drain_receiver.kicad_sch note "effective net class"
+net /RST_B kind named
+net /RST_R class = Default @ sch logic-7_mcu_open_drain_receiver.kicad_sch note "effective net class"
+net /RST_R kind named
+net unconnected-(U1-PA3-Pad5) class = Default @ sch logic-7_mcu_open_drain_receiver.kicad_sch note "effective net class"
+net unconnected-(U1-PA3-Pad5) kind unconnected
+net unconnected-(U1-PB2-Pad6) class = Default @ sch logic-7_mcu_open_drain_receiver.kicad_sch note "effective net class"
+net unconnected-(U1-PB2-Pad6) kind unconnected
+part R1 field Value = 33R @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part R1 flag dnp = no @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part R1 flag exclude_from_sim = no @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part R1 flag in_bom = yes @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part R1 flag on_board = yes @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part R1 lib Fixture:R sheet / symbol Fixture:R
+part R1 unit 1 sheet / uuid 7e000015-0000-4000-8000-000000000000 line 79 at 80,80 rot 0
+part R1 value = qty 33 ohm @ sch logic-7_mcu_open_drain_receiver.kicad_sch note "from the Value field"
+part U1 field Value = MCU @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U1 flag dnp = no @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U1 flag exclude_from_sim = no @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U1 flag in_bom = yes @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U1 flag on_board = yes @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U1 lib Fixture:MCU sheet / symbol Fixture:MCU
+part U1 unit 1 sheet / uuid 7e000001-0000-4000-8000-000000000000 line 49 at 40,40 rot 0
+part U1 value = text MCU @ sch logic-7_mcu_open_drain_receiver.kicad_sch note "from the Value field"
+part U2 field Value = 74LVC1G17 @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U2 flag dnp = no @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U2 flag exclude_from_sim = no @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U2 flag in_bom = yes @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U2 flag on_board = yes @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U2 lib Fixture:BUF sheet / symbol Fixture:BUF
+part U2 unit 1 sheet / uuid 7e00000c-0000-4000-8000-000000000000 line 66 at 100,40 rot 0
+part U2 value = text 74LVC1G17 @ sch logic-7_mcu_open_drain_receiver.kicad_sch note "from the Value field"
+part U3 field Value = 74LVC1G17 @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U3 flag dnp = no @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U3 flag exclude_from_sim = no @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U3 flag in_bom = yes @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U3 flag on_board = yes @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+part U3 lib Fixture:BUF sheet / symbol Fixture:BUF
+part U3 unit 1 sheet / uuid 7e00001a-0000-4000-8000-000000000000 line 92 at 100,80 rot 0
+part U3 value = text 74LVC1G17 @ sch logic-7_mcu_open_drain_receiver.kicad_sch note "from the Value field"
+pin R1 1 name "" unit 1 net /RST_R
+pin R1 1 type = passive @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin R1 2 name "" unit 1 net /RST_B
+pin R1 2 type = passive @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin U1 1 name VDD unit 1 net /+3V3
+pin U1 1 type = power_in @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin U1 2 name VSS unit 1 net /GND
+pin U1 2 type = power_in @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin U1 3 name PA1 unit 1 alt PA1/OD net /RST
+pin U1 3 type = open_collector @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin U1 4 name PA2 unit 1 alt PA2/OD net /RST_R
+pin U1 4 type = open_collector @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin U1 5 name PA3 unit 1 net unconnected-(U1-PA3-Pad5)
+pin U1 5 type = bidirectional @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin U1 6 name PB2 unit 1 net unconnected-(U1-PB2-Pad6)
+pin U1 6 type = bidirectional @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin U2 1 name VCC unit 1 net /+3V3
+pin U2 1 type = power_in @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin U2 2 name GND unit 1 net /GND
+pin U2 2 type = power_in @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin U2 3 name A unit 1 net /RST
+pin U2 3 type = input @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin U2 4 name Y unit 1 net /OUT2
+pin U2 4 type = output @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin U3 1 name VCC unit 1 net /+3V3
+pin U3 1 type = power_in @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin U3 2 name GND unit 1 net /GND
+pin U3 2 type = power_in @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin U3 3 name A unit 1 net /RST_B
+pin U3 3 type = input @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+pin U3 4 name Y unit 1 net /OUT3
+pin U3 4 type = output @ sch logic-7_mcu_open_drain_receiver.kicad_sch
+sheet / name "" file logic-7_mcu_open_drain_receiver.kicad_sch uuid /
+source file logic-7_mcu_open_drain_receiver.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:BUF description "Logic buffer"
+symbol Fixture:BUF field Description "Logic buffer"
+symbol Fixture:BUF field Reference U
+symbol Fixture:BUF field Value BUF
+symbol Fixture:BUF hash 27b814b6dba5a017
+symbol Fixture:BUF pin 1 unit 1 body 1 name VCC type power_in style line
+symbol Fixture:BUF pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:BUF pin 3 unit 1 body 1 name A type input style line
+symbol Fixture:BUF pin 4 unit 1 body 1 name Y type output style line
+symbol Fixture:BUF units 1
+symbol Fixture:MCU description Microcontroller
+symbol Fixture:MCU field Description Microcontroller
+symbol Fixture:MCU field Reference U
+symbol Fixture:MCU field Value MCU
+symbol Fixture:MCU hash 74fe6b0f5a49ba6f
+symbol Fixture:MCU pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:MCU pin 2 unit 1 body 1 name VSS type power_in style line
+symbol Fixture:MCU pin 3 unit 1 body 1 alt PA1/IN type input style line
+symbol Fixture:MCU pin 3 unit 1 body 1 alt PA1/OD type open_collector style line
+symbol Fixture:MCU pin 3 unit 1 body 1 alt PA1/PP type output style line
+symbol Fixture:MCU pin 3 unit 1 body 1 name PA1 type bidirectional style line
+symbol Fixture:MCU pin 4 unit 1 body 1 alt PA2/IN type input style line
+symbol Fixture:MCU pin 4 unit 1 body 1 alt PA2/OD type open_collector style line
+symbol Fixture:MCU pin 4 unit 1 body 1 alt PA2/PP type output style line
+symbol Fixture:MCU pin 4 unit 1 body 1 name PA2 type bidirectional style line
+symbol Fixture:MCU pin 5 unit 1 body 1 alt PA3/IN type input style line
+symbol Fixture:MCU pin 5 unit 1 body 1 alt PA3/OD type open_collector style line
+symbol Fixture:MCU pin 5 unit 1 body 1 alt PA3/PP type output style line
+symbol Fixture:MCU pin 5 unit 1 body 1 name PA3 type bidirectional style line
+symbol Fixture:MCU pin 6 unit 1 body 1 alt PB2/ADC1_IN10 type bidirectional style line
+symbol Fixture:MCU pin 6 unit 1 body 1 alt PB2/IN type input style line
+symbol Fixture:MCU pin 6 unit 1 body 1 name PB2 type bidirectional style line
+symbol Fixture:MCU units 1
+symbol Fixture:R description Resistor
+symbol Fixture:R field Description Resistor
+symbol Fixture:R field Reference R
+symbol Fixture:R field Value R
+symbol Fixture:R hash 448da3f7f9000746
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:R units 1

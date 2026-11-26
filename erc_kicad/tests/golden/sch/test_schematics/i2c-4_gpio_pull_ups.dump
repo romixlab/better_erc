@@ -1,0 +1,131 @@
+board i2c-4_gpio_pull_ups
+label / local +3V3 at 32.38,32.38 net /+3V3
+label / local +3V3 at 112.38,34.92 net /+3V3
+label / local GND at 32.38,34.92 net /GND
+label / local GND at 112.38,37.46 net /GND
+label / local I2C_EN at 47.62,32.38 net /I2C_EN
+label / local I2C_EN at 80,76.19 net /I2C_EN
+label / local I2C_EN at 100,76.19 net /I2C_EN
+label / local I2C_SCL at 47.62,34.92 net /I2C_SCL
+label / local I2C_SCL at 80,83.81 net /I2C_SCL
+label / local I2C_SCL at 112.38,40 net /I2C_SCL
+label / local I2C_SDA at 47.62,37.46 net /I2C_SDA
+label / local I2C_SDA at 100,83.81 net /I2C_SDA
+label / local I2C_SDA at 112.38,42.54 net /I2C_SDA
+net /+3V3 class = Default @ sch i2c-4_gpio_pull_ups.kicad_sch note "effective net class"
+net /+3V3 kind named
+net /GND class = Default @ sch i2c-4_gpio_pull_ups.kicad_sch note "effective net class"
+net /GND kind named
+net /I2C_EN class = Default @ sch i2c-4_gpio_pull_ups.kicad_sch note "effective net class"
+net /I2C_EN kind named
+net /I2C_SCL class = Default @ sch i2c-4_gpio_pull_ups.kicad_sch note "effective net class"
+net /I2C_SCL kind named
+net /I2C_SDA class = Default @ sch i2c-4_gpio_pull_ups.kicad_sch note "effective net class"
+net /I2C_SDA kind named
+net unconnected-(U1-PB2-Pad6) class = Default @ sch i2c-4_gpio_pull_ups.kicad_sch note "effective net class"
+net unconnected-(U1-PB2-Pad6) kind unconnected
+part R1 field Value = 10K @ sch i2c-4_gpio_pull_ups.kicad_sch
+part R1 flag dnp = no @ sch i2c-4_gpio_pull_ups.kicad_sch
+part R1 flag exclude_from_sim = no @ sch i2c-4_gpio_pull_ups.kicad_sch
+part R1 flag in_bom = yes @ sch i2c-4_gpio_pull_ups.kicad_sch
+part R1 flag on_board = yes @ sch i2c-4_gpio_pull_ups.kicad_sch
+part R1 lib Fixture:R sheet / symbol Fixture:R
+part R1 unit 1 sheet / uuid 7c000016-0000-4000-8000-000000000000 line 80 at 80,80 rot 0
+part R1 value = text 10K @ sch i2c-4_gpio_pull_ups.kicad_sch note "from the Value field"
+part R2 field Value = 10K @ sch i2c-4_gpio_pull_ups.kicad_sch
+part R2 flag dnp = no @ sch i2c-4_gpio_pull_ups.kicad_sch
+part R2 flag exclude_from_sim = no @ sch i2c-4_gpio_pull_ups.kicad_sch
+part R2 flag in_bom = yes @ sch i2c-4_gpio_pull_ups.kicad_sch
+part R2 flag on_board = yes @ sch i2c-4_gpio_pull_ups.kicad_sch
+part R2 lib Fixture:R sheet / symbol Fixture:R
+part R2 unit 1 sheet / uuid 7c00001b-0000-4000-8000-000000000000 line 91 at 100,80 rot 0
+part R2 value = text 10K @ sch i2c-4_gpio_pull_ups.kicad_sch note "from the Value field"
+part U1 field Value = MCU @ sch i2c-4_gpio_pull_ups.kicad_sch
+part U1 flag dnp = no @ sch i2c-4_gpio_pull_ups.kicad_sch
+part U1 flag exclude_from_sim = no @ sch i2c-4_gpio_pull_ups.kicad_sch
+part U1 flag in_bom = yes @ sch i2c-4_gpio_pull_ups.kicad_sch
+part U1 flag on_board = yes @ sch i2c-4_gpio_pull_ups.kicad_sch
+part U1 lib Fixture:MCU sheet / symbol Fixture:MCU
+part U1 unit 1 sheet / uuid 7c000001-0000-4000-8000-000000000000 line 50 at 40,40 rot 0
+part U1 value = text MCU @ sch i2c-4_gpio_pull_ups.kicad_sch note "from the Value field"
+part U2 field Value = TCA6408 @ sch i2c-4_gpio_pull_ups.kicad_sch
+part U2 flag dnp = no @ sch i2c-4_gpio_pull_ups.kicad_sch
+part U2 flag exclude_from_sim = no @ sch i2c-4_gpio_pull_ups.kicad_sch
+part U2 flag in_bom = yes @ sch i2c-4_gpio_pull_ups.kicad_sch
+part U2 flag on_board = yes @ sch i2c-4_gpio_pull_ups.kicad_sch
+part U2 lib Fixture:EXP sheet / symbol Fixture:EXP
+part U2 unit 1 sheet / uuid 7c00000d-0000-4000-8000-000000000000 line 67 at 120,40 rot 0
+part U2 value = text TCA6408 @ sch i2c-4_gpio_pull_ups.kicad_sch note "from the Value field"
+pin R1 1 name "" unit 1 net /I2C_EN
+pin R1 1 type = passive @ sch i2c-4_gpio_pull_ups.kicad_sch
+pin R1 2 name "" unit 1 net /I2C_SCL
+pin R1 2 type = passive @ sch i2c-4_gpio_pull_ups.kicad_sch
+pin R2 1 name "" unit 1 net /I2C_EN
+pin R2 1 type = passive @ sch i2c-4_gpio_pull_ups.kicad_sch
+pin R2 2 name "" unit 1 net /I2C_SDA
+pin R2 2 type = passive @ sch i2c-4_gpio_pull_ups.kicad_sch
+pin U1 1 name VDD unit 1 net /+3V3
+pin U1 1 type = power_in @ sch i2c-4_gpio_pull_ups.kicad_sch
+pin U1 2 name VSS unit 1 net /GND
+pin U1 2 type = power_in @ sch i2c-4_gpio_pull_ups.kicad_sch
+pin U1 3 name PA1 unit 1 alt PA1/PP net /I2C_EN
+pin U1 3 type = output @ sch i2c-4_gpio_pull_ups.kicad_sch
+pin U1 4 name PA2 unit 1 net /I2C_SCL
+pin U1 4 type = bidirectional @ sch i2c-4_gpio_pull_ups.kicad_sch
+pin U1 5 name PA3 unit 1 net /I2C_SDA
+pin U1 5 type = bidirectional @ sch i2c-4_gpio_pull_ups.kicad_sch
+pin U1 6 name PB2 unit 1 net unconnected-(U1-PB2-Pad6)
+pin U1 6 type = bidirectional @ sch i2c-4_gpio_pull_ups.kicad_sch
+pin U2 1 name VCC unit 1 net /+3V3
+pin U2 1 type = power_in @ sch i2c-4_gpio_pull_ups.kicad_sch
+pin U2 2 name GND unit 1 net /GND
+pin U2 2 type = power_in @ sch i2c-4_gpio_pull_ups.kicad_sch
+pin U2 3 name SCL unit 1 net /I2C_SCL
+pin U2 3 type = input @ sch i2c-4_gpio_pull_ups.kicad_sch
+pin U2 4 name SDA unit 1 net /I2C_SDA
+pin U2 4 type = bidirectional @ sch i2c-4_gpio_pull_ups.kicad_sch
+sheet / name "" file i2c-4_gpio_pull_ups.kicad_sch uuid /
+source file i2c-4_gpio_pull_ups.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:EXP description "I2C IO expander"
+symbol Fixture:EXP field Description "I2C IO expander"
+symbol Fixture:EXP field Reference U
+symbol Fixture:EXP field Value EXP
+symbol Fixture:EXP hash 7cd59db0e6d5c65a
+symbol Fixture:EXP pin 1 unit 1 body 1 name VCC type power_in style line
+symbol Fixture:EXP pin 2 unit 1 body 1 name GND type power_in style line
+symbol Fixture:EXP pin 3 unit 1 body 1 name SCL type input style line
+symbol Fixture:EXP pin 4 unit 1 body 1 name SDA type bidirectional style line
+symbol Fixture:EXP units 1
+symbol Fixture:MCU description Microcontroller
+symbol Fixture:MCU field Description Microcontroller
+symbol Fixture:MCU field Reference U
+symbol Fixture:MCU field Value MCU
+symbol Fixture:MCU hash 74fe6b0f5a49ba6f
+symbol Fixture:MCU pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:MCU pin 2 unit 1 body 1 name VSS type power_in style line
+symbol Fixture:MCU pin 3 unit 1 body 1 alt PA1/IN type input style line
+symbol Fixture:MCU pin 3 unit 1 body 1 alt PA1/OD type open_collector style line
+symbol Fixture:MCU pin 3 unit 1 body 1 alt PA1/PP type output style line
+symbol Fixture:MCU pin 3 unit 1 body 1 name PA1 type bidirectional style line
+symbol Fixture:MCU pin 4 unit 1 body 1 alt PA2/IN type input style line
+symbol Fixture:MCU pin 4 unit 1 body 1 alt PA2/OD type open_collector style line
+symbol Fixture:MCU pin 4 unit 1 body 1 alt PA2/PP type output style line
+symbol Fixture:MCU pin 4 unit 1 body 1 name PA2 type bidirectional style line
+symbol Fixture:MCU pin 5 unit 1 body 1 alt PA3/IN type input style line
+symbol Fixture:MCU pin 5 unit 1 body 1 alt PA3/OD type open_collector style line
+symbol Fixture:MCU pin 5 unit 1 body 1 alt PA3/PP type output style line
+symbol Fixture:MCU pin 5 unit 1 body 1 name PA3 type bidirectional style line
+symbol Fixture:MCU pin 6 unit 1 body 1 alt PB2/ADC1_IN10 type bidirectional style line
+symbol Fixture:MCU pin 6 unit 1 body 1 alt PB2/IN type input style line
+symbol Fixture:MCU pin 6 unit 1 body 1 name PB2 type bidirectional style line
+symbol Fixture:MCU units 1
+symbol Fixture:R description Resistor
+symbol Fixture:R field Description Resistor
+symbol Fixture:R field Reference R
+symbol Fixture:R field Value R
+symbol Fixture:R hash 448da3f7f9000746
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:R units 1

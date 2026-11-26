@@ -1,0 +1,223 @@
+board rail-5_zener_shunt
+label / local +V_ISO at 60.96,107.95 net /+V_ISO
+label / local +V_ISO at 71.12,107.95 net /+V_ISO
+label / local +V_ISO at 83.82,109.22 net /+V_ISO
+label / local +V_NOZ at 50.8,74.93 net /+V_NOZ
+label / local +V_NOZ at 71.12,67.31 net /+V_NOZ
+label / local +V_NOZ at 83.82,68.58 net /+V_NOZ
+label / local +V_OPA at 50.8,34.29 net /+V_OPA
+label / local +V_OPA at 60.96,26.67 net /+V_OPA
+label / local +V_OPA at 71.12,26.67 net /+V_OPA
+label / local +V_OPA at 83.82,27.94 net /+V_OPA
+label / power +5V at 20.32,26.67 net +5V
+label / power +5V at 50.8,26.67 net +5V
+label / power +5V at 50.8,67.31 net +5V
+label / power GND at 20.32,34.29 net GND
+label / power GND at 60.96,34.29 net GND
+label / power GND at 60.96,115.57 net GND
+label / power GND at 71.12,34.29 net GND
+label / power GND at 71.12,74.93 net GND
+label / power GND at 71.12,115.57 net GND
+label / power GND at 83.82,30.48 net GND
+label / power GND at 83.82,71.12 net GND
+label / power GND at 83.82,111.76 net GND
+net +5V class = Default @ sch rail-5_zener_shunt.kicad_sch note "effective net class"
+net +5V kind power
+net /+V_ISO class = Default @ sch rail-5_zener_shunt.kicad_sch note "effective net class"
+net /+V_ISO kind named
+net /+V_NOZ class = Default @ sch rail-5_zener_shunt.kicad_sch note "effective net class"
+net /+V_NOZ kind named
+net /+V_OPA class = Default @ sch rail-5_zener_shunt.kicad_sch note "effective net class"
+net /+V_OPA kind named
+net GND class = Default @ sch rail-5_zener_shunt.kicad_sch note "effective net class"
+net GND kind power
+part C1 field Value = 1u @ sch rail-5_zener_shunt.kicad_sch
+part C1 flag dnp = no @ sch rail-5_zener_shunt.kicad_sch
+part C1 flag exclude_from_sim = no @ sch rail-5_zener_shunt.kicad_sch
+part C1 flag in_bom = yes @ sch rail-5_zener_shunt.kicad_sch
+part C1 flag on_board = yes @ sch rail-5_zener_shunt.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 5e0025a0-0000-4000-8000-000000000016 line 135 at 71.12,30.48 rot 0
+part C1 value = text 1u @ sch rail-5_zener_shunt.kicad_sch note "from the Value field"
+part C2 field Value = 1u @ sch rail-5_zener_shunt.kicad_sch
+part C2 flag dnp = no @ sch rail-5_zener_shunt.kicad_sch
+part C2 flag exclude_from_sim = no @ sch rail-5_zener_shunt.kicad_sch
+part C2 flag in_bom = yes @ sch rail-5_zener_shunt.kicad_sch
+part C2 flag on_board = yes @ sch rail-5_zener_shunt.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid 5e0025a0-0000-4000-8000-000000000028 line 183 at 71.12,71.12 rot 0
+part C2 value = text 1u @ sch rail-5_zener_shunt.kicad_sch note "from the Value field"
+part C3 field Value = 1u @ sch rail-5_zener_shunt.kicad_sch
+part C3 flag dnp = no @ sch rail-5_zener_shunt.kicad_sch
+part C3 flag exclude_from_sim = no @ sch rail-5_zener_shunt.kicad_sch
+part C3 flag in_bom = yes @ sch rail-5_zener_shunt.kicad_sch
+part C3 flag on_board = yes @ sch rail-5_zener_shunt.kicad_sch
+part C3 lib Device:C sheet / symbol Device:C
+part C3 unit 1 sheet / uuid 5e0025a0-0000-4000-8000-00000000003a line 231 at 71.12,111.76 rot 0
+part C3 value = text 1u @ sch rail-5_zener_shunt.kicad_sch note "from the Value field"
+part D1 field Value = BZX84-C5V1 @ sch rail-5_zener_shunt.kicad_sch
+part D1 flag dnp = no @ sch rail-5_zener_shunt.kicad_sch
+part D1 flag exclude_from_sim = no @ sch rail-5_zener_shunt.kicad_sch
+part D1 flag in_bom = yes @ sch rail-5_zener_shunt.kicad_sch
+part D1 flag on_board = yes @ sch rail-5_zener_shunt.kicad_sch
+part D1 lib Device:D_Zener sheet / symbol Device:D_Zener
+part D1 unit 1 sheet / uuid 5e0025a0-0000-4000-8000-000000000010 line 119 at 60.96,30.48 rot 0
+part D1 value = text BZX84-C5V1 @ sch rail-5_zener_shunt.kicad_sch note "from the Value field"
+part D3 field Value = BZX84-C5V1 @ sch rail-5_zener_shunt.kicad_sch
+part D3 flag dnp = no @ sch rail-5_zener_shunt.kicad_sch
+part D3 flag exclude_from_sim = no @ sch rail-5_zener_shunt.kicad_sch
+part D3 flag in_bom = yes @ sch rail-5_zener_shunt.kicad_sch
+part D3 flag on_board = yes @ sch rail-5_zener_shunt.kicad_sch
+part D3 lib Device:D_Zener sheet / symbol Device:D_Zener
+part D3 unit 1 sheet / uuid 5e0025a0-0000-4000-8000-000000000034 line 215 at 60.96,111.76 rot 0
+part D3 value = text BZX84-C5V1 @ sch rail-5_zener_shunt.kicad_sch note "from the Value field"
+part J1 field Value = PWR @ sch rail-5_zener_shunt.kicad_sch
+part J1 flag dnp = no @ sch rail-5_zener_shunt.kicad_sch
+part J1 flag exclude_from_sim = no @ sch rail-5_zener_shunt.kicad_sch
+part J1 flag in_bom = yes @ sch rail-5_zener_shunt.kicad_sch
+part J1 flag on_board = yes @ sch rail-5_zener_shunt.kicad_sch
+part J1 lib Connector_Generic:Conn_01x02 sheet / symbol Connector_Generic:Conn_01x02
+part J1 unit 1 sheet / uuid 5e0025a0-0000-4000-8000-000000000003 line 81 at 20.32,30.48 rot 0
+part J1 value = text PWR @ sch rail-5_zener_shunt.kicad_sch note "from the Value field"
+part R1 field Value = 330 @ sch rail-5_zener_shunt.kicad_sch
+part R1 flag dnp = no @ sch rail-5_zener_shunt.kicad_sch
+part R1 flag exclude_from_sim = no @ sch rail-5_zener_shunt.kicad_sch
+part R1 flag in_bom = yes @ sch rail-5_zener_shunt.kicad_sch
+part R1 flag on_board = yes @ sch rail-5_zener_shunt.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 5e0025a0-0000-4000-8000-00000000000a line 103 at 50.8,30.48 rot 0
+part R1 value = text 330 @ sch rail-5_zener_shunt.kicad_sch note "from the Value field"
+part R2 field Value = 330 @ sch rail-5_zener_shunt.kicad_sch
+part R2 flag dnp = no @ sch rail-5_zener_shunt.kicad_sch
+part R2 flag exclude_from_sim = no @ sch rail-5_zener_shunt.kicad_sch
+part R2 flag in_bom = yes @ sch rail-5_zener_shunt.kicad_sch
+part R2 flag on_board = yes @ sch rail-5_zener_shunt.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 5e0025a0-0000-4000-8000-000000000022 line 167 at 50.8,71.12 rot 0
+part R2 value = text 330 @ sch rail-5_zener_shunt.kicad_sch note "from the Value field"
+part U1 field Value = OPA @ sch rail-5_zener_shunt.kicad_sch
+part U1 flag dnp = no @ sch rail-5_zener_shunt.kicad_sch
+part U1 flag exclude_from_sim = no @ sch rail-5_zener_shunt.kicad_sch
+part U1 flag in_bom = yes @ sch rail-5_zener_shunt.kicad_sch
+part U1 flag on_board = yes @ sch rail-5_zener_shunt.kicad_sch
+part U1 lib Amplifier_Operational:OPA_Test sheet / symbol Amplifier_Operational:OPA_Test
+part U1 unit 1 sheet / uuid 5e0025a0-0000-4000-8000-00000000001c line 151 at 91.44,30.48 rot 0
+part U1 value = text OPA @ sch rail-5_zener_shunt.kicad_sch note "from the Value field"
+part U2 field Value = OPA @ sch rail-5_zener_shunt.kicad_sch
+part U2 flag dnp = no @ sch rail-5_zener_shunt.kicad_sch
+part U2 flag exclude_from_sim = no @ sch rail-5_zener_shunt.kicad_sch
+part U2 flag in_bom = yes @ sch rail-5_zener_shunt.kicad_sch
+part U2 flag on_board = yes @ sch rail-5_zener_shunt.kicad_sch
+part U2 lib Amplifier_Operational:OPA_Test sheet / symbol Amplifier_Operational:OPA_Test
+part U2 unit 1 sheet / uuid 5e0025a0-0000-4000-8000-00000000002e line 199 at 91.44,71.12 rot 0
+part U2 value = text OPA @ sch rail-5_zener_shunt.kicad_sch note "from the Value field"
+part U3 field Value = OPA @ sch rail-5_zener_shunt.kicad_sch
+part U3 flag dnp = no @ sch rail-5_zener_shunt.kicad_sch
+part U3 flag exclude_from_sim = no @ sch rail-5_zener_shunt.kicad_sch
+part U3 flag in_bom = yes @ sch rail-5_zener_shunt.kicad_sch
+part U3 flag on_board = yes @ sch rail-5_zener_shunt.kicad_sch
+part U3 lib Amplifier_Operational:OPA_Test sheet / symbol Amplifier_Operational:OPA_Test
+part U3 unit 1 sheet / uuid 5e0025a0-0000-4000-8000-000000000040 line 247 at 91.44,111.76 rot 0
+part U3 value = text OPA @ sch rail-5_zener_shunt.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net /+V_OPA
+pin C1 1 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin C2 1 name "" unit 1 net /+V_NOZ
+pin C2 1 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin C3 1 name "" unit 1 net /+V_ISO
+pin C3 1 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin C3 2 name "" unit 1 net GND
+pin C3 2 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin D1 1 name K unit 1 net /+V_OPA
+pin D1 1 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin D1 2 name A unit 1 net GND
+pin D1 2 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin D3 1 name K unit 1 net /+V_ISO
+pin D3 1 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin D3 2 name A unit 1 net GND
+pin D3 2 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin J1 1 name Pin_1 unit 1 net +5V
+pin J1 1 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin J1 2 name Pin_2 unit 1 net GND
+pin J1 2 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin R1 1 name "" unit 1 net +5V
+pin R1 1 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin R1 2 name "" unit 1 net /+V_OPA
+pin R1 2 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin R2 1 name "" unit 1 net +5V
+pin R2 1 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin R2 2 name "" unit 1 net /+V_NOZ
+pin R2 2 type = passive @ sch rail-5_zener_shunt.kicad_sch
+pin U1 1 name V+ unit 1 net /+V_OPA
+pin U1 1 type = power_in @ sch rail-5_zener_shunt.kicad_sch
+pin U1 2 name V- unit 1 net GND
+pin U1 2 type = power_in @ sch rail-5_zener_shunt.kicad_sch
+pin U2 1 name V+ unit 1 net /+V_NOZ
+pin U2 1 type = power_in @ sch rail-5_zener_shunt.kicad_sch
+pin U2 2 name V- unit 1 net GND
+pin U2 2 type = power_in @ sch rail-5_zener_shunt.kicad_sch
+pin U3 1 name V+ unit 1 net /+V_ISO
+pin U3 1 type = power_in @ sch rail-5_zener_shunt.kicad_sch
+pin U3 2 name V- unit 1 net GND
+pin U3 2 type = power_in @ sch rail-5_zener_shunt.kicad_sch
+sheet / name "" file rail-5_zener_shunt.kicad_sch uuid /
+source file rail-5_zener_shunt.kicad_sch
+source tool kicad
+source version 8.0
+symbol Amplifier_Operational:OPA_Test description "Operational amplifier"
+symbol Amplifier_Operational:OPA_Test field Description "Operational amplifier"
+symbol Amplifier_Operational:OPA_Test field Reference O
+symbol Amplifier_Operational:OPA_Test field Value OPA_Test
+symbol Amplifier_Operational:OPA_Test hash 0be4ecd9dcf70b35
+symbol Amplifier_Operational:OPA_Test pin 1 unit 1 body 1 name V+ type power_in style line
+symbol Amplifier_Operational:OPA_Test pin 2 unit 1 body 1 name V- type power_in style line
+symbol Amplifier_Operational:OPA_Test units 1
+symbol Connector_Generic:Conn_01x02 description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Description "Generic connector"
+symbol Connector_Generic:Conn_01x02 field Reference C
+symbol Connector_Generic:Conn_01x02 field Value Conn_01x02
+symbol Connector_Generic:Conn_01x02 hash d00140592e4a3dcb
+symbol Connector_Generic:Conn_01x02 pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Connector_Generic:Conn_01x02 pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Connector_Generic:Conn_01x02 units 1
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 4f61469a234b07ab
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:D_Zener description "Zener diode"
+symbol Device:D_Zener field Description "Zener diode"
+symbol Device:D_Zener field Reference D
+symbol Device:D_Zener field Value D_Zener
+symbol Device:D_Zener hash 871258ea9bdb13d4
+symbol Device:D_Zener pin 1 unit 1 body 1 name K type passive style line
+symbol Device:D_Zener pin 2 unit 1 body 1 name A type passive style line
+symbol Device:D_Zener units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 7be2b59127b371a9
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

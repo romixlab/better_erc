@@ -1,0 +1,232 @@
+board short-6_sense_nets
+label / local +1V2_CORE at 20.32,116.84 net /+1V2_CORE
+label / local +1V2_CORE at 71.12,107.95 net /+1V2_CORE
+label / local +1V8 at 20.32,119.38 net /+1V8
+label / local +1V8 at 81.28,107.95 net /+1V8
+label / local +1V8 at 91.44,107.95 net /+1V8
+label / local +5V_S at 20.32,71.12 net /+5V_S
+label / local +5V_S at 20.32,76.2 net /+5V_S
+label / local VIO_DISCH at 20.32,38.1 net /VIO_DISCH
+label / local VIO_DISCH at 91.44,26.67 net /VIO_DISCH
+label / local VIO_S at 20.32,35.56 net /VIO_S
+label / local VIO_S at 71.12,26.67 net /VIO_S
+label / local VIO_SP at 20.32,40.64 net /VIO_SP
+label / local VIO_SP at 81.28,26.67 net /VIO_SP
+label / power +3V3 at 20.32,30.48 net +3V3
+label / power +3V3 at 20.32,43.18 net +3V3
+label / power +3V3 at 20.32,111.76 net +3V3
+label / power +3V3 at 71.12,34.29 net +3V3
+label / power +3V3 at 91.44,115.57 net +3V3
+label / power GND at 20.32,33.02 net GND
+label / power GND at 20.32,73.66 net GND
+label / power GND at 20.32,114.3 net GND
+label / power GND at 71.12,115.57 net GND
+label / power GND at 81.28,34.29 net GND
+label / power GND at 81.28,115.57 net GND
+label / power GND at 91.44,34.29 net GND
+net +3V3 class = Default @ sch short-6_sense_nets.kicad_sch note "effective net class"
+net +3V3 kind power
+net /+1V2_CORE class = Default @ sch short-6_sense_nets.kicad_sch note "effective net class"
+net /+1V2_CORE kind named
+net /+1V8 class = Default @ sch short-6_sense_nets.kicad_sch note "effective net class"
+net /+1V8 kind named
+net /+5V_S class = Default @ sch short-6_sense_nets.kicad_sch note "effective net class"
+net /+5V_S kind named
+net /VIO_DISCH class = Default @ sch short-6_sense_nets.kicad_sch note "effective net class"
+net /VIO_DISCH kind named
+net /VIO_S class = Default @ sch short-6_sense_nets.kicad_sch note "effective net class"
+net /VIO_S kind named
+net /VIO_SP class = Default @ sch short-6_sense_nets.kicad_sch note "effective net class"
+net /VIO_SP kind named
+net GND class = Default @ sch short-6_sense_nets.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U2-PA1-Pad4) class = Default @ sch short-6_sense_nets.kicad_sch note "effective net class"
+net unconnected-(U2-PA1-Pad4) kind unconnected
+net unconnected-(U2-PA2-Pad5) class = Default @ sch short-6_sense_nets.kicad_sch note "effective net class"
+net unconnected-(U2-PA2-Pad5) kind unconnected
+net unconnected-(U2-PA3-Pad6) class = Default @ sch short-6_sense_nets.kicad_sch note "effective net class"
+net unconnected-(U2-PA3-Pad6) kind unconnected
+part C1 field Value = 1u @ sch short-6_sense_nets.kicad_sch
+part C1 flag dnp = no @ sch short-6_sense_nets.kicad_sch
+part C1 flag exclude_from_sim = no @ sch short-6_sense_nets.kicad_sch
+part C1 flag in_bom = yes @ sch short-6_sense_nets.kicad_sch
+part C1 flag on_board = yes @ sch short-6_sense_nets.kicad_sch
+part C1 lib Device:C sheet / symbol Device:C
+part C1 unit 1 sheet / uuid 5e0006a0-0000-4000-8000-00000000003b line 207 at 71.12,111.76 rot 0
+part C1 value = text 1u @ sch short-6_sense_nets.kicad_sch note "from the Value field"
+part C2 field Value = 1u @ sch short-6_sense_nets.kicad_sch
+part C2 flag dnp = no @ sch short-6_sense_nets.kicad_sch
+part C2 flag exclude_from_sim = no @ sch short-6_sense_nets.kicad_sch
+part C2 flag in_bom = yes @ sch short-6_sense_nets.kicad_sch
+part C2 flag on_board = yes @ sch short-6_sense_nets.kicad_sch
+part C2 lib Device:C sheet / symbol Device:C
+part C2 unit 1 sheet / uuid 5e0006a0-0000-4000-8000-000000000041 line 223 at 81.28,111.76 rot 0
+part C2 value = text 1u @ sch short-6_sense_nets.kicad_sch note "from the Value field"
+part R1 field Value = 10k @ sch short-6_sense_nets.kicad_sch
+part R1 flag dnp = no @ sch short-6_sense_nets.kicad_sch
+part R1 flag exclude_from_sim = no @ sch short-6_sense_nets.kicad_sch
+part R1 flag in_bom = yes @ sch short-6_sense_nets.kicad_sch
+part R1 flag on_board = yes @ sch short-6_sense_nets.kicad_sch
+part R1 lib Device:R sheet / symbol Device:R
+part R1 unit 1 sheet / uuid 5e0006a0-0000-4000-8000-000000000013 line 112 at 71.12,30.48 rot 0
+part R1 value = text 10k @ sch short-6_sense_nets.kicad_sch note "from the Value field"
+part R2 field Value = 10k @ sch short-6_sense_nets.kicad_sch
+part R2 flag dnp = no @ sch short-6_sense_nets.kicad_sch
+part R2 flag exclude_from_sim = no @ sch short-6_sense_nets.kicad_sch
+part R2 flag in_bom = yes @ sch short-6_sense_nets.kicad_sch
+part R2 flag on_board = yes @ sch short-6_sense_nets.kicad_sch
+part R2 lib Device:R sheet / symbol Device:R
+part R2 unit 1 sheet / uuid 5e0006a0-0000-4000-8000-000000000019 line 128 at 81.28,30.48 rot 0
+part R2 value = text 10k @ sch short-6_sense_nets.kicad_sch note "from the Value field"
+part R3 field Value = 100k @ sch short-6_sense_nets.kicad_sch
+part R3 flag dnp = no @ sch short-6_sense_nets.kicad_sch
+part R3 flag exclude_from_sim = no @ sch short-6_sense_nets.kicad_sch
+part R3 flag in_bom = yes @ sch short-6_sense_nets.kicad_sch
+part R3 flag on_board = yes @ sch short-6_sense_nets.kicad_sch
+part R3 lib Device:R sheet / symbol Device:R
+part R3 unit 1 sheet / uuid 5e0006a0-0000-4000-8000-00000000001f line 144 at 91.44,30.48 rot 0
+part R3 value = text 100k @ sch short-6_sense_nets.kicad_sch note "from the Value field"
+part R4 field Value = 10 @ sch short-6_sense_nets.kicad_sch
+part R4 flag dnp = no @ sch short-6_sense_nets.kicad_sch
+part R4 flag exclude_from_sim = no @ sch short-6_sense_nets.kicad_sch
+part R4 flag in_bom = yes @ sch short-6_sense_nets.kicad_sch
+part R4 flag on_board = yes @ sch short-6_sense_nets.kicad_sch
+part R4 lib Device:R sheet / symbol Device:R
+part R4 unit 1 sheet / uuid 5e0006a0-0000-4000-8000-000000000047 line 239 at 91.44,111.76 rot 0
+part R4 value = text 10 @ sch short-6_sense_nets.kicad_sch note "from the Value field"
+part U1 field Value = MCU @ sch short-6_sense_nets.kicad_sch
+part U1 flag dnp = no @ sch short-6_sense_nets.kicad_sch
+part U1 flag exclude_from_sim = no @ sch short-6_sense_nets.kicad_sch
+part U1 flag in_bom = yes @ sch short-6_sense_nets.kicad_sch
+part U1 flag on_board = yes @ sch short-6_sense_nets.kicad_sch
+part U1 lib MCU_Fixture:MCU sheet / symbol MCU_Fixture:MCU
+part U1 unit 1 sheet / uuid 5e0006a0-0000-4000-8000-000000000007 line 76 at 30.48,30.48 rot 0
+part U1 value = text MCU @ sch short-6_sense_nets.kicad_sch note "from the Value field"
+part U2 field Value = MCU @ sch short-6_sense_nets.kicad_sch
+part U2 flag dnp = no @ sch short-6_sense_nets.kicad_sch
+part U2 flag exclude_from_sim = no @ sch short-6_sense_nets.kicad_sch
+part U2 flag in_bom = yes @ sch short-6_sense_nets.kicad_sch
+part U2 flag on_board = yes @ sch short-6_sense_nets.kicad_sch
+part U2 lib MCU_Fixture:MCU sheet / symbol MCU_Fixture:MCU
+part U2 unit 1 sheet / uuid 5e0006a0-0000-4000-8000-000000000029 line 160 at 30.48,71.12 rot 0
+part U2 value = text MCU @ sch short-6_sense_nets.kicad_sch note "from the Value field"
+part U3 field Value = HUB @ sch short-6_sense_nets.kicad_sch
+part U3 flag dnp = no @ sch short-6_sense_nets.kicad_sch
+part U3 flag exclude_from_sim = no @ sch short-6_sense_nets.kicad_sch
+part U3 flag in_bom = yes @ sch short-6_sense_nets.kicad_sch
+part U3 flag on_board = yes @ sch short-6_sense_nets.kicad_sch
+part U3 lib Interface_USB:HUB sheet / symbol Interface_USB:HUB
+part U3 unit 1 sheet / uuid 5e0006a0-0000-4000-8000-000000000032 line 181 at 30.48,111.76 rot 0
+part U3 value = text HUB @ sch short-6_sense_nets.kicad_sch note "from the Value field"
+pin C1 1 name "" unit 1 net /+1V2_CORE
+pin C1 1 type = passive @ sch short-6_sense_nets.kicad_sch
+pin C1 2 name "" unit 1 net GND
+pin C1 2 type = passive @ sch short-6_sense_nets.kicad_sch
+pin C2 1 name "" unit 1 net /+1V8
+pin C2 1 type = passive @ sch short-6_sense_nets.kicad_sch
+pin C2 2 name "" unit 1 net GND
+pin C2 2 type = passive @ sch short-6_sense_nets.kicad_sch
+pin R1 1 name "" unit 1 net /VIO_S
+pin R1 1 type = passive @ sch short-6_sense_nets.kicad_sch
+pin R1 2 name "" unit 1 net +3V3
+pin R1 2 type = passive @ sch short-6_sense_nets.kicad_sch
+pin R2 1 name "" unit 1 net /VIO_SP
+pin R2 1 type = passive @ sch short-6_sense_nets.kicad_sch
+pin R2 2 name "" unit 1 net GND
+pin R2 2 type = passive @ sch short-6_sense_nets.kicad_sch
+pin R3 1 name "" unit 1 net /VIO_DISCH
+pin R3 1 type = passive @ sch short-6_sense_nets.kicad_sch
+pin R3 2 name "" unit 1 net GND
+pin R3 2 type = passive @ sch short-6_sense_nets.kicad_sch
+pin R4 1 name "" unit 1 net /+1V8
+pin R4 1 type = passive @ sch short-6_sense_nets.kicad_sch
+pin R4 2 name "" unit 1 net +3V3
+pin R4 2 type = passive @ sch short-6_sense_nets.kicad_sch
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch short-6_sense_nets.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch short-6_sense_nets.kicad_sch
+pin U1 3 name PA0 unit 1 net /VIO_S
+pin U1 3 type = bidirectional @ sch short-6_sense_nets.kicad_sch
+pin U1 4 name PA1 unit 1 net /VIO_DISCH
+pin U1 4 type = bidirectional @ sch short-6_sense_nets.kicad_sch
+pin U1 5 name PA2 unit 1 net /VIO_SP
+pin U1 5 type = bidirectional @ sch short-6_sense_nets.kicad_sch
+pin U1 6 name PA3 unit 1 net +3V3
+pin U1 6 type = bidirectional @ sch short-6_sense_nets.kicad_sch
+pin U2 1 name VDD unit 1 net /+5V_S
+pin U2 1 type = power_in @ sch short-6_sense_nets.kicad_sch
+pin U2 2 name VSS unit 1 net GND
+pin U2 2 type = power_in @ sch short-6_sense_nets.kicad_sch
+pin U2 3 name PA0 unit 1 net /+5V_S
+pin U2 3 type = bidirectional @ sch short-6_sense_nets.kicad_sch
+pin U2 4 name PA1 unit 1 net unconnected-(U2-PA1-Pad4)
+pin U2 4 type = bidirectional @ sch short-6_sense_nets.kicad_sch
+pin U2 5 name PA2 unit 1 net unconnected-(U2-PA2-Pad5)
+pin U2 5 type = bidirectional @ sch short-6_sense_nets.kicad_sch
+pin U2 6 name PA3 unit 1 net unconnected-(U2-PA3-Pad6)
+pin U2 6 type = bidirectional @ sch short-6_sense_nets.kicad_sch
+pin U3 1 name VDD unit 1 net +3V3
+pin U3 1 type = power_in @ sch short-6_sense_nets.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch short-6_sense_nets.kicad_sch
+pin U3 3 name CRFILT unit 1 net /+1V2_CORE
+pin U3 3 type = input @ sch short-6_sense_nets.kicad_sch
+pin U3 4 name AUXIN unit 1 net /+1V8
+pin U3 4 type = input @ sch short-6_sense_nets.kicad_sch
+sheet / name "" file short-6_sense_nets.kicad_sch uuid /
+source file short-6_sense_nets.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:C description "Unpolarized capacitor"
+symbol Device:C field Description "Unpolarized capacitor"
+symbol Device:C field Reference C
+symbol Device:C field Value C
+symbol Device:C hash 4f61469a234b07ab
+symbol Device:C pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:C pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:C units 1
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 7be2b59127b371a9
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol Interface_USB:HUB description "USB 2.0 hub controller"
+symbol Interface_USB:HUB field Description "USB 2.0 hub controller"
+symbol Interface_USB:HUB field Reference H
+symbol Interface_USB:HUB field Value HUB
+symbol Interface_USB:HUB hash de0bea845ecb894c
+symbol Interface_USB:HUB pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Interface_USB:HUB pin 2 unit 1 body 1 name GND type power_in style line
+symbol Interface_USB:HUB pin 3 unit 1 body 1 name CRFILT type input style line
+symbol Interface_USB:HUB pin 4 unit 1 body 1 name AUXIN type input style line
+symbol Interface_USB:HUB units 1
+symbol MCU_Fixture:MCU description Microcontroller
+symbol MCU_Fixture:MCU field Description Microcontroller
+symbol MCU_Fixture:MCU field Reference M
+symbol MCU_Fixture:MCU field Value MCU
+symbol MCU_Fixture:MCU hash fc1fe90a111cd8d8
+symbol MCU_Fixture:MCU pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Fixture:MCU pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Fixture:MCU pin 5 unit 1 body 1 name PA2 type bidirectional style line
+symbol MCU_Fixture:MCU pin 6 unit 1 body 1 name PA3 type bidirectional style line
+symbol MCU_Fixture:MCU units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

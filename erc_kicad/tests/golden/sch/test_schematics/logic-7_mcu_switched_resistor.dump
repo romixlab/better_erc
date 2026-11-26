@@ -1,0 +1,197 @@
+board logic-7_mcu_switched_resistor
+label / local +3V3 at 32.38,32.38 net /+3V3
+label / local +3V3 at 80,116.19 net /+3V3
+label / local CC2 at 47.62,40 net /CC2
+label / local CC2 at 80,83.81 net /CC2
+label / local CC2 at 80,123.81 net /CC2
+label / local CC2 at 114.92,120 net /CC2
+label / local CC2_RD_EN at 47.62,34.92 net /CC2_RD_EN
+label / local CC2_RD_EN at 80,76.19 net /CC2_RD_EN
+label / local EXT_IO at 47.62,32.38 net /EXT_IO
+label / local EXT_IO at 80,36.19 net /EXT_IO
+label / local EXT_IO_J at 80,43.81 net /EXT_IO_J
+label / local EXT_IO_J at 114.92,40 net /EXT_IO_J
+label / local EXT_IO_J at 116.19,80 net /EXT_IO_J
+label / local EXT_IO_J at 146.19,80 net /EXT_IO_J
+label / local GND at 32.38,34.92 net /GND
+label / local GND at 114.92,42.54 net /GND
+label / local GND at 114.92,122.54 net /GND
+label / local GND at 123.81,80 net /GND
+label / local GND at 153.81,80 net /GND
+net /+3V3 class = Default @ sch logic-7_mcu_switched_resistor.kicad_sch note "effective net class"
+net /+3V3 kind named
+net /CC2 class = Default @ sch logic-7_mcu_switched_resistor.kicad_sch note "effective net class"
+net /CC2 kind named
+net /CC2_RD_EN class = Default @ sch logic-7_mcu_switched_resistor.kicad_sch note "effective net class"
+net /CC2_RD_EN kind named
+net /EXT_IO class = Default @ sch logic-7_mcu_switched_resistor.kicad_sch note "effective net class"
+net /EXT_IO kind named
+net /EXT_IO_J class = Default @ sch logic-7_mcu_switched_resistor.kicad_sch note "effective net class"
+net /EXT_IO_J kind named
+net /GND class = Default @ sch logic-7_mcu_switched_resistor.kicad_sch note "effective net class"
+net /GND kind named
+net unconnected-(U1-PA3-Pad5) class = Default @ sch logic-7_mcu_switched_resistor.kicad_sch note "effective net class"
+net unconnected-(U1-PA3-Pad5) kind unconnected
+part D1 field Value = ESD @ sch logic-7_mcu_switched_resistor.kicad_sch
+part D1 flag dnp = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part D1 flag exclude_from_sim = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part D1 flag in_bom = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part D1 flag on_board = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part D1 lib Fixture:ESD sheet / symbol Fixture:ESD
+part D1 unit 1 sheet / uuid 7f000017-0000-4000-8000-000000000000 line 107 at 120,80 rot 0
+part D1 value = text ESD @ sch logic-7_mcu_switched_resistor.kicad_sch note "from the Value field"
+part E1 field Value = SparkGap @ sch logic-7_mcu_switched_resistor.kicad_sch
+part E1 flag dnp = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part E1 flag exclude_from_sim = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part E1 flag in_bom = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part E1 flag on_board = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part E1 lib Fixture:GAP sheet / symbol Fixture:GAP
+part E1 unit 1 sheet / uuid 7f00001c-0000-4000-8000-000000000000 line 118 at 150,80 rot 0
+part E1 value = text SparkGap @ sch logic-7_mcu_switched_resistor.kicad_sch note "from the Value field"
+part J1 field Value = Header @ sch logic-7_mcu_switched_resistor.kicad_sch
+part J1 flag dnp = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part J1 flag exclude_from_sim = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part J1 flag in_bom = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part J1 flag on_board = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part J1 lib Fixture:CONN sheet / symbol Fixture:CONN
+part J1 unit 1 sheet / uuid 7f000012-0000-4000-8000-000000000000 line 96 at 120,40 rot 0
+part J1 value = text Header @ sch logic-7_mcu_switched_resistor.kicad_sch note "from the Value field"
+part J2 field Value = USB_C @ sch logic-7_mcu_switched_resistor.kicad_sch
+part J2 flag dnp = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part J2 flag exclude_from_sim = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part J2 flag in_bom = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part J2 flag on_board = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part J2 lib Fixture:CONN sheet / symbol Fixture:CONN
+part J2 unit 1 sheet / uuid 7f00002b-0000-4000-8000-000000000000 line 151 at 120,120 rot 0
+part J2 value = text USB_C @ sch logic-7_mcu_switched_resistor.kicad_sch note "from the Value field"
+part R1 field Value = 1K @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R1 flag dnp = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R1 flag exclude_from_sim = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R1 flag in_bom = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R1 flag on_board = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R1 lib Fixture:R sheet / symbol Fixture:R
+part R1 unit 1 sheet / uuid 7f00000d-0000-4000-8000-000000000000 line 85 at 80,40 rot 0
+part R1 value = text 1K @ sch logic-7_mcu_switched_resistor.kicad_sch note "from the Value field"
+part R2 field Value = 4K7 @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R2 flag dnp = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R2 flag exclude_from_sim = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R2 flag in_bom = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R2 flag on_board = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R2 lib Fixture:R sheet / symbol Fixture:R
+part R2 unit 1 sheet / uuid 7f000021-0000-4000-8000-000000000000 line 129 at 80,80 rot 0
+part R2 value = text 4K7 @ sch logic-7_mcu_switched_resistor.kicad_sch note "from the Value field"
+part R3 field Value = 56K @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R3 flag dnp = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R3 flag exclude_from_sim = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R3 flag in_bom = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R3 flag on_board = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part R3 lib Fixture:R sheet / symbol Fixture:R
+part R3 unit 1 sheet / uuid 7f000026-0000-4000-8000-000000000000 line 140 at 80,120 rot 0
+part R3 value = text 56K @ sch logic-7_mcu_switched_resistor.kicad_sch note "from the Value field"
+part U1 field Value = MCU @ sch logic-7_mcu_switched_resistor.kicad_sch
+part U1 flag dnp = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part U1 flag exclude_from_sim = no @ sch logic-7_mcu_switched_resistor.kicad_sch
+part U1 flag in_bom = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part U1 flag on_board = yes @ sch logic-7_mcu_switched_resistor.kicad_sch
+part U1 lib Fixture:MCU sheet / symbol Fixture:MCU
+part U1 unit 1 sheet / uuid 7f000001-0000-4000-8000-000000000000 line 70 at 40,40 rot 0
+part U1 value = text MCU @ sch logic-7_mcu_switched_resistor.kicad_sch note "from the Value field"
+pin D1 1 name K unit 1 net /EXT_IO_J
+pin D1 1 type = passive @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin D1 2 name A unit 1 net /GND
+pin D1 2 type = passive @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin E1 1 name 1 unit 1 net /EXT_IO_J
+pin E1 1 type = passive @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin E1 2 name 2 unit 1 net /GND
+pin E1 2 type = passive @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin J1 1 name Pin_1 unit 1 net /EXT_IO_J
+pin J1 1 type = passive @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin J1 2 name Pin_2 unit 1 net /GND
+pin J1 2 type = passive @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin J2 1 name Pin_1 unit 1 net /CC2
+pin J2 1 type = passive @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin J2 2 name Pin_2 unit 1 net /GND
+pin J2 2 type = passive @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin R1 1 name "" unit 1 net /EXT_IO
+pin R1 1 type = passive @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin R1 2 name "" unit 1 net /EXT_IO_J
+pin R1 2 type = passive @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin R2 1 name "" unit 1 net /CC2_RD_EN
+pin R2 1 type = passive @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin R2 2 name "" unit 1 net /CC2
+pin R2 2 type = passive @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin R3 1 name "" unit 1 net /+3V3
+pin R3 1 type = passive @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin R3 2 name "" unit 1 net /CC2
+pin R3 2 type = passive @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin U1 1 name VDD unit 1 net /+3V3
+pin U1 1 type = power_in @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin U1 2 name VSS unit 1 net /GND
+pin U1 2 type = power_in @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin U1 3 name PA1 unit 1 alt PA1/OD net /EXT_IO
+pin U1 3 type = open_collector @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin U1 4 name PA2 unit 1 alt PA2/OD net /CC2_RD_EN
+pin U1 4 type = open_collector @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin U1 5 name PA3 unit 1 net unconnected-(U1-PA3-Pad5)
+pin U1 5 type = bidirectional @ sch logic-7_mcu_switched_resistor.kicad_sch
+pin U1 6 name PB2 unit 1 alt PB2/ADC1_IN10 net /CC2
+pin U1 6 type = bidirectional @ sch logic-7_mcu_switched_resistor.kicad_sch
+sheet / name "" file logic-7_mcu_switched_resistor.kicad_sch uuid /
+source file logic-7_mcu_switched_resistor.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:CONN description Connector
+symbol Fixture:CONN field Description Connector
+symbol Fixture:CONN field Reference J
+symbol Fixture:CONN field Value CONN
+symbol Fixture:CONN hash b7ec0959cc30739a
+symbol Fixture:CONN pin 1 unit 1 body 1 name Pin_1 type passive style line
+symbol Fixture:CONN pin 2 unit 1 body 1 name Pin_2 type passive style line
+symbol Fixture:CONN units 1
+symbol Fixture:ESD description "ESD protection diode"
+symbol Fixture:ESD field Description "ESD protection diode"
+symbol Fixture:ESD field Reference D
+symbol Fixture:ESD field Value ESD
+symbol Fixture:ESD hash 06a5f3e13b4ab444
+symbol Fixture:ESD pin 1 unit 1 body 1 name K type passive style line
+symbol Fixture:ESD pin 2 unit 1 body 1 name A type passive style line
+symbol Fixture:ESD units 1
+symbol Fixture:GAP description "Spark gap"
+symbol Fixture:GAP field Description "Spark gap"
+symbol Fixture:GAP field Reference E
+symbol Fixture:GAP field Value GAP
+symbol Fixture:GAP hash 5214d7f426b4f533
+symbol Fixture:GAP pin 1 unit 1 body 1 name 1 type passive style line
+symbol Fixture:GAP pin 2 unit 1 body 1 name 2 type passive style line
+symbol Fixture:GAP units 1
+symbol Fixture:MCU description Microcontroller
+symbol Fixture:MCU field Description Microcontroller
+symbol Fixture:MCU field Reference U
+symbol Fixture:MCU field Value MCU
+symbol Fixture:MCU hash 74fe6b0f5a49ba6f
+symbol Fixture:MCU pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Fixture:MCU pin 2 unit 1 body 1 name VSS type power_in style line
+symbol Fixture:MCU pin 3 unit 1 body 1 alt PA1/IN type input style line
+symbol Fixture:MCU pin 3 unit 1 body 1 alt PA1/OD type open_collector style line
+symbol Fixture:MCU pin 3 unit 1 body 1 alt PA1/PP type output style line
+symbol Fixture:MCU pin 3 unit 1 body 1 name PA1 type bidirectional style line
+symbol Fixture:MCU pin 4 unit 1 body 1 alt PA2/IN type input style line
+symbol Fixture:MCU pin 4 unit 1 body 1 alt PA2/OD type open_collector style line
+symbol Fixture:MCU pin 4 unit 1 body 1 alt PA2/PP type output style line
+symbol Fixture:MCU pin 4 unit 1 body 1 name PA2 type bidirectional style line
+symbol Fixture:MCU pin 5 unit 1 body 1 alt PA3/IN type input style line
+symbol Fixture:MCU pin 5 unit 1 body 1 alt PA3/OD type open_collector style line
+symbol Fixture:MCU pin 5 unit 1 body 1 alt PA3/PP type output style line
+symbol Fixture:MCU pin 5 unit 1 body 1 name PA3 type bidirectional style line
+symbol Fixture:MCU pin 6 unit 1 body 1 alt PB2/ADC1_IN10 type bidirectional style line
+symbol Fixture:MCU pin 6 unit 1 body 1 alt PB2/IN type input style line
+symbol Fixture:MCU pin 6 unit 1 body 1 name PB2 type bidirectional style line
+symbol Fixture:MCU units 1
+symbol Fixture:R description Resistor
+symbol Fixture:R field Description Resistor
+symbol Fixture:R field Reference R
+symbol Fixture:R field Value R
+symbol Fixture:R hash 448da3f7f9000746
+symbol Fixture:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Fixture:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Fixture:R units 1
