@@ -294,7 +294,10 @@ getting hot, a reverse-polarity FET that conducts when it should not.
 solenoid clicks, and with the MCU unpowered the drain's dV/dt from another load turns it on.
 
 **How to check.** For each MOSFET (pins named per `LIB-3`), the gate net needs a resistor to the source net or to the
-off-rail, unless its driver is a push-pull output that is valid in every state (a gate driver IC).
+off-rail, unless its driver is a push-pull output that is valid in every state (a gate driver IC). The off-rail is one
+at or above the source's level for P-channel, at or below it for N-channel. A source on no rail (the common node of
+back-to-back switches) sits at most at the rails one FET channel away, through the body diodes; each needs a known
+voltage (the name, or the project file's range, whose top counts). An unknown voltage keeps the finding.
 
 **Fix.** 10-100 kΩ from gate to source (pull-down for NMOS, pull-up to the source rail for PMOS).
 
@@ -393,7 +396,8 @@ cannot go inactive is a fault signal nobody looks at.
 pull-up, and with the MCU in reset the fault line floats (B153A hardware reference §3).
 
 **How to check.** KiCad's `open_collector`/`open_emitter` pin type (`IMP-1`), or open-drain roles from part data
-(`NET-7`), on a net with no resistor to a rail.
+(`NET-7`), on a net with no resistor to a rail. A pin with a no-connect flag is left out: the designer left the
+output open on purpose (the controller polls instead).
 
 **Fix.** A pull-up to the receiver's IO rail (10-100 kΩ), or a line in the programmer report (`RPT-13`) if the internal
 pull is intended.
@@ -416,8 +420,10 @@ in rev B next to the old pull-down).
 **Example.** 10 kΩ to `+3V3` and 10 kΩ to GND on a boot strap: 1.65 V, read as either level depending on the part.
 
 **How to check.** Resistors from one net to a rail and to a ground (`NET-5`), excluding nets that reach analog inputs or
-feedback pins; report the divided voltage. An MCU pin counts as an analog input by its name or by the alternate chosen
-on the placed symbol (`PA5/ADC1_IN5` in KiCad's alternate pin functions).
+feedback pins, and sense dividers: a diode clamps the net (anode on it, cathode on a rail) to a rail that none of the
+pull-ups go to and that no pull-up rail is known to sit at or below (VBUS divided into a hub's `VBUS_DET`, clamped to
+its 3.3 V supply). An MCU pin counts as an analog input by its name or by the alternate chosen on the placed symbol
+(`PA5/ADC1_IN5` in KiCad's alternate pin functions). Report the divided voltage.
 
 **Fix.** Remove one, or make the intent explicit (a DNP pair for a strap option).
 

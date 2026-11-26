@@ -29,7 +29,8 @@ impl Check for Io15 {
 
     /// An interrupt, fault or power-good output (`INT`, `ALERT`, `FAULT`, `PGOOD` by name) of a fitted part that
     /// is open-drain: typed open collector or open emitter, or a pin of an IC other than an MCU whose type does
-    /// not say push-pull; on a net with no fitted pull-up and no push-pull driver
+    /// not say push-pull; on a net with no fitted pull-up and no push-pull driver. A pin with a no-connect flag is
+    /// left out.
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let b = cx.board();
         let power = cx.power();
@@ -38,7 +39,8 @@ impl Check for Io15 {
             let class = cx.classes().get(part);
             for pin in &b.part(part).pins {
                 let p = b.pin(*pin);
-                if !functions(&p.name).iter().any(|f| f.function.is_flag()) {
+                // A no-connect flag says the flag is left open on purpose (polled instead)
+                if p.no_connect || !functions(&p.name).iter().any(|f| f.function.is_flag()) {
                     continue;
                 }
                 let open = match p.etype.get() {
@@ -104,5 +106,11 @@ mod tests {
             ],
             "{found:?}"
         );
+    }
+
+    #[test]
+    fn no_connect_flag_left_open() {
+        let found = crate::testing::fingerprints(&super::Io15, "io-15_no_connect_flag");
+        assert_eq!(found, ["IO-15:net /PMIC2_INT|pin U3.3"], "{found:?}");
     }
 }

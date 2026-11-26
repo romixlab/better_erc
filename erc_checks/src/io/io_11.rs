@@ -34,15 +34,57 @@ fn named_nets(cx: &Ctx, part: PartId, names: &[&str]) -> Vec<NetId> {
         .collect()
 }
 
+/// The power nets a FET's source sits at: the source net itself when it is one, else the rails and grounds one
+/// fitted MOSFET's channel away from it. Such a source (the common node of back-to-back switches) follows the body
+/// diodes from those rails, so it sits at most at the highest of them.
+fn source_levels(cx: &Ctx, source: NetId) -> Vec<NetId> {
+    let b = cx.board();
+    let power = cx.power();
+    if power.is_power_net(source) {
+        return vec![source];
+    }
+    let mut out: Vec<NetId> = net_pins(b, source)
+        .map(|p| b.pin(p).part)
+        .filter(|part| cx.fitted(*part) && cx.classes().get(*part).is_mosfet())
+        .flat_map(|part| named_nets(cx, part, &["S", "SOURCE", "D", "DRAIN"]))
+        .filter(|n| *n != source && power.is_power_net(*n))
+        .collect();
+    out.sort();
+    out.dedup();
+    out
+}
+
+/// The lowest voltage a power net sits at: the bottom of its declared range, else its voltage
+fn volts_min(cx: &Ctx, net: NetId) -> Option<f64> {
+    match cx.power().rails.get(&net).and_then(|r| r.range.as_ref()) {
+        Some(range) => Some(range.value.0),
+        None => cx.power().volts(net),
+    }
+}
+
+/// The highest voltage a power net sits at: the top of its declared range, else its voltage
+fn volts_max(cx: &Ctx, net: NetId) -> Option<f64> {
+    match cx.power().rails.get(&net).and_then(|r| r.range.as_ref()) {
+        Some(range) => Some(range.value.1),
+        None => cx.power().volts(net),
+    }
+}
+
+/// Whether a voltage is known to sit at or below another
+fn below(low: Option<f64>, high: Option<f64>) -> bool {
+    matches!((low, high), (Some(l), Some(h)) if l <= h + 1e-6)
+}
+
 impl Check for Io11 {
     fn meta(&self) -> &'static CheckMeta {
         &META
     }
 
     /// Each fitted MOSFET with pins named G, S, D (LIB-3): the gate net and the nets one series resistor away
-    /// need a fitted resistor to the source net or to the off level (a ground for N-channel, a rail at the
-    /// source's voltage for P-channel), unless a push-pull output of an IC that is no MCU (a gate driver, a logic
-    /// gate) drives them: an MCU GPIO, a connector or an open-drain output is high-Z at times
+    /// need a fitted resistor to the source net or to the off level (for N-channel a power net at or below the
+    /// [`source_levels`], for P-channel a rail at or above them), unless a push-pull output of an IC that is no
+    /// MCU (a gate driver, a logic gate) drives them: an MCU GPIO, a connector or an open-drain output is high-Z
+    /// at times
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let b = cx.board();
         let power = cx.power();
@@ -71,13 +113,23 @@ impl Check for Io11 {
                 PartClass::Mosfet { channel } => channel,
                 _ => None,
             };
+            let levels = source_levels(cx, source);
             let off = |to: NetId| {
                 to == source
-                    || match channel {
-                        Some(Channel::N) => power.is_ground(to) && power.is_ground(source),
-                        Some(Channel::P) => power.is_rail(to) && super::same_level(cx, to, source),
-                        None => false,
-                    }
+                    || (!levels.is_empty()
+                        && levels.iter().all(|x| match channel {
+                            Some(Channel::N) => {
+                                power.is_power_net(to)
+                                    && (super::same_level(cx, to, *x)
+                                        || below(volts_max(cx, to), volts_min(cx, *x)))
+                            }
+                            Some(Channel::P) => {
+                                power.is_rail(to)
+                                    && (super::same_level(cx, to, *x)
+                                        || below(volts_max(cx, *x), volts_min(cx, to)))
+                            }
+                            None => false,
+                        }))
             };
             let mut pulls_on: Vec<PartId> = Vec::new();
             let mut pulled_off = false;
@@ -170,6 +222,21 @@ mod tests {
                 "IO-11:net /GATE1|part Q1",
                 "IO-11:net /GATE6|part Q6",
                 "IO-11:net /GATE7|part Q7"
+            ],
+            "{found:?}"
+        );
+    }
+
+    #[test]
+    fn gates_pulled_to_the_source_side_rail() {
+        let found = crate::testing::fingerprints(&super::Io11, "io-11_pulled_off");
+        assert_eq!(
+            found,
+            [
+                "IO-11:net /GATE_B|part Q5",
+                "IO-11:net /GATE_B|part Q6",
+                "IO-11:net /GATE_C|part Q7",
+                "IO-11:net /GATE_D|part Q8"
             ],
             "{found:?}"
         );

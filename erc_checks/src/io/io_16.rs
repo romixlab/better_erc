@@ -8,7 +8,7 @@ use erc_analysis::access::series_neighbours;
 use erc_analysis::analog::is_analog_input;
 use erc_analysis::graph::net_pins;
 use erc_analysis::value::format_si;
-use erc_model::{NetId, PartClass, Unit};
+use erc_model::{NetId, PartClass, PartId, Unit};
 
 pub struct Io16;
 
@@ -30,9 +30,9 @@ impl Check for Io16 {
 
     /// A signal net with a fitted resistor to a rail and another to a ground, unless the net or one series part
     /// away reaches an analog input by name or by the alternate chosen on the placed symbol (`FB`, `ADC`, `VREF`,
-    /// `PA5/ADC1_IN5`, amplifier inputs), a pin of an op-amp,
-    /// comparator, regulator or load switch (feedback, enable and UVLO thresholds are dividers on purpose); with
-    /// the divided voltage where values and the rail's voltage are known
+    /// `PA5/ADC1_IN5`, amplifier inputs), a pin of an op-amp, comparator, regulator or load switch (feedback, enable
+    /// and UVLO thresholds are dividers on purpose), or a [`sense_divider`]; with the divided voltage where values
+    /// and the rail's voltage are known
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
         let b = cx.board();
         let power = cx.power();
@@ -65,7 +65,7 @@ impl Check for Io16 {
                                 | PartClass::LoadSwitch
                         ))
             });
-            if analog {
+            if analog || sense_divider(cx, net, &p.up) {
                 continue;
             }
             let mut f = cx.finding(&META).net(net).parts(p.parts());
@@ -107,6 +107,43 @@ impl Check for Io16 {
     }
 }
 
+/// Whether a fitted diode clamps `net` to a rail none of the pull-ups go to (anode on the net, cathode on the rail),
+/// and no pull-up's rail is known to sit at or below that rail: the pull-ups and pull-downs bring a higher rail down
+/// to the reader's level, a sense divider (VBUS detect)
+fn sense_divider(cx: &Ctx, net: NetId, ups: &[erc_analysis::pull::Pull]) -> bool {
+    let b = cx.board();
+    let power = cx.power();
+    let side = |part: PartId, names: &[&str]| {
+        b.part(part)
+            .pins
+            .iter()
+            .map(|p| b.pin(*p))
+            .find(|p| names.iter().any(|n| p.name.eq_ignore_ascii_case(n)))
+            .and_then(|p| p.net)
+    };
+    net_pins(b, net).any(|pin| {
+        let part = b.pin(pin).part;
+        let class = cx.classes().get(part);
+        if !cx.fitted(part) || !class.is_diode() || class.is_led() {
+            return false;
+        }
+        let (Some(anode), Some(clamp)) =
+            (side(part, &["A", "ANODE"]), side(part, &["K", "CATHODE"]))
+        else {
+            return false;
+        };
+        anode == net
+            && power.is_rail(clamp)
+            && ups.iter().all(|u| {
+                u.to != clamp
+                    && match (power.volts(u.to), power.volts(clamp)) {
+                        (Some(up), Some(down)) => up > down,
+                        _ => true,
+                    }
+            })
+    })
+}
+
 inventory::submit!(Registered(&Io16));
 
 #[cfg(test)]
@@ -121,5 +158,18 @@ mod tests {
     fn chosen_adc_alternate_is_a_sense_divider() {
         let found = crate::testing::fingerprints(&super::Io16, "io-16_adc_alternate");
         assert_eq!(found, ["IO-16:net /LEVEL_B|part R3|part R4"], "{found:?}");
+    }
+
+    #[test]
+    fn sense_divider_with_clamp() {
+        let found = crate::testing::fingerprints(&super::Io16, "io-16_sense_divider");
+        assert_eq!(
+            found,
+            [
+                "IO-16:net /SENSE_LOW|part R5|part R6",
+                "IO-16:net /STRAP|part R3|part R4"
+            ],
+            "{found:?}"
+        );
     }
 }

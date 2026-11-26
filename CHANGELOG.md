@@ -43,6 +43,9 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - `BOM-12`, `RATE-2`: a `Power`, `Preq_min` or `Pworking` field written `1/4W` was read as 1 W.
 - `CLK-5`, `DBG-7`: no finding on STM32G0B1 NRST and open USB2514B PRTPWR/BC_EN, which have internal pulls.
 - `BOM-9`: a part excluded from the BOM (documentation link, value `~`) needs no value.
+- `IO-15`: an open-drain flag pin with a no-connect flag is left open on purpose, not reported.
+- `IO-16`: a divider from a higher rail with a clamp diode to a lower rail is a sense divider, not reported.
+- `IO-11`: a P-channel gate pulled to a rail at or above every rail its source reaches is off.
 
 - `berc fp todo` text and the review tab list one row per footprint hash, families and MPNs under it (TOOL-8).
 - Review tab: a footprint's row shows how its parts differ; Accept ticks the MPNs the datasheet names (TOOL-11).

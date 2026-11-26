@@ -1,0 +1,54 @@
+# What better_erc finds on io-16_sense_divider.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board io-16_sense_divider"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U2"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "IO-16"
+subjects = ["net /SENSE_LOW", "part R5", "part R6"]
+
+[[finding]]
+check = "IO-16"
+subjects = ["net /STRAP", "part R3", "part R4"]
+
+[[finding]]
+check = "LEAK-1"
+subjects = ["net +3V3", "part R3", "part R4"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.5", "pin U2.6"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +5V"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]

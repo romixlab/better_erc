@@ -1,0 +1,54 @@
+# What better_erc finds on io-15_no_connect_flag.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["board io-15_no_connect_flag"]
+
+[[finding]]
+check = "DBG-3"
+subjects = ["part U1"]
+
+[[finding]]
+check = "DBG-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "DBG-8"
+subjects = ["net /PMIC2_INT", "pin U3.3"]
+
+[[finding]]
+check = "DEC-1"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "IO-15"
+subjects = ["net /PMIC2_INT", "pin U3.3"]
+
+[[finding]]
+check = "LOGIC-7"
+subjects = ["net /PMIC2_INT", "part U3"]
+
+[[finding]]
+check = "NAME-10"
+subjects = ["net /PMIC2_INT", "pin U3.3"]
+
+[[finding]]
+check = "RAIL-5"
+subjects = ["net +3V3"]
+also = ["RAIL-1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.4", "pin U1.5", "pin U1.6"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net +3V3"]
+
+[[finding]]
+check = "TEST-4"
+subjects = ["net GND"]
