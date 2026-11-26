@@ -247,11 +247,12 @@ it. With resistors and capacitors it also blinds every value-based check (`I2C-9
 **Example.** A capacitor placed from a generic `C` symbol, footprint set, value never typed.
 
 **How to check.** A component (not a power symbol) whose Value field is empty in the variant checked
-(`erc_checks/src/bom/bom_9.rs`); `DNP` and `DNM` as values are accepted.
+(`erc_checks/src/bom/bom_9.rs`); `DNP` and `DNM` as values are accepted. A symbol excluded from the BOM (`in_bom no`, such as a `VHRD_Graphic:DOC_LINK` documentation link with
+value `~`) is not a part to buy and is skipped; a fitted or DNP part still in the BOM is not.
 
 **Fix.** Fill in the value (and the MPN, `BOM-14`).
 
-**References.** Test schematic `bom-10_values` (R2).
+**References.** Test schematics `bom-10_values` (R2) and `bom-9_graphic_symbols` (V1 skipped, R1).
 
 ## `BOM-10` Value that doesn't parse or isn't a standard series value <a id="bom-10"></a>
 
