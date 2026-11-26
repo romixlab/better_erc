@@ -1918,16 +1918,20 @@ fn library_search_opens_the_first_hit() {
     h.state_mut().open_path(&ctx, &lib);
     h.run();
     h.get_by_label("Rev:Sot").click();
-    h.run();
+    h.step();
     assert_eq!(h.state().rt.query, "TEST-PART");
-    // Until the search has answered and the tab has taken the answer: the search thread may answer within a run
-    // or after it, so wait on its reply when it is still out
+    // Until the search has answered and the tab has taken the answer: the search thread may answer within a frame
+    // or after it, so wait on its reply when it is still out. Single frames: the datasheet it opens is read on a
+    // thread whose replies each ask for a frame, so a run would count them
     while let Some(rx) = h.state_mut().rt.searching.take() {
         let reply = rx.recv().expect("the search answers");
         let (tx, rx) = std::sync::mpsc::channel();
         tx.send(reply).unwrap();
         h.state_mut().rt.searching = Some(rx);
-        h.run();
+        h.step();
+    }
+    if let Some(p) = h.state_mut().rt.pdf.as_mut() {
+        p.wait_idle(&ctx);
     }
     h.run();
     assert_eq!(
