@@ -866,7 +866,8 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `better_erc_app/src/tabs/footprint_review/watch.rs`, `reload_tests.rs`, `better_erc/src/fp/todo.rs`
 - ✅ `VIEW-32` Footprint review round 8: in Move a press drags what is under it (`grab.rs`): the footprint, a
   silhouette view or the 3D model, each hit in its own frame against its extent; where two overlap the moves switch's
-  pick (`Q`) wins, else the topmost; the empty page pans. Hovering outlines what a press would pick and the mode bar
+  pick (`Q`) wins, else the topmost; the empty page pans. A double click puts the footprint's origin under the
+  pointer, a double right click the 3D model's, the view not panned. Hovering outlines what a press would pick and the mode bar
   names it (`drag: the footprint`). Hidden ones are never picked or dragged, and while the moves switch's pick is
   hidden the keys, turn, mirror and the puck move the one shown (the switch shows it, the other disabled with why;
   the choice comes back when it is shown); Ctrl+drag turns only a shown model. The model onto the footprint as KiCad

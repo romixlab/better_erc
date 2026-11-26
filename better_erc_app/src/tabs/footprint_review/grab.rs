@@ -4,6 +4,9 @@
 //! are never picked. Hovering highlights what a press would pick and the mode bar names it. The moves switch stays
 //! the choice for the keys, the arrows, turn, mirror and the SpaceMouse.
 //!
+//! A double click brings the footprint's origin under the pointer, a double right click the 3D model's (the shaded
+//! model in 3D, the picked silhouette view else); the view does not pan.
+//!
 //! A hit is decided in each one's own frame: the page point taken back through its placement into footprint or
 //! view mm, then held against its extent (a few screen points of slack around it).
 
@@ -119,6 +122,33 @@ impl FootprintReview {
             .into_iter()
             .find(|g| self.grab_hits(*g, p))
             .unwrap_or(Grab::Page)
+    }
+
+    /// The 3D model's placement as it shows over the page: the shaded model in 3D, the picked view in Silhouettes;
+    /// none while the model is hidden or not placed
+    pub(super) fn model_place_mut(&mut self) -> Option<&mut Placement> {
+        if !self.model_shown() {
+            return None;
+        }
+        let g = match self.model_views.look {
+            ModelLook::Solid => Grab::Solid,
+            ModelLook::Silhouettes => Grab::View(self.model_views.view),
+        };
+        self.grab_place_mut(g)
+    }
+
+    /// A double click at page point `p` puts the footprint's origin there (Move only: the other modes take clicks),
+    /// a double right click the 3D model's; turn, mirror and the view stay
+    pub(super) fn bring_to_pointer(&mut self, resp: &egui::Response, p: [f32; 2]) {
+        if self.tool == Tool::Move && resp.double_clicked() && self.footprint_shown() {
+            self.place.origin = p;
+            self.centre_restart();
+        }
+        if resp.double_clicked_by(egui::PointerButton::Secondary)
+            && let Some(place) = self.model_place_mut()
+        {
+            place.origin = p;
+        }
     }
 
     /// The placement a drag of `g` moves; none for the page

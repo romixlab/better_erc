@@ -656,7 +656,9 @@ says so.
    picker in the tab. A package's vias (round plated pads without a number of their own, such as thermal vias in
    an exposed pad; KiCad has no vias in footprints) are copper with their holes; they are in the review hash as
    the pads they are.
-   Scroll zooms at the pointer; the right or middle button pans; Page Up and Page Down turn pages. A help line
+   Scroll zooms at the pointer; the right or middle button pans; Page Up and Page Down turn pages. In Move a
+   double click puts the footprint's origin under the pointer and a double right click the 3D model's (the
+   shaded model, else the picked silhouette view), turn, mirror and the view kept. A help line
    under the canvas names the keys.
 5. **Measure and write notes**: a bar above the canvas shows the modes, each with its key, the one on highlighted
    and named first in the help line: Move (M: the mouse moves the footprint), Scale (R: the ruler that sets the

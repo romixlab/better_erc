@@ -2,6 +2,7 @@
 //! left by Esc, the Move key or its own key again; the measuring rulers snap (the drawing's lines, the pads) and
 //! put their lengths into the review note.
 
+use super::modelviews::{ModelLook, Side};
 use super::tests::{datasheet, footprint, harness};
 use super::*;
 use egui_kittest::Harness;
@@ -780,5 +781,78 @@ fn the_footprint_centre_snaps_to_the_drawing() {
     h.get_by_label_contains("Centre snap · ").click();
     h.run();
     assert!(h.state().centre_snap_on(), "the button turns it on");
+    std::fs::remove_dir_all(&dir).unwrap();
+}
+
+/// `clicks` clicks of `button` at `a` (screen), pressed and let go without moving, 50 ms apart from time `t0` (s):
+/// the harness's clock stands still, so a click counts as a double click only with times of its own
+fn clicks_at(h: &mut H, a: egui::Pos2, button: egui::PointerButton, clicks: usize, t0: f64) {
+    h.hover_at(a);
+    h.run();
+    let mut t = t0;
+    for _ in 0..clicks {
+        for pressed in [true, false] {
+            h.input_mut().time = Some(t);
+            h.event(egui::Event::PointerButton {
+                pos: a,
+                button,
+                pressed,
+                modifiers: egui::Modifiers::NONE,
+            });
+            h.step();
+            t += 0.05;
+        }
+    }
+    h.run();
+}
+
+/// A double click brings the footprint's origin under the pointer and a double right click the 3D model's, turn,
+/// mirror, zoom and pan kept; a single click moves neither; the help line names both
+#[test]
+fn double_clicks_bring_the_footprint_and_the_model_to_the_pointer() {
+    let dir = scratch("double");
+    let mut h = open("fp mode double", &dir);
+    let st = h.state_mut();
+    st.place.rotation = 90.0;
+    st.place.mirror = true;
+    st.model_views.look = ModelLook::Silhouettes;
+    st.model_views.view = Side::Bottom;
+    st.model_views.place[Side::Bottom.index()] = Some(Placement {
+        origin: [40.0, 60.0],
+        rotation: 180.0,
+        mirror: false,
+    });
+    h.run();
+    let (zoom, pan) = (h.state().zoom, h.state().pan);
+    let page = |h: &H, p: egui::Pos2| {
+        let st = h.state();
+        st.to_page(st.rt.canvas, p)
+    };
+    let at = screen(&h, [220.0, 180.0]);
+    clicks_at(&mut h, at, egui::PointerButton::Primary, 2, 100.0);
+    let st = h.state();
+    assert_eq!(st.place.origin, page(&h, at));
+    assert_eq!((st.place.rotation, st.place.mirror), (90.0, true));
+    assert_eq!((st.zoom, st.pan), (zoom, pan), "the view does not pan");
+    let model_at = screen(&h, [80.0, 250.0]);
+    clicks_at(&mut h, model_at, egui::PointerButton::Secondary, 2, 200.0);
+    let st = h.state();
+    let model = st.model_views.place[Side::Bottom.index()].clone().unwrap();
+    assert_eq!(model.origin, page(&h, model_at));
+    assert_eq!(model.rotation, 180.0);
+    assert_eq!(st.place.origin, page(&h, at), "the footprint stays");
+    assert_eq!((st.zoom, st.pan), (zoom, pan), "the view does not pan");
+    let help = st.help_line();
+    assert!(
+        help.contains(
+            "double click: the footprint's origin to the pointer, double right click: the model's"
+        ),
+        "{help}"
+    );
+    // One click alone moves nothing
+    let before = h.state().place.origin;
+    let one = screen(&h, [100.0, 100.0]);
+    clicks_at(&mut h, one, egui::PointerButton::Primary, 1, 300.0);
+    assert_eq!(h.state().place.origin, before, "a single click");
     std::fs::remove_dir_all(&dir).unwrap();
 }

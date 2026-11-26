@@ -2425,7 +2425,8 @@ impl FootprintReview {
              {} full width · {} ruler: one end, {} the other · {} zoom on a ruler end, again the other, again back · \
              {} type the ruler's length, Enter sets the scale · {} the dimension's number sets it · \
              {} · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
-             arrows nudge (Shift: 10×) · {} the footprint's centre {} · PgUp/PgDn page · wheel zoom · a drag on the empty page, right or middle drag pans · \
+             arrows nudge (Shift: 10×) · {} the footprint's centre {} · PgUp/PgDn page · wheel zoom · a drag on the empty page, right or middle drag pans · double click: the footprint's origin to the pointer, double \
+             right click: the model's · \
              {} the model as silhouettes or 3D ({}) · {} moves the footprint or the model ({}) · {} {} · \
              3D: SpaceMouse tilt, roll and twist or Ctrl+drag turn it, letting go lands on a side (Alt: free) · \
              {} the model onto the footprint · {} hides or shows the footprint, {} the model · hold {}: the page alone · {} X-ray · {} reload from disk\n\
@@ -3413,6 +3414,9 @@ impl FootprintReview {
                     }
                 }
             }
+        }
+        if let Some(p) = pointer_page.or(hover_page) {
+            self.bring_to_pointer(&resp, p);
         }
         // The Select mode: a box let go selects what is in it, a click the piece at the pointer
         if self.tool == Tool::Select {
