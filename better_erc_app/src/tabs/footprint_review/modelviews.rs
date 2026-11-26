@@ -18,6 +18,7 @@
 //! back, left (from -x) and right, the board's surface their horizontal line through the origin. The bottom view is
 //! seen from below: x mirrored, as a package drawing's bottom view is.
 
+use super::grab::Grab;
 use super::*;
 use i_overlay::core::fill_rule::FillRule;
 use i_overlay::float::simplify::SimplifyShape;
@@ -372,12 +373,11 @@ impl ModelLook {
     }
 }
 
-/// What the arrow keys, turn, mirror and the puck move, and what a press in Move picks first where both are
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+/// What the keys, the puck and the placement controls act on, as one of two: the footprint or the model
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Moves {
-    #[default]
     Footprint,
-    /// The model: the view picked in Silhouettes, the shaded model in 3D
+    /// The model: a silhouette view in Silhouettes, the shaded model in 3D
     Model,
 }
 
@@ -389,12 +389,11 @@ pub struct ModelViews {
     pub place: [Option<Placement>; 6],
     /// Which views are drawn, by [`Side::index`]
     pub shown: [bool; 6],
-    /// The view picked: what Model moves in Silhouettes, what the model view key cycles
+    /// The view the model view key showed last, and cycles on from; the view the model stands for in Silhouettes
+    /// before the pointer was over one
     pub view: Side,
     /// Silhouettes or the shaded model
     pub look: ModelLook,
-    /// The footprint or the model
-    pub moves: Moves,
     /// The shaded model's placement and turn (VIEW-27)
     pub solid: super::solid::Solid,
     /// How opaque the views' fill and the 3D model are; none: the settings' model opacity
@@ -411,41 +410,25 @@ impl ModelViews {
 }
 
 impl FootprintReview {
-    /// The silhouette view that moves, when the model moves in Silhouettes
+    /// The silhouette view the keys and the puck act on, when it is one ([`FootprintReview::aimed`])
     pub(super) fn moving_view(&self) -> Option<Side> {
-        (self.moves_now() == Moves::Model && self.model_views.look == ModelLook::Silhouettes)
-            .then_some(self.model_views.view)
-    }
-
-    /// The shaded model moves
-    pub(super) fn moving_solid(&self) -> bool {
-        self.moves_now() == Moves::Model && self.model_views.look == ModelLook::Solid
-    }
-
-    /// What the mouse, the arrows, turn, mirror and the puck move now: the moves switch's choice, unless that one is
-    /// hidden and the other shown, then the other. A hidden overlay is never dragged; the choice comes back when
-    /// it is shown again (VIEW-32)
-    pub(super) fn moves_now(&self) -> Moves {
-        match self.model_views.moves {
-            Moves::Model if self.rt.model_hidden && !self.rt.fp_hidden => Moves::Footprint,
-            Moves::Footprint if self.rt.fp_hidden && !self.rt.model_hidden => Moves::Model,
-            m => m,
+        match self.aimed() {
+            Grab::View(s) => Some(s),
+            _ => None,
         }
     }
 
-    /// The moves switch's choice stands in for a hidden one: why, and which key shows it again
-    pub(super) fn moves_overridden(&self) -> Option<String> {
-        let k = self.keys();
-        (self.moves_now() != self.model_views.moves).then(|| match self.model_views.moves {
-            Moves::Model => format!(
-                "the model is hidden ({} shows it): the footprint moves until then",
-                key_name(k.hide_model)
-            ),
-            Moves::Footprint => format!(
-                "the footprint is hidden ({} shows it): the model moves until then",
-                key_name(k.hide_footprint)
-            ),
-        })
+    /// The keys and the puck act on the shaded model
+    pub(super) fn moving_solid(&self) -> bool {
+        self.aimed() == Grab::Solid
+    }
+
+    /// Whether the keys and the puck act on the footprint or the model
+    pub(super) fn moves_now(&self) -> Moves {
+        match self.aimed() {
+            Grab::Footprint | Grab::Page => Moves::Footprint,
+            Grab::View(_) | Grab::Solid => Moves::Model,
+        }
     }
 
     /// The placement the mouse, the arrow keys, turn and mirror move: the view picked's or the shaded model's
@@ -500,16 +483,17 @@ impl FootprintReview {
         }
     }
 
-    /// The model view key. Silhouettes: the model moves, the next view picked (the first press takes the view
-    /// picked), shown. 3D: the shaded model turns to the next side, eased
+    /// The model view key. Silhouettes: the next view shown (the first press shows the view last shown, when the
+    /// keys act on the footprint) and aimed at, so the keys act on it until the pointer is over something else. 3D:
+    /// the shaded model turns to the next side, eased
     pub(super) fn cycle_model_view(&mut self, now: f64) {
         let next = Side::ALL[(self.model_views.view.index() + 1) % Side::ALL.len()];
         match self.model_views.look {
             ModelLook::Silhouettes => {
-                if self.model_views.moves == Moves::Model {
+                if self.moves_now() == Moves::Model {
                     self.model_views.view = next;
                 }
-                self.set_moving(Some(self.model_views.view));
+                self.aim_view(self.model_views.view);
             }
             ModelLook::Solid => {
                 let side = match self.solid_side() {
@@ -523,36 +507,13 @@ impl FootprintReview {
         }
     }
 
-    /// What moves: a model view (picked and shown, Silhouettes) or the footprint; in 3D any side means the shaded
-    /// model
-    pub(super) fn set_moving(&mut self, side: Option<Side>) {
-        match side {
-            Some(s) => {
-                self.model_views.moves = Moves::Model;
-                self.model_views.view = s;
-                if self.model_views.look == ModelLook::Silhouettes {
-                    self.show_model_view(s);
-                }
-            }
-            None => self.model_views.moves = Moves::Footprint,
-        }
-        self.usage(&format!(
-            "model views moves {}",
-            match (self.model_views.look, side) {
-                (_, None) => "footprint",
-                (ModelLook::Solid, Some(_)) => "3d model",
-                (ModelLook::Silhouettes, Some(s)) => s.name(),
-            }
-            .to_lowercase()
-        ));
-    }
-
-    /// The moves key: the footprint or the model
-    pub(super) fn toggle_moves(&mut self) {
-        match self.model_views.moves {
-            Moves::Footprint => self.set_moving(Some(self.model_views.view)),
-            Moves::Model => self.set_moving(None),
-        }
+    /// Model view `side` shown and aimed at: the keys and the puck act on it until the pointer is over something
+    /// else
+    pub(super) fn aim_view(&mut self, side: Side) {
+        self.model_views.view = side;
+        self.show_model_view(side);
+        self.rt.aim = Grab::View(side);
+        self.usage(&format!("model view {}", side.name().to_lowercase()));
     }
 
     /// Silhouettes or 3D; the 3D model's first placement is the footprint's, seen from the top, so it lies on its
@@ -562,7 +523,7 @@ impl FootprintReview {
         if look == ModelLook::Solid && self.model_views.solid.place.is_none() {
             self.model_views.solid.place = Some(self.place.clone());
         }
-        if look == ModelLook::Silhouettes && self.model_views.moves == Moves::Model {
+        if look == ModelLook::Silhouettes && self.moves_now() == Moves::Model {
             self.show_model_view(self.model_views.view);
         }
         self.usage(&format!("model look {}", look.name().to_lowercase()));
@@ -601,9 +562,7 @@ impl FootprintReview {
     /// the middle of the canvas once it can be
     pub(super) fn model_views_frame(&mut self, ctx: &egui::Context, canvas: Rect) {
         let wanted = match self.model_views.look {
-            ModelLook::Silhouettes => {
-                self.model_views.any_shown() || self.model_views.moves == Moves::Model
-            }
+            ModelLook::Silhouettes => self.model_views.any_shown(),
             ModelLook::Solid => true,
         };
         if !wanted {
@@ -801,7 +760,7 @@ impl FootprintReview {
             }
             ModelLook::Solid => format!("3D, {}", self.solid_side_name()),
         };
-        let summary = format!("{summary} · moves {}", self.moving_name());
+        let summary = format!("{summary} · keys on {}", self.moving_name());
         SubPane::new("Model views")
             .id_salt("fp model views")
             .summary(summary)
@@ -813,7 +772,7 @@ impl FootprintReview {
             .show(ui, |ui| self.model_views_controls(ui));
     }
 
-    /// The two switches, Silhouettes or 3D and what moves, each with its key; the mode bar shows the same
+    /// The switch Silhouettes or 3D, with its key; the mode bar shows the same
     pub(super) fn model_switches(&mut self, ui: &mut Ui, fill: bool) {
         let k = self.keys();
         let mut look = self.model_views.look;
@@ -842,41 +801,6 @@ impl FootprintReview {
         if look != self.model_views.look {
             self.set_look(look);
         }
-        // What moves now: a hidden one's place taken by the one shown, the other disabled with why
-        let now = self.moves_now();
-        let mut moves = now;
-        let overridden = self.moves_overridden();
-        let why = |m: Moves| overridden.clone().filter(|_| m != now);
-        let mut seg = Segmented::new(&mut moves).id_salt("model moves");
-        if fill {
-            seg = seg.fill_width();
-        }
-        seg.item_if(
-            Moves::Footprint,
-            "Footprint",
-            format!(
-                "The arrow keys, turn, mirror and the puck move the footprint, and a press on both picks it; {} switches",
-                key_name(k.moves)
-            ),
-            why(Moves::Footprint),
-        )
-        .item_if(
-            Moves::Model,
-            "Model",
-            format!(
-                "They move {}; {} switches",
-                match self.model_views.look {
-                    ModelLook::Silhouettes => "the view picked",
-                    ModelLook::Solid => "the 3D model",
-                },
-                key_name(k.moves)
-            ),
-            why(Moves::Model),
-        )
-        .show(ui);
-        if moves != self.moves_now() {
-            self.toggle_moves();
-        }
     }
 
     fn model_views_controls(&mut self, ui: &mut Ui) {
@@ -897,11 +821,7 @@ impl FootprintReview {
             );
         }
         Group::new("Shown as")
-            .tooltip(format!(
-                "Silhouettes or 3D ({}), and what moves: the footprint or the model ({})",
-                key_name(k.model_look),
-                key_name(k.moves)
-            ))
+            .tooltip(format!("Silhouettes or 3D ({})", key_name(k.model_look)))
             .show(ui, |ui| {
                 ui.vertical(|ui| self.model_switches(ui, true));
             });
@@ -1006,9 +926,8 @@ impl FootprintReview {
         }
     }
 
-    /// Silhouettes: which views are drawn, and the view picked (what Model moves, what the model view key cycles)
+    /// Silhouettes: which views are drawn
     fn silhouette_controls(&mut self, ui: &mut Ui) {
-        let k = self.keys();
         Group::new("Shown")
             .tooltip("Which of the model's views are drawn over the page")
             .show(ui, |ui| {
@@ -1034,31 +953,6 @@ impl FootprintReview {
                         }
                     }
                 });
-            });
-        Group::new("View picked")
-            .tooltip(format!(
-                "The view Model moves, shown with it; {} picks the next",
-                key_name(k.model_view)
-            ))
-            .show(ui, |ui| {
-                let mut pick = None;
-                ui.horizontal_wrapped(|ui| {
-                    for side in Side::ALL {
-                        if ui
-                            .selectable_label(self.model_views.view == side, side.name())
-                            .on_hover_text(format!(
-                                "The {} view moves, shown",
-                                side.name().to_lowercase()
-                            ))
-                            .clicked()
-                        {
-                            pick = Some(side);
-                        }
-                    }
-                });
-                if let Some(p) = pick {
-                    self.set_moving(Some(p));
-                }
             });
     }
 }
@@ -1331,21 +1225,21 @@ mod tests {
             "{lo:?} {hi:?}"
         );
 
-        // Back, left, right; the model view key then wraps to the top view; the moves key (Q) the footprint
-        // again: a drag moves it
+        // Back, left, right; the model view key then wraps to the top view, which the keys then act on; the
+        // model hidden (J), they act on the footprint again: a drag moves it
         for _ in 0..3 {
             key(&mut h, egui::Key::K);
         }
         assert_eq!(h.state().moving_view(), Some(Side::Right));
         key(&mut h, egui::Key::K);
         assert_eq!(h.state().moving_view(), Some(Side::Top));
-        key(&mut h, egui::Key::Q);
-        assert_eq!(h.state().moving_view(), None);
-        assert_eq!(h.state().model_views.moves, Moves::Footprint);
         assert_eq!(
             h.state().model_views.shown.iter().filter(|s| **s).count(),
             6
         );
+        key(&mut h, egui::Key::J);
+        assert_eq!(h.state().moving_view(), None);
+        assert_eq!(h.state().moves_now(), Moves::Footprint);
         let o = h.state().place.origin;
         let a = screen(&h, o);
         h.hover_at(a);

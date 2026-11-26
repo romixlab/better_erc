@@ -19,6 +19,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Changed
 
+- Review tab: T, mirror, arrows and the SpaceMouse act on what the pointer is (last) over; Q switch removed (VIEW-37).
 - `berc fp` reviews and hashes the library footprint a board names; a differing board copy is its own finding (TOOL-8).
 - `berc fp check` and `todo` name each board copy's differing settings and the board setup's margins once (TOOL-8).
 - `berc parts refresh` and `berc fp accept` take `--symbols` and `--footprints`; lock pairs hold library hashes (TOOL-9).

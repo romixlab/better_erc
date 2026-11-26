@@ -163,9 +163,6 @@ pub struct Keys {
     pub model_view: String,
     /// How the model is shown over the page: Silhouettes (its six flat views) or 3D (the shaded model) (VIEW-27)
     pub model_look: String,
-    /// What the arrow keys, turn, mirror and the puck move, and what a press in Move picks first where the footprint
-    /// and the model overlap: the footprint or the model (VIEW-27, VIEW-32)
-    pub moves: String,
     /// Hides the footprint over the page, and shows it again where it was (VIEW-28)
     pub hide_footprint: String,
     /// Hides the model over the page (its silhouettes or the 3D model), and shows it again where it was (VIEW-28)
@@ -214,7 +211,6 @@ impl Default for Keys {
             measure_model: "O".into(),
             model_view: "K".into(),
             model_look: "L".into(),
-            moves: "Q".into(),
             hide_footprint: "H".into(),
             hide_model: "J".into(),
             peek: "Space".into(),

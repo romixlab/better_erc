@@ -431,7 +431,7 @@ fn a_lost_focus_leaves_no_turn_held() {
     open(&mut h, &dir);
     let st = h.state_mut();
     st.model_views.look = modelviews::ModelLook::Solid;
-    st.model_views.moves = modelviews::Moves::Model;
+    st.rt.aim = super::grab::Grab::Solid;
     st.puck = PuckMoves::Footprint;
     st.rt.settings.model_snap.enabled = false;
     h.step();
@@ -496,7 +496,8 @@ fn a_lost_focus_leaves_no_turn_held() {
         before.1,
         st.place.origin
     );
-    // The puck reports again: it turns the model again
+    // The puck reports again, the pointer gone and last over the model: it turns the model again
+    h.state_mut().rt.aim = super::grab::Grab::Solid;
     push(&mut h, &fake, [0, 0, 0, 0, 0, 0]);
     let rest = h.state().model_views.solid.turn;
     push(&mut h, &fake, [0, 0, 0, 0, 0, full]);
@@ -510,8 +511,9 @@ fn a_lost_focus_leaves_no_turn_held() {
 }
 
 /// VIEW-33: the puck drives one thing. On the page it pans the view and nothing on the page moves or turns, a twist
-/// included; on a thing it drives what is under the pointer (as a drag picks it), else what Q picks, and the page
-/// stays; the thing is picked as the puck leaves rest and kept until it rests again
+/// included; on a thing it drives what is under the pointer (as a drag picks it), else what the pointer was last
+/// over, marked on the canvas, and the page stays; the thing is picked as the puck leaves rest and kept until it
+/// rests again
 #[test]
 fn the_puck_drives_one_thing() {
     let dir = scratch("one");
@@ -521,7 +523,7 @@ fn the_puck_drives_one_thing() {
     open(&mut h, &dir);
     let st = h.state_mut();
     st.model_views.look = modelviews::ModelLook::Solid;
-    st.model_views.moves = modelviews::Moves::Model;
+    st.rt.aim = super::grab::Grab::Solid;
     st.rt.settings.model_snap.enabled = false;
     h.step();
     let full = Mapping::default().full_scale as i32;
@@ -557,7 +559,7 @@ fn the_puck_drives_one_thing() {
     );
     push(&mut h, &fake, [0; 6]);
 
-    // On a thing, the pointer off the canvas: what Q picks, the 3D model, moves and turns; the page stays
+    // On a thing, the pointer off the canvas and last over the 3D model: the model moves and turns; the page stays
     h.state_mut().puck = PuckMoves::Footprint;
     h.hover_at(pos2(1.0, 1.0));
     h.step();
@@ -597,6 +599,19 @@ fn the_puck_drives_one_thing() {
     );
     push(&mut h, &fake, [0; 6]);
     assert_eq!(h.state().rt.puck.target, None, "at rest the pick is let go");
+
+    // The pointer off the canvas again: the footprint it was last over moves, the model stays
+    h.hover_at(pos2(1.0, 1.0));
+    h.step();
+    assert!(!h.state().rt.pointer_on_canvas);
+    assert_eq!(h.state().aimed(), super::grab::Grab::Footprint);
+    let (_, fp0, model0, _) = snapshot(&h);
+    push(&mut h, &fake, [full, 0, 0, 0, 0, 0]);
+    push(&mut h, &fake, [full, 0, 0, 0, 0, 0]);
+    let (_, fp1, model1, _) = snapshot(&h);
+    assert!(fp1[0] > fp0[0], "the footprint moves: {fp0:?} → {fp1:?}");
+    assert_eq!(model1, model0, "the model stays");
+    push(&mut h, &fake, [0; 6]);
     drop(h);
     drop(fake);
     std::fs::remove_dir_all(&dir).unwrap();

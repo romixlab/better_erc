@@ -765,11 +765,12 @@ mod tests {
         // Nothing of the model over the page yet: the page as it is
         let plain = h.render().unwrap();
 
-        // L: 3D, on the footprint, seen from the top, the footprint still moving; Q: the model moves
+        // L: 3D, on the footprint, seen from the top, the keys still on the footprint; the pointer last over the
+        // model: the keys act on it
         key(&mut h, egui::Key::L);
         assert_eq!(h.state().model_views.look, ModelLook::Solid);
-        assert_eq!(h.state().model_views.moves, Moves::Footprint);
-        key(&mut h, egui::Key::Q);
+        assert_eq!(h.state().moves_now(), Moves::Footprint);
+        h.state_mut().rt.aim = grab::Grab::Solid;
         assert!(h.state().moving_solid());
         assert_eq!(h.state().moving_name(), "the 3D model");
         steps(&mut h, 4);
@@ -1040,12 +1041,24 @@ mod tests {
         drag(&mut h, on, vec2(40.0, 0.0));
         assert!(near(fp_at(&h), [340.0, 400.0]), "{:?}", fp_at(&h));
         assert!(near(solid_at(&h), [300.0, 400.0]), "the model stays");
-        // Q: the model is picked first where they overlap
-        key(&mut h, egui::Key::Q);
+        // The pointer over the model alone (both turned 90°: its left edge, left of the footprint now), then onto the
+        // overlap: the model it was
+        // last over is picked first there
+        let model_only = screen(&h, [285.0, 400.0]);
+        h.hover_at(model_only);
+        h.step();
+        assert_eq!(h.state().rt.hover_grab, Some(grab::Grab::Solid));
+        h.hover_at(on);
+        h.step();
+        assert_eq!(
+            h.state().rt.hover_grab,
+            Some(grab::Grab::Solid),
+            "the model kept"
+        );
         drag(&mut h, on, vec2(0.0, 30.0));
         assert!(near(solid_at(&h), [300.0, 430.0]), "{:?}", solid_at(&h));
         assert!(near(fp_at(&h), [340.0, 400.0]));
-        // The footprint alone under the press (its pad 2, right of the model now): the footprint, whatever Q says
+        // The footprint alone under the press (its pad 2, right of the model now): the footprint
         let pad2 = screen(&h, h.state().fp_to_page([1.27, 0.0]));
         drag(&mut h, pad2, vec2(-40.0, 0.0));
         assert!(near(fp_at(&h), [300.0, 400.0]), "{:?}", fp_at(&h));
@@ -1061,10 +1074,11 @@ mod tests {
         );
         assert!(near(fp_at(&h), [300.0, 400.0]) && near(solid_at(&h), [300.0, 430.0]));
 
-        // The model hidden (J), Q on Model: never picked, the footprint under it moves; the keys move the footprint
-        // too, and the mode bar says so; J again: Q's choice back
+        // The model hidden (J), last over it: never picked, the footprint under it moves; the keys move the
+        // footprint too
+        h.state_mut().rt.aim = grab::Grab::Solid;
         key(&mut h, egui::Key::J);
-        assert!(!h.state().moving_solid() && h.state().moves_overridden().is_some());
+        assert!(!h.state().moving_solid());
         let at = screen(&h, [300.0, 430.0]);
         drag(&mut h, at, vec2(0.0, 40.0));
         assert!(
@@ -1079,10 +1093,10 @@ mod tests {
             fp[0] + 1.0,
             "the arrows move the footprint shown"
         );
+        // J again: the footprint, dragged last, stays what the keys act on
         key(&mut h, egui::Key::J);
-        assert!(h.state().moving_solid());
-        // The footprint hidden (H), Q on Footprint: the model shown moves by the keys, a press on the footprint pans
-        key(&mut h, egui::Key::Q);
+        assert!(!h.state().moving_solid());
+        // The footprint hidden (H): the model shown moves by the keys
         key(&mut h, egui::Key::H);
         assert!(h.state().moving_solid());
         let m = solid_at(&h);
@@ -1090,13 +1104,94 @@ mod tests {
         h.step();
         assert_eq!(solid_at(&h)[1], m[1] + 1.0);
         key(&mut h, egui::Key::H);
-        assert!(!h.state().moving_solid(), "Q's choice back");
+        assert!(!h.state().moving_solid(), "the footprint back");
         let _ = std::fs::remove_dir_all(&dir);
     }
 
     /// Perspective over the page (VIEW-32): the body's top, 1.2 mm over the board, looks larger by the eye's
     /// distance over its distance to the top, the origin stays where it is, the label says the scale holds at the
     /// board plane only, and Measure footprint has no model corner to snap to; orthographic again as before
+    /// T, mirror and the arrows act on what the pointer is over, the footprint or the 3D model, with no pick made
+    /// first; with the pointer still or over the empty page they act on what it was last over; off the canvas the
+    /// canvas marks that one
+    #[test]
+    fn the_keys_act_on_what_the_pointer_is_over() {
+        let dir = std::env::temp_dir().join(format!("berc-fp-aim-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let fp = two_pin(&dir);
+        let pdf = datasheet(&dir);
+        let mut h = gpu_harness("fp aim");
+        h.run();
+        let ctx = h.ctx.clone();
+        h.state_mut().open_path(&ctx, &fp);
+        h.state_mut().open_datasheet(&ctx, &pdf);
+        h.state_mut().rt.pdf.as_mut().unwrap().wait_idle(&ctx);
+        h.run();
+        let st = h.state_mut();
+        st.scale = Some(Scale {
+            mm_per_point: 0.04,
+            page: st.page,
+            mm: 2.0,
+            note: None,
+        });
+        st.zoom = 1.0;
+        st.pan = [0.0, 0.0];
+        st.rt.fit_page = false;
+        st.place.origin = [300.0, 400.0];
+        h.run();
+        key(&mut h, egui::Key::L);
+        h.state_mut().model_views.solid.place = Some(Placement {
+            origin: [500.0, 400.0],
+            rotation: 0.0,
+            mirror: false,
+        });
+        steps(&mut h, 4);
+        let press = |h: &mut H, at: egui::Pos2, k: egui::Key| {
+            h.hover_at(at);
+            h.step();
+            h.key_press(k);
+            h.step();
+        };
+        let solid = |h: &H| h.state().model_views.solid.place.clone().unwrap();
+        let fp_place = |h: &H| h.state().place.clone();
+        let over_model = screen(&h, [500.0, 400.0]);
+        let over_fp = screen(&h, [300.0, 400.0]);
+        // T over the model turns the model, X mirrors it; the footprint stays
+        press(&mut h, over_model, egui::Key::T);
+        assert_eq!(solid(&h).rotation, 90.0);
+        press(&mut h, over_model, egui::Key::X);
+        assert!(solid(&h).mirror);
+        assert_eq!((fp_place(&h).rotation, fp_place(&h).mirror), (0.0, false));
+        // An arrow over the model nudges it
+        press(&mut h, over_model, egui::Key::ArrowRight);
+        assert_eq!(solid(&h).origin, [501.0, 400.0]);
+        // Over the footprint: the footprint
+        press(&mut h, over_fp, egui::Key::T);
+        assert_eq!(fp_place(&h).rotation, 90.0);
+        assert_eq!(solid(&h).rotation, 90.0, "the model stays");
+        let o = fp_place(&h).origin;
+        press(&mut h, over_fp, egui::Key::ArrowDown);
+        assert_eq!(fp_place(&h).origin, [o[0], o[1] + 1.0]);
+        // Over the empty page: still the footprint, last over
+        let empty = screen(&h, [700.0, 150.0]);
+        press(&mut h, empty, egui::Key::T);
+        assert_eq!(fp_place(&h).rotation, 180.0);
+        assert_eq!(h.state().moving_name(), "the footprint");
+        // Off the canvas: the one last over marked, the hover outline gone
+        h.hover_at(egui::pos2(1.0, 1.0));
+        steps(&mut h, 2);
+        let st = h.state();
+        assert!(!st.rt.pointer_on_canvas && st.rt.hover_grab.is_none());
+        assert_eq!(st.aimed(), grab::Grab::Footprint);
+        let help = st.help_line();
+        assert!(
+            help.contains("act on what is under the pointer, else what it was last over, marked"),
+            "{help}"
+        );
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
     #[test]
     fn the_3d_model_in_perspective() {
         let dir = std::env::temp_dir().join(format!("berc-fp-persp-{}", std::process::id()));
@@ -1311,18 +1406,17 @@ mod tests {
         h.state_mut().set_perspective(false);
         key(&mut h, egui::Key::Home);
         steps(&mut h, 10);
-        // Hovering the model with Q on Model: its outline, and the mode bar names it
-        key(&mut h, egui::Key::Q);
+        // Hovering the model, last over it: its outline, and the mode bar names it
+        h.state_mut().rt.aim = grab::Grab::Solid;
         h.hover_at(screen(&h, fp_place.origin) + vec2(4.0, 4.0));
         steps(&mut h, 2);
         shot(&mut h, "13-hover-picks-the-model.png");
-        // The model hidden: the switch shows the footprint moving, Model disabled
+        // The model hidden: the footprint picked
         key(&mut h, egui::Key::J);
         h.hover_at(screen(&h, fp_place.origin) + vec2(4.0, 4.0));
         steps(&mut h, 2);
         shot(&mut h, "13a-model-hidden-footprint-moves.png");
         key(&mut h, egui::Key::J);
-        key(&mut h, egui::Key::Q);
         // The 3D view orthographic
         h.state_mut().rt.settings.view_3d_projection = ve_view3d::Projection::Orthographic;
         key(&mut h, egui::Key::Num3);

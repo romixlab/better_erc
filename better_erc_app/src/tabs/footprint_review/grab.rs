@@ -1,8 +1,11 @@
 //! What a press in Move drags (VIEW-32): whatever is under the pointer. A press on the footprint drags the footprint,
 //! on a silhouette view that view, on the 3D model the model, on the empty page it pans the page. Where two overlap,
-//! the one the moves switch (`Q`) picks wins, else the topmost (the footprint is drawn over the model). Hidden ones
-//! are never picked. Hovering highlights what a press would pick and the mode bar names it. The moves switch stays
-//! the choice for the keys, the arrows, turn, mirror and the SpaceMouse.
+//! the one the pointer was last over wins, else the topmost (the footprint is drawn over the model). Hidden ones are
+//! never picked. Hovering highlights what a press would pick and the mode bar names it.
+//!
+//! The keys (turn, mirror, the arrows, blink), the SpaceMouse and the placement controls act on the same: what the
+//! pointer is over, else what it was last over ([`FootprintReview::aimed`]), marked while the pointer is off the
+//! canvas. There is no selection to make first.
 //!
 //! A double click brings the footprint's origin under the pointer, a double right click the 3D model's (the shaded
 //! model in 3D, the picked silhouette view else); the view does not pan.
@@ -10,7 +13,7 @@
 //! A hit is decided in each one's own frame: the page point taken back through its placement into footprint or
 //! view mm, then held against its extent (a few screen points of slack around it).
 
-use super::modelviews::{ModelLook, Moves, Side};
+use super::modelviews::{ModelLook, Side};
 use super::*;
 
 /// What a press in Move drags
@@ -114,14 +117,47 @@ impl FootprintReview {
                 );
             }
         }
-        let order: Vec<Grab> = match self.model_views.moves {
-            Moves::Model => model.into_iter().chain([Grab::Footprint]).collect(),
-            Moves::Footprint => std::iter::once(Grab::Footprint).chain(model).collect(),
-        };
-        order
-            .into_iter()
+        // The one last over first, so a pointer moving on from it onto an overlap keeps it; then the topmost
+        std::iter::once(self.rt.aim)
+            .chain([Grab::Footprint])
+            .chain(model)
             .find(|g| self.grab_hits(*g, p))
             .unwrap_or(Grab::Page)
+    }
+
+    /// What the keys, the puck and the placement controls act on: what the pointer was last over on the canvas,
+    /// the footprint before anything was. One hidden gives way to the other shown; a model view or the 3D model
+    /// stands for the model in the look shown
+    pub(super) fn aimed(&self) -> Grab {
+        let model = match (self.rt.aim, self.model_views.look) {
+            (Grab::View(s), ModelLook::Silhouettes) => Grab::View(s),
+            (_, ModelLook::Silhouettes) => Grab::View(self.model_views.view),
+            (_, ModelLook::Solid) => Grab::Solid,
+        };
+        let on_model = matches!(self.rt.aim, Grab::View(_) | Grab::Solid);
+        let (model_hidden, fp_hidden) = (self.rt.model_hidden, self.rt.fp_hidden);
+        let to_model = if on_model {
+            !(model_hidden && !fp_hidden)
+        } else {
+            fp_hidden && !model_hidden
+        };
+        if to_model { model } else { Grab::Footprint }
+    }
+
+    /// The mark on what the keys and the puck act on, while the pointer is off the canvas: its outline, dashed
+    pub(super) fn draw_aim(&self, painter: &egui::Painter, canvas: Rect) {
+        let mut shapes = Vec::new();
+        self.grab_outline(canvas, self.aimed(), |pts| {
+            let mut closed = pts.clone();
+            closed.extend(pts.first());
+            shapes.extend(Shape::dashed_line(
+                &closed,
+                Stroke::new(1.5, HOVER_COLOUR),
+                6.0,
+                4.0,
+            ));
+        });
+        painter.extend(shapes);
     }
 
     /// The 3D model's placement as it shows over the page: the shaded model in 3D, the picked view in Silhouettes;
@@ -174,9 +210,13 @@ impl FootprintReview {
     /// The outline of what a press would pick, thin, in the highlight colour
     pub(super) fn draw_grab_hover(&self, painter: &egui::Painter, canvas: Rect, g: Grab) {
         let s = Stroke::new(1.5, HOVER_COLOUR);
-        let closed = |pts: Vec<Pos2>| {
+        self.grab_outline(canvas, g, |pts| {
             painter.add(Shape::closed_line(pts, s));
-        };
+        });
+    }
+
+    /// The outline of `g` on screen, each closed contour given to `closed`
+    fn grab_outline(&self, canvas: Rect, g: Grab, mut closed: impl FnMut(Vec<Pos2>)) {
         let corners = |(lo, hi): ([f64; 2], [f64; 2])| [lo, [hi[0], lo[1]], hi, [lo[0], hi[1]]];
         match g {
             Grab::Footprint => {

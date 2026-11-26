@@ -707,13 +707,15 @@ says so.
    datasheet at the page's scale, to hold against the package drawing. Each is the model's silhouette filled in its
    colour (a setting, `colors.model`), outlined, with the edges seen from that side (`colors.model_edges`); edges
    hidden behind a face are left out. The top view lies as the footprint does, the side views stand on the board's
-   line through the origin, the bottom view is mirrored as a package drawing's is. K (a setting, the Moves button in
-   the mode bar, the pie) picks what moves: the footprint, then each view in turn, then the footprint again; the view
-   picked is shown, the top view first on the footprint and the others in the middle of the canvas. What moves is
-   what the mouse in Move, the arrow keys, turn (T) and mirror (X) move and what the Placement section shows; each
-   view keeps its own place, all share the page's scale. The side panel's Model views section shows and hides each
-   view, picks what moves, and sets the views' blend mode (normal, multiply, screen, difference), opacity and blink
-   (B blinks what moves). Measure footprint (G) snaps to the views' outline corners and edge ends too, so a model
+   line through the origin, the bottom view is mirrored as a package drawing's is. K (a setting, the pie) shows the
+   next view, the top view first on the footprint and the others in the middle of the canvas. There is no pick to
+   make first: the arrow keys, turn (T), mirror (X), blink (B), the SpaceMouse and the Placement section act on what
+   the pointer is over (the footprint, a view, the 3D model), else on what it was last over, which the canvas marks
+   with a dashed outline while the pointer is off it; a view K just showed is that one until the pointer moves. Where
+   two overlap the one the pointer came from wins, so a view on the footprint is reached from its part outside the
+   footprint, or with the footprint hidden (H). Each view keeps its own place, all share the page's scale. The side
+   panel's Model views section shows and hides each view and sets the views' blend mode (normal, multiply, screen,
+   difference), opacity and blink. Measure footprint (G) snaps to the views' outline corners and edge ends too, so a model
    dimension measures on the page. The footprint is drawn over the views where they overlap.
 9. **Accept** (A): when the footprint matches the drawing, Accept records a review of its hash in the part source,
    and for a board row refreshes the project's parts snapshot from it (as `berc fp accept` does); the list is read
@@ -757,8 +759,9 @@ libspnav), so the device is not needed to build or run it.
 
 - **The puck moves the page**: slide it and the page follows the hand, lift it and the page moves up, push it away
   and the view zooms out about the pointer (pull it towards you to zoom in). The slide pans in screen points, so a
-  push moves the page across the screen at the same speed at every zoom. P switches the puck to move the footprint
-  over the page instead, at the same screen speed; zooming stays the view's.
+  push moves the page across the screen at the same speed at every zoom. P switches the puck to move a thing over the
+  page instead, at the same screen speed: what the pointer is over, else what it was last over; zooming stays the
+  view's.
 - **Tap a button**: the left one lays the ruler (R at the pointer: once for the first end, again for the other), the
   right one switches what the puck moves (P).
 - **Hold a button**: a pie menu opens at the pointer. Move out across its outer circle, or click, to do the action

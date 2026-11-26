@@ -1229,15 +1229,13 @@ impl FootprintReview {
         let fp = self.moves_now() == modelviews::Moves::Footprint;
         let what = self.moving_name();
         let mut place = self.moving_mut().clone();
-        if !fp {
-            hint(
-                ui,
-                format!(
-                    "Placing {what}; {} moves the footprint again (Model views)",
-                    key_name(keys.moves)
-                ),
-            );
-        }
+        hint(
+            ui,
+            format!(
+                "Placing {what}: what the pointer was last over on the canvas ({} turns it there, the arrows nudge it)",
+                key_name(keys.rotate)
+            ),
+        );
         PropertyRow::new("Position")
             .tooltip(format!(
                 "The origin of {what} from the page's top left corner, in mm at the drawing's scale"

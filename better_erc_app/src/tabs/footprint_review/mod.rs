@@ -639,6 +639,13 @@ struct Runtime {
     centre_snapped: Option<(Snap, f64)>,
     /// What a press in Move would drag, under the pointer
     hover_grab: Option<grab::Grab>,
+    /// What the pointer was last over on the canvas (never the page): what T, mirror, the arrows, blink, the puck
+    /// and the placement controls act on ([`grab::Grab`], [`FootprintReview::aimed`])
+    aim: grab::Grab,
+    /// The pointer is over the canvas this frame
+    pointer_on_canvas: bool,
+    /// Where the pointer was over the canvas last frame: the aim follows it only when it moves
+    aim_from: Option<Pos2>,
     /// The peek key is held: the page alone
     peek: bool,
     /// Ctrl is held: a Measure across end snaps to the source that is not the nearer (VIEW-29)
@@ -759,6 +766,9 @@ impl Default for Runtime {
             centre_free: None,
             centre_snapped: None,
             hover_grab: None,
+            aim: grab::Grab::Footprint,
+            pointer_on_canvas: false,
+            aim_from: None,
             peek: false,
             other_source: false,
             end_snaps: [None; 2],
@@ -2427,7 +2437,8 @@ impl FootprintReview {
              {} · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
              arrows nudge (Shift: 10×) · {} the footprint's centre {} · PgUp/PgDn page · wheel zoom · a drag on the empty page, right or middle drag pans · double click: the footprint's origin to the pointer, double \
              right click: the model's · \
-             {} the model as silhouettes or 3D ({}) · {} moves the footprint or the model ({}) · {} {} · \
+             {} the model as silhouettes or 3D ({}) · {}, {}, the arrows, blink and the puck act on what is under the pointer, else \
+             what it was last over, marked ({}) · {} {} · \
              3D: SpaceMouse tilt, roll and twist or Ctrl+drag turn it, letting go lands on a side (Alt: free) · \
              {} the model onto the footprint · {} hides or shows the footprint, {} the model · hold {}: the page alone · {} X-ray · {} reload from disk\n\
              {} accept · {} next to review · {} write a review note · SpaceMouse: the puck {} ({} switches), push away zooms out, while a drag holds something it carries it · \
@@ -2470,7 +2481,8 @@ impl FootprintReview {
             },
             n(k.model_look),
             self.model_views.look.name(),
-            n(k.moves),
+            n(k.rotate),
+            n(k.mirror),
             self.moving_name(),
             n(k.model_view),
             match self.model_views.look {
@@ -2709,7 +2721,7 @@ impl FootprintReview {
                 egui::Label::new(RichText::new(format!("drag: {grab}")).color(SNAP_COLOUR)),
             )
             .on_hover_text(
-                "In Move a press drags what is under it, the one the moves switch picks first where two overlap; \
+                "In Move a press drags what is under it, the one the pointer was last over first where two overlap; \
                  the empty page pans. The keys, turn, mirror and the SpaceMouse move what the switch picks",
             );
             // Its room kept in Move too, so the bar never wraps differently and the canvas never jumps
@@ -3357,7 +3369,11 @@ impl FootprintReview {
                             .interact_pointer_pos()
                             .map(|s| s - resp.drag_delta())
                             .unwrap_or_default();
-                        self.rt.grab = Some(self.grab_at(self.to_page(canvas, start)));
+                        let g = self.grab_at(self.to_page(canvas, start));
+                        if g != grab::Grab::Page {
+                            self.rt.aim = g;
+                        }
+                        self.rt.grab = Some(g);
                         self.centre_restart();
                     }
                     let delta = resp.drag_delta();
@@ -3449,6 +3465,20 @@ impl FootprintReview {
                 self.rt.ruler_anchor = None;
             }
         }
+        // What the pointer moves onto aims the keys and the puck; off the canvas, over the empty page or with the
+        // pointer still (a key that aimed at something keeps it) the last one stays
+        self.rt.pointer_on_canvas = resp.hovered();
+        let hover = resp.hover_pos();
+        if let (Some(p), Some(at)) = (hover_page, hover)
+            && !resp.dragged()
+            && self.rt.aim_from != Some(at)
+        {
+            let g = self.grab_at(p);
+            if g != grab::Grab::Page {
+                self.rt.aim = g;
+            }
+        }
+        self.rt.aim_from = hover;
         // What a press in Move would drag, highlighted; the one dragged while a drag is on
         self.rt.hover_grab = if self.tool != Tool::Move || self.ctrl_turns(other) {
             None
@@ -3479,7 +3509,7 @@ impl FootprintReview {
                 (p.down as i32 - p.up as i32) as f32 * step,
             ];
             if nudge != [0.0, 0.0] {
-                if self.moves_grab() == grab::Grab::Footprint {
+                if self.aimed() == grab::Grab::Footprint {
                     // Its centre snaps to the drawing's lines (VIEW-35); a run of presses pulls it off again
                     self.move_footprint(nudge, !lines, now);
                 } else {
@@ -3516,7 +3546,6 @@ impl FootprintReview {
                 (p.measure_model, Action::Mode(Tool::MeasureModel)),
                 (p.model_view, Action::ModelView),
                 (p.model_look, Action::ModelLook),
-                (p.moves, Action::Moves),
                 (p.hide_footprint, Action::HideFootprint),
                 (p.hide_model, Action::HideModel),
                 (p.xray, Action::XRay),
@@ -3544,8 +3573,13 @@ impl FootprintReview {
         if self.footprint_shown() && self.blinked(&ctx, self.blink) && !self.rt.items.is_empty() {
             self.draw_footprint(&painter, canvas, page, ui.id());
         }
-        if let Some(g) = self.rt.hover_grab {
-            self.draw_grab_hover(&painter, canvas, g);
+        // What a press would pick; with the pointer off the canvas, what the keys and the puck act on
+        match self.rt.hover_grab {
+            Some(g) => self.draw_grab_hover(&painter, canvas, g),
+            None if !self.rt.pointer_on_canvas && self.tool == Tool::Move => {
+                self.draw_aim(&painter, canvas);
+            }
+            None => {}
         }
         self.draw_selection(&painter, canvas);
         // The ruler
@@ -4170,7 +4204,6 @@ struct KeyMap {
     measure_model: Option<egui::Key>,
     model_view: Option<egui::Key>,
     model_look: Option<egui::Key>,
-    moves: Option<egui::Key>,
     hide_footprint: Option<egui::Key>,
     hide_model: Option<egui::Key>,
     peek: Option<egui::Key>,
@@ -4208,7 +4241,6 @@ impl From<&Keys> for KeyMap {
             measure_model: key(&k.measure_model),
             model_view: key(&k.model_view),
             model_look: key(&k.model_look),
-            moves: key(&k.moves),
             hide_footprint: key(&k.hide_footprint),
             hide_model: key(&k.hide_model),
             peek: key(&k.peek),
@@ -4253,7 +4285,6 @@ struct Pressed {
     measure_model: bool,
     model_view: bool,
     model_look: bool,
-    moves: bool,
     hide_footprint: bool,
     hide_model: bool,
     /// The peek key is held down (not just pressed)
@@ -4301,7 +4332,6 @@ impl Pressed {
                 measure_model: pressed(km.measure_model),
                 model_view: pressed(km.model_view),
                 model_look: pressed(km.model_look),
-                moves: pressed(km.moves),
                 hide_footprint: pressed(km.hide_footprint),
                 hide_model: pressed(km.hide_model),
                 peek: km.peek.is_some_and(|k| i.key_down(k)),

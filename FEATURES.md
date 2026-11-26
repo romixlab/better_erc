@@ -806,9 +806,9 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   (hidden ones cut on a depth raster). The fill through the blend pass in every mode (normal, multiply, screen,
   difference; overlapping triangles mix in once), its own opacity and blink; colours are settings. Each view placed
   on its own (the top view first on the footprint, the others in the middle of the canvas), moved, turned and
-  mirrored as the footprint is: since `VIEW-27` the moves switch (`Q`) picks the footprint or the model, the model
-  view key (`K`, a setting, the mode bar, a pie slot) picks the next view, moving and shown, and Move, the arrows,
-  `T`, `X`, `B`, the puck and the Placement section act on what moves. Measure footprint (`G`) snaps to the views' outline corners and edge ends. A Model views section in the
+  mirrored as the footprint is: the model view key (`K`, a setting, the mode bar, a pie slot) shows the next view,
+  and Move, the arrows, `T`, `X`, `B`, the puck and the Placement section act on what the pointer is over, else what
+  it was last over (`VIEW-37`; the moves switch `Q` of `VIEW-27` is gone). Measure footprint (`G`) snaps to the views' outline corners and edge ends. A Model views section in the
   side panel; usage signals `app fp-review model views moves|show|blend ...`. Tests on boxes for every side and
   hidden edges, the keys and snaps on the synthetic STEP, a real datasheet and model on the GPU through
   `BERC_MODEL_VIEWS` · `better_erc_app/src/tabs/footprint_review/modelviews.rs`
@@ -866,7 +866,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `better_erc_app/src/tabs/footprint_review/watch.rs`, `reload_tests.rs`, `better_erc/src/fp/todo.rs`
 - ✅ `VIEW-32` Footprint review round 8: in Move a press drags what is under it (`grab.rs`): the footprint, a
   silhouette view or the 3D model, each hit in its own frame against its extent; where two overlap the moves switch's
-  pick (`Q`) wins, else the topmost; the empty page pans. A double click puts the footprint's origin under the
+  pick (`Q`) wins (since `VIEW-37` the one the pointer was last over), else the topmost; the empty page pans. A double click puts the footprint's origin under the
   pointer, a double right click the 3D model's, the view not panned. Hovering outlines what a press would pick and the mode bar
   names it (`drag: the footprint`). Hidden ones are never picked or dragged, and while the moves switch's pick is
   hidden the keys, turn, mirror and the puck move the one shown (the switch shows it, the other disabled with why;
@@ -892,8 +892,8 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `solid.rs`
 - ✅ `VIEW-33` 🐛 fixed: the SpaceMouse moved the 3D model and the page at once (a slide always has some twist in
   it). The puck drives one thing (`PuckMoves`, `Tab` switches): on *the page* its slide pans the view and nothing on
-  the page moves or turns; on *a thing* it drives what is under the pointer, as a drag picks it, else what the moves
-  switch (`Q`) picks: its slide moves it, and tilt, roll and twist turn it when it is the shaded 3D model; the page
+  the page moves or turns; on *a thing* it drives what is under the pointer, as a drag picks it, else what the
+  pointer was last over (`VIEW-37`): its slide moves it, and tilt, roll and twist turn it when it is the shaded 3D model; the page
   stays. The thing is picked as the puck leaves rest and kept until it rests again, so moving it away from under the
   pointer never hands the motion to another. Push and pull zoom the view in both. The pie's centre names the thing
   (`Move 3D model`), the controls and the help line say what the puck moves. Tests: page, Q's pick, the thing under
@@ -922,6 +922,13 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   screen, and the name sits just over that box's top left corner, following its place, turn and zoom; a silhouette
   view's name over the top left corner of its outline box on screen (`label_corner`). Test: on the GPU, the name at
   the body's corner, and at its new corner after a quarter turn · `solid.rs`, `modelviews.rs`
+- ✅ `VIEW-37` Footprint review, no selection to make: `T`, `X`, `B`, the arrows, the SpaceMouse and the Placement
+  section act on what the pointer is over (the footprint, a silhouette view, the 3D model), else on what it was last
+  over (`FootprintReview::aimed`), marked by a dashed outline while the pointer is off the canvas; the aim follows
+  the pointer only as it moves, so a view the model view key just showed stays aimed; where two overlap the one
+  last over wins. The moves switch (`Q`, its segmented button, its pie slot, the View picked chips) is gone; hiding
+  one (`H`, `J`) reaches the other. Tests: keys on the footprint and the model, the empty page, off the canvas,
+  the puck off the canvas · `grab.rs`, `modelviews.rs`, `puck.rs`, `solid.rs`, `puck_tests.rs`
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
   one lookup per MPN per session, on a worker thread) and its review state from the part source's reviews (reviewed,

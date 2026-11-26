@@ -49,8 +49,6 @@ pub enum Action {
     ModelView,
     /// Silhouettes or 3D (VIEW-27)
     ModelLook,
-    /// What moves: the footprint or the model (VIEW-27)
-    Moves,
     /// The footprint or the model over the page hidden, or shown again where it was (VIEW-28)
     HideFootprint,
     HideModel,
@@ -235,7 +233,7 @@ impl FootprintReview {
                 let (free, now) = ctx.input(|i| (i.modifiers.alt, i.time));
                 self.move_footprint([d.x / zoom, d.y / zoom], free, now);
             } else {
-                let place = if target == self.moves_grab() {
+                let place = if target == self.aimed() {
                     Some(self.moving_mut())
                 } else {
                     self.grab_place_mut(target)
@@ -261,7 +259,7 @@ impl FootprintReview {
     }
 
     /// What the puck drives as it starts from rest: the page, or the thing under the pointer as a drag picks it,
-    /// else the moves switch's pick
+    /// else what the pointer was last over
     fn puck_target(&self, canvas: Rect, pointer: Option<Pos2>) -> grab::Grab {
         if self.puck == PuckMoves::Page {
             return grab::Grab::Page;
@@ -270,23 +268,13 @@ impl FootprintReview {
             .filter(|p| canvas.contains(*p))
             .map(|p| self.grab_at(self.to_page(canvas, p)))
             .filter(|g| *g != grab::Grab::Page)
-            .unwrap_or_else(|| self.moves_grab())
+            .unwrap_or_else(|| self.aimed())
     }
 
-    /// What the moves switch (Q) picks, as what a drag would take: the footprint, a silhouette view or the 3D model
-    pub(super) fn moves_grab(&self) -> grab::Grab {
-        if self.moving_solid() {
-            grab::Grab::Solid
-        } else if let Some(side) = self.moving_view() {
-            grab::Grab::View(side)
-        } else {
-            grab::Grab::Footprint
-        }
-    }
-
-    /// The moves switch's pick in two words, for the pie: `footprint`, `3D model`, `top view`
+    /// What the puck acts on with the pointer off the canvas, in two words, for the pie: `footprint`, `3D model`,
+    /// `top view`
     fn moves_thing(&self) -> String {
-        Self::grab_name(self.moves_grab())
+        Self::grab_name(self.aimed())
             .trim_start_matches("the ")
             .to_string()
     }
@@ -296,8 +284,8 @@ impl FootprintReview {
         match self.puck {
             PuckMoves::Page => "moves the page".into(),
             PuckMoves::Footprint => format!(
-                "moves what is under the pointer, else {}",
-                Self::grab_name(self.moves_grab())
+                "moves what is under the pointer, else what it was last over, {}",
+                Self::grab_name(self.aimed())
             ),
         }
     }
@@ -560,17 +548,13 @@ impl FootprintReview {
                 ),
                 Some(
                     slot(
-                        match self.model_views.moves {
-                            modelviews::Moves::Footprint => "Move the model",
-                            modelviews::Moves::Model => "Move the footprint",
-                        },
-                        short_key(k.moves),
-                        icons::ARROWS_OUT,
-                        Moves,
+                        "Model onto the footprint",
+                        short_key(k.model_on_footprint),
+                        icons::ARROWS_IN,
+                        ModelOnFootprint,
                     )
                     .disabled_if(
-                        self.model_views.moves == modelviews::Moves::Footprint
-                            && self.model_blocker().is_some(),
+                        self.model_blocker().is_some(),
                         self.model_blocker().unwrap_or_default(),
                     ),
                 ),
@@ -718,7 +702,6 @@ impl FootprintReview {
             Action::View3d => self.toggle_3d(),
             Action::ModelView => self.cycle_model_view(ctx.input(|i| i.time)),
             Action::ModelLook => self.toggle_look(),
-            Action::Moves => self.toggle_moves(),
             Action::HideFootprint => self.toggle_hidden(false),
             Action::HideModel => self.toggle_hidden(true),
             Action::XRay => self.toggle_xray(),
@@ -746,10 +729,7 @@ impl FootprintReview {
                     format!("spacenavd's socket: {}", self.rt.puck.socket_line()),
                 );
                 let k = short_key(self.keys().puck);
-                let (q_pick, q) = (
-                    Self::grab_name(self.moves_grab()),
-                    short_key(self.keys().moves),
-                );
+                let last = Self::grab_name(self.aimed());
                 PropertyRow::new("The puck moves")
                     .tooltip(format!("{k} switches"))
                     .show(ui, |ui| {
@@ -764,9 +744,9 @@ impl FootprintReview {
                                 PuckMoves::Footprint,
                                 "a thing",
                                 format!(
-                                    "it moves what is under the pointer, else {} (the moves switch, {}), \
-                                     and turns the 3D model; the page stays; {k} switches",
-                                    q_pick, q,
+                                    "it moves what is under the pointer, else what it was last over \
+                                     ({last}, marked on the canvas), and turns the 3D model; the page stays; {k} \
+                                     switches",
                                 ),
                             )
                             .fill_width()
