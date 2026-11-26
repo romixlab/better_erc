@@ -1,0 +1,156 @@
+board io-15_no_connect_flag
+label / local PMIC2_INT at 22.38,27.46 net /PMIC2_INT
+label / local PMIC2_INT at 118.38,27.46 net /PMIC2_INT
+label / power +3V3 at 22.38,22.38 net +3V3
+label / power +3V3 at 70.38,22.38 net +3V3
+label / power +3V3 at 118.38,22.38 net +3V3
+label / power GND at 22.38,24.92 net GND
+label / power GND at 70.38,24.92 net GND
+label / power GND at 118.38,24.92 net GND
+nc / at 22.38,30 pin U1 4
+nc / at 22.38,32.54 pin U1 5
+nc / at 22.38,35.08 pin U1 6
+nc / at 70.38,27.46 pin U2 3
+net +3V3 class = Default @ sch io-15_no_connect_flag.kicad_sch note "effective net class"
+net +3V3 kind power
+net /PMIC2_INT class = Default @ sch io-15_no_connect_flag.kicad_sch note "effective net class"
+net /PMIC2_INT kind named
+net GND class = Default @ sch io-15_no_connect_flag.kicad_sch note "effective net class"
+net GND kind power
+net unconnected-(U1-PA1-Pad4) class = Default @ sch io-15_no_connect_flag.kicad_sch note "effective net class"
+net unconnected-(U1-PA1-Pad4) kind unconnected
+net unconnected-(U1-PA2-Pad5) class = Default @ sch io-15_no_connect_flag.kicad_sch note "effective net class"
+net unconnected-(U1-PA2-Pad5) kind unconnected
+net unconnected-(U1-PA3-Pad6) class = Default @ sch io-15_no_connect_flag.kicad_sch note "effective net class"
+net unconnected-(U1-PA3-Pad6) kind unconnected
+net unconnected-(U2-~{INT}-Pad3) class = Default @ sch io-15_no_connect_flag.kicad_sch note "effective net class"
+net unconnected-(U2-~{INT}-Pad3) kind unconnected
+part U1 field Value = MCU_IO4 @ sch io-15_no_connect_flag.kicad_sch
+part U1 flag dnp = no @ sch io-15_no_connect_flag.kicad_sch
+part U1 flag exclude_from_sim = no @ sch io-15_no_connect_flag.kicad_sch
+part U1 flag in_bom = yes @ sch io-15_no_connect_flag.kicad_sch
+part U1 flag on_board = yes @ sch io-15_no_connect_flag.kicad_sch
+part U1 lib MCU_Fixture:MCU_IO4 sheet / symbol MCU_Fixture:MCU_IO4
+part U1 unit 1 sheet / uuid 10150c00-0000-4000-8000-000000000001 line 110 at 30,30 rot 0
+part U1 value = text MCU_IO4 @ sch io-15_no_connect_flag.kicad_sch note "from the Value field"
+part U2 field Value = PMIC_Fixture @ sch io-15_no_connect_flag.kicad_sch
+part U2 flag dnp = no @ sch io-15_no_connect_flag.kicad_sch
+part U2 flag exclude_from_sim = no @ sch io-15_no_connect_flag.kicad_sch
+part U2 flag in_bom = yes @ sch io-15_no_connect_flag.kicad_sch
+part U2 flag on_board = yes @ sch io-15_no_connect_flag.kicad_sch
+part U2 lib Regulator_Switching:PMIC_Fixture sheet / symbol Regulator_Switching:PMIC_Fixture
+part U2 unit 1 sheet / uuid 10150c00-0000-4000-8000-000000000016 line 140 at 78,30 rot 0
+part U2 value = text PMIC_Fixture @ sch io-15_no_connect_flag.kicad_sch note "from the Value field"
+part U3 field Value = PMIC_Fixture @ sch io-15_no_connect_flag.kicad_sch
+part U3 flag dnp = no @ sch io-15_no_connect_flag.kicad_sch
+part U3 flag exclude_from_sim = no @ sch io-15_no_connect_flag.kicad_sch
+part U3 flag in_bom = yes @ sch io-15_no_connect_flag.kicad_sch
+part U3 flag on_board = yes @ sch io-15_no_connect_flag.kicad_sch
+part U3 lib Regulator_Switching:PMIC_Fixture sheet / symbol Regulator_Switching:PMIC_Fixture
+part U3 unit 1 sheet / uuid 10150c00-0000-4000-8000-000000000025 line 164 at 126,30 rot 0
+part U3 value = text PMIC_Fixture @ sch io-15_no_connect_flag.kicad_sch note "from the Value field"
+pin U1 1 name VDD unit 1 net +3V3
+pin U1 1 type = power_in @ sch io-15_no_connect_flag.kicad_sch
+pin U1 2 name VSS unit 1 net GND
+pin U1 2 type = power_in @ sch io-15_no_connect_flag.kicad_sch
+pin U1 3 name PA0 unit 1 net /PMIC2_INT
+pin U1 3 type = bidirectional @ sch io-15_no_connect_flag.kicad_sch
+pin U1 4 name PA1 unit 1 nc net unconnected-(U1-PA1-Pad4)
+pin U1 4 type = bidirectional @ sch io-15_no_connect_flag.kicad_sch
+pin U1 5 name PA2 unit 1 nc net unconnected-(U1-PA2-Pad5)
+pin U1 5 type = bidirectional @ sch io-15_no_connect_flag.kicad_sch
+pin U1 6 name PA3 unit 1 nc net unconnected-(U1-PA3-Pad6)
+pin U1 6 type = bidirectional @ sch io-15_no_connect_flag.kicad_sch
+pin U2 1 name VIN unit 1 net +3V3
+pin U2 1 type = power_in @ sch io-15_no_connect_flag.kicad_sch
+pin U2 2 name GND unit 1 net GND
+pin U2 2 type = power_in @ sch io-15_no_connect_flag.kicad_sch
+pin U2 3 name ~{INT} unit 1 nc net unconnected-(U2-~{INT}-Pad3)
+pin U2 3 type = open_collector @ sch io-15_no_connect_flag.kicad_sch
+pin U3 1 name VIN unit 1 net +3V3
+pin U3 1 type = power_in @ sch io-15_no_connect_flag.kicad_sch
+pin U3 2 name GND unit 1 net GND
+pin U3 2 type = power_in @ sch io-15_no_connect_flag.kicad_sch
+pin U3 3 name ~{INT} unit 1 net /PMIC2_INT
+pin U3 3 type = open_collector @ sch io-15_no_connect_flag.kicad_sch
+sheet / name "" file io-15_no_connect_flag.kicad_sch uuid /
+source file io-15_no_connect_flag.kicad_sch
+source tool kicad
+source version 8.0
+symbol Device:R description Resistor
+symbol Device:R field Description Resistor
+symbol Device:R field Reference R
+symbol Device:R field Value R
+symbol Device:R hash 8d4237cb2cb756ad
+symbol Device:R pin 1 unit 1 body 1 name "" type passive style line
+symbol Device:R pin 2 unit 1 body 1 name "" type passive style line
+symbol Device:R units 1
+symbol MCU_Fixture:MCU_IO4 description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_IO4 field Description "Fixture microcontroller"
+symbol MCU_Fixture:MCU_IO4 field Reference U
+symbol MCU_Fixture:MCU_IO4 field Value MCU_IO4
+symbol MCU_Fixture:MCU_IO4 hash 7d66917882027003
+symbol MCU_Fixture:MCU_IO4 pin 1 unit 1 body 1 name VDD type power_in style line
+symbol MCU_Fixture:MCU_IO4 pin 2 unit 1 body 1 name VSS type power_in style line
+symbol MCU_Fixture:MCU_IO4 pin 3 unit 1 body 1 name PA0 type bidirectional style line
+symbol MCU_Fixture:MCU_IO4 pin 4 unit 1 body 1 name PA1 type bidirectional style line
+symbol MCU_Fixture:MCU_IO4 pin 5 unit 1 body 1 name PA2 type bidirectional style line
+symbol MCU_Fixture:MCU_IO4 pin 6 unit 1 body 1 name PA3 type bidirectional style line
+symbol MCU_Fixture:MCU_IO4 units 1
+symbol Power_Fixture:LoadSwitch description "Load switch"
+symbol Power_Fixture:LoadSwitch field Description "Load switch"
+symbol Power_Fixture:LoadSwitch field Reference U
+symbol Power_Fixture:LoadSwitch field Value LoadSwitch
+symbol Power_Fixture:LoadSwitch hash 1977e296bc4189e1
+symbol Power_Fixture:LoadSwitch pin 1 unit 1 body 1 name VIN type power_in style line
+symbol Power_Fixture:LoadSwitch pin 2 unit 1 body 1 name GND type power_in style line
+symbol Power_Fixture:LoadSwitch pin 3 unit 1 body 1 name ~{FLT} type open_collector style line
+symbol Power_Fixture:LoadSwitch units 1
+symbol Regulator_Switching:PMIC_Fixture description "Power management IC"
+symbol Regulator_Switching:PMIC_Fixture field Description "Power management IC"
+symbol Regulator_Switching:PMIC_Fixture field Reference U
+symbol Regulator_Switching:PMIC_Fixture field Value PMIC_Fixture
+symbol Regulator_Switching:PMIC_Fixture hash 9d8f254c7e32e7ca
+symbol Regulator_Switching:PMIC_Fixture pin 1 unit 1 body 1 name VIN type power_in style line
+symbol Regulator_Switching:PMIC_Fixture pin 2 unit 1 body 1 name GND type power_in style line
+symbol Regulator_Switching:PMIC_Fixture pin 3 unit 1 body 1 name ~{INT} type open_collector style line
+symbol Regulator_Switching:PMIC_Fixture units 1
+symbol Sensor_Fixture:Temp description "Temperature sensor"
+symbol Sensor_Fixture:Temp field Description "Temperature sensor"
+symbol Sensor_Fixture:Temp field Reference U
+symbol Sensor_Fixture:Temp field Value Temp
+symbol Sensor_Fixture:Temp hash 5f0521febb3ddfec
+symbol Sensor_Fixture:Temp pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Sensor_Fixture:Temp pin 2 unit 1 body 1 name GND type power_in style line
+symbol Sensor_Fixture:Temp pin 3 unit 1 body 1 name ALERT type passive style line
+symbol Sensor_Fixture:Temp units 1
+symbol Sensor_Fixture:TempPushPull description "Temperature sensor"
+symbol Sensor_Fixture:TempPushPull field Description "Temperature sensor"
+symbol Sensor_Fixture:TempPushPull field Reference U
+symbol Sensor_Fixture:TempPushPull field Value TempPushPull
+symbol Sensor_Fixture:TempPushPull hash a270176e8f2ef2bf
+symbol Sensor_Fixture:TempPushPull pin 1 unit 1 body 1 name VDD type power_in style line
+symbol Sensor_Fixture:TempPushPull pin 2 unit 1 body 1 name GND type power_in style line
+symbol Sensor_Fixture:TempPushPull pin 3 unit 1 body 1 name ALERT type output style line
+symbol Sensor_Fixture:TempPushPull units 1
+symbol power:+3V3 description "Power symbol +3V3"
+symbol power:+3V3 field Description "Power symbol +3V3"
+symbol power:+3V3 field Reference "#PWR"
+symbol power:+3V3 field Value +3V3
+symbol power:+3V3 hash 592d8a6e92bbae8b
+symbol power:+3V3 pin 1 unit 1 body 1 name +3V3 type power_in style line
+symbol power:+3V3 units 1 power global
+symbol power:+5V description "Power symbol +5V"
+symbol power:+5V field Description "Power symbol +5V"
+symbol power:+5V field Reference "#PWR"
+symbol power:+5V field Value +5V
+symbol power:+5V hash 544a98283458acaa
+symbol power:+5V pin 1 unit 1 body 1 name +5V type power_in style line
+symbol power:+5V units 1 power global
+symbol power:GND description "Power symbol GND"
+symbol power:GND field Description "Power symbol GND"
+symbol power:GND field Reference "#PWR"
+symbol power:GND field Value GND
+symbol power:GND hash b3d7b78f63fe31f5
+symbol power:GND pin 1 unit 1 body 1 name GND type power_in style line
+symbol power:GND units 1 power global

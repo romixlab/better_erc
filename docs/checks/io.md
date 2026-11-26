@@ -389,7 +389,8 @@ cannot go inactive is a fault signal nobody looks at.
 pull-up, and with the MCU in reset the fault line floats (B153A hardware reference §3).
 
 **How to check.** KiCad's `open_collector`/`open_emitter` pin type (`IMP-1`), or open-drain roles from part data
-(`NET-7`), on a net with no resistor to a rail.
+(`NET-7`), on a net with no resistor to a rail. A pin with a no-connect flag is left out: the designer left the
+output open on purpose (the controller polls instead).
 
 **Fix.** A pull-up to the receiver's IO rail (10-100 kΩ), or a line in the programmer report (`RPT-13`) if the internal
 pull is intended.
