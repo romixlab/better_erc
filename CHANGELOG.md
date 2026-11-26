@@ -13,6 +13,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ### Added
 
+- `erc_model::fphash::differences` names the settings and items two copies of a footprint differ in (TOOL-8).
 - Cargo feature `mx3`: `berc parts refresh` and `berc fp accept` use the mx3 part store without `--from` (CFG-9).
 
 ### Changed

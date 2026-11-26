@@ -83,31 +83,46 @@ pub fn compare(stored: &str, f: &LocalFootprint) -> Compared {
 /// The canonical text the hash is taken over, one sorted line per item: what a review covers, readable, so two
 /// footprints with different hashes can be diffed line by line
 pub fn canonical(f: &LocalFootprint) -> Vec<String> {
-    let mut lines = Vec::new();
-    let st = &f.footprint.settings;
+    let mut lines: Vec<String> = footprint_settings(&f.footprint.settings)
+        .into_iter()
+        .map(|(k, v)| format!("footprint {k} {v}"))
+        .collect();
+    lines.extend(f.pads.iter().map(pad_line));
+    lines.extend(shape_lines(f));
+    lines.sort();
+    lines
+}
+
+/// The footprint's own settings in canonical form, in canonical order
+fn footprint_settings(st: &FootprintSettings) -> Vec<(&'static str, String)> {
+    let mut out = Vec::new();
     for (k, v) in [
         ("clearance", st.clearance),
         ("mask", st.solder_mask_margin),
         ("paste", st.solder_paste_margin),
     ] {
         if let Some(v) = v {
-            lines.push(format!("footprint {k} {}", Nm(q(v))));
+            out.push((k, Nm(q(v)).to_string()));
         }
     }
     if let Some(r) = st.solder_paste_ratio {
-        lines.push(format!("footprint paste-ratio {}", ratio(r)));
+        out.push(("paste-ratio", ratio(r)));
     }
     if let Some(z) = st.zone_connect {
-        lines.push(format!("footprint zone-connect {z}"));
+        out.push(("zone-connect", z.to_string()));
     }
-    lines.extend(f.pads.iter().map(pad_line));
+    out
+}
+
+/// The graphics and zones lines of the canonical text, unsorted
+fn shape_lines(f: &LocalFootprint) -> Vec<String> {
+    let mut lines = Vec::new();
     for g in f.footprint.graphics.iter().filter(|g| in_scope(&g.layer)) {
         lines.push(format!("gfx {}", shape_tokens(&shape(g)).join(" ")));
     }
     for z in &f.footprint.zones {
         lines.push(format!("zone {}", zone_tokens(&zone(z)).join(" ")));
     }
-    lines.sort();
     lines
 }
 
@@ -146,7 +161,22 @@ fn layer_set(ls: &[String]) -> String {
     tok(&ls.join(","))
 }
 
+/// A pad's canonical line: its geometry, its settings, its shape parameters
 fn pad_line(p: &Pad) -> String {
+    let mut line = pad_head(p);
+    for (k, v) in pad_settings(p) {
+        line += &format!(" {k} {v}");
+    }
+    line + &pad_tail(p)
+}
+
+/// A pad without its settings: what two pads must share for their settings to be compared
+fn pad_geometry(p: &Pad) -> String {
+    pad_head(p) + &pad_tail(p)
+}
+
+/// What of a pad comes before its settings in its line: number, type, shape, place, size, drill, layers
+fn pad_head(p: &Pad) -> String {
     let d = &p.details;
     let offset = d.drill_offset.map(qp).filter(|o| *o != Pt::default());
     let mut rot = angle(p.rotation);
@@ -188,6 +218,13 @@ fn pad_line(p: &Pad) -> String {
     if let Some(prop) = &p.property {
         line += &format!(" prop {}", tok(prop));
     }
+    line
+}
+
+/// A pad's own settings (margins, clearance, thermal relief, zone connection) in canonical form and order
+fn pad_settings(p: &Pad) -> Vec<(&'static str, String)> {
+    let d = &p.details;
+    let mut out = Vec::new();
     for (k, v) in [
         ("mask", p.solder_mask_margin),
         ("paste", p.solder_paste_margin),
@@ -196,15 +233,22 @@ fn pad_line(p: &Pad) -> String {
         ("thermal-gap", d.thermal_gap),
     ] {
         if let Some(v) = v {
-            line += &format!(" {k} {}", Nm(q(v)));
+            out.push((k, Nm(q(v)).to_string()));
         }
     }
     if let Some(r) = p.solder_paste_ratio {
-        line += &format!(" paste-ratio {}", ratio(r));
+        out.push(("paste-ratio", ratio(r)));
     }
     if let Some(z) = p.zone_connect {
-        line += &format!(" zone-connect {z}");
+        out.push(("zone-connect", z.to_string()));
     }
+    out
+}
+
+/// What of a pad comes after its settings in its line: shape parameters, padstack, custom primitives
+fn pad_tail(p: &Pad) -> String {
+    let d = &p.details;
+    let mut line = String::new();
     if let Some(r) = d.roundrect_rratio.filter(|_| p.shape == "roundrect") {
         line += &format!(" rratio {}", ratio(r));
     }
@@ -330,6 +374,161 @@ fn zone(z: &Zone) -> Zone {
         keepout,
         filled: false,
     }
+}
+
+/// One setting a footprint itself holds that differs between two copies of it: the footprint's own or a pad's
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, serde::Serialize, serde::Deserialize)]
+pub struct SettingDiff {
+    /// `None` for the footprint's own setting, else the pad's number
+    pub pad: Option<String>,
+    /// The setting as the canonical text names it: `mask`, `paste`, `paste-ratio`, `clearance`, `thermal-width`,
+    /// `thermal-gap`, `zone-connect`
+    pub setting: String,
+    /// Its value in the first footprint (lengths in mm), `None` when it sets none
+    pub was: Option<String>,
+    /// Its value in the second
+    pub now: Option<String>,
+}
+
+/// How a footprint differs from another in what the review hash covers ([`differences`])
+#[derive(Clone, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct Differences {
+    /// Settings of the footprint and of pads of the same geometry, sorted
+    pub settings: Vec<SettingDiff>,
+    /// Canonical lines of pads, graphics and zones only in the first footprint, sorted
+    pub only_was: Vec<String>,
+    /// Canonical lines only in the second, sorted
+    pub only_now: Vec<String>,
+}
+
+impl Differences {
+    /// The two footprints hash the same
+    pub fn is_empty(&self) -> bool {
+        self.settings.is_empty() && self.only_was.is_empty() && self.only_now.is_empty()
+    }
+
+    /// One line per difference for the person, the first footprint called `was` and the second `now`: pads with
+    /// the same change grouped (`paste on pads 1 2: library none, board -0.05`), then the pads, graphics and zones
+    /// that differ beyond their settings, counted by kind
+    pub fn describe(&self, was: &str, now: &str) -> Vec<String> {
+        let none = || "none".to_owned();
+        let mut out = Vec::new();
+        let mut grouped: Vec<(&SettingDiff, Vec<&str>)> = Vec::new();
+        for d in &self.settings {
+            let same = |g: &&mut (&SettingDiff, Vec<&str>)| {
+                g.0.setting == d.setting
+                    && g.0.was == d.was
+                    && g.0.now == d.now
+                    && g.0.pad.is_some() == d.pad.is_some()
+            };
+            match (grouped.iter_mut().find(same), &d.pad) {
+                (Some(g), Some(p)) => g.1.push(p),
+                (_, p) => grouped.push((d, p.iter().map(String::as_str).collect())),
+            }
+        }
+        for (d, pads) in grouped {
+            let on = match pads.as_slice() {
+                [] => "the footprint".to_owned(),
+                [p] => format!("pad {p}"),
+                ps => format!("pads {}", ps.join(" ")),
+            };
+            out.push(format!(
+                "{} on {on}: {was} {}, {now} {}",
+                d.setting,
+                d.was.clone().unwrap_or_else(none),
+                d.now.clone().unwrap_or_else(none)
+            ));
+        }
+        for (kind, name) in [("pad ", "pads"), ("gfx ", "graphics"), ("zone ", "zones")] {
+            let n_was = self.only_was.iter().filter(|l| l.starts_with(kind)).count();
+            let n_now = self.only_now.iter().filter(|l| l.starts_with(kind)).count();
+            if n_was + n_now > 0 {
+                out.push(format!(
+                    "{name} differ beyond their settings: {n_was} only in the {was}, {n_now} only on the {now}"
+                ));
+            }
+        }
+        out
+    }
+}
+
+/// How `now` differs from `was` in what the review hash covers: the settings each holds itself (the footprint's,
+/// and each pad's where a pad of the same geometry is in both), and the canonical lines of pads, graphics and
+/// zones in one only. Empty exactly when the two hash the same.
+pub fn differences(was: &LocalFootprint, now: &LocalFootprint) -> Differences {
+    fn sorted(f: &LocalFootprint) -> Vec<(String, &Pad)> {
+        let mut v: Vec<(String, &Pad)> = f.pads.iter().map(|p| (pad_geometry(p), p)).collect();
+        v.sort_by(|a, b| {
+            a.0.cmp(&b.0)
+                .then_with(|| pad_line(a.1).cmp(&pad_line(b.1)))
+        });
+        v
+    }
+    let mut out = Differences::default();
+    let named = |s: Vec<(&'static str, String)>| -> Vec<(String, String)> {
+        s.into_iter().map(|(k, v)| (k.to_owned(), v)).collect()
+    };
+    let compare = |pad: Option<&str>,
+                   a: Vec<(String, String)>,
+                   b: Vec<(String, String)>,
+                   out: &mut Vec<SettingDiff>| {
+        let mut keys: Vec<&String> = a.iter().chain(&b).map(|(k, _)| k).collect();
+        keys.sort();
+        keys.dedup();
+        for k in keys {
+            let get =
+                |s: &[(String, String)]| s.iter().find(|(n, _)| n == k).map(|(_, v)| v.clone());
+            let (x, y) = (get(&a), get(&b));
+            if x != y {
+                out.push(SettingDiff {
+                    pad: pad.map(String::from),
+                    setting: k.clone(),
+                    was: x,
+                    now: y,
+                });
+            }
+        }
+    };
+    compare(
+        None,
+        named(footprint_settings(&was.footprint.settings)),
+        named(footprint_settings(&now.footprint.settings)),
+        &mut out.settings,
+    );
+    // Pads paired by their geometry, in canonical order so a reorder pairs the same way
+    let mut unpaired: Vec<(String, &Pad)> = sorted(was);
+    for (geometry, p) in sorted(now) {
+        match unpaired.iter().position(|(g, _)| *g == geometry) {
+            Some(i) => {
+                let (_, q) = unpaired.remove(i);
+                compare(
+                    Some(&p.number),
+                    named(pad_settings(q)),
+                    named(pad_settings(p)),
+                    &mut out.settings,
+                );
+            }
+            None => out.only_now.push(pad_line(p)),
+        }
+    }
+    out.only_was
+        .extend(unpaired.into_iter().map(|(_, p)| pad_line(p)));
+    let mut a = shape_lines(was);
+    let mut b = shape_lines(now);
+    a.sort();
+    b.sort();
+    for l in &b {
+        if let Some(i) = a.iter().position(|x| x == l) {
+            a.remove(i);
+        } else {
+            out.only_now.push(l.clone());
+        }
+    }
+    out.only_was.extend(a);
+    out.settings.sort();
+    out.only_was.sort();
+    out.only_now.sort();
+    out
 }
 
 #[cfg(test)]
@@ -654,5 +853,35 @@ mod tests {
         for other in [rotated, reversed, closed] {
             assert_eq!(polygon(&other), polygon(&ps));
         }
+    }
+
+    /// A pad's own paste margin, the footprint's mask margin and a moved pad are each named; the same footprint
+    /// has none
+    #[test]
+    fn differences_name_the_settings() {
+        let lib = sample();
+        assert!(differences(&lib, &lib).is_empty());
+        let mut board = sample();
+        for p in &mut board.pads {
+            p.solder_paste_margin = Some(-50_000);
+        }
+        board.footprint.settings.solder_mask_margin = Some(20_000);
+        let d = differences(&lib, &board);
+        assert!(d.only_was.is_empty() && d.only_now.is_empty(), "{d:?}");
+        assert_eq!(
+            d.describe("library", "board"),
+            [
+                "mask on the footprint: library none, board 0.02",
+                "paste on pads 1 2: library none, board -0.05",
+            ]
+        );
+        board.pads[1].at = Pt::from_mm(0.9, 0.0);
+        let d = differences(&lib, &board);
+        assert_eq!((d.only_was.len(), d.only_now.len()), (1, 1), "{d:?}");
+        assert_eq!(
+            d.describe("library", "board").last().unwrap(),
+            "pads differ beyond their settings: 1 only in the library, 1 only on the board"
+        );
+        assert_ne!(hash(&lib), hash(&board));
     }
 }
