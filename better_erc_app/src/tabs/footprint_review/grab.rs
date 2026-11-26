@@ -1,5 +1,5 @@
 //! What a press in Move drags (VIEW-32): whatever is under the pointer. A press on the footprint drags the footprint,
-//! on a silhouette view that view, on the 3D model the model, on the empty page it pans the page. Where two overlap,
+//! on a projection that projection, on the 3D model the model, on the empty page it pans the page. Where two overlap,
 //! the one the pointer was last over wins, else the topmost (the footprint is drawn over the model). Hidden ones are
 //! never picked. Hovering highlights what a press would pick and the mode bar names it.
 //!
@@ -8,20 +8,20 @@
 //! canvas. There is no selection to make first.
 //!
 //! A double click brings the footprint's origin under the pointer, a double right click the 3D model's (the shaded
-//! model in 3D, the picked silhouette view else); the view does not pan.
+//! model in 3D, the projection aimed at else); the view does not pan.
 //!
 //! A hit is decided in each one's own frame: the page point taken back through its placement into footprint or
 //! view mm, then held against its extent (a few screen points of slack around it).
 
-use super::modelviews::{ModelLook, Side};
+use super::modelviews::ModelLook;
 use super::*;
 
 /// What a press in Move drags
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Grab {
     Footprint,
-    /// A silhouette view (Silhouettes)
-    View(Side),
+    /// A projection of the model, by its index in [`super::modelviews::ModelViews::views`]
+    View(usize),
     /// The shaded 3D model (3D)
     Solid,
     /// Nothing under the pointer: the page pans
@@ -64,16 +64,13 @@ impl FootprintReview {
                     && outline::extent(&self.rt.items)
                         .is_some_and(|e| inside(e, self.unplaced(&self.place, p), slack))
             }
-            Grab::View(side) => {
+            Grab::View(i) => {
                 self.model_shown()
-                    && self.model_views.look == ModelLook::Silhouettes
-                    && self.model_views.shown[side.index()]
-                    && match (&self.model_views.place[side.index()], self.projected(side)) {
-                        (Some(place), Some(v)) => v
-                            .extent
-                            .is_some_and(|e| inside(e, self.unplaced(place, p), slack)),
-                        _ => false,
-                    }
+                    && self.model_views.views.get(i).is_some_and(|view| {
+                        self.projected(view.side)
+                            .and_then(|v| v.extent)
+                            .is_some_and(|e| inside(e, self.unplaced(&view.place, p), slack))
+                    })
             }
             Grab::Solid => {
                 let Some(place) =
@@ -100,23 +97,16 @@ impl FootprintReview {
         }
     }
 
-    /// What a press at page point `p` drags: the moves switch's pick first, then the topmost; the page when nothing
+    /// What a press at page point `p` drags: the one last over first, then the topmost; the page when nothing
     /// shown is there
     pub(super) fn grab_at(&self, p: [f32; 2]) -> Grab {
-        let mut model: Vec<Grab> = Vec::new();
-        match self.model_views.look {
-            ModelLook::Solid => model.push(Grab::Solid),
-            ModelLook::Silhouettes => {
-                // The view picked first, then the others in their order
-                model.push(Grab::View(self.model_views.view));
-                model.extend(
-                    Side::ALL
-                        .into_iter()
-                        .filter(|s| *s != self.model_views.view)
-                        .map(Grab::View),
-                );
-            }
-        }
+        // The projections are drawn over the 3D model, so one just added on it can be dragged off; the later
+        // over the earlier
+        let solid = (self.model_views.look == ModelLook::Solid).then_some(Grab::Solid);
+        let model = (0..self.model_views.views.len())
+            .rev()
+            .map(Grab::View)
+            .chain(solid);
         // The one last over first, so a pointer moving on from it onto an overlap keeps it; then the topmost
         std::iter::once(self.rt.aim)
             .chain([Grab::Footprint])
@@ -126,13 +116,16 @@ impl FootprintReview {
     }
 
     /// What the keys, the puck and the placement controls act on: what the pointer was last over on the canvas,
-    /// the footprint before anything was. One hidden gives way to the other shown; a model view or the 3D model
-    /// stands for the model in the look shown
+    /// the footprint before anything was. One hidden gives way to the other shown; the 3D model, else the view of
+    /// the side picked, stands for the model when the pointer was last over the footprint
     pub(super) fn aimed(&self) -> Grab {
+        let views = self.model_views.views.len();
         let model = match (self.rt.aim, self.model_views.look) {
-            (Grab::View(s), ModelLook::Silhouettes) => Grab::View(s),
-            (_, ModelLook::Silhouettes) => Grab::View(self.model_views.view),
-            (_, ModelLook::Solid) => Grab::Solid,
+            (Grab::View(i), _) if i < views => Some(Grab::View(i)),
+            (_, ModelLook::Solid) => Some(Grab::Solid),
+            (_, ModelLook::Silhouettes) => {
+                self.model_views.of(self.model_views.view).map(Grab::View)
+            }
         };
         let on_model = matches!(self.rt.aim, Grab::View(_) | Grab::Solid);
         let (model_hidden, fp_hidden) = (self.rt.model_hidden, self.rt.fp_hidden);
@@ -141,7 +134,10 @@ impl FootprintReview {
         } else {
             fp_hidden && !model_hidden
         };
-        if to_model { model } else { Grab::Footprint }
+        match model {
+            Some(m) if to_model => m,
+            _ => Grab::Footprint,
+        }
     }
 
     /// The mark on what the keys and the puck act on, while the pointer is off the canvas: its outline, dashed
@@ -160,15 +156,16 @@ impl FootprintReview {
         painter.extend(shapes);
     }
 
-    /// The 3D model's placement as it shows over the page: the shaded model in 3D, the picked view in Silhouettes;
-    /// none while the model is hidden or not placed
+    /// The 3D model's placement as it shows over the page: the shaded model in 3D; in Silhouettes the projection
+    /// aimed at, else the first of the side picked; none while the model is hidden or not placed
     pub(super) fn model_place_mut(&mut self) -> Option<&mut Placement> {
         if !self.model_shown() {
             return None;
         }
-        let g = match self.model_views.look {
-            ModelLook::Solid => Grab::Solid,
-            ModelLook::Silhouettes => Grab::View(self.model_views.view),
+        let g = match (self.model_views.look, self.aimed()) {
+            (ModelLook::Solid, _) => Grab::Solid,
+            (ModelLook::Silhouettes, Grab::View(i)) => Grab::View(i),
+            (ModelLook::Silhouettes, _) => Grab::View(self.model_views.of(self.model_views.view)?),
         };
         self.grab_place_mut(g)
     }
@@ -191,17 +188,20 @@ impl FootprintReview {
     pub(super) fn grab_place_mut(&mut self, g: Grab) -> Option<&mut Placement> {
         match g {
             Grab::Footprint => Some(&mut self.place),
-            Grab::View(side) => self.model_views.place[side.index()].as_mut(),
+            Grab::View(i) => self.model_views.views.get_mut(i).map(|v| &mut v.place),
             Grab::Solid => self.model_views.solid.place.as_mut(),
             Grab::Page => None,
         }
     }
 
     /// What a press drags, in words, for the mode bar
-    pub(super) fn grab_name(g: Grab) -> String {
+    pub(super) fn grab_name(&self, g: Grab) -> String {
         match g {
             Grab::Footprint => "the footprint".into(),
-            Grab::View(s) => format!("the {} view", s.name().to_lowercase()),
+            Grab::View(i) => match self.model_views.views.get(i) {
+                Some(v) => format!("the {} view", v.side.name().to_lowercase()),
+                None => "the page (pans)".into(),
+            },
             Grab::Solid => "the 3D model".into(),
             Grab::Page => "the page (pans)".into(),
         }
@@ -228,14 +228,14 @@ impl FootprintReview {
                     );
                 }
             }
-            Grab::View(side) => {
-                if let (Some(place), Some(v)) =
-                    (&self.model_views.place[side.index()], self.projected(side))
+            Grab::View(i) => {
+                if let Some(view) = self.model_views.views.get(i)
+                    && let Some(v) = self.projected(view.side)
                 {
                     for c in &v.outline {
                         closed(
                             c.iter()
-                                .map(|p| self.to_screen(canvas, self.placed(place, *p)))
+                                .map(|p| self.to_screen(canvas, self.placed(&view.place, *p)))
                                 .collect(),
                         );
                     }

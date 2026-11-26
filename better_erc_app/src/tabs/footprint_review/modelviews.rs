@@ -381,15 +381,24 @@ pub enum Moves {
     Model,
 }
 
+/// How many projections the page holds at most
+pub(super) const VIEWS_MAX: usize = 24;
+
+/// One projection of the model over the page: which side it shows and where it lies
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ModelView {
+    pub side: Side,
+    pub place: Placement,
+}
+
 /// The model views' state in the tab, saved with it
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct ModelViews {
-    /// Each view's placement on the page, by [`Side::index`]; none until it is first shown
-    pub place: [Option<Placement>; 6],
-    /// Which views are drawn, by [`Side::index`]
-    pub shown: [bool; 6],
-    /// The view the model view key showed last, and cycles on from; the view the model stands for in Silhouettes
+    /// The model's projections over the page, each placed on its own; a side may be shown more than once. They are
+    /// drawn in both looks, under the 3D model in 3D
+    pub views: Vec<ModelView>,
+    /// The side the model view key showed last, and cycles on from; the view the model stands for in Silhouettes
     /// before the pointer was over one
     pub view: Side,
     /// Silhouettes or the shaded model
@@ -405,15 +414,25 @@ pub struct ModelViews {
 
 impl ModelViews {
     pub fn any_shown(&self) -> bool {
-        self.shown.iter().any(|s| *s)
+        !self.views.is_empty()
+    }
+
+    /// The first projection of `side`
+    pub fn of(&self, side: Side) -> Option<usize> {
+        self.views.iter().position(|v| v.side == side)
+    }
+
+    /// Whether `side` is shown at least once
+    pub fn shows(&self, side: Side) -> bool {
+        self.of(side).is_some()
     }
 }
 
 impl FootprintReview {
-    /// The silhouette view the keys and the puck act on, when it is one ([`FootprintReview::aimed`])
-    pub(super) fn moving_view(&self) -> Option<Side> {
+    /// The projection the keys and the puck act on, when it is one ([`FootprintReview::aimed`])
+    pub(super) fn moving_view(&self) -> Option<usize> {
         match self.aimed() {
-            Grab::View(s) => Some(s),
+            Grab::View(i) => Some(i),
             _ => None,
         }
     }
@@ -431,23 +450,20 @@ impl FootprintReview {
         }
     }
 
-    /// The placement the mouse, the arrow keys, turn and mirror move: the view picked's or the shaded model's
-    /// when the model moves, else the footprint's
+    /// The placement the mouse, the arrow keys, turn and mirror move: the projection's or the shaded model's when
+    /// the model moves, else the footprint's
     pub(super) fn moving_mut(&mut self) -> &mut Placement {
         if self.moving_solid() {
             let first = self.place.clone();
             return self.model_views.solid.place.get_or_insert(first);
         }
         match self.moving_view() {
-            Some(side) => {
-                let first = self.first_place(side);
-                self.model_views.place[side.index()].get_or_insert(first)
-            }
-            None => &mut self.place,
+            Some(i) if i < self.model_views.views.len() => &mut self.model_views.views[i].place,
+            _ => &mut self.place,
         }
     }
 
-    /// Where a model view goes when first shown: the top view on the footprint (so it lies on its pads), the
+    /// Where a projection goes when first shown: the top view on the footprint (so it lies on its pads), the
     /// others unturned, into the middle of the view once the model is read
     fn first_place(&self, side: Side) -> Placement {
         match side {
@@ -465,25 +481,81 @@ impl FootprintReview {
         if self.moving_solid() {
             return "the 3D model".into();
         }
-        match self.moving_view() {
-            Some(s) => format!("the model's {} view", s.name().to_lowercase()),
+        match self
+            .moving_view()
+            .and_then(|i| self.model_views.views.get(i))
+        {
+            Some(v) => format!("the model's {} view", v.side.name().to_lowercase()),
             None => "the footprint".into(),
         }
     }
 
-    /// Shows a model view; one shown for the first time gets its first placement
-    pub(super) fn show_model_view(&mut self, side: Side) {
-        let i = side.index();
-        self.model_views.shown[i] = true;
-        if self.model_views.place[i].is_none() {
-            self.model_views.place[i] = Some(self.first_place(side));
-            if side != Side::Top {
-                self.rt.center_model_view = Some(side);
-            }
+    /// A projection of `side` added; its middle goes to page point `at` once the model is read, the canvas'
+    /// middle without one. None when the page holds [`VIEWS_MAX`] already
+    pub(super) fn add_projection(&mut self, side: Side, at: Option<[f32; 2]>) -> Option<usize> {
+        if self.model_views.views.len() >= VIEWS_MAX {
+            return None;
+        }
+        let place = self.first_place(side);
+        self.model_views.views.push(ModelView { side, place });
+        let i = self.model_views.views.len() - 1;
+        let target = at.unwrap_or_else(|| self.to_page(self.rt.canvas, self.rt.canvas.center()));
+        self.rt.center_model_view = Some((i, target));
+        self.usage(&format!("model views add {}", side.name().to_lowercase()));
+        Some(i)
+    }
+
+    /// The first projection of `side`, added when there is none: the top view on the footprint, the others into
+    /// the middle of the view
+    pub(super) fn show_model_view(&mut self, side: Side) -> Option<usize> {
+        if let Some(i) = self.model_views.of(side) {
+            return Some(i);
+        }
+        if self.model_views.views.len() >= VIEWS_MAX {
+            return None;
+        }
+        if side == Side::Top {
+            let place = self.first_place(side);
+            self.model_views.views.push(ModelView { side, place });
+            return Some(self.model_views.views.len() - 1);
+        }
+        self.add_projection(side, None)
+    }
+
+    /// Projection `i` taken off the page; what pointed at the ones after it follows them down
+    pub(super) fn remove_projection(&mut self, i: usize) {
+        if i >= self.model_views.views.len() {
+            return;
+        }
+        let side = self.model_views.views.remove(i).side;
+        self.rt.model_menu = Default::default();
+        let shift = |g: Grab| match g {
+            Grab::View(j) if j == i => None,
+            Grab::View(j) if j > i => Some(Grab::View(j - 1)),
+            g => Some(g),
+        };
+        self.rt.aim = shift(self.rt.aim).unwrap_or(Grab::Footprint);
+        self.rt.grab = self.rt.grab.and_then(shift);
+        self.rt.hover_grab = self.rt.hover_grab.and_then(shift);
+        self.rt.center_model_view = match self.rt.center_model_view {
+            Some((j, _)) if j == i => None,
+            Some((j, t)) if j > i => Some((j - 1, t)),
+            c => c,
+        };
+        self.usage(&format!(
+            "model views remove {}",
+            side.name().to_lowercase()
+        ));
+    }
+
+    /// Every projection of `side` taken off the page
+    fn remove_side(&mut self, side: Side) {
+        while let Some(i) = self.model_views.of(side) {
+            self.remove_projection(i);
         }
     }
 
-    /// The model view key. Silhouettes: the next view shown (the first press shows the view last shown, when the
+    /// The model view key. Silhouettes: the next side shown (the first press shows the side last shown, when the
     /// keys act on the footprint) and aimed at, so the keys act on it until the pointer is over something else. 3D:
     /// the shaded model turns to the next side, eased
     pub(super) fn cycle_model_view(&mut self, now: f64) {
@@ -507,12 +579,13 @@ impl FootprintReview {
         }
     }
 
-    /// Model view `side` shown and aimed at: the keys and the puck act on it until the pointer is over something
-    /// else
+    /// The first projection of `side` shown and aimed at: the keys and the puck act on it until the pointer is
+    /// over something else
     pub(super) fn aim_view(&mut self, side: Side) {
         self.model_views.view = side;
-        self.show_model_view(side);
-        self.rt.aim = Grab::View(side);
+        if let Some(i) = self.show_model_view(side) {
+            self.rt.aim = Grab::View(i);
+        }
         self.usage(&format!("model view {}", side.name().to_lowercase()));
     }
 
@@ -523,8 +596,12 @@ impl FootprintReview {
         if look == ModelLook::Solid && self.model_views.solid.place.is_none() {
             self.model_views.solid.place = Some(self.place.clone());
         }
-        if look == ModelLook::Silhouettes && self.moves_now() == Moves::Model {
-            self.show_model_view(self.model_views.view);
+        // The keys on the 3D model go on to the view of the side picked
+        if look == ModelLook::Silhouettes
+            && self.rt.aim == Grab::Solid
+            && let Some(i) = self.show_model_view(self.model_views.view)
+        {
+            self.rt.aim = Grab::View(i);
         }
         self.usage(&format!("model look {}", look.name().to_lowercase()));
     }
@@ -543,23 +620,17 @@ impl FootprintReview {
         v.extent.is_some().then_some(v)
     }
 
-    /// The model views shown, each with its placement and what it draws; none in 3D
-    fn shown_views(&self) -> impl Iterator<Item = (Side, &Placement, &ProjectedView)> {
-        let silhouettes = self.model_views.look == ModelLook::Silhouettes;
-        Side::ALL
-            .into_iter()
-            .filter(move |_| silhouettes)
-            .filter_map(|s| {
-                let i = s.index();
-                if !self.model_views.shown[i] {
-                    return None;
-                }
-                Some((s, self.model_views.place[i].as_ref()?, self.projected(s)?))
-            })
+    /// The projections, each with its index, placement and what it draws
+    fn shown_views(&self) -> impl Iterator<Item = (usize, &ModelView, &ProjectedView)> {
+        self.model_views
+            .views
+            .iter()
+            .enumerate()
+            .filter_map(|(i, v)| Some((i, v, self.projected(v.side)?)))
     }
 
-    /// Each frame on the page: the model read while a view is wanted, a view shown for the first time moved into
-    /// the middle of the canvas once it can be
+    /// Each frame on the page: the model read while a view is wanted, a projection just added moved to where it
+    /// was asked for once it can be
     pub(super) fn model_views_frame(&mut self, ctx: &egui::Context, canvas: Rect) {
         let wanted = match self.model_views.look {
             ModelLook::Silhouettes => self.model_views.any_shown(),
@@ -573,28 +644,19 @@ impl FootprintReview {
         }
         self.model_wanted(ctx);
         self.model_poll(ctx);
-        if let Some(side) = self.rt.center_model_view
+        if let Some((i, target)) = self.rt.center_model_view
             && canvas.width() > 1.0
-            && let Some((lo, hi)) = self.projected(side).and_then(|v| v.extent)
+            && let Some(v) = self.model_views.views.get(i)
+            && let Some((lo, hi)) = self.projected(v.side).and_then(|p| p.extent)
         {
-            let target = self.to_page(canvas, canvas.center());
-            let place = self.moving_place(side);
-            let mid = self.placed(&place, [(lo[0] + hi[0]) / 2.0, (lo[1] + hi[1]) / 2.0]);
-            let p = &mut self.model_views.place[side.index()];
-            if let Some(p) = p {
-                p.origin = [
-                    p.origin[0] + target[0] - mid[0],
-                    p.origin[1] + target[1] - mid[1],
-                ];
-            }
+            let mid = self.placed(&v.place, [(lo[0] + hi[0]) / 2.0, (lo[1] + hi[1]) / 2.0]);
+            let p = &mut self.model_views.views[i].place;
+            p.origin = [
+                p.origin[0] + target[0] - mid[0],
+                p.origin[1] + target[1] - mid[1],
+            ];
             self.rt.center_model_view = None;
         }
-    }
-
-    fn moving_place(&self, side: Side) -> Placement {
-        self.model_views.place[side.index()]
-            .clone()
-            .unwrap_or_else(|| self.first_place(side))
     }
 
     /// Where a measuring ruler snaps on the model views shown: their outlines' corners and their edges' ends, page
@@ -602,10 +664,10 @@ impl FootprintReview {
     /// and the shaded model's silhouette corners while it sits on a side
     pub(super) fn model_view_snaps(&self) -> impl Iterator<Item = ([f32; 2], SnapKind)> + '_ {
         self.shown_views()
-            .flat_map(move |(_, place, v)| {
+            .flat_map(move |(_, view, v)| {
                 v.snaps
                     .iter()
-                    .map(move |p| (self.placed(place, *p), SnapKind::ModelCorner))
+                    .map(move |p| (self.placed(&view.place, *p), SnapKind::ModelCorner))
             })
             .chain(self.solid_snaps().map(|p| (p, SnapKind::ModelCorner)))
     }
@@ -666,7 +728,8 @@ impl FootprintReview {
         let mut mesh = egui::Mesh::default();
         let mut lines = Vec::new();
         let mut labels = Vec::new();
-        for (side, place, v) in self.shown_views() {
+        for (i, view, v) in self.shown_views() {
+            let (side, place) = (view.side, &view.place);
             let screen = |p: [f64; 2]| self.to_screen(canvas, self.placed(place, p));
             let c = if gpu { fill } else { fill.gamma_multiply(a) };
             for t in &v.fill {
@@ -676,7 +739,7 @@ impl FootprintReview {
                 }
                 mesh.add_triangle(base, base + 1, base + 2);
             }
-            let current = self.moving_view() == Some(side);
+            let current = self.moving_view() == Some(i);
             let stroke = Stroke::new(
                 if current { 2.5 } else { 1.5 },
                 line.gamma_multiply(a.max(0.6)),
@@ -747,16 +810,14 @@ impl FootprintReview {
     pub(super) fn model_views_section(&mut self, ui: &mut Ui) {
         let summary = match self.model_views.look {
             ModelLook::Silhouettes => {
-                let shown: Vec<&str> = Side::ALL
-                    .iter()
-                    .filter(|s| self.model_views.shown[s.index()])
-                    .map(|s| s.name())
-                    .collect();
-                if shown.is_empty() {
-                    "Silhouettes, none shown".to_string()
+                if self.model_views.any_shown() {
+                    format!("Silhouettes {}", self.views_named())
                 } else {
-                    format!("Silhouettes {}", shown.join(", "))
+                    "Silhouettes, none shown".to_string()
                 }
+            }
+            ModelLook::Solid if self.model_views.any_shown() => {
+                format!("3D, {}; {}", self.solid_side_name(), self.views_named())
             }
             ModelLook::Solid => format!("3D, {}", self.solid_side_name()),
         };
@@ -825,9 +886,9 @@ impl FootprintReview {
             .show(ui, |ui| {
                 ui.vertical(|ui| self.model_switches(ui, true));
             });
-        match self.model_views.look {
-            ModelLook::Silhouettes => self.silhouette_controls(ui),
-            ModelLook::Solid => self.solid_controls(ui),
+        self.projection_controls(ui);
+        if self.model_views.look == ModelLook::Solid {
+            self.solid_controls(ui);
         }
         let gpu = blend::available(ui.ctx());
         let mut mode = self.model_views_blend();
@@ -904,8 +965,12 @@ impl FootprintReview {
         self.model_views.view = side;
         match self.model_views.look {
             ModelLook::Silhouettes => {
-                self.model_views.place[side.index()] = Some(on);
-                self.model_views.shown[side.index()] = true;
+                if let Some(i) = self.show_model_view(side) {
+                    self.model_views.views[i].place = on;
+                    if self.rt.center_model_view.is_some_and(|(j, _)| j == i) {
+                        self.rt.center_model_view = None;
+                    }
+                }
             }
             ModelLook::Solid => {
                 self.model_views.solid.place = Some(on);
@@ -919,37 +984,68 @@ impl FootprintReview {
     pub(super) fn centre_model(&mut self) {
         match self.model_views.look {
             ModelLook::Silhouettes => {
-                self.show_model_view(self.model_views.view);
-                self.rt.center_model_view = Some(self.model_views.view);
+                let i = match self.moving_view() {
+                    Some(i) => Some(i),
+                    None => self.show_model_view(self.model_views.view),
+                };
+                if let Some(i) = i {
+                    let mid = self.to_page(self.rt.canvas, self.rt.canvas.center());
+                    self.rt.center_model_view = Some((i, mid));
+                }
             }
             ModelLook::Solid => self.rt.solid.centre = true,
         }
     }
 
-    /// Silhouettes: which views are drawn
-    fn silhouette_controls(&mut self, ui: &mut Ui) {
-        Group::new("Shown")
-            .tooltip("Which of the model's views are drawn over the page")
+    /// The projections in words: each side, with how often it is shown when more than once
+    fn views_named(&self) -> String {
+        Side::ALL
+            .iter()
+            .filter_map(|s| {
+                let n = self
+                    .model_views
+                    .views
+                    .iter()
+                    .filter(|v| v.side == *s)
+                    .count();
+                match n {
+                    0 => None,
+                    1 => Some(s.name().to_owned()),
+                    n => Some(format!("{} x{n}", s.name())),
+                }
+            })
+            .collect::<Vec<_>>()
+            .join(", ")
+    }
+
+    /// Which sides are projected: a chip per side adds its view or takes every one of it off; a right click on
+    /// the model adds more of one
+    fn projection_controls(&mut self, ui: &mut Ui) {
+        let full = self.model_views.views.len() >= VIEWS_MAX;
+        Group::new("Projections")
+            .tooltip(
+                "The model's flat views over the page, each placed on its own; a right click on the model adds \
+                 one at the pointer, on a view takes it off",
+            )
             .show(ui, |ui| {
                 ui.horizontal_wrapped(|ui| {
                     for side in Side::ALL {
-                        let mut on = self.model_views.shown[side.index()];
-                        if ui
-                            .add(ToggleChip::new(&mut on, side.name()).tooltip(format!(
-                                "The model seen from the {}",
-                                side.name().to_lowercase()
-                            )))
-                            .changed()
-                        {
-                            if on {
-                                self.show_model_view(side);
-                                self.usage(&format!(
-                                    "model views show {}",
-                                    side.name().to_lowercase()
-                                ));
-                            } else {
-                                self.model_views.shown[side.index()] = false;
-                            }
+                        let was = self.model_views.shows(side);
+                        let mut on = was;
+                        let tip = format!("The model seen from the {}", side.name().to_lowercase());
+                        let why = (full && !was).then(|| {
+                            format!("the page holds {VIEWS_MAX} views, the most it takes: take one off first")
+                        });
+                        let chip = ToggleChip::new(&mut on, side.name())
+                            .tooltip(tip)
+                            .disabled_because(why);
+                        if !ui.add(chip).changed() || on == was {
+                            continue;
+                        }
+                        if on {
+                            self.show_model_view(side);
+                        } else {
+                            self.remove_side(side);
                         }
                     }
                 });
@@ -964,7 +1060,7 @@ pub(super) fn label_corner(points: &[Pos2]) -> Pos2 {
 }
 
 #[cfg(test)]
-mod tests {
+pub(super) mod tests {
     use super::super::model3d::tests::two_pin;
     use super::super::tests::{datasheet, harness};
     use super::*;
@@ -972,6 +1068,18 @@ mod tests {
     use ve_view3d::shapes::cuboid;
 
     type H = Harness<'static, FootprintReview>;
+
+    /// The side of the projection the keys act on
+    pub(in super::super) fn moving_side(st: &FootprintReview) -> Option<Side> {
+        st.moving_view().map(|i| st.model_views.views[i].side)
+    }
+
+    /// The first projection of `side`'s placement
+    pub(in super::super) fn place_of(st: &FootprintReview, side: Side) -> Option<Placement> {
+        st.model_views
+            .of(side)
+            .map(|i| st.model_views.views[i].place.clone())
+    }
 
     fn close(a: f64, b: f64) -> bool {
         (a - b).abs() < 1e-6
@@ -1142,9 +1250,9 @@ mod tests {
         // Top: on the footprint, read and projected; the body 4 x 2 mm
         key(&mut h, egui::Key::K);
         let st = h.state();
-        assert_eq!(st.moving_view(), Some(Side::Top));
-        assert!(st.model_views.shown[Side::Top.index()]);
-        assert_eq!(st.model_views.place[0].as_ref(), Some(&st.place));
+        assert_eq!(moving_side(st), Some(Side::Top));
+        assert!(st.model_views.shows(Side::Top));
+        assert_eq!(place_of(st, Side::Top).as_ref(), Some(&st.place));
         let top = st
             .projected(Side::Top)
             .expect("the model read and projected");
@@ -1174,13 +1282,11 @@ mod tests {
         // Bottom: shown beside, moved into the middle of the view; a drag and the turn key move it alone
         key(&mut h, egui::Key::K);
         let st = h.state();
-        assert_eq!(st.moving_view(), Some(Side::Bottom));
-        assert!(
-            st.model_views.shown[Side::Top.index()] && st.model_views.shown[Side::Bottom.index()]
-        );
+        assert_eq!(moving_side(st), Some(Side::Bottom));
+        assert!(st.model_views.shows(Side::Top) && st.model_views.shows(Side::Bottom));
         assert_eq!(st.rt.center_model_view, None);
         let mid = st.to_page(st.rt.canvas, st.rt.canvas.center());
-        let bottom = st.model_views.place[Side::Bottom.index()].clone().unwrap();
+        let bottom = place_of(st, Side::Bottom).unwrap();
         assert!(near(bottom.origin, mid), "{:?} {mid:?}", bottom.origin);
         let fp_before = st.place.clone();
         let a = screen(&h, bottom.origin);
@@ -1195,9 +1301,7 @@ mod tests {
         }
         h.drop_at(b);
         h.run();
-        let moved = h.state().model_views.place[Side::Bottom.index()]
-            .clone()
-            .unwrap();
+        let moved = place_of(h.state(), Side::Bottom).unwrap();
         assert!(
             near(
                 moved.origin,
@@ -1208,13 +1312,7 @@ mod tests {
         );
         key(&mut h, egui::Key::T);
         let st = h.state();
-        assert_eq!(
-            st.model_views.place[Side::Bottom.index()]
-                .as_ref()
-                .unwrap()
-                .rotation,
-            90.0
-        );
+        assert_eq!(place_of(st, Side::Bottom).unwrap().rotation, 90.0);
         assert_eq!(st.place, fp_before);
 
         // Front: x across, the height up from the board's line
@@ -1230,15 +1328,12 @@ mod tests {
         for _ in 0..3 {
             key(&mut h, egui::Key::K);
         }
-        assert_eq!(h.state().moving_view(), Some(Side::Right));
+        assert_eq!(moving_side(h.state()), Some(Side::Right));
         key(&mut h, egui::Key::K);
-        assert_eq!(h.state().moving_view(), Some(Side::Top));
-        assert_eq!(
-            h.state().model_views.shown.iter().filter(|s| **s).count(),
-            6
-        );
+        assert_eq!(moving_side(h.state()), Some(Side::Top));
+        assert_eq!(h.state().model_views.views.len(), 6);
         key(&mut h, egui::Key::J);
-        assert_eq!(h.state().moving_view(), None);
+        assert_eq!(moving_side(h.state()), None);
         assert_eq!(h.state().moves_now(), Moves::Footprint);
         let o = h.state().place.origin;
         let a = screen(&h, o);
@@ -1361,8 +1456,7 @@ mod tests {
                 .into_iter()
                 .find(|s| s.name().eq_ignore_ascii_case(what.trim()))
                 .unwrap();
-            st.model_views.shown[side.index()] = true;
-            st.model_views.place[side.index()] = Some(place);
+            st.model_views.views.push(ModelView { side, place });
         }
         if st.model_views.blend.is_none() {
             st.model_views.blend = Some(BlendMode::Multiply);

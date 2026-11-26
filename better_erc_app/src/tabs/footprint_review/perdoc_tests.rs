@@ -181,6 +181,24 @@ fn each_datasheet_keeps_its_own_review() {
     };
     align(&mut h, 1, 0.02, &place_a);
     h.state_mut().ruler = Some([[100.0, 200.0], [200.0, 200.0]]);
+    // Two projections laid beside A's drawings (VIEW-38), the front one twice
+    let views_a: Vec<modelviews::ModelView> = [
+        (modelviews::Side::Front, [60.0, 80.0]),
+        (modelviews::Side::Front, [260.0, 80.0]),
+        (modelviews::Side::Left, [60.0, 380.0]),
+    ]
+    .into_iter()
+    .map(|(side, origin)| modelviews::ModelView {
+        side,
+        place: Placement {
+            origin,
+            rotation: 0.0,
+            mirror: false,
+        },
+    })
+    .collect();
+    h.state_mut().model_views.views = views_a.clone();
+    h.run();
     assert_eq!(
         accept(&mut h),
         [
@@ -207,6 +225,10 @@ fn each_datasheet_keeps_its_own_review() {
         assert_eq!(st.scale, None, "A's scale carried over to B");
         assert_eq!(st.ruler, None, "A's ruler carried over to B");
         assert_ne!(st.place, place_a, "A's placement carried over to B");
+        assert!(
+            st.model_views.views.is_empty(),
+            "A's projections carried over to B"
+        );
     }
     // Aligned on B at its own scale and accepted: B names TEST-PART too, but A's review covers it, so only
     // OTHER-PART is ticked
@@ -252,6 +274,7 @@ fn each_datasheet_keeps_its_own_review() {
         );
         assert_eq!(st.place, place_a);
         assert_eq!(st.ruler, Some([[100.0, 200.0], [200.0, 200.0]]));
+        assert_eq!(st.model_views.views, views_a, "A's projections");
     }
     assert_eq!(reviews(&parts), after_b, "switching recorded a review");
 
@@ -285,6 +308,7 @@ fn each_datasheet_keeps_its_own_review() {
         .find(|v| v.datasheet == a)
         .expect("A's view saved");
     assert_eq!(kept.place, place_a);
+    assert_eq!(kept.model_views.views, views_a);
     assert_eq!(kept.symbol, "Rev:Two");
     assert!(
         !std::fs::read_to_string(&lib).unwrap().contains("Review"),

@@ -713,9 +713,12 @@ says so.
    the pointer is over (the footprint, a view, the 3D model), else on what it was last over, which the canvas marks
    with a dashed outline while the pointer is off it; a view K just showed is that one until the pointer moves. Where
    two overlap the one the pointer came from wins, so a view on the footprint is reached from its part outside the
-   footprint, or with the footprint hidden (H). Each view keeps its own place, all share the page's scale. The side
-   panel's Model views section shows and hides each view and sets the views' blend mode (normal, multiply, screen,
-   difference), opacity and blink. Measure footprint (G) snaps to the views' outline corners and edge ends too, so a model
+   footprint, or with the footprint hidden (H). Each view keeps its own place, all share the page's scale. A right
+   click on the model (a view, or the shaded 3D model) opens Add projection: the side picked is added under the
+   pointer, to be dragged beside the datasheet's drawings, so one side may be shown more than once; on a view the
+   menu also takes that view off. A double right click brings the model to the pointer instead. The projections are
+   saved with the row's view and drawn over the 3D model too. The side panel's Model views section adds or takes off
+   each side and sets the views' blend mode (normal, multiply, screen, difference), opacity and blink. Measure footprint (G) snaps to the views' outline corners and edge ends too, so a model
    dimension measures on the page. The footprint is drawn over the views where they overlap.
 9. **Accept** (A): when the footprint matches the drawing, Accept records a review of its hash in the part source,
    and for a board row refreshes the project's parts snapshot from it (as `berc fp accept` does); the list is read

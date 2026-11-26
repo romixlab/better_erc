@@ -974,10 +974,10 @@ mod tests {
         key(&mut h, egui::Key::Home);
         let st = h.state();
         assert_eq!(
-            st.model_views.place[Side::Bottom.index()].as_ref(),
+            super::modelviews::tests::place_of(st, Side::Bottom).as_ref(),
             Some(&on)
         );
-        assert!(st.model_views.shown[Side::Bottom.index()]);
+        assert!(st.model_views.shows(Side::Bottom));
         assert_eq!(st.model_views.view, Side::Bottom);
         h.run();
         h.run();
@@ -992,9 +992,11 @@ mod tests {
                 "{p}: {by_model:?} {by_fp:?}"
             );
         }
-        // 3D, the model moved away and turned: Home puts it back, turned onto the bottom
+        // 3D, the model moved away and turned: Home puts it back, turned onto the bottom. The bottom view is taken
+        // off first: the projections are drawn over the 3D model too
         key(&mut h, egui::Key::L);
         let st = h.state_mut();
+        st.model_views.views.clear();
         st.model_views.solid.place = Some(Placement {
             origin: [500.0, 200.0],
             rotation: 0.0,

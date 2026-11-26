@@ -929,6 +929,13 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   last over wins. The moves switch (`Q`, its segmented button, its pie slot, the View picked chips) is gone; hiding
   one (`H`, `J`) reaches the other. Tests: keys on the footprint and the model, the empty page, off the canvas,
   the puck off the canvas · `grab.rs`, `modelviews.rs`, `puck.rs`, `solid.rs`, `puck_tests.rs`
+- ✅ `VIEW-38` Footprint review, projections on a right click: a right click on the 3D model or a projection opens
+  Add projection (top, bottom, front, back, left, right) once egui's double click time is over, so a double right
+  click still brings the model (`VIEW-32`); the side picked is added under the pointer and aimed at, a drag places
+  it. On a projection the menu also offers Remove this view. The projections are one list (`ModelViews::views`, at
+  most `VIEWS_MAX`, a side may repeat), drawn in both looks over the 3D model and saved with the row's view; the
+  Model views section's chips add or take off each side. Tests: add, place, remove, Escape and double right click;
+  the per-datasheet view keeps them · `projmenu.rs`, `modelviews.rs`, `grab.rs`, `perdoc_tests.rs`
 - 🚧 `VIEW-26` Footprint review, datasheets by MPN: a table in the Datasheet section with each `Mpn` field of the
   symbol, the library document that covers it (the library's answer through `library_mpn`, `tpm lib mpn --json`;
   one lookup per MPN per session, on a worker thread) and its review state from the part source's reviews (reviewed,

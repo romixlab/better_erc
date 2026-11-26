@@ -112,7 +112,7 @@ impl FootprintReview {
                 self.rt.center_footprint = true;
             }
             // The model's places were on the last datasheet's page, at its scale
-            self.model_views.place = Default::default();
+            self.model_views.views.clear();
             self.model_views.solid.place = None;
             self.rt.note.clear();
             self.rt.measure_count = 0;

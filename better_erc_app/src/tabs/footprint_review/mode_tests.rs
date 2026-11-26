@@ -817,10 +817,13 @@ fn double_clicks_bring_the_footprint_and_the_model_to_the_pointer() {
     st.place.mirror = true;
     st.model_views.look = ModelLook::Silhouettes;
     st.model_views.view = Side::Bottom;
-    st.model_views.place[Side::Bottom.index()] = Some(Placement {
-        origin: [40.0, 60.0],
-        rotation: 180.0,
-        mirror: false,
+    st.model_views.views.push(super::modelviews::ModelView {
+        side: Side::Bottom,
+        place: Placement {
+            origin: [40.0, 60.0],
+            rotation: 180.0,
+            mirror: false,
+        },
     });
     h.run();
     let (zoom, pan) = (h.state().zoom, h.state().pan);
@@ -837,7 +840,7 @@ fn double_clicks_bring_the_footprint_and_the_model_to_the_pointer() {
     let model_at = screen(&h, [80.0, 250.0]);
     clicks_at(&mut h, model_at, egui::PointerButton::Secondary, 2, 200.0);
     let st = h.state();
-    let model = st.model_views.place[Side::Bottom.index()].clone().unwrap();
+    let model = st.model_views.views[0].place.clone();
     assert_eq!(model.origin, page(&h, model_at));
     assert_eq!(model.rotation, 180.0);
     assert_eq!(st.place.origin, page(&h, at), "the footprint stays");

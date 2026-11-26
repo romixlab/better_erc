@@ -63,6 +63,7 @@ mod pdf;
 #[cfg(test)]
 mod perdoc_tests;
 mod prims;
+mod projmenu;
 mod puck;
 mod recorded;
 #[cfg(test)]
@@ -538,8 +539,8 @@ struct Runtime {
     auto_page: bool,
     /// The footprint goes to the middle of the view on the next frame
     center_footprint: bool,
-    /// This model view goes to the middle of the view once the model is read (VIEW-24)
-    center_model_view: Option<modelviews::Side>,
+    /// This projection's middle goes to this page point once the model is read (VIEW-24)
+    center_model_view: Option<(usize, [f32; 2])>,
     /// The shaded model over the page (VIEW-27)
     solid: solid::SolidRt,
     /// The page is fitted into the view on the next frame
@@ -642,6 +643,8 @@ struct Runtime {
     /// What the pointer was last over on the canvas (never the page): what T, mirror, the arrows, blink, the puck
     /// and the placement controls act on ([`grab::Grab`], [`FootprintReview::aimed`])
     aim: grab::Grab,
+    /// The model's right-click menu (VIEW-38)
+    model_menu: projmenu::MenuRt,
     /// The pointer is over the canvas this frame
     pointer_on_canvas: bool,
     /// Where the pointer was over the canvas last frame: the aim follows it only when it moves
@@ -767,6 +770,7 @@ impl Default for Runtime {
             centre_snapped: None,
             hover_grab: None,
             aim: grab::Grab::Footprint,
+            model_menu: projmenu::MenuRt::default(),
             pointer_on_canvas: false,
             aim_from: None,
             peek: false,
@@ -2436,7 +2440,7 @@ impl FootprintReview {
              {} type the ruler's length, Enter sets the scale · {} the dimension's number sets it · \
              {} · {}\n{} turn 90° · {} bottom view · {} blink · {} copper/mask/paste · {} invert the page · \
              arrows nudge (Shift: 10×) · {} the footprint's centre {} · PgUp/PgDn page · wheel zoom · a drag on the empty page, right or middle drag pans · double click: the footprint's origin to the pointer, double \
-             right click: the model's · \
+             right click: the model's · right click on the model: add a projection, or take the one clicked off · \
              {} the model as silhouettes or 3D ({}) · {}, {}, the arrows, blink and the puck act on what is under the pointer, else \
              what it was last over, marked ({}) · {} {} · \
              3D: SpaceMouse tilt, roll and twist or Ctrl+drag turn it, letting go lands on a side (Alt: free) · \
@@ -2715,7 +2719,7 @@ impl FootprintReview {
                 self.toggle_centre_snap();
             }
             // What a press drags, in Move; its room kept in the other modes
-            let grab = Self::grab_name(self.rt.hover_grab.unwrap_or(grab::Grab::Page));
+            let grab = self.grab_name(self.rt.hover_grab.unwrap_or(grab::Grab::Page));
             ui.add_visible(
                 self.tool == Tool::Move,
                 egui::Label::new(RichText::new(format!("drag: {grab}")).color(SNAP_COLOUR)),
@@ -3434,6 +3438,7 @@ impl FootprintReview {
         if let Some(p) = pointer_page.or(hover_page) {
             self.bring_to_pointer(&resp, p);
         }
+        self.model_menu(&ctx, &resp, pointer_page.or(hover_page), ui.id());
         // The Select mode: a box let go selects what is in it, a click the piece at the pointer
         if self.tool == Tool::Select {
             if resp.drag_stopped()
@@ -3567,8 +3572,8 @@ impl FootprintReview {
         });
         let page = rect.zip(self.page_image(&ctx, invert));
         if self.model_shown() && self.blinked(&ctx, self.model_views.blink) {
-            self.draw_model_views(&painter, canvas, page.clone(), ui.id());
             self.draw_solid(&painter, canvas, page.clone(), ui.id());
+            self.draw_model_views(&painter, canvas, page.clone(), ui.id());
         }
         if self.footprint_shown() && self.blinked(&ctx, self.blink) && !self.rt.items.is_empty() {
             self.draw_footprint(&painter, canvas, page, ui.id());

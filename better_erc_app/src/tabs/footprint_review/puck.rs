@@ -274,7 +274,7 @@ impl FootprintReview {
     /// What the puck acts on with the pointer off the canvas, in two words, for the pie: `footprint`, `3D model`,
     /// `top view`
     fn moves_thing(&self) -> String {
-        Self::grab_name(self.aimed())
+        self.grab_name(self.aimed())
             .trim_start_matches("the ")
             .to_string()
     }
@@ -285,7 +285,7 @@ impl FootprintReview {
             PuckMoves::Page => "moves the page".into(),
             PuckMoves::Footprint => format!(
                 "moves what is under the pointer, else what it was last over, {}",
-                Self::grab_name(self.aimed())
+                self.grab_name(self.aimed())
             ),
         }
     }
@@ -729,7 +729,7 @@ impl FootprintReview {
                     format!("spacenavd's socket: {}", self.rt.puck.socket_line()),
                 );
                 let k = short_key(self.keys().puck);
-                let last = Self::grab_name(self.aimed());
+                let last = self.grab_name(self.aimed());
                 PropertyRow::new("The puck moves")
                     .tooltip(format!("{k} switches"))
                     .show(ui, |ui| {
