@@ -1,0 +1,16 @@
+# better_erc's binaries as binkeep sets, in binkeep's list format (cat_stack, cs_keep::list). Each binary is a set of
+# its own, so each rolls back alone and keeps the history `binkeep adopt` brought over from tpm's stack, where every
+# release was a set of one named after its binary. `just install` puts this file as the user's drop-in
+# ~/.config/binkeep/binkeep.d/better_erc.toml (`binkeep list put`); the source folder is the build's target/deploy.
+
+# The desktop app, with its launcher entry linked where the app launcher looks (KEEP-36). binkeep links SVG icons
+# only and the app has PNG ones, so `just install` copies the icon itself.
+[[set.better_erc.bin]]
+name = "better_erc"
+kind = "gui"
+desktop = "deploy/better_erc.desktop"
+
+# The command line tool.
+[[set.berc.bin]]
+name = "berc"
+kind = "cli"
