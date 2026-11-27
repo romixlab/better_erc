@@ -1,0 +1,67 @@
+# What better_erc finds on lib-30_datasheet_link.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "BOM-14"
+subjects = ["part U6"]
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U1"]
+confidence = "estimate"
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U2"]
+confidence = "estimate"
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U3"]
+confidence = "estimate"
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U4"]
+confidence = "estimate"
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U5"]
+confidence = "estimate"
+
+[[finding]]
+check = "LIB-15"
+subjects = ["part U6"]
+confidence = "estimate"
+
+[[finding]]
+check = "LIB-30"
+subjects = ["part U2"]
+
+[[finding]]
+check = "LIB-30"
+subjects = ["part U3"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U1", "pin U1.1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U2", "pin U2.1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U3", "pin U3.1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U4", "pin U4.1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U5", "pin U5.1"]
+
+[[finding]]
+check = "TEST-1"
+subjects = ["part U6", "pin U6.1"]

@@ -65,6 +65,7 @@ part R3 flag on_board = yes @ sch bom-20_parts_lock.kicad_sch
 part R3 lib Fixture:R sheet / symbol Fixture:R
 part R3 unit 1 sheet / uuid b2000007-0000-4000-8000-000000000000 line 60 at 70,40 rot 0
 part R3 value = text 4k7 @ sch bom-20_parts_lock.kicad_sch note "from the Value field"
+part R4 blank Mpn1
 part R4 field Description = Resistor @ sch bom-20_parts_lock.kicad_sch
 part R4 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-20_parts_lock.kicad_sch
 part R4 field Mpn2 = RC0402FR-071KL @ sch bom-20_parts_lock.kicad_sch

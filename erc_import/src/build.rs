@@ -97,6 +97,7 @@ impl Builder {
         let id = PartId::from_index(self.b.parts.len());
         self.b.parts.push(Part {
             designator: designator.to_string(),
+            blank_fields: Vec::new(),
             symbol: None,
             lib_id: String::new(),
             sheet: self.root(),

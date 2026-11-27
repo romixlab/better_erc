@@ -1,0 +1,128 @@
+board lib-30_datasheet_link
+net unconnected-(U1-A-Pad1) class = Default @ sch lib-30_datasheet_link.kicad_sch note "effective net class"
+net unconnected-(U1-A-Pad1) kind unconnected
+net unconnected-(U2-A-Pad1) class = Default @ sch lib-30_datasheet_link.kicad_sch note "effective net class"
+net unconnected-(U2-A-Pad1) kind unconnected
+net unconnected-(U3-A-Pad1) class = Default @ sch lib-30_datasheet_link.kicad_sch note "effective net class"
+net unconnected-(U3-A-Pad1) kind unconnected
+net unconnected-(U4-A-Pad1) class = Default @ sch lib-30_datasheet_link.kicad_sch note "effective net class"
+net unconnected-(U4-A-Pad1) kind unconnected
+net unconnected-(U5-A-Pad1) class = Default @ sch lib-30_datasheet_link.kicad_sch note "effective net class"
+net unconnected-(U5-A-Pad1) kind unconnected
+net unconnected-(U6-A-Pad1) class = Default @ sch lib-30_datasheet_link.kicad_sch note "effective net class"
+net unconnected-(U6-A-Pad1) kind unconnected
+part U1 field Datasheet = "mx3:${Mpn1} ${Mpn2}" @ sch lib-30_datasheet_link.kicad_sch
+part U1 field Mpn1 = A-1 @ sch lib-30_datasheet_link.kicad_sch
+part U1 field Mpn2 = A-2 @ sch lib-30_datasheet_link.kicad_sch
+part U1 field Value = FIXTURE @ sch lib-30_datasheet_link.kicad_sch
+part U1 flag dnp = no @ sch lib-30_datasheet_link.kicad_sch
+part U1 flag exclude_from_sim = no @ sch lib-30_datasheet_link.kicad_sch
+part U1 flag in_bom = yes @ sch lib-30_datasheet_link.kicad_sch
+part U1 flag on_board = yes @ sch lib-30_datasheet_link.kicad_sch
+part U1 lib Fixture:IC_U1 sheet / symbol Fixture:IC_U1
+part U1 unit 1 sheet / uuid l3000001-0000-4000-8000-000000000000 line 77 at 40,50 rot 0
+part U1 value = text FIXTURE @ sch lib-30_datasheet_link.kicad_sch note "from the Value field"
+part U2 blank Mpn12
+part U2 field Datasheet = "mx3:${Mpn1} ${Mpn2} ${Mpn3} ${Mpn4} ${Mpn5} ${Mpn6} ${Mpn7} ${Mpn8} ${Mpn9} ${Mpn10} ${Mpn11} ${Mpn12}" @ sch lib-30_datasheet_link.kicad_sch
+part U2 field Mpn1 = B-1 @ sch lib-30_datasheet_link.kicad_sch
+part U2 field Mpn2 = B-2 @ sch lib-30_datasheet_link.kicad_sch
+part U2 field Mpn3 = B-3 @ sch lib-30_datasheet_link.kicad_sch
+part U2 field Mpn4 = B-4 @ sch lib-30_datasheet_link.kicad_sch
+part U2 field Value = FIXTURE @ sch lib-30_datasheet_link.kicad_sch
+part U2 flag dnp = no @ sch lib-30_datasheet_link.kicad_sch
+part U2 flag exclude_from_sim = no @ sch lib-30_datasheet_link.kicad_sch
+part U2 flag in_bom = yes @ sch lib-30_datasheet_link.kicad_sch
+part U2 flag on_board = yes @ sch lib-30_datasheet_link.kicad_sch
+part U2 lib Fixture:IC_U2 sheet / symbol Fixture:IC_U2
+part U2 unit 1 sheet / uuid l3000002-0000-4000-8000-000000000000 line 88 at 80,50 rot 0
+part U2 value = text FIXTURE @ sch lib-30_datasheet_link.kicad_sch note "from the Value field"
+part U3 field Datasheet = mx3:${Mpn1} @ sch lib-30_datasheet_link.kicad_sch
+part U3 field Mpn1 = C-1 @ sch lib-30_datasheet_link.kicad_sch
+part U3 field Mpn2 = C-2 @ sch lib-30_datasheet_link.kicad_sch
+part U3 field Value = FIXTURE @ sch lib-30_datasheet_link.kicad_sch
+part U3 flag dnp = no @ sch lib-30_datasheet_link.kicad_sch
+part U3 flag exclude_from_sim = no @ sch lib-30_datasheet_link.kicad_sch
+part U3 flag in_bom = yes @ sch lib-30_datasheet_link.kicad_sch
+part U3 flag on_board = yes @ sch lib-30_datasheet_link.kicad_sch
+part U3 lib Fixture:IC_U3 sheet / symbol Fixture:IC_U3
+part U3 unit 1 sheet / uuid l3000003-0000-4000-8000-000000000000 line 102 at 120,50 rot 0
+part U3 value = text FIXTURE @ sch lib-30_datasheet_link.kicad_sch note "from the Value field"
+part U4 field Datasheet = https://www.example.com/ds.pdf @ sch lib-30_datasheet_link.kicad_sch
+part U4 field Mpn1 = D-1 @ sch lib-30_datasheet_link.kicad_sch
+part U4 field Value = FIXTURE @ sch lib-30_datasheet_link.kicad_sch
+part U4 flag dnp = no @ sch lib-30_datasheet_link.kicad_sch
+part U4 flag exclude_from_sim = no @ sch lib-30_datasheet_link.kicad_sch
+part U4 flag in_bom = yes @ sch lib-30_datasheet_link.kicad_sch
+part U4 flag on_board = yes @ sch lib-30_datasheet_link.kicad_sch
+part U4 lib Fixture:IC_U4 sheet / symbol Fixture:IC_U4
+part U4 unit 1 sheet / uuid l3000004-0000-4000-8000-000000000000 line 113 at 160,50 rot 0
+part U4 value = text FIXTURE @ sch lib-30_datasheet_link.kicad_sch note "from the Value field"
+part U5 field Mpn1 = E-1 @ sch lib-30_datasheet_link.kicad_sch
+part U5 field Value = FIXTURE @ sch lib-30_datasheet_link.kicad_sch
+part U5 flag dnp = no @ sch lib-30_datasheet_link.kicad_sch
+part U5 flag exclude_from_sim = no @ sch lib-30_datasheet_link.kicad_sch
+part U5 flag in_bom = yes @ sch lib-30_datasheet_link.kicad_sch
+part U5 flag on_board = yes @ sch lib-30_datasheet_link.kicad_sch
+part U5 lib Fixture:IC_U5 sheet / symbol Fixture:IC_U5
+part U5 unit 1 sheet / uuid l3000005-0000-4000-8000-000000000000 line 123 at 200,50 rot 0
+part U5 value = text FIXTURE @ sch lib-30_datasheet_link.kicad_sch note "from the Value field"
+part U6 field Datasheet = mx3:F-1 @ sch lib-30_datasheet_link.kicad_sch
+part U6 field Value = FIXTURE @ sch lib-30_datasheet_link.kicad_sch
+part U6 flag dnp = no @ sch lib-30_datasheet_link.kicad_sch
+part U6 flag exclude_from_sim = no @ sch lib-30_datasheet_link.kicad_sch
+part U6 flag in_bom = yes @ sch lib-30_datasheet_link.kicad_sch
+part U6 flag on_board = yes @ sch lib-30_datasheet_link.kicad_sch
+part U6 lib Fixture:IC_U6 sheet / symbol Fixture:IC_U6
+part U6 unit 1 sheet / uuid l3000006-0000-4000-8000-000000000000 line 133 at 240,50 rot 0
+part U6 value = text FIXTURE @ sch lib-30_datasheet_link.kicad_sch note "from the Value field"
+pin U1 1 name A unit 1 net unconnected-(U1-A-Pad1)
+pin U1 1 type = passive @ sch lib-30_datasheet_link.kicad_sch
+pin U2 1 name A unit 1 net unconnected-(U2-A-Pad1)
+pin U2 1 type = passive @ sch lib-30_datasheet_link.kicad_sch
+pin U3 1 name A unit 1 net unconnected-(U3-A-Pad1)
+pin U3 1 type = passive @ sch lib-30_datasheet_link.kicad_sch
+pin U4 1 name A unit 1 net unconnected-(U4-A-Pad1)
+pin U4 1 type = passive @ sch lib-30_datasheet_link.kicad_sch
+pin U5 1 name A unit 1 net unconnected-(U5-A-Pad1)
+pin U5 1 type = passive @ sch lib-30_datasheet_link.kicad_sch
+pin U6 1 name A unit 1 net unconnected-(U6-A-Pad1)
+pin U6 1 type = passive @ sch lib-30_datasheet_link.kicad_sch
+sheet / name "" file lib-30_datasheet_link.kicad_sch uuid /
+source file lib-30_datasheet_link.kicad_sch
+source tool kicad
+source version 8.0
+symbol Fixture:IC_U1 field Datasheet "mx3:${Mpn1} ${Mpn2}"
+symbol Fixture:IC_U1 field Reference U
+symbol Fixture:IC_U1 field Value IC_U1
+symbol Fixture:IC_U1 hash a7ffdd0e5ed8816a
+symbol Fixture:IC_U1 pin 1 unit 1 body 1 name A type passive style line
+symbol Fixture:IC_U1 units 1
+symbol Fixture:IC_U2 field Datasheet "mx3:${Mpn1} ${Mpn2} ${Mpn3} ${Mpn4} ${Mpn5} ${Mpn6} ${Mpn7} ${Mpn8} ${Mpn9} ${Mpn10} ${Mpn11} ${Mpn12}"
+symbol Fixture:IC_U2 field Reference U
+symbol Fixture:IC_U2 field Value IC_U2
+symbol Fixture:IC_U2 hash fb3b86408fc6f433
+symbol Fixture:IC_U2 pin 1 unit 1 body 1 name A type passive style line
+symbol Fixture:IC_U2 units 1
+symbol Fixture:IC_U3 field Datasheet mx3:${Mpn1}
+symbol Fixture:IC_U3 field Reference U
+symbol Fixture:IC_U3 field Value IC_U3
+symbol Fixture:IC_U3 hash 892e7f11aadadccf
+symbol Fixture:IC_U3 pin 1 unit 1 body 1 name A type passive style line
+symbol Fixture:IC_U3 units 1
+symbol Fixture:IC_U4 field Datasheet https://www.example.com/ds.pdf
+symbol Fixture:IC_U4 field Reference U
+symbol Fixture:IC_U4 field Value IC_U4
+symbol Fixture:IC_U4 hash 88e97bf3513381fb
+symbol Fixture:IC_U4 pin 1 unit 1 body 1 name A type passive style line
+symbol Fixture:IC_U4 units 1
+symbol Fixture:IC_U5 field Reference U
+symbol Fixture:IC_U5 field Value IC_U5
+symbol Fixture:IC_U5 hash d5f3ff4b88a4bb43
+symbol Fixture:IC_U5 pin 1 unit 1 body 1 name A type passive style line
+symbol Fixture:IC_U5 units 1
+symbol Fixture:IC_U6 field Datasheet mx3:F-1
+symbol Fixture:IC_U6 field Reference U
+symbol Fixture:IC_U6 field Value IC_U6
+symbol Fixture:IC_U6 hash c2eff437f0574cbb
+symbol Fixture:IC_U6 pin 1 unit 1 body 1 name A type passive style line
+symbol Fixture:IC_U6 units 1

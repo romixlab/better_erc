@@ -161,6 +161,7 @@ impl Board {
             p.units
                 .sort_by(|a, b| (a.unit, &a.uuid).cmp(&(b.unit, &b.uuid)));
             p.fields.sort_by(|a, b| natural_cmp(&a.name, &b.name));
+            p.blank_fields.sort_by(|a, b| natural_cmp(a, b));
             for v in &mut p.variants {
                 v.fields.sort_by(|a, b| natural_cmp(&a.name, &b.name));
             }

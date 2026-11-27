@@ -15,6 +15,7 @@
 //!
 //! ```text
 //! part R1 field Value = 10k @ sch power.kicad_sch
+//! part R1 blank Mpn2
 //! part R1 flag dnp = yes @ manual Roman rank 1000 at 2026-10-22T00:00:00Z note "fitted later"
 //! ```
 //!
@@ -472,6 +473,9 @@ fn board_lines(b: &Board) -> Vec<String> {
                 &f.value,
                 |v| tok(v),
             );
+        }
+        for n in &p.blank_fields {
+            out.push(format!("part {k} blank {}", tok(n)));
         }
         fact_lines(&mut out, &format!("part {k} value"), &p.value, value_tokens);
         flag_lines(&mut out, &format!("part {k}"), &p.flags);
@@ -1765,6 +1769,7 @@ impl BoardReader {
                 .insert(key.clone(), PartId::from_index(self.b.parts.len()));
             self.b.parts.push(Part {
                 designator: key.0,
+                blank_fields: Vec::new(),
                 symbol,
                 lib_id,
                 sheet,
@@ -1819,6 +1824,10 @@ impl BoardReader {
                 let name = c.next()?.to_string();
                 let f = c.fact(read_string)?;
                 add_field(&mut self.b.parts[id.index()].fields, name, f);
+            }
+            "blank" => {
+                let name = c.next()?.to_string();
+                self.b.parts[id.index()].blank_fields.push(name);
             }
             "value" => {
                 let f = c.fact(read_value)?;

@@ -149,6 +149,7 @@ fn sample() -> Design {
     for (i, d) in ["R1", "R?", "R?"].iter().enumerate() {
         b.parts.push(Part {
             designator: d.to_string(),
+            blank_fields: Vec::new(),
             symbol: Some(SymbolId(0)),
             lib_id: "Device:R".into(),
             sheet: SheetId(1),

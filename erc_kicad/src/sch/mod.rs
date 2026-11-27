@@ -633,7 +633,11 @@ fn assemble(
                         parts.insert(res.reference.clone(), id);
                     }
                     let mut fields = Vec::new();
+                    let mut blank_fields: Vec<String> = Vec::new();
                     for (k, v) in &s.properties {
+                        if v.is_empty() && erc_model::user_field(k) && !blank_fields.contains(k) {
+                            blank_fields.push(k.clone());
+                        }
                         if k == "Reference" || v.is_empty() {
                             continue;
                         }
@@ -699,6 +703,7 @@ fn assemble(
                     }
                     b.parts.push(Part {
                         designator: res.reference.clone(),
+                        blank_fields,
                         symbol: symbol_ids.get(s.lib_key()).copied(),
                         lib_id: s.lib_id.clone(),
                         sheet,

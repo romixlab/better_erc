@@ -325,6 +325,7 @@ impl Reader {
                 fields.push(Field::new(name, Fact::new(value.to_string(), src.clone())));
             }
         };
+        let mut blank_fields: Vec<String> = Vec::new();
         let mut lib_id = String::new();
         let mut sheet = None;
         let mut uuids: Vec<String> = Vec::new();
@@ -368,7 +369,14 @@ impl Reader {
                 Some("fields") => {
                     for f in item.children("field") {
                         if let Some(n) = f.value("name") {
-                            add(&mut fields, n, f.arg(1).unwrap_or(""), &self.src);
+                            let v = f.arg(1).unwrap_or("");
+                            if v.is_empty()
+                                && erc_model::user_field(n)
+                                && !blank_fields.iter().any(|b| b == n)
+                            {
+                                blank_fields.push(n.to_owned());
+                            }
+                            add(&mut fields, n, v, &self.src);
                         }
                     }
                 }
@@ -517,6 +525,7 @@ impl Reader {
         let value = Facts::one(self.fact(value).with_note("from the Value field"));
         self.b.parts.push(Part {
             designator,
+            blank_fields,
             symbol,
             lib_id,
             sheet,
@@ -537,6 +546,7 @@ impl Reader {
         self.parts.insert(designator.to_string(), id);
         self.b.parts.push(Part {
             designator: designator.to_string(),
+            blank_fields: Vec::new(),
             symbol: None,
             lib_id: String::new(),
             sheet,

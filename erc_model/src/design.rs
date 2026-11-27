@@ -315,6 +315,15 @@ impl Field {
     }
 }
 
+/// Whether a field is a user field: neither one every KiCad symbol has (`Reference`, `Value`, `Footprint`,
+/// `Datasheet`, `Description`) nor a library property (`ki_keywords`)
+pub fn user_field(name: &str) -> bool {
+    !matches!(
+        name,
+        "Reference" | "Value" | "Footprint" | "Datasheet" | "Description"
+    ) && !name.starts_with("ki_")
+}
+
 /// The resolved value of the field `name` in a list of fields
 pub fn field_value<'a>(fields: &'a [Field], name: &str) -> Option<&'a str> {
     fields
@@ -336,6 +345,10 @@ pub struct Part {
     pub units: Vec<UnitPlacement>,
     /// Fields in file order: `Value`, `Footprint`, `Datasheet`, `Description` and user fields (`Mpn1`)
     pub fields: Vec<Field>,
+    /// The user fields the symbol carries with no text (an `Mpn12` left empty), by name ([`user_field`]);
+    /// [`Part::fields`] leaves them out
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub blank_fields: Vec<String>,
     /// The Value field, parsed
     pub value: Facts<Value>,
     pub flags: PartFlags,
@@ -754,6 +767,7 @@ mod tests {
     fn part(designator: &str, value: &str) -> Part {
         Part {
             designator: designator.into(),
+            blank_fields: Vec::new(),
             symbol: None,
             lib_id: "Device:R".into(),
             sheet: SheetId(0),

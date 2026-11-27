@@ -7,6 +7,7 @@
 //! [`source::FileSource`] reads hand-filled data.
 
 pub mod board;
+pub mod datasheet;
 pub mod keys;
 pub mod lock;
 pub mod mpn;

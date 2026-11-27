@@ -454,6 +454,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
 - ✅ `LIB-15` IC symbol without power pins (by type or name, hidden ones count) · `lib/lib_15.rs`, `lib-15_no_power_pins`
 - ✅ `LIB-19` Hidden pin not grouped with a visible pin of the same meaning (`strict`: every hidden pin) · `lib/lib_19.rs`, `lib-19_hidden_pins`
 - ✅ `LIB-29` Placed symbol carrying a `ki_` field, which KiCad's schematic parity reports on the footprint · `lib/lib_29.rs`, `lib-29_placed_ki_fields`
+- ✅ `LIB-30` Placed symbol whose `mx3:` Datasheet link references an MPN field it lacks or misses one it has (blank fields count) · `lib/lib_30.rs`, `lib-30_datasheet_link`
 - ✅ `MUX-1` Interface signal on a pin named for another (SCL/SDA, MOSI/MISO, D+/D-, CANH/CANL), UART TX meeting TX ·
   `mux/mux_1.rs`, `erc_analysis/src/names/signals.rs`, `mux-1_swapped_signals` (alternates from part data with `NET-12`)
 - ✅ `LOGIC-3` High fan-out: one driver on 8 inputs, a clock on 3 · `logic/logic_3.rs`, `logic-3_fan_out`

@@ -847,3 +847,21 @@ pass without it.
 **Fix.** Delete the field in Symbol Properties on the placed symbol, then Update PCB from Schematic.
 
 **References.** None.
+
+## `LIB-30` Placed symbol whose `mx3:` Datasheet link does not reference its MPN fields <a id="lib-30"></a>
+
+⚠️ warning · needs: the schematic's placed symbols · [catalogue entry](../checks.md#lib-30)
+
+**Impl.** easy
+
+**What it catches.** A placed symbol whose `Datasheet` is an `mx3:` link (`mx3:${Mpn1} ${Mpn2}`) that references an MPN field the symbol has no field for, or does not reference an MPN field the symbol has. A field left empty counts as had. A `Datasheet` that is a vendor URL, empty or `~` is never looked at; a literal part number in the link names no field.
+
+**Why it matters.** KiCad has no wildcard over fields, so the link names each MPN field by hand. A reference to a field the symbol lacks shows unresolved (`${Mpn5}`) and Show Datasheet passes it on as text. A field added later (`Mpn2` after the link was written) goes unnamed, and its part number never reaches the document lookup.
+
+**Example.** `mx3:${Mpn1} ${Mpn2} ... ${Mpn12}` on a symbol with `Mpn1` to `Mpn4` and an empty `Mpn12`; `mx3:${Mpn1}` on a symbol that also has `Mpn2`.
+
+**How to check.** The `${Name}` references of the link against the placed symbol's field names, any case. Only MPN fields count (`Mpn`, `Mpn1`, `MPN_2`, the names BOM checks read as MPN fields); other references (`${Value}`) are not looked at.
+
+**Fix.** Close the schematic in KiCad and run `berc fix datasheet-links --write`. Each stale link becomes `mx3:` and a reference to each MPN field, in field order. The symbol's copy in `lib_symbols` takes the library symbol's `Datasheet`. Fix the library first (`kilib lint --rule datasheet-link --fix` in kicad-library).
+
+**References.** kicad-library `LIB-39`; mx3 `docs/kicad-datasheet.md`.

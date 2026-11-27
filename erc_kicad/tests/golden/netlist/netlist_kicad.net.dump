@@ -11,6 +11,7 @@ part B1 field ki_keywords = "battery cell" @ net netlist_kicad.net
 part B1 lib vhrd_connector_battery:BAT-HLD-001-THM sheet /MCU_H7/
 part B1 unit 0 sheet /MCU_H7/ uuid f824eb5c-eeb0-4d20-81c9-527c8d59e79e
 part B1 value = text BAT-HLD-001-THM @ net netlist_kicad.net note "from the Value field"
+part C1 blank Mpn2
 part C1 field Description = catch @ net netlist_kicad.net
 part C1 field Dielectric = X7R @ net netlist_kicad.net
 part C1 field Footprint = Capacitor_SMD:C_0402_1005Metric @ net netlist_kicad.net

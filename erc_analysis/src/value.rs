@@ -251,6 +251,7 @@ mod tests {
         };
         Part {
             designator: designator.into(),
+            blank_fields: Vec::new(),
             symbol: None,
             lib_id: lib.into(),
             sheet: SheetId(0),

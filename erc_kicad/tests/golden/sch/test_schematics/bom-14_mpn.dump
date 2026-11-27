@@ -21,6 +21,7 @@ net unconnected-(R4-Pad2) class = Default @ sch bom-14_mpn.kicad_sch note "effec
 net unconnected-(R4-Pad2) kind unconnected
 net unconnected-(TP1-Pad1) class = Default @ sch bom-14_mpn.kicad_sch note "effective net class"
 net unconnected-(TP1-Pad1) kind unconnected
+part C1 blank MPN
 part C1 field Description = "Unpolarized capacitor" @ sch bom-14_mpn.kicad_sch
 part C1 field Footprint = Capacitor_SMD:C_0402_1005Metric @ sch bom-14_mpn.kicad_sch
 part C1 field Value = 100n @ sch bom-14_mpn.kicad_sch
@@ -62,6 +63,7 @@ part R3 flag on_board = yes @ sch bom-14_mpn.kicad_sch
 part R3 lib Fixture:R sheet / symbol Fixture:R
 part R3 unit 1 sheet / uuid b1400007-0000-4000-8000-000000000000 line 59 at 70,40 rot 0
 part R3 value = text 4k7 @ sch bom-14_mpn.kicad_sch note "from the Value field"
+part R4 blank Mpn1
 part R4 field Description = Resistor @ sch bom-14_mpn.kicad_sch
 part R4 field Footprint = Resistor_SMD:R_0402_1005Metric @ sch bom-14_mpn.kicad_sch
 part R4 field Mpn2 = RC0402FR-071KL @ sch bom-14_mpn.kicad_sch

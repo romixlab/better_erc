@@ -130,6 +130,7 @@ mod tests {
     fn part(designator: &str, value: &str) -> Part {
         Part {
             designator: designator.into(),
+            blank_fields: Vec::new(),
             symbol: None,
             lib_id: "Device:R".into(),
             sheet: SheetId(0),
