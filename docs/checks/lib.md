@@ -862,6 +862,6 @@ pass without it.
 
 **How to check.** The `${Name}` references of the link against the placed symbol's field names, any case. Only MPN fields count (`Mpn`, `Mpn1`, `MPN_2`, the names BOM checks read as MPN fields); other references (`${Value}`) are not looked at.
 
-**Fix.** Close the schematic in KiCad and run `berc fix datasheet-links --write`. Each stale link becomes `mx3:` and a reference to each MPN field, in field order. The symbol's copy in `lib_symbols` takes the library symbol's `Datasheet`. Fix the library first (`kilib lint --rule datasheet-link --fix` in kicad-library).
+**Fix.** Close the schematic in KiCad and run `berc fix datasheet-links --write`. Each stale link becomes `mx3:` and a reference to each MPN field, in field order. The symbol's copy in `lib_symbols` takes the library symbol's `Datasheet`. Fix the library first (`kilib lint --rule datasheet-link --write` in kicad-library).
 
 **References.** kicad-library `LIB-39`; mx3 `docs/kicad-datasheet.md`.
