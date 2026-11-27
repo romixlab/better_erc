@@ -935,7 +935,7 @@ fn kicad_locks_warn() {
         "KiCad running alone is no warning"
     );
     let lock = dir.join("~rev.kicad_sch.lck");
-    let host = this_host().unwrap_or_default();
+    let host = better_erc::kicad::lock::this_host().unwrap_or_default();
     let record = |pid: Option<u64>| {
         let mut j = serde_json::json!({"username": "someone", "hostname": host});
         if let Some(p) = pid {

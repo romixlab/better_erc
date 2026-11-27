@@ -26,6 +26,7 @@ use better_erc::fp::{
     SymbolLibraries, SymbolStatus, TodoEntry, TodoStatus, Written,
 };
 use better_erc::kicad::libtable::FootprintLibraries;
+use better_erc::kicad::lock;
 use better_erc::model::layout::{FootprintId, Layout};
 use better_erc::parts::lock::LockedReview;
 use better_erc::parts::{FileSource, Source};
@@ -398,14 +399,14 @@ struct Accepted {
 }
 
 /// Why KiCad may overwrite what is `written`: a file it would change is open in KiCad, by its lock file (see
-/// [`kicad_lock`]), one line each naming the lock file. A KiCad running without a lock beside the file is no warning.
+/// [`lock::held`]), one line each naming the lock file. A KiCad running without a lock beside the file is no warning.
 fn kicad_warnings(written: &[Written], running: bool) -> Vec<String> {
-    let host = this_host();
+    let host = lock::this_host();
     written
         .iter()
         .filter(|w| w.changed)
         .filter_map(|w| {
-            let lock = kicad_lock(&w.file, host.as_deref(), running)?;
+            let lock = lock::held(&w.file, host.as_deref(), running)?;
             Some(format!(
                 "{} is open in KiCad (its lock file {}{}): KiCad's next save of it overwrites the change; close it \
                  there first",
@@ -415,76 +416,6 @@ fn kicad_warnings(written: &[Written], running: bool) -> Vec<String> {
             ))
         })
         .collect()
-}
-
-/// KiCad's lock file of an open file, held
-struct KicadLock {
-    path: PathBuf,
-    /// Who holds it, `user@host`, when the lock says
-    owner: Option<String>,
-}
-
-/// The lock file KiCad keeps beside `file` while it has it open (`~NAME.EXT.lck`, `LOCKFILE::LockPathFor` in
-/// KiCad's `include/lockfile.h`), when it is held. KiCad 8 to 10 write `{"username", "hostname"}` into it and no
-/// process id: a lock from this computer (`host`) is held while a KiCad runs here (`running`), or while its `pid`
-/// lives should a lock carry one; a lock from another computer, or one that names none, can't be checked from here
-/// and counts as held. An empty or unreadable lock is stale, as KiCad 10 takes it.
-fn kicad_lock(file: &Path, host: Option<&str>, running: bool) -> Option<KicadLock> {
-    let path = file.with_file_name(format!("~{}.lck", file_name(file)));
-    let text = std::fs::read_to_string(&path).ok()?;
-    let rec: serde_json::Value = serde_json::from_str(&text).ok()?;
-    rec.as_object()?;
-    let field = |k: &str| {
-        rec.get(k)
-            .and_then(|v| v.as_str())
-            .filter(|v| !v.is_empty())
-    };
-    let short = |h: &str| h.split('.').next().unwrap_or(h).to_lowercase();
-    let here = field("hostname")
-        .zip(host)
-        .is_some_and(|(h, me)| short(h) == short(me));
-    if here {
-        let held = match rec.get("pid").and_then(|p| p.as_u64()) {
-            Some(pid) => process_alive(pid),
-            None => running,
-        };
-        if !held {
-            return None;
-        }
-    }
-    let owner = match (field("username"), field("hostname")) {
-        (Some(u), Some(h)) => Some(format!("{u}@{h}")),
-        (u, h) => u.or(h).map(String::from),
-    };
-    Some(KicadLock { path, owner })
-}
-
-/// This computer's name, as KiCad writes it into its locks (wxGetHostName: without the domain)
-fn this_host() -> Option<String> {
-    std::fs::read_to_string("/proc/sys/kernel/hostname")
-        .ok()
-        .or_else(|| std::env::var("HOSTNAME").ok())
-        .map(|h| h.trim().to_string())
-        .filter(|h| !h.is_empty())
-}
-
-/// Whether process `pid` lives on this computer; where that can't be told (no `/proc`), it is taken to
-fn process_alive(pid: u64) -> bool {
-    if !Path::new("/proc/self").exists() {
-        return true;
-    }
-    Path::new("/proc").join(pid.to_string()).exists()
-}
-
-/// Whether a KiCad process (the project manager or the schematic editor) runs on this computer
-fn kicad_running() -> bool {
-    let Ok(dir) = std::fs::read_dir("/proc") else {
-        return false;
-    };
-    dir.flatten().any(|e| {
-        std::fs::read_to_string(e.path().join("comm"))
-            .is_ok_and(|c| matches!(c.trim(), "kicad" | "eeschema"))
-    })
 }
 
 /// The row under review: Accept records a review of its footprint for its MPNs
@@ -748,7 +679,7 @@ impl Default for Runtime {
             namer: None,
             accepted: None,
             confirm: None,
-            kicad_running,
+            kicad_running: lock::kicad_running,
             symbols: None,
             target: None,
             symbol_note: None,
