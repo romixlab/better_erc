@@ -267,6 +267,24 @@ keeps every other byte. Close the schematic in KiCad first, and run `berc parts 
 follow the snapshot. A run after `--write` finds nothing to do, and the `BOM-12` findings on these fields are gone.
 Exit code 2: a design or file error, or no snapshot.
 
+## mx3: Datasheet links
+
+```sh
+berc fix datasheet-links PROJECT [--write] [--symbols DIR]
+```
+
+A part symbol's `Datasheet` can be an `mx3:` link, `mx3:${Mpn1} ${Mpn2}`: KiCad's Show Datasheet then opens the
+library's document of the symbol's part numbers. KiCad has no wildcard over fields, so the link names each MPN field.
+`LIB-30` warns when a placed symbol's link references an MPN field the symbol lacks (KiCad shows `${Mpn5}`
+unresolved), or misses one it has (a field added later). An empty field counts as had; a vendor URL or an empty
+`Datasheet` is never looked at.
+
+`berc fix datasheet-links` rewrites each such link to `mx3:` and a reference to each of the symbol's MPN fields, in
+field order. Each copy in the schematic's `lib_symbols` whose `Datasheet` is an `mx3:` link takes the library
+symbol's text, found through the project's and KiCad's `sym-lib-table` or `--symbols`. Only the `Datasheet` text
+changes. A dry run by default; `--write` refuses while KiCad holds the project or a sheet (its
+`~NAME.kicad_pro.lck` or `~NAME.kicad_sch.lck`), since KiCad's next save would overwrite the fix.
+
 ## Placing fields
 
 ```sh

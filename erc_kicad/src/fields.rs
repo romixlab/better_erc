@@ -213,6 +213,48 @@ pub fn edit_values(text: &str, edits: &[ValueEdit]) -> Result<String, PlaceError
     out.apply(text).map_err(|o| PlaceError::Overlap(o.at))
 }
 
+/// A placed symbol as its sheet file holds it
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct PlacedSymbol {
+    pub uuid: String,
+    /// The library id (`Device:R`)
+    pub lib_id: String,
+    /// The name of its copy in `lib_symbols`: the `lib_name` when the symbol has one, else the library id
+    pub lib_symbol: String,
+    /// Its properties, name and text, in file order
+    pub properties: Vec<(String, String)>,
+}
+
+/// The placed symbols of `text`, a schematic, in file order
+pub fn placed_symbols(text: &str) -> Result<Vec<PlacedSymbol>, PlaceError> {
+    let tree = Tree::parse(text).map_err(PlaceError::Parse)?;
+    let sch = tree.root("kicad_sch").ok_or(PlaceError::NotSchematic)?;
+    let value = |n: &Node, head: &str| {
+        tree.child(n, head)
+            .and_then(|c| tree.arg(c, 0))
+            .map(|v| v.into_owned())
+    };
+    Ok(tree
+        .children(sch, "symbol")
+        .filter_map(|s| {
+            let lib_id = value(s, "lib_id")?;
+            Some(PlacedSymbol {
+                uuid: uuid(&tree, s)?,
+                lib_symbol: value(s, "lib_name").unwrap_or_else(|| lib_id.clone()),
+                lib_id,
+                properties: tree
+                    .children(s, "property")
+                    .filter_map(|p| {
+                        let name = tree.arg(p, 0)?.into_owned();
+                        let text = tree.arg(p, 1).map(|v| v.into_owned()).unwrap_or_default();
+                        Some((name, text))
+                    })
+                    .collect(),
+            })
+        })
+        .collect())
+}
+
 /// The placed symbol's UUID
 fn uuid(tree: &Tree, sym: &Node) -> Option<String> {
     tree.child(sym, "uuid")

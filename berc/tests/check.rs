@@ -711,3 +711,128 @@ fn waive_then_check() {
     assert_eq!(v["waivers"].as_array().unwrap().len(), 3);
     assert_eq!(v["findings"][0]["waiver"]["status"], "applied");
 }
+
+/// The library of the LIB-30 test schematic: each symbol with the link of its own MPN fields
+fn datasheet_library() -> String {
+    let symbol = |name: &str, datasheet: &str, mpns: &[&str]| {
+        let mpns: String = mpns
+            .iter()
+            .map(|m| {
+                format!("    (property \"{m}\" \"\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))\n")
+            })
+            .collect();
+        format!(
+            "  (symbol \"{name}\" (exclude_from_sim no) (in_bom yes) (on_board yes)\n    (property \"Reference\" \"U\" (at 0 0 0) (effects (font (size 1.27 1.27))))\n    (property \"Datasheet\" \"{datasheet}\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))\n{mpns}  )\n"
+        )
+    };
+    let mut lib =
+        String::from("(kicad_symbol_lib (version 20231120) (generator \"kicad_symbol_editor\")\n");
+    lib += &symbol("IC_U1", "mx3:${Mpn1} ${Mpn2}", &["Mpn1", "Mpn2"]);
+    lib += &symbol(
+        "IC_U2",
+        "mx3:${Mpn1} ${Mpn2} ${Mpn3} ${Mpn4}",
+        &["Mpn1", "Mpn2", "Mpn3", "Mpn4"],
+    );
+    lib += &symbol("IC_U3", "mx3:${Mpn1} ${Mpn2}", &["Mpn1", "Mpn2"]);
+    lib += &symbol("IC_U4", "https://www.example.com/ds.pdf", &["Mpn1"]);
+    lib += &symbol("IC_U5", "", &["Mpn1"]);
+    lib += &symbol("IC_U6", "mx3:F-1", &[]);
+    lib + ")\n"
+}
+
+/// `berc fix datasheet-links` on the LIB-30 test schematic: a dry run lists U2, U3 and the copies of IC_U2 and
+/// IC_U3; a lock KiCad holds refuses --write; --write changes only Datasheet lines and LIB-30 is silent after
+#[test]
+fn fix_datasheet_links() {
+    let dir = scratch("fix_datasheet_links");
+    let original =
+        std::fs::read_to_string(sources().join("lib-30_datasheet_link.kicad_sch")).unwrap();
+    let sch = dir.join("fix.kicad_sch");
+    std::fs::write(&sch, &original).unwrap();
+    std::fs::write(dir.join("fix.kicad_pro"), "{}\n").unwrap();
+    let lib = dir.join("Fixture.kicad_sym");
+    std::fs::write(&lib, datasheet_library()).unwrap();
+    let config = scratch("fix_datasheet_links_config");
+    let fix = |write: bool| {
+        let mut args = vec![
+            "fix",
+            "datasheet-links",
+            ".",
+            "--symbols",
+            "Fixture.kicad_sym",
+        ];
+        if write {
+            args.push("--write");
+        }
+        Command::new(env!("CARGO_BIN_EXE_berc"))
+            .env("BERC_USAGE", "off")
+            .env("KICAD_CONFIG_HOME", &config)
+            .current_dir(&dir)
+            .args(&args)
+            .output()
+            .unwrap()
+    };
+
+    let out = fix(false);
+    assert_eq!(code(&out), 0, "{}", stderr(&out));
+    let all12: Vec<String> = (1..=12).map(|i| format!("${{Mpn{i}}}")).collect();
+    let all12 = format!("mx3:{}", all12.join(" "));
+    assert_eq!(
+        stdout(&out),
+        format!(
+            "fix.kicad_sch U2: {all12} -> mx3:${{Mpn1}} ${{Mpn2}} ${{Mpn3}} ${{Mpn4}} ${{Mpn12}}\n\
+             fix.kicad_sch U3: mx3:${{Mpn1}} -> mx3:${{Mpn1}} ${{Mpn2}}\n\
+             fix.kicad_sch lib_symbols Fixture:IC_U2: {all12} -> mx3:${{Mpn1}} ${{Mpn2}} ${{Mpn3}} ${{Mpn4}}\n\
+             fix.kicad_sch lib_symbols Fixture:IC_U3: mx3:${{Mpn1}} -> mx3:${{Mpn1}} ${{Mpn2}}\n\
+             Dry run: 2 links and 2 lib_symbols copies in 1 files; 0 left alone; --write edits the files.\n"
+        )
+    );
+    assert_eq!(std::fs::read_to_string(&sch).unwrap(), original);
+
+    let lock = dir.join("~fix.kicad_sch.lck");
+    std::fs::write(&lock, r#"{"username":"someone","hostname":"elsewhere"}"#).unwrap();
+    let out = fix(true);
+    assert_eq!(code(&out), 2);
+    assert!(
+        stderr(&out).contains(
+            "fix.kicad_sch is open in KiCad (its lock file ./~fix.kicad_sch.lck, someone@elsewhere)"
+        ),
+        "{}",
+        stderr(&out)
+    );
+    assert_eq!(std::fs::read_to_string(&sch).unwrap(), original);
+    std::fs::remove_file(&lock).unwrap();
+
+    let out = fix(true);
+    assert_eq!(code(&out), 0, "{}", stderr(&out));
+    assert!(
+        stdout(&out)
+            .ends_with("Wrote 2 links and 2 lib_symbols copies in 1 files; 0 left alone.\n")
+    );
+    let fixed = std::fs::read_to_string(&sch).unwrap();
+    let changed: Vec<(&str, &str)> = original
+        .lines()
+        .zip(fixed.lines())
+        .filter(|(a, b)| a != b)
+        .collect();
+    assert_eq!(changed.len(), 4, "{changed:#?}");
+    assert!(
+        changed
+            .iter()
+            .all(|(a, b)| a.contains("(property \"Datasheet\" \"mx3:")
+                && b.contains("(property \"Datasheet\" \"mx3:"))
+    );
+    assert_eq!(original.lines().count(), fixed.lines().count());
+
+    let out = berc_in(
+        &dir,
+        &["check", ".", "--only", "LIB-30", "--format", "json"],
+    );
+    assert_eq!(
+        json(&out)["findings"].as_array().map(Vec::len),
+        Some(0),
+        "{}",
+        stdout(&out)
+    );
+    assert!(stdout(&fix(false)).starts_with("Nothing to write"));
+}

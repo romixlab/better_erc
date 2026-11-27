@@ -1161,6 +1161,11 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   where the file's version keeps it, the symbol's `fields_autoplaced` dropped (`erc_kicad::fields`); the counts before
   and after come from the edited files read again (`Project::reopen_with`) · `erc_checks/src/draw/place.rs`,
   `erc_kicad/src/fields.rs`, `better_erc/src/place.rs`, `better_erc/tests/place.rs`, README "Placing fields"
+- ✅ `TOOL-19` `berc fix datasheet-links PROJECT [--write] [--symbols DIR]`: the fix of `LIB-30`. A placed symbol's
+  stale `mx3:` link becomes `mx3:` and a reference to each of its MPN fields (`erc_parts::datasheet::link_of`); a
+  `lib_symbols` copy whose `Datasheet` is an `mx3:` link takes the library symbol's text. Dry run by default;
+  `--write` refuses while KiCad holds the `.kicad_pro` or a `.kicad_sch` (`erc_kicad::lock`) ·
+  `better_erc/src/datasheet.rs`, `berc/tests/check.rs`, README "mx3: Datasheet links"
 
 ## Code generation (`GEN`)
 

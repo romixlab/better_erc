@@ -211,6 +211,17 @@ pub fn property_names(text: &str, symbol: &str) -> Result<Vec<String>, EditError
         .collect())
 }
 
+/// The text of property `name` of symbol `symbol` in `text` (a symbol library or a schematic, as [`set_property`]
+/// reads them), `None` when the symbol has no such property of its own
+pub fn property(text: &str, symbol: &str, name: &str) -> Result<Option<String>, EditError> {
+    let tree = Tree::parse(text).map_err(EditError::Parse)?;
+    let (sym, _) = find_symbol(&tree, symbol)?;
+    Ok(tree
+        .children(sym, "property")
+        .find(|p| tree.arg(p, 0).as_deref() == Some(name))
+        .map(|p| tree.arg(p, 1).map(|v| v.into_owned()).unwrap_or_default()))
+}
+
 /// Removes property `name` of symbol `symbol` from `text` (a symbol library or a schematic, as [`set_property`]
 /// reads them): the property and the line it stood on, every other byte kept. The same text, unchanged, when the
 /// symbol has no such property.

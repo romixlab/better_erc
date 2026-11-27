@@ -14,6 +14,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 ### Added
 
 - `LIB-30`: an `mx3:` Datasheet link that references an MPN field the symbol lacks, or misses one (LIB-30).
+- `berc fix datasheet-links`: rewrites stale `mx3:` links and their lib_symbols copies; refuses while KiCad holds the files (TOOL-19).
 
 ## [0.6.7] - 2026-11-26
 

@@ -6,6 +6,8 @@
 //! - [`import`] ([`erc_import`]): the importer registry with KiCad, Altium, OrCAD and pick-and-place files.
 //! - [`analysis`] ([`erc_analysis`]): part classes, values, graph queries, the power structure, I2C buses.
 //! - [`checks`] ([`erc_checks`]): the check engine, the catalogue, findings and reports (JSON, SARIF, Markdown).
+//! - [`datasheet`]: stale `mx3:` Datasheet links rewritten (`LIB-30`), the library side of
+//!   `berc fix datasheet-links`.
 //! - [`diff`]: comparisons of two designs on disk, the library side of `berc diff`.
 //! - [`step`] ([`erc_step`]): STEP models into parts, faces and edges in mm, and measurements on them.
 //! - [`fp`]: footprint review hashes of library footprints and board copies, their 3D models against them, the
@@ -40,6 +42,7 @@ pub use erc_kicad as kicad;
 pub use erc_model as model;
 pub use erc_step as step;
 
+pub mod datasheet;
 pub mod diff;
 pub mod fields;
 pub mod fp;

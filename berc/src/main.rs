@@ -99,6 +99,13 @@ const FIELDS_SYNC_AFTER_HELP: &str = "Exit codes: 0 planned (or written), 2 usag
 parts.lock.toml; nothing is written when any file fails to edit.\n\nClose the schematic in KiCad before --write. \
 Run `berc parts refresh` first.\n\nExamples:\n  berc fields sync hw/board\n  berc fields sync hw/board --write";
 
+/// Exit codes of `berc fix datasheet-links`, under its --help
+const FIX_DATASHEET_LINKS_AFTER_HELP: &str = "Exit codes: 0 planned (or written), 2 usage, read or write error, \
+KiCad holds a file of the project; nothing is written when any file fails to edit.\n\nClose the project in KiCad \
+before --write: berc refuses while a lock file (~NAME.kicad_pro.lck, ~NAME.kicad_sch.lck) is held. Fix the library \
+first, so the lib_symbols copies take its right links.\n\nExamples:\n  berc fix datasheet-links hw/board\n  \
+berc fix datasheet-links hw/board --write";
+
 /// better_erc command line tools
 ///
 /// Colour in help, errors and `check` text only on a terminal, and never with NO_COLOR set; `textconv` output is
@@ -204,6 +211,11 @@ enum Command {
         #[command(subcommand)]
         command: FieldsCommand,
     },
+    /// Fix what a check finds, in the design's files
+    Fix {
+        #[command(subcommand)]
+        command: FixCommand,
+    },
     /// How often each command ran on this PC, from the local usage record
     ///
     /// Every run appends a line to $BERC_USAGE_FILE, else $XDG_STATE_HOME/berc/usage.tsv, else
@@ -271,6 +283,33 @@ struct FieldsSyncArgs {
     /// fields (`drawing.fields.pitch=2.54`)
     #[arg(long = "set", value_name = "NAME=VALUE")]
     set: Vec<String>,
+}
+
+#[derive(Subcommand)]
+enum FixCommand {
+    /// Rewrite stale mx3: Datasheet links: `mx3:` and a reference to each MPN field of the symbol (LIB-30)
+    ///
+    /// A placed symbol whose `mx3:${Mpn1} ${Mpn2}` link references an MPN field it lacks, or misses one it has (an
+    /// empty field counts as had), gets `mx3:` and a `${Field}` reference to each of its MPN fields, in field order.
+    /// Each copy in the schematic's lib_symbols whose Datasheet is an mx3: link takes the library symbol's text,
+    /// through the project's and KiCad's sym-lib-table. A Datasheet that is a vendor URL or empty is left alone.
+    /// Only the Datasheet text changes. A dry run by default.
+    #[command(after_help = FIX_DATASHEET_LINKS_AFTER_HELP)]
+    DatasheetLinks(FixDatasheetLinksArgs),
+}
+
+#[derive(clap::Args)]
+struct FixDatasheetLinksArgs {
+    /// The design: a directory with one .kicad_pro, the .kicad_pro or the root .kicad_sch
+    #[arg(value_hint = ValueHint::AnyPath, default_value = ".")]
+    project: PathBuf,
+    /// Edit the .kicad_sch files in place; without it nothing is written
+    #[arg(long)]
+    write: bool,
+    /// A symbol library (.kicad_sym, .kicad_symdir) or a folder of them, searched before the sym-lib-table, each
+    /// by its file name; repeatable
+    #[arg(long, value_name = "DIR", value_hint = ValueHint::AnyPath)]
+    symbols: Vec<PathBuf>,
 }
 
 #[derive(Subcommand)]
@@ -778,6 +817,9 @@ fn main() -> ExitCode {
         Command::Fields {
             command: FieldsCommand::Sync(args),
         } => fields_sync(&args),
+        Command::Fix {
+            command: FixCommand::DatasheetLinks(args),
+        } => fix_datasheet_links(&args),
         Command::Usage => {
             let out = usage::summary(&usage::known(&Cli::command()));
             let _ = std::io::stdout().lock().write_all(out.as_bytes());
@@ -914,6 +956,27 @@ fn fields_sync(args: &FieldsSyncArgs) -> ExitCode {
     match synced {
         Ok(s) => {
             let out = better_erc::fields::render(&s);
+            let _ = anstream::stdout().lock().write_all(out.as_bytes());
+            ExitCode::SUCCESS
+        }
+        Err(e) => {
+            error(&e.to_string());
+            ExitCode::from(CheckError::EXIT_CODE)
+        }
+    }
+}
+
+fn fix_datasheet_links(args: &FixDatasheetLinksArgs) -> ExitCode {
+    let opts = better_erc::datasheet::FixOptions {
+        write: args.write,
+        libraries: better_erc::fp::LibrarySearch {
+            symbols: args.symbols.clone(),
+            ..better_erc::fp::LibrarySearch::kicad()
+        },
+    };
+    match better_erc::datasheet::fix(&args.project, &opts) {
+        Ok(f) => {
+            let out = better_erc::datasheet::render(&f);
             let _ = anstream::stdout().lock().write_all(out.as_bytes());
             ExitCode::SUCCESS
         }
