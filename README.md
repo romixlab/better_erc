@@ -130,10 +130,12 @@ to `~/.zshrc`, or `COMPLETE=fish berc | source` to `~/.config/fish/config.fish`.
 ```sh
 berc check PROJECT [--variant V] [--only CAT,ID] [--format text|json|sarif|md]
                    [--baseline report.json] [--fail-on error|warning|suggestion] [--require NEED]
-                   [--set NAME=VALUE] [--theme THEME.json]
+                   [--set NAME=VALUE] [--theme THEME.json] [--units mm|mil|in]
 ```
 
-`PROJECT` is a directory with one design in it (its `.kicad_pro`) or a design file. Exit codes:
+`PROJECT` is a directory with one design in it (its `.kicad_pro`) or a design file. `--units` writes positions and
+lengths in messages in mm (default), mil or in, to match the editor's coordinate display; it wins over the project
+file's `[report] units = "mil"`. Item names and the JSON report's positions stay in mm. Exit codes:
 
 | code | meaning |
 |---|---|

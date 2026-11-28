@@ -16,6 +16,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 - Licence: MIT OR Apache-2.0, with LICENSE-MIT and LICENSE-APACHE; every crate inherits it.
 - `Project::open_edited`: a design file opened with some files replaced by an editor's unsaved texts, in one import (TOOL-20).
 - Crate `better_erc_cxx`: a cxx bridge for C++ hosts, `berc::check` returns the violations of an open schematic (TOOL-20).
+- Messages write positions and lengths in mm, mil or in: `[report] units`, `berc check --units` (CFG-10).
 
 ### Changed
 

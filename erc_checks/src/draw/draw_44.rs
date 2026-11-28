@@ -4,7 +4,7 @@ use super::section::sections;
 use super::{HEADING_SIZE, SECTION_REACH, location, nm, sheet_subject};
 use crate::meta::*;
 use crate::{Ctx, Finding};
-use erc_analysis::scene::mm;
+
 use erc_model::geometry::Rect;
 
 pub struct Draw44;
@@ -28,15 +28,9 @@ static META: CheckMeta = CheckMeta {
     params: &[SECTION_GAP, HEADING_SIZE, SECTION_REACH],
 };
 
-/// `x 10..20 y 30..40`, in millimetres
-fn span(r: Rect) -> String {
-    format!(
-        "x {}..{} y {}..{}",
-        mm(r.min.x),
-        mm(r.max.x),
-        mm(r.min.y),
-        mm(r.max.y)
-    )
+/// `x 10..20 y 30..40`, in the run's units
+fn span(cx: &Ctx, r: Rect) -> String {
+    cx.units().span((r.min.x, r.max.x), (r.min.y, r.max.y))
 }
 
 impl Check for Draw44 {
@@ -67,13 +61,13 @@ impl Check for Draw44 {
                             .location(location(scene, ha, a.rect.min))
                             .location(location(scene, hb, b.rect.min))
                             .message(format!(
-                                "sections {} ({}) and {} ({}) are {} mm apart, less than {}",
+                                "sections {} ({}) and {} ({}) are {} apart, less than {}",
                                 a.title,
-                                span(a.rect),
+                                span(cx, a.rect),
                                 b.title,
-                                span(b.rect),
-                                mm(apart),
-                                mm(gap)
+                                span(cx, b.rect),
+                                cx.units().len(apart),
+                                cx.units().num(gap)
                             ))
                             .fix("move the sections apart")
                             .build(),

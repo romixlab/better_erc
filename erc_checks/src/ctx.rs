@@ -6,6 +6,7 @@ use crate::finding::FindingBuilder;
 use crate::meta::{CheckMeta, Need, PATHS, Severity};
 use crate::project_file::derating::Derating;
 use crate::project_file::nets::{NetFacts, ProjectNets};
+use crate::units::Units;
 use erc_analysis::drawing::Drawing;
 use erc_analysis::scene::Scene;
 use erc_analysis::{Feeds, I2cBuses, PartClasses, Power, PowerOptions, Values};
@@ -45,6 +46,10 @@ pub struct Config {
     /// The text of each file of [`Config::paths`], by its path as given; [`Config::read_paths`] fills it
     #[serde(default)]
     pub files: BTreeMap<String, String>,
+    /// The units of positions and lengths in messages (CFG-10); `None`: not set here, millimetres unless a
+    /// config laid over it sets them
+    #[serde(default)]
+    pub units: Option<Units>,
 }
 
 /// The largest file a path setting may name
@@ -90,6 +95,9 @@ impl Config {
             .extend(other.paths.iter().map(|(k, v)| (k.clone(), v.clone())));
         self.files
             .extend(other.files.iter().map(|(k, v)| (k.clone(), v.clone())));
+        if other.units.is_some() {
+            self.units = other.units;
+        }
     }
 
     /// Sets a threshold by its key: a setting of `CHECK-ID.param`, or a shared one by its own name. A key no
@@ -435,6 +443,11 @@ impl<'a> Ctx<'a> {
             drawing: OnceLock::new(),
             scenes: OnceLock::new(),
         }
+    }
+
+    /// The units messages write positions and lengths in (CFG-10)
+    pub fn units(&self) -> Units {
+        self.config.units.unwrap_or_default()
     }
 
     /// The context with the project's parts snapshot (Need::PartsLock)

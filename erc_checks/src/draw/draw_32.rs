@@ -4,7 +4,7 @@
 use super::{COLOUR_SLACK, HEADING_SIZE, is_directive, near_colour, nm, one};
 use crate::meta::*;
 use crate::{Ctx, Finding};
-use erc_analysis::scene::{Item, ItemKind as K, Scene, mm};
+use erc_analysis::scene::{Item, ItemKind as K, Scene};
 use erc_model::geometry::{DrawnTextBox, Text};
 
 pub struct Draw32;
@@ -43,7 +43,13 @@ const KINDS: [(&str, (u8, u8, u8)); 6] = [
 const PARAMETER_BOX: (u8, u8, u8) = (110, 110, 110);
 
 /// What is wrong with a free text item, if anything
-fn free_text(scene: &Scene, item: &Item, t: &Text, heading: (i64, i64)) -> Option<String> {
+fn free_text(
+    cx: &Ctx,
+    scene: &Scene,
+    item: &Item,
+    t: &Text,
+    heading: (i64, i64),
+) -> Option<String> {
     if t.text.trim_start().starts_with('.') {
         return (!is_directive(t.text.trim_start())).then(|| {
             format!(
@@ -63,8 +69,8 @@ fn free_text(scene: &Scene, item: &Item, t: &Text, heading: (i64, i64)) -> Optio
     }
     let what = if t.bold {
         format!(
-            "is bold at {} mm, neither a section heading nor a note heading",
-            mm(t.size.0)
+            "is bold at {}, neither a section heading nor a note heading",
+            cx.units().len(t.size.0)
         )
     } else {
         "stands free: put it in a note box".to_string()
@@ -128,7 +134,7 @@ impl Check for Draw32 {
             let g = scene.geometry;
             let texts = scene.items.iter().filter(|i| i.kind == K::Text);
             for (item, t) in texts.zip(&g.texts) {
-                if let Some(m) = free_text(scene, item, &t.text, heading) {
+                if let Some(m) = free_text(cx, scene, item, &t.text, heading) {
                     out.push(
                         one(cx, &META, scene, item, t.text.at)
                             .message(m)

@@ -4,7 +4,6 @@
 use super::{PIN_LEAD, at, nm, one};
 use crate::meta::*;
 use crate::{Ctx, Finding};
-use erc_analysis::scene::mm;
 
 pub struct Draw41;
 
@@ -44,11 +43,11 @@ impl Check for Draw41 {
                 } else if run == 0 {
                     format!(
                         "{} leaves across its axis ({})",
-                        at(item, p.at),
+                        at(cx, item, p.at),
                         p.outward.name()
                     )
                 } else if run < lead && scene.bends_at(end, p.outward) {
-                    format!("{} bends {} mm out", at(item, p.at), mm(run))
+                    format!("{} bends {} out", at(cx, item, p.at), cx.units().len(run))
                 } else {
                     continue;
                 };

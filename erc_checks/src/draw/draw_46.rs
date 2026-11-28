@@ -4,7 +4,7 @@ use super::draw_35::small_part;
 use super::{COLOUR_SLACK, near_colour, nm, one};
 use crate::meta::*;
 use crate::{Ctx, Finding};
-use erc_analysis::scene::{Item, ItemKind as K, Scene, mm};
+use erc_analysis::scene::{Item, ItemKind as K, Scene};
 use erc_model::Pt;
 use erc_model::geometry::{DrawnGraphic, Rect};
 
@@ -235,8 +235,8 @@ impl Check for Draw46 {
                 let rect = outline(scene, body);
                 match last.miss(rect.center()) {
                     Some(m) if m > aim => wrong.push(format!(
-                        "its line passes {} mm from the body's centre",
-                        mm(m as i64)
+                        "its line passes {} from the body's centre",
+                        cx.units().len(m as i64)
                     )),
                     None => wrong.push("it points away from the body".to_string()),
                     _ => {}
@@ -246,16 +246,18 @@ impl Check for Draw46 {
                 if gap == 0 {
                     wrong.push("its tip is on or inside the outline".to_string());
                 } else if gap < clear {
-                    wrong.push(format!("its tip stops {} mm from the outline", mm(gap)));
+                    wrong.push(format!(
+                        "its tip stops {} from the outline",
+                        cx.units().len(gap)
+                    ));
                 }
                 if wrong.is_empty() {
                     continue;
                 }
                 let start = leader.points.first().copied().unwrap_or(last.from);
                 let message = format!(
-                    "Leader from x {} y {} into {}: {}",
-                    mm(start.x),
-                    mm(start.y),
+                    "Leader from {} into {}: {}",
+                    cx.units().xy(start.x, start.y),
                     body.name,
                     wrong.join(", ")
                 );

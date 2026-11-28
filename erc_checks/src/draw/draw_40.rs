@@ -1,13 +1,14 @@
 //! `DRAW-40` Power or tie wiring much longer than it needs, with a cheaper drawing at hand
 
 use super::{
-    ALIGN_SNAP, ALIGN_WINDOW, CLEARANCE_PART, CLEARANCE_POWER, CLEARANCE_TEXT, MM, location, nm,
+    ALIGN_SNAP, ALIGN_WINDOW, CLEARANCE_PART, CLEARANCE_POWER, CLEARANCE_TEXT, location, nm,
     sheet_subject,
 };
 use crate::meta::*;
+use crate::units::Units;
 use crate::{Ctx, Finding};
 use erc_analysis::power::{NameRole, read_name};
-use erc_analysis::scene::{Item, ItemKind, PinRef, Scene, Tie, mm};
+use erc_analysis::scene::{Item, ItemKind, PinRef, Scene, Tie};
 use erc_model::Pt;
 use erc_model::geometry::{Dir, DrawnPin, DrawnSymbol, Rect};
 use std::collections::BTreeMap;
@@ -421,6 +422,8 @@ struct Site<'r, 's> {
     tie: usize,
     /// The Manhattan length of the tie
     span: i64,
+    /// The units the redraw's text writes positions in
+    units: Units,
 }
 
 impl Site<'_, '_> {
@@ -533,7 +536,7 @@ fn joined(site: &Site, gs: &[Group], target: Pt, into: Option<Dir>, rail: &str) 
         segs.extend(path);
         wire += length(&segs);
     }
-    let at = format!("x {} y {}", target.x as f64 / MM, target.y as f64 / MM);
+    let at = site.units.xy(target.x, target.y);
     Some(Redraw {
         cost: cost + site.wire_cost(wire),
         what: format!("a direct path to {rail} at {at}"),
@@ -584,7 +587,7 @@ fn routed_wires(scene: &Scene, tie: &Tie) -> Vec<usize> {
 /// The tie's scored drawing and its cheapest candidate, when the tie is one this check reads: wires between pins
 /// and a power symbol, or pins of one part tied together. A tie with a label goes on elsewhere and has no known end.
 /// Power and ground ties are looked at with any bend, a signal only past the detour limit: signals may bend more.
-fn judge(scene: &Scene, w: &Weights, t: usize) -> Option<(f64, Redraw, f64)> {
+fn judge(scene: &Scene, w: &Weights, t: usize, units: Units) -> Option<(f64, Redraw, f64)> {
     let g = scene.geometry;
     let tie = &scene.ties[t];
     let powers: Vec<usize> = tie
@@ -646,6 +649,7 @@ fn judge(scene: &Scene, w: &Weights, t: usize) -> Option<(f64, Redraw, f64)> {
         w,
         tie: t,
         span,
+        units,
     };
     let direct = joined(&site, &gs, target, to, rail);
     let drop = to.and_then(|d| straight_drops(&site, &gs, d, target, rail, template));
@@ -672,7 +676,7 @@ impl Check for Draw40 {
         for scene in cx.scenes() {
             let sheet = sheet_subject(cx, scene);
             for t in 0..scene.ties.len() {
-                let Some((cost, best, ratio)) = judge(scene, &w, t) else {
+                let Some((cost, best, ratio)) = judge(scene, &w, t, cx.units()) else {
                     continue;
                 };
                 let wire = scene.ties[t].wires[0];
@@ -697,9 +701,8 @@ impl Check for Draw40 {
                         .item(sheet, format!("{} ({})", item.name, names.join(", ")))
                         .location(location(scene, item, at))
                         .message(format!(
-                            "{what} at x {} y {} runs {ratio:.1} times its Manhattan length: {} costs {:.0} instead of {:.0}",
-                            mm(at.x),
-                            mm(at.y),
+                            "{what} at {} runs {ratio:.1} times its Manhattan length: {} costs {:.0} instead of {:.0}",
+                            cx.units().xy(at.x, at.y),
                             best.what,
                             best.cost,
                             cost

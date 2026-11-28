@@ -9,7 +9,7 @@ use std::fmt;
 use std::panic::{self, AssertUnwindSafe};
 use std::path::Path;
 
-use erc_checks::{CheckError, CheckOptions, Finding, Project};
+use erc_checks::{CheckError, CheckOptions, Finding, Project, Units};
 
 #[cxx::bridge(namespace = "berc")]
 mod ffi {
@@ -29,6 +29,16 @@ mod ffi {
         Suggestion,
         /// Facts worth knowing, nothing to fix
         Info,
+    }
+
+    /// The units messages write positions and lengths in: the editor's display units
+    enum Units {
+        /// Millimetres
+        Mm,
+        /// Mils
+        Mil,
+        /// Inches
+        Inch,
     }
 
     /// What a violation is about: `part R1`, `pin R1.2`, `net /I2C/SDA`, `sheet /MCU/`
@@ -65,8 +75,9 @@ mod ffi {
     }
 
     extern "Rust" {
-        /// Runs every check on the design file `project` with `edited` in place of those files
-        fn check(project: &str, edited: &[EditedFile]) -> Result<Vec<Violation>>;
+        /// Runs every check on the design file `project` with `edited` in place of those files; messages write
+        /// positions and lengths in `units`, over the project file's setting
+        fn check(project: &str, edited: &[EditedFile], units: Units) -> Result<Vec<Violation>>;
 
         /// better_erc's version (`0.6.8`)
         fn version() -> String;
@@ -80,6 +91,8 @@ enum BridgeError {
     Check(CheckError),
     /// A check panicked; the message is the panic's
     Panic(String),
+    /// The units value is none of the bridge's
+    Units(u8),
 }
 
 impl fmt::Display for BridgeError {
@@ -87,6 +100,7 @@ impl fmt::Display for BridgeError {
         match self {
             BridgeError::Check(e) => write!(f, "{e}"),
             BridgeError::Panic(m) => write!(f, "better_erc panicked: {m}"),
+            BridgeError::Units(u) => write!(f, "no units {u}: Mm, Mil or Inch"),
         }
     }
 }
@@ -95,19 +109,26 @@ impl std::error::Error for BridgeError {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         match self {
             BridgeError::Check(e) => Some(e),
-            BridgeError::Panic(_) => None,
+            BridgeError::Panic(_) | BridgeError::Units(_) => None,
         }
     }
 }
 
-fn check(project: &str, edited: &[ffi::EditedFile]) -> Result<Vec<ffi::Violation>, BridgeError> {
+fn check(
+    project: &str,
+    edited: &[ffi::EditedFile],
+    units: ffi::Units,
+) -> Result<Vec<ffi::Violation>, BridgeError> {
+    let units = units_of(units)?;
     let edited: BTreeMap<String, Vec<u8>> = edited
         .iter()
         .map(|f| (f.path.clone(), f.text.clone().into_bytes()))
         .collect();
     let run = panic::catch_unwind(AssertUnwindSafe(|| {
         let project = Project::open_edited(Path::new(project), &edited)?;
-        project.check(&CheckOptions::default())
+        let mut opts = CheckOptions::default();
+        opts.run.config.units = Some(units);
+        project.check(&opts)
     }))
     .map_err(|payload| BridgeError::Panic(panic_message(payload.as_ref())))?
     .map_err(BridgeError::Check)?;
@@ -118,6 +139,16 @@ fn check(project: &str, edited: &[ffi::EditedFile]) -> Result<Vec<ffi::Violation
         .filter(|f| !f.waived())
         .map(violation)
         .collect())
+}
+
+/// The checks' units for the bridge's; a value C++ made up is an error
+fn units_of(units: ffi::Units) -> Result<Units, BridgeError> {
+    match units {
+        ffi::Units::Mm => Ok(Units::Mm),
+        ffi::Units::Mil => Ok(Units::Mil),
+        ffi::Units::Inch => Ok(Units::Inch),
+        _ => Err(BridgeError::Units(units.repr)),
+    }
 }
 
 fn version() -> String {
@@ -186,7 +217,7 @@ mod tests {
     #[test]
     fn checks_the_file_on_disk() {
         let main = format!("{SOURCES}/ana-3_shunt_filters.kicad_sch");
-        let found = check(&main, &[]).unwrap();
+        let found = check(&main, &[], ffi::Units::Mm).unwrap();
         let ids = ids(&found);
         assert!(ids.contains(&"ANA-3".to_owned()), "{ids:?}");
         let ana3 = found.iter().find(|v| v.check == "ANA-3").unwrap();
@@ -203,14 +234,30 @@ mod tests {
             path: "ana-3_shunt_filters.kicad_sch".to_owned(),
             text: other,
         }];
-        let ids = ids(&check(&main, &edited).unwrap());
+        let ids = ids(&check(&main, &edited, ffi::Units::Mm).unwrap());
         assert!(!ids.contains(&"ANA-3".to_owned()), "{ids:?}");
         assert!(ids.contains(&"ANA-10".to_owned()), "{ids:?}");
     }
 
     #[test]
+    fn units_reach_the_messages() {
+        let main = format!("{SOURCES}/draw-34_too_close.kicad_sch");
+        let message = |units| {
+            let found = check(&main, &[], units).unwrap();
+            found
+                .iter()
+                .find(|v| v.check == "DRAW-34")
+                .map(|v| v.message.clone())
+                .unwrap()
+        };
+        assert!(message(ffi::Units::Mm).contains(" mm short"));
+        assert!(message(ffi::Units::Mil).contains(" mil short"));
+        assert!(message(ffi::Units::Inch).contains(" in short"));
+    }
+
+    #[test]
     fn missing_project_is_an_error() {
-        let result = check("/nonexistent/board.kicad_sch", &[]);
+        let result = check("/nonexistent/board.kicad_sch", &[], ffi::Units::Mm);
         assert!(matches!(result, Err(BridgeError::Check(_))));
     }
 }

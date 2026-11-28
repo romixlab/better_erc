@@ -27,6 +27,9 @@
 //! [parts]
 //! lock = "parts.lock.toml"
 //!
+//! [report]
+//! units = "mil"
+//!
 //! [[waiver]]
 //! fingerprint = "I2C-1:net /SDA|part R5"
 //! input_hash = "in1:0123456789abcdef"
@@ -43,6 +46,7 @@ pub mod waiver;
 use crate::catalogue::catalogue;
 use crate::ctx::Config;
 use crate::meta::Severity;
+use crate::units::Units;
 use derating::{Derating, SetError};
 use erc_model::Time;
 use nets::{NetFacts, NetVoltage, toml_key};
@@ -238,6 +242,7 @@ impl ProjectFile {
                 "drawing" => read_settings(&mut r, "drawing", v, &mut config)?,
                 "waiver" => waivers = read_waivers(&mut r, v)?,
                 "parts" => parts = read_parts(&mut r, v)?,
+                "report" => read_report(&mut r, v, &mut config)?,
                 _ => r.unknown(key),
             }
         }
@@ -310,6 +315,24 @@ fn read_voltage(r: &mut Reader, path: &str, v: &Value) -> Result<NetVoltage, Pro
         return Err(r.err(path, format!("nominal {n} V is outside {min}..{max} V")));
     }
     Ok(NetVoltage { nominal, min, max })
+}
+
+/// `[report]`: `units`, what messages write positions and lengths in (CFG-10)
+fn read_report(r: &mut Reader, v: &Value, config: &mut Config) -> Result<(), ProjectFileError> {
+    for (key, v) in r.table("report", v)? {
+        let path = format!("report.{key}");
+        match key.as_str() {
+            "units" => {
+                let units = r
+                    .string(&path, v)?
+                    .parse::<Units>()
+                    .map_err(|e| r.err(&path, e.to_string()))?;
+                config.units = Some(units);
+            }
+            _ => r.unknown(&path),
+        }
+    }
+    Ok(())
 }
 
 /// `[parts]`: `lock`, a relative path inside the project directory

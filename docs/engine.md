@@ -126,7 +126,7 @@ keeps it in the model.
 `berc` (the `berc` crate) is a thin client of the library (`better_erc`); nothing it does is missing there.
 
 - `berc check PROJECT [--variant V] [--only CAT,ID] [--format text|json|sarif|md] [--baseline report.json]
-  [--fail-on error|warning|suggestion] [--require NEED]`: `check_path` and `render`. Exit codes 0 clean, 1 findings
+  [--fail-on error|warning|suggestion] [--require NEED] [--units mm|mil|in]`: `check_path` and `render`. Exit codes 0 clean, 1 findings
   at or above `--fail-on` (default `error`; with `--baseline` new ones only), 2 usage or import error, 3 a required
   need unavailable (before 1). `--require` takes the needs by slug, repeated or comma-separated (`graph`,
   `part-classes`, `values`, `rails`, `rail-voltages`, `pin-roles`, `pin-thresholds`, `pin-functions`,

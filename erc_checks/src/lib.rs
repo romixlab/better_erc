@@ -25,6 +25,7 @@ pub mod meta;
 pub mod project;
 pub mod project_file;
 pub mod report;
+pub mod units;
 
 mod ana;
 mod bom;
@@ -78,3 +79,4 @@ pub use project::{
     check_path, read_baseline,
 };
 pub use report::{Delta, Report, Status};
+pub use units::Units;

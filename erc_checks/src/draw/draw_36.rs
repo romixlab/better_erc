@@ -6,7 +6,7 @@ use super::{ALIGN_SNAP, ALIGN_WINDOW, HEADING_SIZE, SECTION_REACH, location, nm,
 use crate::meta::*;
 use crate::{Ctx, Finding};
 use erc_analysis::power::{NameRole, read_name};
-use erc_analysis::scene::{Item, ItemKind as K, Scene, mm};
+use erc_analysis::scene::{Item, ItemKind as K, Scene};
 use erc_model::geometry::Dir;
 use erc_model::geometry::Rect;
 use erc_model::{LabelKind, Pt};
@@ -252,7 +252,7 @@ fn ladder_finding(
     let off: Vec<String> = line
         .off
         .iter()
-        .map(|(v, i)| format!("{} at {n} {}", i.name, mm(*v)))
+        .map(|(v, i)| format!("{} at {n} {}", i.name, cx.units().coord(*v)))
         .collect();
     let at = |i: &Item| i.rect.center();
     let mut f = cx
@@ -265,7 +265,7 @@ fn ladder_finding(
     f.message(format!(
         "section {}: {what} line up at {n} {}, off it: {}",
         section.title,
-        mm(line.at),
+        cx.units().coord(line.at),
         off.join(", ")
     ))
     .fix("put them on one line, or clearly apart")
@@ -331,12 +331,12 @@ impl Check for Draw36 {
                             .location(location(scene, a.item, pa))
                             .location(location(scene, b.item, pb))
                             .message(format!(
-                                "{} at {n} {}, {} at {n} {}: {} mm",
+                                "{} at {n} {}, {} at {n} {}: {}",
                                 a.item.name,
-                                mm(va),
+                                cx.units().coord(va),
                                 b.item.name,
-                                mm(vb),
-                                mm(off)
+                                cx.units().coord(vb),
+                                cx.units().len(off)
                             ))
                             .fix("line them up, or move one clearly away")
                             .build(),

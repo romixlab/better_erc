@@ -4,7 +4,7 @@ use super::colour::delta_e;
 use super::{location, sheet_subject};
 use crate::meta::*;
 use crate::{Ctx, Finding, Location};
-use erc_analysis::scene::{Item, ItemKind as K, Scene, Tie, mm};
+use erc_analysis::scene::{Item, ItemKind as K, Scene, Tie};
 use erc_model::geometry::{Colour, Theme};
 use erc_model::{Board, NetId, Pt};
 use std::collections::BTreeMap;
@@ -182,13 +182,12 @@ impl Check for Draw42 {
                     }
                     out.push(
                         f.message(format!(
-                            "on {}, wires {wire} and {what}s {other} differ by ΔE {:.1}, below {min}, at {} place{}, first {first} at x {} y {}",
+                            "on {}, wires {wire} and {what}s {other} differ by ΔE {:.1}, below {min}, at {} place{}, first {first} at {}",
                             theme.name,
                             delta_e(p.wire, p.other),
                             p.places,
                             if p.places == 1 { "" } else { "s" },
-                            mm(p.at.x),
-                            mm(p.at.y),
+                            cx.units().xy(p.at.x, p.at.y),
                         ))
                         .fix("change the theme, the net class or the library symbol, not the item")
                         .build(),

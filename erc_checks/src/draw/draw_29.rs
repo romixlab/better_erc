@@ -70,7 +70,7 @@ impl Check for Draw29 {
                             .item(sheet, ib.name.clone())
                             .location(location(scene, ia, a.at))
                             .location(location(scene, ib, b.at))
-                            .message(format!("{} {how} {}", at(ia, a.at), at(ib, b.at)))
+                            .message(format!("{} {how} {}", at(cx, ia, a.at), at(cx, ib, b.at)))
                             .fix("move the parts apart: at least one major grid step of wire between two pins")
                             .build(),
                     );

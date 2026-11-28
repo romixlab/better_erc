@@ -660,6 +660,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   beside it (`Mfg` beside `MPN`, `Mfg1` beside `Mpn1`) is its own entry: the source is asked by MPN and maker (mx3
   through its company synonyms) and the entry records the part chosen, or the makers to choose from (`makers`); an MPN
   without a maker is asked and checked as before
+- ✅ `CFG-10` Units of positions and lengths in messages and fixes: `mm` (default), `mil` or `in`, so the numbers
+  match the editor's coordinate display; `[report] units` in the project file, `berc check --units` over it, and the
+  `units` argument of the cxx bridge's `berc::check`. One formatter (`erc_checks::Units`) writes them all; item names
+  and the JSON `Location.at` stay in millimetres · `erc_checks/src/units.rs`, `draw-34_too_close`
 - 📋 `CFG-4` File-based config format for open source (RON?)
 - 📋 `CFG-5` Custom rules for parts in the database
 - 📋 `CFG-6` Selection constraints in the part database's `required` entries: one typed vocabulary of passive parameters
@@ -1166,7 +1170,7 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `lib_symbols` copy whose `Datasheet` is an `mx3:` link takes the library symbol's text. Dry run by default;
   `--write` refuses while KiCad holds the `.kicad_pro` or a `.kicad_sch` (`erc_kicad::lock`) ·
   `better_erc/src/datasheet.rs`, `berc/tests/check.rs`, README "mx3: Datasheet links"
-- 🚧 `TOOL-20` better_erc inside KiCad: crate `better_erc_cxx`, a cxx bridge whose `berc::check(project, edited)` runs
+- 🚧 `TOOL-20` better_erc inside KiCad: crate `better_erc_cxx`, a cxx bridge whose `berc::check(project, edited, units)` runs
   every check on the design with the editor's unsaved sheets in place of their files (`Project::open_edited`) and
   returns the violations no waiver covers as plain structs; errors and panics reach C++ as `rust::Error`. A KiCad
   fork links it into eeschema and shows the violations as ERC markers · `better_erc_cxx/src/lib.rs`,

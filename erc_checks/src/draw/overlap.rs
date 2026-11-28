@@ -6,7 +6,7 @@ use super::{
 };
 use crate::meta::CheckMeta;
 use crate::{Ctx, Finding};
-use erc_analysis::scene::{Item, ItemKind as K, Scene, mm};
+use erc_analysis::scene::{Item, ItemKind as K, Scene};
 use erc_model::geometry::{Rect, Shape};
 use std::borrow::Cow;
 use std::collections::BTreeMap;
@@ -300,14 +300,9 @@ pub(super) fn finding(
         .item(sheet, b.name.clone())
         .location(location(scene, a, pa))
         .location(location(scene, b, pb))
-        .message(format!("{} {what} {}", at(a, pa), at(b, pb)))
+        .message(format!("{} {what} {}", at(cx, a, pa), at(cx, b, pb)))
         .fix(fix)
         .build()
-}
-
-/// `0.42 mm`
-pub(super) fn gap_text(nm: i64) -> String {
-    format!("{} mm", mm(nm))
 }
 
 #[cfg(test)]

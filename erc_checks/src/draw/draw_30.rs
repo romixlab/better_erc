@@ -4,7 +4,7 @@
 use super::{location, sheet_subject};
 use crate::meta::*;
 use crate::{Ctx, Finding};
-use erc_analysis::scene::{PinRef, Scene, mm};
+use erc_analysis::scene::{PinRef, Scene};
 use erc_model::geometry::{Dir, DrawnSymbol};
 use std::collections::BTreeSet;
 
@@ -90,11 +90,10 @@ fn finding(
     }
     Some(
         f.message(format!(
-            "{} pins {list} have {} {rail} symbols, from x {} y {}",
+            "{} pins {list} have {} {rail} symbols, from {}",
             s.reference,
             power.len(),
-            mm(p.x),
-            mm(p.y)
+            cx.units().xy(p.x, p.y)
         ))
         .fix("wire the pins together to one symbol")
         .build(),

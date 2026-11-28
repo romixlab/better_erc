@@ -99,7 +99,7 @@ impl Check for Draw35 {
                     one(cx, &META, scene, item, s.at)
                         .message(format!(
                             "{} lies horizontal, pin {} to power",
-                            at(item, s.at),
+                            at(cx, item, s.at),
                             p.number
                         ))
                         .fix("stand it on the voltage axis: rail end up, ground end down")

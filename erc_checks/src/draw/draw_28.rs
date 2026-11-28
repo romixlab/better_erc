@@ -3,7 +3,7 @@
 use super::{at, nm, one};
 use crate::meta::*;
 use crate::{Ctx, Finding};
-use erc_analysis::scene::{ItemKind as K, mm};
+use erc_analysis::scene::ItemKind as K;
 use erc_model::LabelKind;
 
 pub struct Draw28;
@@ -56,19 +56,19 @@ impl Check for Draw28 {
                     continue;
                 } else if stub > 0 {
                     format!(
-                        "{}: stub {} mm under text {} mm",
-                        at(item, l.at),
-                        mm(stub),
-                        mm(text)
+                        "{}: stub {} under text {}",
+                        at(cx, item, l.at),
+                        cx.units().len(stub),
+                        cx.units().len(text)
                     )
                 } else if on_wire {
                     format!(
                         "{}: text runs {} off its wire",
-                        at(item, l.at),
+                        at(cx, item, l.at),
                         l.runs.name()
                     )
                 } else {
-                    format!("{}: no stub of its own", at(item, l.at))
+                    format!("{}: no stub of its own", at(cx, item, l.at))
                 };
                 out.push(
                     one(cx, &META, scene, item, l.at)

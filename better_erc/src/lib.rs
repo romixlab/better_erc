@@ -55,6 +55,7 @@ pub use erc_checks::{
     Availability, BaselineState, CheckError, CheckInfo, CheckOptions, CheckRun, CheckState,
     Confidence, Config, Delta, Exit, Explanation, Finding, FindingFact, Format, ListedCheck,
     Location, Need, NotRun, Project, Report, RunOptions, RunState, Severity, Stage, Status,
-    SubjectRef, Tier, Unavailable, Verdict, check_path, explain, list, list_for, read_baseline,
+    SubjectRef, Tier, Unavailable, Units, Verdict, check_path, explain, list, list_for,
+    read_baseline,
 };
 pub use erc_model::{Board, Design};

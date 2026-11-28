@@ -631,6 +631,10 @@ struct CheckArgs {
     /// Findings of this severity or worse make the exit code 1
     #[arg(long, value_enum, default_value_t = FailOn::Error)]
     fail_on: FailOn,
+    /// Units of positions and lengths in messages, to match the editor's coordinate display; over the project
+    /// file's `[report] units` (default mm)
+    #[arg(long, value_name = "UNITS", value_parser = parse_units)]
+    units: Option<better_erc::Units>,
     /// Data that must be there on every board, else exit code 3 (repeat or comma-separate)
     #[arg(long, value_name = "NEED", value_delimiter = ',', value_parser = parse_need,
           add = ArgValueCandidates::new(complete::needs))]
@@ -723,6 +727,12 @@ enum Format {
     Sarif,
     /// Markdown, for a pull request comment
     Md,
+}
+
+/// `--units`: mm, mil or in
+fn parse_units(s: &str) -> Result<better_erc::Units, String> {
+    s.parse()
+        .map_err(|e: better_erc::checks::units::UnknownUnits| e.to_string())
 }
 
 #[derive(Clone, Copy, ValueEnum)]
@@ -1086,6 +1096,7 @@ fn git_user() -> Option<String> {
 /// The settings of `--set` and the colour themes of `--theme`
 fn check_config(args: &CheckArgs) -> Result<better_erc::Config, String> {
     let mut config = settings(&args.set)?;
+    config.units = args.units;
     for path in &args.theme {
         let text = std::fs::read_to_string(path)
             .map_err(|e| format!("--theme {}: {e}", path.display()))?;

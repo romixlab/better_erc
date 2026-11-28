@@ -4,7 +4,7 @@ use super::section::{line_up, sections};
 use super::{HEADING_SIZE, SECTION_REACH, location, nm, sheet_subject};
 use crate::meta::*;
 use crate::{Ctx, Finding};
-use erc_analysis::scene::mm;
+
 use erc_model::Pt;
 
 pub struct Draw45;
@@ -51,7 +51,7 @@ impl Check for Draw45 {
                     let list: Vec<String> = line
                         .off
                         .iter()
-                        .map(|(v, i)| format!("{} at {n} {}", i.name, mm(*v)))
+                        .map(|(v, i)| format!("{} at {n} {}", i.name, cx.units().coord(*v)))
                         .collect();
                     let mut f = cx.finding(&META).subject(sheet);
                     for (_, i) in &line.off {
@@ -62,7 +62,7 @@ impl Check for Draw45 {
                     out.push(
                         f.message(format!(
                             "section {what} at {n} {}, off it: {}",
-                            mm(line.at),
+                            cx.units().coord(line.at),
                             list.join(", ")
                         ))
                         .fix("put the sections on one row or column")

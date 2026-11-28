@@ -219,3 +219,19 @@ fn parts_lock_path() {
         "b.berc.toml: parts.lock: a path inside the project directory, not \"/etc/parts.lock.toml\""
     );
 }
+
+#[test]
+fn report_units_are_read() {
+    let f = ProjectFile::parse("b.berc.toml", "[report]\nunits = \"mil\"\n").expect("parses");
+    assert_eq!(f.config.units, Some(Units::Mil));
+    assert!(f.warnings.is_empty(), "{:?}", f.warnings);
+    let none = ProjectFile::parse("b.berc.toml", "").expect("parses");
+    assert_eq!(none.config.units, None);
+}
+
+#[test]
+fn unknown_report_units_are_refused() {
+    let e = err("[report]\nunits = \"inch\"\n");
+    assert!(e.contains("report.units"), "{e}");
+    assert!(e.contains("mm, mil or in"), "{e}");
+}

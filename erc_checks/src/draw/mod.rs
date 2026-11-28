@@ -3,7 +3,7 @@
 
 use crate::meta::Param;
 use crate::{Ctx, Location};
-use erc_analysis::scene::{Item, Scene, mm};
+use erc_analysis::scene::{Item, Scene};
 use erc_model::geometry::{Colour, Rect};
 use erc_model::{Pt, Subject};
 
@@ -204,9 +204,9 @@ fn sheet_subject(cx: &Ctx, scene: &Scene) -> Subject {
     })
 }
 
-/// `R1 Value at x 12.7 y 25.4`
-fn at(item: &Item, p: Pt) -> String {
-    format!("{} at x {} y {}", item.name, mm(p.x), mm(p.y))
+/// `R1 Value at x 12.7 y 25.4`, in the run's units
+fn at(cx: &Ctx, item: &Item, p: Pt) -> String {
+    format!("{} at {}", item.name, cx.units().xy(p.x, p.y))
 }
 
 /// Where an item is, on the point of interest
