@@ -1,0 +1,18 @@
+[package]
+name = "better_erc_cxx"
+description = "better_erc for C++ hosts: a cxx bridge that runs the checks on an editor's open schematic and returns the violations"
+authors.workspace = true
+edition.workspace = true
+version.workspace = true
+rust-version.workspace = true
+license.workspace = true
+include.workspace = true
+publish = false
+
+[lib]
+# staticlib: linked into the host (KiCad's eeschema); rlib: for this crate's own tests
+crate-type = ["staticlib", "rlib"]
+
+[dependencies]
+cxx = { version = "1", default-features = false, features = ["std"] }
+erc_checks = { path = "../erc_checks" }

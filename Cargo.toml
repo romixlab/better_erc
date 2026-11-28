@@ -17,6 +17,7 @@ members = [
     "berc",
     "better_erc",
     "better_erc_app",
+    "better_erc_cxx",
     "erc_analysis",
     "erc_checks",
     "erc_import",
