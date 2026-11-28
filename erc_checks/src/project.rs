@@ -324,14 +324,32 @@ impl Project {
     /// The same design read again with some of its files replaced: `edited` by path relative to [`Project::dir`],
     /// the rest from the directory. What a change to the files would make of the design, before writing it.
     pub fn reopen_with(&self, edited: &BTreeMap<String, Vec<u8>>) -> Result<Project, CheckError> {
+        Project::open_edited(&self.dir.join(&self.main), edited)
+    }
+
+    /// Opens the design file `main` with some of its directory's files replaced by `edited` (paths relative to
+    /// `main`'s directory): an editor's unsaved sheets checked against the project on disk, in one import
+    pub fn open_edited(
+        main: &Path,
+        edited: &BTreeMap<String, Vec<u8>>,
+    ) -> Result<Project, CheckError> {
+        let name = main
+            .file_name()
+            .and_then(|n| n.to_str())
+            .ok_or_else(|| CheckError::NotFound(main.to_path_buf()))?
+            .to_owned();
+        let dir = match main.parent() {
+            Some(p) if !p.as_os_str().is_empty() => p.to_path_buf(),
+            _ => PathBuf::from("."),
+        };
         let files = Overlay {
-            dir: DirFiles(self.dir.clone()),
+            dir: DirFiles(dir.clone()),
             edited,
         };
         Project::import(
             &Registry::default(),
-            self.dir.clone(),
-            self.main.clone(),
+            dir,
+            name,
             &files,
             Parts::Read,
             &mut |_| {},
