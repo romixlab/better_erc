@@ -11,6 +11,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 ## [Unreleased]
 
+### Added
+
+- Licence: MIT OR Apache-2.0, with LICENSE-MIT and LICENSE-APACHE; every crate inherits it.
+
 ### Changed
 
 - `just install` installs better_erc and berc through binkeep (`deploy/binkeep.toml`), the launcher entry linked by binkeep: `tpm install` refuses once `binkeep adopt` took the stack.

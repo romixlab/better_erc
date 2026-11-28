@@ -3,6 +3,7 @@ authors = ["Roman Isaikin <romix.lab@gmail.com>"]
 edition = "2024"
 version = "0.6.8"
 rust-version = "1.92"
+license = "MIT OR Apache-2.0"
 include = [
     # "../../Cargo.lock", # So that users can pass `--locked` to `cargo install x`
     "**/*.rs",

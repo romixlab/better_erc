@@ -924,3 +924,7 @@ What the text shows:
 `berc textconv --with-geometry FILE` adds positions (footprints rounded to 0.1 mm), wires and tracks, for when
 placement is what you are reviewing. `--all` (`.kicad_pro` only) shows settings otherwise folded as looking like
 KiCad's default.
+
+## License
+
+Licensed under either of [Apache License, Version 2.0](LICENSE-APACHE) or [MIT license](LICENSE-MIT) at your option.
