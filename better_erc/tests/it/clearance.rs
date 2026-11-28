@@ -83,7 +83,7 @@ fn findings(name: &str, items: &str, config: Config) -> Vec<String> {
         .report
         .findings
         .iter()
-        .map(|f| f.fingerprint.clone())
+        .map(|f| f.fingerprint_names().to_owned())
         .collect();
     out.sort();
     out

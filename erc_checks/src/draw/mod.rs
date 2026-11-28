@@ -230,7 +230,7 @@ fn one<'c, 'a>(
     let sheet = sheet_subject(cx, scene);
     cx.finding(meta)
         .subject(sheet)
-        .item(sheet, item.name.clone())
+        .scene_item(sheet, item)
         .location(location(scene, item, p))
 }
 

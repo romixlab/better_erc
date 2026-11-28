@@ -175,6 +175,23 @@ fn schematics_match_their_expectations() {
             opts.config.read_paths(dir).unwrap();
         }
         let report = run_imported(&imported, &opts).unwrap();
+        // RPT-27: a fingerprint and a short id each name one finding of the run
+        let mut seen = BTreeSet::new();
+        let mut ids = BTreeSet::new();
+        for f in report.findings.iter().chain(&report.candidates) {
+            if !seen.insert((&f.board, &f.fingerprint, &f.state)) {
+                failed.push(format!(
+                    "{name}.kicad_sch: two findings share the fingerprint {}",
+                    f.fingerprint
+                ));
+            }
+            if !ids.insert(&f.short_id) {
+                failed.push(format!(
+                    "{name}.kicad_sch: two findings share the id #{}",
+                    f.short_id
+                ));
+            }
+        }
         let mut got = actual(&report);
         if !name.starts_with("draw-") {
             got.findings.retain(|f| !f.check.starts_with("DRAW-"));

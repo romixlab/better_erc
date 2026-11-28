@@ -296,8 +296,8 @@ pub(super) fn finding(
     let (pa, pb) = (near_point(a, b.rect), near_point(b, a.rect));
     cx.finding(meta)
         .subject(sheet)
-        .item(sheet, a.name.clone())
-        .item(sheet, b.name.clone())
+        .scene_item(sheet, a)
+        .scene_item(sheet, b)
         .location(location(scene, a, pa))
         .location(location(scene, b, pb))
         .message(format!("{} {what} {}", at(cx, a, pa), at(cx, b, pb)))

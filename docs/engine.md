@@ -47,7 +47,7 @@ One type for every check:
 | `variant`, `state` | the variant checked; the power state (once power states exist) |
 | `message`, `fix` | what is wrong on this design, and how to fix it |
 | `facts` | the facts it rests on, each with its source (`R601 = 3 kΩ` from `i2c-10_non_equal_pull_ups.kicad_sch`, a threshold from the check's default or the project file) |
-| `fingerprint` | the check id and the sorted subject names (`I2C-10:net /SCL\|net /SDA\|part R601\|part R602`): what waivers and baselines key on |
+| `fingerprint` | the check id and the sorted subject names (`I2C-10:net /SCL\|net /SDA\|part R601\|part R602`), for drawing checks with `@` and 8 hex digits of the drawn items' UUIDs (and the axis, DRAW-36), so two labels of one name are two findings: what waivers and baselines key on |
 | `explain` | the detail page section (`docs/checks/i2c.md#i2c-10`) |
 | `locations` | the sheet files and positions of the parts and labels involved |
 | `also` | the overlapping checks this finding folded in |

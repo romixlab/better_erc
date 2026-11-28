@@ -76,7 +76,8 @@ pub struct Finding {
     pub state: Option<String>,
     pub message: String,
     pub facts: Vec<FindingFact>,
-    /// Check id and the sorted subject names: stable across re-annotation-free edits, what waivers and baselines
+    /// Check id and the sorted subject names, with `@` and a key hash where a drawn item's UUID or an axis tells it
+    /// from another (`DRAW-36:item label A|item label B|sheet /@1f0c9a2e`): stable across re-annotation-free edits, what waivers and baselines
     /// key on
     pub fingerprint: String,
     /// The detail page section (`docs/checks/i2c.md#i2c-1`); the text is [`crate::explain`]
@@ -118,6 +119,13 @@ pub const INPUT_HASH_VERSION: &str = "in1";
 /// The hash of what a verdict rests on: `in1:` and 16 hex digits, the first 8 bytes of the SHA-256 of the
 /// `name=value` lines sorted by name and joined by `\n`. The same inputs in any order give the same hash; any
 /// changed name or value gives another.
+/// 8 hex digits of the SHA-256 of `keys` joined by newlines: a fingerprint's tail for [`FindingBuilder::key`]
+fn key_hash(keys: &[String]) -> String {
+    use sha2::{Digest, Sha256};
+    let digest = Sha256::digest(keys.join("\n").as_bytes());
+    digest[..4].iter().map(|b| format!("{b:02x}")).collect()
+}
+
 pub fn input_hash<N: AsRef<str>, V: AsRef<str>>(inputs: &[(N, V)]) -> String {
     use sha2::{Digest, Sha256};
     let mut lines: Vec<String> = inputs
@@ -131,6 +139,17 @@ pub fn input_hash<N: AsRef<str>, V: AsRef<str>>(inputs: &[(N, V)]) -> String {
 }
 
 impl Finding {
+    /// The fingerprint without the key hash that [`FindingBuilder::key`] adds (`@` and 8 hex digits): the check and
+    /// the subject names
+    pub fn fingerprint_names(&self) -> &str {
+        match self.fingerprint.rsplit_once('@') {
+            Some((names, key)) if key.len() == 8 && key.bytes().all(|b| b.is_ascii_hexdigit()) => {
+                names
+            }
+            _ => &self.fingerprint,
+        }
+    }
+
     /// Whether a waiver of the project file applies to it
     pub fn waived(&self) -> bool {
         self.waiver.as_ref().is_some_and(FindingWaiver::applied)
@@ -167,6 +186,9 @@ pub struct FindingBuilder<'c, 'a> {
     items: Vec<SubjectRef>,
     locations: Vec<Location>,
     inputs: Vec<(String, String)>,
+    /// What tells this finding from another of the check over the same subject names: drawn items' UUIDs, an
+    /// axis. Folded into the fingerprint, never shown
+    keys: Vec<String>,
 }
 
 impl<'c, 'a> FindingBuilder<'c, 'a> {
@@ -184,6 +206,7 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
             items: Vec::new(),
             locations: Vec::new(),
             inputs: Vec::new(),
+            keys: Vec::new(),
         }
     }
 
@@ -231,6 +254,22 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
         };
         if !self.items.contains(&item) {
             self.items.push(item);
+        }
+        self
+    }
+
+    /// A drawn item of a sheet's scene: [`FindingBuilder::item`] by its name, told apart from another of the same
+    /// name (two labels `SDA` on one sheet) by its file UUID
+    pub fn scene_item(self, sheet: Subject, item: &erc_analysis::scene::Item) -> Self {
+        self.item(sheet, item.name.clone()).key(item.uuid.clone())
+    }
+
+    /// Something that tells this finding from another of the check over the same subject names (two labels of one
+    /// name, a column and a row): folded into the fingerprint as a short hash, never shown
+    pub fn key(mut self, key: impl Into<String>) -> Self {
+        let key = key.into();
+        if !key.is_empty() && !self.keys.contains(&key) {
+            self.keys.push(key);
         }
         self
     }
@@ -306,7 +345,13 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
         });
         let mut names: Vec<String> = subjects.iter().map(|s| s.to_string()).collect();
         names.sort();
-        let fingerprint = format!("{}:{}", self.meta.id, names.join("|"));
+        let mut fingerprint = format!("{}:{}", self.meta.id, names.join("|"));
+        if !self.keys.is_empty() {
+            let mut keys = self.keys;
+            keys.sort();
+            fingerprint.push('@');
+            fingerprint.push_str(&key_hash(&keys));
+        }
         let mut locations: Vec<Location> = self
             .subjects
             .iter()

@@ -23,6 +23,10 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 
 - `just install` installs better_erc and berc through binkeep (`deploy/binkeep.toml`), the launcher entry linked by binkeep: `tpm install` refuses once `binkeep adopt` took the stack.
 
+### Fixed
+
+- Drawing findings key on item UUIDs, DRAW-36 also on its axis: no shared fingerprints; existing DRAW waivers break.
+
 ## [0.6.8] - 2026-11-27
 
 ### Added

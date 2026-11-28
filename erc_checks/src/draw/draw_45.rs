@@ -56,7 +56,7 @@ impl Check for Draw45 {
                     let mut f = cx.finding(&META).subject(sheet);
                     for (_, i) in &line.off {
                         f = f
-                            .item(sheet, i.name.clone())
+                            .scene_item(sheet, i)
                             .location(location(scene, i, i.rect.min));
                     }
                     out.push(

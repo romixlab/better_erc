@@ -20,7 +20,7 @@ pub fn fingerprints_with(
         .findings
         .iter()
         .chain(&report.candidates)
-        .map(|f| f.fingerprint.clone())
+        .map(|f| f.fingerprint_names().to_owned())
         .collect();
     f.sort();
     f
@@ -68,7 +68,7 @@ pub fn fingerprints_of_with(
         .findings
         .iter()
         .chain(&report.candidates)
-        .map(|f| f.fingerprint.clone())
+        .map(|f| f.fingerprint_names().to_owned())
         .collect();
     f.sort();
     f

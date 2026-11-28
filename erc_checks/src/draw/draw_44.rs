@@ -56,8 +56,8 @@ impl Check for Draw44 {
                     out.push(
                         cx.finding(&META)
                             .subject(sheet)
-                            .item(sheet, ha.name.clone())
-                            .item(sheet, hb.name.clone())
+                            .scene_item(sheet, ha)
+                            .scene_item(sheet, hb)
                             .location(location(scene, ha, a.rect.min))
                             .location(location(scene, hb, b.rect.min))
                             .message(format!(

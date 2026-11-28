@@ -25,6 +25,13 @@ static META: CheckMeta = CheckMeta {
     params: &[ALIGN_WINDOW, ALIGN_SNAP, HEADING_SIZE, SECTION_REACH],
 };
 
+/// An item by name and UUID: two labels of one name are two items
+type ItemKey<'s> = (&'s str, &'s str);
+
+fn item_key(item: &Item) -> ItemKey<'_> {
+    (&item.name, &item.uuid)
+}
+
 /// An axis things line up on
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 enum Axis {
@@ -258,9 +265,10 @@ fn ladder_finding(
     let mut f = cx
         .finding(&META)
         .subject(sheet)
-        .item(sheet, format!("section {} {what}", section.title));
+        .item(sheet, format!("section {} {what}", section.title))
+        .key(n);
     for (_, i) in &line.off {
-        f = f.location(location(scene, i, at(i)));
+        f = f.location(location(scene, i, at(i))).key(i.uuid.clone());
     }
     f.message(format!(
         "section {}: {what} line up at {n} {}, off it: {}",
@@ -288,7 +296,7 @@ impl Check for Draw36 {
         for scene in cx.scenes() {
             for axis in [Axis::X, Axis::Y] {
                 let liners = liners(scene, axis);
-                let mut found: BTreeMap<(&str, &str), Missed> = BTreeMap::new();
+                let mut found: BTreeMap<(ItemKey, ItemKey), Missed> = BTreeMap::new();
                 for (i, a) in liners.iter().enumerate() {
                     for b in &liners[i + 1..] {
                         if a.class != b.class || a.item.name == b.item.name {
@@ -311,7 +319,8 @@ impl Check for Draw36 {
                         let Some((off, va, vb)) = miss(axis, a, b, snap) else {
                             continue;
                         };
-                        let key = (a.item.name.as_str(), b.item.name.as_str());
+                        // Two items of one name (two labels `SDA`) are two pairs
+                        let key = (item_key(a.item), item_key(b.item));
                         let key = (key.0.min(key.1), key.0.max(key.1));
                         let e = found.entry(key).or_insert((a, b, off, va, vb));
                         if off < e.2 {
@@ -326,8 +335,9 @@ impl Check for Draw36 {
                     out.push(
                         cx.finding(&META)
                             .subject(sheet)
-                            .item(sheet, a.item.name.clone())
-                            .item(sheet, b.item.name.clone())
+                            .scene_item(sheet, a.item)
+                            .scene_item(sheet, b.item)
+                            .key(n)
                             .location(location(scene, a.item, pa))
                             .location(location(scene, b.item, pb))
                             .message(format!(

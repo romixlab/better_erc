@@ -3,11 +3,15 @@
 //!
 //! A finding's full id is the SHA-256 of its board, fingerprint and power state, its first 65 bits written as 13
 //! characters of lower-case Crockford base32 (`0-9`, `a-z` without `i`, `l`, `o`, `u`). It stays the same from run
-//! to run while the finding does: same check, same subjects, same board. The short id is the shortest prefix of the
-//! full id that no other finding of the run shares, and at least [`SHORT_ID_LEN_MIN`] characters, as git shortens a
-//! commit hash. Two findings with the same board, fingerprint and state get the same id.
+//! to run while the finding does: same check, same subjects, same board. Findings that would share it (one check
+//! over the same subjects twice) are told apart by their message and locations folded into the hash, and identical
+//! ones by their order among themselves, so no two findings of a run share an id. The short id is the shortest
+//! prefix of the full id that no other finding of the run shares, and at least [`SHORT_ID_LEN_MIN`] characters, as
+//! git shortens a commit hash.
 
 use sha2::{Digest, Sha256};
+
+use std::collections::{BTreeMap, BTreeSet};
 
 use crate::finding::Finding;
 
@@ -22,20 +26,33 @@ const ALPHABET: &[u8; 32] = b"0123456789abcdefghjkmnpqrstvwxyz";
 
 /// The full id of `f`: [`FULL_ID_LEN`] base32 characters of the hash of its board, fingerprint and state
 pub fn full_id(f: &Finding) -> String {
+    hash_id(f, None)
+}
+
+/// The full id of `f` when another finding shares its [`full_id`]: its message and locations folded in
+fn told_id(f: &Finding) -> String {
+    let locations = serde_json::to_string(&f.locations).expect("locations serialise");
+    hash_id(f, Some(&format!("{}\n{locations}", f.message)))
+}
+
+fn hash_id(f: &Finding, salt: Option<&str>) -> String {
     let mut hasher = Sha256::new();
     hasher.update(f.board.as_bytes());
     hasher.update(b"\n");
     hasher.update(f.fingerprint.as_bytes());
     hasher.update(b"\n");
     hasher.update(f.state.as_deref().unwrap_or("").as_bytes());
-    let digest = hasher.finalize();
-    let mut bits = [0u8; 9];
-    bits.copy_from_slice(&digest[..9]);
-    let value = u128::from_be_bytes({
-        let mut b = [0u8; 16];
-        b[..9].copy_from_slice(&bits);
-        b
-    });
+    if let Some(salt) = salt {
+        hasher.update(b"\n");
+        hasher.update(salt.as_bytes());
+    }
+    base32(&hasher.finalize())
+}
+
+fn base32(digest: &[u8]) -> String {
+    let mut b = [0u8; 16];
+    b[..9].copy_from_slice(&digest[..9]);
+    let value = u128::from_be_bytes(b);
     (0..FULL_ID_LEN)
         .map(|i| {
             let shift = 128 - 5 * (i + 1);
@@ -45,37 +62,63 @@ pub fn full_id(f: &Finding) -> String {
         .collect()
 }
 
+/// Indices of `ids` that share their id with another
+fn shared(ids: &[String]) -> Vec<usize> {
+    let mut count: BTreeMap<&str, usize> = BTreeMap::new();
+    for id in ids {
+        *count.entry(id.as_str()).or_default() += 1;
+    }
+    (0..ids.len())
+        .filter(|i| count[ids[*i].as_str()] > 1)
+        .collect()
+}
+
 /// Gives each finding its short id, unique among `findings`
 pub fn assign<'f>(findings: impl IntoIterator<Item = &'f mut Finding>) {
-    let mut all: Vec<(String, &mut Finding)> =
-        findings.into_iter().map(|f| (full_id(f), f)).collect();
-    let mut ids: Vec<&str> = all.iter().map(|(id, _)| id.as_str()).collect();
-    ids.sort_unstable();
-    ids.dedup();
-    let lens: Vec<usize> = ids
+    let mut all: Vec<&mut Finding> = findings.into_iter().collect();
+    let mut ids: Vec<String> = all.iter().map(|f| full_id(f)).collect();
+    for i in shared(&ids) {
+        ids[i] = told_id(all[i]);
+    }
+    // Identical findings, or a hash collision: each takes the next free id of a chain hashed from its own
+    let mut taken: BTreeSet<String> = BTreeSet::new();
+    for id in &mut ids {
+        let mut n = 0;
+        while taken.contains(id.as_str()) {
+            n += 1;
+            *id = base32(&Sha256::digest(format!("{id}\n{n}").as_bytes()));
+        }
+        taken.insert(id.clone());
+    }
+    let sorted: Vec<&String> = taken.iter().collect();
+    let len_of: BTreeMap<&str, usize> = sorted
         .iter()
         .enumerate()
         .map(|(i, id)| {
-            let before = i.checked_sub(1).map_or(0, |p| common_prefix(ids[p], id));
-            let after = ids.get(i + 1).map_or(0, |n| common_prefix(n, id));
-            (before.max(after) + 1).clamp(SHORT_ID_LEN_MIN, FULL_ID_LEN)
+            let before = i.checked_sub(1).map_or(0, |p| common_prefix(sorted[p], id));
+            let after = sorted.get(i + 1).map_or(0, |n| common_prefix(n, id));
+            (
+                id.as_str(),
+                (before.max(after) + 1).clamp(SHORT_ID_LEN_MIN, FULL_ID_LEN),
+            )
         })
         .collect();
-    let len_of: std::collections::BTreeMap<String, usize> = ids
-        .iter()
-        .zip(lens)
-        .map(|(id, len)| ((*id).to_owned(), len))
-        .collect();
-    for (id, f) in &mut all {
-        let len = len_of[id.as_str()];
-        f.short_id = id[..len].to_owned();
+    for (f, id) in all.iter_mut().zip(&ids) {
+        f.short_id = id[..len_of[id.as_str()]].to_owned();
     }
 }
 
-/// Whether `query` (`#k3f` or `k3f`, any case) names `f`: a prefix of its full id
+/// Whether `query` (`#k3f` or `k3f`, any case) names `f`: a prefix of its short id, or a longer prefix of its full
+/// id
 pub fn matches(f: &Finding, query: &str) -> bool {
     let q = query.trim_start_matches('#').to_ascii_lowercase();
-    !q.is_empty() && full_id(f).starts_with(&q)
+    if q.is_empty() {
+        return false;
+    }
+    if f.short_id.starts_with(&q) {
+        return true;
+    }
+    q.starts_with(&f.short_id) && (full_id(f).starts_with(&q) || told_id(f).starts_with(&q))
 }
 
 /// Whether a selector is a finding id (`#k3f`) rather than a check id or category
@@ -147,6 +190,42 @@ mod tests {
         );
         assert_ne!(fs[0].short_id, fs[1].short_id);
         assert_eq!(fs[0].short_id.len(), fs[1].short_id.len());
+    }
+
+    #[test]
+    fn equal_fingerprints_are_told_apart_by_message_in_any_order() {
+        let mut a = finding("b", "DRAW-36:item label A|item label B");
+        a.message = "at x 1, at x 2".to_owned();
+        let mut b = a.clone();
+        b.message = "at y 1, at y 3".to_owned();
+        let mut fs = [a.clone(), b.clone()];
+        assign(fs.iter_mut());
+        assert_ne!(fs[0].short_id, fs[1].short_id);
+        let mut swapped = [b, a];
+        assign(swapped.iter_mut());
+        assert_eq!(
+            swapped[0].short_id, fs[1].short_id,
+            "the run order does not decide"
+        );
+        assert_eq!(
+            swapped[1].short_id, fs[0].short_id,
+            "the run order does not decide"
+        );
+        for f in &fs {
+            assert!(matches(f, &format!("#{}", f.short_id)));
+        }
+        assert!(!matches(&fs[0], &fs[1].short_id));
+    }
+
+    #[test]
+    fn identical_findings_still_get_two_ids() {
+        let f = finding("b", "DRAW-32:item text|sheet /");
+        let mut fs = [f.clone(), f.clone(), f];
+        assign(fs.iter_mut());
+        let mut ids: Vec<&str> = fs.iter().map(|f| f.short_id.as_str()).collect();
+        ids.sort_unstable();
+        ids.dedup();
+        assert_eq!(ids.len(), 3, "{ids:?}");
     }
 
     #[test]

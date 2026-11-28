@@ -66,8 +66,8 @@ impl Check for Draw29 {
                     out.push(
                         cx.finding(&META)
                             .subject(sheet)
-                            .item(sheet, ia.name.clone())
-                            .item(sheet, ib.name.clone())
+                            .scene_item(sheet, ia)
+                            .scene_item(sheet, ib)
                             .location(location(scene, ia, a.at))
                             .location(location(scene, ib, b.at))
                             .message(format!("{} {how} {}", at(cx, ia, a.at), at(cx, ib, b.at)))
