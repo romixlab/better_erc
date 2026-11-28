@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "tool": "better_erc 0.4.62",
+  "tool": "better_erc 0.6.8",
   "summary": {
     "boards": [
       {
@@ -18,10 +18,11 @@
     "warnings": 56,
     "suggestions": 166,
     "infos": 0,
+    "waived": 0,
     "candidates": 0,
-    "ran": 157,
-    "not_run": 1,
-    "planned": 462
+    "ran": 164,
+    "not_run": 9,
+    "planned": 458
   },
   "checks": [
     {
@@ -45,7 +46,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 158
+      "micros": 95
     },
     {
       "id": "PIN-4",
@@ -156,7 +157,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 495
+      "micros": 207
     },
     {
       "id": "RAIL-2",
@@ -186,7 +187,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 250
+      "micros": 121
     },
     {
       "id": "RAIL-6",
@@ -279,7 +280,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 4
+      "micros": 1
     },
     {
       "id": "RAIL-19",
@@ -288,7 +289,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 286
+      "micros": 152
     },
     {
       "id": "RAIL-20",
@@ -346,7 +347,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 84
+      "micros": 49
     },
     {
       "id": "DEC-2",
@@ -369,7 +370,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 12
+      "micros": 7
     },
     {
       "id": "DEC-5",
@@ -392,7 +393,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 10
+      "micros": 6
     },
     {
       "id": "DEC-8",
@@ -401,7 +402,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 23
+      "micros": 18
     },
     {
       "id": "DEC-9",
@@ -417,7 +418,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 118
+      "micros": 69
     },
     {
       "id": "DEC-11",
@@ -435,7 +436,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 11
+      "micros": 7
     },
     {
       "id": "DEC-13",
@@ -560,7 +561,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 14
+      "micros": 9
     },
     {
       "id": "DRV-1",
@@ -597,7 +598,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 15
+      "micros": 14
     },
     {
       "id": "DRV-6",
@@ -606,7 +607,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 26
+      "micros": 19
     },
     {
       "id": "DRV-7",
@@ -615,7 +616,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 40
+      "micros": 12
     },
     {
       "id": "DRV-8",
@@ -631,7 +632,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 10
+      "micros": 17
     },
     {
       "id": "DRV-10",
@@ -654,7 +655,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 7
     },
     {
       "id": "DRV-13",
@@ -670,7 +671,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9
+      "micros": 6
     },
     {
       "id": "DRV-15",
@@ -693,7 +694,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 12
+      "micros": 10
     },
     {
       "id": "DRV-18",
@@ -772,7 +773,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 138
+      "micros": 71
     },
     {
       "id": "SHORT-2",
@@ -781,7 +782,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 342
+      "micros": 211
     },
     {
       "id": "SHORT-3",
@@ -790,7 +791,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 180
+      "micros": 107
     },
     {
       "id": "SHORT-4",
@@ -799,7 +800,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 148
+      "micros": 90
     },
     {
       "id": "SHORT-5",
@@ -808,7 +809,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 684
+      "micros": 449
     },
     {
       "id": "SHORT-6",
@@ -817,7 +818,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 55
+      "micros": 27
     },
     {
       "id": "SHORT-7",
@@ -826,7 +827,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 689
+      "micros": 439
     },
     {
       "id": "SHORT-8",
@@ -856,7 +857,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 81
+      "micros": 45
     },
     {
       "id": "SHORT-12",
@@ -865,7 +866,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1502
+      "micros": 1250
     },
     {
       "id": "WIRE-1",
@@ -874,7 +875,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 350
+      "micros": 288
     },
     {
       "id": "WIRE-2",
@@ -883,7 +884,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 161
+      "micros": 92
     },
     {
       "id": "WIRE-3",
@@ -948,7 +949,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 4
+      "micros": 2
     },
     {
       "id": "WIRE-12",
@@ -964,7 +965,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 126
+      "micros": 72
     },
     {
       "id": "WIRE-14",
@@ -973,7 +974,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 586
+      "micros": 389
     },
     {
       "id": "WIRE-15",
@@ -1087,7 +1088,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 145
+      "micros": 83
     },
     {
       "id": "LEAK-2",
@@ -1159,7 +1160,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1984
+      "micros": 115
     },
     {
       "id": "LVL-5",
@@ -1182,7 +1183,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 1802
+      "micros": 1213
     },
     {
       "id": "LVL-8",
@@ -1198,7 +1199,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 52
+      "micros": 378
     },
     {
       "id": "LVL-10",
@@ -1249,7 +1250,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 11,
-      "micros": 363
+      "micros": 205
     },
     {
       "id": "IO-2",
@@ -1286,7 +1287,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 291
+      "micros": 159
     },
     {
       "id": "IO-7",
@@ -1295,7 +1296,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 11
+      "micros": 6
     },
     {
       "id": "IO-8",
@@ -1304,7 +1305,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 575
+      "micros": 341
     },
     {
       "id": "IO-9",
@@ -1320,7 +1321,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 247
+      "micros": 160
     },
     {
       "id": "IO-11",
@@ -1329,7 +1330,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 17
+      "micros": 10
     },
     {
       "id": "IO-12",
@@ -1359,7 +1360,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 514
+      "micros": 330
     },
     {
       "id": "IO-16",
@@ -1368,7 +1369,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 107
+      "micros": 62
     },
     {
       "id": "IO-17",
@@ -1405,7 +1406,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 593
+      "micros": 390
     },
     {
       "id": "LOGIC-4",
@@ -1435,7 +1436,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 158
+      "micros": 92
     },
     {
       "id": "LOGIC-8",
@@ -1444,7 +1445,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 210
+      "micros": 133
     },
     {
       "id": "MUX-1",
@@ -1453,7 +1454,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 9175
+      "micros": 2386
     },
     {
       "id": "MUX-2",
@@ -1595,7 +1596,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 13
+      "micros": 6
     },
     {
       "id": "CLK-4",
@@ -1611,7 +1612,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 571
+      "micros": 320
     },
     {
       "id": "CLK-6",
@@ -1620,7 +1621,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 472
+      "micros": 288
     },
     {
       "id": "CLK-7",
@@ -1629,7 +1630,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 612
+      "micros": 311
     },
     {
       "id": "CLK-8",
@@ -1680,7 +1681,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 460
+      "micros": 288
     },
     {
       "id": "CLK-15",
@@ -1689,7 +1690,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 467
+      "micros": 292
     },
     {
       "id": "CLK-16",
@@ -1712,7 +1713,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 467
+      "micros": 298
     },
     {
       "id": "CLK-19",
@@ -1728,7 +1729,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 45
+      "micros": 15
     },
     {
       "id": "I2C-2",
@@ -1737,7 +1738,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 3,
-      "micros": 137
+      "micros": 72
     },
     {
       "id": "I2C-3",
@@ -1746,7 +1747,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 78
+      "micros": 45
     },
     {
       "id": "I2C-4",
@@ -1755,7 +1756,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 60
+      "micros": 46
     },
     {
       "id": "I2C-5",
@@ -1778,7 +1779,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 100
+      "micros": 60
     },
     {
       "id": "I2C-8",
@@ -1794,7 +1795,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 240
+      "micros": 143
     },
     {
       "id": "I2C-10",
@@ -1803,7 +1804,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 205
+      "micros": 132
     },
     {
       "id": "I2C-11",
@@ -1861,7 +1862,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 23
+      "micros": 19
     },
     {
       "id": "I2C-19",
@@ -1989,7 +1990,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 16
+      "micros": 8
     },
     {
       "id": "SER-15",
@@ -2082,7 +2083,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 428
+      "micros": 245
     },
     {
       "id": "ETH-4",
@@ -2168,7 +2169,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 31
+      "micros": 16
     },
     {
       "id": "MEM-2",
@@ -2184,7 +2185,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 21
+      "micros": 13
     },
     {
       "id": "MEM-4",
@@ -2221,7 +2222,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 424
+      "micros": 252
     },
     {
       "id": "MEM-9",
@@ -2237,7 +2238,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 11
+      "micros": 6
     },
     {
       "id": "MEM-11",
@@ -2281,7 +2282,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 241
+      "micros": 149
     },
     {
       "id": "HS-5",
@@ -2304,7 +2305,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 11
+      "micros": 7
     },
     {
       "id": "HS-8",
@@ -2320,7 +2321,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 11
+      "micros": 6
     },
     {
       "id": "HS-10",
@@ -2364,7 +2365,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 1363
+      "micros": 786
     },
     {
       "id": "HS-16",
@@ -2443,7 +2444,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 16
+      "micros": 7
     },
     {
       "id": "USB-2",
@@ -2466,7 +2467,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 47
+      "micros": 9
     },
     {
       "id": "USB-5",
@@ -2503,7 +2504,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 48
+      "micros": 30
     },
     {
       "id": "USB-10",
@@ -2512,7 +2513,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 34
+      "micros": 8
     },
     {
       "id": "USB-11",
@@ -2521,7 +2522,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 56
+      "micros": 28
     },
     {
       "id": "USB-12",
@@ -2558,7 +2559,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 22
+      "micros": 6
     },
     {
       "id": "USB-17",
@@ -2595,7 +2596,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 576
+      "micros": 84
     },
     {
       "id": "CONN-3",
@@ -2611,7 +2612,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 21
+      "micros": 9
     },
     {
       "id": "CONN-5",
@@ -2641,7 +2642,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 28
+      "micros": 6
     },
     {
       "id": "CONN-9",
@@ -2657,7 +2658,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 33
+      "micros": 13
     },
     {
       "id": "CONN-11",
@@ -2701,7 +2702,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 16
+      "micros": 9
     },
     {
       "id": "CONN-17",
@@ -2710,7 +2711,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 16
+      "micros": 7
     },
     {
       "id": "CONN-18",
@@ -2754,7 +2755,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 16
+      "micros": 8
     },
     {
       "id": "ANA-4",
@@ -2763,7 +2764,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 333
+      "micros": 192
     },
     {
       "id": "ANA-5",
@@ -2807,7 +2808,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 12
+      "micros": 7
     },
     {
       "id": "ANA-11",
@@ -2816,7 +2817,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 10
+      "micros": 6
     },
     {
       "id": "ANA-12",
@@ -2825,7 +2826,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 10
+      "micros": 6
     },
     {
       "id": "ANA-13",
@@ -2855,7 +2856,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 11
+      "micros": 6
     },
     {
       "id": "ANA-17",
@@ -2892,7 +2893,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 416
+      "micros": 6
     },
     {
       "id": "ANA-22",
@@ -2901,7 +2902,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 3011
+      "micros": 56
     },
     {
       "id": "ANA-23",
@@ -2929,14 +2930,20 @@
       "title": "Capacitor voltage rating margins",
       "severity": "warning",
       "tier": "mid",
-      "status": "planned"
+      "status": "not_run",
+      "check": "RATE-1",
+      "need": "parts snapshot",
+      "hint": "no parts snapshot beside the project: `berc parts refresh` writes parts.lock.toml (CFG-9) (the check needs: rail voltage across the capacitor, its voltage rating (value field or MPN))"
     },
     {
       "id": "RATE-2",
       "title": "Resistor power rating",
       "severity": "warning",
       "tier": "mid",
-      "status": "planned"
+      "status": "not_run",
+      "check": "RATE-2",
+      "need": "parts snapshot",
+      "hint": "no parts snapshot beside the project: `berc parts refresh` writes parts.lock.toml (CFG-9) (the check needs: voltage across or current through the resistor, its power rating (package or MPN))"
     },
     {
       "id": "RATE-3",
@@ -2985,7 +2992,10 @@
       "title": "Resistor voltage rating (high voltage dividers, a single 0402 across 100 V)",
       "severity": "warning",
       "tier": "mid",
-      "status": "planned"
+      "status": "not_run",
+      "check": "RATE-9",
+      "need": "parts snapshot",
+      "hint": "no parts snapshot beside the project: `berc parts refresh` writes parts.lock.toml (CFG-9) (the check needs: voltage across each resistor, its maximum working voltage)"
     },
     {
       "id": "RATE-10",
@@ -3027,7 +3037,10 @@
       "title": "Inductor saturation current below the peak current of its converter (Iout plus half the ripple)",
       "severity": "error",
       "tier": "mid",
-      "status": "planned"
+      "status": "not_run",
+      "check": "RATE-15",
+      "need": "parts snapshot",
+      "hint": "no parts snapshot beside the project: `berc parts refresh` writes parts.lock.toml (CFG-9) (the check needs: input range, output voltage and current, switching frequency, inductance, the inductor's saturation)"
     },
     {
       "id": "RATE-16",
@@ -3442,7 +3455,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 3928
+      "micros": 827
     },
     {
       "id": "DBG-2",
@@ -3451,7 +3464,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 235
+      "micros": 181
     },
     {
       "id": "DBG-3",
@@ -3460,7 +3473,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 48
+      "micros": 27
     },
     {
       "id": "DBG-4",
@@ -3469,7 +3482,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 5,
-      "micros": 39
+      "micros": 65
     },
     {
       "id": "DBG-5",
@@ -3492,7 +3505,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 3018
+      "micros": 337
     },
     {
       "id": "DBG-8",
@@ -3501,7 +3514,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 561
+      "micros": 335
     },
     {
       "id": "DBG-9",
@@ -3517,7 +3530,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 2,
-      "micros": 54
+      "micros": 34
     },
     {
       "id": "DBG-11",
@@ -3526,7 +3539,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 562
+      "micros": 326
     },
     {
       "id": "DBG-12",
@@ -3549,7 +3562,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 185
+      "micros": 150
     },
     {
       "id": "DBG-15",
@@ -3565,7 +3578,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 14
+      "micros": 13
     },
     {
       "id": "DBG-17",
@@ -3574,7 +3587,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 269
+      "micros": 275
     },
     {
       "id": "DBG-18",
@@ -3583,7 +3596,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 14,
-      "micros": 595
+      "micros": 496
     },
     {
       "id": "DBG-19",
@@ -3634,7 +3647,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 20,
-      "micros": 538
+      "micros": 489
     },
     {
       "id": "TEST-2",
@@ -3643,7 +3656,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 40
+      "micros": 29
     },
     {
       "id": "TEST-3",
@@ -3659,7 +3672,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 57
+      "micros": 53
     },
     {
       "id": "TEST-5",
@@ -3668,7 +3681,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 28,
-      "micros": 781
+      "micros": 641
     },
     {
       "id": "TEST-6",
@@ -3691,7 +3704,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 6,
-      "micros": 570
+      "micros": 280
     },
     {
       "id": "BOM-2",
@@ -3707,7 +3720,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 300
+      "micros": 206
     },
     {
       "id": "BOM-4",
@@ -3716,7 +3729,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 12,
-      "micros": 716
+      "micros": 263
     },
     {
       "id": "BOM-5",
@@ -3725,7 +3738,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 602
+      "micros": 358
     },
     {
       "id": "BOM-6",
@@ -3734,7 +3747,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 530
+      "micros": 334
     },
     {
       "id": "BOM-7",
@@ -3750,7 +3763,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 12
+      "micros": 6
     },
     {
       "id": "BOM-9",
@@ -3759,7 +3772,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 525
+      "micros": 309
     },
     {
       "id": "BOM-10",
@@ -3768,7 +3781,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 42
+      "micros": 21
     },
     {
       "id": "BOM-11",
@@ -3777,14 +3790,17 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 21
+      "micros": 14
     },
     {
       "id": "BOM-12",
       "title": "Value field vs the MPN's parameters: resistance, capacitance, voltage, tolerance or package decoded from the part number disagree with the value or footprint (B200A R201/R203 13k3 for 13k7, B153A R219/R222 13k3 for 3k3; B135B C405, C509 MPN errors)",
       "severity": "error",
       "tier": "mid",
-      "status": "planned"
+      "status": "not_run",
+      "check": "BOM-12",
+      "need": "parts snapshot",
+      "hint": "no parts snapshot beside the project: `berc parts refresh` writes parts.lock.toml (CFG-9) (the check needs: the parts snapshot, the value and rating fields)"
     },
     {
       "id": "BOM-13",
@@ -3800,7 +3816,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 218
+      "micros": 140
     },
     {
       "id": "BOM-15",
@@ -3823,7 +3839,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 123
+      "micros": 81
     },
     {
       "id": "BOM-18",
@@ -3840,13 +3856,42 @@
       "status": "planned"
     },
     {
+      "id": "BOM-20",
+      "title": "MPN on the board but not in the parts snapshot (`parts.lock.toml`): its facts and footprint reviews go unchecked",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "not_run",
+      "check": "BOM-20",
+      "need": "parts snapshot",
+      "hint": "no parts snapshot beside the project: `berc parts refresh` writes parts.lock.toml (CFG-9) (the check needs: MPN fields, the parts snapshot)"
+    },
+    {
+      "id": "BOM-21",
+      "title": "MPN whose maker is not settled: several parts in the part source and no `MfgN` beside it (the makers named), or an `MfgN` the source knows no part of that MPN by, or does not know at all (b153b: SN74LVC1G17DCKR by TI and UMW, maker-less stubs)",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "not_run",
+      "check": "BOM-21",
+      "need": "parts snapshot",
+      "hint": "no parts snapshot beside the project: `berc parts refresh` writes parts.lock.toml (CFG-9) (the check needs: MPN and maker fields, the parts snapshot)"
+    },
+    {
+      "id": "BOM-22",
+      "title": "Maker field (`MfgN`) filled without the MPN field it belongs beside (`MpnN`)",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 0,
+      "micros": 150
+    },
+    {
       "id": "NAME-1",
       "title": "Inconsistent naming of inverted signals: suggest one notation",
       "severity": "suggestion",
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 3161
+      "micros": 64
     },
     {
       "id": "NAME-2",
@@ -3855,7 +3900,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 77
+      "micros": 43
     },
     {
       "id": "NAME-3",
@@ -3871,7 +3916,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 102
+      "micros": 62
     },
     {
       "id": "NAME-5",
@@ -3880,7 +3925,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 211
+      "micros": 125
     },
     {
       "id": "NAME-6",
@@ -3889,7 +3934,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 135
+      "micros": 61
     },
     {
       "id": "NAME-7",
@@ -3898,7 +3943,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 1,
-      "micros": 2271
+      "micros": 1471
     },
     {
       "id": "NAME-8",
@@ -3914,7 +3959,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 112
+      "micros": 286
     },
     {
       "id": "NAME-10",
@@ -3923,7 +3968,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 110
+      "micros": 221
     },
     {
       "id": "NAME-11",
@@ -3932,7 +3977,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 215
+      "micros": 494
     },
     {
       "id": "NAME-12",
@@ -3941,7 +3986,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 72
+      "micros": 132
     },
     {
       "id": "NAME-13",
@@ -3950,7 +3995,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 2,
-      "micros": 27
+      "micros": 47
     },
     {
       "id": "DRAW-1",
@@ -4001,7 +4046,7 @@
       "tier": "hard",
       "status": "ran",
       "findings": 0,
-      "micros": 15345
+      "micros": 10622
     },
     {
       "id": "DRAW-8",
@@ -4017,7 +4062,7 @@
       "tier": "hard",
       "status": "ran",
       "findings": 0,
-      "micros": 15153
+      "micros": 13127
     },
     {
       "id": "DRAW-10",
@@ -4030,6 +4075,13 @@
       "id": "DRAW-11",
       "title": "Net label written vertically where a horizontal wire stub would carry it",
       "severity": "suggestion",
+      "tier": "mid",
+      "status": "planned"
+    },
+    {
+      "id": "DRAW-12",
+      "title": "Symbol placed so its inputs face right and its outputs left (pin types as drawn, after rotation and mirror), against the sheet's left-to-right flow",
+      "severity": "info",
       "tier": "mid",
       "status": "planned"
     },
@@ -4145,7 +4197,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 1,
-      "micros": 392
+      "micros": 3693
     },
     {
       "id": "DRAW-29",
@@ -4154,7 +4206,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 1672
+      "micros": 1648
     },
     {
       "id": "DRAW-30",
@@ -4163,7 +4215,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 539
+      "micros": 264
     },
     {
       "id": "DRAW-31",
@@ -4179,7 +4231,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 381
+      "micros": 5157
     },
     {
       "id": "DRAW-33",
@@ -4195,7 +4247,7 @@
       "tier": "hard",
       "status": "ran",
       "findings": 60,
-      "micros": 30479
+      "micros": 25156
     },
     {
       "id": "DRAW-35",
@@ -4204,7 +4256,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 224
+      "micros": 138
     },
     {
       "id": "DRAW-36",
@@ -4213,7 +4265,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 17,
-      "micros": 10470
+      "micros": 5137
     },
     {
       "id": "DRAW-37",
@@ -4243,7 +4295,7 @@
       "tier": "hard",
       "status": "ran",
       "findings": 0,
-      "micros": 1742
+      "micros": 1111
     },
     {
       "id": "DRAW-41",
@@ -4252,7 +4304,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 2,
-      "micros": 7792
+      "micros": 2520
     },
     {
       "id": "DRAW-42",
@@ -4271,7 +4323,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 217
+      "micros": 124
     },
     {
       "id": "DRAW-44",
@@ -4280,7 +4332,7 @@
       "tier": "hard",
       "status": "ran",
       "findings": 0,
-      "micros": 2137
+      "micros": 134
     },
     {
       "id": "DRAW-45",
@@ -4289,7 +4341,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 2012
+      "micros": 146
     },
     {
       "id": "DRAW-46",
@@ -4298,7 +4350,7 @@
       "tier": "mid",
       "status": "ran",
       "findings": 0,
-      "micros": 1597
+      "micros": 2
     },
     {
       "id": "DRAW-47",
@@ -4307,7 +4359,44 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 2797
+      "micros": 111
+    },
+    {
+      "id": "DRAW-48",
+      "title": "Functional block (parts sharing a `Block` field) with no note on its sheet: nothing says what it does or why",
+      "severity": "suggestion",
+      "tier": "mid",
+      "status": "ran",
+      "findings": 0,
+      "micros": 66
+    },
+    {
+      "id": "DRAW-49",
+      "title": "Placeholder left in a note, a text or a field (`x V .. y V`, `TBD`, `???`, an empty `Max current:`) ≈ BOM-5",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 0,
+      "micros": 602
+    },
+    {
+      "id": "DRAW-50",
+      "title": "Note reference (`See N12`) to a note the board's notes file does not have",
+      "severity": "warning",
+      "tier": "mid",
+      "status": "not_run",
+      "check": "DRAW-50",
+      "need": "project file: drawing.notes",
+      "hint": "`drawing.notes` is not set: --set drawing.notes=FILE or the better_erc project file (CFG-2) (the check needs: the schematic drawing (geometry), the setting `drawing.notes`)"
+    },
+    {
+      "id": "DRAW-51",
+      "title": "Block name that contradicts its parts: a DC-DC or buck with a linear regulator and no inductor, an LDO with an inductor",
+      "severity": "info",
+      "tier": "mid",
+      "status": "ran",
+      "findings": 0,
+      "micros": 6
     },
     {
       "id": "LIB-1",
@@ -4330,7 +4419,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 44
+      "micros": 7
     },
     {
       "id": "LIB-4",
@@ -4351,7 +4440,9 @@
       "title": "Footprint does not match the MPN's package (an inductor on the wrong footprint, a diode in another case size)",
       "severity": "error",
       "tier": "mid",
-      "status": "planned"
+      "status": "ran",
+      "findings": 0,
+      "micros": 233
     },
     {
       "id": "LIB-7",
@@ -4409,7 +4500,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 21
+      "micros": 6
     },
     {
       "id": "LIB-15",
@@ -4418,7 +4509,7 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 700
+      "micros": 526
     },
     {
       "id": "LIB-16",
@@ -4448,7 +4539,14 @@
       "tier": "easy",
       "status": "ran",
       "findings": 0,
-      "micros": 32
+      "micros": 9
+    },
+    {
+      "id": "LIB-20",
+      "title": "Board places a footprint other than the one its symbol's own `Footprint` field names (a library migration half done, or a deliberate per-instance override)",
+      "severity": "info",
+      "tier": "easy",
+      "status": "planned"
     },
     {
       "id": "LIB-21",
@@ -4505,6 +4603,24 @@
       "severity": "suggestion",
       "tier": "easy",
       "status": "planned"
+    },
+    {
+      "id": "LIB-29",
+      "title": "Placed symbol carrying a `ki_` field (`ki_fp_filters`, `ki_keywords`): library-symbol properties that KiCad's schematic parity then reports as missing in the footprint",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 0,
+      "micros": 9
+    },
+    {
+      "id": "LIB-30",
+      "title": "Placed symbol whose `mx3:` Datasheet link references an MPN field the symbol lacks, or misses one it has (a field added later goes unnamed)",
+      "severity": "warning",
+      "tier": "easy",
+      "status": "ran",
+      "findings": 0,
+      "micros": 6
     },
     {
       "id": "LAY-1",
@@ -4710,7 +4826,8 @@
       "locations": [],
       "also": [
         "RAIL-1"
-      ]
+      ],
+      "short_id": "ev6"
     },
     {
       "check": "RAIL-5",
@@ -4739,7 +4856,8 @@
       "locations": [],
       "also": [
         "RAIL-1"
-      ]
+      ],
+      "short_id": "xe8"
     },
     {
       "check": "RAIL-5",
@@ -4768,7 +4886,8 @@
       "locations": [],
       "also": [
         "RAIL-1"
-      ]
+      ],
+      "short_id": "ejb"
     },
     {
       "check": "RAIL-5",
@@ -4797,7 +4916,8 @@
       "locations": [],
       "also": [
         "RAIL-1"
-      ]
+      ],
+      "short_id": "t1h"
     },
     {
       "check": "RAIL-5",
@@ -4826,7 +4946,8 @@
       "locations": [],
       "also": [
         "RAIL-1"
-      ]
+      ],
+      "short_id": "57s"
     },
     {
       "check": "I2C-1",
@@ -4896,7 +5017,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "k59"
     },
     {
       "check": "I2C-3",
@@ -5006,7 +5128,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "tt0"
     },
     {
       "check": "I2C-3",
@@ -5116,7 +5239,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "5s9"
     },
     {
       "check": "I2C-4",
@@ -5226,7 +5350,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "4q2"
     },
     {
       "check": "DEC-1",
@@ -5253,7 +5378,8 @@
       "explain": "docs/checks/dec.md#dec-1",
       "fix": "a 100 nF ceramic from the rail to ground at each power pin, plus bulk on the rail",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "6b4"
     },
     {
       "check": "DEC-1",
@@ -5280,7 +5406,8 @@
       "explain": "docs/checks/dec.md#dec-1",
       "fix": "a 100 nF ceramic from the rail to ground at each power pin, plus bulk on the rail",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "6vn"
     },
     {
       "check": "DEC-1",
@@ -5307,7 +5434,8 @@
       "explain": "docs/checks/dec.md#dec-1",
       "fix": "a 100 nF ceramic from the rail to ground at each power pin, plus bulk on the rail",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "djg"
     },
     {
       "check": "DEC-1",
@@ -5334,7 +5462,8 @@
       "explain": "docs/checks/dec.md#dec-1",
       "fix": "a 100 nF ceramic from the rail to ground at each power pin, plus bulk on the rail",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "4nq"
     },
     {
       "check": "DEC-1",
@@ -5361,7 +5490,8 @@
       "explain": "docs/checks/dec.md#dec-1",
       "fix": "a 100 nF ceramic from the rail to ground at each power pin, plus bulk on the rail",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "sm1"
     },
     {
       "check": "WIRE-1",
@@ -5416,7 +5546,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "48f"
     },
     {
       "check": "WIRE-1",
@@ -5471,7 +5602,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "rdq"
     },
     {
       "check": "WIRE-1",
@@ -5526,7 +5658,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "scw"
     },
     {
       "check": "WIRE-1",
@@ -5581,7 +5714,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "afz"
     },
     {
       "check": "WIRE-1",
@@ -5636,7 +5770,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "db0"
     },
     {
       "check": "LVL-7",
@@ -5693,7 +5828,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "xnz"
     },
     {
       "check": "IO-1",
@@ -5740,7 +5876,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "sp2"
     },
     {
       "check": "IO-1",
@@ -5787,7 +5924,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "ra6"
     },
     {
       "check": "IO-1",
@@ -5834,7 +5972,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "rtk"
     },
     {
       "check": "IO-1",
@@ -5881,7 +6020,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "bjq"
     },
     {
       "check": "IO-1",
@@ -5928,7 +6068,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "hxy"
     },
     {
       "check": "IO-1",
@@ -5975,7 +6116,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "a2q"
     },
     {
       "check": "IO-1",
@@ -6022,7 +6164,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "sn0"
     },
     {
       "check": "IO-1",
@@ -6069,7 +6212,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "fyf"
     },
     {
       "check": "IO-1",
@@ -6116,7 +6260,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "a8j"
     },
     {
       "check": "IO-1",
@@ -6163,7 +6308,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "vpq"
     },
     {
       "check": "IO-1",
@@ -6210,7 +6356,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "2kr"
     },
     {
       "check": "CLK-5",
@@ -6257,7 +6404,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "jx6"
     },
     {
       "check": "CLK-5",
@@ -6304,7 +6452,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "qc6"
     },
     {
       "check": "CLK-5",
@@ -6351,7 +6500,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "519"
     },
     {
       "check": "CLK-5",
@@ -6398,7 +6548,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "491"
     },
     {
       "check": "CLK-5",
@@ -6445,7 +6596,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "0g2"
     },
     {
       "check": "CLK-7",
@@ -6492,7 +6644,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "4tv"
     },
     {
       "check": "CLK-7",
@@ -6539,7 +6692,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "q4v"
     },
     {
       "check": "CLK-7",
@@ -6586,7 +6740,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "qer"
     },
     {
       "check": "CLK-7",
@@ -6633,7 +6788,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "7y8"
     },
     {
       "check": "CLK-7",
@@ -6680,7 +6836,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "b5v"
     },
     {
       "check": "I2C-2",
@@ -6815,7 +6972,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "xy4"
     },
     {
       "check": "I2C-2",
@@ -6981,7 +7139,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "6rn"
     },
     {
       "check": "I2C-2",
@@ -7147,7 +7306,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "5kj"
     },
     {
       "check": "I2C-7",
@@ -7303,7 +7463,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "vx6"
     },
     {
       "check": "I2C-9",
@@ -7439,7 +7600,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "kej"
     },
     {
       "check": "I2C-10",
@@ -7566,7 +7728,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "h20"
     },
     {
       "check": "BOM-14",
@@ -7590,7 +7753,8 @@
       "explain": "docs/checks/bom.md#bom-14",
       "fix": "add an MPN field (`MPN`, `Mpn1`) to the parts, with alternates for passives",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "6bz"
     },
     {
       "check": "DRAW-36",
@@ -7633,7 +7797,7 @@
       "state": null,
       "message": "power GND at y 85.09, power VCC_3V3 at y 86.36: 1.27 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item power GND|item power VCC_3V3|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-36:item power GND|item power VCC_3V3|sheet /C107: I2C multiple pull-ups/@d5718f8d",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -7661,7 +7825,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "6fj"
     },
     {
       "check": "DRAW-36",
@@ -7704,7 +7869,7 @@
       "state": null,
       "message": "power VCC_3V3 at x 212.09, power GND at x 210.82: 1.27 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item power GND|item power VCC_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-36:item power GND|item power VCC_3V3|sheet /C22: I2C Segments/@919b4952",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -7732,7 +7897,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "mvr"
     },
     {
       "check": "DRAW-36",
@@ -7775,7 +7941,7 @@
       "state": null,
       "message": "wire of GND at x 210.82, wire of VCC_3V3 at x 212.09: 1.27 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of GND|item wire of VCC_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-36:item wire of GND|item wire of VCC_3V3|sheet /C22: I2C Segments/@42d1a700",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -7803,7 +7969,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "e8j"
     },
     {
       "check": "DRAW-36",
@@ -7846,7 +8013,7 @@
       "state": null,
       "message": "wire of SCL1_1V8 at y 49.53, wire of SDA1_3V3 at y 46.99: 2.54 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of SCL1_1V8|item wire of SDA1_3V3|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-36:item wire of SCL1_1V8|item wire of SDA1_3V3|sheet /C107: I2C multiple pull-ups/@0d575e68",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -7874,7 +8041,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "gtj"
     },
     {
       "check": "DRAW-36",
@@ -7917,7 +8085,7 @@
       "state": null,
       "message": "wire of SDA1_3V3 at y 59.69, wire of SCL1_1V8 at y 62.23: 2.54 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of SCL1_1V8|item wire of SDA1_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-36:item wire of SCL1_1V8|item wire of SDA1_3V3|sheet /C22: I2C Segments/@2624f2c3",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -7945,7 +8113,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "z3k"
     },
     {
       "check": "DRAW-36",
@@ -7988,7 +8157,7 @@
       "state": null,
       "message": "wire of SCL1_3V3_VCC2 at y 160.02, wire of SDA1_3V3 at y 157.48: 2.54 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of SCL1_3V3_VCC2|item wire of SDA1_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-36:item wire of SCL1_3V3_VCC2|item wire of SDA1_3V3|sheet /C22: I2C Segments/@1c0c32bc",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -8016,7 +8185,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "aha"
     },
     {
       "check": "DRAW-36",
@@ -8059,7 +8229,7 @@
       "state": null,
       "message": "wire of SDA1_1V8 at y 46.99, wire of SCL1_3V3 at y 49.53: 2.54 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of SCL1_3V3|item wire of SDA1_1V8|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-36:item wire of SCL1_3V3|item wire of SDA1_1V8|sheet /C107: I2C multiple pull-ups/@cbaac58b",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -8087,7 +8257,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "mbx"
     },
     {
       "check": "DRAW-36",
@@ -8130,7 +8301,7 @@
       "state": null,
       "message": "wire of SDA1_1V8 at y 59.69, wire of SCL1_3V3 at y 62.23: 2.54 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of SCL1_3V3|item wire of SDA1_1V8|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-36:item wire of SCL1_3V3|item wire of SDA1_1V8|sheet /C22: I2C Segments/@cf3ef966",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -8158,7 +8329,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "f0h"
     },
     {
       "check": "DRAW-36",
@@ -8201,7 +8373,7 @@
       "state": null,
       "message": "wire of SCL1_3V3 at y 109.22, wire of SDA_U7 at y 106.68: 2.54 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of SCL1_3V3|item wire of SDA_U7|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-36:item wire of SCL1_3V3|item wire of SDA_U7|sheet /C107: I2C multiple pull-ups/@db15972e",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -8229,7 +8401,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "2qb"
     },
     {
       "check": "DRAW-36",
@@ -8272,7 +8445,7 @@
       "state": null,
       "message": "wire of SCL1_3V3 at y 121.92, wire of SDA_U7 at y 119.38: 2.54 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of SCL1_3V3|item wire of SDA_U7|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-36:item wire of SCL1_3V3|item wire of SDA_U7|sheet /C22: I2C Segments/@ea89c6fd",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -8300,7 +8473,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "44y"
     },
     {
       "check": "DRAW-36",
@@ -8343,7 +8517,7 @@
       "state": null,
       "message": "wire of SCL1_3V3 at y 254, wire of UNM1 at y 251.46: 2.54 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of SCL1_3V3|item wire of UNM1|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-36:item wire of SCL1_3V3|item wire of UNM1|sheet /C22: I2C Segments/@2acfdcad",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -8371,7 +8545,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "jnk"
     },
     {
       "check": "DRAW-36",
@@ -8414,7 +8589,7 @@
       "state": null,
       "message": "wire of VCC_3V3 at x 171.45, wire of SCL1_3V3 at x 172.72: 1.27 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of SCL1_3V3|item wire of VCC_3V3|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-36:item wire of SCL1_3V3|item wire of VCC_3V3|sheet /C107: I2C multiple pull-ups/@ef4f70cb",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -8442,7 +8617,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "efz"
     },
     {
       "check": "DRAW-36",
@@ -8485,7 +8661,7 @@
       "state": null,
       "message": "wire of SCL_U7 at y 109.22, wire of SDA1_3V3 at y 106.68: 2.54 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of SCL_U7|item wire of SDA1_3V3|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-36:item wire of SCL_U7|item wire of SDA1_3V3|sheet /C107: I2C multiple pull-ups/@9091925b",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -8513,7 +8689,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "hrh"
     },
     {
       "check": "DRAW-36",
@@ -8556,7 +8733,7 @@
       "state": null,
       "message": "wire of SDA1_3V3 at y 119.38, wire of SCL_U7 at y 121.92: 2.54 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of SCL_U7|item wire of SDA1_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-36:item wire of SCL_U7|item wire of SDA1_3V3|sheet /C22: I2C Segments/@47219fee",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -8584,7 +8761,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "t5f"
     },
     {
       "check": "DRAW-36",
@@ -8627,7 +8805,7 @@
       "state": null,
       "message": "wire of SDA1_3V3 at y 251.46, wire of UNM2 at y 254: 2.54 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of SDA1_3V3|item wire of UNM2|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-36:item wire of SDA1_3V3|item wire of UNM2|sheet /C22: I2C Segments/@8ed20ce3",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -8655,7 +8833,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "71m"
     },
     {
       "check": "DRAW-36",
@@ -8698,7 +8877,7 @@
       "state": null,
       "message": "wire of VCC2_3V3 at x 210.82, wire of VCC_1V2 at x 213.36: 2.54 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of VCC2_3V3|item wire of VCC_1V2|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-36:item wire of VCC2_3V3|item wire of VCC_1V2|sheet /C22: I2C Segments/@bd4ffcda",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -8726,7 +8905,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "twj"
     },
     {
       "check": "DRAW-36",
@@ -8769,7 +8949,7 @@
       "state": null,
       "message": "wire of VCC2_3V3 at x 210.82, wire of VCC_3V3 at x 208.28: 2.54 mm",
       "facts": [],
-      "fingerprint": "DRAW-36:item wire of VCC2_3V3|item wire of VCC_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-36:item wire of VCC2_3V3|item wire of VCC_3V3|sheet /C22: I2C Segments/@e9f9cb78",
       "explain": "docs/checks/draw.md#draw-36",
       "fix": "line them up, or move one clearly away",
       "locations": [
@@ -8797,7 +8977,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "vhj"
     },
     {
       "check": "RAIL-19",
@@ -8863,7 +9044,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "0sy"
     },
     {
       "check": "RAIL-19",
@@ -8948,7 +9130,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "2jk"
     },
     {
       "check": "CONN-2",
@@ -9022,7 +9205,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "k9e"
     },
     {
       "check": "CONN-2",
@@ -9096,7 +9280,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "kxc"
     },
     {
       "check": "DBG-3",
@@ -9209,7 +9394,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "eec"
     },
     {
       "check": "DBG-4",
@@ -9236,7 +9422,8 @@
       "explain": "docs/checks/dbg.md#dbg-4",
       "fix": "an LED with its resistor from the rail to ground (DNP on battery boards); the input rail and switched rails first",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "3p8"
     },
     {
       "check": "DBG-4",
@@ -9263,7 +9450,8 @@
       "explain": "docs/checks/dbg.md#dbg-4",
       "fix": "an LED with its resistor from the rail to ground (DNP on battery boards); the input rail and switched rails first",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "dd0"
     },
     {
       "check": "DBG-4",
@@ -9290,7 +9478,8 @@
       "explain": "docs/checks/dbg.md#dbg-4",
       "fix": "an LED with its resistor from the rail to ground (DNP on battery boards); the input rail and switched rails first",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "r6s"
     },
     {
       "check": "DBG-4",
@@ -9317,7 +9506,8 @@
       "explain": "docs/checks/dbg.md#dbg-4",
       "fix": "an LED with its resistor from the rail to ground (DNP on battery boards); the input rail and switched rails first",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "fnx"
     },
     {
       "check": "DBG-4",
@@ -9344,7 +9534,8 @@
       "explain": "docs/checks/dbg.md#dbg-4",
       "fix": "an LED with its resistor from the rail to ground (DNP on battery boards); the input rail and switched rails first",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "ndk"
     },
     {
       "check": "DBG-7",
@@ -9391,7 +9582,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "qdp"
     },
     {
       "check": "DBG-10",
@@ -9428,7 +9620,8 @@
       "explain": "docs/checks/dbg.md#dbg-10",
       "fix": "a 0 Ω (or ferrite, or solder jumper) at the start of each block's branch",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "h69"
     },
     {
       "check": "DBG-10",
@@ -9465,7 +9658,8 @@
       "explain": "docs/checks/dbg.md#dbg-10",
       "fix": "a 0 Ω (or ferrite, or solder jumper) at the start of each block's branch",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "vcx"
     },
     {
       "check": "DBG-18",
@@ -9543,7 +9737,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "7p9"
     },
     {
       "check": "DBG-18",
@@ -9597,7 +9792,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "pat"
     },
     {
       "check": "DBG-18",
@@ -9651,7 +9847,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "6cs"
     },
     {
       "check": "DBG-18",
@@ -9721,7 +9918,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "ppj"
     },
     {
       "check": "DBG-18",
@@ -9775,7 +9973,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "3wg"
     },
     {
       "check": "DBG-18",
@@ -9829,7 +10028,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "yw2"
     },
     {
       "check": "DBG-18",
@@ -9899,7 +10099,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "9v6"
     },
     {
       "check": "DBG-18",
@@ -9969,7 +10170,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "731"
     },
     {
       "check": "DBG-18",
@@ -10023,7 +10225,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "z5t"
     },
     {
       "check": "DBG-18",
@@ -10077,7 +10280,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "4ed"
     },
     {
       "check": "DBG-18",
@@ -10131,7 +10335,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "f29"
     },
     {
       "check": "DBG-18",
@@ -10185,7 +10390,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "t64"
     },
     {
       "check": "DBG-18",
@@ -10239,7 +10445,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "x11"
     },
     {
       "check": "DBG-18",
@@ -10293,7 +10500,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "7me"
     },
     {
       "check": "TEST-1",
@@ -10480,7 +10688,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "hw0"
     },
     {
       "check": "TEST-1",
@@ -10557,7 +10766,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "bp3"
     },
     {
       "check": "TEST-1",
@@ -10634,7 +10844,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "twe"
     },
     {
       "check": "TEST-1",
@@ -10711,7 +10922,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "qxf"
     },
     {
       "check": "TEST-1",
@@ -10898,7 +11110,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "j9r"
     },
     {
       "check": "TEST-1",
@@ -10975,7 +11188,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "3h2"
     },
     {
       "check": "TEST-1",
@@ -11132,7 +11346,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "wmw"
     },
     {
       "check": "TEST-1",
@@ -11209,7 +11424,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "8sf"
     },
     {
       "check": "TEST-1",
@@ -11286,7 +11502,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "hrt"
     },
     {
       "check": "TEST-1",
@@ -11333,7 +11550,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "28m"
     },
     {
       "check": "TEST-1",
@@ -11410,7 +11628,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "jn9"
     },
     {
       "check": "TEST-1",
@@ -11487,7 +11706,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "cyd"
     },
     {
       "check": "TEST-1",
@@ -11564,7 +11784,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "a6s"
     },
     {
       "check": "TEST-1",
@@ -11641,7 +11862,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "qrs"
     },
     {
       "check": "TEST-1",
@@ -11828,7 +12050,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "mj0"
     },
     {
       "check": "TEST-1",
@@ -11905,7 +12128,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "hpx"
     },
     {
       "check": "TEST-1",
@@ -11982,7 +12206,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "31r"
     },
     {
       "check": "TEST-1",
@@ -12059,7 +12284,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "630"
     },
     {
       "check": "TEST-1",
@@ -12246,7 +12472,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "rjz"
     },
     {
       "check": "TEST-1",
@@ -12323,7 +12550,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "7hm"
     },
     {
       "check": "TEST-4",
@@ -12350,7 +12578,8 @@
       "explain": "docs/checks/test.md#test-4",
       "fix": "a test point per rail and at least one ground pad (or a ground loop) per board area",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "rsb"
     },
     {
       "check": "TEST-4",
@@ -12377,7 +12606,8 @@
       "explain": "docs/checks/test.md#test-4",
       "fix": "a test point per rail and at least one ground pad (or a ground loop) per board area",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "wwf"
     },
     {
       "check": "TEST-4",
@@ -12404,7 +12634,8 @@
       "explain": "docs/checks/test.md#test-4",
       "fix": "a test point per rail and at least one ground pad (or a ground loop) per board area",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "vr9"
     },
     {
       "check": "TEST-4",
@@ -12431,7 +12662,8 @@
       "explain": "docs/checks/test.md#test-4",
       "fix": "a test point per rail and at least one ground pad (or a ground loop) per board area",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "xnc"
     },
     {
       "check": "TEST-4",
@@ -12458,7 +12690,8 @@
       "explain": "docs/checks/test.md#test-4",
       "fix": "a test point per rail and at least one ground pad (or a ground loop) per board area",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "0f0"
     },
     {
       "check": "TEST-4",
@@ -12485,7 +12718,8 @@
       "explain": "docs/checks/test.md#test-4",
       "fix": "a test point per rail and at least one ground pad (or a ground loop) per board area",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "qmk"
     },
     {
       "check": "TEST-5",
@@ -12529,7 +12763,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "g6d"
     },
     {
       "check": "TEST-5",
@@ -12565,7 +12800,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "fe7"
     },
     {
       "check": "TEST-5",
@@ -12601,7 +12837,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "k92"
     },
     {
       "check": "TEST-5",
@@ -12653,7 +12890,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "dgg"
     },
     {
       "check": "TEST-5",
@@ -12689,7 +12927,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "62z"
     },
     {
       "check": "TEST-5",
@@ -12725,7 +12964,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "rec"
     },
     {
       "check": "TEST-5",
@@ -12769,7 +13009,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "m0j"
     },
     {
       "check": "TEST-5",
@@ -12805,7 +13046,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "sve"
     },
     {
       "check": "TEST-5",
@@ -12841,7 +13083,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "j55"
     },
     {
       "check": "TEST-5",
@@ -12885,7 +13128,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "v1t"
     },
     {
       "check": "TEST-5",
@@ -12921,7 +13165,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "pc0"
     },
     {
       "check": "TEST-5",
@@ -12957,7 +13202,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "b2b"
     },
     {
       "check": "TEST-5",
@@ -13001,7 +13247,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "w8t"
     },
     {
       "check": "TEST-5",
@@ -13045,7 +13292,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "x2v"
     },
     {
       "check": "TEST-5",
@@ -13089,7 +13337,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "3eg"
     },
     {
       "check": "TEST-5",
@@ -13133,7 +13382,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "agp"
     },
     {
       "check": "TEST-5",
@@ -13169,7 +13419,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "18y"
     },
     {
       "check": "TEST-5",
@@ -13205,7 +13456,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "6rr"
     },
     {
       "check": "TEST-5",
@@ -13241,7 +13493,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "0v0"
     },
     {
       "check": "TEST-5",
@@ -13277,7 +13530,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "tze"
     },
     {
       "check": "TEST-5",
@@ -13313,7 +13567,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "dy0"
     },
     {
       "check": "TEST-5",
@@ -13349,7 +13604,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "4ss"
     },
     {
       "check": "TEST-5",
@@ -13385,7 +13641,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "h0s"
     },
     {
       "check": "TEST-5",
@@ -13421,7 +13678,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "0s5"
     },
     {
       "check": "TEST-5",
@@ -13457,7 +13715,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "a2y"
     },
     {
       "check": "TEST-5",
@@ -13493,7 +13752,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "dkg"
     },
     {
       "check": "TEST-5",
@@ -13529,7 +13789,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "4qh"
     },
     {
       "check": "TEST-5",
@@ -13565,7 +13826,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "23m"
     },
     {
       "check": "BOM-1",
@@ -13849,7 +14111,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "qkw"
     },
     {
       "check": "BOM-1",
@@ -14171,7 +14434,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "75y"
     },
     {
       "check": "BOM-1",
@@ -14436,7 +14700,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "cwv"
     },
     {
       "check": "BOM-1",
@@ -14549,7 +14814,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "bmk"
     },
     {
       "check": "BOM-1",
@@ -14795,7 +15061,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "f0k"
     },
     {
       "check": "BOM-1",
@@ -14927,7 +15194,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "7q0"
     },
     {
       "check": "BOM-4",
@@ -15011,7 +15279,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "78j"
     },
     {
       "check": "BOM-4",
@@ -15095,7 +15364,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "5xm"
     },
     {
       "check": "BOM-4",
@@ -15179,7 +15449,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "169"
     },
     {
       "check": "BOM-4",
@@ -15255,7 +15526,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "rr6"
     },
     {
       "check": "BOM-4",
@@ -15331,7 +15603,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "2e0"
     },
     {
       "check": "BOM-4",
@@ -15407,7 +15680,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "hr6"
     },
     {
       "check": "BOM-4",
@@ -15483,7 +15757,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "r0h"
     },
     {
       "check": "BOM-4",
@@ -15559,7 +15834,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "534"
     },
     {
       "check": "BOM-4",
@@ -15635,7 +15911,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "8g2"
     },
     {
       "check": "BOM-4",
@@ -15711,7 +15988,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "bzk"
     },
     {
       "check": "BOM-4",
@@ -15787,7 +16065,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "59a"
     },
     {
       "check": "BOM-4",
@@ -15863,7 +16142,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "ys7"
     },
     {
       "check": "NAME-5",
@@ -15929,7 +16209,8 @@
           ]
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "yy9"
     },
     {
       "check": "NAME-7",
@@ -15963,7 +16244,8 @@
       "explain": "docs/checks/name.md#name-7",
       "fix": "name rails `+3V3`, `+5V0`, or run in non-strict mode and check what it picked up",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "e8x"
     },
     {
       "check": "NAME-13",
@@ -15990,7 +16272,8 @@
       "explain": "docs/checks/name.md#name-13",
       "fix": "name it +<voltage>_<source or group>, like +3V3_LDO",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "x5x"
     },
     {
       "check": "NAME-13",
@@ -16017,7 +16300,8 @@
       "explain": "docs/checks/name.md#name-13",
       "fix": "name it +<voltage>_<source or group>, like +3V3_LDO",
       "locations": [],
-      "also": []
+      "also": [],
+      "short_id": "c3w"
     },
     {
       "check": "DRAW-28",
@@ -16050,7 +16334,7 @@
       "state": null,
       "message": "label I2C1_EN at x 140.97 y 88.9: stub 8.89 mm under text 7.74 mm",
       "facts": [],
-      "fingerprint": "DRAW-28:item label I2C1_EN|sheet /C20: I2C no pull-ups/",
+      "fingerprint": "DRAW-28:item label I2C1_EN|sheet /C20: I2C no pull-ups/@84ed55c8",
       "explain": "docs/checks/draw.md#draw-28",
       "fix": "justify the label so its text lies along the wire, on a stub longer than the text",
       "locations": [
@@ -16069,7 +16353,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "3h1"
     },
     {
       "check": "DRAW-34",
@@ -16112,7 +16397,7 @@
       "state": null,
       "message": "power VCC2_3V3 at x 210.82 y 163.51 is 1.27 mm short of its margin to Q401 body at x 210.82 y 155.89",
       "facts": [],
-      "fingerprint": "DRAW-34:item Q401 body|item power VCC2_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item Q401 body|item power VCC2_3V3|sheet /C22: I2C Segments/@417e65a7",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -16140,7 +16425,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "wds"
     },
     {
       "check": "DRAW-34",
@@ -16183,7 +16469,7 @@
       "state": null,
       "message": "power VCC_1V8 at x 222.25 y 65.72 is 1.27 mm short of its margin to Q403 body at x 222.25 y 58.1",
       "facts": [],
-      "fingerprint": "DRAW-34:item Q403 body|item power VCC_1V8|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item Q403 body|item power VCC_1V8|sheet /C22: I2C Segments/@c55646c1",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -16211,7 +16497,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "gcd"
     },
     {
       "check": "DRAW-34",
@@ -16254,7 +16541,7 @@
       "state": null,
       "message": "Q503 body at x 182.88 y 45.4 is 1.27 mm short of its margin to power VCC_1V8 at x 182.88 y 53.02",
       "facts": [],
-      "fingerprint": "DRAW-34:item Q503 body|item power VCC_1V8|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-34:item Q503 body|item power VCC_1V8|sheet /C107: I2C multiple pull-ups/@a80e9b22",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -16282,7 +16569,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "r7w"
     },
     {
       "check": "DRAW-34",
@@ -16325,7 +16613,7 @@
       "state": null,
       "message": "R406.1 name at x 179.71 y 121.03 is 0.07 mm short of its margin to R405 body at x 182.88 y 119.38",
       "facts": [],
-      "fingerprint": "DRAW-34:item R405 body|item R406.1 name|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item R405 body|item R406.1 name|sheet /C22: I2C Segments/@63b47738",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -16353,7 +16641,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "t0a"
     },
     {
       "check": "DRAW-34",
@@ -16396,7 +16685,7 @@
       "state": null,
       "message": "R406.2 name at x 186.06 y 121.03 is 0.07 mm short of its margin to R405 body at x 182.88 y 119.38",
       "facts": [],
-      "fingerprint": "DRAW-34:item R405 body|item R406.2 name|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item R405 body|item R406.2 name|sheet /C22: I2C Segments/@63b47738",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -16424,7 +16713,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "nt0"
     },
     {
       "check": "DRAW-34",
@@ -16467,7 +16757,7 @@
       "state": null,
       "message": "R414.1 name at x 179.71 y 253.11 is 0.07 mm short of its margin to R413 body at x 182.88 y 251.46",
       "facts": [],
-      "fingerprint": "DRAW-34:item R413 body|item R414.1 name|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item R413 body|item R414.1 name|sheet /C22: I2C Segments/@c3536101",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -16495,7 +16785,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "m2r"
     },
     {
       "check": "DRAW-34",
@@ -16538,7 +16829,7 @@
       "state": null,
       "message": "R414.2 name at x 186.06 y 253.11 is 0.07 mm short of its margin to R413 body at x 182.88 y 251.46",
       "facts": [],
-      "fingerprint": "DRAW-34:item R413 body|item R414.2 name|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item R413 body|item R414.2 name|sheet /C22: I2C Segments/@c3536101",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -16566,7 +16857,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "wkb"
     },
     {
       "check": "DRAW-34",
@@ -16609,7 +16901,7 @@
       "state": null,
       "message": "R506.1 name at x 140.34 y 108.33 is 0.07 mm short of its margin to R505 body at x 143.51 y 106.68",
       "facts": [],
-      "fingerprint": "DRAW-34:item R505 body|item R506.1 name|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-34:item R505 body|item R506.1 name|sheet /C107: I2C multiple pull-ups/@5ec8fa55",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -16637,7 +16929,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "kkx"
     },
     {
       "check": "DRAW-34",
@@ -16680,7 +16973,7 @@
       "state": null,
       "message": "R506.2 name at x 146.69 y 108.33 is 0.07 mm short of its margin to R505 body at x 143.51 y 106.68",
       "facts": [],
-      "fingerprint": "DRAW-34:item R505 body|item R506.2 name|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-34:item R505 body|item R506.2 name|sheet /C107: I2C multiple pull-ups/@5ec8fa55",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -16708,7 +17001,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "dyx"
     },
     {
       "check": "DRAW-34",
@@ -16751,7 +17045,7 @@
       "state": null,
       "message": "power GND at x 49.53 y 124.78 is 1.27 mm short of its margin to U201 Value at x 59.4 y 120.65",
       "facts": [],
-      "fingerprint": "DRAW-34:item U201 Value|item power GND|sheet /C20: I2C no pull-ups/",
+      "fingerprint": "DRAW-34:item U201 Value|item power GND|sheet /C20: I2C no pull-ups/@ac78cfe8",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -16779,7 +17073,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "2ms"
     },
     {
       "check": "DRAW-34",
@@ -16822,7 +17117,7 @@
       "state": null,
       "message": "power VCC at x 107.95 y 86.04 is 1.27 mm short of its margin to U202 Reference at x 112.62 y 90.17",
       "facts": [],
-      "fingerprint": "DRAW-34:item U202 Reference|item power VCC|sheet /C20: I2C no pull-ups/",
+      "fingerprint": "DRAW-34:item U202 Reference|item power VCC|sheet /C20: I2C no pull-ups/@bebebbe7",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -16850,7 +17145,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "z55"
     },
     {
       "check": "DRAW-34",
@@ -16893,7 +17189,7 @@
       "state": null,
       "message": "U203 Reference at x 177.39 y 90.17 is 1.27 mm short of its margin to power VCC at x 172.72 y 86.04",
       "facts": [],
-      "fingerprint": "DRAW-34:item U203 Reference|item power VCC|sheet /C20: I2C no pull-ups/",
+      "fingerprint": "DRAW-34:item U203 Reference|item power VCC|sheet /C20: I2C no pull-ups/@757a0d7c",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -16921,7 +17217,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "5cx"
     },
     {
       "check": "DRAW-34",
@@ -16964,7 +17261,7 @@
       "state": null,
       "message": "U204 Reference at x 248.51 y 90.17 is 1.27 mm short of its margin to power VCC at x 243.84 y 86.04",
       "facts": [],
-      "fingerprint": "DRAW-34:item U204 Reference|item power VCC|sheet /C20: I2C no pull-ups/",
+      "fingerprint": "DRAW-34:item U204 Reference|item power VCC|sheet /C20: I2C no pull-ups/@a866615e",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -16992,7 +17289,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "1ef"
     },
     {
       "check": "DRAW-34",
@@ -17035,7 +17333,7 @@
       "state": null,
       "message": "U301 Value at x 83.53 y 91.44 is 1.27 mm short of its margin to power GND at x 73.66 y 95.57",
       "facts": [],
-      "fingerprint": "DRAW-34:item U301 Value|item power GND|sheet /C20: I2C non standard pull-ups/",
+      "fingerprint": "DRAW-34:item U301 Value|item power GND|sheet /C20: I2C non standard pull-ups/@d597fde6",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -17063,7 +17361,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "nt5"
     },
     {
       "check": "DRAW-34",
@@ -17106,7 +17405,7 @@
       "state": null,
       "message": "power VCC at x 152.4 y 56.83 is 1.27 mm short of its margin to U302 Reference at x 157.07 y 60.96",
       "facts": [],
-      "fingerprint": "DRAW-34:item U302 Reference|item power VCC|sheet /C20: I2C non standard pull-ups/",
+      "fingerprint": "DRAW-34:item U302 Reference|item power VCC|sheet /C20: I2C non standard pull-ups/@51d08e5b",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -17134,7 +17433,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "760"
     },
     {
       "check": "DRAW-34",
@@ -17177,7 +17477,7 @@
       "state": null,
       "message": "U401 Value at x 97.5 y 96.52 is 1.27 mm short of its margin to power GND at x 87.63 y 100.65",
       "facts": [],
-      "fingerprint": "DRAW-34:item U401 Value|item power GND|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item U401 Value|item power GND|sheet /C22: I2C Segments/@be4cc793",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -17205,7 +17505,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "xd2"
     },
     {
       "check": "DRAW-34",
@@ -17248,7 +17549,7 @@
       "state": null,
       "message": "power VCC_3V3 at x 190.5 y 69.53 is 1.27 mm short of its margin to U402 Reference at x 195.17 y 73.66",
       "facts": [],
-      "fingerprint": "DRAW-34:item U402 Reference|item power VCC_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item U402 Reference|item power VCC_3V3|sheet /C22: I2C Segments/@37cac319",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -17276,7 +17577,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "6w3"
     },
     {
       "check": "DRAW-34",
@@ -17319,7 +17621,7 @@
       "state": null,
       "message": "U403 Reference at x 215.49 y 106.68 is 1.27 mm short of its margin to power VCC_3V3 at x 210.82 y 102.55",
       "facts": [],
-      "fingerprint": "DRAW-34:item U403 Reference|item power VCC_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item U403 Reference|item power VCC_3V3|sheet /C22: I2C Segments/@1eb75de5",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -17347,7 +17649,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "mfh"
     },
     {
       "check": "DRAW-34",
@@ -17390,7 +17693,7 @@
       "state": null,
       "message": "U405 Reference at x 281.53 y 144.78 is 1.27 mm short of its margin to power VCC2_3V3 at x 276.86 y 140.65",
       "facts": [],
-      "fingerprint": "DRAW-34:item U405 Reference|item power VCC2_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item U405 Reference|item power VCC2_3V3|sheet /C22: I2C Segments/@7e38ba8a",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -17418,7 +17721,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "vrc"
     },
     {
       "check": "DRAW-34",
@@ -17461,7 +17765,7 @@
       "state": null,
       "message": "power VCC_1V8 at x 288.29 y 42.86 is 1.27 mm short of its margin to U406 Reference at x 292.96 y 46.99",
       "facts": [],
-      "fingerprint": "DRAW-34:item U406 Reference|item power VCC_1V8|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item U406 Reference|item power VCC_1V8|sheet /C22: I2C Segments/@b4c13794",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -17489,7 +17793,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "z1p"
     },
     {
       "check": "DRAW-34",
@@ -17532,7 +17837,7 @@
       "state": null,
       "message": "U407 Reference at x 294.23 y 191.77 is 1.27 mm short of its margin to power VCC_1V2 at x 289.56 y 187.64",
       "facts": [],
-      "fingerprint": "DRAW-34:item U407 Reference|item power VCC_1V2|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item U407 Reference|item power VCC_1V2|sheet /C22: I2C Segments/@e9dccb89",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -17560,7 +17865,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "cc30"
     },
     {
       "check": "DRAW-34",
@@ -17603,7 +17909,7 @@
       "state": null,
       "message": "U408 Reference at x 238.35 y 238.76 is 1.27 mm short of its margin to power VCC_3V3 at x 233.68 y 234.63",
       "facts": [],
-      "fingerprint": "DRAW-34:item U408 Reference|item power VCC_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item U408 Reference|item power VCC_3V3|sheet /C22: I2C Segments/@b6cfede6",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -17631,7 +17937,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "8s1"
     },
     {
       "check": "DRAW-34",
@@ -17674,7 +17981,7 @@
       "state": null,
       "message": "power GND at x 48.26 y 87.95 is 1.27 mm short of its margin to U501 Value at x 58.13 y 83.82",
       "facts": [],
-      "fingerprint": "DRAW-34:item U501 Value|item power GND|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-34:item U501 Value|item power GND|sheet /C107: I2C multiple pull-ups/@96a61eb3",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -17702,7 +18009,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "y9k"
     },
     {
       "check": "DRAW-34",
@@ -17745,7 +18053,7 @@
       "state": null,
       "message": "power VCC_3V3 at x 151.13 y 56.83 is 1.27 mm short of its margin to U502 Reference at x 155.8 y 60.96",
       "facts": [],
-      "fingerprint": "DRAW-34:item U502 Reference|item power VCC_3V3|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-34:item U502 Reference|item power VCC_3V3|sheet /C107: I2C multiple pull-ups/@415abe0e",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -17773,7 +18081,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "z26"
     },
     {
       "check": "DRAW-34",
@@ -17816,7 +18125,7 @@
       "state": null,
       "message": "power VCC_3V3 at x 204.47 y 89.85 is 1.27 mm short of its margin to U503 Reference at x 209.14 y 93.98",
       "facts": [],
-      "fingerprint": "DRAW-34:item U503 Reference|item power VCC_3V3|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-34:item U503 Reference|item power VCC_3V3|sheet /C107: I2C multiple pull-ups/@e379f4bb",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -17844,7 +18153,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "n9k"
     },
     {
       "check": "DRAW-34",
@@ -17887,7 +18197,7 @@
       "state": null,
       "message": "power VCC_1V8 at x 248.92 y 30.16 is 1.27 mm short of its margin to U506 Reference at x 253.59 y 34.29",
       "facts": [],
-      "fingerprint": "DRAW-34:item U506 Reference|item power VCC_1V8|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-34:item U506 Reference|item power VCC_1V8|sheet /C107: I2C multiple pull-ups/@95de5c64",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -17915,7 +18225,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "x2q"
     },
     {
       "check": "DRAW-34",
@@ -17958,7 +18269,7 @@
       "state": null,
       "message": "U601 Value at x 78.45 y 86.36 is 1.27 mm short of its margin to power GND at x 68.58 y 90.49",
       "facts": [],
-      "fingerprint": "DRAW-34:item U601 Value|item power GND|sheet /C20: I2C non equal pull-ups/",
+      "fingerprint": "DRAW-34:item U601 Value|item power GND|sheet /C20: I2C non equal pull-ups/@079f50ae",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -17986,7 +18297,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "vbg"
     },
     {
       "check": "DRAW-34",
@@ -18029,7 +18341,7 @@
       "state": null,
       "message": "U602 Reference at x 151.99 y 55.88 is 1.27 mm short of its margin to power VCC at x 147.32 y 51.75",
       "facts": [],
-      "fingerprint": "DRAW-34:item U602 Reference|item power VCC|sheet /C20: I2C non equal pull-ups/",
+      "fingerprint": "DRAW-34:item U602 Reference|item power VCC|sheet /C20: I2C non equal pull-ups/@f04a2e35",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -18057,7 +18369,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "21m"
     },
     {
       "check": "DRAW-34",
@@ -18100,7 +18413,7 @@
       "state": null,
       "message": "label I2C2_EN at x 71.06 y 84.2 is 0.51 mm short of its margin to label I2C4_EN at x 71.06 y 81.66",
       "facts": [],
-      "fingerprint": "DRAW-34:item label I2C2_EN|item label I2C4_EN|sheet /C20: I2C no pull-ups/",
+      "fingerprint": "DRAW-34:item label I2C2_EN|item label I2C4_EN|sheet /C20: I2C no pull-ups/@a1eb9e04",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -18128,7 +18441,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "ge6"
     },
     {
       "check": "DRAW-34",
@@ -18171,7 +18485,7 @@
       "state": null,
       "message": "label SDA1_1V2 at x 267.52 y 203.58 is 0.51 mm short of its margin to label SCL1_1V2 at x 267.49 y 206.12",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL1_1V2|item label SDA1_1V2|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item label SCL1_1V2|item label SDA1_1V2|sheet /C22: I2C Segments/@7a11564f",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -18199,7 +18513,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "rqn"
     },
     {
       "check": "DRAW-34",
@@ -18242,7 +18557,7 @@
       "state": null,
       "message": "label SCL1_1V8 at x 46.2 y 189.61 is 0.51 mm short of its margin to label SDA1_1V8 at x 46.17 y 187.07",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL1_1V8|item label SDA1_1V8|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-34:item label SCL1_1V8|item label SDA1_1V8|sheet /C107: I2C multiple pull-ups/@62bdca00",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -18270,7 +18585,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "cc39"
     },
     {
       "check": "DRAW-34",
@@ -18313,7 +18629,7 @@
       "state": null,
       "message": "label SDA1_1V8 at x 226.88 y 46.1 is 0.51 mm short of its margin to label SCL1_1V8 at x 226.85 y 48.64",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL1_1V8|item label SDA1_1V8|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-34:item label SCL1_1V8|item label SDA1_1V8|sheet /C107: I2C multiple pull-ups/@89893970",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -18341,7 +18657,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "v2p"
     },
     {
       "check": "DRAW-34",
@@ -18384,7 +18701,7 @@
       "state": null,
       "message": "label SCL1_1V8 at x 266.22 y 61.34 is 0.51 mm short of its margin to label SDA1_1V8 at x 266.25 y 58.8",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL1_1V8|item label SDA1_1V8|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item label SCL1_1V8|item label SDA1_1V8|sheet /C22: I2C Segments/@b7250f9a",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -18412,7 +18729,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "c77"
     },
     {
       "check": "DRAW-34",
@@ -18455,7 +18773,7 @@
       "state": null,
       "message": "label SCL1_3V3_VCC2 at x 252.61 y 159.13 is 0.51 mm short of its margin to label SDA1_3V3_VCC2 at x 252.64 y 156.59",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL1_3V3_VCC2|item label SDA1_3V3_VCC2|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item label SCL1_3V3_VCC2|item label SDA1_3V3_VCC2|sheet /C22: I2C Segments/@18be3b50",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -18483,7 +18801,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "1fv"
     },
     {
       "check": "DRAW-34",
@@ -18526,7 +18845,7 @@
       "state": null,
       "message": "label SDA1_3V3 at x 75.38 y 67.69 is 0.51 mm short of its margin to label SCL1_3V3 at x 75.41 y 65.15",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL1_3V3|item label SDA1_3V3|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-34:item label SCL1_3V3|item label SDA1_3V3|sheet /C107: I2C multiple pull-ups/@7d69a595",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -18554,7 +18873,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "xpr"
     },
     {
       "check": "DRAW-34",
@@ -18597,7 +18917,7 @@
       "state": null,
       "message": "label SDA1_3V3 at x 114.75 y 80.39 is 0.51 mm short of its margin to label SCL1_3V3 at x 114.78 y 77.85",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL1_3V3|item label SDA1_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item label SCL1_3V3|item label SDA1_3V3|sheet /C22: I2C Segments/@b9c4921e",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -18625,7 +18945,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "4c3"
     },
     {
       "check": "DRAW-34",
@@ -18668,7 +18989,7 @@
       "state": null,
       "message": "label SCL1 at x 84.91 y 104.52 is 0.51 mm short of its margin to label SDA1 at x 84.94 y 101.98",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL1|item label SDA1|sheet /C20: I2C no pull-ups/",
+      "fingerprint": "DRAW-34:item label SCL1|item label SDA1|sheet /C20: I2C no pull-ups/@42082693",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -18696,7 +19017,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "wdn"
     },
     {
       "check": "DRAW-34",
@@ -18739,7 +19061,7 @@
       "state": null,
       "message": "label SDA1 at x 72.54 y 104.52 is 0.51 mm short of its margin to label SCL1 at x 72.57 y 101.98",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL1|item label SDA1|sheet /C20: I2C no pull-ups/",
+      "fingerprint": "DRAW-34:item label SCL1|item label SDA1|sheet /C20: I2C no pull-ups/@8f68364f",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -18767,7 +19089,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "vtm"
     },
     {
       "check": "DRAW-34",
@@ -18810,7 +19133,7 @@
       "state": null,
       "message": "label SDA1_3V3 at x 114.75 y 80.39 is 0.51 mm short of its margin to label SCL2_3V3 at x 114.78 y 82.93",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL2_3V3|item label SDA1_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item label SCL2_3V3|item label SDA1_3V3|sheet /C22: I2C Segments/@cad75d71",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -18838,7 +19161,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "c34"
     },
     {
       "check": "DRAW-34",
@@ -18881,7 +19205,7 @@
       "state": null,
       "message": "label SCL2_3V3 at x 114.78 y 82.93 is 0.51 mm short of its margin to label SDA2_3V3 at x 114.75 y 85.47",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL2_3V3|item label SDA2_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item label SCL2_3V3|item label SDA2_3V3|sheet /C22: I2C Segments/@3d927cb8",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -18909,7 +19233,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "0at"
     },
     {
       "check": "DRAW-34",
@@ -18952,7 +19277,7 @@
       "state": null,
       "message": "label SDA2 at x 131.93 y 101.98 is 0.51 mm short of its margin to label SCL2 at x 131.9 y 104.52",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL2|item label SDA2|sheet /C20: I2C no pull-ups/",
+      "fingerprint": "DRAW-34:item label SCL2|item label SDA2|sheet /C20: I2C no pull-ups/@1e9dab1f",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -18980,7 +19305,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "a9a"
     },
     {
       "check": "DRAW-34",
@@ -19023,7 +19349,7 @@
       "state": null,
       "message": "label SCL3 at x 203.02 y 104.52 is 0.51 mm short of its margin to label SDA3 at x 203.05 y 101.98",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL3|item label SDA3|sheet /C20: I2C no pull-ups/",
+      "fingerprint": "DRAW-34:item label SCL3|item label SDA3|sheet /C20: I2C no pull-ups/@766b0712",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -19051,7 +19377,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "9nv"
     },
     {
       "check": "DRAW-34",
@@ -19094,7 +19421,7 @@
       "state": null,
       "message": "label SCL_NOT_I2C at x 113.3 y 57.53 is 0.51 mm short of its margin to label SDATA_SMTH_ELSE at x 110.85 y 60.07",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL_NOT_I2C|item label SDATA_SMTH_ELSE|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item label SCL_NOT_I2C|item label SDATA_SMTH_ELSE|sheet /C22: I2C Segments/@95dc872c",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -19122,7 +19449,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "qzw"
     },
     {
       "check": "DRAW-34",
@@ -19165,7 +19493,7 @@
       "state": null,
       "message": "label SCL_U7 at x 153.37 y 108.33 is 0.51 mm short of its margin to label SDA_U7 at x 153.4 y 105.79",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL_U7|item label SDA_U7|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-34:item label SCL_U7|item label SDA_U7|sheet /C107: I2C multiple pull-ups/@90fb4064",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -19193,7 +19521,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "9cz"
     },
     {
       "check": "DRAW-34",
@@ -19236,7 +19565,7 @@
       "state": null,
       "message": "label SDA_U7 at x 192.77 y 118.49 is 0.51 mm short of its margin to label SCL_U7 at x 192.74 y 121.03",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL_U7|item label SDA_U7|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item label SCL_U7|item label SDA_U7|sheet /C22: I2C Segments/@1395bb59",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -19264,78 +19593,8 @@
           "at": null
         }
       ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              2
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C20: I2C non equal pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              2
-            ]
-          },
-          "kind": "item",
-          "name": "label SCL"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              2
-            ]
-          },
-          "kind": "item",
-          "name": "label SDA"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "label SCL at x 107.47 y 67.69 is 0.51 mm short of its margin to label SDA at x 107.44 y 70.23",
-      "facts": [],
-      "fingerprint": "DRAW-34:item label SCL|item label SDA|sheet /C20: I2C non equal pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
-          "what": "label SCL",
-          "line": 1256,
-          "at": [
-            107.46619,
-            67.691
-          ]
-        },
-        {
-          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
-          "what": "label SDA",
-          "line": 1289,
-          "at": [
-            107.435952,
-            70.231
-          ]
-        },
-        {
-          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
-          "what": "sheet /C20: I2C non equal pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
+      "also": [],
+      "short_id": "djm"
     },
     {
       "check": "DRAW-34",
@@ -19378,7 +19637,7 @@
       "state": null,
       "message": "label SDA at x 123.7 y 67.69 is 0.51 mm short of its margin to label SCL at x 123.67 y 70.23",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL|item label SDA|sheet /C20: I2C non equal pull-ups/",
+      "fingerprint": "DRAW-34:item label SCL|item label SDA|sheet /C20: I2C non equal pull-ups/@4c1b13ea",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -19406,7 +19665,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "8a3"
     },
     {
       "check": "DRAW-34",
@@ -19418,17 +19678,17 @@
           "subject": {
             "Sheet": [
               0,
-              3
+              2
             ]
           },
           "kind": "sheet",
-          "name": "/C20: I2C non standard pull-ups/"
+          "name": "/C20: I2C non equal pull-ups/"
         },
         {
           "subject": {
             "Sheet": [
               0,
-              3
+              2
             ]
           },
           "kind": "item",
@@ -19438,7 +19698,7 @@
           "subject": {
             "Sheet": [
               0,
-              3
+              2
             ]
           },
           "kind": "item",
@@ -19447,37 +19707,38 @@
       ],
       "variant": null,
       "state": null,
-      "message": "label SCL at x 112.55 y 72.77 is 0.51 mm short of its margin to label SDA at x 112.52 y 75.31",
+      "message": "label SCL at x 107.47 y 67.69 is 0.51 mm short of its margin to label SDA at x 107.44 y 70.23",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL|item label SDA|sheet /C20: I2C non standard pull-ups/",
+      "fingerprint": "DRAW-34:item label SCL|item label SDA|sheet /C20: I2C non equal pull-ups/@901bbc78",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
         {
-          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
           "what": "label SCL",
           "line": 1256,
           "at": [
-            112.54619,
-            72.771
+            107.46619,
+            67.691
           ]
         },
         {
-          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
           "what": "label SDA",
           "line": 1289,
           "at": [
-            112.515952,
-            75.311
+            107.435952,
+            70.231
           ]
         },
         {
-          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
-          "what": "sheet /C20: I2C non standard pull-ups/",
+          "file": "i2c-10_non_equal_pull_ups.kicad_sch",
+          "what": "sheet /C20: I2C non equal pull-ups/",
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "jsp"
     },
     {
       "check": "DRAW-34",
@@ -19520,7 +19781,7 @@
       "state": null,
       "message": "label SCL at x 128.75 y 75.31 is 0.51 mm short of its margin to label SDA at x 128.78 y 72.77",
       "facts": [],
-      "fingerprint": "DRAW-34:item label SCL|item label SDA|sheet /C20: I2C non standard pull-ups/",
+      "fingerprint": "DRAW-34:item label SCL|item label SDA|sheet /C20: I2C non standard pull-ups/@2d622121",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -19548,7 +19809,80 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "8me"
+    },
+    {
+      "check": "DRAW-34",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Sheet": [
+              0,
+              3
+            ]
+          },
+          "kind": "sheet",
+          "name": "/C20: I2C non standard pull-ups/"
+        },
+        {
+          "subject": {
+            "Sheet": [
+              0,
+              3
+            ]
+          },
+          "kind": "item",
+          "name": "label SCL"
+        },
+        {
+          "subject": {
+            "Sheet": [
+              0,
+              3
+            ]
+          },
+          "kind": "item",
+          "name": "label SDA"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "label SCL at x 112.55 y 72.77 is 0.51 mm short of its margin to label SDA at x 112.52 y 75.31",
+      "facts": [],
+      "fingerprint": "DRAW-34:item label SCL|item label SDA|sheet /C20: I2C non standard pull-ups/@f127f89b",
+      "explain": "docs/checks/draw.md#draw-34",
+      "fix": "give them room: move one, or set the drawing.clearance margins",
+      "locations": [
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "label SCL",
+          "line": 1256,
+          "at": [
+            112.54619,
+            72.771
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "label SDA",
+          "line": 1289,
+          "at": [
+            112.515952,
+            75.311
+          ]
+        },
+        {
+          "file": "i2c-9_non_standard_pull_ups.kicad_sch",
+          "what": "sheet /C20: I2C non standard pull-ups/",
+          "at": null
+        }
+      ],
+      "also": [],
+      "short_id": "6a2"
     },
     {
       "check": "DRAW-34",
@@ -19591,7 +19925,7 @@
       "state": null,
       "message": "label UNM2 at x 191.89 y 253.11 is 0.51 mm short of its margin to label UNM1 at x 191.89 y 250.57",
       "facts": [],
-      "fingerprint": "DRAW-34:item label UNM1|item label UNM2|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item label UNM1|item label UNM2|sheet /C22: I2C Segments/@bcdf7a10",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -19619,7 +19953,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "cv1"
     },
     {
       "check": "DRAW-34",
@@ -19652,7 +19987,7 @@
       "state": null,
       "message": "power VCC2_3V3 at x 231.14 y 140.65 is 1.69 mm short of its margin to power VCC2_3V3 at x 241.3 y 140.65",
       "facts": [],
-      "fingerprint": "DRAW-34:item power VCC2_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item power VCC2_3V3|sheet /C22: I2C Segments/@b549529f",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -19680,7 +20015,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "05r"
     },
     {
       "check": "DRAW-34",
@@ -19723,7 +20059,7 @@
       "state": null,
       "message": "power VCC_1V2 at x 215.9 y 185.1 is 0.48 mm short of its margin to power VCC_3V3 at x 205.74 y 185.1",
       "facts": [],
-      "fingerprint": "DRAW-34:item power VCC_1V2|item power VCC_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item power VCC_1V2|item power VCC_3V3|sheet /C22: I2C Segments/@97b5280a",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -19751,7 +20087,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "s64"
     },
     {
       "check": "DRAW-34",
@@ -19784,7 +20121,7 @@
       "state": null,
       "message": "power VCC_1V2 at x 243.84 y 187.64 is 0.48 mm short of its margin to power VCC_1V2 at x 254 y 187.64",
       "facts": [],
-      "fingerprint": "DRAW-34:item power VCC_1V2|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item power VCC_1V2|sheet /C22: I2C Segments/@d2b29cbd",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -19812,68 +20149,8 @@
           "at": null
         }
       ],
-      "also": []
-    },
-    {
-      "check": "DRAW-34",
-      "severity": "suggestion",
-      "confidence": "certain",
-      "board": "test_schematics",
-      "subjects": [
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "sheet",
-          "name": "/C107: I2C multiple pull-ups/"
-        },
-        {
-          "subject": {
-            "Sheet": [
-              0,
-              5
-            ]
-          },
-          "kind": "item",
-          "name": "power VCC_1V8"
-        }
-      ],
-      "variant": null,
-      "state": null,
-      "message": "power VCC_1V8 at x 203.2 y 30.16 is 0.48 mm short of its margin to power VCC_1V8 at x 213.36 y 30.16",
-      "facts": [],
-      "fingerprint": "DRAW-34:item power VCC_1V8|sheet /C107: I2C multiple pull-ups/",
-      "explain": "docs/checks/draw.md#draw-34",
-      "fix": "give them room: move one, or set the drawing.clearance margins",
-      "locations": [
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "power VCC_1V8",
-          "line": 2148,
-          "at": [
-            203.2,
-            30.1625
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "power VCC_1V8",
-          "line": 4505,
-          "at": [
-            213.36,
-            30.1625
-          ]
-        },
-        {
-          "file": "i2c-2_multiple_pull_ups.kicad_sch",
-          "what": "sheet /C107: I2C multiple pull-ups/",
-          "at": null
-        }
-      ],
-      "also": []
+      "also": [],
+      "short_id": "8np"
     },
     {
       "check": "DRAW-34",
@@ -19906,7 +20183,7 @@
       "state": null,
       "message": "power VCC_1V8 at x 35.56 y 172.4 is 0.48 mm short of its margin to power VCC_1V8 at x 25.4 y 172.4",
       "facts": [],
-      "fingerprint": "DRAW-34:item power VCC_1V8|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-34:item power VCC_1V8|sheet /C107: I2C multiple pull-ups/@1b6c4287",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -19934,7 +20211,70 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "0hq"
+    },
+    {
+      "check": "DRAW-34",
+      "severity": "suggestion",
+      "confidence": "certain",
+      "board": "test_schematics",
+      "subjects": [
+        {
+          "subject": {
+            "Sheet": [
+              0,
+              5
+            ]
+          },
+          "kind": "sheet",
+          "name": "/C107: I2C multiple pull-ups/"
+        },
+        {
+          "subject": {
+            "Sheet": [
+              0,
+              5
+            ]
+          },
+          "kind": "item",
+          "name": "power VCC_1V8"
+        }
+      ],
+      "variant": null,
+      "state": null,
+      "message": "power VCC_1V8 at x 203.2 y 30.16 is 0.48 mm short of its margin to power VCC_1V8 at x 213.36 y 30.16",
+      "facts": [],
+      "fingerprint": "DRAW-34:item power VCC_1V8|sheet /C107: I2C multiple pull-ups/@572a1362",
+      "explain": "docs/checks/draw.md#draw-34",
+      "fix": "give them room: move one, or set the drawing.clearance margins",
+      "locations": [
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "power VCC_1V8",
+          "line": 2148,
+          "at": [
+            203.2,
+            30.1625
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "power VCC_1V8",
+          "line": 4505,
+          "at": [
+            213.36,
+            30.1625
+          ]
+        },
+        {
+          "file": "i2c-2_multiple_pull_ups.kicad_sch",
+          "what": "sheet /C107: I2C multiple pull-ups/",
+          "at": null
+        }
+      ],
+      "also": [],
+      "short_id": "0vh"
     },
     {
       "check": "DRAW-34",
@@ -19967,7 +20307,7 @@
       "state": null,
       "message": "power VCC_1V8 at x 242.57 y 42.86 is 0.48 mm short of its margin to power VCC_1V8 at x 252.73 y 42.86",
       "facts": [],
-      "fingerprint": "DRAW-34:item power VCC_1V8|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item power VCC_1V8|sheet /C22: I2C Segments/@07f2a943",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -19995,7 +20335,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "hv3"
     },
     {
       "check": "DRAW-34",
@@ -20028,7 +20369,7 @@
       "state": null,
       "message": "power VCC_3V3 at x 181.61 y 83.5 is 0.48 mm short of its margin to power VCC_3V3 at x 171.45 y 83.5",
       "facts": [],
-      "fingerprint": "DRAW-34:item power VCC_3V3|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-34:item power VCC_3V3|sheet /C107: I2C multiple pull-ups/@0e877e5c",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -20056,7 +20397,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "0ta"
     },
     {
       "check": "DRAW-34",
@@ -20089,7 +20431,7 @@
       "state": null,
       "message": "power VCC_3V3 at x 118.11 y 42.86 is 0.48 mm short of its margin to power VCC_3V3 at x 107.95 y 42.86",
       "facts": [],
-      "fingerprint": "DRAW-34:item power VCC_3V3|sheet /C107: I2C multiple pull-ups/",
+      "fingerprint": "DRAW-34:item power VCC_3V3|sheet /C107: I2C multiple pull-ups/@e1392c69",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -20117,7 +20459,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "xyn"
     },
     {
       "check": "DRAW-34",
@@ -20150,7 +20493,7 @@
       "state": null,
       "message": "power VCC_3V3 at x 212.09 y 234.63 is 0.48 mm short of its margin to power VCC_3V3 at x 201.93 y 234.63",
       "facts": [],
-      "fingerprint": "DRAW-34:item power VCC_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item power VCC_3V3|sheet /C22: I2C Segments/@64f36595",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -20178,7 +20521,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "bjf"
     },
     {
       "check": "DRAW-34",
@@ -20211,7 +20555,7 @@
       "state": null,
       "message": "power VCC_3V3 at x 157.48 y 55.56 is 0.48 mm short of its margin to power VCC_3V3 at x 147.32 y 55.56",
       "facts": [],
-      "fingerprint": "DRAW-34:item power VCC_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-34:item power VCC_3V3|sheet /C22: I2C Segments/@dea0c8c5",
       "explain": "docs/checks/draw.md#draw-34",
       "fix": "give them room: move one, or set the drawing.clearance margins",
       "locations": [
@@ -20239,7 +20583,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "agb"
     },
     {
       "check": "DRAW-41",
@@ -20272,7 +20617,7 @@
       "state": null,
       "message": "power VCC_1V2 at x 215.9 y 187.96 bends 1.27 mm out",
       "facts": [],
-      "fingerprint": "DRAW-41:item power VCC_1V2|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-41:item power VCC_1V2|sheet /C22: I2C Segments/@6c5faeef",
       "explain": "docs/checks/draw.md#draw-41",
       "fix": "run the wire straight out of the pin before the first bend",
       "locations": [
@@ -20291,7 +20636,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "w36"
     },
     {
       "check": "DRAW-41",
@@ -20324,7 +20670,7 @@
       "state": null,
       "message": "power VCC_3V3 at x 205.74 y 187.96 bends 1.27 mm out",
       "facts": [],
-      "fingerprint": "DRAW-41:item power VCC_3V3|sheet /C22: I2C Segments/",
+      "fingerprint": "DRAW-41:item power VCC_3V3|sheet /C22: I2C Segments/@bc4bdcbe",
       "explain": "docs/checks/draw.md#draw-41",
       "fix": "run the wire straight out of the pin before the first bend",
       "locations": [
@@ -20343,7 +20689,8 @@
           "at": null
         }
       ],
-      "also": []
+      "also": [],
+      "short_id": "6pd"
     }
   ],
   "candidates": [],
@@ -20360,7 +20707,7 @@
     }
   ],
   "timing": {
-    "checks_micros": 39202,
-    "total_micros": 42987
+    "checks_micros": 33950,
+    "total_micros": 38059
   }
 }
