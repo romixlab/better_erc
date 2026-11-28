@@ -7,8 +7,7 @@ use crate::meta::*;
 use crate::{Ctx, Finding};
 use erc_analysis::power::{NameRole, read_name};
 use erc_analysis::scene::{Item, ItemKind as K, Scene};
-use erc_model::geometry::Dir;
-use erc_model::geometry::Rect;
+use erc_model::geometry::{Dir, Rect};
 use erc_model::{LabelKind, Pt};
 use std::collections::BTreeMap;
 
@@ -69,7 +68,8 @@ impl Axis {
 /// parts with parts
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Class {
-    Label,
+    /// Labels line up with labels of their own kind: local labels sit on stubs, ports in port columns
+    Label(LabelKind),
     Power,
     Wire,
     Part,
@@ -100,7 +100,7 @@ fn liners<'s>(scene: &'s Scene, axis: Axis) -> Vec<Liner<'s>> {
         let lines = match item.kind {
             K::Label => {
                 let l = labels.next().expect("one item per label");
-                (Class::Label, vec![(0, l.at)])
+                (Class::Label(l.kind), vec![(0, l.at)])
             }
             K::Power => {
                 let s = item.owner.map(|o| &g.symbols[o]);
@@ -163,7 +163,7 @@ fn miss(axis: Axis, a: &Liner, b: &Liner, snap: i64) -> Option<(i64, i64, i64)> 
 type Missed<'l, 's> = (&'l Liner<'s>, &'l Liner<'s>, i64, i64, i64);
 
 /// The parts each label, power symbol or wire is tied to, by symbol and the side its pin leaves the body
-fn sides(scene: &Scene, item: &Item) -> Vec<(usize, erc_model::geometry::Dir)> {
+fn sides(scene: &Scene, item: &Item) -> Vec<(usize, Dir)> {
     let Some(tie) = item.tie else {
         return Vec::new();
     };
@@ -173,6 +173,39 @@ fn sides(scene: &Scene, item: &Item) -> Vec<(usize, erc_model::geometry::Dir)> {
         .filter(|p| !g.symbols[p.symbol].power)
         .map(|p| (p.symbol, g.symbols[p.symbol].pins[p.pin].outward))
         .collect()
+}
+
+/// Where a liner's tie runs along the axis's line through `at`: the span its wires on that line cover across it,
+/// with `at` itself
+fn run_along(scene: &Scene, item: &Item, axis: Axis, at: Pt) -> (i64, i64) {
+    let g = scene.geometry;
+    let on_line = axis.of(at);
+    let along = |p: Pt| match axis {
+        Axis::X => p.y,
+        Axis::Y => p.x,
+    };
+    let mut span = (along(at), along(at));
+    let wires = item.tie.into_iter().flat_map(|t| &scene.ties[t].wires);
+    for w in wires.map(|w| &g.wires[*w]) {
+        if axis.of(w.a) == on_line && axis.of(w.b) == on_line {
+            span.0 = span.0.min(along(w.a)).min(along(w.b));
+            span.1 = span.1.max(along(w.a)).max(along(w.b));
+        }
+    }
+    span
+}
+
+/// Whether lining up two liners would run one's wire into the other's: two ties side by side on neighbouring
+/// lines that overlap are spacing, and one moved onto the other's line would join or cross them
+fn would_join(scene: &Scene, axis: Axis, a: &Liner, b: &Liner) -> bool {
+    if a.item.tie.is_none() || a.item.tie == b.item.tie {
+        return false;
+    }
+    let (sa, sb) = (
+        run_along(scene, a.item, axis, a.lines[0].1),
+        run_along(scene, b.item, axis, b.lines[0].1),
+    );
+    sa.0 <= sb.1 && sb.0 <= sa.1
 }
 
 /// Whether two wires both end on pins of one symbol: they sit at its pin pitch, nothing to line up
@@ -286,7 +319,8 @@ impl Check for Draw36 {
     }
 
     /// Two liners of one class in line with each other, not alongside: neighbours by the window or by being on
-    /// the same side of one part. Parallel wires and parts side by side are spacing, not a missed column. Of the
+    /// the same side of one part, compared along that side. Two ties whose wires would join or cross on one line
+    /// are neighbouring rows, not a miss. Parallel wires and parts side by side are spacing, not a missed column. Of the
     /// wires of one tie, the pair with the smallest offset speaks for the rest. Then each section's ladders: its
     /// ground symbols, its supplies, its input and its output ports off their row or column.
     fn run(&self, cx: &Ctx) -> Vec<Finding> {
@@ -309,9 +343,16 @@ impl Check for Draw36 {
                         if a.class == Class::Wire && one_symbol(scene, a.item, b.item) {
                             continue;
                         }
+                        // A side of a part is a column (left, right) or a row (top, bottom): along it its labels
+                        // line up, across it they sit on the part's pin rows
                         let same_side = {
                             let sb = sides(scene, b.item);
-                            sides(scene, a.item).iter().any(|s| sb.contains(s))
+                            let along =
+                                |s: &&(usize, Dir)| s.1.is_horizontal() == (axis == Axis::X);
+                            sides(scene, a.item)
+                                .iter()
+                                .filter(along)
+                                .any(|s| sb.contains(s))
                         };
                         if apart > window && !same_side {
                             continue;
@@ -319,6 +360,9 @@ impl Check for Draw36 {
                         let Some((off, va, vb)) = miss(axis, a, b, snap) else {
                             continue;
                         };
+                        if a.class != Class::Part && would_join(scene, axis, a, b) {
+                            continue;
+                        }
                         // Two items of one name (two labels `SDA`) are two pairs
                         let key = (item_key(a.item), item_key(b.item));
                         let key = (key.0.min(key.1), key.0.max(key.1));

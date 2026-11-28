@@ -1,0 +1,23 @@
+board draw-36_neighbour_rows
+label / hierarchical PORT at 52.07,106.68 shape input net /PORT
+label / local LOC at 50.8,101.6 net /LOC
+label / local ROWA at 50.8,50.8 net /ROWA
+label / local ROWB at 63.5,53.34 net /ROWB
+label / local STEPA at 110.49,50.8 net /STEPA
+label / local STEPB at 133.35,53.34 net /STEPB
+net /LOC class = Default @ sch draw-36_neighbour_rows.kicad_sch note "effective net class"
+net /LOC kind named
+net /PORT class = Default @ sch draw-36_neighbour_rows.kicad_sch note "effective net class"
+net /PORT kind named
+net /ROWA class = Default @ sch draw-36_neighbour_rows.kicad_sch note "effective net class"
+net /ROWA kind named
+net /ROWB class = Default @ sch draw-36_neighbour_rows.kicad_sch note "effective net class"
+net /ROWB kind named
+net /STEPA class = Default @ sch draw-36_neighbour_rows.kicad_sch note "effective net class"
+net /STEPA kind named
+net /STEPB class = Default @ sch draw-36_neighbour_rows.kicad_sch note "effective net class"
+net /STEPB kind named
+sheet / name "" file draw-36_neighbour_rows.kicad_sch uuid /
+source file draw-36_neighbour_rows.kicad_sch
+source tool kicad
+source version 8.0

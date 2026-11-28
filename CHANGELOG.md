@@ -26,6 +26,7 @@ grouped by month; it was backfilled on 6 Oct 2026 from the git history.
 ### Fixed
 
 - Drawing findings key on item UUIDs, DRAW-36 also on its axis: no shared fingerprints; existing DRAW waivers break.
+- DRAW-36 skips neighbouring rows that lining up would join, other label kinds, and rows across a part's side.
 
 ## [0.6.8] - 2026-11-27
 

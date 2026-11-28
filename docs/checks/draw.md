@@ -497,7 +497,10 @@ wires, part body edges and centre lines) that are neighbours (on the same side o
 Larger offsets are deliberate and not reported. Within a section the ladders are compared on their own: its ground
 symbols, its supplies, its input ports and its output ports ([ladders](../drawing-guide.md#ladders-one-row-for-ground-one-for-supplies-ports-in-columns)).
 Wires that end on pins of one symbol are not compared (their pitch is the symbol's), and bodies of different size
-compare centres only (a shared pin line or edge clears them).
+compare centres only (a shared pin line or edge clears them). Labels compare with labels of their own kind only
+(local labels on stubs, ports in port columns). "The same side of a part" counts along that side: a column for its
+left and right sides, a row for its top and bottom; across it the labels sit on the part's pin rows. Two ties whose
+wires overlap on neighbouring lines are not a miss: lining them up would join or cross them.
 
 ## `DRAW-37` Note box that names a part or block and has no leader to it <a id="draw-37"></a>
 

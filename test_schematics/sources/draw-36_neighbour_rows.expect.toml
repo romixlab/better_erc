@@ -1,0 +1,9 @@
+# What better_erc finds on draw-36_neighbour_rows.kicad_sch (erc_checks/tests/schematics.rs; BLESS=1 rewrites it)
+
+[[finding]]
+check = "DRAW-36"
+subjects = ["item label STEPA", "item label STEPB", "sheet /"]
+
+[[finding]]
+check = "DRAW-36"
+subjects = ["item wire of STEPA", "item wire of STEPB", "sheet /"]
