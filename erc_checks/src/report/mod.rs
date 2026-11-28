@@ -380,20 +380,20 @@ fn write_finding(out: &mut String, f: &Finding, st: &Styles) {
     let sev = st.severity(f.severity);
     writeln!(
         out,
-        "  {}{:<10}{} {:<8} {}{estimate}{also}{new}{waiver}",
+        "  {}{:<10}{} {:<14} {}{estimate}{also}{new}{waiver}",
         sev.render(),
         f.severity.name(),
         sev.render_reset(),
-        f.check,
+        format!("{} #{}", f.check, f.short_id),
         f.message
     )
     .unwrap();
     let subjects: Vec<String> = f.subjects.iter().map(|s| s.to_string()).collect();
-    writeln!(out, "  {:<10} {:<8} {}", "", "", subjects.join(", ")).unwrap();
+    writeln!(out, "  {:<10} {:<14} {}", "", "", subjects.join(", ")).unwrap();
     for fact in &f.facts {
         writeln!(
             out,
-            "  {:<10} {:<8} {}{} = {} ({}){}",
+            "  {:<10} {:<14} {}{} = {} ({}){}",
             "",
             "",
             st.dim.render(),
@@ -405,12 +405,12 @@ fn write_finding(out: &mut String, f: &Finding, st: &Styles) {
         .unwrap();
     }
     if let Some(fix) = &f.fix {
-        writeln!(out, "  {:<10} {:<8} fix: {fix}", "", "").unwrap();
+        writeln!(out, "  {:<10} {:<14} fix: {fix}", "", "").unwrap();
     }
     if let Some(h) = &f.input_hash {
         writeln!(
             out,
-            "  {:<10} {:<8} {}input {h}{}",
+            "  {:<10} {:<14} {}input {h}{}",
             "",
             "",
             st.dim.render(),
@@ -422,7 +422,7 @@ fn write_finding(out: &mut String, f: &Finding, st: &Styles) {
         let verb = if w.applied() { "waived" } else { "was waived" };
         writeln!(
             out,
-            "  {:<10} {:<8} {verb} by {} on {}: {}",
+            "  {:<10} {:<14} {verb} by {} on {}: {}",
             "",
             "",
             w.who,

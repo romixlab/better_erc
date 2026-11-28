@@ -70,6 +70,9 @@ mod ffi {
         explain: String,
         /// Stable across edits that keep the subjects' names: what waivers and baselines key on
         fingerprint: String,
+        /// A few characters that name it among this run's findings (`k3f`, shown as `#k3f`); `berc check --only
+        /// '#k3f'` and `berc waive DESIGN '#k3f'` find it
+        short_id: String,
         subjects: Vec<Subject>,
         locations: Vec<Location>,
     }
@@ -168,6 +171,7 @@ fn violation(f: &Finding) -> ffi::Violation {
         fix: f.fix.clone().unwrap_or_default(),
         explain: f.explain.clone(),
         fingerprint: f.fingerprint.clone(),
+        short_id: f.short_id.clone(),
         subjects: f
             .subjects
             .iter()
@@ -223,6 +227,15 @@ mod tests {
         let ana3 = found.iter().find(|v| v.check == "ANA-3").unwrap();
         let names: Vec<&str> = ana3.subjects.iter().map(|s| s.name.as_str()).collect();
         assert_eq!(names, ["R1", "U1"]);
+        assert!(
+            found.iter().all(|v| v.short_id.len() >= 3),
+            "every violation has a short id"
+        );
+        let again = check(&main, &[], ffi::Units::Mm).unwrap();
+        let short = |vs: &[ffi::Violation]| -> Vec<String> {
+            vs.iter().map(|v| v.short_id.clone()).collect()
+        };
+        assert_eq!(short(&found), short(&again), "the same in a second run");
     }
 
     #[test]

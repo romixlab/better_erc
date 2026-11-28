@@ -7,6 +7,7 @@ use crate::ctx::{Availability, Config, Ctx};
 use crate::finding::{Confidence, Finding, NotRun};
 use crate::meta::{Check, Need, Scope, Severity, registered};
 use crate::report::{BoardSummary, CheckStatus, Note, Report, Status, Summary, Timing};
+use crate::short_id;
 use erc_model::{BoardId, Design, Imported, NoteKind};
 use erc_parts::PartsLock;
 use rayon::prelude::*;
@@ -20,7 +21,8 @@ use std::time::Instant;
 pub struct RunOptions {
     /// The variant to check, by name; `None` for the base design
     pub variant: Option<String>,
-    /// Only these check ids or categories (`I2C-3`, `BOM`); empty for all
+    /// Only these check ids or categories (`I2C-3`, `BOM`); empty for all. A `#id` entry keeps only the findings
+    /// whose id starts with it ([`crate::short_id`]), and selects no check
     pub only: Vec<String>,
     pub config: Config,
     /// The project's parts snapshot (CFG-9)
@@ -224,7 +226,13 @@ pub fn run_with(
             status: status_of(&mut o),
         });
     }
-    let all = fold_overlaps(checks, all);
+    let mut all = fold_overlaps(checks, all);
+    // Ids among every finding of the run, before a waiver or a `#id` selector leaves any out
+    short_id::assign(all.iter_mut());
+    let wanted: Vec<&String> = opts.only.iter().filter(|o| short_id::is_query(o)).collect();
+    if !wanted.is_empty() {
+        all.retain(|f| wanted.iter().any(|q| short_id::matches(f, q)));
+    }
     for s in &mut statuses {
         if let Status::Ran { findings, .. } = &mut s.status {
             *findings = all.iter().filter(|f| f.check == s.id).count();
@@ -295,7 +303,12 @@ fn select(
     checks: &[&'static dyn Check],
     opts: &RunOptions,
 ) -> Result<Vec<&'static dyn Check>, RunError> {
-    for o in &opts.only {
+    let only: Vec<&String> = opts
+        .only
+        .iter()
+        .filter(|o| !short_id::is_query(o))
+        .collect();
+    for &o in &only {
         let known = checks
             .iter()
             .any(|c| c.meta().id == o || c.meta().category == o)
@@ -309,11 +322,10 @@ fn select(
         .copied()
         .filter(|c| !opts.config.disabled.contains(c.meta().id))
         .filter(|c| {
-            opts.only.is_empty()
-                || opts
-                    .only
+            only.is_empty()
+                || only
                     .iter()
-                    .any(|o| o == c.meta().id || o == c.meta().category)
+                    .any(|o| *o == c.meta().id || *o == c.meta().category)
         })
         .collect())
 }

@@ -32,7 +32,9 @@ const DIFF_AFTER_HELP: &str = "Exit codes: 0 the same, 1 different, 2 usage or i
 
 /// Exit codes of `berc check`, under its --help
 const CHECK_AFTER_HELP: &str = "Exit codes: 0 nothing at or above --fail-on, 1 findings at or above --fail-on \
-(with --baseline: new ones only), 2 usage or import error, 3 a --require'd need is not available.";
+(with --baseline: new ones only), 2 usage or import error, 3 a --require'd need is not available.\n\nEach \
+finding ends with its id (`#k3f`): the same while the finding is, unique in the run.\n\nExamples:\n  \
+berc check hw/board\n  berc check hw/board --only '#k3f'";
 
 /// Exit codes of `berc waive`, under its --help
 const WAIVE_AFTER_HELP: &str = "Exit codes: 0 written, 1 no finding or several match (without --all), 2 usage, \
@@ -127,8 +129,8 @@ enum Command {
     Check(CheckArgs),
     /// Accept a finding for this project: append a [[waiver]] to its project file
     ///
-    /// FINDING is a check id with subject names that pick one finding (`I2C-1 R5`, `BOM-14 "part R9"`), or a
-    /// full fingerprint as the JSON report gives it (`I2C-1:net /SDA|part R5`). The design is checked first; the
+    /// FINDING is a finding id as the report prints it (`#k3f`), a check id with subject names that pick one
+    /// finding (`I2C-1 R5`, `BOM-14 "part R9"`), or a full fingerprint as the JSON report gives it (`I2C-1:net /SDA|part R5`). The design is checked first; the
     /// waiver keeps the finding's input hash, so it goes stale when what was judged changes. Written to
     /// `<name>.berc.toml` beside the design, else `berc.toml`, created when neither exists.
     #[command(after_help = WAIVE_AFTER_HELP)]
@@ -578,7 +580,7 @@ struct WaiveArgs {
     /// The design: a directory or a file
     #[arg(value_hint = ValueHint::AnyPath)]
     project: PathBuf,
-    /// A check id, or a full fingerprint
+    /// A finding id (`#k3f`), a check id, or a full fingerprint
     #[arg(add = ArgValueCandidates::new(complete::catalogue_ids))]
     finding: String,
     /// Subject names that pick the finding among the check's (`R5`, `/SDA`, `part R5`)
@@ -611,7 +613,8 @@ struct CheckArgs {
     /// Power state to check in: reserved, power states are not built yet (NET-8)
     #[arg(long, value_name = "S")]
     state: Option<String>,
-    /// Only these check ids and categories, comma-separated (`I2C,BOM-5`)
+    /// Only these check ids and categories, comma-separated (`I2C,BOM-5`); a finding id (`#k3f`, as the report
+    /// prints it after a finding) keeps only that finding
     #[arg(long, value_name = "CAT,ID", value_delimiter = ',',
           add = ArgValueCandidates::new(complete::check_ids_and_categories))]
     only: Vec<String>,

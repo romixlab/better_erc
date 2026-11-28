@@ -25,6 +25,7 @@ pub mod meta;
 pub mod project;
 pub mod project_file;
 pub mod report;
+pub mod short_id;
 pub mod units;
 
 mod ana;

@@ -96,6 +96,10 @@ pub struct Finding {
     /// The project file's waiver that matched it, and whether it applied
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub waiver: Option<FindingWaiver>,
+    /// A few characters that name it in this run (`k3f`, written `#k3f`), from the hash of its board,
+    /// fingerprint and state ([`crate::short_id`]); empty until the run assigns it
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub short_id: String,
 }
 
 /// A finding against a baseline report, matched by board and fingerprint
@@ -347,6 +351,7 @@ impl<'c, 'a> FindingBuilder<'c, 'a> {
             baseline: None,
             input_hash: (!self.inputs.is_empty()).then(|| input_hash(&self.inputs)),
             waiver: None,
+            short_id: String::new(),
         }
     }
 }

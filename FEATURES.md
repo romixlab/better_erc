@@ -728,6 +728,10 @@ The checks run in `erc_checks` ([docs/engine.md](docs/engine.md)), one file per 
   `UnitPlacement::line`), partial fingerprints, baseline states, not-run checks as notifications · `erc_checks/src/report/sarif.rs`
 - ✅ `RPT-25` Markdown report for a pull request comment: counts, baseline delta, findings table, fixed findings,
   candidates, not-run checks and notes folded · `erc_checks/src/report/markdown.rs`
+- ✅ `RPT-27` Short finding ids: each finding gets the shortest prefix (3 characters at least) of a base32 hash of its
+  board, fingerprint and state that is unique in the run (`BOM-14 #2s5`), the same while the finding is; in the
+  text, JSON and Markdown reports and the cxx bridge; `berc check --only '#2s5'` and `berc waive DESIGN '#2s5'` find
+  it · `erc_checks/src/short_id.rs`
 
 ## Views (`VIEW`)
 

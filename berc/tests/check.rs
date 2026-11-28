@@ -215,7 +215,7 @@ fn markdown_for_a_pr_comment() {
         "{md}"
     );
     assert!(
-        md.contains("| 🛑 | `I2C-1` | I2C bus /I2C1: no pull-ups on SCL and SDA"),
+        md.contains("| 🛑 | `I2C-1` `#e6r` | I2C bus /I2C1: no pull-ups on SCL and SDA"),
         "{md}"
     );
     assert!(md.contains("<details><summary>Notes ("), "{md}");
@@ -835,4 +835,56 @@ fn fix_datasheet_links() {
         stdout(&out)
     );
     assert!(stdout(&fix(false)).starts_with("Nothing to write"));
+}
+
+/// Each finding carries a short id (`#xyz`, RPT-27): in the text and JSON, the same in a second run and after a
+/// waiver; `--only '#id'` keeps that finding alone and `berc waive DESIGN '#id'` waives it
+#[test]
+fn short_ids_find_one_finding() {
+    let dir = scratch("short-id");
+    std::fs::copy(i2c1(), dir.join("board.kicad_sch")).unwrap();
+    let p = dir.join("board.kicad_sch");
+    let p = p.to_str().unwrap();
+    let ids = |args: &[&str]| -> Vec<String> {
+        let mut all = vec!["check", p, "--only", "I2C", "--format", "json"];
+        all.extend_from_slice(args);
+        let v = json(&berc(&all));
+        v["findings"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|f| f["short_id"].as_str().unwrap().to_string())
+            .collect()
+    };
+    let first = ids(&[]);
+    assert_eq!(first.len(), 3, "{first:?}");
+    assert!(first.iter().all(|id| id.len() >= 3), "{first:?}");
+    assert_eq!(ids(&[]), first, "the same in a second run");
+
+    let text = stdout(&berc(&["check", p, "--only", "I2C"]));
+    assert!(text.contains(&format!(" #{} ", first[0])), "{text}");
+
+    let one = format!("#{}", first[1]);
+    let only = berc(&[
+        "check",
+        p,
+        "--only",
+        &format!("I2C,{one}"),
+        "--format",
+        "json",
+    ]);
+    let v = json(&only);
+    let picked = v["findings"].as_array().unwrap();
+    assert_eq!(picked.len(), 1, "{v}");
+    assert_eq!(picked[0]["short_id"], first[1].as_str());
+
+    let waive = berc(&[
+        "waive", p, &one, "--who", "Jane Doe", "--reason", "accepted",
+    ]);
+    assert_eq!(code(&waive), 0, "{}", stderr(&waive));
+    let mut after = ids(&[]);
+    let mut before = first.clone();
+    after.sort();
+    before.sort();
+    assert_eq!(after, before, "a waiver shifts no id");
 }

@@ -714,15 +714,18 @@ pub fn verdict(report: &Report, fail_on: Severity, unavailable: Vec<Unavailable>
     }
 }
 
-/// The findings and candidates of a report that `check` and `subjects` pick: `check` is a full fingerprint
-/// (`I2C-1:net /SDA|part R5`), or a check id with subject names that each name one of the finding's subjects
-/// (`R5`, or `part R5`)
+/// The findings and candidates of a report that `check` and `subjects` pick: `check` is a finding id (`#k3f`, a
+/// prefix of its full id, [`crate::short_id`]), a full fingerprint (`I2C-1:net /SDA|part R5`), or a check id with
+/// subject names that each name one of the finding's subjects (`R5`, or `part R5`)
 pub fn select<'r>(report: &'r Report, check: &str, subjects: &[String]) -> Vec<&'r Finding> {
     report
         .findings
         .iter()
         .chain(&report.candidates)
         .filter(|f| {
+            if crate::short_id::is_query(check) {
+                return crate::short_id::matches(f, check);
+            }
             if check.contains(':') {
                 return f.fingerprint == check;
             }

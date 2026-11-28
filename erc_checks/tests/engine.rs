@@ -151,8 +151,12 @@ fn needs_overlaps_and_ordering() {
     assert_eq!(back, report);
     let text = report.to_text();
     assert!(text.contains("BOM - BOM hygiene"), "{text}");
+    let bom6 = report.findings.iter().find(|f| f.check == "BOM-6").unwrap();
     assert!(
-        text.contains("error      BOM-6    mounted (also BOM-5)"),
+        text.contains(&format!(
+            "error      BOM-6 #{:<7} mounted (also BOM-5)",
+            bom6.short_id
+        )),
         "{text}"
     );
     assert!(text.contains("LAY-1    needs layout: no layout"), "{text}");

@@ -129,9 +129,10 @@ fn table(out: &mut String, findings: &[Finding]) {
         let subjects: Vec<String> = f.subjects.iter().map(|s| s.to_string()).collect();
         writeln!(
             out,
-            "| {} | `{}` | {message} | {} |",
+            "| {} | `{}` `#{}` | {message} | {} |",
             emoji(f),
             f.check,
+            f.short_id,
             cell(&subjects.join(", "))
         )
         .unwrap();
